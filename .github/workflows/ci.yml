@@ -1,0 +1,62 @@
+name: CI
+
+# v0.1.0 ships only the gating guards that can pass against a clean template.
+# Lint, typecheck, vitest, and a Sanity-backed studio build are wired in v0.2.0,
+# once the Sample Firm seed is committed and a CI-scoped scratch Sanity project
+# lets the studio build succeed against a non-sentinel projectId.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  template-scrub-guard:
+    name: Template scrub guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify no client-identity leaks
+        run: |
+          set -e
+          echo "Checking for accidental client identity strings..."
+          # Audit-citation comments referencing the H&S source folder are
+          # intentionally preserved. They may point to either the live
+          # `Clients/henningson-snoxell-ltd/...` path or the post-retirement
+          # `Clients/_archive/henningson-snoxell-ltd/...` path — exclude both.
+          if grep -rniE 'henningson|snoxell|hennsnoxlaw' \
+               --include='*.ts' --include='*.tsx' --include='*.js' \
+               --include='*.jsx' --include='*.json' --include='*.css' \
+               --exclude-dir=node_modules --exclude-dir=.next \
+               --exclude-dir=dist --exclude-dir=.sanity \
+               | grep -v -E '//\s*(Source of truth: )?Clients/(_archive/)?henningson-snoxell-ltd/'; then
+            echo "::error::Client identity strings leaked into template source"
+            exit 1
+          fi
+          if grep -rn '5lyox4tc' \
+               --include='*.ts' --include='*.tsx' --include='*.js' \
+               --include='*.json' --include='*.md' \
+               --exclude-dir=node_modules --exclude-dir=.next \
+               --exclude-dir=dist --exclude-dir=.sanity; then
+            echo "::error::H&S Sanity project ID 5lyox4tc leaked into template"
+            exit 1
+          fi
+          echo "Template scrub guard passed."
+
+  seed-validation:
+    name: Sample Firm seed presence
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify seed file presence
+        run: |
+          # v0.1.0 ships WITHOUT the seed NDJSON — Phase C will commit it.
+          # This job warns but does not fail until v0.2.0.
+          if [ ! -s studio/seedData/sampleFirm.ndjson ]; then
+            echo "::warning::studio/seedData/sampleFirm.ndjson is missing or empty"
+            echo "::warning::Schema-change PRs must regenerate the seed — see studio/seedData/regenerate.md"
+            echo "::warning::Phase C will commit the initial seed; this becomes a hard-fail in v0.2.0"
+            exit 0
+          fi
+          echo "Seed file present ($(wc -l < studio/seedData/sampleFirm.ndjson) lines)."

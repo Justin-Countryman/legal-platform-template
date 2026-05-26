@@ -1,0 +1,10 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/@sanity/codegen/schema.json",
+  "path": [
+    "../site/app/**/*.{ts,tsx}",
+    "../site/components/**/*.{ts,tsx}",
+    "../site/lib/**/*.{ts,tsx}"
+  ],
+  "schema": "./schema.json",
+  "generates": "../site/types/sanity.types.ts"
+}

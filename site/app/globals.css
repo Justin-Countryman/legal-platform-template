@@ -1,0 +1,664 @@
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
+
+/* ─── Relume Breakpoints ──────────────────────────────────────────────────── */
+/* Overrides Tailwind defaults to match Relume component breakpoints           */
+@theme {
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-xxl: 1440px;
+}
+
+/* ─── Relume Keyframes ────────────────────────────────────────────────────── */
+@keyframes accordion-down {
+  from { height: 0px; }
+  to { height: var(--radix-accordion-content-height); }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0px; }
+}
+@keyframes loop-horizontally {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+@keyframes loop-testimonials {
+  from { transform: translateX(0); }
+  to { transform: translateX(-135rem); }
+}
+@keyframes loop-vertically {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+@keyframes loop-vertically-top {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+@keyframes loop-vertically-bottom {
+  from { transform: translateY(-50%); }
+  to { transform: translateY(0); }
+}
+@keyframes marquee-top {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes marquee-right {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+@keyframes marquee-bottom {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0%); }
+}
+@keyframes marquee-left {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes tabs-fade {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ─── Relume Theme ────────────────────────────────────────────────────────── */
+@theme {
+  /* UI motion tokens — scale with motionTempo design setting (injected by buildDesignTokenCSS).
+     Defaults here match "relaxed" (the initial value). Components use duration-ui-* utilities. */
+  --motion-ui-fast: 250ms;
+  --motion-ui-base: 400ms;
+  --motion-ui-slow: 600ms;
+
+  /* Structural motion tokens — fixed, NOT affected by motionTempo.
+     Tuned for premium floating UI (dropdowns, modals, drawers, accordions).
+     Components use duration-structural-* utilities. */
+  --motion-structural-fast: 150ms;
+  --motion-structural-base: 250ms;
+  --motion-structural-slow: 400ms;
+
+  --ease-smooth:   cubic-bezier(0.25, 0, 0, 1);
+  --ease-balanced: cubic-bezier(0.45, 0, 0.55, 1);
+
+  /* Animations */
+  --animate-accordion-down: accordion-down 0.25s cubic-bezier(0.25, 0, 0, 1);
+  --animate-accordion-up: accordion-up 0.25s cubic-bezier(0.25, 0, 0, 1);
+  --animate-loop-horizontally: loop-horizontally 20s linear infinite;
+  --animate-loop-testimonials: loop-testimonials 30s linear infinite;
+  --animate-loop-vertically: loop-vertically 30s linear infinite;
+  --animate-loop-vertically-top: loop-vertically-top 50s linear infinite;
+  --animate-loop-vertically-bottom: loop-vertically-bottom 50s linear infinite;
+  --animate-marquee-horizontally: marquee-top 30s linear infinite;
+  --animate-marquee-top: marquee-top 50s linear infinite;
+  --animate-marquee-right: marquee-right 25s linear infinite;
+  --animate-marquee-bottom: marquee-bottom 50s linear infinite;
+  --animate-marquee-left: marquee-left 25s linear infinite;
+  --animate-tabs: tabs-fade 0.4s cubic-bezier(0.25, 0, 0, 1) forwards;
+
+  /* Structural elevation tokens — color adapts via --shadow-rgb (set by buildColorCSS).
+     Card-level tokens (--shadow-card-rest/hover, --transform-card-hover) are runtime-
+     injected by buildDesignTokenCSS based on the client's elevationStyle selection. */
+  --shadow-elevation-sm:
+    0 1px 2px rgb(var(--shadow-rgb) / 0.03),
+    0 4px 8px  rgb(var(--shadow-rgb) / 0.04);
+  --shadow-elevation-md:
+    0 1px 2px  rgb(var(--shadow-rgb) / 0.04),
+    0 8px 20px rgb(var(--shadow-rgb) / 0.08),
+    0 16px 40px rgb(var(--shadow-rgb) / 0.04);
+  --shadow-elevation-lg:
+    0 4px 6px  rgb(var(--shadow-rgb) / 0.05),
+    0 16px 40px rgb(var(--shadow-rgb) / 0.10),
+    0 40px 80px rgb(var(--shadow-rgb) / 0.06);
+
+  /* Relume Wireframe Colors */
+  --color-brand-black: #000000;
+  --color-brand-white: #ffffff;
+  --color-neutral: #666666;
+  --color-neutral-black: #000000;
+  --color-neutral-white: #ffffff;
+  --color-neutral-lightest: #eeeeee;
+  --color-neutral-lighter: #cccccc;
+  --color-neutral-light: #aaaaaa;
+  --color-neutral-dark: #444444;
+  --color-neutral-darker: #222222;
+  --color-neutral-darkest: #111111;
+  --color-system-success-green: #027a48;
+  --color-system-success-green-light: #ecfdf3;
+  --color-system-error-red: #b42318;
+  --color-system-error-red-light: #fef3f2;
+  --color-background: #ffffff;
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #eeeeee;
+  --color-background-tertiary: #666666;
+  --color-background-alternative: #000000;
+  --color-background-success: #ecfdf3;
+  --color-background-error: #fef3f2;
+  --color-border: #000000;
+  --color-border-primary: #000000;
+  --color-border-secondary: #aaaaaa;
+  --color-border-tertiary: #444444;
+  --color-border-alternative: #ffffff;
+  --color-border-success: #027a48;
+  --color-border-error: #b42318;
+  --color-text: #000000;
+  --color-text-primary: #000000;
+  --color-text-secondary: #aaaaaa;
+  --color-text-alternative: #ffffff;
+  --color-text-success: #027a48;
+  --color-text-error: #b42318;
+  --color-link: #000000;
+  --color-link-primary: #000000;
+  --color-link-secondary: #666666;
+  --color-link-alternative: #ffffff;
+
+  /* Non-standard font sizes from Relume */
+  --text-md: 1.125rem;
+  --text-7xl: 2.75rem;
+  --text-8xl: 3rem;
+  --text-9xl: 3.25rem;
+  --text-10xl: 3.5rem;
+}
+
+/* ─── Container ──────────────────────────────────────────────────────────── */
+@utility container {
+  margin-inline: auto;
+  width: 100%;
+}
+
+/* ─── Tagline Utility ────────────────────────────────────────────────────── */
+/* Shares one source of truth with the <Tagline> primitive. Semantic elements  */
+/* (h2, h3, dt, etc.) can apply `tagline` to inherit the same typography      */
+/* treatment without going through the primitive. All five CSS variables are  */
+/* driven by buildDesignTokenCSS from designSettings.taglineStyle, so         */
+/* toggling the Sanity field updates both primitive and utility consumers     */
+/* simultaneously — including the leading rule (rendered via ::before).       */
+@utility tagline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;                 /* gap-2 */
+  font-size: 0.875rem;         /* text-sm */
+  font-weight: 500;            /* font-medium */
+  color: var(--color-accent);  /* cascade-aware (light → tagline; dark → on-dark) */
+  text-transform:        var(--tagline-text-transform);
+  letter-spacing:        var(--tagline-letter-spacing);
+  text-decoration:       var(--tagline-text-decoration);
+  text-underline-offset: var(--tagline-text-underline-offset);
+
+  /* Leading rule for the `lined` style — nested inside @utility so Tailwind  */
+  /* retains the selector. --tagline-rule-display is `inline-block` for       */
+  /* `lined` and `none` for plain/titlecase — single source of truth shared   */
+  /* by the <Tagline> primitive and `<h2 className="tagline">` utility.       */
+  &::before {
+    content: '';
+    display: var(--tagline-rule-display);
+    width: 1.5rem;             /* w-6 */
+    height: 1px;               /* h-px */
+    background-color: var(--color-accent);
+  }
+}
+
+/* ─── Relume Utility Classes ──────────────────────────────────────────────── */
+@layer utilities {
+  .animate-disable {
+    animation-name: none;
+    animation-duration: 0s;
+    --tw-enter-opacity: initial;
+    --tw-enter-scale: initial;
+    --tw-enter-rotate: initial;
+    --tw-enter-translate-x: initial;
+    --tw-enter-translate-y: initial;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* ─── Card Elevation Utilities ───────────────────────────────────────────── */
+/* --shadow-card-rest/hover and --transform-card-hover are injected at runtime  */
+/* by buildDesignTokenCSS from the client's elevationStyle selection.           */
+/* All three support hover: and other Tailwind variants automatically.          */
+@utility shadow-card-rest {
+  box-shadow: var(--shadow-card-rest);
+}
+@utility shadow-card-hover {
+  box-shadow: var(--shadow-card-hover);
+}
+@utility card-lift {
+  translate: 0 var(--transform-card-hover, 0px);
+}
+
+/* ─── Motion Duration Utilities ─────────────────────────────────────────── */
+/* UI tokens scale with motionTempo; structural tokens are fixed.             */
+/* Both sets collapse to 10ms under prefers-reduced-motion.                  */
+@utility duration-ui-fast       { transition-duration: var(--motion-ui-fast); }
+@utility duration-ui-base       { transition-duration: var(--motion-ui-base); }
+@utility duration-ui-slow       { transition-duration: var(--motion-ui-slow); }
+@utility duration-structural-fast { transition-duration: var(--motion-structural-fast); }
+@utility duration-structural-base { transition-duration: var(--motion-structural-base); }
+@utility duration-structural-slow { transition-duration: var(--motion-structural-slow); }
+
+/* ─── Marketing Type Scale Utilities ─────────────────────────────────────── */
+/* Used on homePage and landingPage headlines only. Internal pages use standard
+   sizing (Tailwind text-* utilities or .text-page-h1).
+   Mobile floor is locked across all presets — never break.
+   Desktop ceiling comes from --marketing-h*; when no preset is selected
+   (marketingScale = 'default'), buildDesignTokenCSS emits no --marketing-* vars
+   and clamp falls back to the standard sizing constants below — homepage and
+   landing pages then render identically to internal pages typographically.    */
+@utility marketing-h1 {
+  font-size: clamp(1.875rem, 1rem + 5vw, var(--marketing-h1, 3.5rem));
+  line-height: 1.05;
+}
+@utility marketing-h2 {
+  font-size: clamp(1.5rem, 0.75rem + 4vw, var(--marketing-h2, 2.25rem));
+  line-height: 1.1;
+}
+@utility marketing-h3 {
+  font-size: clamp(1.25rem, 0.625rem + 3vw, var(--marketing-h3, 1.875rem));
+  line-height: 1.2;
+}
+@utility marketing-h4 {
+  font-size: clamp(1.125rem, 0.5rem + 2vw, var(--marketing-h4, 1.5rem));
+  line-height: 1.25;
+}
+
+/* ─── Focus Ring Utilities ───────────────────────────────────────────────── */
+/* ring-focus / ring-focus-on-dark are not auto-generated by Tailwind v4 because
+   the token names don't follow the expected <color> key pattern. These manual
+   @utility definitions bridge the gap so focus-visible:ring-focus and
+   focus-visible:ring-focus-on-dark compile to proper --tw-ring-color overrides. */
+@utility ring-focus {
+  --tw-ring-color: var(--color-ring-focus, #1a1a1a);
+}
+@utility ring-focus-on-dark {
+  --tw-ring-color: var(--color-ring-focus-on-dark, #4a4a4a);
+}
+
+/* ─── Button Hover Animations ────────────────────────────────────────────── */
+/* Driven by `data-button-animation="<mode>"` on a top-level wrapper (set by
+   the (site) layout from designSettings.buttonAnimation). Buttons opt in via
+   `data-button-animatable="true"` — only primary and secondary variants set it;
+   tertiary is excluded by design.
+   Modes layer ON TOP of the variant class strings — the existing
+   `transition-colors duration-ui-fast hover:bg-action-hover` (etc.) still fires
+   and serves as the fallback / under-layer when a pseudo-element animates over
+   it. `'none'` mode emits no rules; class-string color hover is the only visual.
+   Each mode collapses to no-op under `prefers-reduced-motion: reduce`. */
+
+/* Mode: sweep — background fills left-to-right via ::before scaleX. */
+[data-button-animation="sweep"] [data-button-animatable="true"] {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+[data-button-animation="sweep"] [data-button-animatable="true"]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-action);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--motion-ui-base) ease-out;
+  z-index: -1;
+}
+[data-button-animation="sweep"] [data-button-animatable="true"][data-variant="primary"]::before {
+  background: var(--color-action-hover);
+}
+[data-button-animation="sweep"] [data-button-animatable="true"][data-variant="secondary"]::before {
+  background: var(--color-action);
+}
+[data-button-animation="sweep"] [data-button-animatable="true"]:hover::before {
+  transform: scaleX(1);
+}
+
+/* Mode: fill-center — background fills from center via clip-path circle. */
+[data-button-animation="fill-center"] [data-button-animatable="true"] {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+[data-button-animation="fill-center"] [data-button-animatable="true"]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-action);
+  clip-path: circle(0% at 50% 50%);
+  transition: clip-path var(--motion-ui-base) ease-out;
+  z-index: -1;
+}
+[data-button-animation="fill-center"] [data-button-animatable="true"][data-variant="primary"]::before {
+  background: var(--color-action-hover);
+}
+[data-button-animation="fill-center"] [data-button-animatable="true"][data-variant="secondary"]::before {
+  background: var(--color-action);
+}
+[data-button-animation="fill-center"] [data-button-animatable="true"]:hover::before {
+  clip-path: circle(75% at 50% 50%);
+}
+
+/* Mode: inset — pressed-in shadow on hover gives the button physical weight.
+   Same treatment for primary and secondary; tertiary excluded (no
+   data-button-animatable). Shadow color uses --shadow-rgb so the tint follows
+   the brand palette instead of being pure black. The transition list includes
+   color/background/border so the variant's existing class-string color hovers
+   don't snap while the inset shadow animates. */
+[data-button-animation="inset"] [data-button-animatable="true"] {
+  transition: box-shadow var(--motion-ui-base) ease-out,
+              background-color var(--motion-ui-fast) ease-out,
+              color var(--motion-ui-fast) ease-out,
+              border-color var(--motion-ui-fast) ease-out;
+}
+[data-button-animation="inset"] [data-button-animatable="true"]:hover {
+  box-shadow: inset 0 2px 8px rgb(var(--shadow-rgb) / 0.2);
+}
+
+/* Mode: lift — translateY + shadow grows on hover. */
+[data-button-animation="lift"] [data-button-animatable="true"] {
+  transition: transform var(--motion-ui-fast) ease-out,
+              box-shadow var(--motion-ui-fast) ease-out,
+              background-color var(--motion-ui-fast),
+              border-color var(--motion-ui-fast),
+              color var(--motion-ui-fast);
+}
+[data-button-animation="lift"] [data-button-animatable="true"]:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevation-md);
+}
+
+/* Reduced-motion carve-outs for all four non-standard modes. */
+@media (prefers-reduced-motion: reduce) {
+  [data-button-animation="sweep"] [data-button-animatable="true"]::before,
+  [data-button-animation="fill-center"] [data-button-animatable="true"]::before {
+    transition: none;
+  }
+  [data-button-animation="inset"] [data-button-animatable="true"] {
+    transition: none;
+  }
+  [data-button-animation="inset"] [data-button-animatable="true"]:hover {
+    box-shadow: none;
+  }
+  [data-button-animation="lift"] [data-button-animatable="true"] {
+    transition: none;
+  }
+  [data-button-animation="lift"] [data-button-animatable="true"]:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* ─── Image-backed Internal Hero — Secondary Button treatment ────────────── */
+/* Driven by `data-hero-image="true"` on the InternalHero <section> (set when
+   `backgroundImage.src` is truthy) and Button's existing `data-variant`
+   attribute. Secondary's anchored action-color outline (`border-action` +
+   cascade-aware `text-action-text` resolving to raw action on dark) reads
+   weakly against image variability regardless of scrim depth. Inside an
+   image-backed hero the hero already sets `data-ring-context="dark"`, so the
+   cascade-aware `--color-foreground` resolves to its on-dark value
+   (cream / `--color-foreground-on-dark`). Referencing `var(--color-foreground)`
+   here pulls cream against the `bg-brand-dark/80` scrim without anchored
+   token references. Primary stays as-is (white-fill via its WS5 cascade-reset
+   escape). Tertiary stays as-is (cascade-aware `text-action-text`). */
+[data-hero-image="true"] [data-variant="secondary"] {
+  background-color: color-mix(in oklch, var(--color-brand-dark) 70%, transparent);
+  border-color: var(--color-foreground);
+  color: var(--color-foreground);
+}
+[data-hero-image="true"] [data-variant="secondary"]:hover {
+  background-color: var(--color-foreground);
+  border-color: var(--color-foreground);
+  color: var(--color-brand-dark);
+}
+
+/* buttonAnimation composition — `sweep` and `fill-center` modes animate a
+   `::before` overlay tinted `var(--color-action)`. On image-backed heroes
+   that re-introduces action-color on hover, clashing with the cream-on-dark
+   treatment. Override the overlay tint to `var(--color-foreground)` (cream
+   on dark via the cascade) so the secondary stays coherent under every
+   buttonAnimation mode. `inset` and `lift` modes don't touch color — they
+   compose cleanly without an override. the reference build runs `buttonAnimation: 'none'`,
+   so this rule is a platform-portability guard rather than a single-client behavior
+   change. */
+[data-hero-image="true"] [data-button-animation="sweep"] [data-button-animatable="true"][data-variant="secondary"]::before,
+[data-hero-image="true"] [data-button-animation="fill-center"] [data-button-animatable="true"][data-variant="secondary"]::before {
+  background: var(--color-foreground);
+}
+
+/* ─── Prefers Reduced Motion ─────────────────────────────────────────────── */
+/* 10ms (not 0ms) avoids jump-cut artifacts in max-height collapse animations. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-ui-fast: 10ms;
+    --motion-ui-base: 10ms;
+    --motion-ui-slow: 10ms;
+    --motion-structural-fast: 10ms;
+    --motion-structural-base: 10ms;
+    --motion-structural-slow: 10ms;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 10ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Smooth-scroll carve-out — html { scroll-behavior: smooth } at the Base
+   Styles block below must yield to the OS-level reduced-motion preference.
+   Kept as a separate @media block (not folded into the motion-var clamp
+   above) so the smooth-scroll concern stays semantically distinct from
+   the motion-duration tokens. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* ─── Brand Design System ─────────────────────────────────────────────────── */
+
+/* @theme inline — values that are themselves var() references; inlined into utilities */
+/* --dynamic-font-* are runtime-injected by buildFontCSS when a Font Pairing
+   Preset or custom font upload is active. When neither is set, the chain falls
+   through to the system serif/sans-serif stacks at the consumption layer
+   (body and heading rules below).                                              */
+@theme inline {
+  --font-heading: var(--dynamic-font-heading, Georgia, serif);
+  --font-body:    var(--dynamic-font-body,    system-ui, sans-serif);
+}
+
+/* @theme — generates var() references in utilities so runtime :root injection works.
+   Defaults here are overridden by server-injected :root values from designTokens.ts */
+@theme {
+  /* ── Canonical color aliases ──────────────────────────────────────────────
+     Consumer-facing names that Tailwind v4 wires into utility classes
+     (bg-*, text-*, etc.). These mirror role tokens but live in the
+     --color-* namespace because Tailwind utility generation is namespaced
+     to --color-*. Fallbacks here are overridden at runtime by buildColorCSS. */
+  --color-action:              #4a4a4a;   /* buttons, CTAs at rest (solid fill, anchored) */
+  --color-action-fg:           #ffffff;   /* text ON action-colored elements                */
+  --color-accent-fg:           #1a1a1a;   /* text ON accent-colored elements (light-surface only) */
+  --color-action-hover:        #666666;   /* buttons, CTAs on hover (lightened for dark-text fill) */
+  --color-action-text:         #1a1a1a;   /* outlined-button + tertiary text (cascade-aware: light = AA-safe action-on-light) */
+  --color-action-text-on-dark: #4a4a4a;   /* action-text dark variant (raw action color)    */
+  --color-muted:               #f5f5f5;   /* off-white section alternation (anchored — does NOT cascade) */
+  --color-brand-dark:          #1a1a1a;   /* dark sections, footer, overlays                */
+  --color-accent:              #666666;   /* tagline accent (cascade-aware)                 */
+  --color-accent-on-dark:      #666666;   /* accent brightened for dark bg                  */
+
+  /* ── Neutral scale — branded-derived; overridden at runtime by buildColorCSS ─
+     The four light-surface neutrals (foreground/muted/subtle/border) ship only
+     as cascade-aware aliases below. --color-foreground-on-light is also emitted
+     as a static escape hatch (same value as --color-foreground at :root, but
+     NOT subject to cascade swap) for Button primary-on-dark white-flip.        */
+  --color-background:   #ffffff;
+
+  /* ── Inverse neutral scale — branded-derived; overridden at runtime ────────────
+     Fallback values illustrate the primaryColor → deriveInverseNeutrals() pipeline
+     (example primary e.g. #1a1a1a produces the values below; runtime overrides
+     emit the active client's derivation). All three text levels pass AA (4.5:1)
+     against role-brand-dark (example dark e.g. #1a1a1a).                          */
+  --color-foreground-on-dark:          #f5f5f5;   /* body text on dark surfaces (cascade dark target) */
+  --color-foreground-muted-on-dark:    #f5f5f5;   /* supporting text on dark surfaces (cascade dark target) */
+  --color-foreground-subtle-on-dark:   #666666;   /* labels / metadata on dark surfaces (cascade dark target) */
+  --color-border-on-dark:              #4a4a4a;   /* dividers on dark (cascade dark target) — derivation: primaryColor at L 0.38 / C×0.50 cap 0.08 */
+
+  /* ── UI shape tokens ─────────────────────────────────────────────────────  */
+  --radius-ui:  8px;
+  --radius-btn: 6px;
+
+  /* ── Tagline style tokens ─────────────────────────────────────────────────
+     Drive the Tagline primitive's text-transform / tracking / decoration /
+     leading-rule visibility. Defaults match the 'plain' preset; overridden at
+     runtime by buildDesignTokenCSS from designSettings.taglineStyle.          */
+  --tagline-text-transform:        uppercase;
+  --tagline-letter-spacing:        0.1em;
+  --tagline-text-decoration:       none;
+  --tagline-text-underline-offset: auto;
+  --tagline-rule-display:          none;
+
+  /* ── Focus ring ───────────────────────────────────────────────────────────
+     Light-surface: action if ≥3:1 on white/bg-light; else brand-dark.
+     Example: a low-contrast action color (~2:1 on white) falls back to a
+     dark-variant value (>7:1 on white).                                       */
+  --color-ring-focus: #1a1a1a;
+  /* Dark-surface: action if ≥3:1 on brand-dark; else tagline-on-dark.
+     Example: an action color reaching ~7.6:1 on brand-dark uses action
+     directly (no fallback needed).                                            */
+  --color-ring-focus-on-dark: #4a4a4a;
+
+  /* ── Surface-aware border ─────────────────────────────────────────────────
+     --color-border holds the light-surface value at :root and is reassigned
+     to var(--color-border-on-dark) inside .bg-brand-dark and
+     [data-ring-context="dark"] containers via the cascade rule below.
+     Components reach for border-border / bg-border / divide-border — the
+     correct value resolves automatically per surface.
+     Fallback mirrors the L 0.92 value that deriveNeutrals produces from a
+     primaryColor input (e.g., #1a1a1a); --color-border-on-dark already
+     exists above (L 0.38 hairline from deriveInverseNeutrals —
+     C×0.50 cap 0.08).                                                        */
+  --color-border:          #f5f5f5;
+
+  /* ── Surface-aware foreground ────────────────────────────────────────────
+     Body text. --color-foreground holds the light-surface value at :root;
+     cascade rule reassigns to var(--color-foreground-on-dark) on dark surfaces.
+     Components reach for text-foreground / bg-foreground / border-foreground
+     and the correct value resolves per surface.
+     --color-foreground-on-light is the static escape hatch — same value at
+     :root, NOT cascade-swapped. Used by Button primary-on-dark white-flip:
+     `[--color-foreground:var(--color-foreground-on-light)]` resets the local
+     custom property so the inner `text-foreground` reads the light value
+     even inside a dark parent.                                                 */
+  --color-foreground:          #1a1a1a;
+  --color-foreground-on-light: #1a1a1a;
+
+  /* ── Surface-aware foreground-muted ──────────────────────────────────────
+     Supporting / secondary text. --color-foreground-muted holds the
+     light-surface value at :root; cascade rule reassigns to
+     var(--color-foreground-muted-on-dark) on dark surfaces. Components reach
+     for text-foreground-muted and the correct value resolves per surface.
+     Fallback is primaryColor's L 0.45 neutral derivation; on-dark fallback declared above. */
+  --color-foreground-muted: #4a4a4a;
+
+  /* ── Surface-aware foreground-subtle ──────────────────────────────────────
+     Labels, metadata, placeholder text. --color-foreground-subtle holds the
+     light-surface value at :root; cascade rule reassigns to
+     var(--color-foreground-subtle-on-dark) on dark surfaces. Components reach
+     for text-foreground-subtle and the correct value resolves per surface.
+     Fallback is primaryColor's L 0.65 neutral derivation; on-dark fallback declared above. */
+  --color-foreground-subtle: #666666;
+
+  /* ── Surface-aware hover wash ─────────────────────────────────────────────
+     Subtle background tint for hover on row-links / list items / dropdowns.
+     Light-surface uses --shadow-rgb @ 0.06 (matches shadow-elevation-* idiom);
+     dark-surface uses color-mix on --color-foreground-on-dark @ 8%. Both auto-tune
+     per brand. Same cascade pattern as --color-border — components reach for
+     bg-hover-wash and the correct value resolves automatically per surface.  */
+  --color-hover-wash:         rgb(var(--shadow-rgb) / 0.06);
+  --color-hover-wash-on-dark: color-mix(in oklch, var(--color-foreground-on-dark) 8%, transparent);
+}
+
+/* ─── Design Token Utilities ──────────────────────────────────────────────── */
+/* rounded-ui and rounded-btn are generated by @theme inline above — no manual definition needed */
+@layer utilities {
+  /* Internal page h1 — fixed best-practice scale, consistent across all internal pages.
+     Homepage and landing pages set their own heading sizes per design. */
+  .text-page-h1 {
+    font-size: 2rem;
+    line-height: 1.15;
+    @media (min-width: 768px) { font-size: 2.5rem; }
+    @media (min-width: 992px) { font-size: 3.5rem; }
+  }
+}
+
+/* ─── Base Styles ─────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--dynamic-font-body, system-ui), sans-serif;
+  color: var(--color-foreground);
+  background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--dynamic-font-heading, Georgia), serif;
+}
+
+/* Brand-derived focus ring — color injected by buildColorCSS as --color-ring-focus */
+:focus-visible {
+  outline: 2px solid var(--color-ring-focus, #1a1a1a);
+  outline-offset: 2px;
+}
+
+/* Override Tailwind's default blue ring color with brand-derived focus token */
+*, ::before, ::after {
+  --tw-ring-color: var(--color-ring-focus, #1a1a1a);
+}
+
+/* Dark-surface containers: reassign cascade-aware tokens so descendants
+   resolve to dark-surface variants automatically. CSS custom properties
+   inherit normally, so all focusable / consuming descendants benefit
+   without any per-element override.
+   .bg-brand-dark covers direct dark backgrounds; [data-ring-context="dark"]
+   covers containers whose dark appearance is created by an overlay (e.g.
+   BackgroundCta's bg-brand-dark/80 scrim) or other non-class mechanisms.
+   Cascade-aware tokens swap together on the same trigger. */
+.bg-brand-dark,
+[data-ring-context="dark"] {
+  --color-ring-focus:        var(--color-ring-focus-on-dark,        #4a4a4a);
+  --color-border:            var(--color-border-on-dark,            #4a4a4a);
+  --color-accent:            var(--color-accent-on-dark,            #666666);
+  --color-action-text:       var(--color-action-text-on-dark,       #4a4a4a);
+  --color-foreground:        var(--color-foreground-on-dark,        #f5f5f5);
+  --color-foreground-muted:  var(--color-foreground-muted-on-dark,  #f5f5f5);
+  --color-foreground-subtle: var(--color-foreground-subtle-on-dark, #666666);
+  --color-hover-wash:        var(--color-hover-wash-on-dark);
+}
+
+/* Light-surface containers nested inside dark-context ancestors: re-declare
+   the same set of cascade-aware tokens back to their light-surface defaults
+   so descendants resolve correctly. Generalizes the "light island inside a
+   dark surface" pattern (dropdowns, popovers, light cards rendered above a
+   dark header / scrim).
+   --color-foreground reuses the static --color-foreground-on-light escape
+   hatch (emitted by buildColorCSS as the brand-derived light value). The
+   remaining tokens have no *-on-light static variant emitted, so we mirror
+   the :root literal defaults — values match the primaryColor-derived fallbacks above
+   and the dark-rule's *-on-dark counterparts. If future clients need brand-
+   derived values here, emit additional *-on-light tokens from designTokens.ts
+   (mirroring the foreground-on-light precedent) and switch these literals
+   to var() refs. */
+[data-ring-context="light"] {
+  --color-ring-focus:        #1a1a1a;
+  --color-border:            #f5f5f5;
+  --color-accent:            #666666;
+  --color-action-text:       #1a1a1a;
+  --color-foreground:        var(--color-foreground-on-light, #1a1a1a);
+  --color-foreground-muted:  #4a4a4a;
+  --color-foreground-subtle: #666666;
+  --color-hover-wash:        rgb(var(--shadow-rgb) / 0.06);
+}

@@ -1,0 +1,29 @@
+import {defineType} from 'sanity'
+
+export const featuredTestimonial = defineType({
+  name: 'featuredTestimonial',
+  title: 'Featured Testimonial',
+  type: 'document',
+  fields: [
+    {
+      name: 'name',
+      title: 'Section Name',
+      type: 'string',
+      description: 'Internal label — e.g. "Family Law Featured Testimonial"',
+      validation: (Rule) => Rule.required().warning(),
+    },
+    {
+      name: 'testimonial',
+      title: 'Testimonial',
+      type: 'reference',
+      to: [{type: 'testimonial'}],
+      validation: (Rule) => Rule.required().warning(),
+    },
+  ],
+  preview: {
+    select: {title: 'name'},
+    prepare({title}) {
+      return {title: title ?? 'Featured Testimonial'}
+    },
+  },
+})
