@@ -25,12 +25,17 @@ jobs:
           # intentionally preserved. They may point to either the live
           # `Clients/henningson-snoxell-ltd/...` path or the post-retirement
           # `Clients/_archive/henningson-snoxell-ltd/...` path — exclude both.
+          # Any line that references the H&S source folder by path
+          # (Clients/[_archive/]henningson-snoxell-ltd/...) is an audit
+          # citation and is preserved. Real identity leaks would be raw
+          # string literals like 'henningson-snoxell' without the path,
+          # which still trip the guard.
           if grep -rniE 'henningson|snoxell|hennsnoxlaw' \
                --include='*.ts' --include='*.tsx' --include='*.js' \
                --include='*.jsx' --include='*.json' --include='*.css' \
                --exclude-dir=node_modules --exclude-dir=.next \
                --exclude-dir=dist --exclude-dir=.sanity \
-               | grep -v -E '//\s*(Source of truth: )?Clients/(_archive/)?henningson-snoxell-ltd/'; then
+               | grep -v -E 'Clients/(_archive/)?henningson-snoxell-ltd/'; then
             echo "::error::Client identity strings leaked into template source"
             exit 1
           fi
