@@ -38,14 +38,22 @@ In your schema-change PR branch:
 
 1. Apply the schema change locally; verify it builds: `cd studio && npm run build`.
 2. Deploy the schema to the scratch project: `npx sanity deploy` (uses the scratch project ID + token from `~/.legal-platform/tokens.json`).
-3. Open the scratch project in a browser (`https://<seed-studio-host>.sanity.studio`); for each affected sample document, fill any new required fields with **neutral defaults** (no client names, no specific cities/states beyond "Springfield, IL" or generic placeholders).
-4. Export:
+3. If the schema added or changed a required field on any of the 10 seed docs, update `scripts/seed-bootstrap.mjs` to populate the new field with a neutral default (no client names; "Springfield, IL" or generic placeholders only).
+4. Re-run the bootstrap to overwrite docs in the scratch project (`createOrReplace` is idempotent):
+   ```bash
+   SANITY_SEED_PROJECT_ID=<scratch-id> SANITY_SEED_TOKEN=<token> \
+     node scripts/seed-bootstrap.mjs
+   ```
+5. If touch-ups are needed (richer prose, references between seed docs), open the scratch Studio in a browser and edit there. The bootstrap script will only need updating when schema **shape** changes.
+6. Export:
    ```bash
    cd studio
    npx sanity dataset export production seedData/sampleFirm.ndjson --raw --asset-concurrency 0 --overwrite
    ```
-5. Commit `studio/seedData/sampleFirm.ndjson` in the same PR as the schema change.
-6. Push; CI seed-validation job should pass.
+7. Commit `studio/seedData/sampleFirm.ndjson` (and any `scripts/seed-bootstrap.mjs` updates) in the same PR as the schema change.
+8. Push; CI seed-validation job should pass.
+
+See `scripts/README.md` for the one-time setup of the scratch project + token caching.
 
 ## What "neutral defaults" means
 
