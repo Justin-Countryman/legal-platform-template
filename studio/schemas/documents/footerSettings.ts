@@ -196,6 +196,20 @@ export const footerSettings = defineType({
       type: 'url',
       fieldset: 'social',
     },
+    {
+      name: 'avvoUrl',
+      title: 'Avvo URL (firm)',
+      type: 'url',
+      fieldset: 'social',
+      description: 'Firm-level Avvo profile. Surfaced in Organization JSON-LD `sameAs`; attorney-level Avvo profiles live on attorneyPage.',
+    },
+    {
+      name: 'justiaUrl',
+      title: 'Justia URL (firm)',
+      type: 'url',
+      fieldset: 'social',
+      description: 'Firm-level Justia profile. Surfaced in Organization JSON-LD `sameAs`; attorney-level Justia profiles live on attorneyPage.',
+    },
 
   ],
 

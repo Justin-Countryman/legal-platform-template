@@ -34,6 +34,8 @@ type OrganizationData = {
     twitterUrl?: string | null
     linkedInUrl?: string | null
     youTubeUrl?: string | null
+    avvoUrl?: string | null
+    justiaUrl?: string | null
   } | null
 }
 
@@ -48,6 +50,8 @@ function buildOrganizationSchema(data: OrganizationData) {
     data.socials?.twitterUrl,
     data.socials?.instagramUrl,
     data.socials?.youTubeUrl,
+    data.socials?.avvoUrl,
+    data.socials?.justiaUrl,
   ].filter((u): u is string => typeof u === 'string' && u.length > 0)
 
   const address = data.address && data.address.address1

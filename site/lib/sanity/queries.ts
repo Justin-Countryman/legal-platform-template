@@ -152,7 +152,9 @@ export const ORGANIZATION_SCHEMA_QUERY = groq`{
     instagramUrl,
     twitterUrl,
     linkedInUrl,
-    youTubeUrl
+    youTubeUrl,
+    avvoUrl,
+    justiaUrl
   }
 }`
 
