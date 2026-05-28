@@ -1,7 +1,7 @@
 'use client'
 
 import {useEffect, useLayoutEffect, useRef, useState, forwardRef} from 'react'
-import {AnimatePresence, motion} from 'framer-motion'
+import {motion} from 'framer-motion'
 import {motionConfig} from '@/lib/motionConfig'
 import {RxChevronDown} from 'react-icons/rx'
 import {MdPhone, MdLocationPin, MdEmail, MdClose} from 'react-icons/md'
@@ -510,6 +510,18 @@ export function SubMenu({navItem, isMobile, textClass, hoverTextClass, ringClass
     }
   }
 
+  // Crawler-discoverable rendering: the dropdown `<ul>` is always mounted so
+  // its anchor children land in SSR HTML. Visibility is controlled by the
+  // `animate` opacity transition + `aria-hidden` + `pointer-events-none` when
+  // closed. Conditional `{isOpen && (...)}` would hide the links from
+  // non-JS crawlers (Screaming Frog, Bing, robots that don't execute JS).
+  //
+  // Parent-with-href split: when `navItem.href` is set (e.g. navItemAttorneys
+  // pointing at the /attorneys index), the label renders as a real `<a>` and
+  // a sibling chevron-button toggles the dropdown. Without the split the
+  // parent URL is unreachable except via the dropdown — invisible to
+  // crawlers and unhelpful for keyboard users wanting to land on the index.
+  const parentHref = navItem.href ?? null
   return (
     <div
       ref={containerRef}
@@ -519,60 +531,88 @@ export function SubMenu({navItem, isMobile, textClass, hoverTextClass, ringClass
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
     >
-      <button
-        ref={buttonRef}
-        type="button"
-        className={`flex w-full items-center justify-between gap-2 rounded-ui py-3 text-left text-sm font-medium tracking-wide transition-colors duration-ui-fast ${hoverTextClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${ringClass} md:flex-none md:justify-start md:px-4 md:py-2 ${textClass}`}
-        aria-expanded={isOpen}
-        aria-haspopup="true"
-        aria-controls={menuId}
-        onClick={toggle}
-      >
-        <span>{navItem.label}</span>
-        <motion.span
-          aria-hidden="true"
-          animate={isOpen ? {rotate: 180} : {rotate: 0}}
-          transition={motionConfig.chevron}
-          className="flex-shrink-0"
-        >
-          <RxChevronDown />
-        </motion.span>
-      </button>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.ul
-            ref={menuRef}
-            id={menuId}
-            role="list"
-            data-ring-context="light"
-            initial={{opacity: 0, y: -6}}
-            animate={{opacity: 1, y: 0}}
-            exit={{opacity: 0, y: -6}}
-            transition={motionConfig.dropdown}
-            className={[
-              'bg-muted text-foreground rounded-ui',
-              colClass(flatItems.length),
-              'md:absolute md:top-full md:z-50',
-              alignRight ? 'md:right-0' : 'md:left-0',
-              'md:min-w-48 md:shadow-elevation-md',
-              'p-2',
-            ].join(' ')}
+      {parentHref ? (
+        <div className="flex w-full items-center md:flex-none">
+          <Link
+            href={parentHref}
+            className={`block flex-1 rounded-ui py-3 text-left text-sm font-medium tracking-wide transition-colors duration-ui-fast ${hoverTextClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${ringClass} md:flex-none md:px-4 md:py-2 ${textClass}`}
           >
-            {flatItems.map((item, i) => (
-              <li key={i}>
-                <Link
-                  href={item.href}
-                  className="block rounded-ui px-4 py-2 pl-[5%] text-sm font-medium transition-colors duration-ui-fast hover:bg-hover-wash focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus lg:whitespace-nowrap lg:px-4"
-                  onClick={close}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </motion.ul>
-        )}
-      </AnimatePresence>
+            {navItem.label}
+          </Link>
+          <button
+            ref={buttonRef}
+            type="button"
+            className={`flex items-center justify-center rounded-ui px-3 py-3 transition-colors duration-ui-fast ${hoverTextClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${ringClass} md:py-2 ${textClass}`}
+            aria-expanded={isOpen}
+            aria-haspopup="true"
+            aria-controls={menuId}
+            aria-label={`Toggle ${navItem.label} submenu`}
+            onClick={toggle}
+          >
+            <motion.span
+              aria-hidden="true"
+              animate={isOpen ? {rotate: 180} : {rotate: 0}}
+              transition={motionConfig.chevron}
+              className="flex-shrink-0"
+            >
+              <RxChevronDown />
+            </motion.span>
+          </button>
+        </div>
+      ) : (
+        <button
+          ref={buttonRef}
+          type="button"
+          className={`flex w-full items-center justify-between gap-2 rounded-ui py-3 text-left text-sm font-medium tracking-wide transition-colors duration-ui-fast ${hoverTextClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${ringClass} md:flex-none md:justify-start md:px-4 md:py-2 ${textClass}`}
+          aria-expanded={isOpen}
+          aria-haspopup="true"
+          aria-controls={menuId}
+          onClick={toggle}
+        >
+          <span>{navItem.label}</span>
+          <motion.span
+            aria-hidden="true"
+            animate={isOpen ? {rotate: 180} : {rotate: 0}}
+            transition={motionConfig.chevron}
+            className="flex-shrink-0"
+          >
+            <RxChevronDown />
+          </motion.span>
+        </button>
+      )}
+
+      <motion.ul
+        ref={menuRef}
+        id={menuId}
+        role="list"
+        aria-hidden={!isOpen}
+        data-ring-context="light"
+        initial={false}
+        animate={{opacity: isOpen ? 1 : 0, y: isOpen ? 0 : -6}}
+        transition={motionConfig.dropdown}
+        className={[
+          'bg-muted text-foreground rounded-ui',
+          colClass(flatItems.length),
+          'md:absolute md:top-full md:z-50',
+          alignRight ? 'md:right-0' : 'md:left-0',
+          'md:min-w-48 md:shadow-elevation-md',
+          'p-2',
+          isOpen ? '' : 'pointer-events-none',
+        ].filter(Boolean).join(' ')}
+      >
+        {flatItems.map((item, i) => (
+          <li key={i}>
+            <Link
+              href={item.href}
+              className="block rounded-ui px-4 py-2 pl-[5%] text-sm font-medium transition-colors duration-ui-fast hover:bg-hover-wash focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus lg:whitespace-nowrap lg:px-4"
+              onClick={close}
+              tabIndex={isOpen ? 0 : -1}
+            >
+              {item.label}
+            </Link>
+          </li>
+        ))}
+      </motion.ul>
     </div>
   )
 }
@@ -970,48 +1010,80 @@ function MobileSubMenu({navItem}: {navItem: NavItem}) {
   const [isOpen, setIsOpen] = useState(false)
   const flatItems = flattenChildren(navItem)
   const submenuId = `mobile-submenu-${navItem.label.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`
+  // Same crawler-discoverability fix as the desktop SubMenu — always render
+  // the dropdown `<ul>` so its anchor children are in SSR HTML, hide via
+  // height/opacity when closed. See the desktop SubMenu comment for why.
+  // Parent-with-href split mirrors the desktop pattern: when navItem.href is
+  // set, render the label as a real `<a>` + a sibling chevron disclosure
+  // button so the parent index URL is crawlable + keyboard-reachable
+  // independent of toggling the dropdown.
+  const parentHref = navItem.href ?? null
   return (
     <div>
-      <button
-        className="flex w-full items-center justify-between py-4 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus"
-        aria-expanded={isOpen}
-        aria-haspopup="true"
-        aria-controls={submenuId}
-        onClick={() => setIsOpen((p) => !p)}
-      >
-        <span>{navItem.label}</span>
-        <motion.span
-          aria-hidden="true"
-          animate={isOpen ? {rotate: 180} : {rotate: 0}}
-          transition={motionConfig.chevron}
-        >
-          <RxChevronDown />
-        </motion.span>
-      </button>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.ul
-            id={submenuId}
-            role="list"
-            initial={{height: 0, opacity: 0}}
-            animate={{height: 'auto', opacity: 1}}
-            exit={{height: 0, opacity: 0}}
-            transition={motionConfig.subnav}
-            className="overflow-hidden pb-2"
+      {parentHref ? (
+        <div className="flex w-full items-center">
+          <Link
+            href={parentHref}
+            className="flex-1 py-4 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus"
           >
-            {flatItems.map((item, i) => (
-              <li key={i}>
-                <Link
-                  href={item.href}
-                  className="block py-3 pl-4 text-sm text-foreground transition-colors duration-ui-fast hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </motion.ul>
-        )}
-      </AnimatePresence>
+            {navItem.label}
+          </Link>
+          <button
+            className="flex items-center justify-center px-3 py-4 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus"
+            aria-expanded={isOpen}
+            aria-haspopup="true"
+            aria-controls={submenuId}
+            aria-label={`Toggle ${navItem.label} submenu`}
+            onClick={() => setIsOpen((p) => !p)}
+          >
+            <motion.span
+              aria-hidden="true"
+              animate={isOpen ? {rotate: 180} : {rotate: 0}}
+              transition={motionConfig.chevron}
+            >
+              <RxChevronDown />
+            </motion.span>
+          </button>
+        </div>
+      ) : (
+        <button
+          className="flex w-full items-center justify-between py-4 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus"
+          aria-expanded={isOpen}
+          aria-haspopup="true"
+          aria-controls={submenuId}
+          onClick={() => setIsOpen((p) => !p)}
+        >
+          <span>{navItem.label}</span>
+          <motion.span
+            aria-hidden="true"
+            animate={isOpen ? {rotate: 180} : {rotate: 0}}
+            transition={motionConfig.chevron}
+          >
+            <RxChevronDown />
+          </motion.span>
+        </button>
+      )}
+      <motion.ul
+        id={submenuId}
+        role="list"
+        aria-hidden={!isOpen}
+        initial={false}
+        animate={{height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0}}
+        transition={motionConfig.subnav}
+        className="overflow-hidden pb-2"
+      >
+        {flatItems.map((item, i) => (
+          <li key={i}>
+            <Link
+              href={item.href}
+              className="block py-3 pl-4 text-sm text-foreground transition-colors duration-ui-fast hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus"
+              tabIndex={isOpen ? 0 : -1}
+            >
+              {item.label}
+            </Link>
+          </li>
+        ))}
+      </motion.ul>
     </div>
   )
 }
