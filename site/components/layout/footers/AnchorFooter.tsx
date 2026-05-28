@@ -4,7 +4,7 @@
 
 import Link from 'next/link'
 import {MdLocationOn} from 'react-icons/md'
-import {SocialIcons, ActionButtons, OfficeHours, cityLine} from './shared'
+import {SocialIcons, ActionButtons, OfficeHours, cityLine, FooterNavRegion, FooterNavList} from './shared'
 import type {FooterData} from '../Footer'
 
 type Props = {data: FooterData}
@@ -103,28 +103,14 @@ export function AnchorFooter({data}: Props) {
             )}
           </div>
 
-          {/* Col 3: nav links */}
+          {/* Col 3: nav links — see shared.tsx footer-nav contract */}
           {hasNav && (
-            <div className="grid grid-cols-2 items-start gap-8">
-              {col1.length > 0 && (
-                <ul>
-                  {col1.map((link, i) => (
-                    <li key={i} className="py-1.5 text-sm">
-                      <Link href={link.href} className="transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">{link.label}</Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {col2.length > 0 && (
-                <ul>
-                  {col2.map((link, i) => (
-                    <li key={i} className="py-1.5 text-sm">
-                      <Link href={link.href} className="transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">{link.label}</Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+            <FooterNavRegion>
+              <div className="grid grid-cols-2 items-start gap-8">
+                <FooterNavList label="Practice areas" links={col1} />
+                <FooterNavList label="Site navigation" links={col2} />
+              </div>
+            </FooterNavRegion>
           )}
         </div>
 

@@ -1,3 +1,34 @@
+// ─── Footer nav contract (canonical) ─────────────────────────────────────────
+// `footerSettings.column1` and `footerSettings.column2` are the two operator-
+// configurable footer nav arrays. Their semantic roles:
+//
+//   column1 — practice areas list. Populated per-client by SBT Phase 10
+//             (compose_footer_column1_links) from each practiceArea doc's
+//             `title` + slug. Labels can drift from page titles if titles
+//             change after SBT runs — re-run SBT Phase 10 to re-sync, or
+//             edit footerSettings in Studio.
+//
+//   column2 — standard core nav: About / Our Attorneys / Locations / Blog /
+//             Contact. Populated once by SBT Phase 3 (site_setup) from
+//             STANDARD_FOOTER_COLUMN_2 (BE/Site-Build-Tool/config/
+//             content_recipes.py) — the same recipe across every client.
+//
+// 7 footer layouts (operator picks via footerSettings.footerLayout):
+//   nav-having (renders column1 + column2)   minimalist (intentional, no nav)
+//   ─────────────────────────────────────    ──────────────────────────────────
+//   AnchorFooter  — single location           MeridianFooter — logo/address/phone
+//   CrestFooter   — single location           BeaconFooter   — contact form focus
+//   PillarFooter  — single location           LedgerFooter   — action-button focus
+//                                             DistrictsFooter — multi-location grid
+//
+// The nav-having layouts share a footer-nav semantic posture (see
+// FooterNavRegion + FooterNavList below) so a11y + crawl posture is
+// identical regardless of layout — a `<nav aria-label="Footer navigation">`
+// wraps the lists, each `<ul>` has role="list" + aria-label, and the bottom
+// legal links (privacy/disclaimer/cookies) ship in every layout's bottom bar.
+// ──────────────────────────────────────────────────────────────────────────────
+
+import Link from 'next/link'
 import {FaXTwitter} from 'react-icons/fa6'
 import {
   BiLogoFacebookCircle,
@@ -7,6 +38,59 @@ import {
 } from 'react-icons/bi'
 import {ButtonGroup, type CtaItem} from '@/components/ui/ButtonGroup'
 import type {FooterData, OfficeHours} from '../Footer'
+
+// ─── Footer Nav primitives ────────────────────────────────────────────────────
+
+export type FooterLink = {label: string; href: string}
+
+/** Wraps both columns in a single landmark for screen readers and crawler
+ *  semantics. Use once per footer layout that renders nav columns. */
+export function FooterNavRegion({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return (
+    <nav aria-label="Footer navigation" className={className}>
+      {children}
+    </nav>
+  )
+}
+
+/** A single labeled column. `label` ships as `aria-label` on the `<ul>` (and
+ *  is also exposed as `sr-only` text so it appears in the accessibility tree
+ *  even if visual headings are omitted by the layout). */
+export function FooterNavList({
+  label,
+  links,
+  className = '',
+  liClassName = 'py-1.5 text-sm',
+  linkClassName,
+}: {
+  label: string
+  links: FooterLink[]
+  className?: string
+  liClassName?: string
+  linkClassName?: string
+}) {
+  if (links.length === 0) return null
+  const linkCls =
+    linkClassName ??
+    'transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus'
+  return (
+    <ul role="list" aria-label={label} className={className}>
+      {links.map((link, i) => (
+        <li key={i} className={liClassName}>
+          <Link href={link.href} className={linkCls}>
+            {link.label}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  )
+}
 
 // ─── Social Icons ─────────────────────────────────────────────────────────────
 

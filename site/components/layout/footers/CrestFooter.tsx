@@ -6,7 +6,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import {MdLocationOn} from 'react-icons/md'
-import {SocialIcons, ActionButtons, OfficeHours, cityLine} from './shared'
+import {SocialIcons, ActionButtons, OfficeHours, cityLine, FooterNavRegion, FooterNavList} from './shared'
 import type {FooterData} from '../Footer'
 
 type Props = {data: FooterData}
@@ -20,7 +20,9 @@ export function CrestFooter({data}: Props) {
 
   const officePhone = address?.officePhone
   const tollFreePhone = address?.tollFreePhone
-  const navLinks = [...(column1 ?? []), ...(column2 ?? [])].filter((l): l is typeof l & {href: string} => !!l.href)
+  const col1 = (column1 ?? []).filter((l): l is typeof l & {href: string} => !!l.href)
+  const col2 = (column2 ?? []).filter((l): l is typeof l & {href: string} => !!l.href)
+  const hasNav = col1.length > 0 || col2.length > 0
   const officeLocation = locations?.[0]
   const officePageSlug = officeLocation?.pageSlug
   const officeCityName = officeLocation?.city ?? address?.city
@@ -126,24 +128,30 @@ export function CrestFooter({data}: Props) {
           <SocialIcons data={data} className="mt-8 text-foreground-subtle" />
         </div>
 
-        {/* Col 3 — Nav links (split into two sub-columns) */}
-        {navLinks.length > 0 && (
-          <div>
+        {/* Col 3 — Nav columns. Pre-fix this section merged column1+column2
+            into a single array then split in half for display, which
+            destroyed the operator's semantic distinction between
+            practice-area links and core site nav. Now each column renders
+            as its own labeled list, matching AnchorFooter + PillarFooter
+            (canonical contract documented in footers/shared.tsx). */}
+        {hasNav && (
+          <FooterNavRegion>
             <h3 className="text-base font-semibold mb-2 text-foreground-muted">Quick Links</h3>
             <div className="grid grid-cols-[auto_auto] justify-start gap-x-8">
-              {[navLinks.slice(0, Math.ceil(navLinks.length / 2)), navLinks.slice(Math.ceil(navLinks.length / 2))].map((col, ci) => (
-                <ul key={ci}>
-                  {col.map((link, i) => (
-                    <li key={i} className="py-1">
-                      <Link href={link.href} className="text-sm transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              ))}
+              <FooterNavList
+                label="Practice areas"
+                links={col1}
+                liClassName="py-1"
+                linkClassName="text-sm transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
+              />
+              <FooterNavList
+                label="Site navigation"
+                links={col2}
+                liClassName="py-1"
+                linkClassName="text-sm transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
+              />
             </div>
-          </div>
+          </FooterNavRegion>
         )}
       </div>
 
