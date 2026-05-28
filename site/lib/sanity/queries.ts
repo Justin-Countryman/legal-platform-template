@@ -974,6 +974,35 @@ export const BLOG_POSTS_QUERY = groq`
   }
 `
 
+// Related posts — same category as the current post, newest first, excluding
+// the current post. If no category match exists this returns the most recent
+// posts overall. Drives the SSR inter-blog linking module on every blog post
+// page so non-JS crawlers see a discoverable trail between posts and
+// individual posts aren't dead-ends from a crawl perspective.
+export const RELATED_POSTS_QUERY = groq`
+  {
+    "byCategory": *[
+      _type == "blogPost" &&
+      slug.current != $slug &&
+      defined(category._ref) &&
+      category._ref == *[_type == "blogPost" && slug.current == $slug][0].category._ref
+    ] | order(publishedAt desc) [0..3] {
+      "slug": slug.current,
+      h1,
+      metaDescription,
+      publishedAt,
+      "category": category->{title, "slug": slug.current}
+    },
+    "fallback": *[_type == "blogPost" && slug.current != $slug] | order(publishedAt desc) [0..3] {
+      "slug": slug.current,
+      h1,
+      metaDescription,
+      publishedAt,
+      "category": category->{title, "slug": slug.current}
+    }
+  }
+`
+
 // ─── Blog Post Detail Page ────────────────────────────────────────────────────
 export const BLOG_POST_PAGE_QUERY = groq`
   *[_type == "blogPost" && slug.current == $slug][0]{

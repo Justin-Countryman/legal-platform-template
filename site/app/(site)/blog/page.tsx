@@ -17,6 +17,7 @@ import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {BlogIndexClient} from '@/components/sections/BlogIndexClient'
+import {BlogIndexFallback} from '@/components/sections/BlogIndexFallback'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
@@ -70,7 +71,13 @@ export default async function BlogIndexPage() {
       {/* Blog listing */}
       <section className="px-[5%] pt-8 pb-16 md:pt-10 md:pb-24 lg:pb-28">
         <div className="container">
-          <Suspense fallback={null}>
+          {/* BlogIndexClient is gated behind Suspense because it calls
+              useSearchParams() — during SSR the fallback renders, NOT the
+              client component. Pre-fix the fallback was `null`, so SSR HTML
+              had zero post anchors and non-JS crawlers (Screaming Frog
+              default) couldn't discover blog post URLs through /blog at all.
+              The fallback now renders every post as a crawlable <a>. */}
+          <Suspense fallback={<BlogIndexFallback posts={posts ?? []} tokens={tokens ?? null} />}>
             <BlogIndexClient posts={posts ?? []} categories={categories ?? []} tokens={tokens ?? null} />
           </Suspense>
         </div>

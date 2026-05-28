@@ -147,9 +147,17 @@ export const blogCategory = defineType({
   ],
 
   preview: {
-    select: {title: 'h1', subtitle: 'slug.current'},
-    prepare({title, subtitle}) {
-      return {title: title ?? 'Blog Category', subtitle: subtitle ? `/${subtitle}` : ''}
+    // Prefer `title` (the internal Studio label, always populated) over `h1`
+    // (the on-page rendered heading, frequently empty on migrated sites where
+    // the source CMS didn't have a separate H1 field for category archives).
+    // Falls back through `h1` and a generic placeholder so the document list
+    // never shows the literal "Blog Category" string when real data exists.
+    select: {title: 'title', h1: 'h1', subtitle: 'slug.current'},
+    prepare({title, h1, subtitle}) {
+      return {
+        title: title ?? h1 ?? 'Blog Category',
+        subtitle: subtitle ? `/${subtitle}` : '',
+      }
     },
   },
 })

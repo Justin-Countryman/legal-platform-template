@@ -12,6 +12,7 @@ import {
   DESIGN_TOKENS_QUERY,
   GLOBAL_CTA_QUERY,
   NAP_TOKENS_QUERY,
+  RELATED_POSTS_QUERY,
 } from '@/lib/sanity/queries'
 import {resolveTokenString, expandNapTokens, type NapTokens} from '@/lib/tokens'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -21,6 +22,7 @@ import {Button} from '@/components/ui/Button'
 import {ContentSidebarLayout} from '@/components/layout/ContentSidebarLayout'
 import {Sidebar} from '@/components/layout/Sidebar'
 import {GlobalCta} from '@/components/sections/GlobalCta'
+import {RelatedPosts, type RelatedPostsData} from '@/components/sections/RelatedPosts'
 
 // ─── Static params ────────────────────────────────────────────────────────────
 // Blog post slugs are stored as `blog/{name}`; the URL segment is the bare
@@ -144,11 +146,12 @@ export default async function BlogPostPage({params}: Props) {
   const {slug} = await params
   const fullSlug = `blog/${slug}`
 
-  const [post, globalCtaData, rawTokens, designTokens] = await Promise.all([
+  const [post, globalCtaData, rawTokens, designTokens, relatedPosts] = await Promise.all([
     client.fetch(BLOG_POST_PAGE_QUERY, {slug: fullSlug}),
     client.fetch(GLOBAL_CTA_QUERY),
     client.fetch(NAP_TOKENS_QUERY),
     client.fetch(DESIGN_TOKENS_QUERY),
+    client.fetch<RelatedPostsData>(RELATED_POSTS_QUERY, {slug: fullSlug}),
   ])
   const tokens = expandNapTokens(rawTokens)
 
@@ -307,6 +310,9 @@ export default async function BlogPostPage({params}: Props) {
           <PortableTextRenderer value={post.body} napTokens={tokens} />
         )}
       </ContentSidebarLayout>
+
+      {/* ── Related posts (SSR — crawlable inter-blog linking) ──────────── */}
+      <RelatedPosts data={relatedPosts ?? null} tokens={tokens} />
 
       {/* ── Global CTA ───────────────────────────────────────────────────── */}
       {!post.hideCtaForm && globalCtaData && (

@@ -18,6 +18,7 @@ import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {Suspense} from 'react'
 import {BlogIndexClient} from '@/components/sections/BlogIndexClient'
+import {BlogIndexFallback} from '@/components/sections/BlogIndexFallback'
 
 // ─── Static params ────────────────────────────────────────────────────────────
 // Blog category slugs are stored as `blog/category/{name}`; the URL segment
@@ -100,7 +101,18 @@ export default async function BlogCategoryPage({params}: Props) {
       {/* Blog listing — pre-filtered to this category */}
       <section className="px-[5%] pt-8 pb-16 md:pt-10 md:pb-24 lg:pb-28">
         <div className="container">
-          <Suspense fallback={null}>
+          {/* SSR fallback renders every post in this category as a crawlable
+              <a> so non-JS crawlers can discover them — see
+              BlogIndexFallback for the rationale. */}
+          <Suspense
+            fallback={
+              <BlogIndexFallback
+                posts={posts ?? []}
+                tokens={tokens ?? null}
+                initialCategory={fullSlug}
+              />
+            }
+          >
             <BlogIndexClient
               posts={posts ?? []}
               categories={categories ?? []}
