@@ -22,8 +22,11 @@ export function BackToTop() {
         'fixed bottom-8 right-8 z-50 flex h-11 w-11 items-center justify-center',
         // Visual
         'rounded-full bg-background border border-brand-dark text-brand-dark shadow-elevation-md',
-        // Hover / focus
-        'hover:bg-brand-dark hover:text-foreground hover:shadow-elevation-lg hover:scale-110',
+        // Hover / focus — use the brand action color so the button stays
+        // visible against any backdrop (light page sections OR dark footer).
+        // Chevron inherits via currentColor → swaps to text-action-fg on
+        // hover so the icon never disappears into the hover-state fill.
+        'hover:bg-action hover:text-action-fg hover:border-action hover:shadow-elevation-lg hover:scale-110',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus',
         // Transition
         'transition-[opacity,transform,box-shadow] duration-ui-fast ease-smooth',
