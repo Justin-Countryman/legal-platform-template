@@ -6,7 +6,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import {MdLocationOn} from 'react-icons/md'
-import {SocialIcons, ActionButtons, OfficeHours, cityLine} from './shared'
+import {SocialIcons, ActionButtons, OfficeHours, cityLine, officeLocationLabel} from './shared'
 import type {FooterData} from '../Footer'
 
 type Props = {data: FooterData}
@@ -76,7 +76,7 @@ export function MeridianFooter({data}: Props) {
                 className="mt-4 inline-flex items-center gap-1 text-sm text-foreground underline underline-offset-2 transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
               >
                 <MdLocationOn className="shrink-0" />
-                {officeCityName ? `${officeCityName} Office` : 'Our Office'}
+                {officeLocationLabel(officeCityName)}
               </Link>
             )}
           </div>

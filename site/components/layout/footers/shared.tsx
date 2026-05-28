@@ -92,6 +92,24 @@ export function FooterNavList({
   )
 }
 
+// ─── Office Details link label ────────────────────────────────────────────────
+//
+// Every footer layout renders an "Office Location" link next to its address
+// block, pointing at the office's locationPage when one exists. The label is
+// "{City} Office Location" (e.g. "Blaine Office Location") or "Office Location"
+// when no city is known. The label was previously "{City} Office" / "Our Office"
+// — normalized to include "Location" so the destination (a dedicated location
+// page, not a generic contact section) is unambiguous to visitors.
+//
+// This link replaces the previous platform-wide "Locations" main-nav item +
+// /locations index route — visitors reach individual locationPages via the
+// footer instead. See content_recipes.STANDARD_NAV_ITEMS for the recipe note.
+
+export function officeLocationLabel(city?: string | null): string {
+  const c = city?.trim()
+  return c ? `${c} Office Location` : 'Office Location'
+}
+
 // ─── Social Icons ─────────────────────────────────────────────────────────────
 
 type SocialData = Pick<

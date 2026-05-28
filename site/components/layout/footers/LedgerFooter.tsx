@@ -6,7 +6,7 @@
 // Inspired by Andy Weinstein — elevated with more generous spacing and small-caps treatment.
 
 import Link from 'next/link'
-import {SocialIcons, ActionButtons, OfficeHours, cityLine} from './shared'
+import {SocialIcons, ActionButtons, OfficeHours, cityLine, officeLocationLabel} from './shared'
 import type {FooterData, FooterLocation} from '../Footer'
 
 type Props = {data: FooterData}
@@ -107,7 +107,7 @@ export function LedgerFooter({data}: Props) {
                   href={`/${loc.pageSlug}/`}
                   className="mt-4 inline-block text-xs font-semibold underline underline-offset-2 text-foreground-muted transition-colors duration-ui-fast hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
                 >
-                  Office Details
+                  {officeLocationLabel(loc.city)}
                 </Link>
               )}
             </div>

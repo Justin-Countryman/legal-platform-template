@@ -7,7 +7,7 @@
 
 import Link from 'next/link'
 import {Button} from '@/components/ui/Button'
-import {SocialIcons, ActionButtons, OfficeHours, cityLine} from './shared'
+import {SocialIcons, ActionButtons, OfficeHours, cityLine, officeLocationLabel} from './shared'
 import type {FooterData, FooterLocation} from '../Footer'
 
 type Props = {data: FooterData}
@@ -115,7 +115,7 @@ export function DistrictsFooter({data}: Props) {
                   href={`/${loc.pageSlug}/`}
                   className="mt-5 self-start"
                 >
-                  View {loc.city ? `${loc.city} ` : ''}Office
+                  {officeLocationLabel(loc.city)}
                 </Button>
               )}
             </li>
