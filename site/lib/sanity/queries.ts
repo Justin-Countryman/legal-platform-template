@@ -537,6 +537,7 @@ export const NAP_TOKENS_QUERY = groq`
     "profileCtaUrl": *[_type == "designSettings"][0].profileCtaUrl,
     "primaryPhone": primaryLocation->officePhone,
     "primaryTollFree": primaryLocation->tollFreePhone,
+    "primaryLocationId": primaryLocation->_id,
     "locations": *[_type == "location" && locationStatus == "Active"]{
       "_id": _id,
       "phone": officePhone,
@@ -1225,6 +1226,7 @@ export const LOCATION_PAGE_QUERY = groq`
     "body": body ${BLOCK_CONTENT_FRAGMENT},
     mapEmbed,
     "locationData": locationRef->{
+      "_id": _id,
       city,
       state,
       address1,

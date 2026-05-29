@@ -46,11 +46,53 @@ export function resolveTokenString(
   })
 }
 
+// Computes the per-field display values for one location. Shared by the
+// location-keyed tokens (location.{_id}.field) and the current-office aliases
+// (office.field), so both stay identical.
+function computeOfficeFields(loc: Record<string, unknown>): Record<string, string> {
+  const out: Record<string, string> = {}
+  const phone = loc.phone as string | undefined
+  const fax = loc.fax as string | undefined
+  const address1 = loc.address1 as string | undefined
+  const address2 = loc.address2 as string | undefined
+  const address3 = loc.address3 as string | undefined
+  const city = loc.city as string | undefined
+  const state = loc.state as string | undefined
+  const zip = loc.zip as string | undefined
+  if (phone) out.phone = formatPhone(phone)
+  if (fax)   out.fax   = formatPhone(fax)
+  if (address1) out.address1 = address1
+  if (address2) out.address2 = address2
+  if (address3) out.address3 = address3
+  if (city)  out.city  = city
+  if (state) out.state = state
+  if (zip)   out.zip   = zip
+  const street = [address1, address2, address3].filter(Boolean).join(', ')
+  const cityLine = [city, [state, zip].filter(Boolean).join(' ')].filter(Boolean).join(', ')
+  const address = [street, cityLine].filter(Boolean).join('\n')
+  if (address) out.address = address
+  // Appointment policy — only surface the restriction; "Walk-Ins Welcome"
+  // (default) renders nothing (mirrors appointmentNoteLabel in footers/shared).
+  if (loc.appointmentRequired === 'Appointment Required') out.appointment = 'By appointment only'
+  // Emergency — label + number, both gated on the 24/7 toggle so a template
+  // line collapses to nothing when off.
+  if (loc.emergency24_7) {
+    out.emergencyLabel = '24/7 Emergency: '
+    const ep = formatPhone(loc.emergencyPhone as string | undefined)
+    if (ep) out.emergency = ep
+  }
+  return out
+}
+
 /**
  * Expand raw NAP_TOKENS_QUERY result into a flat NapTokens map.
- * Adds per-location keys: location.{_id}.phone, location.{_id}.address
+ * Adds per-location keys (location.{_id}.field) for every active location, plus
+ * current-office aliases (office.field) resolved to `currentLocationId` when
+ * given, otherwise the firm's primary location. The office.* aliases let one
+ * template body work on any location page (and default to the primary office
+ * elsewhere) without baking a specific location id.
  */
-export function expandNapTokens(raw: unknown): NapTokens {
+export function expandNapTokens(raw: unknown, currentLocationId?: string | null): NapTokens {
   const r = raw as Record<string, unknown> | null | undefined
   const tokens: NapTokens = {
     firmName:       (r?.firmName       as string | null) ?? null,
@@ -61,43 +103,13 @@ export function expandNapTokens(raw: unknown): NapTokens {
     profileCtaLabel: (r?.profileCtaLabel as string | null) ?? null,
     profileCtaUrl:   (r?.profileCtaUrl   as string | null) ?? null,
   }
+  const activeId = currentLocationId ?? (r?.primaryLocationId as string | undefined)
   for (const loc of (r?.locations as Array<Record<string, unknown>>) ?? []) {
     const id = loc._id as string
-    const phone = loc.phone as string | undefined
-    const fax = loc.fax as string | undefined
-    const address1 = loc.address1 as string | undefined
-    const address2 = loc.address2 as string | undefined
-    const address3 = loc.address3 as string | undefined
-    const city = loc.city as string | undefined
-    const state = loc.state as string | undefined
-    const zip = loc.zip as string | undefined
-    if (phone) tokens[`location.${id}.phone`] = formatPhone(phone)
-    if (fax)   tokens[`location.${id}.fax`]   = formatPhone(fax)
-    if (address1) tokens[`location.${id}.address1`] = address1
-    if (address2) tokens[`location.${id}.address2`] = address2
-    if (address3) tokens[`location.${id}.address3`] = address3
-    if (city)     tokens[`location.${id}.city`]     = city
-    if (state)    tokens[`location.${id}.state`]    = state
-    if (zip)      tokens[`location.${id}.zip`]      = zip
-    const street = [address1, address2, address3].filter(Boolean).join(', ')
-    const cityLine = [city, [state, zip].filter(Boolean).join(' ')].filter(Boolean).join(', ')
-    const address = [street, cityLine].filter(Boolean).join('\n')
-    if (address) tokens[`location.${id}.address`] = address
-    // Appointment policy — only surface the restriction. "Walk-Ins Welcome" is
-    // the default state, so it renders nothing (mirrors appointmentNoteLabel in
-    // footers/shared.tsx).
-    if (loc.appointmentRequired === 'Appointment Required') {
-      tokens[`location.${id}.appointment`] = 'By appointment only'
-    }
-    // Emergency — two tokens, both gated on the 24/7 toggle so a standard
-    // template line `{{…emergencyLabel}}{{…emergency}}` shows when enabled and
-    // collapses to nothing when not:
-    //   .emergencyLabel → "24/7 Emergency: " (label + separator)
-    //   .emergency      → the formatted emergency phone number
-    if (loc.emergency24_7) {
-      tokens[`location.${id}.emergencyLabel`] = '24/7 Emergency: '
-      const ep = formatPhone(loc.emergencyPhone as string | undefined)
-      if (ep) tokens[`location.${id}.emergency`] = ep
+    const fields = computeOfficeFields(loc)
+    for (const [k, v] of Object.entries(fields)) {
+      tokens[`location.${id}.${k}`] = v
+      if (id === activeId) tokens[`office.${k}`] = v
     }
   }
   return tokens

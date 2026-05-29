@@ -14,6 +14,22 @@ const STATIC_LABELS: Record<string, string> = {
 function tokenKeyToLabel(key: string | undefined): string {
   if (!key) return 'Token'
   if (STATIC_LABELS[key]) return STATIC_LABELS[key]
+  if (key.startsWith('office.')) {
+    const field = key.split('.')[1]
+    if (field === 'phone')          return 'Office Phone'
+    if (field === 'fax')            return 'Office Fax'
+    if (field === 'address')        return 'Office Address (Full)'
+    if (field === 'address1')       return 'Office Address Line 1'
+    if (field === 'address2')       return 'Office Address Line 2'
+    if (field === 'address3')       return 'Office Address Line 3'
+    if (field === 'city')           return 'Office City'
+    if (field === 'state')          return 'Office State'
+    if (field === 'zip')            return 'Office ZIP'
+    if (field === 'appointment')    return 'Office Appointment Policy'
+    if (field === 'emergencyLabel') return 'Office 24/7 Emergency Label'
+    if (field === 'emergency')      return 'Office 24/7 Emergency Phone'
+    return 'Office'
+  }
   if (key.startsWith('location.')) {
     const parts = key.split('.')
     const field = parts[2]

@@ -205,12 +205,14 @@ export default async function CatchAllPage({params}: Props) {
     client.fetch(NAP_TOKENS_QUERY),
     client.fetch(GLOBAL_CTA_QUERY),
   ])
-  const tokens = expandNapTokens(rawTokens)
   const page = practiceArea ?? locationPage ?? contentPage
 
   if (!page) notFound()
 
   const isLocation = page._type === 'locationPage'
+  // On location pages, office.* shortcodes resolve to THIS page's location;
+  // elsewhere they fall back to the firm's primary office.
+  const tokens = expandNapTokens(rawTokens, isLocation ? page.locationData?._id : undefined)
   const hasSidebar = page.sidebar && page.sidebar.filter((c: unknown) => (c as {_componentType?: unknown})._componentType).length > 0
   const hasFaqs = page.faqItems && page.faqItems.length > 0
   const breadcrumbs = buildBreadcrumbs(page)

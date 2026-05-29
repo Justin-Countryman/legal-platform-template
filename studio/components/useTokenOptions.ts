@@ -13,6 +13,18 @@ export const STATIC_TOKENS: TokenOption[] = [
   {group: 'Firm Identity',   label: 'Firm Name — Short',       value: 'firmNameShort',    insertValue: '{{firmNameShort}}'},
   {group: 'Primary Contact', label: 'Primary Phone',           value: 'primaryPhone',     insertValue: '{{primaryPhone}}'},
   {group: 'Primary Contact', label: 'Primary Toll-Free Phone', value: 'primaryTollFree',  insertValue: '{{primaryTollFree}}'},
+  // Current Office — resolves to the page's own location on location pages, and
+  // to the firm's primary office everywhere else. Use these to build one
+  // location-page template that works for every office.
+  {group: 'Current Office', label: 'Office Address (Full)',      value: 'office.address',        insertValue: '{{office.address}}'},
+  {group: 'Current Office', label: 'Office Address Line 1',      value: 'office.address1',       insertValue: '{{office.address1}}'},
+  {group: 'Current Office', label: 'Office City',                value: 'office.city',           insertValue: '{{office.city}}'},
+  {group: 'Current Office', label: 'Office State',               value: 'office.state',          insertValue: '{{office.state}}'},
+  {group: 'Current Office', label: 'Office ZIP',                 value: 'office.zip',            insertValue: '{{office.zip}}'},
+  {group: 'Current Office', label: 'Office Phone',               value: 'office.phone',          insertValue: '{{office.phone}}'},
+  {group: 'Current Office', label: 'Office Appointment Policy',  value: 'office.appointment',    insertValue: '{{office.appointment}}'},
+  {group: 'Current Office', label: 'Office 24/7 Emergency Label', value: 'office.emergencyLabel', insertValue: '{{office.emergencyLabel}}'},
+  {group: 'Current Office', label: 'Office 24/7 Emergency Phone', value: 'office.emergency',      insertValue: '{{office.emergency}}'},
 ]
 
 export function useTokenOptions() {
