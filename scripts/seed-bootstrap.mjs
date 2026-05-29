@@ -152,6 +152,7 @@ const sampleSiteSettings = {
   timezone: 'America/Chicago',
   languageCode: 'en',
   privacyPolicyUrl: '/privacy-policy/',
+  disclaimerUrl: '/disclaimer/',
 }
 
 const sampleDesignSettings = {
