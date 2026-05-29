@@ -74,7 +74,8 @@ export const siteSettings = defineType({
       title: 'Legal Disclaimer URL',
       type: 'string',
       components: {input: PageLinkInput},
-      description: 'e.g. /legal-disclaimer/',
+      description: 'e.g. /disclaimer/',
+      initialValue: '/disclaimer/',
     },
     {
       name: 'cookiesUrl',
