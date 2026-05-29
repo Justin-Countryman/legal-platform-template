@@ -5,7 +5,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import {MdLocationOn} from 'react-icons/md'
-import {SocialIcons, ActionButtons, OfficeHours, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel} from './shared'
+import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel} from './shared'
+import {formatPhone} from '@/lib/tokens'
 import type {FooterData} from '../Footer'
 
 type Props = {data: FooterData}
@@ -76,6 +77,7 @@ export function AnchorFooter({data}: Props) {
                     {officeLocationLabel(officeCityName)}
                   </Link>
                 )}
+                <AppointmentNote appointmentRequired={address?.appointmentRequired} className="mt-2 text-sm" />
               </div>
             )}
 
@@ -90,23 +92,29 @@ export function AnchorFooter({data}: Props) {
                 <h3 className="text-base font-semibold mb-2 text-foreground-muted">Contact</h3>
                 {officePhone && (
                   <a href={`tel:${officePhone.replace(/\D/g, '')}`} className="block text-sm transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
-                    {officePhone}
+                    {formatPhone(officePhone)}
                   </a>
                 )}
                 {tollFreePhone && (
                   <a href={`tel:${tollFreePhone.replace(/\D/g, '')}`} className="block text-sm transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
-                    {tollFreePhone}
+                    {formatPhone(tollFreePhone)}
                   </a>
                 )}
+                <EmergencyContact
+                  emergency24_7={address?.emergency24_7}
+                  emergencyPhone={address?.emergencyPhone}
+                  className="mt-3"
+                  labelClass="text-sm font-semibold text-foreground-muted"
+                  phoneClass="text-sm"
+                />
               </div>
             )}
 
-            {(address?.hours || address?.emergency24_7) && (
+            {address?.hours && (
               <div className="mt-8">
                 <h3 className="text-base font-semibold mb-2 text-foreground-muted">Office Hours</h3>
                 <OfficeHours
                   hours={address.hours}
-                  emergency24_7={address.emergency24_7}
                   rowClass="text-sm text-foreground-muted"
                   closedRowClass="text-sm text-foreground-subtle"
                 />

@@ -33,6 +33,8 @@ export type FooterLocation = {
   pageSlug?: string | null
   hours?: OfficeHours | null
   emergency24_7?: boolean | null
+  emergencyPhone?: string | null
+  appointmentRequired?: string | null
 }
 
 export type FooterData = {
@@ -49,6 +51,8 @@ export type FooterData = {
     tollFreePhone?: string | null
     hours?: OfficeHours | null
     emergency24_7?: boolean | null
+    emergencyPhone?: string | null
+    appointmentRequired?: string | null
   } | null
   ctaText?: string | null
   ctaUrl?: string | null

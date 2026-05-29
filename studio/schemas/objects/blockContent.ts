@@ -77,6 +77,9 @@ export const blockContent = defineType({
       },
     }),
     defineArrayMember({
+      type: 'officeHours',
+    }),
+    defineArrayMember({
       type: 'image',
       options: {hotspot: true},
       fields: [

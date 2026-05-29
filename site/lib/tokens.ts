@@ -1,5 +1,21 @@
 // ─── NAP Token Resolution ─────────────────────────────────────────────────────
 
+/**
+ * Format a phone number for display as `xxx-xxx-xxxx` (US).
+ * Accepts any stored shape — E.164 (`+17632805100`), `(763) 280-5100`,
+ * `7632805100` — strips a leading US country code, and returns the canonical
+ * dashed form. Falls back to the trimmed original if it isn't a 10-digit US
+ * number (so extensions / international numbers pass through untouched).
+ * Idempotent: formatPhone(formatPhone(x)) === formatPhone(x).
+ */
+export function formatPhone(raw: string | null | undefined): string {
+  if (!raw) return ''
+  const digits = raw.replace(/\D/g, '')
+  const local = digits.length === 11 && digits.startsWith('1') ? digits.slice(1) : digits
+  if (local.length !== 10) return raw.trim()
+  return `${local.slice(0, 3)}-${local.slice(3, 6)}-${local.slice(6)}`
+}
+
 export type NapTokens = {
   firmName?: string | null
   firmNameShort?: string | null
@@ -21,9 +37,12 @@ export function resolveTokenString(
 ): string {
   if (!text) return ''
   if (!tokens) return text
+  // Empty/unknown tokens resolve to '' (not the literal {{key}}) so unset fields
+  // — e.g. {{primaryTollFree}} for a firm with no toll-free — never leak the raw
+  // shortcode to visitors.
   return text.replace(/\{\{([\w.-]+)\}\}/g, (_, key: string) => {
     const value = tokens[key]
-    return value ?? `{{${key}}}`
+    return value ?? ''
   })
 }
 
@@ -36,26 +55,50 @@ export function expandNapTokens(raw: unknown): NapTokens {
   const tokens: NapTokens = {
     firmName:       (r?.firmName       as string | null) ?? null,
     firmNameShort:  (r?.firmNameShort  as string | null) ?? null,
-    primaryPhone:   (r?.primaryPhone   as string | null) ?? null,
-    primaryTollFree: (r?.primaryTollFree as string | null) ?? null,
+    primaryPhone:   formatPhone(r?.primaryPhone   as string | null) || null,
+    primaryTollFree: formatPhone(r?.primaryTollFree as string | null) || null,
     profileLayout:   (r?.profileLayout   as string | null) ?? null,
     profileCtaLabel: (r?.profileCtaLabel as string | null) ?? null,
     profileCtaUrl:   (r?.profileCtaUrl   as string | null) ?? null,
   }
-  for (const loc of (r?.locations as Array<Record<string, string | undefined>>) ?? []) {
-    const id = loc._id
-    if (loc.phone) tokens[`location.${id}.phone`] = loc.phone
-    if (loc.fax)   tokens[`location.${id}.fax`]   = loc.fax
-    if (loc.address1) tokens[`location.${id}.address1`] = loc.address1
-    if (loc.address2) tokens[`location.${id}.address2`] = loc.address2
-    if (loc.address3) tokens[`location.${id}.address3`] = loc.address3
-    if (loc.city)     tokens[`location.${id}.city`]     = loc.city
-    if (loc.state)    tokens[`location.${id}.state`]    = loc.state
-    if (loc.zip)      tokens[`location.${id}.zip`]      = loc.zip
-    const street = [loc.address1, loc.address2, loc.address3].filter(Boolean).join(', ')
-    const cityLine = [loc.city, [loc.state, loc.zip].filter(Boolean).join(' ')].filter(Boolean).join(', ')
+  for (const loc of (r?.locations as Array<Record<string, unknown>>) ?? []) {
+    const id = loc._id as string
+    const phone = loc.phone as string | undefined
+    const fax = loc.fax as string | undefined
+    const address1 = loc.address1 as string | undefined
+    const address2 = loc.address2 as string | undefined
+    const address3 = loc.address3 as string | undefined
+    const city = loc.city as string | undefined
+    const state = loc.state as string | undefined
+    const zip = loc.zip as string | undefined
+    if (phone) tokens[`location.${id}.phone`] = formatPhone(phone)
+    if (fax)   tokens[`location.${id}.fax`]   = formatPhone(fax)
+    if (address1) tokens[`location.${id}.address1`] = address1
+    if (address2) tokens[`location.${id}.address2`] = address2
+    if (address3) tokens[`location.${id}.address3`] = address3
+    if (city)     tokens[`location.${id}.city`]     = city
+    if (state)    tokens[`location.${id}.state`]    = state
+    if (zip)      tokens[`location.${id}.zip`]      = zip
+    const street = [address1, address2, address3].filter(Boolean).join(', ')
+    const cityLine = [city, [state, zip].filter(Boolean).join(' ')].filter(Boolean).join(', ')
     const address = [street, cityLine].filter(Boolean).join('\n')
     if (address) tokens[`location.${id}.address`] = address
+    // Appointment policy — only surface the restriction. "Walk-Ins Welcome" is
+    // the default state, so it renders nothing (mirrors appointmentNoteLabel in
+    // footers/shared.tsx).
+    if (loc.appointmentRequired === 'Appointment Required') {
+      tokens[`location.${id}.appointment`] = 'By appointment only'
+    }
+    // Emergency — two tokens, both gated on the 24/7 toggle so a standard
+    // template line `{{…emergencyLabel}}{{…emergency}}` shows when enabled and
+    // collapses to nothing when not:
+    //   .emergencyLabel → "24/7 Emergency: " (label + separator)
+    //   .emergency      → the formatted emergency phone number
+    if (loc.emergency24_7) {
+      tokens[`location.${id}.emergencyLabel`] = '24/7 Emergency: '
+      const ep = formatPhone(loc.emergencyPhone as string | undefined)
+      if (ep) tokens[`location.${id}.emergency`] = ep
+    }
   }
   return tokens
 }
@@ -69,7 +112,8 @@ export function resolveToken(
   tokens: NapTokens | null | undefined,
 ): string {
   if (!tokenKey) return ''
-  if (!tokens) return `{{${tokenKey}}}`
+  if (!tokens) return ''
   const value = tokens[tokenKey]
-  return value ?? `{{${tokenKey}}}`
+  // Empty/unknown tokens resolve to '' so unset fields never leak {{key}}.
+  return value ?? ''
 }

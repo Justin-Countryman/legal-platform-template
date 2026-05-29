@@ -21,6 +21,7 @@ import {FaqAccordion} from '@/components/ui/FaqAccordion'
 import {Sidebar} from '@/components/layout/Sidebar'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {PageSections} from '@/components/sections/PageSections'
+import {OfficeHoursProvider} from '@/components/location/OfficeHoursContext'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -48,12 +49,17 @@ type LocationHours = Record<string, string | null | undefined>
 type LocationData = {
   address1?: string | null
   address2?: string | null
+  address3?: string | null
   city?: string | null
   state?: string | null
   zip?: string | null
   officePhone?: string | null
+  officeFax?: string | null
   tollFreePhone?: string | null
   hours?: LocationHours | null
+  emergency24_7?: boolean | null
+  emergencyPhone?: string | null
+  appointmentRequired?: string | null
   gbpCidUrl?: string | null
 }
 
@@ -186,7 +192,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-const DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN ?? 'example.com'
+const DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN ?? 'kmwasche.com'
 
 export default async function CatchAllPage({params}: Props) {
   const {slug} = await params
@@ -209,7 +215,7 @@ export default async function CatchAllPage({params}: Props) {
   const hasFaqs = page.faqItems && page.faqItems.length > 0
   const breadcrumbs = buildBreadcrumbs(page)
 
-  return (
+  const content = (
     <>
       {/* LegalService schema */}
       <script
@@ -299,5 +305,14 @@ export default async function CatchAllPage({params}: Props) {
         <GlobalCta data={page.ctaOverride ? {...globalCtaData, ...page.ctaOverride} : globalCtaData} napTokens={tokens} />
       )}
     </>
+  )
+
+  // Location pages override the layout's default (primary-location) hours with
+  // this page's own location, so an Office Hours block in the body shows the
+  // right office.
+  return isLocation && page.locationData?.hours ? (
+    <OfficeHoursProvider value={page.locationData.hours}>{content}</OfficeHoursProvider>
+  ) : (
+    content
   )
 }

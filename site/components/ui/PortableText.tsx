@@ -2,12 +2,27 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {PortableText, type PortableTextComponents} from 'next-sanity'
 import {resolveToken, type NapTokens} from '@/lib/tokens'
+import {OfficeHoursBlock} from '@/components/location/OfficeHoursBlock'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Props = {
   value: unknown[]
   napTokens?: NapTokens | null
+}
+
+// A `normal` paragraph whose entire content resolves to empty — e.g. a template
+// line of only `{{…emergencyLabel}}{{…emergency}}` for a firm with no 24/7
+// service — should render nothing rather than leave a blank gap. Returns true
+// when every child is an empty/whitespace span or a token that resolves empty.
+function paragraphResolvesEmpty(value: unknown, napTokens: NapTokens | null | undefined): boolean {
+  const children = (value as {children?: Array<Record<string, unknown>>})?.children
+  if (!Array.isArray(children) || children.length === 0) return true
+  return children.every((c) => {
+    if (c._type === 'span') return !String(c.text ?? '').trim()
+    if (c._type === 'contentToken') return !resolveToken(c.tokenKey as string, napTokens).trim()
+    return false // images / other inline objects count as content
+  })
 }
 
 // ─── Component Map ────────────────────────────────────────────────────────────
@@ -18,6 +33,7 @@ function makeComponents(napTokens: NapTokens | null | undefined): PortableTextCo
       contentToken: ({value}) => {
         return <>{resolveToken(value?.tokenKey, napTokens)}</>
       },
+      officeHours: ({value}) => <OfficeHoursBlock title={value?.title} />,
       image: ({value}) => {
         const src = value?.src ?? value?.asset?.url
         if (!src) return null
@@ -82,7 +98,8 @@ function makeComponents(napTokens: NapTokens | null | undefined): PortableTextCo
     },
 
     block: {
-      normal: ({children}) => <p className="mb-4 last:mb-0">{children}</p>,
+      normal: ({children, value}) =>
+        paragraphResolvesEmpty(value, napTokens) ? null : <p className="mb-4 last:mb-0">{children}</p>,
       h2: ({children}) => (
         <h2 className="mb-4 mt-8 font-heading text-3xl font-bold text-foreground first:mt-0">{children}</h2>
       ),

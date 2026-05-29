@@ -37,6 +37,7 @@ import {faqItem} from './documents/faqItem'
 // ─── Object Types ─────────────────────────────────────────────────────────────
 import {blockContent} from './objects/blockContent'
 import {contentToken} from './objects/contentToken'
+import {officeHours} from './objects/officeHours'
 import {ctaButton} from './objects/ctaButton'
 import {internalHero} from './objects/internalHero'
 import {ctaFormSection} from './objects/ctaFormSection'
@@ -114,6 +115,7 @@ export const schemaTypes = [
   // Objects
   blockContent,
   contentToken,
+  officeHours,
   ctaButton,
   internalHero,
   ctaFormSection,

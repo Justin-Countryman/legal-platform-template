@@ -36,7 +36,9 @@ import {
   BiLogoLinkedinSquare,
   BiLogoYoutube,
 } from 'react-icons/bi'
+import {MdCheck} from 'react-icons/md'
 import {ButtonGroup, type CtaItem} from '@/components/ui/ButtonGroup'
+import {formatPhone} from '@/lib/tokens'
 import type {FooterData, OfficeHours} from '../Footer'
 
 // ─── Footer Nav primitives ────────────────────────────────────────────────────
@@ -252,29 +254,92 @@ function buildHoursRows(hours: OfficeHours): HoursRow[] {
   return rows
 }
 
+// Maps the location record's `appointmentRequired` enum to a short visitor-facing
+// note. Returns null for unset/unknown values so callers can render conditionally.
+// Placement note: this is an OFFICE attribute (shown by the office/address block),
+// not a contact or hours detail.
+export function appointmentNoteLabel(appointmentRequired?: string | null): string | null {
+  // Only surface the restriction. "Walk-Ins Welcome" is the default state and
+  // renders nothing — consistent with the {{…appointment}} shortcode.
+  return appointmentRequired === 'Appointment Required' ? 'By appointment only' : null
+}
+
+// Appointment policy — an OFFICE attribute. Renders a checkmark icon + short
+// note so it aligns visually with the icon'd office-location link it sits under.
+export function AppointmentNote({
+  appointmentRequired,
+  className = '',
+  iconClass = 'shrink-0',
+}: {
+  appointmentRequired?: string | null
+  className?: string
+  iconClass?: string
+}) {
+  const label = appointmentNoteLabel(appointmentRequired)
+  if (!label) return null
+  return (
+    <p className={['flex w-fit items-center gap-1', className].join(' ').trim()}>
+      <MdCheck className={iconClass} aria-hidden="true" />
+      {label}
+    </p>
+  )
+}
+
+// 24/7 emergency contact — belongs in the CONTACT block, beneath the main phone.
+// Renders a "24/7 Emergency" label with the emergency number under it; falls back
+// to a plain availability line when no dedicated number is set.
+export function EmergencyContact({
+  emergency24_7,
+  emergencyPhone,
+  className = '',
+  labelClass = 'text-sm font-semibold',
+  phoneClass = 'text-sm',
+}: {
+  emergency24_7?: boolean | null
+  emergencyPhone?: string | null
+  className?: string
+  labelClass?: string
+  phoneClass?: string
+}) {
+  if (!emergency24_7) return null
+  return (
+    <div className={className}>
+      <p className={labelClass}>24/7 Emergency</p>
+      {emergencyPhone ? (
+        <a
+          href={`tel:${emergencyPhone.replace(/\D/g, '')}`}
+          className={`block ${phoneClass} underline transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus`}
+        >
+          {formatPhone(emergencyPhone)}
+        </a>
+      ) : (
+        <p className={phoneClass}>Emergency line available</p>
+      )}
+    </div>
+  )
+}
+
 export function OfficeHours({
   hours,
-  emergency24_7,
   className = '',
   rowClass = 'text-sm',
   closedRowClass,
   closedClass = 'opacity-40',
 }: {
   hours?: OfficeHours | null
-  emergency24_7?: boolean | null
   className?: string
   rowClass?: string
   /** When provided, replaces rowClass entirely for closed rows — prevents opacity compounding on dark backgrounds. */
   closedRowClass?: string
   closedClass?: string
 }) {
-  if (!hours && !emergency24_7) return null
+  if (!hours) return null
 
-  const rows = hours ? buildHoursRows(hours) : []
+  const rows = buildHoursRows(hours)
   // Check if any day is actually configured
   const hasData = rows.some((r) => !r.closed || r.time === 'Closed')
 
-  if (!hasData && !emergency24_7) return null
+  if (!hasData) return null
 
   return (
     <div className={className}>
@@ -294,11 +359,6 @@ export function OfficeHours({
           </div>
         ))}
       </dl>
-      {emergency24_7 && (
-        <p className={['mt-2 font-semibold', rowClass].join(' ')}>
-          24/7 Emergency Line Available
-        </p>
-      )}
     </div>
   )
 }

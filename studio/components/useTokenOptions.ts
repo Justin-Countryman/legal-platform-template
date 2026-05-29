@@ -22,8 +22,8 @@ export function useTokenOptions() {
 
   useEffect(() => {
     client
-      .fetch<{_id: string; title: string; officeFax?: string; address1?: string; address2?: string; address3?: string; city?: string; state?: string; zip?: string}[]>(
-        `*[_type == "location" && locationStatus == "Active"] | order(isPrimary desc, title asc) {_id, title, officeFax, address1, address2, address3, city, state, zip}`
+      .fetch<{_id: string; title: string; officeFax?: string; address1?: string; address2?: string; address3?: string; city?: string; state?: string; zip?: string; appointmentRequired?: string; emergency24_7?: boolean}[]>(
+        `*[_type == "location" && locationStatus == "Active"] | order(isPrimary desc, title asc) {_id, title, officeFax, address1, address2, address3, city, state, zip, appointmentRequired, emergency24_7}`
       )
       .then((locations) => {
         const locationTokens: TokenOption[] = locations.flatMap((loc) => [
@@ -80,6 +80,23 @@ export function useTokenOptions() {
             label: 'ZIP Code',
             value: `location.${loc._id}.zip`,
             insertValue: `{{location.${loc._id}.zip}}`,
+          }] : []),
+          ...(loc.appointmentRequired ? [{
+            group: loc.title,
+            label: 'Appointment Policy',
+            value: `location.${loc._id}.appointment`,
+            insertValue: `{{location.${loc._id}.appointment}}`,
+          }] : []),
+          ...(loc.emergency24_7 ? [{
+            group: loc.title,
+            label: '24/7 Emergency Label',
+            value: `location.${loc._id}.emergencyLabel`,
+            insertValue: `{{location.${loc._id}.emergencyLabel}}`,
+          }, {
+            group: loc.title,
+            label: '24/7 Emergency Phone',
+            value: `location.${loc._id}.emergency`,
+            insertValue: `{{location.${loc._id}.emergency}}`,
           }] : []),
         ])
         setOptions([...STATIC_TOKENS, ...locationTokens])

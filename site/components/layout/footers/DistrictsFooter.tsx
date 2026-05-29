@@ -7,7 +7,8 @@
 
 import Link from 'next/link'
 import {Button} from '@/components/ui/Button'
-import {SocialIcons, ActionButtons, OfficeHours, cityLine, officeLocationLabel} from './shared'
+import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, officeLocationLabel} from './shared'
+import {formatPhone} from '@/lib/tokens'
 import type {FooterData, FooterLocation} from '../Footer'
 
 type Props = {data: FooterData}
@@ -30,6 +31,10 @@ export function DistrictsFooter({data}: Props) {
         zip: address.zip,
         officePhone: address.officePhone,
         tollFreePhone: address.tollFreePhone,
+        hours: address.hours,
+        emergency24_7: address.emergency24_7,
+        emergencyPhone: address.emergencyPhone,
+        appointmentRequired: address.appointmentRequired,
         pageSlug: null,
       }
     : null
@@ -80,13 +85,14 @@ export function DistrictsFooter({data}: Props) {
                   <p>{cityLine(loc.city, loc.state, loc.zip)}</p>
                 )}
               </address>
+              <AppointmentNote appointmentRequired={loc.appointmentRequired} className="mt-2 text-sm text-foreground-muted" />
 
               {loc.officePhone && (
                 <a
                   href={`tel:${loc.officePhone.replace(/\D/g, '')}`}
                   className="mt-3 text-sm text-foreground transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
                 >
-                  {loc.officePhone}
+                  {formatPhone(loc.officePhone)}
                 </a>
               )}
               {loc.tollFreePhone && (
@@ -94,14 +100,20 @@ export function DistrictsFooter({data}: Props) {
                   href={`tel:${loc.tollFreePhone.replace(/\D/g, '')}`}
                   className="mt-1 text-sm text-foreground-subtle transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
                 >
-                  {loc.tollFreePhone}
+                  {formatPhone(loc.tollFreePhone)}
                 </a>
               )}
+              <EmergencyContact
+                emergency24_7={loc.emergency24_7}
+                emergencyPhone={loc.emergencyPhone}
+                className="mt-3"
+                labelClass="text-sm font-semibold text-foreground-muted"
+                phoneClass="text-sm text-foreground"
+              />
 
-              {(loc.hours || loc.emergency24_7) && (
+              {loc.hours && (
                 <OfficeHours
                   hours={loc.hours}
-                  emergency24_7={loc.emergency24_7}
                   className="mt-4"
                   rowClass="text-sm text-foreground-muted"
                   closedRowClass="text-sm text-foreground-subtle"

@@ -21,6 +21,9 @@ export const BLOCK_CONTENT_FRAGMENT = groq`[]{
     "src": asset->url,
     "width": asset->metadata.dimensions.width,
     "height": asset->metadata.dimensions.height
+  },
+  _type == "officeHours" => {
+    title
   }
 }`
 
@@ -327,6 +330,8 @@ export const FOOTER_QUERY = groq`{
       officePhone,
       tollFreePhone,
       emergency24_7,
+      emergencyPhone,
+      appointmentRequired,
       hours
     }
   },
@@ -358,6 +363,8 @@ export const FOOTER_QUERY = groq`{
     officePhone,
     tollFreePhone,
     emergency24_7,
+    emergencyPhone,
+    appointmentRequired,
     hours,
     "pageSlug": *[_type == "locationPage" && references(^._id)][0].slug.current
   }
@@ -539,7 +546,10 @@ export const NAP_TOKENS_QUERY = groq`
       address3,
       city,
       state,
-      zip
+      zip,
+      appointmentRequired,
+      emergency24_7,
+      emergencyPhone
     },
   }
 `
@@ -1225,6 +1235,9 @@ export const LOCATION_PAGE_QUERY = groq`
       officeFax,
       tollFreePhone,
       hours,
+      emergency24_7,
+      emergencyPhone,
+      appointmentRequired,
       gbpCidUrl
     },
     ${SIDEBAR_FRAGMENT},

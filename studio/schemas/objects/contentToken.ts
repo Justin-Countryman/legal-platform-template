@@ -23,9 +23,12 @@ function tokenKeyToLabel(key: string | undefined): string {
     if (field === 'address1') return 'Address Line 1'
     if (field === 'address2') return 'Address Line 2'
     if (field === 'address3') return 'Address Line 3'
-    if (field === 'city')     return 'City'
-    if (field === 'state')    return 'State'
-    if (field === 'zip')      return 'ZIP'
+    if (field === 'city')        return 'City'
+    if (field === 'state')       return 'State'
+    if (field === 'zip')         return 'ZIP'
+    if (field === 'appointment')    return 'Appointment Policy'
+    if (field === 'emergencyLabel') return '24/7 Emergency Label'
+    if (field === 'emergency')      return '24/7 Emergency Phone'
     return 'Location'
   }
   return key

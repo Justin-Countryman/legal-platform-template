@@ -4,10 +4,11 @@
 
 import {client} from '@/lib/sanity/client'
 import {HEADER_QUERY, FOOTER_QUERY, DESIGN_TOKENS_QUERY} from '@/lib/sanity/queries'
-import {resolveTokenString} from '@/lib/tokens'
+import {resolveTokenString, formatPhone} from '@/lib/tokens'
 import {buildDesignTokenCSS, buildColorCSS, buildFontCSS, resolveSidebarDesignSettings} from '@/lib/designTokens'
 import {HeroSchemeProvider} from '@/lib/heroSchemeContext'
 import {SidebarDesignSettingsProvider} from '@/lib/sidebarDesignSettingsContext'
+import {OfficeHoursProvider} from '@/components/location/OfficeHoursContext'
 import {resolvefonts, buildFontPreloads} from '@/fonts/loader'
 import {Header, type NavItem, type NavChild} from '@/components/layout/Header'
 import {Footer} from '@/components/layout/Footer'
@@ -93,8 +94,8 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
   const napTokens = {
     firmName: headerData?.siteSettings?.firmName,
     firmNameShort: headerData?.siteSettings?.firmNameShort,
-    primaryPhone: headerData?.siteSettings?.phone,
-    primaryTollFree: headerData?.siteSettings?.tollFreePhone,
+    primaryPhone: formatPhone(headerData?.siteSettings?.phone) || null,
+    primaryTollFree: formatPhone(headerData?.siteSettings?.tollFreePhone) || null,
   }
 
   // Button hover animation is driven by a data-attribute on a top-level wrapper
@@ -132,8 +133,8 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
           logoOnDark: headerData?.designSettings?.logoOnDark ?? null,
           logoMarkOnLight: headerData?.designSettings?.logoMarkOnLight ?? null,
           logoMarkOnDark: headerData?.designSettings?.logoMarkOnDark ?? null,
-          phone: headerData?.siteSettings?.phone,
-          tollFreePhone: headerData?.siteSettings?.tollFreePhone,
+          phone: formatPhone(headerData?.siteSettings?.phone) || null,
+          tollFreePhone: formatPhone(headerData?.siteSettings?.tollFreePhone) || null,
           headerLayout: headerData?.mainNavigation?.headerLayout ?? 'apex',
           mobileLayout: headerData?.mainNavigation?.mobileLayout ?? 'standard',
           heroMerge: headerData?.mainNavigation?.heroMerge ?? false,
@@ -147,8 +148,8 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
           topBarLeft: resolveTokenString(headerData?.mainNavigation?.topBarLeft, napTokens) || null,
           topBarRight: resolveTokenString(headerData?.mainNavigation?.topBarRight, napTokens) || null,
           topBarStyle: headerData?.mainNavigation?.topBarStyle ?? 'primary',
-          headerPhone: resolveTokenString(headerData?.mainNavigation?.headerPhone, napTokens) || null,
-          headerPhone2: resolveTokenString(headerData?.mainNavigation?.headerPhone2, napTokens) || null,
+          headerPhone: formatPhone(resolveTokenString(headerData?.mainNavigation?.headerPhone, napTokens)) || null,
+          headerPhone2: formatPhone(resolveTokenString(headerData?.mainNavigation?.headerPhone2, napTokens)) || null,
           headerPhoneTagline: headerData?.mainNavigation?.headerPhoneTagline,
           headerCtaLabel: headerData?.mainNavigation?.headerCtaLabel,
           headerCtaUrl: headerData?.mainNavigation?.headerCtaUrl,
@@ -159,7 +160,11 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
       />
       <HeroSchemeProvider scheme={designTokens?.internalHeroBackground === 'light' ? 'light' : 'dark'}>
         <SidebarDesignSettingsProvider value={resolveSidebarDesignSettings(designTokens)}>
-          <main id="main-content" tabIndex={-1} className="outline-none">{children}</main>
+          <main id="main-content" tabIndex={-1} className="outline-none">
+            <OfficeHoursProvider value={footerData?.siteSettings?.address?.hours ?? null}>
+              {children}
+            </OfficeHoursProvider>
+          </main>
         </SidebarDesignSettingsProvider>
       </HeroSchemeProvider>
       {footerData?.designSettings?.showBackToTop === true && <BackToTop />}
