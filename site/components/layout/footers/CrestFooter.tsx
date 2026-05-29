@@ -42,22 +42,15 @@ export function CrestFooter({data}: Props) {
       {/* ── Crest header — centered ──────────────────────────────────────── */}
       <div className="border-b border-border py-10 text-center">
         {logo?.src ? (
-          <>
-            <Link href="/" className="inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
-              <Image
-                src={logo.src}
-                alt={logo.alt ?? ''}
-                width={logo.width}
-                height={logo.height}
-                className="mx-auto h-16 w-auto"
-              />
-            </Link>
-            {firmName && (
-              <p className="tagline mt-3">
-                {firmName}
-              </p>
-            )}
-          </>
+          <Link href="/" className="inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus" aria-label={firmName ?? 'Home'}>
+            <Image
+              src={logo.src}
+              alt={logo.alt ?? firmName ?? ''}
+              width={logo.width}
+              height={logo.height}
+              className="mx-auto h-16 w-auto"
+            />
+          </Link>
         ) : firmName ? (
           <Link href="/" className="font-heading text-2xl font-bold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
             {firmName}
