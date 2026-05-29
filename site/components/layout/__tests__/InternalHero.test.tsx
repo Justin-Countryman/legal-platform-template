@@ -312,14 +312,16 @@ describe('InternalHero — resolveTokenString integration', () => {
     expect(container.querySelector('h1')?.textContent).toBe('Welcome to {{firmName}}')
   })
 
-  it('falls back to the literal {{key}} placeholder when the key is unknown', () => {
+  it('drops an unknown key to nothing when napTokens is present (no {{key}} leak)', () => {
     const {container} = render(
       <InternalHero
         data={{...BASE_DATA, heading: 'Hello {{unknownKey}}'}}
         napTokens={NAP_TOKENS}
       />,
     )
-    expect(container.querySelector('h1')?.textContent).toBe('Hello {{unknownKey}}')
+    const h1 = container.querySelector('h1')?.textContent ?? ''
+    expect(h1).not.toContain('{{')
+    expect(h1).toContain('Hello')
   })
 })
 

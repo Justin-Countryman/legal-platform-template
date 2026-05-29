@@ -380,7 +380,8 @@ describe('PortableTextRenderer — image type', () => {
 // - Pass the napTokens prop into the component (no mocking of lib/tokens).
 // - Assert that contentToken type/mark blocks render the resolved string when
 //   the key is present in napTokens.
-// - Assert the {{key}} placeholder fallback for missing keys / null napTokens.
+// - Assert empty output for missing keys / null napTokens (empty-token guard:
+//   unresolved tokens render nothing rather than leaking {{key}} to visitors).
 // - Assert empty string for null/empty tokenKey.
 //
 // The integration test exercises both makeComponents.types.contentToken and
@@ -398,24 +399,25 @@ describe('PortableTextRenderer — NAP-token resolution', () => {
     expect(container.textContent).toContain('Sample Firm')
   })
 
-  it('contentToken type with an unknown key renders the {{key}} placeholder', () => {
+  it('contentToken type with an unknown key renders nothing (no {{key}} leak)', () => {
     const {container} = render(
       <PortableTextRenderer
         napTokens={NAP_TOKENS}
         value={[{_key: 't1', _type: 'contentToken', tokenKey: 'missingKey'} as unknown] as unknown[]}
       />,
     )
-    expect(container.textContent).toContain('{{missingKey}}')
+    expect(container.textContent).not.toContain('{{')
+    expect(container.textContent).not.toContain('missingKey')
   })
 
-  it('contentToken type with null napTokens prop renders the {{key}} placeholder', () => {
+  it('contentToken type with null napTokens prop renders nothing (no {{key}} leak)', () => {
     const {container} = render(
       <PortableTextRenderer
         napTokens={null}
         value={[{_key: 't1', _type: 'contentToken', tokenKey: 'firmName'} as unknown] as unknown[]}
       />,
     )
-    expect(container.textContent).toContain('{{firmName}}')
+    expect(container.textContent).not.toContain('{{')
   })
 
   it('contentToken type with an empty/null tokenKey renders an empty string', () => {
@@ -450,7 +452,7 @@ describe('PortableTextRenderer — NAP-token resolution', () => {
     expect(p.textContent).toContain('today.')
   })
 
-  it('contentToken inline mark with missing key renders {{key}} placeholder inside the paragraph', () => {
+  it('contentToken inline mark with missing key renders nothing (no {{key}} leak)', () => {
     const block = {
       _key: 'b1',
       _type: 'block',
@@ -463,7 +465,7 @@ describe('PortableTextRenderer — NAP-token resolution', () => {
     const {container} = render(
       <PortableTextRenderer napTokens={NAP_TOKENS} value={[block] as unknown[]} />,
     )
-    expect(container.textContent).toContain('{{unknown}}')
+    expect(container.textContent).not.toContain('{{')
   })
 })
 
