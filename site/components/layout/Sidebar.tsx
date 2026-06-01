@@ -84,7 +84,9 @@ function separatorClass(
   if (!itemSeparators) return ''
   if (isLast) return ''
   if (disclosureOpen) return ''
-  return 'border-b border-foreground/10'
+  // pb-3 gives the hairline breathing room from the row text above it; the
+  // list's space-y supplies the gap below the line — premium, uncramped rhythm.
+  return 'border-b border-foreground/10 pb-3'
 }
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -417,7 +419,7 @@ function HierarchyChildItem({
 
   return (
     <li className={sepCls}>
-      <div className="flex items-center gap-1">
+      <div className="flex w-full items-center justify-between gap-2">
         <HierarchyNavRow
           href={`/${child.slug}/`}
           label={child.title}
@@ -433,27 +435,25 @@ function HierarchyChildItem({
           // Focus ring uses `ring-inset` — matches the FaqAccordion exception
           // (row-based UI; outset ring would visually fight sibling rows).
           className={[
-            'shrink-0 inline-flex h-6 w-6 items-center justify-center rounded',
+            'shrink-0 -mr-1 inline-flex h-6 w-6 items-center justify-center rounded',
             'text-foreground-muted hover:text-foreground',
-            'transition-transform duration-ui-base ease-smooth',
+            'transition-colors duration-ui-base ease-smooth',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus',
-            isOpen ? 'rotate-45' : 'rotate-0',
           ].join(' ')}
           data-sidebar-grandchildren-toggle={child.slug}
         >
-          {/* Decorative plus icon — hidden from AT (button carries aria-label). */}
-          <svg
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            className="h-3.5 w-3.5"
-          >
-            <path d="M12 5v14M5 12h14" />
-          </svg>
+          {/* Animated plus↔minus (matches the AOL toggle) — vertical bar scales
+              to 0 on open. Decorative; button carries the aria-label. */}
+          <span aria-hidden="true" className="relative inline-block h-3.5 w-3.5">
+            <span className="absolute left-1/2 top-1/2 h-0.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-current" />
+            <span
+              className={[
+                'absolute left-1/2 top-1/2 h-3.5 w-0.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-current origin-center',
+                'transition-transform duration-ui-base ease-smooth motion-reduce:transition-none',
+                isOpen ? 'scale-y-0' : 'scale-y-100',
+              ].join(' ')}
+            />
+          </span>
         </button>
       </div>
 
@@ -510,42 +510,107 @@ function HierarchyExpandedAol({
   pathname,
   currentChildSlug,
   iconStyle,
-  itemSeparators,
+  trailingSeparator,
 }: {
   aol: SidebarAol
   pathname: string | null
   currentChildSlug: string | null
   iconStyle: SidebarNavIconStyle
-  itemSeparators: boolean
+  trailingSeparator?: boolean
 }) {
+  const baseId = useId()
+  const panelId = `${baseId}-aol-children`
+  const hasChildren = aol.children.length > 0
+  // The current area of law is an accordion, open by default (the visitor is
+  // inside it). The plus toggle lets them collapse/expand its child pages.
+  const [isOpen, setIsOpen] = useState(true)
+  // Parent-level hairline beneath the whole block (after its children when
+  // open, under the row when collapsed/childless) divides it from the AOLs below.
+  const wrap = [
+    'space-y-1.5',
+    trailingSeparator ? 'border-b border-foreground/10 pb-3' : '',
+  ].filter(Boolean).join(' ')
+
+  if (!hasChildren) {
+    return (
+      <ul className={wrap}>
+        <li>
+          <HierarchyNavRow href={`/${aol.slug}/`} label={aol.title} pathname={pathname} iconStyle={iconStyle} />
+        </li>
+      </ul>
+    )
+  }
+
   return (
-    <ul className="space-y-1">
-      {/* AOL parent: never gets a separator below it (the AOL parent reads as
-          a section heading, not a sibling of its children — separators only
-          apply to same-level siblings per BI-Sidebar.md §5b). */}
+    <ul className={wrap}>
       <li>
-        <HierarchyNavRow
-          href={`/${aol.slug}/`}
-          label={aol.title}
-          pathname={pathname}
-          iconStyle={iconStyle}
-        />
+        <div className="flex w-full items-center justify-between gap-2">
+          {/* Leading icon follows the site design setting on EVERY row (with or
+              without children) for consistency; the ± toggle is an additional,
+              separate affordance on the right. */}
+          <HierarchyNavRow href={`/${aol.slug}/`} label={aol.title} pathname={pathname} iconStyle={iconStyle} />
+          <button
+            type="button"
+            aria-expanded={isOpen}
+            aria-controls={panelId}
+            aria-label={isOpen ? `Collapse ${aol.title} pages` : `Expand ${aol.title} pages`}
+            onClick={() => setIsOpen((v) => !v)}
+            className={[
+              'shrink-0 -mr-1 inline-flex h-6 w-6 items-center justify-center rounded',
+              'text-foreground-muted hover:text-foreground',
+              'transition-colors duration-ui-base ease-smooth',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus',
+            ].join(' ')}
+            data-sidebar-aol-toggle={aol.slug}
+          >
+            {/* Animated plus↔minus (pure CSS): two `currentColor` bars; the
+                vertical bar smoothly scales to 0 on open, morphing + into −.
+                Cascade-aware (uses currentColor), GPU-cheap, reduced-motion safe.
+                Chevrons are reserved for the page nav rows, so the toggle uses ±. */}
+            <span aria-hidden="true" className="relative inline-block h-3.5 w-3.5">
+              <span className="absolute left-1/2 top-1/2 h-0.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-current" />
+              <span
+                className={[
+                  'absolute left-1/2 top-1/2 h-3.5 w-0.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-current origin-center',
+                  'transition-transform duration-ui-base ease-smooth motion-reduce:transition-none',
+                  isOpen ? 'scale-y-0' : 'scale-y-100',
+                ].join(' ')}
+              />
+            </span>
+          </button>
+        </div>
+        {/* Children: indented (no rail), grouped — no separators between them. */}
+        <div
+          id={panelId}
+          aria-hidden={!isOpen}
+          className={[
+            'grid transition-[grid-template-rows] duration-structural-base ease-smooth',
+            isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
+          ].join(' ')}
+        >
+          <div className="overflow-hidden" inert={!isOpen}>
+            <ul
+              className={[
+                'mt-1.5 space-y-1.5 pl-5 transition-opacity duration-structural-base ease-smooth',
+                isOpen ? 'opacity-100' : 'opacity-0',
+              ].join(' ')}
+              data-sidebar-aol-children={aol.slug}
+            >
+              {aol.children.map((child, i) => (
+                <HierarchyChildItem
+                  key={child._id}
+                  child={child}
+                  pathname={pathname}
+                  autoOpen={currentChildSlug === child.slug && child.grandchildren.length > 0}
+                  iconStyle={iconStyle}
+                  itemSeparators={false}
+                  isLast={i === aol.children.length - 1}
+                />
+              ))}
+            </ul>
+          </div>
+        </div>
       </li>
-      {aol.children.map((child, i) => {
-        const autoOpen =
-          currentChildSlug === child.slug && child.grandchildren.length > 0
-        return (
-          <HierarchyChildItem
-            key={child._id}
-            child={child}
-            pathname={pathname}
-            autoOpen={autoOpen}
-            iconStyle={iconStyle}
-            itemSeparators={itemSeparators}
-            isLast={i === aol.children.length - 1}
-          />
-        )
-      })}
     </ul>
   )
 }
@@ -567,7 +632,7 @@ function HierarchyParentOnlyList({
   itemSeparators: boolean
 }) {
   return (
-    <ul className={className ?? 'space-y-1'}>
+    <ul className={className ?? 'space-y-2'}>
       {aols.map((aol, i) => {
         const sep = separatorClass(itemSeparators, i === aols.length - 1)
         return (
@@ -645,13 +710,13 @@ function SidebarNav({component}: {component: SidebarNavComponent}) {
                 pathname={pathname}
                 currentChildSlug={currentChildSlug}
                 iconStyle={iconStyle}
-                itemSeparators={itemSeparators}
+                trailingSeparator={itemSeparators && otherAols.length > 0}
               />
               {otherAols.length > 0 && (
                 <HierarchyParentOnlyList
                   aols={otherAols}
                   pathname={pathname}
-                  className="mt-2 space-y-1"
+                  className="mt-3 space-y-2"
                   iconStyle={iconStyle}
                   itemSeparators={itemSeparators}
                 />

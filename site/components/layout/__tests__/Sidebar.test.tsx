@@ -1046,14 +1046,16 @@ describe('SidebarNav — accordion: keyboard semantics', () => {
     expect(toggle.className).toContain('focus-visible:ring-focus')
   })
 
-  it('plus icon rotates 45° when open (toggle reflects state via transform class)', () => {
+  it('toggle morphs plus→minus when open (vertical bar scales out)', () => {
     mockUsePathname.mockReturnValue('/family-law/')
     const {container} = render(<Sidebar components={[HIERARCHY_FIXTURE]} />)
     const toggle = getToggle(container, 'family-law/divorce')!
-    expect(toggle.className).toContain('rotate-0')
-    expect(toggle.className).not.toContain('rotate-45')
+    // The ± icon is two bars; the vertical bar (2nd) is full when collapsed and
+    // scales to 0 when open — morphing + into −, no rotate-to-×.
+    const verticalBar = () => toggle.querySelectorAll('span span')[1]
+    expect(verticalBar()?.className).toContain('scale-y-100')
     fireEvent.click(toggle)
-    expect(toggle.className).toContain('rotate-45')
+    expect(verticalBar()?.className).toContain('scale-y-0')
   })
 })
 
@@ -1100,11 +1102,13 @@ describe('SidebarNav — sidebarNavIconStyle (arrows)', () => {
     const {container} = renderWithSettings([HIERARCHY_FIXTURE], {
       sidebarNavIconStyle: 'arrows',
     })
-    // Family Law parent link should contain the arrow character.
-    const familyLink = findLinkByLabel(container, 'Family Law')!
-    expect(familyLink.textContent).toContain('→')
+    // A standard nav row (bottom-list AOL) should contain the arrow character.
+    // (The expanded AOL header intentionally uses no leading icon — it carries
+    // the accordion chevron toggle instead.)
+    const navLink = findLinkByLabel(container, 'Criminal Defense')!
+    expect(navLink.textContent).toContain('→')
     // No hover-bg shift on the link itself.
-    expect(familyLink.className).not.toContain('hover:bg-foreground/5')
+    expect(navLink.className).not.toContain('hover:bg-foreground/5')
   })
 
   it('does not render a chevron SVG inside the link', () => {
@@ -1112,8 +1116,8 @@ describe('SidebarNav — sidebarNavIconStyle (arrows)', () => {
     const {container} = renderWithSettings([HIERARCHY_FIXTURE], {
       sidebarNavIconStyle: 'arrows',
     })
-    const familyLink = findLinkByLabel(container, 'Family Law')!
-    expect(familyLink.querySelector('svg')).toBeNull()
+    const navLink = findLinkByLabel(container, 'Criminal Defense')!
+    expect(navLink.querySelector('svg')).toBeNull()
   })
 })
 
@@ -1123,9 +1127,9 @@ describe('SidebarNav — sidebarNavIconStyle (chevrons, default)', () => {
     const {container} = renderWithSettings([HIERARCHY_FIXTURE], {
       sidebarNavIconStyle: 'chevrons',
     })
-    const familyLink = findLinkByLabel(container, 'Family Law')!
-    expect(familyLink.textContent).not.toContain('→')
-    expect(familyLink.querySelector('svg')).not.toBeNull()
+    const navLink = findLinkByLabel(container, 'Criminal Defense')!
+    expect(navLink.textContent).not.toContain('→')
+    expect(navLink.querySelector('svg')).not.toBeNull()
   })
 
   it('preserves hover-nudge transform class on the chevron wrapper', () => {
@@ -1133,8 +1137,8 @@ describe('SidebarNav — sidebarNavIconStyle (chevrons, default)', () => {
     const {container} = renderWithSettings([HIERARCHY_FIXTURE], {
       sidebarNavIconStyle: 'chevrons',
     })
-    const familyLink = findLinkByLabel(container, 'Family Law')!
-    const svgWrapper = familyLink.querySelector('span[aria-hidden]')!
+    const navLink = findLinkByLabel(container, 'Criminal Defense')!
+    const svgWrapper = navLink.querySelector('span[aria-hidden]')!
     expect(svgWrapper.className).toContain('group-hover:translate-x-')
   })
 })
@@ -1191,18 +1195,19 @@ describe('SidebarNav — sidebarNavIconStyle (none)', () => {
   })
 })
 
-describe('SidebarNav — accordion plus icon is unaffected by sidebarNavIconStyle', () => {
+describe('SidebarNav — accordion ± toggle is unaffected by sidebarNavIconStyle', () => {
   it.each(['arrows', 'chevrons', 'none'] as const)(
-    'iconStyle=%s — plus toggle button still renders inline SVG with M12 5v14M5 12h14 path',
+    'iconStyle=%s — toggle renders the two-bar ± icon (no chevron/arrow glyph)',
     (iconStyle) => {
       mockUsePathname.mockReturnValue('/family-law/')
       const {container} = renderWithSettings([HIERARCHY_FIXTURE], {
         sidebarNavIconStyle: iconStyle,
       })
       const toggle = getToggle(container, 'family-law/divorce')!
-      const svg = toggle.querySelector('svg')
-      const path = svg?.querySelector('path')
-      expect(path?.getAttribute('d')).toBe('M12 5v14M5 12h14')
+      // Two bars (horizontal always, vertical scales out on open) — no SVG glyph.
+      const bars = toggle.querySelectorAll('span span')
+      expect(bars.length).toBe(2)
+      expect(toggle.querySelector('svg')).toBeNull()
     },
   )
 })
@@ -1267,11 +1272,11 @@ describe('SidebarNav — sidebarItemSeparators (hierarchy mode)', () => {
     expect(familyLink.parentElement?.className).not.toMatch(/\bborder-b\b/)
   })
 
-  it('Edwards pattern: child with OPEN disclosure has NO border-b under it', () => {
-    // Three-child fixture so the expanded child sits MID-list (with siblings
-    // above AND below). HIERARCHY_FIXTURE only has 2 children for Family Law;
-    // build inline so this test exercises the Edwards "no line under expanded,
-    // lines around it" case unambiguously.
+  it('expanded AOL children are indented (no rail) and grouped with NO internal separators', () => {
+    // Premium model: the area of law is an accordion (plus toggle); its child
+    // pages are nested via indentation only (no vertical rail line) and grouped
+    // as a unit — no separators between them. Separators live only at the
+    // area-of-law (parent) level.
     const edwardsFixture: SidebarComponent = {
       _componentType: 'sidebarNav',
       header: 'Practice Areas',
@@ -1304,60 +1309,43 @@ describe('SidebarNav — sidebarItemSeparators (hierarchy mode)', () => {
     // Divorce has the split-button wrapper (flex div) — climb two levels.
     const divorceLi = findLinkByLabel(container, 'Divorce')?.parentElement?.parentElement
     const custodyLi = findLinkByLabel(container, 'Custody')?.parentElement
-    expect(adoptionLi?.className).toContain('border-b') // sibling above the expanded
-    expect(divorceLi?.className).not.toMatch(/\bborder-b\b/) // expanded — Edwards
-    expect(custodyLi?.className).not.toMatch(/\bborder-b\b/) // last child — no separator
+    // Grouped — no separators between children at any position.
+    expect(adoptionLi?.className).not.toMatch(/\bborder-b\b/)
+    expect(divorceLi?.className).not.toMatch(/\bborder-b\b/)
+    expect(custodyLi?.className).not.toMatch(/\bborder-b\b/)
+    // Children are indented (pl-*) with NO vertical rail line (no border-l).
+    const childUl = findLinkByLabel(container, 'Adoption')?.closest('ul')
+    expect(childUl?.className).toMatch(/\bpl-\d/)
+    expect(childUl?.className).not.toMatch(/\bborder-l\b/)
+    // The area of law exposes a plus-icon accordion toggle.
+    expect(container.querySelector('[data-sidebar-aol-toggle="family-law"]')).toBeTruthy()
   })
 
-  it('Edwards pattern: lines appear BETWEEN grandchildren (siblings within the disclosure)', () => {
+  it('grandchildren are grouped with NO internal separators', () => {
     mockUsePathname.mockReturnValue('/family-law/divorce/')
     const {container} = renderWithSettings([HIERARCHY_FIXTURE])
     const contestedLi = findLinkByLabel(container, 'Contested Divorce')?.parentElement
     const uncontestedLi = findLinkByLabel(container, 'Uncontested Divorce')?.parentElement
-    // First grandchild gets border-b; second (last) does not.
-    expect(contestedLi?.className).toContain('border-b')
+    expect(contestedLi?.className).not.toMatch(/\bborder-b\b/)
     expect(uncontestedLi?.className).not.toMatch(/\bborder-b\b/)
   })
 
-  it('Edwards pattern: when accordion is closed, the line under that child is RESTORED', () => {
-    // Three-child fixture so Divorce isn't last — when its disclosure is
-    // closed (no Edwards suppression), border-b should be present.
-    const edwardsFixture: SidebarComponent = {
-      _componentType: 'sidebarNav',
-      header: 'Practice Areas',
-      mode: 'practiceArea',
-      orderedAolIds: ['pa-family'],
-      areasOfLaw: [
-        {
-          _id: 'pa-family',
-          slug: 'family-law',
-          title: 'Family Law',
-          children: [
-            {_id: 'pa-adoption', slug: 'family-law/adoption', title: 'Adoption', grandchildren: []},
-            {
-              _id: 'pa-divorce',
-              slug: 'family-law/divorce',
-              title: 'Divorce',
-              grandchildren: [
-                {slug: 'family-law/divorce/contested', title: 'Contested Divorce'},
-              ],
-            },
-            {_id: 'pa-custody', slug: 'family-law/custody', title: 'Custody', grandchildren: []},
-          ],
-        },
-      ],
-    }
-    mockUsePathname.mockReturnValue('/family-law/') // AOL parent — Divorce closed
-    const {container} = renderWithSettings([edwardsFixture])
-    const divorceLi = findLinkByLabel(container, 'Divorce')?.parentElement?.parentElement
-    expect(divorceLi?.className).toContain('border-b')
+  it('the expanded AOL block carries a trailing separator dividing it from the AOLs below', () => {
+    mockUsePathname.mockReturnValue('/family-law/')
+    const {container} = renderWithSettings([HIERARCHY_FIXTURE])
+    // The expanded-AOL block <ul> (closest ul to the Family Law row) gets
+    // border-b when other AOLs follow.
+    const expandedUl = findLinkByLabel(container, 'Family Law')?.closest('ul')
+    expect(expandedUl?.tagName).toBe('UL')
+    expect(expandedUl?.className).toMatch(/\bborder-b\b/)
   })
 
   it('uses only cascade-aware tokens for separator lines', () => {
     mockUsePathname.mockReturnValue('/family-law/')
     const {container} = renderWithSettings([HIERARCHY_FIXTURE])
-    const adoptionLi = findLinkByLabel(container, 'Adoption')?.parentElement
-    const cls = adoptionLi?.className ?? ''
+    // Area-of-law level separator (bottom list, non-last item).
+    const criminalLi = findLinkByLabel(container, 'Criminal Defense')?.parentElement
+    const cls = criminalLi?.className ?? ''
     expect(cls).toContain('border-foreground/10')
     expect(cls).not.toMatch(/\bborder-on-dark\b/)
     expect(cls).not.toMatch(/#[0-9a-fA-F]{3,8}/)
