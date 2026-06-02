@@ -50,7 +50,18 @@ export const siteSettings = defineType({
       name: 'timezone',
       title: 'Timezone',
       type: 'string',
-      description: 'e.g. America/Chicago',
+      description: 'IANA timezone for the firm — drives hours, dates, and schema output.',
+      options: {
+        list: [
+          {title: 'Eastern Time — New York (ET)', value: 'America/New_York'},
+          {title: 'Central Time — Chicago (CT)', value: 'America/Chicago'},
+          {title: 'Mountain Time — Denver (MT)', value: 'America/Denver'},
+          {title: 'Mountain Time — Phoenix, Arizona (no DST)', value: 'America/Phoenix'},
+          {title: 'Pacific Time — Los Angeles (PT)', value: 'America/Los_Angeles'},
+          {title: 'Alaska Time — Anchorage (AKT)', value: 'America/Anchorage'},
+          {title: 'Hawaii–Aleutian Time — Honolulu (no DST)', value: 'Pacific/Honolulu'},
+        ],
+      },
       initialValue: 'America/Chicago',
     },
     {
