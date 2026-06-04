@@ -88,12 +88,30 @@ function buildOrganizationSchema(data: OrganizationData) {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await client.fetch<{firmName?: string; primaryDomain?: string} | null>(
-    SITE_METADATA_QUERY,
-  )
+  const data = await client.fetch<{
+    firmName?: string
+    primaryDomain?: string
+    faviconUrl?: string | null
+    faviconMime?: string | null
+    webclipUrl?: string | null
+  } | null>(SITE_METADATA_QUERY)
   const firmName = data?.firmName ?? 'Site'
   const domain = data?.primaryDomain ?? process.env.NEXT_PUBLIC_SITE_DOMAIN ?? 'localhost:3000'
   const gscVerification = process.env.NEXT_PUBLIC_GSC_VERIFICATION
+
+  // Browser-tab favicon + Apple touch icon are sourced from Design Settings
+  // (designSettings.favicon / webclipImage). The asset URLs are absolute Sanity
+  // CDN links, so they resolve independently of metadataBase. When unset, no
+  // `icons` are emitted and the browser falls back to its default — there is no
+  // static app/favicon.ico shadowing the Sanity-managed icon.
+  const icons: Metadata['icons'] = data?.faviconUrl || data?.webclipUrl
+    ? {
+        ...(data?.faviconUrl
+          ? {icon: [{url: data.faviconUrl, ...(data.faviconMime ? {type: data.faviconMime} : {})}]}
+          : {}),
+        ...(data?.webclipUrl ? {apple: [{url: data.webclipUrl}]} : {}),
+      }
+    : undefined
 
   return {
     title: {
@@ -101,6 +119,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s | ${firmName}`,
     },
     metadataBase: new URL(`https://${domain}`),
+    ...(icons ? {icons} : {}),
     openGraph: {
       siteName: firmName,
       locale: 'en_US',
