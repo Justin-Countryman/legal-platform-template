@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest'
-import {deriveVariants, buildRoleMap, validateWcag, buildColorCSS, buildDesignTokenCSS, deriveNeutrals, deriveInverseNeutrals, hexToRgbTriplet} from '../designTokens'
+import {deriveVariants, buildRoleMap, validateWcag, buildColorCSS, buildDesignTokenCSS, deriveNeutrals, deriveInverseNeutrals, hexToRgbTriplet, deriveHeroTint} from '../designTokens'
 import {converter, wcagContrast} from 'culori'
 
 const toOklch = converter('oklch')
@@ -8,6 +8,28 @@ function oklchOf(hex: string) {
   const c = toOklch(hex)
   return {l: c?.l ?? 0, c: c?.c ?? 0, h: c?.h ?? 0}
 }
+
+// ─── Hero tint (light internal-hero surface) ──────────────────────────────────
+describe('deriveHeroTint — neutral near-white for the light hero surface', () => {
+  // Vivid accent-adjacent primaries must NOT produce a visibly tinted hero
+  // surface (the whole point of the no-bg-muted lock). Chroma stays tiny and
+  // lightness very high across palettes.
+  it.each(['#821428', '#E68F1A', '#1E3A8A', '#065F46', '#6D28D9'])(
+    'is very light (L ≥ 0.97) and near-neutral (C ≤ 0.008 after 8-bit hex round-trip) for %s',
+    (hex) => {
+      const o = oklchOf(deriveHeroTint(hex))
+      expect(o.l).toBeGreaterThanOrEqual(0.97)
+      // Derivation caps chroma at 0.006; 8-bit hex quantization can nudge it
+      // ~0.0007 higher. Still far below any perceptible tint.
+      expect(o.c).toBeLessThanOrEqual(0.008)
+    },
+  )
+
+  it('is emitted as --color-hero-tint by buildColorCSS', () => {
+    const css = buildColorCSS({colorApproach: 'monochromatic', primaryColor: '#821428'})
+    expect(css).toContain('--color-hero-tint:')
+  })
+})
 
 // ─── Warm analogous-accent palette (example) ──────────────────────────────────────────────────────────────
 

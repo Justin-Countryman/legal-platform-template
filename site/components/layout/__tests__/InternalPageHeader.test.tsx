@@ -1,7 +1,16 @@
-import {describe, it, expect} from 'vitest'
+import {describe, it, expect, vi} from 'vitest'
 import {render} from '@testing-library/react'
+
+vi.mock('next/image', () => ({
+  default: vi.fn(({src, alt, fill, className, sizes}) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img data-testid="hero-bg" src={src} alt={alt ?? ''} data-fill={fill ? 'true' : 'false'} data-sizes={sizes} className={className} />
+  )),
+}))
+
 import {InternalPageHeader} from '../InternalPageHeader'
 import {HeroSchemeProvider} from '@/lib/heroSchemeContext'
+import {HeroSurfaceProvider} from '@/lib/heroSurfaceContext'
 
 // Trust-platform-utilities strategy (same posture as PortableText for next-
 // sanity, DialogPanel for Radix): use the real HeroSchemeProvider rather than
@@ -35,6 +44,14 @@ describe('InternalPageHeader — render shape', () => {
     expect(header.style.paddingTop).toContain('--header-height')
     expect(header.style.paddingTop).toContain('--hero-pt')
   })
+
+  it('is always vertically centered (the fallback band is title-only)', () => {
+    const {container} = render(<InternalPageHeader title="X" />)
+    // Centering lives on the band-filling content container, not the section.
+    const content = (container.firstChild as HTMLElement).firstChild as HTMLElement
+    expect(content.className).toContain('grow')
+    expect(content.className).toContain('justify-center')
+  })
 })
 
 // ─── useHeroScheme hook integration (the new anchor pattern) ──────────────────
@@ -65,14 +82,17 @@ describe('InternalPageHeader — useHeroScheme integration', () => {
     expect(header.getAttribute('data-ring-context')).toBe('dark')
   })
 
-  it('scheme="light" via HeroSchemeProvider applies bg-background + omits data-ring-context', () => {
+  it('scheme="light" via HeroSchemeProvider applies neutral bg-hero-tint + omits data-ring-context', () => {
     const {container} = render(
       <HeroSchemeProvider scheme="light">
         <InternalPageHeader title="X" />
       </HeroSchemeProvider>,
     )
     const header = container.firstChild as HTMLElement
-    expect(header.className).toContain('bg-background')
+    // Light-tint fix: neutral hero tint, NOT bg-background (#fff) or bg-muted (accent-tinted).
+    expect(header.className).toContain('bg-hero-tint')
+    expect(header.className).not.toContain('bg-background')
+    expect(header.className).not.toContain('bg-muted')
     expect(header.className).not.toContain('bg-brand-dark')
     // Component renders data-ring-context only when isDark === true.
     expect(header.hasAttribute('data-ring-context')).toBe(false)
@@ -92,7 +112,43 @@ describe('InternalPageHeader — useHeroScheme integration', () => {
       </HeroSchemeProvider>,
     )
     expect((dark.container.firstChild as HTMLElement).className).toContain('bg-brand-dark')
-    expect((light.container.firstChild as HTMLElement).className).toContain('bg-background')
+    expect((light.container.firstChild as HTMLElement).className).toContain('bg-hero-tint')
+  })
+
+  it('renders the shared site background image + scrim when provided via HeroSurfaceProvider', () => {
+    const {getByTestId} = render(
+      <HeroSchemeProvider scheme="light">
+        <HeroSurfaceProvider value={{bgImage: {src: '/site-hero.jpg', alt: 'Skyline', fit: 'cover'}, foreground: null, scrimOpacity: 60}}>
+          <InternalPageHeader title="X" />
+        </HeroSurfaceProvider>
+      </HeroSchemeProvider>,
+    )
+    // No-hero band inherits the site image — shared surface, no divergence.
+    expect(getByTestId('hero-backdrop')).not.toBeNull()
+    expect((getByTestId('hero-scrim') as HTMLElement).style.opacity).toBe('0.6')
+  })
+
+  it('renders the shared site FOREGROUND (two-column) on the no-hero band', () => {
+    const {getByTestId} = render(
+      <HeroSchemeProvider scheme="light">
+        <HeroSurfaceProvider value={{bgImage: null, foreground: {src: '/partner.png', alt: 'Partner', width: 800, height: 1200}, scrimOpacity: 80}}>
+          <InternalPageHeader title="X" />
+        </HeroSurfaceProvider>
+      </HeroSchemeProvider>,
+    )
+    const fg = getByTestId('hero-foreground') as HTMLElement
+    expect(fg.className).toContain('hidden')
+    expect(fg.className).toContain('lg:block')
+    expect(fg.querySelector('img')?.getAttribute('src')).toBe('/partner.png')
+  })
+
+  it('omits the foreground on the band when no site foreground is set', () => {
+    const {queryByTestId} = render(
+      <HeroSchemeProvider scheme="light">
+        <InternalPageHeader title="X" />
+      </HeroSchemeProvider>,
+    )
+    expect(queryByTestId('hero-foreground')).toBeNull()
   })
 })
 

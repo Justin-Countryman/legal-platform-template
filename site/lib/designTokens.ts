@@ -79,6 +79,16 @@ export type ColorVariants = {
   fg: string     // white or text-dark — WCAG-computed text ON this color
 }
 
+// Neutral near-white for the light internal-hero surface. Derived from the
+// primary hue at L 0.985 with near-zero chroma — a soft, brand-integrated
+// off-white that is NOT stark #fff and NOT the accent-derived bg-muted tint
+// (which the no-bg-muted lock bans for hero bands because accent1 can be vivid,
+// e.g. gold). Chroma capped at 0.006 keeps it visually neutral on every palette.
+export function deriveHeroTint(primaryHex: string): string {
+  const o = parseOklch(primaryHex)
+  return toHex(0.985, Math.min(o.c * 0.04, 0.006), o.h)
+}
+
 export function deriveVariants(hex: string): ColorVariants {
   const o = parseOklch(hex)
 
@@ -607,6 +617,9 @@ export function buildColorCSS(settings: DesignColorSettings): string {
   // (does NOT participate in the dark-surface cascade) — section-fill role,
   // not a surface-context-sensitive value.
   vars['--color-muted']              = roles['role-muted']
+  // Neutral hero-tint surface for the light internal-hero scheme (bg-hero-tint).
+  // Anchored to :root (does NOT cascade) — a surface fill, not a contextual value.
+  vars['--color-hero-tint']          = deriveHeroTint(inputs.primary)
   vars['--color-brand-dark']         = roles['role-brand-dark']
   // Cascade-aware border — --color-border holds the light-surface value at :root
   // and is reassigned to var(--color-border-on-dark) inside .bg-brand-dark and

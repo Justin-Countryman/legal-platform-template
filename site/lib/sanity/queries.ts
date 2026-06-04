@@ -443,17 +443,39 @@ export const SIDEBAR_FRAGMENT = groq`sidebar[]{
 }`
 
 // ─── Internal Hero Fragment ───────────────────────────────────────────────────
-// Embed in page queries as: hero ${INTERNAL_HERO_FRAGMENT}
-export const INTERNAL_HERO_FRAGMENT = groq`{
-  heading,
+// Every internal-hero field EXCEPT `heading`. Page-type queries that need a
+// page-specific heading fallback project `"heading": coalesce(heading, "...")`
+// and splice these shared override fields in, so ALL page types surface the full
+// cascade (scheme / bg / foreground / none / scrim / fit) — not just the few that
+// used INTERNAL_HERO_FRAGMENT. Embed as:
+//   "hero": hero{ "heading": coalesce(heading, "X"), ${INTERNAL_HERO_OVERRIDE_FIELDS} }
+export const INTERNAL_HERO_OVERRIDE_FIELDS = groq`
   description,
   "buttons": buttons[]{title, url, variant},
+  schemeOverride,
+  backgroundNone,
+  foregroundNone,
+  scrimOpacityOverride,
   "backgroundImage": backgroundImage{
     "src": asset->url,
     "alt": alt,
+    "fit": fit,
+    "width": asset->metadata.dimensions.width,
+    "height": asset->metadata.dimensions.height
+  },
+  "foregroundImage": foregroundImage{
+    "src": asset->url,
+    "alt": alt,
+    "hotspot": hotspot{x, y},
     "width": asset->metadata.dimensions.width,
     "height": asset->metadata.dimensions.height
   }
+`
+
+// Embed in page queries as: hero ${INTERNAL_HERO_FRAGMENT}
+export const INTERNAL_HERO_FRAGMENT = groq`{
+  heading,
+  ${INTERNAL_HERO_OVERRIDE_FIELDS}
 }`
 
 // ─── Design Tokens ────────────────────────────────────────────────────────────
@@ -474,6 +496,21 @@ export const DESIGN_TOKENS_QUERY = groq`
     "accent1Color":  accent1Color,
     "accent2Color":  accent2Color,
     internalHeroBackground,
+    heroScrimOpacity,
+    "siteHeroBackgroundImage": siteHeroBackgroundImage{
+      "src": asset->url,
+      "alt": alt,
+      "fit": fit,
+      "width": asset->metadata.dimensions.width,
+      "height": asset->metadata.dimensions.height
+    },
+    "siteHeroForegroundImage": siteHeroForegroundImage{
+      "src": asset->url,
+      "alt": alt,
+      "hotspot": hotspot{x, y},
+      "width": asset->metadata.dimensions.width,
+      "height": asset->metadata.dimensions.height
+    },
     // WS-Sidebar Phase 2.1 — sidebar UI element settings. Behavior wired in
     // Phase 2.5; resolver in lib/designTokens.ts (resolveSidebarDesignSettings).
     sidebarNavIconStyle,
@@ -608,8 +645,7 @@ export const ATTORNEY_INDEX_QUERY = groq`
     canonicalUrl,
     "hero": hero{
       "heading": coalesce(heading, "Our Attorneys"),
-      description,
-      "buttons": buttons[]{title, url, variant}
+      ${INTERNAL_HERO_OVERRIDE_FIELDS}
     },
     "title": coalesce(hero.heading, "Our Attorneys"),
     tagline,
@@ -674,8 +710,7 @@ export const STAFF_INDEX_QUERY = groq`
     canonicalUrl,
     "hero": hero{
       "heading": coalesce(heading, "Our Team"),
-      description,
-      "buttons": buttons[]{title, url, variant}
+      ${INTERNAL_HERO_OVERRIDE_FIELDS}
     },
     "title": coalesce(hero.heading, "Our Team"),
     hideCtaForm,
@@ -754,8 +789,7 @@ export const SERVICE_AREA_INDEX_QUERY = groq`
     canonicalUrl,
     "hero": hero{
       "heading": coalesce(heading, "Service Area"),
-      description,
-      "buttons": buttons[]{title, url, variant}
+      ${INTERNAL_HERO_OVERRIDE_FIELDS}
     },
     "title": coalesce(hero.heading, title, "Service Area"),
     tagline,
@@ -852,14 +886,7 @@ export const PRACTICE_AREA_QUERY = groq`
     },
     "hero": hero {
       "heading": coalesce(heading, ^.title),
-      description,
-      "buttons": buttons[]{title, url, variant},
-      "backgroundImage": backgroundImage{
-        "src": asset->url,
-        "alt": alt,
-        "width": asset->metadata.dimensions.width,
-        "height": asset->metadata.dimensions.height
-      }
+      ${INTERNAL_HERO_OVERRIDE_FIELDS}
     },
     "body": body ${BLOCK_CONTENT_FRAGMENT},
     "faqItems": faqItems[defined(@->_id)]->{
@@ -954,14 +981,7 @@ export const BLOG_INDEX_PAGE_QUERY = groq`
     canonicalUrl,
     "hero": hero {
       "heading": coalesce(heading, "Blog"),
-      description,
-      "buttons": buttons[]{title, url, variant},
-      "backgroundImage": backgroundImage{
-        "src": asset->url,
-        "alt": alt,
-        "width": asset->metadata.dimensions.width,
-        "height": asset->metadata.dimensions.height
-      }
+      ${INTERNAL_HERO_OVERRIDE_FIELDS}
     },
     "title": coalesce(hero.heading, "Blog"),
     hideCtaForm,
@@ -1220,8 +1240,7 @@ export const LOCATION_PAGE_QUERY = groq`
     canonicalUrl,
     "hero": hero {
       "heading": coalesce(heading, ^.title),
-      description,
-      "buttons": buttons[]{title, url, variant}
+      ${INTERNAL_HERO_OVERRIDE_FIELDS}
     },
     "body": body ${BLOCK_CONTENT_FRAGMENT},
     mapEmbed,
@@ -1274,14 +1293,7 @@ export const CONTENT_PAGE_QUERY = groq`
     },
     "hero": hero {
       "heading": coalesce(heading, ^.title),
-      description,
-      "buttons": buttons[]{title, url, variant},
-      "backgroundImage": backgroundImage{
-        "src": asset->url,
-        "alt": alt,
-        "width": asset->metadata.dimensions.width,
-        "height": asset->metadata.dimensions.height
-      }
+      ${INTERNAL_HERO_OVERRIDE_FIELDS}
     },
     "body": body ${BLOCK_CONTENT_FRAGMENT},
     "faqItems": faqItems[defined(@->_id)]->{

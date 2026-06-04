@@ -46,7 +46,7 @@ export function SplitHeroLayout({attorney, napTokens, cta = {label: 'Contact Us'
           {/* Info panel */}
           <div
             data-ring-context={isDark ? 'dark' : undefined}
-            className={`flex flex-col justify-center ${isDark ? 'bg-brand-dark' : 'bg-background'} px-10 py-12 lg:px-14`}
+            className={`flex flex-col justify-center ${isDark ? 'bg-brand-dark' : 'bg-hero-tint'} px-10 py-12 lg:px-14`}
           >
 
             <h1

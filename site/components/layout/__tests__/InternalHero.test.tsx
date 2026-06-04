@@ -10,7 +10,7 @@ import {render} from '@testing-library/react'
 // using real resolveToken in Commit 7).
 
 vi.mock('next/image', () => ({
-  default: vi.fn(({src, alt, fill, priority, className, sizes}) => (
+  default: vi.fn(({src, alt, fill, priority, className, sizes, style}) => (
     // The mock returns a plain <img>; we're isolating away next/image's
     // optimization layer which isn't this file's contract.
     // eslint-disable-next-line @next/next/no-img-element
@@ -22,6 +22,7 @@ vi.mock('next/image', () => ({
       data-priority={priority ? 'true' : 'false'}
       data-sizes={sizes}
       className={className}
+      style={style}
     />
   )),
 }))
@@ -44,12 +45,23 @@ vi.mock('@/components/ui/ButtonGroup', () => ({
 
 import {InternalHero} from '../InternalHero'
 import {HeroSchemeProvider} from '@/lib/heroSchemeContext'
+import {
+  HERO_BAND_MIN_H_LG,
+  HERO_BAND_BASE_MIN_H_LG,
+  HERO_FOREGROUND_HEIGHT,
+  HERO_FOREGROUND_MAX_WIDTH,
+  HERO_FOREGROUND_GAP,
+  HERO_FOREGROUND_RIGHT_INSET,
+} from '@/lib/heroLayout'
 import type {NapTokens} from '@/lib/tokens'
 
 const BASE_DATA = {
   heading: 'Family Law Services',
   description: 'Compassionate guidance through difficult times.',
 }
+
+// Bare h1 — no description, no buttons.
+const HEADING_ONLY = {heading: 'About Our Firm'}
 
 const WITH_BUTTONS = {
   ...BASE_DATA,
@@ -59,6 +71,7 @@ const WITH_BUTTONS = {
   ],
 }
 
+// A per-page background image — uploading overrides automatically (no mode flip).
 const WITH_IMAGE = {
   ...BASE_DATA,
   backgroundImage: {
@@ -66,6 +79,16 @@ const WITH_IMAGE = {
     alt: 'Office exterior',
     width: 1920,
     height: 1080,
+  },
+}
+
+const WITH_FOREGROUND = {
+  ...BASE_DATA,
+  foregroundImage: {
+    src: '/attorney.png',
+    alt: 'Attorney portrait',
+    width: 800,
+    height: 1200,
   },
 }
 
@@ -96,6 +119,50 @@ describe('InternalHero — render shape', () => {
     expect(section.style.paddingTop).toContain('calc(')
     expect(section.style.paddingTop).toContain('--header-height')
     expect(section.style.paddingTop).toContain('--hero-pt')
+  })
+})
+
+// ─── Vertical alignment (bare h1 centers; with content it stacks from top) ────
+
+describe('InternalHero — vertical alignment', () => {
+  // The content container (not the section) carries justify-center, so the
+  // foreground figure (anchored to the container top, which fills the band)
+  // stays at the band top regardless of how the heading is aligned.
+  const contentContainer = (container: HTMLElement) =>
+    (container.firstChild as HTMLElement).firstChild as HTMLElement
+
+  it('a bare h1 (no description, no buttons) centers in a base-height band', () => {
+    const {container} = render(<InternalHero data={HEADING_ONLY} />)
+    const section = container.firstChild as HTMLElement
+    // Band height on the section; centering on the (band-filling) container.
+    expect(section.className).toContain(HERO_BAND_BASE_MIN_H_LG)
+    expect(section.className).toContain('flex flex-col')
+    const content = contentContainer(container)
+    expect(content.className).toContain('grow')
+    expect(content.className).toContain('justify-center')
+    // No trailing margin under the lone h1 (keeps it optically centered).
+    expect((container.querySelector('h1') as HTMLElement).className).not.toContain('mb-5')
+  })
+
+  it('a bare h1 WITH a foreground centers in the tall foreground band', () => {
+    const {container} = render(<InternalHero data={{...HEADING_ONLY, foregroundImage: WITH_FOREGROUND.foregroundImage}} />)
+    const section = container.firstChild as HTMLElement
+    expect(section.className).toContain(HERO_BAND_MIN_H_LG)
+    expect(section.className).not.toContain(HERO_BAND_BASE_MIN_H_LG)
+    expect(contentContainer(container).className).toContain('justify-center')
+  })
+
+  it('a description present → top-aligned (no centering, no base band, h1 keeps its margin)', () => {
+    const {container} = render(<InternalHero data={BASE_DATA} />)
+    const section = container.firstChild as HTMLElement
+    expect(section.className).not.toContain(HERO_BAND_BASE_MIN_H_LG)
+    expect(contentContainer(container).className).not.toContain('justify-center')
+    expect((container.querySelector('h1') as HTMLElement).className).toContain('mb-5')
+  })
+
+  it('buttons present (no description) → top-aligned (no centering)', () => {
+    const {container} = render(<InternalHero data={{heading: 'X', buttons: WITH_BUTTONS.buttons}} />)
+    expect(contentContainer(container).className).not.toContain('justify-center')
   })
 })
 
@@ -158,11 +225,143 @@ describe('InternalHero — background image composition', () => {
     expect(queryByTestId('hero-bg')).toBeNull()
   })
 
-  it('renders a darkening overlay div above the image (bg-brand-dark/80)', () => {
-    const {container} = render(<InternalHero data={WITH_IMAGE} />)
-    const overlay = container.querySelector('.absolute.inset-0 .absolute.inset-0') as HTMLElement
-    expect(overlay).not.toBeNull()
-    expect(overlay.className).toContain('bg-brand-dark/80')
+  it('renders a configurable scrim above the image (bg-brand-dark, default opacity 0.8)', () => {
+    const {getByTestId} = render(<InternalHero data={WITH_IMAGE} />)
+    const scrim = getByTestId('hero-scrim') as HTMLElement
+    expect(scrim.className).toContain('bg-brand-dark')
+    // Scrim opacity is now an inline style driven by the resolver (was hardcoded /80).
+    expect(scrim.style.opacity).toBe('0.8')
+  })
+
+  it('honors a per-page scrimOpacityOverride on the scrim layer', () => {
+    const {getByTestId} = render(
+      <InternalHero data={{...WITH_IMAGE, scrimOpacityOverride: 40}} />,
+    )
+    expect((getByTestId('hero-scrim') as HTMLElement).style.opacity).toBe('0.4')
+  })
+
+  it('renders a tiled backdrop (no next/image) when custom fit is "tile"', () => {
+    const {getByTestId, queryByTestId} = render(
+      <InternalHero data={{...WITH_IMAGE, backgroundImage: {...WITH_IMAGE.backgroundImage, fit: 'tile'}}} />,
+    )
+    expect(getByTestId('hero-bg-tile')).not.toBeNull()
+    expect(queryByTestId('hero-bg')).toBeNull()
+  })
+})
+
+// ─── Foreground image (InternalHero only) ────────────────────────────────────
+//
+// Right-aligned, bottom-anchored subject that bleeds off the bottom, full color
+// ABOVE the scrim (z-10). Two-column with the left text at lg+; hidden < lg so
+// mobile is text-first. InternalPageHeader never renders one (covered there).
+
+describe('InternalHero — foreground image', () => {
+  it('renders the foreground wrapper + image when foregroundImage.src is present', () => {
+    const {getByTestId} = render(<InternalHero data={WITH_FOREGROUND} />)
+    const fg = getByTestId('hero-foreground') as HTMLElement
+    const img = fg.querySelector('img') as HTMLImageElement
+    expect(img.getAttribute('src')).toBe('/attorney.png')
+    expect(img.getAttribute('alt')).toBe('Attorney portrait')
+  })
+
+  it('omits the foreground when foregroundImage is absent', () => {
+    const {queryByTestId} = render(<InternalHero data={BASE_DATA} />)
+    expect(queryByTestId('hero-foreground')).toBeNull()
+  })
+
+  it('is a box in the content container sized from the shared CSS vars, top-anchored, above the scrim (z-10), hidden below lg', () => {
+    const {getByTestId} = render(<InternalHero data={WITH_FOREGROUND} />)
+    const fg = getByTestId('hero-foreground') as HTMLElement
+    expect(fg.className).toContain('absolute')
+    expect(fg.className).toContain('top-0') // anchored to the band top (head near top)
+    expect(fg.className).toContain('z-10')
+    expect(fg.className).toContain('hidden')
+    expect(fg.className).toContain('lg:block')
+    // Box geometry comes from the shared vars (kept in sync with the heading reserve).
+    expect(fg.style.width).toBe('var(--hero-fg-col)')
+    expect(fg.style.height).toBe('var(--hero-fg-h)')
+    expect(fg.style.right).toBe('var(--hero-fg-inset)')
+    // The foreground lives INSIDE the content container (same frame as the heading).
+    const container = fg.parentElement as HTMLElement
+    expect(container.className).toContain('container')
+    expect(container.style.getPropertyValue('--hero-fg-col')).toBe(HERO_FOREGROUND_MAX_WIDTH)
+    expect(container.style.getPropertyValue('--hero-fg-h')).toBe(HERO_FOREGROUND_HEIGHT)
+    expect(container.style.getPropertyValue('--hero-fg-gap')).toBe(HERO_FOREGROUND_GAP)
+    expect(container.style.getPropertyValue('--hero-fg-inset')).toBe(HERO_FOREGROUND_RIGHT_INSET)
+    // Image is contained + grounded bottom-right inside the box (aspect-robust).
+    const img = fg.querySelector('img') as HTMLElement
+    expect(img.className).toContain('object-contain')
+    expect(img.className).toContain('object-right-bottom')
+    expect(img.className).toContain('h-full')
+    expect(img.className).toContain('w-full')
+  })
+
+  it('stays boxed (constant box vars) across aspect ratios (narrow / portrait / wide)', () => {
+    const ASPECTS = [
+      {label: 'narrow head-to-chest', width: 600, height: 640},
+      {label: 'head-to-thigh (portrait)', width: 800, height: 1200},
+      {label: 'wide full-body cut-out', width: 1600, height: 900},
+    ]
+    for (const a of ASPECTS) {
+      const {getByTestId, unmount} = render(
+        <InternalHero data={{...BASE_DATA, foregroundImage: {src: '/fg.png', alt: a.label, width: a.width, height: a.height}}} />,
+      )
+      const fg = getByTestId('hero-foreground') as HTMLElement
+      const container = fg.parentElement as HTMLElement
+      // Box dimensions are constant regardless of the uploaded aspect ratio —
+      // the image can never exceed the box (no heading crowding / right overflow).
+      expect(container.style.getPropertyValue('--hero-fg-col')).toBe(HERO_FOREGROUND_MAX_WIDTH)
+      expect(container.style.getPropertyValue('--hero-fg-h')).toBe(HERO_FOREGROUND_HEIGHT)
+      // Contained + grounded bottom-right, so tall→height-wins, wide→width-capped.
+      const img = fg.querySelector('img') as HTMLElement
+      expect(img.className).toContain('object-contain')
+      expect(img.className).toContain('object-right-bottom')
+      unmount()
+    }
+  })
+
+  it('reserves the heading column so a long heading never slides under the foreground (zero overlap)', () => {
+    const LONG = 'Comprehensive Estate Planning, Probate, and Trust Administration Services for Minnesota Families'
+    const {getByTestId, getByRole} = render(
+      <InternalHero data={{...BASE_DATA, heading: LONG, foregroundImage: WITH_FOREGROUND.foregroundImage}} />,
+    )
+    const fg = getByTestId('hero-foreground') as HTMLElement
+    const container = fg.parentElement as HTMLElement
+    // Heading column carries the reservation flag + sits in the same container
+    // whose vars cap its max-width before the foreground zone (globals.css rule).
+    const headingCol = getByRole('heading', {level: 1}).parentElement as HTMLElement
+    expect(headingCol.hasAttribute('data-hero-heading-reserve')).toBe(true)
+    expect(headingCol.parentElement).toBe(container) // heading + foreground are siblings (true two-column)
+    expect(container.style.getPropertyValue('--hero-fg-col')).toBe(HERO_FOREGROUND_MAX_WIDTH)
+    expect(container.style.getPropertyValue('--hero-fg-gap')).toBe(HERO_FOREGROUND_GAP)
+  })
+
+  it('does NOT reserve the heading column when there is no foreground', () => {
+    const {getByRole} = render(<InternalHero data={BASE_DATA} />)
+    const headingCol = getByRole('heading', {level: 1}).parentElement as HTMLElement
+    expect(headingCol.hasAttribute('data-hero-heading-reserve')).toBe(false)
+  })
+
+  it('gives the section the band min-height (lg+) only when a foreground is present', () => {
+    const withFg = render(<InternalHero data={WITH_FOREGROUND} />)
+    expect((withFg.container.firstChild as HTMLElement).className).toContain(HERO_BAND_MIN_H_LG)
+    // No foreground → no forced min-height.
+    const noFg = render(<InternalHero data={BASE_DATA} />)
+    expect((noFg.container.firstChild as HTMLElement).className).not.toContain(HERO_BAND_MIN_H_LG)
+  })
+
+  it('coexists with a background image (full-color subject over the scrim)', () => {
+    const {getByTestId} = render(
+      <InternalHero data={{...WITH_IMAGE, foregroundImage: WITH_FOREGROUND.foregroundImage}} />,
+    )
+    // Both layers present: backdrop+scrim AND the foreground subject.
+    expect(getByTestId('hero-scrim')).not.toBeNull()
+    expect(getByTestId('hero-foreground')).not.toBeNull()
+  })
+
+  it('enables overflow-hidden on the section so the subject bleeds off the bottom', () => {
+    const {container} = render(<InternalHero data={WITH_FOREGROUND} />)
+    expect((container.firstChild as HTMLElement).className).toContain('overflow-hidden')
   })
 })
 
@@ -240,7 +439,7 @@ describe('InternalHero — scheme matrix (hasImage × useHeroScheme)', () => {
     expect(section.className).not.toContain('bg-background')
   })
 
-  it('hasImage=false + scheme="light" → isDark=false (override absent, bg-background applied)', () => {
+  it('hasImage=false + scheme="light" → isDark=false (neutral bg-hero-tint, NOT bg-background/#fff or bg-muted)', () => {
     const {container} = render(
       <HeroSchemeProvider scheme="light">
         <InternalHero data={BASE_DATA} />
@@ -249,8 +448,22 @@ describe('InternalHero — scheme matrix (hasImage × useHeroScheme)', () => {
     const section = container.firstChild as HTMLElement
     // No override fires; data-ring-context omitted entirely.
     expect(section.hasAttribute('data-ring-context')).toBe(false)
-    expect(section.className).toContain('bg-background')
+    // Light-tint fix: neutral hero tint, not stark white, not the accent-tinted bg-muted.
+    expect(section.className).toContain('bg-hero-tint')
+    expect(section.className).not.toContain('bg-background')
+    expect(section.className).not.toContain('bg-muted')
     expect(section.className).not.toContain('bg-brand-dark')
+  })
+
+  it('page schemeOverride="light" beats a dark site scheme (page > site)', () => {
+    const {container} = render(
+      <HeroSchemeProvider scheme="dark">
+        <InternalHero data={{...BASE_DATA, schemeOverride: 'light'}} />
+      </HeroSchemeProvider>,
+    )
+    const section = container.firstChild as HTMLElement
+    expect(section.className).toContain('bg-hero-tint')
+    expect(section.hasAttribute('data-ring-context')).toBe(false)
   })
 
   it('button-group context follows the resolved isDark (dark when image overrides light scheme)', () => {

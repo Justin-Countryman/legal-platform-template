@@ -165,6 +165,23 @@
   width: 100%;
 }
 
+/* ─── Internal-hero two-column heading reservation ─────────────────────────── */
+/* When an internal hero has a foreground figure, the heading column's max-width
+   is reserved (lg+) so the heading always ends before the foreground zone and
+   can never slide under the figure — even a long heading just wraps in its
+   column. The CSS vars are set on the hero content container by
+   lib/heroLayout.ts → heroForegroundVars(); 42rem mirrors max-w-2xl (the
+   heading's natural measure). Below lg the foreground is hidden and the heading
+   keeps its base max-w-2xl. */
+@media (min-width: 992px) {
+  [data-hero-heading-reserve] {
+    max-width: min(
+      42rem,
+      calc(100% - var(--hero-fg-col) - var(--hero-fg-gap) - var(--hero-fg-inset))
+    );
+  }
+}
+
 /* ─── Tagline Utility ────────────────────────────────────────────────────── */
 /* Shares one source of truth with the <Tagline> primitive. Semantic elements  */
 /* (h2, h3, dt, etc.) can apply `tagline` to inherit the same typography      */
@@ -482,6 +499,7 @@
   --color-action-text:         #1a1a1a;   /* outlined-button + tertiary text (cascade-aware: light = AA-safe action-on-light) */
   --color-action-text-on-dark: #4a4a4a;   /* action-text dark variant (raw action color)    */
   --color-muted:               #f5f5f5;   /* off-white section alternation (anchored — does NOT cascade) */
+  --color-hero-tint:           #fafaf9;   /* neutral near-white for the light internal-hero surface — NOT #fff (stark), NOT bg-muted (accent-tinted); runtime-derived from primary at near-zero chroma */
   --color-brand-dark:          #1a1a1a;   /* dark sections, footer, overlays                */
   --color-accent:              #666666;   /* tagline accent (cascade-aware)                 */
   --color-accent-on-dark:      #666666;   /* accent brightened for dark bg                  */

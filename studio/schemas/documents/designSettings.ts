@@ -33,6 +33,11 @@ export const designSettings = defineType({
       options: {collapsible: true, collapsed: true},
     },
     {
+      name: 'internalHero',
+      title: 'Internal Hero',
+      options: {collapsible: true, collapsed: true},
+    },
+    {
       name: 'buttons',
       title: 'Buttons',
       options: {collapsible: true, collapsed: true},
@@ -491,16 +496,71 @@ export const designSettings = defineType({
       name: 'internalHeroBackground',
       title: 'Internal Hero — Default Background',
       type: 'string',
-      fieldset: 'uiElements',
-      description: 'Controls the background style for all internal page heroes (About, Practice Areas, Blog, etc.). Pages with a background image always use the image — this setting applies only when no image is present.',
+      fieldset: 'internalHero',
+      description: 'Default background style for internal page heroes when NO background image is present (site image below, or a per-page image). Light is a soft neutral tint — not stark white. A page can override this in its own Internal Hero settings.',
       options: {
         list: [
           {title: 'Dark — brand color background, white text', value: 'dark'},
-          {title: 'Light — tint background, dark text', value: 'light'},
+          {title: 'Light — neutral tint background, dark text', value: 'light'},
         ],
         layout: 'radio',
       },
       initialValue: 'dark',
+    },
+    {
+      name: 'siteHeroBackgroundImage',
+      title: 'Internal Hero — Default Background Image',
+      type: 'image',
+      fieldset: 'internalHero',
+      description: 'Optional site-wide background image for internal page heroes. Pages inherit this by default; a page can override with its own image or force no image. When an image is present the hero is always dark (scrim + white text).',
+      options: {hotspot: true},
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alt Text',
+          description: 'Describe the image for screen readers and SEO.',
+        },
+        {
+          name: 'fit',
+          type: 'string',
+          title: 'Fit',
+          description: 'Cover fills the band (cropped to fit). Tile repeats the image as a pattern.',
+          options: {
+            list: [
+              {title: 'Cover — fill the band', value: 'cover'},
+              {title: 'Tile — repeat as a pattern', value: 'tile'},
+            ],
+            layout: 'radio',
+          },
+          initialValue: 'cover',
+        },
+      ],
+    },
+    {
+      name: 'siteHeroForegroundImage',
+      title: 'Internal Hero — Default Foreground Image',
+      type: 'image',
+      fieldset: 'internalHero',
+      description: 'Optional site-wide foreground subject (e.g. attorney, building) shown bottom-right of every internal page hero, in full color above the scrim. Hidden on mobile. A page can override it with its own image or hide it.',
+      options: {hotspot: true},
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alt Text',
+          description: 'Describe the image for screen readers and SEO.',
+        },
+      ],
+    },
+    {
+      name: 'heroScrimOpacity',
+      title: 'Internal Hero — Scrim Opacity',
+      type: 'number',
+      fieldset: 'internalHero',
+      description: 'Darkening overlay strength over hero background images (0 = none, 100 = solid). Keeps heading text readable. A page can override this.',
+      initialValue: 80,
+      validation: (Rule) => Rule.min(0).max(100),
     },
     {
       name: 'tertiaryStyle',

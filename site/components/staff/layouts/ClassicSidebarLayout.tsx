@@ -39,7 +39,7 @@ export function ClassicSidebarLayout({member, napTokens, cta = {label: 'Contact 
       {/* ── Top banner ────────────────────────────────────────────────────── */}
       <div
         data-ring-context={isDark ? 'dark' : undefined}
-        className={`${isDark ? 'bg-brand-dark' : 'bg-background'} px-[5%] py-12 md:py-16`}
+        className={`${isDark ? 'bg-brand-dark' : 'bg-hero-tint'} px-[5%] py-12 md:py-16`}
         aria-labelledby="staff-h1"
       >
         <div className="container">

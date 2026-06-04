@@ -7,6 +7,8 @@ import {HEADER_QUERY, FOOTER_QUERY, DESIGN_TOKENS_QUERY} from '@/lib/sanity/quer
 import {resolveTokenString, formatPhone} from '@/lib/tokens'
 import {buildDesignTokenCSS, buildColorCSS, buildFontCSS, resolveSidebarDesignSettings} from '@/lib/designTokens'
 import {HeroSchemeProvider} from '@/lib/heroSchemeContext'
+import {HeroSurfaceProvider} from '@/lib/heroSurfaceContext'
+import {DEFAULT_SCRIM_OPACITY, resolveHeroSurface, resolveMergedHeaderScheme} from '@/lib/heroSurface'
 import {SidebarDesignSettingsProvider} from '@/lib/sidebarDesignSettingsContext'
 import {OfficeHoursProvider} from '@/components/location/OfficeHoursContext'
 import {resolvefonts, buildFontPreloads} from '@/fonts/loader'
@@ -105,6 +107,24 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
   // doesn't fetch designSettings) so the GROQ call isn't duplicated.
   const buttonAnimation = designTokens?.buttonAnimation ?? 'none'
 
+  // Merged-header contrast guardrail: when heroMerge is on, the transparent
+  // at-top header overlays the hero, so its text polarity must follow the
+  // EFFECTIVE site hero scheme (dark hero / any hero image ⇒ white text; light
+  // hero ⇒ dark text) rather than the independent mainNavigation default. The
+  // image⇒dark rule comes through resolveHeroSurface().isDark. Solid header
+  // schemes (no overlay) and heroMerge-off are left untouched.
+  const siteHeroSurface = resolveHeroSurface({
+    scheme: designTokens?.internalHeroBackground === 'light' ? 'light' : 'dark',
+    bgImage: designTokens?.siteHeroBackgroundImage ?? null,
+    foreground: designTokens?.siteHeroForegroundImage ?? null,
+    scrimOpacity: DEFAULT_SCRIM_OPACITY,
+  })
+  const mergedDefaultScheme = resolveMergedHeaderScheme(
+    headerData?.mainNavigation?.defaultScheme ?? 'light',
+    headerData?.mainNavigation?.heroMerge ?? false,
+    siteHeroSurface.isDark,
+  )
+
   // Preload regular-weight heading + body fonts so the browser fetches them in
   // parallel with parsing the inline @font-face <style> below. See
   // buildFontPreloads() in fonts/loader.ts for the dedupe and selection rules.
@@ -141,7 +161,7 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
           sticky: headerData?.mainNavigation?.sticky ?? true,
           stickyHideSupplementary: headerData?.mainNavigation?.stickyHideSupplementary ?? true,
           compactStyle: headerData?.mainNavigation?.compactStyle ?? 'docked',
-          defaultScheme: headerData?.mainNavigation?.defaultScheme ?? 'light',
+          defaultScheme: mergedDefaultScheme,
           scrolledScheme: headerData?.mainNavigation?.scrolledScheme ?? 'light',
           topBarEnabled: headerData?.mainNavigation?.topBarEnabled ?? false,
           topBarPinSide: headerData?.mainNavigation?.topBarPinSide ?? 'none',
@@ -159,13 +179,24 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
         }}
       />
       <HeroSchemeProvider scheme={designTokens?.internalHeroBackground === 'light' ? 'light' : 'dark'}>
-        <SidebarDesignSettingsProvider value={resolveSidebarDesignSettings(designTokens)}>
-          <main id="main-content" tabIndex={-1} className="outline-none">
-            <OfficeHoursProvider value={footerData?.siteSettings?.address?.hours ?? null}>
-              {children}
-            </OfficeHoursProvider>
-          </main>
-        </SidebarDesignSettingsProvider>
+        <HeroSurfaceProvider
+          value={{
+            bgImage: designTokens?.siteHeroBackgroundImage ?? null,
+            foreground: designTokens?.siteHeroForegroundImage ?? null,
+            scrimOpacity:
+              typeof designTokens?.heroScrimOpacity === 'number'
+                ? designTokens.heroScrimOpacity
+                : DEFAULT_SCRIM_OPACITY,
+          }}
+        >
+          <SidebarDesignSettingsProvider value={resolveSidebarDesignSettings(designTokens)}>
+            <main id="main-content" tabIndex={-1} className="outline-none">
+              <OfficeHoursProvider value={footerData?.siteSettings?.address?.hours ?? null}>
+                {children}
+              </OfficeHoursProvider>
+            </main>
+          </SidebarDesignSettingsProvider>
+        </HeroSurfaceProvider>
       </HeroSchemeProvider>
       {footerData?.designSettings?.showBackToTop === true && <BackToTop />}
       <Footer
