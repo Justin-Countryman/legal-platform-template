@@ -93,7 +93,10 @@ describe('SectionHeader — scale prop', () => {
     expect(h2.className).toBe(SECTION_HEADER_H2_CLASS.xl)
     expect(h2.className).toContain('text-4xl')
     expect(h2.className).toContain('md:mb-6')
-    expect(h2.className).toContain('lg:text-6xl')
+    expect(h2.className).toContain('md:text-5xl')
+    // xl caps at text-5xl (48px); the former lg:text-6xl (60px) overshot the
+    // compressed display ceiling and is intentionally gone.
+    expect(h2.className).not.toContain('lg:text-6xl')
   })
 
   it('h2 always carries the scale-paired mb-X (idempotent regardless of description presence)', () => {

@@ -51,7 +51,13 @@ export type SectionHeaderProps = {
 export const SECTION_HEADER_H2_CLASS: Record<SectionHeaderScale, string> = {
   md: 'mb-4 text-3xl font-bold text-foreground md:text-4xl',
   lg: 'mb-5 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl',
-  xl: 'mb-5 text-4xl font-bold text-foreground md:mb-6 md:text-5xl lg:text-6xl',
+  // xl is the marquee bottom-of-page CTA tier (sole consumer: GlobalCta). It
+  // stays the largest tier — highest mobile floor (text-4xl) and reaches the
+  // ceiling one breakpoint earlier than lg — but caps at text-5xl (48px). The
+  // former lg:text-6xl (60px) overshot the project's own compressed display
+  // ceiling (--text-10xl = 56px), so a long heading wrapped to three lines in
+  // the centered max-w-lg column and dwarfed the eyebrow/subhead/button.
+  xl: 'mb-5 text-4xl font-bold text-foreground md:mb-6 md:text-5xl',
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
