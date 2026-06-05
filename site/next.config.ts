@@ -24,10 +24,13 @@ const securityHeaders = [
 // tracked in git). The Site Prep Tool may regenerate `output/redirects.csv`
 // for comparison but never overwrites the CS-tracked copy.
 //
-// CSV shape: `old_path,new_path` with header row. Both columns are
-// path-relative (leading `/`). Lines beginning with `#` are treated as
-// comments. Empty lines are skipped.
-function loadRedirects(): {source: string; destination: string; permanent: boolean}[] {
+// CSV shape: `old_path,new_path[,redirect_type]` with header row. The first two
+// columns are path-relative (leading `/`). The optional third column is the
+// HTTP status (`301` or `302`); when absent it defaults to `301` — the correct
+// default for a migration. Lines beginning with `#` are comments; empty lines
+// are skipped. Emitting an explicit `statusCode` (301/302) rather than
+// `permanent` preserves the literal type from CS-SITEMAP.csv.
+function loadRedirects(): {source: string; destination: string; statusCode: number}[] {
   const csvPath = resolve(__dirname, '../CS/redirects.csv')
   let raw: string
   try {
@@ -39,14 +42,15 @@ function loadRedirects(): {source: string; destination: string; permanent: boole
   }
 
   const lines = raw.split('\n')
-  const out: {source: string; destination: string; permanent: boolean}[] = []
+  const out: {source: string; destination: string; statusCode: number}[] = []
   for (let i = 0; i < lines.length; i++) {
     const trimmed = lines[i].trim()
     if (!trimmed || trimmed.startsWith('#')) continue
     if (i === 0 && trimmed.toLowerCase().startsWith('old_path')) continue // header
-    const [source, destination] = trimmed.split(',').map((s) => s.trim())
+    const [source, destination, rawType] = trimmed.split(',').map((s) => s.trim())
     if (!source || !destination) continue
-    out.push({source, destination, permanent: true})
+    const statusCode = rawType === '302' ? 302 : 301
+    out.push({source, destination, statusCode})
   }
   return out
 }
