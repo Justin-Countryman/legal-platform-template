@@ -30,6 +30,21 @@ const securityHeaders = [
 // default for a migration. Lines beginning with `#` are comments; empty lines
 // are skipped. Emitting an explicit `statusCode` (301/302) rather than
 // `permanent` preserves the literal type from CS-SITEMAP.csv.
+//
+// Trailing-slash normalization: the site runs with the default
+// `trailingSlash: false`, so Next 308-strips a trailing slash off the incoming
+// path BEFORE matching redirect rules. CSV paths are WordPress-style slashed
+// (`/about/attorney/`), so we strip both source and destination to the site's
+// canonical slashless form. Without this the rule (keyed on the slashed source)
+// never matches and the legacy URL 404s. Result: a slashless legacy URL is a
+// single 301; an originally-slashed one is a functional 308→301 chain (Next
+// normalizes the incoming slash first — unavoidable without disabling the
+// site-wide trailing-slash redirect). Normalizing the destination too avoids a
+// trailing 308 hop to the canonical target.
+function stripTrailingSlash(p: string): string {
+  return p === '/' ? '/' : p.replace(/\/+$/, '')
+}
+
 function loadRedirects(): {source: string; destination: string; statusCode: number}[] {
   const csvPath = resolve(__dirname, '../CS/redirects.csv')
   let raw: string
@@ -47,8 +62,13 @@ function loadRedirects(): {source: string; destination: string; statusCode: numb
     const trimmed = lines[i].trim()
     if (!trimmed || trimmed.startsWith('#')) continue
     if (i === 0 && trimmed.toLowerCase().startsWith('old_path')) continue // header
-    const [source, destination, rawType] = trimmed.split(',').map((s) => s.trim())
-    if (!source || !destination) continue
+    const [rawSource, rawDestination, rawType] = trimmed.split(',').map((s) => s.trim())
+    if (!rawSource || !rawDestination) continue
+    const source = stripTrailingSlash(rawSource)
+    const destination = stripTrailingSlash(rawDestination)
+    // After normalization a `/foo/`→`/foo` row collapses to a self-redirect —
+    // skip it (Next rejects a rule whose source equals its destination).
+    if (source === destination) continue
     const statusCode = rawType === '302' ? 302 : 301
     out.push({source, destination, statusCode})
   }
