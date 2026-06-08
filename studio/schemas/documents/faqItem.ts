@@ -6,9 +6,13 @@ import {TokenStringInput} from '../../components/TokenStringInput'
 // of truth, edit once and propagate across pages. Site Build Tool composes faqItem docs once
 // from BI doctrine + CS-FIRM-DATA, references them from page docs where they apply.
 //
-// `category` options are a per-client list. For new clients the Client Provisioning Tool's
-// sanitization map rewrites the list to match the new firm's top-level practice areas
-// (driven by CS-FIRM-DATA.clientPracticeAreaSelections at Site Build Tool time).
+// `category` options are the GENERIC platform list below — NOT per-client. The
+// Client Provisioning Tool does not rewrite this enum (no such logic exists).
+// SBT FAQ auto-wiring matches a faqItem's stored `category` value against the
+// page slug and never reads this enum, so generic values that don't equal a
+// client's practice-area slugs break auto-wiring. Per-client alignment is the
+// deferred reference-based SBT-wiring workstream (faqItem → practiceArea
+// reference; SBT wires by ref), pre-client-#2 — see BI/OUTSTANDING.md.
 
 export const faqItem = defineType({
   name: 'faqItem',
@@ -36,11 +40,12 @@ export const faqItem = defineType({
       title: 'Category',
       type: 'string',
       description:
-        'Practice-area category for FAQ filtering. The list below is the platform template; the Client Provisioning Tool rewrites it per-client at Site Build Tool time.',
+        'Practice-area category for FAQ filtering. This is the generic platform list — it is NOT customized per client. Pick the closest value; if none matches your practice-area slug, FAQ auto-wiring may not attach (per-client alignment is a deferred workstream).',
       options: {
-        // PLATFORM TEMPLATE — default practice areas + General/Firm-Operational.
-        // Sanitized + rewritten per-client by Client Provisioning Tool (see BI-SANITY.md
-        // "Sanitization map" — entry: faqItem.category options list).
+        // GENERIC PLATFORM LIST — default practice areas + General/Firm-Operational.
+        // NOT rewritten per-client (the Provisioning Tool has no such logic).
+        // Per-client alignment = deferred reference-based SBT-wiring workstream;
+        // see BI/OUTSTANDING.md and BI-SANITY.md sanitization-map row 31.
         list: [
           {title: 'General / Firm-Operational', value: 'general'},
           {title: 'Family Law', value: 'family-law'},
