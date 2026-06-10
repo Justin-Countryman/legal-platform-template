@@ -1,4 +1,5 @@
 import {defineType} from 'sanity'
+import {TokenStringInput} from '../../../components/TokenStringInput'
 
 export const featuredTestimonial = defineType({
   name: 'featuredTestimonial',
@@ -10,6 +11,21 @@ export const featuredTestimonial = defineType({
       title: 'Section Name',
       type: 'string',
       description: 'Internal label — e.g. "Family Law Featured Testimonial"',
+      validation: (Rule) => Rule.required().warning(),
+    },
+    {
+      name: 'tagline',
+      title: 'Tagline',
+      type: 'string',
+      components: {input: TokenStringInput},
+    },
+    {
+      name: 'heading',
+      title: 'H2 Heading',
+      type: 'string',
+      description: 'The section heading shown above the testimonial.',
+      initialValue: 'Client Testimonial',
+      components: {input: TokenStringInput},
       validation: (Rule) => Rule.required().warning(),
     },
     {

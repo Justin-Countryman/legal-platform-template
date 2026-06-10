@@ -45,6 +45,7 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
   heading,
   description,
   layout,
+  cardStyle,
   mode,
   reviewsEmbed,
   footerHeading,
@@ -78,7 +79,7 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
   ),
   "attorneys": select(
     mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{
-      _id, title, "slug": slug.current, h1,
+      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
       "photo": photo{
         "src": asset->url,
         "alt": coalesce(alt, ""),
@@ -87,7 +88,7 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
       }
     },
     mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{
-      _id, title, "slug": slug.current, h1,
+      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
       "photo": photo{
         "src": asset->url,
         "alt": coalesce(alt, ""),
@@ -96,7 +97,7 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
       }
     },
     mode == 'manual' => attorneys[defined(@->_id)]->{
-      _id, title, "slug": slug.current, h1,
+      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
       "photo": photo{
         "src": asset->url,
         "alt": coalesce(alt, ""),
@@ -201,6 +202,7 @@ export const SITEMAP_QUERY = groq`{
   "blogIndex":        *[_type == "blogIndex"][0]{_updatedAt},
   "eventIndex":       *[_type == "eventIndex"][0]{_updatedAt},
   "serviceAreaIndex": *[_type == "serviceAreaIndex"][0]{_updatedAt},
+  "videoIndex":       *[_type == "videoIndex" && coalesce(noIndex, false) == false][0]{_updatedAt},
   "testimonials":     *[_type == "testimonialsPage"][0]{_updatedAt},
   "attorneys":        *[_type == "attorneyPage" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},
   "staff":            *[_type == "staffPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},
@@ -987,6 +989,46 @@ export const BLOG_INDEX_PAGE_QUERY = groq`
       ${INTERNAL_HERO_OVERRIDE_FIELDS}
     },
     "title": coalesce(hero.heading, "Blog"),
+    hideCtaForm,
+    "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT}
+  }
+`
+
+// ─── Video Library Page ───────────────────────────────────────────────────────
+// Curated, ordered video refs + an optional featured spotlight. The grid filter
+// chips are derived client-side from each video's videoType.
+const VIDEO_CARD_FRAGMENT = groq`{
+  "id": _id,
+  title,
+  youTubeUrl,
+  description,
+  videoType,
+  duration,
+  "thumbnail": thumbnail{
+    "src": asset->url,
+    "alt": coalesce(alt, ""),
+    "width": asset->metadata.dimensions.width,
+    "height": asset->metadata.dimensions.height
+  }
+}`
+
+export const VIDEO_INDEX_PAGE_QUERY = groq`
+  *[_type == "videoIndex"][0]{
+    "slug": slug.current,
+    seoTitle,
+    metaDescription,
+    noIndex,
+    canonicalUrl,
+    "hero": hero {
+      "heading": coalesce(heading, "Video Library"),
+      ${INTERNAL_HERO_OVERRIDE_FIELDS}
+    },
+    "title": coalesce(hero.heading, "Video Library"),
+    tagline,
+    heading,
+    description,
+    "featuredVideo": featuredVideo->${VIDEO_CARD_FRAGMENT},
+    "videos": videos[defined(@->_id)]->${VIDEO_CARD_FRAGMENT},
     hideCtaForm,
     "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT}
   }

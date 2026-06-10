@@ -1,11 +1,15 @@
 import Image from 'next/image'
 import {StarRating} from '@/components/ui/StarRating'
+import {Tagline} from '@/components/ui/Tagline'
 import {type TestimonialData} from '@/components/ui/TestimonialCard'
+import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type FeaturedTestimonialSectionData = {
   _type: 'featuredTestimonial'
+  tagline?: string | null
+  heading?: string | null
   testimonial?: TestimonialData | null
 }
 
@@ -13,19 +17,27 @@ export type FeaturedTestimonialSectionData = {
 
 export function FeaturedTestimonialSection({
   data,
+  napTokens,
 }: {
   data: FeaturedTestimonialSectionData
+  napTokens?: NapTokens | null
 }) {
   const t = data.testimonial
   if (!t?.quote) return null
+
+  const tagline = resolveTokenString(data.tagline, napTokens)
+  // Editable H2; falls back to the original default for sections created before
+  // the heading field existed.
+  const heading = resolveTokenString(data.heading, napTokens) || 'Client Testimonial'
 
   return (
     <section className="bg-background px-[5%] py-16 md:py-24 lg:py-28">
       <div className="container mx-auto max-w-4xl">
 
         {/* Section heading */}
+        {tagline && <Tagline as="p">{tagline}</Tagline>}
         <h2 className="mb-6 font-heading text-xl font-bold text-foreground md:text-2xl">
-          Client Testimonial
+          {heading}
         </h2>
 
         {/* Stars */}

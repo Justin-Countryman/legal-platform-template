@@ -38,7 +38,7 @@ export function PageSections({
           case 'testimonialsGrid':
             return <TestimonialsGridSection key={i} data={section} napTokens={napTokens} />
           case 'featuredTestimonial':
-            return <FeaturedTestimonialSection key={i} data={section} />
+            return <FeaturedTestimonialSection key={i} data={section} napTokens={napTokens} />
           case 'ctaSection':
             return <CtaSectionBlock key={i} data={section} napTokens={napTokens} />
           case 'faqSection':

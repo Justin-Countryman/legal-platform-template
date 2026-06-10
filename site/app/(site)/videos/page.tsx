@@ -1,0 +1,131 @@
+export const revalidate = 3600
+
+import type {Metadata} from 'next'
+import {client} from '@/lib/sanity/client'
+import {VIDEO_INDEX_PAGE_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
+import {resolveTokenString, expandNapTokens} from '@/lib/tokens'
+import {buildSocialMeta} from '@/lib/socialMeta'
+import {getEmbedUrl, autoThumbnails, toIsoDuration} from '@/lib/videoEmbed'
+import {InternalHero, type InternalHeroData} from '@/components/layout/InternalHero'
+import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
+import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
+import {GlobalCta} from '@/components/sections/GlobalCta'
+import {VideoLibraryClient, type VideoCardData} from '@/components/sections/VideoLibraryClient'
+
+type VideoIndexData = {
+  slug?: string | null
+  seoTitle?: string | null
+  metaDescription?: string | null
+  noIndex?: boolean | null
+  canonicalUrl?: string | null
+  hero?: InternalHeroData | null
+  title?: string | null
+  tagline?: string | null
+  heading?: string | null
+  description?: string | null
+  featuredVideo?: VideoCardData | null
+  videos?: VideoCardData[] | null
+  hideCtaForm?: boolean | null
+  ctaOverride?: Record<string, unknown> | null
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const [indexPage, rawTokens] = await Promise.all([
+    client.fetch<VideoIndexData | null>(VIDEO_INDEX_PAGE_QUERY),
+    client.fetch(NAP_TOKENS_QUERY),
+  ])
+  if (!indexPage) return {title: 'Video Library'}
+  const tokens = expandNapTokens(rawTokens)
+  const title = resolveTokenString(indexPage.seoTitle, tokens)
+  const description = resolveTokenString(indexPage.metaDescription, tokens)
+  return {
+    title,
+    description,
+    ...(indexPage.noIndex ? {robots: {index: false, follow: false}} : {}),
+    alternates: {canonical: indexPage.canonicalUrl ?? '/videos'},
+    ...buildSocialMeta(title, description),
+  }
+}
+
+// VideoObject JSON-LD for each playable video (helps video rich results).
+function videoJsonLd(videos: VideoCardData[]) {
+  const graph = videos
+    .map((v) => {
+      const embedUrl = getEmbedUrl(v.youTubeUrl)
+      if (!embedUrl) return null
+      const thumbnailUrl = v.thumbnail?.src ?? autoThumbnails(v.youTubeUrl)?.primary
+      const iso = toIsoDuration(v.duration)
+      return {
+        '@type': 'VideoObject',
+        name: v.title,
+        description: v.description || v.title,
+        ...(thumbnailUrl ? {thumbnailUrl} : {}),
+        ...(iso ? {duration: iso} : {}),
+        embedUrl,
+      }
+    })
+    .filter(Boolean)
+  if (graph.length === 0) return null
+  return {'@context': 'https://schema.org', '@graph': graph}
+}
+
+export default async function VideoLibraryPage() {
+  const [indexPage, globalCtaData, rawTokens] = await Promise.all([
+    client.fetch<VideoIndexData | null>(VIDEO_INDEX_PAGE_QUERY),
+    client.fetch(GLOBAL_CTA_QUERY),
+    client.fetch(NAP_TOKENS_QUERY),
+  ])
+  const tokens = expandNapTokens(rawTokens)
+
+  const featured = indexPage?.featuredVideo ?? null
+  // Featured video is excluded from the grid (no duplicate).
+  const gridVideos = (indexPage?.videos ?? []).filter((v) => v && v.id !== featured?.id)
+
+  const tagline = resolveTokenString(indexPage?.tagline, tokens)
+  const heading = resolveTokenString(indexPage?.heading, tokens)
+  const description = resolveTokenString(indexPage?.description, tokens)
+
+  const jsonLd = videoJsonLd([...(featured ? [featured] : []), ...gridVideos])
+
+  return (
+    <>
+      {indexPage?.hero ? (
+        <InternalHero data={indexPage.hero} napTokens={tokens} />
+      ) : (
+        <InternalPageHeader title={indexPage?.title ?? 'Video Library'} />
+      )}
+
+      <div className="bg-muted border-b border-border px-[5%] py-3">
+        <div className="container">
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: 'Video Library', href: '/videos/'}]} />
+        </div>
+      </div>
+
+      <section className="px-[5%] pt-8 pb-16 md:pt-10 md:pb-24 lg:pb-28">
+        <div className="container">
+          <VideoLibraryClient
+            featured={featured}
+            videos={gridVideos}
+            tagline={tagline}
+            heading={heading}
+            description={description}
+          />
+        </div>
+      </section>
+
+      {!indexPage?.hideCtaForm && globalCtaData && (
+        <GlobalCta
+          data={indexPage?.ctaOverride ? {...globalCtaData, ...indexPage.ctaOverride} : globalCtaData}
+          napTokens={tokens}
+        />
+      )}
+
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}}
+        />
+      )}
+    </>
+  )
+}

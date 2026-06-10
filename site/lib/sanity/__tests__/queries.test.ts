@@ -186,17 +186,16 @@ describe('GROQ canonical filter-before-dereference pattern', () => {
   // See BI/skills/skill-sanity-schema/SKILL.md → "Reference array dereferencing"
   // for the mechanism + consumer-side belt-and-suspenders pairing.
 
-  it('catalog-stability: queries.ts contains exactly 22 canonical filter-before-deref patterns', () => {
-    // If this count changes, the 22-site catalog has drifted. Update this
-    // number in lockstep with any new []-> projection and verify the new
-    // projection ships with the canonical [defined(@->_id)]-> shape.
+  it('catalog-stability: queries.ts contains exactly 23 canonical filter-before-deref patterns', () => {
+    // If this count changes, the catalog has drifted. Update this number in
+    // lockstep with any new []-> projection and verify the new projection ships
+    // with the canonical [defined(@->_id)]-> shape.
     // Catalog grew 19 → 22 in WS-FAQ-Migration (2026-05-14) when `faqItems[]`
     // on practiceArea/geoPracticeArea/serviceAreaPage/faqPage + `questions[]`
     // on faqSection migrated from inline `faqItem` objects to references.
-    // The 3 new sites: SECTIONS_FRAGMENT.questions (faqSection), and the
-    // two faqItems projections inside PRACTICE_AREA_QUERY + CONTENT_PAGE_QUERY.
+    // Grew 22 → 23 with VIDEO_INDEX_PAGE_QUERY.videos[] (Video Library).
     const matches = QUERIES_SRC.match(/\[defined\(@->_id\)\]->/g) ?? []
-    expect(matches.length).toBe(22)
+    expect(matches.length).toBe(23)
   })
 
   it('source-text meta: queries.ts contains zero broken-pattern occurrences', () => {

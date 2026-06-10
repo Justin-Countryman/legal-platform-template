@@ -12,6 +12,7 @@ type SitemapData = {
   blogIndex: SingletonNode
   eventIndex: SingletonNode
   serviceAreaIndex: SingletonNode
+  videoIndex: SingletonNode
   testimonials: SingletonNode
   attorneys: SanityNode[]
   staff: SanityNode[]
@@ -54,6 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (data.blogIndex) push('/blog', data.blogIndex._updatedAt, 0.8)
   if (data.eventIndex) push('/events', data.eventIndex._updatedAt, 0.8)
   if (data.serviceAreaIndex) push('/service-area', data.serviceAreaIndex._updatedAt, 0.8)
+  if (data.videoIndex) push('/videos', data.videoIndex._updatedAt, 0.8)
   if (data.testimonials) push('/testimonials', data.testimonials._updatedAt, 0.6)
   // /contact is dedicated (no singleton _updatedAt fetched); use build time.
   push('/contact', undefined, 0.7)

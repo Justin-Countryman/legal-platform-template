@@ -42,7 +42,7 @@ export const attorneyPage = defineType({
     },
     {
       name: 'ctaSection',
-      title: 'CTA Settings',
+      title: 'Global CTA Section',
       options: {collapsible: true, collapsed: true},
     },
   ],
@@ -415,7 +415,7 @@ export const attorneyPage = defineType({
     // ─── CTA Settings (collapsed) ─────────────────────────────────────────────
     defineField({
       name: 'hideCtaForm',
-      title: 'Hide CTA Section',
+      title: 'Hide Global CTA',
       type: 'boolean',
       description: 'Hide the global CTA section on this page',
       initialValue: false,
@@ -423,7 +423,7 @@ export const attorneyPage = defineType({
     }),
     defineField({
       name: 'ctaFormOverride',
-      title: 'CTA Content Override',
+      title: 'Global CTA Override',
       type: 'ctaFormSection',
       fieldset: 'ctaSection',
     }),

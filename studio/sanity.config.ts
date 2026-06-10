@@ -17,6 +17,7 @@ const PROTECTED_TYPES = [
   'attorneyIndex',
   'staffIndex',
   'eventIndex',
+  'videoIndex',
 ]
 
 export default defineConfig({

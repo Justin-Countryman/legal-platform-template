@@ -25,7 +25,7 @@ export const landingPage = defineType({
     },
     {
       name: 'ctaSection',
-      title: 'CTA Section',
+      title: 'Global CTA Section',
       options: {collapsible: true, collapsed: true},
     },
     {
@@ -105,7 +105,7 @@ export const landingPage = defineType({
     {
       name: 'hideCtaForm',
       fieldset: 'ctaSection',
-      title: 'Hide CTA Section',
+      title: 'Hide Global CTA',
       type: 'boolean',
       description: 'Hide the CTA form on this page',
       initialValue: false,

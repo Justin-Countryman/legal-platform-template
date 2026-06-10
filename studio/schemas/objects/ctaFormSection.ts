@@ -4,7 +4,7 @@ import {TokenTextInput} from '../../components/TokenTextInput'
 
 export const ctaFormSection = defineType({
   name: 'ctaFormSection',
-  title: 'CTA Content Override',
+  title: 'Global CTA Override',
   type: 'object',
   description: 'Override the Global CTA heading/text for this page only — leave blank to use Global CTA defaults. Form is always pulled from Site Settings.',
   options: {collapsible: true, collapsed: true},
@@ -40,7 +40,7 @@ export const ctaFormSection = defineType({
   preview: {
     select: {title: 'heading'},
     prepare({title}) {
-      return {title: title ?? 'CTA Content Override'}
+      return {title: title ?? 'Global CTA Override'}
     },
   },
 })

@@ -21,6 +21,15 @@ type Props = {
   /** Controlled-open state. Omit for uncontrolled. */
   open?:             boolean
   onOpenChange?:     (open: boolean) => void
+  /** Desktop panel max-width. Defaults to 'default' (max-w-lg, unchanged). */
+  size?:             'default' | 'lg' | 'xl'
+}
+
+// Desktop panel max-width by size. 'default' preserves the original max-w-lg.
+const PANEL_MAX_W: Record<NonNullable<Props['size']>, string> = {
+  default: 'md:max-w-lg',
+  lg:      'md:max-w-2xl',
+  xl:      'md:max-w-4xl',
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -42,6 +51,7 @@ export function DialogPanel({
   closeAriaLabel = 'Close',
   open,
   onOpenChange,
+  size = 'default',
 }: Props) {
   const reactId = useId()
   const descId  = `dialog-${reactId}-description`
@@ -61,14 +71,14 @@ export function DialogPanel({
 
         {/* Panel */}
         <Dialog.Content
-          className="fixed z-[1100] bg-background shadow-elevation-lg focus-visible:outline-none
+          className={`fixed z-[1100] bg-background shadow-elevation-lg focus-visible:outline-none
             data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-bottom-6
             data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-bottom-6
             md:data-[state=open]:slide-in-from-bottom-0 md:data-[state=open]:zoom-in-95
             md:data-[state=closed]:slide-out-to-bottom-0 md:data-[state=closed]:zoom-out-95
             duration-structural-slow ease-smooth
             bottom-0 left-0 right-0 max-h-[90dvh] overflow-y-auto rounded-t-ui px-6 pb-10 pt-6
-            md:bottom-auto md:left-1/2 md:right-auto md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[90%] md:max-w-lg md:rounded-ui md:px-10 md:py-10"
+            md:bottom-auto md:left-1/2 md:right-auto md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[90%] ${PANEL_MAX_W[size]} md:rounded-ui md:px-10 md:py-10`}
           aria-describedby={description ? descId : undefined}
         >
           {/* Drag handle — mobile only */}

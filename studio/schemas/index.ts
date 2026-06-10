@@ -55,6 +55,7 @@ import {attorneySection} from './documents/sections/attorneySection'
 import {reviewsSection} from './documents/sections/reviewsSection'
 import {videoSection} from './documents/sections/videoSection'
 import {video} from './documents/video'
+import {videoIndex} from './documents/videoIndex'
 
 export const schemaTypes = [
   // Documents
@@ -105,6 +106,7 @@ export const schemaTypes = [
 
   // Videos
   video,
+  videoIndex,
 
   // Sidebar Components (documents)
   sidebarNav,

@@ -34,6 +34,22 @@ export const videoSection = defineType({
       components: {input: TokenTextInput},
     },
     {
+      name: 'layout',
+      title: 'Layout',
+      type: 'string',
+      description:
+        'Centered places the heading above the video (like other sections). Split puts the heading text in a left column with the video beside it on the right (best for a single video).',
+      options: {
+        list: [
+          {title: 'Centered — heading above the video', value: 'centered'},
+          {title: 'Split — heading left, video right', value: 'split'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'centered',
+      validation: (Rule) => Rule.required().warning(),
+    },
+    {
       name: 'videos',
       title: 'Videos',
       type: 'array',

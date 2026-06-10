@@ -2,9 +2,13 @@ import {defineType} from 'sanity'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
 
-export const testimonialsPage = defineType({
-  name: 'testimonialsPage',
-  title: 'Testimonials Page',
+// Video Library singleton — mirrors blogIndex (SEO + internal hero + sections +
+// Global CTA controls) and adds a curated, ordered `videos[]` list plus an
+// optional `featuredVideo` spotlight. Slug is fixed to `videos`.
+
+export const videoIndex = defineType({
+  name: 'videoIndex',
+  title: 'Video Library',
   type: 'document',
   fieldsets: [
     {
@@ -18,36 +22,27 @@ export const testimonialsPage = defineType({
       options: {collapsible: true, collapsed: true},
     },
     {
-      name: 'layout',
-      title: 'Layout',
-      options: {collapsible: true, collapsed: true},
-    },
-    {
       name: 'ctaSection',
       title: 'Global CTA Section',
       options: {collapsible: true, collapsed: true},
     },
+    {
+      name: 'layout',
+      title: 'Layout',
+      options: {collapsible: true, collapsed: true},
+    },
   ],
   fields: [
-    // ─── Page Settings ────────────────────────────────────────────────────────
-    {
-      name: 'title',
-      fieldset: 'pageSettings',
-      title: 'Page Title',
-      type: 'string',
-      description: 'Internal label — e.g. "Testimonials"',
-      validation: (Rule) => Rule.required().warning(),
-    },
     {
       name: 'slug',
       fieldset: 'pageSettings',
       title: 'Slug',
       type: 'slug',
-      description: 'Click Generate after setting Page Title',
-      options: {source: 'title'},
+      description: 'Always videos/ — do not change',
+      readOnly: true,
+      initialValue: {current: 'videos'},
       validation: (Rule) => Rule.required().error(),
     },
-
     // ─── SEO Settings ─────────────────────────────────────────────────────────
     {
       name: 'seoTitle',
@@ -96,26 +91,50 @@ export const testimonialsPage = defineType({
       fieldset: 'seo',
       description: 'Override only — the canonical URL is set automatically from the page slug. Only fill this in if you need to point to a different URL.',
     },
-
-    // ─── Internal Hero ────────────────────────────────────────────────────────
+    // ─── Content ──────────────────────────────────────────────────────────────
     {
       name: 'hero',
       title: 'Internal Hero',
       type: 'internalHero',
-      description: 'Optional. When set, the heading inside the hero is the page\'s H1. When left empty, the page title renders as the H1 in a fallback header band.',
+      description: 'Optional. When set, the heading inside the hero is the page\'s H1. When left empty, a fallback header band renders the H1.',
     },
-
-    // ─── Testimonials ─────────────────────────────────────────────────────────
     {
-      name: 'testimonials',
-      title: 'Testimonials',
-      type: 'array',
-      of: [{type: 'reference', to: [{type: 'testimonial'}]}],
-      description: 'Add and reorder testimonials — only selected items appear on the page',
-      validation: (Rule) => Rule.min(1).warning('Add at least one testimonial'),
+      name: 'tagline',
+      title: 'Library Tagline',
+      type: 'string',
+      description: 'Optional eyebrow above the library heading.',
+      components: {input: TokenStringInput},
     },
-
-    // ─── Layout ───────────────────────────────────────────────────────────────
+    {
+      name: 'heading',
+      title: 'Library Heading',
+      type: 'string',
+      description: 'Optional heading shown above the video grid (e.g. "Browse the Library").',
+      components: {input: TokenStringInput},
+    },
+    {
+      name: 'description',
+      title: 'Library Description',
+      type: 'text',
+      rows: 2,
+      description: 'Optional intro text shown above the video grid.',
+      components: {input: TokenTextInput},
+    },
+    {
+      name: 'featuredVideo',
+      title: 'Featured Video',
+      type: 'reference',
+      to: [{type: 'video'}],
+      description: 'Optional spotlight video shown large at the top. It is excluded from the grid below to avoid duplication.',
+    },
+    {
+      name: 'videos',
+      title: 'Videos',
+      type: 'array',
+      description: 'Pick videos to display, drag to order. Category filters are built automatically from each video\'s Video Type.',
+      of: [{type: 'reference', to: [{type: 'video'}]}],
+    },
+    // ─── Page Sections ────────────────────────────────────────────────────────
     {
       name: 'sections',
       fieldset: 'layout',
@@ -137,8 +156,6 @@ export const testimonialsPage = defineType({
         },
       ],
     },
-
-    // ─── CTA Section ──────────────────────────────────────────────────────────
     {
       name: 'hideCtaForm',
       fieldset: 'ctaSection',
@@ -158,10 +175,10 @@ export const testimonialsPage = defineType({
   preview: {
     select: {subtitle: 'slug.current'},
     prepare({subtitle}) {
-      return {
-        title: 'Testimonials Page',
-        subtitle: subtitle ? `/${subtitle}` : '',
-      }
+      const derived = subtitle
+        ? subtitle.replace(/\//g, ' / ').replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
+        : null
+      return {title: derived ?? 'Video Library', subtitle: subtitle ? `/${subtitle}` : ''}
     },
   },
 })

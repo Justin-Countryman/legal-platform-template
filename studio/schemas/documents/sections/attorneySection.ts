@@ -81,6 +81,7 @@ export const attorneySection = defineType({
     {
       name: 'layout',
       title: 'Layout',
+      description: 'How the cards are arranged. Grid stacks them; Slider puts them in a swipeable carousel.',
       type: 'string',
       options: {
         list: [
@@ -90,6 +91,25 @@ export const attorneySection = defineType({
         layout: 'radio',
       },
       initialValue: 'grid',
+      validation: (Rule) => Rule.required().warning(),
+    },
+    {
+      name: 'cardStyle',
+      title: 'Card Style',
+      description:
+        'The look of each attorney card. Portrait, Editorial, Minimal, and Spotlight feature a larger photo — upload headshots for best results (a placeholder monogram shows when no photo is set).',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Classic — photo left, details right', value: 'classic'},
+          {title: 'Portrait — photo on top, details below', value: 'portrait'},
+          {title: 'Editorial — name over a full-bleed photo', value: 'editorial'},
+          {title: 'Minimal — frameless photo, lots of whitespace', value: 'minimal'},
+          {title: 'Spotlight — photo with bio revealed on hover', value: 'spotlight'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'classic',
       validation: (Rule) => Rule.required().warning(),
     },
   ],

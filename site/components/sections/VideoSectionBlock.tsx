@@ -1,5 +1,6 @@
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
+import {getEmbedUrl} from '@/lib/videoEmbed'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -16,35 +17,8 @@ export type VideoSectionBlockData = {
   tagline?: string | null
   heading?: string | null
   description?: string | null
+  layout?: 'centered' | 'split' | null
   videos?: VideoItem[] | null
-}
-
-// ─── URL helpers ──────────────────────────────────────────────────────────────
-
-function getEmbedUrl(url: string): string | null {
-  try {
-    const u = new URL(url)
-
-    // YouTube: youtube.com/watch?v=ID or youtu.be/ID
-    if (u.hostname.includes('youtube.com')) {
-      const id = u.searchParams.get('v')
-      return id ? `https://www.youtube.com/embed/${id}` : null
-    }
-    if (u.hostname === 'youtu.be') {
-      const id = u.pathname.slice(1)
-      return id ? `https://www.youtube.com/embed/${id}` : null
-    }
-
-    // Vimeo: vimeo.com/ID
-    if (u.hostname.includes('vimeo.com')) {
-      const id = u.pathname.replace(/^\//, '')
-      return id ? `https://player.vimeo.com/video/${id}` : null
-    }
-
-    return null
-  } catch {
-    return null
-  }
 }
 
 // ─── Single video ─────────────────────────────────────────────────────────────
@@ -101,7 +75,36 @@ export function VideoSectionBlock({
   const description = resolveTokenString(data.description, napTokens)
 
   const isSingle = videos.length === 1
+  // Operator-chosen; defaults to centered so existing sections (and the common
+  // single-video case) match every other section's centered header.
+  const layout = data.layout === 'split' ? 'split' : 'centered'
 
+  // Split — heading text in a left column, video(s) stacked on the right.
+  if (layout === 'split') {
+    return (
+      <section className="px-[5%] py-16 md:py-24 lg:py-28">
+        <div className="container grid grid-cols-1 items-start gap-12 md:grid-cols-2 lg:gap-20">
+          <div>
+            {heading && (
+              <SectionHeader
+                tagline={tagline}
+                heading={heading}
+                description={description}
+                alignment="left"
+              />
+            )}
+          </div>
+          <div className="space-y-8">
+            {videos.map((video) => (
+              <VideoEmbed key={video._id} video={video} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // Centered (default) — heading above, video centered (grid when multiple).
   return (
     <section className="px-[5%] py-16 md:py-24 lg:py-28">
       <div className="container">
@@ -111,8 +114,8 @@ export function VideoSectionBlock({
             tagline={tagline}
             heading={heading}
             description={description}
-            alignment={isSingle ? 'left' : 'center'}
-            className={isSingle ? 'mb-12' : 'mx-auto mb-12 max-w-2xl'}
+            alignment="center"
+            className="mx-auto mb-12 max-w-2xl"
           />
         )}
 

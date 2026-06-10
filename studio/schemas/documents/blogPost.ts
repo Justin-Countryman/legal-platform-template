@@ -27,7 +27,7 @@ export const blogPost = defineType({
     },
     {
       name: 'ctaSection',
-      title: 'CTA Section',
+      title: 'Global CTA Section',
       options: {collapsible: true, collapsed: true},
     },
     {
@@ -224,7 +224,7 @@ export const blogPost = defineType({
     {
       name: 'hideCtaForm',
       fieldset: 'ctaSection',
-      title: 'Hide CTA Section',
+      title: 'Hide Global CTA',
       type: 'boolean',
       description: 'Hide the global CTA section on this page',
       initialValue: true,
@@ -232,7 +232,7 @@ export const blogPost = defineType({
     {
       name: 'ctaFormOverride',
       fieldset: 'ctaSection',
-      title: 'CTA Content Override',
+      title: 'Global CTA Override',
       type: 'ctaFormSection',
     },
   ],

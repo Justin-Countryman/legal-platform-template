@@ -43,12 +43,13 @@ export const structure = (S: StructureBuilder) =>
         ),
       S.divider(),
 
-      // ─── Specialty Pages ──────────────────────────────────────────────────
+      // ─── Core Pages ───────────────────────────────────────────────────────
+      // Fixed order: Home, About, Contact, Location, General.
       S.listItem()
-        .title('Specialty Pages')
+        .title('Core Pages')
         .child(
           S.list()
-            .title('Specialty Pages')
+            .title('Core Pages')
             .items([
               S.listItem()
                 .title('Homepage')
@@ -75,29 +76,8 @@ export const structure = (S: StructureBuilder) =>
                         ),
                     ])
                 ),
-              S.documentTypeListItem('locationPage').title('Location Pages'),
-              S.documentTypeListItem('faqPage').title('FAQ Pages'),
-              S.documentTypeListItem('testimonialsPage').title('Testimonials Page'),
-              S.documentTypeListItem('reviewPage').title('Review Pages'),
-              S.listItem()
-                .title('Events')
-                .child(
-                  S.list()
-                    .title('Events')
-                    .items([
-                      S.listItem()
-                        .title('Events Index')
-                        .id('eventIndex')
-                        .child(
-                          S.document()
-                            .schemaType('eventIndex')
-                            .documentId('eventIndex')
-                            .title('Events Index')
-                        ),
-                      S.documentTypeListItem('eventPage').title('Events'),
-                    ])
-                ),
               S.documentTypeListItem('contactPage').title('Contact Page'),
+              S.documentTypeListItem('locationPage').title('Location Pages'),
               S.listItem()
                 .title('General Pages')
                 .child(
@@ -105,7 +85,6 @@ export const structure = (S: StructureBuilder) =>
                     .title('General Pages')
                     .filter('_type == "generalPage" && !defined(parentPage) && !(_id in *[_type == "generalPage" && defined(parentPage)].parentPage._ref)')
                 ),
-              S.documentTypeListItem('landingPage').title('Landing Pages'),
             ])
         ),
 
@@ -136,30 +115,6 @@ export const structure = (S: StructureBuilder) =>
         ),
 
       S.listItem()
-        .title('Geo Practice Areas')
-        .child(
-          S.documentList()
-            .title('Geo Practice Areas')
-            .schemaType('geoPracticeArea')
-            .filter('_type == "geoPracticeArea"')
-            .defaultOrdering([
-              {field: 'parentPage', direction: 'asc'},
-              {field: 'slug.current', direction: 'asc'},
-            ])
-        ),
-
-      S.listItem()
-        .title('Service Areas')
-        .child(
-          S.list()
-            .title('Service Areas')
-            .items([
-              S.documentTypeListItem('serviceAreaIndex').title('Service Area Index'),
-              S.documentTypeListItem('serviceAreaPage').title('Service Area Pages'),
-            ])
-        ),
-
-      S.listItem()
         .title('Blog')
         .child(
           S.list()
@@ -169,6 +124,69 @@ export const structure = (S: StructureBuilder) =>
               S.documentTypeListItem('blogPost').title('Blog Posts'),
               S.documentTypeListItem('blogCategory').title('Blog Categories'),
               S.documentTypeListItem('blogTag').title('Blog Tags'),
+            ])
+        ),
+
+      // ─── Specialty Pages (alphabetical) ───────────────────────────────────
+      S.listItem()
+        .title('Specialty Pages')
+        .child(
+          S.list()
+            .title('Specialty Pages')
+            .items([
+              S.listItem()
+                .title('Events')
+                .child(
+                  S.list()
+                    .title('Events')
+                    .items([
+                      S.listItem()
+                        .title('Events Index')
+                        .id('eventIndex')
+                        .child(
+                          S.document()
+                            .schemaType('eventIndex')
+                            .documentId('eventIndex')
+                            .title('Events Index')
+                        ),
+                      S.documentTypeListItem('eventPage').title('Events'),
+                    ])
+                ),
+              S.documentTypeListItem('faqPage').title('FAQ Pages'),
+              S.listItem()
+                .title('Geo Practice Areas')
+                .child(
+                  S.documentList()
+                    .title('Geo Practice Areas')
+                    .schemaType('geoPracticeArea')
+                    .filter('_type == "geoPracticeArea"')
+                    .defaultOrdering([
+                      {field: 'parentPage', direction: 'asc'},
+                      {field: 'slug.current', direction: 'asc'},
+                    ])
+                ),
+              S.documentTypeListItem('landingPage').title('Landing Pages'),
+              S.documentTypeListItem('reviewPage').title('Review Pages'),
+              S.listItem()
+                .title('Service Areas')
+                .child(
+                  S.list()
+                    .title('Service Areas')
+                    .items([
+                      S.documentTypeListItem('serviceAreaIndex').title('Service Area Index'),
+                      S.documentTypeListItem('serviceAreaPage').title('Service Area Pages'),
+                    ])
+                ),
+              S.documentTypeListItem('testimonialsPage').title('Testimonials Page'),
+              S.listItem()
+                .title('Video Library Page')
+                .id('videoIndex')
+                .child(
+                  S.document()
+                    .schemaType('videoIndex')
+                    .documentId('videoIndex')
+                    .title('Video Library Page')
+                ),
             ])
         ),
 
