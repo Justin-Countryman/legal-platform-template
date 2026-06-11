@@ -7,7 +7,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import {MdLocationOn} from 'react-icons/md'
-import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, officeLocationLabel} from './shared'
+import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, officeLocationLabel, footerSurface, footerLogo} from './shared'
 import {formatPhone} from '@/lib/tokens'
 import {FormEmbed} from './FormEmbed'
 import type {FooterData} from '../Footer'
@@ -16,12 +16,14 @@ type Props = {data: FooterData}
 
 export function BeaconFooter({data}: Props) {
   const {
-    firmName, logo, address, locations,
+    firmName, address, locations,
     ctaText,
     privacyPolicyUrl, disclaimerUrl, cookiesUrl,
     formEmbed,
   } = data
 
+  const surface = footerSurface(data.footerScheme)
+  const logo = footerLogo(data, data.footerScheme)
   const officePhone = address?.officePhone
   const tollFreePhone = address?.tollFreePhone
 
@@ -38,7 +40,7 @@ export function BeaconFooter({data}: Props) {
   const year = new Date().getFullYear()
 
   return (
-    <footer data-ring-context="dark" aria-labelledby="footer-heading" className="bg-brand-dark text-foreground-muted">
+    <footer data-ring-context={surface.ringContext} aria-labelledby="footer-heading" className={surface.footerClass}>
       <h2 id="footer-heading" className="sr-only">Footer</h2>
 
       {/* ── Main split ────────────────────────────────────────────────────────── */}
@@ -131,7 +133,7 @@ export function BeaconFooter({data}: Props) {
 
           {/* Social + action buttons */}
           <SocialIcons data={data} className="text-foreground-subtle" />
-          <ActionButtons data={data} context="dark" className="text-foreground-muted" />
+          <ActionButtons data={data} context={surface.buttonContext} className="text-foreground-muted" />
         </div>
 
         {/* Right — form panel */}

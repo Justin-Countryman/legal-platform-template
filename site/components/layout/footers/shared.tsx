@@ -14,12 +14,12 @@
 //             content_recipes.py) — the same recipe across every client.
 //
 // 7 footer layouts (operator picks via footerSettings.footerLayout):
-//   nav-having (renders column1 + column2)   minimalist (intentional, no nav)
+//   nav-having (renders column1 + column2)   no-nav layouts
 //   ─────────────────────────────────────    ──────────────────────────────────
-//   AnchorFooter  — single location           MeridianFooter — logo/address/phone
-//   CrestFooter   — single location           BeaconFooter   — contact form focus
-//   PillarFooter  — single location           LedgerFooter   — action-button focus
-//                                             DistrictsFooter — multi-location grid
+//   AnchorFooter  — single location           MeridianFooter    — logo/address/phone
+//   CrestFooter   — single location           BeaconFooter      — contact form focus
+//   PillarFooter  — single location           DistrictsFooter   — multi-location grid
+//                                             SwitchboardFooter — multi-location selector
 //
 // The nav-having layouts share a footer-nav semantic posture (see
 // FooterNavRegion + FooterNavList below) so a11y + crawl posture is
@@ -39,7 +39,43 @@ import {
 import {MdCheck} from 'react-icons/md'
 import {ButtonGroup, type CtaItem} from '@/components/ui/ButtonGroup'
 import {formatPhone} from '@/lib/tokens'
-import type {FooterData, OfficeHours} from '../Footer'
+import type {FooterData, FooterScheme, OfficeHours} from '../Footer'
+
+// ─── Footer color scheme ──────────────────────────────────────────────────────
+// Every footer layout is dark by default (brand background, light text) but can
+// be flipped to light via footerSettings.footerScheme. The cascade-aware text
+// utilities (text-foreground / -muted / -subtle, hover:text-action-text,
+// border-border) auto-resolve polarity from `.bg-brand-dark` / the
+// `[data-ring-context="dark"]` attribute — so a footer only has to swap its
+// surface class + ring-context here and derive button context. Light uses
+// `bg-hero-tint` (the neutral near-white used for light hero bands) — NOT
+// `bg-muted` (accent-tinted, flat). Buttons/ButtonGroup take an explicit
+// context, so we hand it back too.
+
+export type FooterSurface = {
+  /** Background + base text classes for the <footer> element. */
+  footerClass: string
+  /** `data-ring-context` value — 'dark' on the dark surface, omitted on light. */
+  ringContext: 'dark' | undefined
+  /** Surface context for Button / ButtonGroup / ActionButtons. */
+  buttonContext: 'light' | 'dark'
+}
+
+export function footerSurface(scheme: FooterScheme | null | undefined): FooterSurface {
+  if (scheme === 'light') {
+    return {footerClass: 'bg-hero-tint text-foreground-muted', ringContext: undefined, buttonContext: 'light'}
+  }
+  return {footerClass: 'bg-brand-dark text-foreground-muted', ringContext: 'dark', buttonContext: 'dark'}
+}
+
+/** Scheme-appropriate logo: light surface prefers logoOnLight, falling back to
+ *  the dark logo (and vice-versa) so a footer always has a mark to render. */
+export function footerLogo(
+  data: Pick<FooterData, 'logo' | 'logoLight'>,
+  scheme: FooterScheme | null | undefined,
+) {
+  return scheme === 'light' ? data.logoLight ?? data.logo ?? null : data.logo ?? data.logoLight ?? null
+}
 
 // ─── Footer Nav primitives ────────────────────────────────────────────────────
 
@@ -180,7 +216,7 @@ type ActionData = Pick<
  * Context (light/dark) is determined implicitly by the parent footer surface
  * via the `data-ring-context` cascade for focus rings; consumer `className`
  * carries any per-surface text-color overrides (`text-foreground-muted`,
- * etc.) and layout overrides (`flex-col items-start` on LedgerFooter).
+ * etc.) and any layout overrides via the consumer `className`.
  */
 export function ActionButtons({
   data,

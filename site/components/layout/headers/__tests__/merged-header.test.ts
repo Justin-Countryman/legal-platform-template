@@ -5,6 +5,9 @@ import {
   resolveScheme,
   isDarkSurface,
   solidScheme,
+  suppressMergeForRoute,
+  CUSTOM_HERO_ROUTE_PREFIXES,
+  type HeaderData,
 } from '../shared'
 import {resolveHeroSurface, resolveMergedHeaderScheme, type HeroSiteDefaults} from '@/lib/heroSurface'
 
@@ -65,5 +68,49 @@ describe('merged header — contrast guardrail follows the EFFECTIVE hero scheme
 
   it('heroMerge OFF leaves the operator scheme untouched (no overlay coupling)', () => {
     expect(resolveMergedHeaderScheme('transparent-dark', false, true)).toBe('transparent-dark')
+  })
+})
+
+describe('merged header — suppressed on custom-hero page types (attorney/staff profiles)', () => {
+  // A typical merged header: fixed transparent-dark overlay, solid scheme
+  // (scrolledScheme) is light. Profile pages render bespoke hero layouts that can't
+  // host the overlay, so the dispatcher falls back to a solid in-flow bar there.
+  const merged: HeaderData = {
+    headerLayout: 'ridge',
+    heroMerge: true,
+    sticky: true,
+    defaultScheme: 'transparent-dark',
+    scrolledScheme: 'light',
+  }
+
+  it('attorney PROFILE route → merge dropped, default flips to the solid scrolled scheme', () => {
+    const r = suppressMergeForRoute(merged, '/attorneys/jane-doe')
+    expect(r.heroMerge).toBe(false)
+    expect(r.defaultScheme).toBe('light') // scrolledScheme — a solid bar, not transparent-dark
+    // positioning + height contract follow heroMerge:false (sticky, --header-height → 0)
+    expect(headerPositionClass(r.heroMerge ?? false, r.sticky ?? true)).toContain('sticky')
+  })
+
+  it('staff PROFILE route → merge dropped the same way', () => {
+    expect(suppressMergeForRoute(merged, '/staff/john-smith').heroMerge).toBe(false)
+  })
+
+  it('INDEX routes (/attorneys, /staff) keep merge — they render the standard hero', () => {
+    expect(suppressMergeForRoute(merged, '/attorneys').heroMerge).toBe(true)
+    expect(suppressMergeForRoute(merged, '/staff').heroMerge).toBe(true)
+  })
+
+  it('unrelated routes are untouched', () => {
+    expect(suppressMergeForRoute(merged, '/practice-areas/family-law').heroMerge).toBe(true)
+    expect(suppressMergeForRoute(merged, '/').heroMerge).toBe(true)
+  })
+
+  it('a non-merged header is returned unchanged on every route (no-op)', () => {
+    const solid: HeaderData = {headerLayout: 'ridge', heroMerge: false, defaultScheme: 'light'}
+    expect(suppressMergeForRoute(solid, '/attorneys/jane-doe')).toBe(solid)
+  })
+
+  it('suppression prefixes are nested (trailing slash) so the index never matches', () => {
+    expect(CUSTOM_HERO_ROUTE_PREFIXES.every((p) => p.endsWith('/'))).toBe(true)
   })
 })

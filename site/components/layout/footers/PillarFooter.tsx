@@ -7,7 +7,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import {MdLocationOn} from 'react-icons/md'
-import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel} from './shared'
+import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel, footerSurface, footerLogo} from './shared'
 import {formatPhone} from '@/lib/tokens'
 import type {FooterData} from '../Footer'
 
@@ -15,11 +15,13 @@ type Props = {data: FooterData}
 
 export function PillarFooter({data}: Props) {
   const {
-    firmName, logo, address, locations,
+    firmName, address, locations,
     column1, column2,
     privacyPolicyUrl, disclaimerUrl, cookiesUrl,
   } = data
 
+  const surface = footerSurface(data.footerScheme)
+  const logo = footerLogo(data, data.footerScheme)
   const officePhone = address?.officePhone
   const tollFreePhone = address?.tollFreePhone
   const col1 = (column1 ?? []).filter((l): l is typeof l & {href: string} => !!l.href)
@@ -38,14 +40,14 @@ export function PillarFooter({data}: Props) {
   const year = new Date().getFullYear()
 
   return (
-    <footer data-ring-context="dark" aria-labelledby="footer-heading">
+    <footer data-ring-context={surface.ringContext} aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">Footer</h2>
 
       {/* ── Split panels ──────────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-[5fr_7fr]">
 
         {/* Left — brand + contact */}
-        <div className="relative bg-brand-dark px-[5%] py-14 text-foreground-muted lg:px-14">
+        <div className={`relative ${surface.footerClass} px-[5%] py-14 lg:px-14`}>
           {/* Vertical divider */}
           <div className="absolute inset-y-0 right-0 hidden w-px bg-border lg:block" aria-hidden="true" />
 
@@ -120,11 +122,11 @@ export function PillarFooter({data}: Props) {
             </div>
           )}
 
-          <ActionButtons data={data} context="dark" className="mt-10 text-foreground-subtle" />
+          <ActionButtons data={data} context={surface.buttonContext} className="mt-10 text-foreground-subtle" />
         </div>
 
         {/* Right — nav + social */}
-        <div className="bg-brand-dark px-[5%] py-14 text-foreground-muted lg:px-14">
+        <div className={`${surface.footerClass} px-[5%] py-14 lg:px-14`}>
           {firmName && (
             <p className="tagline mb-10">
               {firmName}
@@ -142,7 +144,7 @@ export function PillarFooter({data}: Props) {
       </div>
 
       {/* ── Bottom bar ────────────────────────────────────────────────────── */}
-      <div className="bg-brand-dark px-[5%]">
+      <div className={`${surface.footerClass} px-[5%]`}>
         <div className="container flex flex-col gap-3 py-5 text-xs text-foreground-subtle md:flex-row md:items-center md:justify-between">
           <p>© {year} {firmName}. All rights reserved.</p>
           {legalLinks.length > 0 && (

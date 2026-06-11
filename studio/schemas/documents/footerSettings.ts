@@ -50,13 +50,28 @@ export const footerSettings = defineType({
           {title: 'Crest — Single location', value: 'crest'},
           {title: 'Pillar — Single location', value: 'pillar'},
           {title: 'Meridian — Single location', value: 'meridian'},
-          {title: 'Districts — Multiple locations (2–4)', value: 'districts'},
-          {title: 'Ledger — Multiple locations (2–3, light background)', value: 'ledger'},
+          {title: 'Districts — Multiple locations (card grid)', value: 'districts'},
+          {title: 'Switchboard — Multiple locations (tabbed office selector)', value: 'switchboard'},
           {title: 'Beacon (Form) — Single location', value: 'beacon'},
         ],
         layout: 'radio',
       },
       initialValue: 'anchor',
+    },
+    {
+      name: 'footerScheme',
+      title: 'Footer Color Scheme',
+      type: 'string',
+      fieldset: 'layout',
+      description: 'Dark (brand background, light text) or Light (neutral background, dark text). Applies to every footer layout.',
+      options: {
+        list: [
+          {title: 'Dark', value: 'dark'},
+          {title: 'Light', value: 'light'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'dark',
     },
 
     // ─── Form ─────────────────────────────────────────────────────────────────

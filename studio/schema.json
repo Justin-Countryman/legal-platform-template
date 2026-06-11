@@ -3897,11 +3897,28 @@
             },
             {
               "type": "string",
-              "value": "ledger"
+              "value": "switchboard"
             },
             {
               "type": "string",
               "value": "beacon"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "footerScheme": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "dark"
+            },
+            {
+              "type": "string",
+              "value": "light"
             }
           ]
         },

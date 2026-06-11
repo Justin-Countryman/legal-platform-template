@@ -202,7 +202,9 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
       <Footer
         data={{
           firmName: footerData?.siteSettings?.firmName,
+          footerScheme: footerData?.footerSettings?.footerScheme ?? 'dark',
           logo: footerData?.designSettings?.logoOnDark ?? null,
+          logoLight: footerData?.designSettings?.logoOnLight ?? null,
           address: footerData?.siteSettings?.address,
           ctaText: resolveTokenString(footerData?.footerSettings?.ctaText, napTokens) || null,
           ctaUrl: footerData?.footerSettings?.ctaUrl,

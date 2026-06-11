@@ -243,6 +243,33 @@ export function headerPositionClass(heroMerge: boolean, sticky: boolean): string
   return 'relative z-50 w-full'
 }
 
+// ─── Merge suppression for custom-hero page types ───────────────────────────────
+// heroMerge's contract — a transparent header floating over a full-bleed hero band
+// that extends up behind it — is only fulfilled by pages that render the standard
+// InternalHero / InternalPageHeader (they reserve --header-height and carry a
+// scheme that matches the merged header's text polarity). Attorney + staff PROFILE
+// pages instead use bespoke per-template hero layouts that are contained/editorial
+// cards (not full-bleed bands), don't reserve --header-height, and have light top
+// edges — so a fixed transparent header overlaps their name/contact block and can
+// land white text on a white surface. On those routes the header falls back to a
+// solid, in-flow bar (the same solid look it takes when scrolled), which needs no
+// --header-height reservation (the hook writes 0 when heroMerge is off).
+//
+// Only the nested profile routes are suppressed (trailing slash) — the INDEX routes
+// /attorneys and /staff render the standard internal hero and merge correctly. The
+// homepage will join this list once it renders its own custom hero.
+export const CUSTOM_HERO_ROUTE_PREFIXES = ['/attorneys/', '/staff/'] as const
+
+export function suppressMergeForRoute(data: HeaderData, pathname: string): HeaderData {
+  if (!data.heroMerge) return data
+  const isCustomHeroRoute = CUSTOM_HERO_ROUTE_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+  if (!isCustomHeroRoute) return data
+  // Drop the fixed overlay (→ sticky/in-flow; useHeaderHeight writes --header-height:0)
+  // and swap the transparent at-top default for the operator's solid scrolled scheme,
+  // so the header keeps a background + readable text over the bespoke profile layout.
+  return {...data, heroMerge: false, defaultScheme: data.scrolledScheme ?? 'light'}
+}
+
 // ─── Logo ─────────────────────────────────────────────────────────────────────
 
 type LogoProps = {

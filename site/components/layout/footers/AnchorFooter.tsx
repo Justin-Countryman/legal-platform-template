@@ -5,7 +5,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import {MdLocationOn} from 'react-icons/md'
-import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel} from './shared'
+import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel, footerSurface, footerLogo} from './shared'
 import {formatPhone} from '@/lib/tokens'
 import type {FooterData} from '../Footer'
 
@@ -13,11 +13,13 @@ type Props = {data: FooterData}
 
 export function AnchorFooter({data}: Props) {
   const {
-    firmName, logo, address, locations,
+    firmName, address, locations,
     column1, column2,
     privacyPolicyUrl, disclaimerUrl, cookiesUrl,
   } = data
 
+  const surface = footerSurface(data.footerScheme)
+  const logo = footerLogo(data, data.footerScheme)
   const officePhone = address?.officePhone
   const tollFreePhone = address?.tollFreePhone
   const officeLocation = locations?.[0]
@@ -36,7 +38,7 @@ export function AnchorFooter({data}: Props) {
   const year = new Date().getFullYear()
 
   return (
-    <footer data-ring-context="dark" aria-labelledby="footer-heading" className="bg-brand-dark text-foreground-muted px-[5%]">
+    <footer data-ring-context={surface.ringContext} aria-labelledby="footer-heading" className={`${surface.footerClass} px-[5%]`}>
       <h2 id="footer-heading" className="sr-only">Footer</h2>
       <div className="container">
 
@@ -82,7 +84,7 @@ export function AnchorFooter({data}: Props) {
             )}
 
             <SocialIcons data={data} className="mt-8 text-foreground-muted" />
-            <ActionButtons data={data} context="dark" className="mt-6 text-foreground-muted" />
+            <ActionButtons data={data} context={surface.buttonContext} className="mt-6 text-foreground-muted" />
           </div>
 
           {/* Col 2: contact + hours */}

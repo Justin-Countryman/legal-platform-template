@@ -2,7 +2,7 @@ import {AnchorFooter} from './footers/AnchorFooter'
 import {MeridianFooter} from './footers/MeridianFooter'
 import {PillarFooter} from './footers/PillarFooter'
 import {DistrictsFooter} from './footers/DistrictsFooter'
-import {LedgerFooter} from './footers/LedgerFooter'
+import {SwitchboardFooter} from './footers/SwitchboardFooter'
 import {CrestFooter} from './footers/CrestFooter'
 import {BeaconFooter} from './footers/BeaconFooter'
 
@@ -37,9 +37,16 @@ export type FooterLocation = {
   appointmentRequired?: string | null
 }
 
+export type FooterScheme = 'dark' | 'light'
+
 export type FooterData = {
   firmName?: string | null
+  /** Dark scheme = brand background + light text; light scheme = neutral background + dark text. */
+  footerScheme?: FooterScheme | null
+  /** Logo for the dark surface (logoOnDark). Used when footerScheme is dark. */
   logo?: {src: string; alt: string; width: number; height: number} | null
+  /** Logo for the light surface (logoOnLight). Used when footerScheme is light; falls back to `logo`. */
+  logoLight?: {src: string; alt: string; width: number; height: number} | null
   address?: {
     address1?: string | null
     address2?: string | null
@@ -85,8 +92,9 @@ export function Footer({data}: {data: FooterData}) {
       return <PillarFooter data={data} />
     case 'districts':
       return <DistrictsFooter data={data} />
-    case 'ledger':
-      return <LedgerFooter data={data} />
+    case 'switchboard':
+    case 'ledger': // legacy alias — Ledger was rebuilt as Switchboard
+      return <SwitchboardFooter data={data} />
     case 'crest':
       return <CrestFooter data={data} />
     case 'beacon':

@@ -29,7 +29,7 @@ import {AnchorFooter} from '@/components/layout/footers/AnchorFooter'
 import {BeaconFooter} from '@/components/layout/footers/BeaconFooter'
 import {CrestFooter} from '@/components/layout/footers/CrestFooter'
 import {DistrictsFooter} from '@/components/layout/footers/DistrictsFooter'
-import {LedgerFooter} from '@/components/layout/footers/LedgerFooter'
+import {SwitchboardFooter} from '@/components/layout/footers/SwitchboardFooter'
 import {MeridianFooter} from '@/components/layout/footers/MeridianFooter'
 import {PillarFooter} from '@/components/layout/footers/PillarFooter'
 import {type FooterData} from '@/components/layout/Footer'
@@ -2719,15 +2719,16 @@ function LayoutsPanel() {
 
       {/* ── Footers — 7 variants (6 dark + 1 light) ───────────────────── */}
       <section className="mb-12">
-        <Heading>Footers — 7 variants (6 dark + 1 light Ledger)</Heading>
+        <Heading>Footers — 7 variants (dark/light via footerScheme)</Heading>
         <Note>
           All 7 footer variants take a shared <code>FooterData</code> prop;
-          each composes the same data differently. 6 variants render on dark
-          surfaces (cascade auto-applies via <code>bg-brand-dark</code> +{' '}
-          <code>data-ring-context=&quot;dark&quot;</code>); LedgerFooter is the
-          single light-surface footer (100% role-token discipline). Studio
-          renders each at container width; production renders at full page
-          width.
+          each composes the same data differently. Every layout flips dark↔light
+          off <code>footerSettings.footerScheme</code> via the{' '}
+          <code>footerSurface()</code> helper (dark = <code>bg-brand-dark</code> +{' '}
+          <code>data-ring-context=&quot;dark&quot;</code>; light ={' '}
+          <code>bg-hero-tint</code>); the cascade auto-resolves text polarity.
+          Studio renders each at container width; production renders at full
+          page width.
         </Note>
 
         <div className="space-y-8">
@@ -2761,9 +2762,9 @@ function LayoutsPanel() {
             </p>
           </div>
           <div>
-            <Subheading>LedgerFooter (light) — only light-surface footer</Subheading>
+            <Subheading>SwitchboardFooter — tabbed office selector (multi-location)</Subheading>
             <div className="overflow-hidden rounded-ui border border-border">
-              <LedgerFooter data={SAMPLE_FOOTER_DATA} />
+              <SwitchboardFooter data={SAMPLE_FOOTER_DATA} />
             </div>
           </div>
           <div>

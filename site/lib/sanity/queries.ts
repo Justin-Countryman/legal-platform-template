@@ -318,6 +318,12 @@ export const FOOTER_QUERY = groq`{
       "width": asset->metadata.dimensions.width,
       "height": asset->metadata.dimensions.height
     },
+    "logoOnLight": logoOnLight{
+      "src": asset->url,
+      "alt": alt,
+      "width": asset->metadata.dimensions.width,
+      "height": asset->metadata.dimensions.height
+    },
     "showBackToTop": coalesce(showBackToTop, true)
   },
   "siteSettings": *[_type == "siteSettings"][0]{
@@ -342,6 +348,7 @@ export const FOOTER_QUERY = groq`{
   },
   "footerSettings": *[_type == "footerSettings"][0]{
     footerLayout,
+    footerScheme,
     ctaText,
     ctaUrl,
     actionButton1Label,
