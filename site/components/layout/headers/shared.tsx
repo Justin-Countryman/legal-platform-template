@@ -7,6 +7,7 @@ import {RxChevronDown} from 'react-icons/rx'
 import {MdPhone, MdLocationPin, MdEmail, MdClose} from 'react-icons/md'
 import Link from 'next/link'
 import Image from 'next/image'
+import {usePathname} from 'next/navigation'
 import {IconButton} from '@/components/ui/IconButton'
 import {ButtonGroup, type CtaItem} from '@/components/ui/ButtonGroup'
 
@@ -890,6 +891,35 @@ function MobileLogoSplit({data, isOpen, onToggle, scheme, hoverTextClass, trigge
 
 export const NAV_PANEL_ID = 'main-nav-panel'
 
+// Normalize a path for comparison: drop query/hash + trailing slashes so
+// `/about/` (nav href) matches `/about` (the canonical trailingSlash:false URL).
+function normalizePath(p: string): string {
+  const s = p.split(/[?#]/)[0].replace(/\/+$/, '')
+  return s === '' ? '/' : s
+}
+
+function isActivePath(href: string | null | undefined, pathname: string): boolean {
+  if (!href || href.startsWith('http') || href.startsWith('tel:') || href.startsWith('mailto:')) {
+    return false
+  }
+  return normalizePath(href) === normalizePath(pathname)
+}
+
+// Mobile drawer link chrome. `active` adds an accent rail + wash + weight (not
+// color alone — satisfies WCAG 1.4.1) and is paired with aria-current="page".
+// `active:` (pressed) wash gives immediate touch feedback where hover can't.
+function mobileLinkClass(active: boolean, extra = ''): string {
+  return [
+    'block border-l-2 py-4 pl-3 text-sm transition-colors duration-ui-fast',
+    'active:bg-foreground/10',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus',
+    active
+      ? 'border-accent bg-accent/10 font-semibold text-foreground'
+      : 'border-transparent font-medium text-foreground hover:text-accent',
+    extra,
+  ].filter(Boolean).join(' ')
+}
+
 type MobileDrawerProps = {
   data: HeaderData
   isOpen: boolean
@@ -903,6 +933,40 @@ export function MobileDrawer({data, isOpen, items, onClose, triggerRef}: MobileD
   const phone2   = data.headerPhone2 || null
   const drawerRef    = useRef<HTMLDivElement>(null)
   const hasMountedRef = useRef(false)
+  const pathname     = usePathname() ?? ''
+
+  // Auto-close on navigation (mobile-nav best practice: the drawer is a
+  // temporary overlay; leaving it open after a route change reads as broken).
+  // Ref-guarded so it fires only on an actual path change — not on mount and
+  // not when the parent re-creates onClose (which would re-close every render).
+  const prevPathRef = useRef(pathname)
+  useEffect(() => {
+    if (prevPathRef.current !== pathname) {
+      prevPathRef.current = pathname
+      onClose()
+    }
+  }, [pathname, onClose])
+
+  // Size the drawer to exactly fill from its top (below the header) to the
+  // viewport bottom. It is `top-full` inside the header, so a flat 100dvh
+  // overran the viewport by the header's height — pushing the CTA/phone off
+  // the bottom edge. `--header-height` is only set when heroMerge is on, so we
+  // measure the drawer's real viewport offset to stay correct on every layout.
+  const [fillHeight, setFillHeight] = useState<string | undefined>(undefined)
+  useLayoutEffect(() => {
+    if (!isOpen) return
+    const measure = () => {
+      const top = drawerRef.current?.getBoundingClientRect().top ?? 0
+      setFillHeight(`calc(100dvh - ${Math.max(0, Math.round(top))}px)`)
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    window.addEventListener('orientationchange', measure)
+    return () => {
+      window.removeEventListener('resize', measure)
+      window.removeEventListener('orientationchange', measure)
+    }
+  }, [isOpen])
 
   // Focus management: first item on open, trigger button on close.
   // Skip on initial mount — triggerRef may be display:none on desktop,
@@ -968,6 +1032,9 @@ export function MobileDrawer({data, isOpen, items, onClose, triggerRef}: MobileD
       initial="close"
       animate={isOpen ? 'open' : 'close'}
       transition={motionConfig.drawer}
+      // Measured fill-height (see effect above); h-[100dvh] is the SSR/no-JS
+      // fallback the inline style overrides once mounted.
+      style={fillHeight ? {height: fillHeight} : undefined}
       className={[
         // absolute takes the drawer out of normal flow so the sticky header
         // keeps its natural height — content never shifts when the nav opens.
@@ -980,7 +1047,8 @@ export function MobileDrawer({data, isOpen, items, onClose, triggerRef}: MobileD
         'bg-brand-dark text-foreground',
       ].join(' ')}
     >
-      <nav aria-label="Main navigation" className="pb-8 pt-4">
+      {/* pb clears the iOS home indicator so the CTA is never under the edge. */}
+      <nav aria-label="Main navigation" className="pt-4 pb-[calc(2rem+env(safe-area-inset-bottom))]">
         {/* Close button — required inside the dialog for keyboard/AT users */}
         <div className="mb-4 flex items-center justify-between border-b border-border pb-4">
           <span className="text-xs font-semibold uppercase tracking-widest text-foreground-subtle">Navigation</span>
@@ -997,16 +1065,21 @@ export function MobileDrawer({data, isOpen, items, onClose, triggerRef}: MobileD
         <ul role="list">
           {items.map((item, i) => {
             const hasChildren = (item.children ?? []).length > 0
+            const active = isActivePath(item.href, pathname)
             return (
               <li key={i} className="border-b border-border">
                 {hasChildren ? (
-                  <MobileSubMenu navItem={item} />
+                  <MobileSubMenu navItem={item} pathname={pathname} />
                 ) : item.href ? (
-                  <Link href={item.href} className="block py-4 text-sm font-medium text-foreground">
+                  <Link
+                    href={item.href}
+                    aria-current={active ? 'page' : undefined}
+                    className={mobileLinkClass(active)}
+                  >
                     {item.label}
                   </Link>
                 ) : (
-                  <span className="block py-4 text-sm font-medium text-foreground">{item.label}</span>
+                  <span className="block border-l-2 border-transparent py-4 pl-3 text-sm font-medium text-foreground">{item.label}</span>
                 )}
               </li>
             )
@@ -1033,63 +1106,47 @@ export function MobileDrawer({data, isOpen, items, onClose, triggerRef}: MobileD
   )
 }
 
-function MobileSubMenu({navItem}: {navItem: NavItem}) {
-  const [isOpen, setIsOpen] = useState(false)
-  const flatItems = flattenChildren(navItem)
-  const submenuId = `mobile-submenu-${navItem.label.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`
-  // Same crawler-discoverability fix as the desktop SubMenu — always render
-  // the dropdown `<ul>` so its anchor children are in SSR HTML, hide via
-  // height/opacity when closed. See the desktop SubMenu comment for why.
-  // Parent-with-href split mirrors the desktop pattern: when navItem.href is
-  // set, render the label as a real `<a>` + a sibling chevron disclosure
-  // button so the parent index URL is crawlable + keyboard-reachable
-  // independent of toggling the dropdown.
+function MobileSubMenu({navItem, pathname}: {navItem: NavItem; pathname: string}) {
   const parentHref = navItem.href ?? null
+  const childItems = flattenChildren(navItem)
+  // On mobile a parent row is a pure accordion toggle (a disclosure — it never
+  // navigates). When the parent has an index page, surface it as an explicit
+  // "All {label}" link at the top of the expanded list: the index stays
+  // reachable + crawlable (its anchor still ships in SSR HTML via the
+  // always-rendered <ul>) without the split label/chevron tap-target that made
+  // navigation feel accidental on touch. Desktop keeps the link + hover dropdown.
+  // "Our Attorneys" → "All Attorneys", "Practice Areas" → "All Practice Areas".
+  // Strip a leading "Our " so the overview link reads naturally and stays a
+  // descriptive link name (WCAG 2.4.4 — better than a bare "View All").
+  const overviewLabel = `All ${navItem.label.replace(/^our\s+/i, '')}`
+  const listItems = parentHref
+    ? [{label: overviewLabel, href: parentHref}, ...childItems]
+    : childItems
+  // Start expanded when the current page lives in this group so the active item
+  // is visible the moment the drawer opens.
+  const groupActive = listItems.some((c) => isActivePath(c.href, pathname))
+  const [isOpen, setIsOpen] = useState(groupActive)
+  const submenuId = `mobile-submenu-${navItem.label.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`
   return (
     <div>
-      {parentHref ? (
-        <div className="flex w-full items-center">
-          <Link
-            href={parentHref}
-            className="flex-1 py-4 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus"
-          >
-            {navItem.label}
-          </Link>
-          <button
-            className="flex items-center justify-center px-3 py-4 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus"
-            aria-expanded={isOpen}
-            aria-haspopup="true"
-            aria-controls={submenuId}
-            aria-label={`Toggle ${navItem.label} submenu`}
-            onClick={() => setIsOpen((p) => !p)}
-          >
-            <motion.span
-              aria-hidden="true"
-              animate={isOpen ? {rotate: 180} : {rotate: 0}}
-              transition={motionConfig.chevron}
-            >
-              <RxChevronDown />
-            </motion.span>
-          </button>
-        </div>
-      ) : (
-        <button
-          className="flex w-full items-center justify-between py-4 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus"
-          aria-expanded={isOpen}
-          aria-haspopup="true"
-          aria-controls={submenuId}
-          onClick={() => setIsOpen((p) => !p)}
+      {/* Single disclosure structure for every parent (with or without an index
+          href) — identical chrome means chevrons + labels line up across items,
+          and the whole row is one large toggle target (no accidental nav). */}
+      <button
+        className="flex w-full items-center justify-between border-l-2 border-transparent py-4 pl-3 text-sm font-medium text-foreground transition-colors duration-ui-fast active:bg-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus"
+        aria-expanded={isOpen}
+        aria-controls={submenuId}
+        onClick={() => setIsOpen((p) => !p)}
+      >
+        <span>{navItem.label}</span>
+        <motion.span
+          aria-hidden="true"
+          animate={isOpen ? {rotate: 180} : {rotate: 0}}
+          transition={motionConfig.chevron}
         >
-          <span>{navItem.label}</span>
-          <motion.span
-            aria-hidden="true"
-            animate={isOpen ? {rotate: 180} : {rotate: 0}}
-            transition={motionConfig.chevron}
-          >
-            <RxChevronDown />
-          </motion.span>
-        </button>
-      )}
+          <RxChevronDown />
+        </motion.span>
+      </button>
       <motion.ul
         id={submenuId}
         role="list"
@@ -1099,17 +1156,27 @@ function MobileSubMenu({navItem}: {navItem: NavItem}) {
         transition={motionConfig.subnav}
         className="overflow-hidden pb-2"
       >
-        {flatItems.map((item, i) => (
-          <li key={i}>
-            <Link
-              href={item.href}
-              className="block py-3 pl-4 text-sm text-foreground transition-colors duration-ui-fast hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus"
-              tabIndex={isOpen ? 0 : -1}
-            >
-              {item.label}
-            </Link>
-          </li>
-        ))}
+        {listItems.map((item, i) => {
+          const active = isActivePath(item.href, pathname)
+          return (
+            <li key={i}>
+              <Link
+                href={item.href}
+                aria-current={active ? 'page' : undefined}
+                className={[
+                  'block border-l-2 py-3 pl-4 text-sm transition-colors duration-ui-fast',
+                  'active:bg-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus',
+                  active
+                    ? 'border-accent bg-accent/10 font-semibold text-foreground'
+                    : 'border-transparent text-foreground hover:text-accent',
+                ].join(' ')}
+                tabIndex={isOpen ? 0 : -1}
+              >
+                {item.label}
+              </Link>
+            </li>
+          )
+        })}
       </motion.ul>
     </div>
   )
