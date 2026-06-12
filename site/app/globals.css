@@ -79,6 +79,10 @@
 
   --ease-smooth:   cubic-bezier(0.25, 0, 0, 1);
   --ease-balanced: cubic-bezier(0.45, 0, 0.55, 1);
+  /* Gentle, even ease-out (easeOutCubic) — NOT front-loaded like ease-smooth, so
+     hover transitions decelerate smoothly across the whole duration instead of
+     snapping early. Use for content-reveal / hover affordances. */
+  --ease-gentle:   cubic-bezier(0.33, 1, 0.68, 1);
 
   /* Animations */
   --animate-accordion-down: accordion-down 0.25s cubic-bezier(0.25, 0, 0, 1);

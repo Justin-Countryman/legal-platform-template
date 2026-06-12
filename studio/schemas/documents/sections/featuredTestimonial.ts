@@ -1,10 +1,12 @@
 import {defineType} from 'sanity'
 import {TokenStringInput} from '../../../components/TokenStringInput'
+import {appearanceFieldset, appearanceFields} from '../../objects/appearanceFields'
 
 export const featuredTestimonial = defineType({
   name: 'featuredTestimonial',
   title: 'Featured Testimonial',
   type: 'document',
+  fieldsets: [appearanceFieldset],
   fields: [
     {
       name: 'name',
@@ -35,6 +37,7 @@ export const featuredTestimonial = defineType({
       to: [{type: 'testimonial'}],
       validation: (Rule) => Rule.required().warning(),
     },
+    ...appearanceFields({defaultSurface: 'tint'}),
   ],
   preview: {
     select: {title: 'name'},

@@ -1,11 +1,13 @@
 import {defineType} from 'sanity'
 import {TokenStringInput} from '../../../components/TokenStringInput'
 import {TokenTextInput} from '../../../components/TokenTextInput'
+import {appearanceFieldset, appearanceFields} from '../../objects/appearanceFields'
 
 export const attorneySection = defineType({
   name: 'attorneySection',
   title: 'Attorney Section',
   type: 'document',
+  fieldsets: [appearanceFieldset],
   fields: [
     {
       name: 'name',
@@ -97,13 +99,13 @@ export const attorneySection = defineType({
       name: 'cardStyle',
       title: 'Card Style',
       description:
-        'The look of each attorney card. Portrait, Editorial, Minimal, and Spotlight feature a larger photo — upload headshots for best results (a placeholder monogram shows when no photo is set).',
+        'The look of each attorney card. Portrait, Avatar, Minimal, and Spotlight feature a larger photo — upload headshots for best results (a placeholder monogram shows when no photo is set; Avatar shows a clean initials circle).',
       type: 'string',
       options: {
         list: [
           {title: 'Classic — photo left, details right', value: 'classic'},
           {title: 'Portrait — photo on top, details below', value: 'portrait'},
-          {title: 'Editorial — name over a full-bleed photo', value: 'editorial'},
+          {title: 'Avatar — round headshot, centered', value: 'avatar'},
           {title: 'Minimal — frameless photo, lots of whitespace', value: 'minimal'},
           {title: 'Spotlight — photo with bio revealed on hover', value: 'spotlight'},
         ],
@@ -112,6 +114,7 @@ export const attorneySection = defineType({
       initialValue: 'classic',
       validation: (Rule) => Rule.required().warning(),
     },
+    ...appearanceFields({defaultSurface: 'light'}),
   ],
   preview: {
     select: {title: 'name', subtitle: 'heading'},

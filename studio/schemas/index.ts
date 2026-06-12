@@ -54,6 +54,7 @@ import {badgesSection} from './documents/sections/badgesSection'
 import {attorneySection} from './documents/sections/attorneySection'
 import {reviewsSection} from './documents/sections/reviewsSection'
 import {videoSection} from './documents/sections/videoSection'
+import {practiceAreaNav} from './documents/sections/practiceAreaNav'
 import {video} from './documents/video'
 import {videoIndex} from './documents/videoIndex'
 
@@ -103,6 +104,7 @@ export const schemaTypes = [
   attorneySection,
   reviewsSection,
   videoSection,
+  practiceAreaNav,
 
   // Videos
   video,

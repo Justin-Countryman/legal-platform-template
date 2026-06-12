@@ -150,6 +150,7 @@ export const aboutPage = defineType({
             {type: 'attorneySection'},
             {type: 'reviewsSection'},
             {type: 'videoSection'},
+            {type: 'practiceAreaNav'},
           ],
         },
       ],

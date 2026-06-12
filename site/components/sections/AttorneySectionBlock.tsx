@@ -3,6 +3,7 @@ import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {AttorneyCard, type AttorneyCardStyle} from './AttorneyCard'
 import {type AttorneyCard as AttorneyCardData} from './AttorneyCardParts'
 import {AttorneySlider} from './AttorneySlider'
+import {SectionShell, type SectionAppearance} from './SectionShell'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -16,6 +17,7 @@ export type AttorneySectionBlockData = {
   cardStyle?: AttorneyCardStyle | null
   attorneys?: AttorneyCardData[] | null
   orderedAttorneyIds?: string[] | null
+  appearance?: SectionAppearance | null
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -41,31 +43,29 @@ export function AttorneySectionBlock({
   const isSlider = data.layout === 'slider'
 
   return (
-    <section className="px-[5%] py-16 md:py-24 lg:py-28">
-      <div className="container">
+    <SectionShell appearance={data.appearance}>
 
-        {heading && (
-          <SectionHeader
-            tagline={tagline}
-            heading={heading}
-            description={description}
-            className="mx-auto mb-12 max-w-2xl"
-          />
-        )}
+      {heading && (
+        <SectionHeader
+          tagline={tagline}
+          heading={heading}
+          description={description}
+          className="mx-auto mb-12 max-w-2xl"
+        />
+      )}
 
-        {isSlider ? (
-          <AttorneySlider attorneys={attorneys} cardStyle={cardStyle} />
-        ) : (
-          <ul role="list" className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3" aria-label="Attorneys">
-            {attorneys.map((attorney) => (
-              <li key={attorney._id}>
-                <AttorneyCard attorney={attorney} cardStyle={cardStyle} />
-              </li>
-            ))}
-          </ul>
-        )}
+      {isSlider ? (
+        <AttorneySlider attorneys={attorneys} cardStyle={cardStyle} />
+      ) : (
+        <ul role="list" className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3" aria-label="Attorneys">
+          {attorneys.map((attorney) => (
+            <li key={attorney._id}>
+              <AttorneyCard attorney={attorney} cardStyle={cardStyle} />
+            </li>
+          ))}
+        </ul>
+      )}
 
-      </div>
-    </section>
+    </SectionShell>
   )
 }

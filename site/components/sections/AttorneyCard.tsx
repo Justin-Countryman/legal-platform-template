@@ -1,13 +1,14 @@
 import {AttorneyCardItem} from './AttorneyCardItem'
 import {
   AttorneyCardPortrait,
-  AttorneyCardEditorial,
+  AttorneyCardAvatar,
   AttorneyCardMinimal,
   AttorneyCardSpotlight,
 } from './AttorneyCardVariants'
 import type {AttorneyCard as AttorneyCardData} from './AttorneyCardParts'
 
-export type AttorneyCardStyle = 'classic' | 'portrait' | 'editorial' | 'minimal' | 'spotlight'
+// 'editorial' retained as a legacy alias — that style was rebuilt as 'avatar'.
+export type AttorneyCardStyle = 'classic' | 'portrait' | 'avatar' | 'editorial' | 'minimal' | 'spotlight'
 
 // Picks the card style chosen on the section. Defaults to Classic (the original
 // horizontal card) so existing sections and unset values render unchanged.
@@ -21,8 +22,9 @@ export function AttorneyCard({
   switch (cardStyle) {
     case 'portrait':
       return <AttorneyCardPortrait attorney={attorney} />
-    case 'editorial':
-      return <AttorneyCardEditorial attorney={attorney} />
+    case 'avatar':
+    case 'editorial': // legacy alias — Editorial was rebuilt as Avatar
+      return <AttorneyCardAvatar attorney={attorney} />
     case 'minimal':
       return <AttorneyCardMinimal attorney={attorney} />
     case 'spotlight':

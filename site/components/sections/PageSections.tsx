@@ -7,6 +7,7 @@ import {BadgesSectionBlock, type BadgesSectionBlockData} from './BadgesSectionBl
 import {AttorneySectionBlock, type AttorneySectionBlockData} from './AttorneySectionBlock'
 import {ReviewsSectionBlock, type ReviewsSectionBlockData} from './ReviewsSectionBlock'
 import {VideoSectionBlock, type VideoSectionBlockData} from './VideoSectionBlock'
+import {PracticeAreaNavBlock, type PracticeAreaNavBlockData} from './PracticeAreaNavBlock'
 
 // ─── Union type ───────────────────────────────────────────────────────────────
 
@@ -19,6 +20,7 @@ export type PageSectionData =
   | AttorneySectionBlockData
   | ReviewsSectionBlockData
   | VideoSectionBlockData
+  | PracticeAreaNavBlockData
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -51,6 +53,8 @@ export function PageSections({
             return <ReviewsSectionBlock key={i} data={section} napTokens={napTokens} />
           case 'videoSection':
             return <VideoSectionBlock key={i} data={section} napTokens={napTokens} />
+          case 'practiceAreaNav':
+            return <PracticeAreaNavBlock key={i} data={section} napTokens={napTokens} />
           default:
             return null
         }

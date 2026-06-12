@@ -124,6 +124,7 @@ export const homePage = defineType({
             {type: 'attorneySection'},
             {type: 'reviewsSection'},
             {type: 'videoSection'},
+            {type: 'practiceAreaNav'},
           ],
         },
       ],

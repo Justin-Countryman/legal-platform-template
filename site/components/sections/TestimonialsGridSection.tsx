@@ -1,6 +1,7 @@
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {TestimonialCard, type TestimonialData} from '@/components/ui/TestimonialCard'
+import {SectionShell, type SectionAppearance} from './SectionShell'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -10,6 +11,7 @@ export type TestimonialsGridSectionData = {
   heading?: string | null
   description?: string | null
   testimonials?: TestimonialData[] | null
+  appearance?: SectionAppearance | null
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -35,31 +37,29 @@ export function TestimonialsGridSection({
   const description = resolveTokenString(data.description, napTokens)
 
   return (
-    <section className="px-[5%] py-16 md:py-24 lg:py-28">
-      <div className="container">
+    <SectionShell appearance={data.appearance}>
 
-        {heading && (
-          <SectionHeader
-            tagline={tagline}
-            heading={heading}
-            description={description}
-            className="mx-auto mb-12 max-w-2xl"
-          />
-        )}
+      {heading && (
+        <SectionHeader
+          tagline={tagline}
+          heading={heading}
+          description={description}
+          className="mx-auto mb-12 max-w-2xl"
+        />
+      )}
 
-        <ul
-          role="list"
-          className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
-          aria-label="Client testimonials"
-        >
-          {testimonials.map((t) => (
-            <li key={t._id}>
-              <TestimonialCard t={t} />
-            </li>
-          ))}
-        </ul>
+      <ul
+        role="list"
+        className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
+        aria-label="Client testimonials"
+      >
+        {testimonials.map((t) => (
+          <li key={t._id}>
+            <TestimonialCard t={t} />
+          </li>
+        ))}
+      </ul>
 
-      </div>
-    </section>
+    </SectionShell>
   )
 }

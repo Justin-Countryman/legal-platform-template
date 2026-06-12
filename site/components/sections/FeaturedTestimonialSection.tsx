@@ -3,6 +3,7 @@ import {StarRating} from '@/components/ui/StarRating'
 import {Tagline} from '@/components/ui/Tagline'
 import {type TestimonialData} from '@/components/ui/TestimonialCard'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
+import {SectionShell, type SectionAppearance} from './SectionShell'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -11,6 +12,7 @@ export type FeaturedTestimonialSectionData = {
   tagline?: string | null
   heading?: string | null
   testimonial?: TestimonialData | null
+  appearance?: SectionAppearance | null
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -31,8 +33,8 @@ export function FeaturedTestimonialSection({
   const heading = resolveTokenString(data.heading, napTokens) || 'Client Testimonial'
 
   return (
-    <section className="bg-background px-[5%] py-16 md:py-24 lg:py-28">
-      <div className="container mx-auto max-w-4xl">
+    <SectionShell appearance={data.appearance}>
+      <div className="mx-auto max-w-4xl">
 
         {/* Section heading */}
         {tagline && <Tagline as="p">{tagline}</Tagline>}
@@ -51,6 +53,7 @@ export function FeaturedTestimonialSection({
             {t.quote}
           </p>
 
+          {/* eslint-disable-next-line platform/footer-landmark-naming -- attribution footer inside <blockquote>, not a page-footer landmark; SectionShell wraps the <section> so the rule can't see the sectioning ancestor */}
           <footer className="mt-8 flex items-center gap-3">
             {t.avatar?.src && (
               <Image
@@ -71,6 +74,6 @@ export function FeaturedTestimonialSection({
         </blockquote>
 
       </div>
-    </section>
+    </SectionShell>
   )
 }

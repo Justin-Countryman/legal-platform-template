@@ -28,23 +28,31 @@ export function AttorneyCardPortrait({attorney}: {attorney: AttorneyCard}) {
   )
 }
 
-// Editorial — a content card that floats up over the lower edge of the photo
-// (overlap + depth), led by a short accent rule. Distinct from the image-overlay
-// Spotlight: the text sits on a solid surface, so contrast is inherently safe.
-export function AttorneyCardEditorial({attorney}: {attorney: AttorneyCard}) {
+// Avatar — a centered round headshot with name + title below. The one circular
+// style. Degrades to a clean initials-circle (never an empty box) when an
+// attorney has no photo, so it stays premium for photo-less rosters. Hover rings
+// the avatar in the accent color and gently zooms the photo within the circle.
+export function AttorneyCardAvatar({attorney}: {attorney: AttorneyCard}) {
   const name = attorneyName(attorney)
   return (
     <Link
       href={`/${attorney.slug}/`}
       aria-label={`View profile for ${name}`}
-      className="group block rounded-ui focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2"
+      className="group block rounded-ui px-4 py-2 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2"
     >
-      <CardImage attorney={attorney} ratio="aspect-[4/3]" className="rounded-ui" sizes={PORTRAIT_SIZES} />
-      <div className="relative -mt-12 mx-4 rounded-ui border border-border bg-background p-5 shadow-card-rest transition-[box-shadow,translate,border-color] duration-ui-slow group-hover:-translate-y-1 group-hover:border-action group-hover:shadow-card-hover">
-        <span aria-hidden="true" className="mb-3 block h-0.5 w-8 bg-action" />
-        <p className="font-heading text-lg font-semibold leading-snug text-foreground">{name}</p>
-        {attorney.jobTitle && <p className="mt-1 text-sm text-foreground-muted">{attorney.jobTitle}</p>}
-        <ViewProfileCue className="mt-4" />
+      <div className="mx-auto w-32">
+        <CardImage
+          attorney={attorney}
+          ratio="aspect-square"
+          className="rounded-full ring-2 ring-border transition-[box-shadow] duration-ui-slow group-hover:ring-action"
+          imgClassName="transition-transform duration-ui-slow group-hover:scale-105"
+          sizes="160px"
+        />
+      </div>
+      <p className="mt-5 font-heading text-lg font-semibold leading-snug text-foreground">{name}</p>
+      {attorney.jobTitle && <p className="mt-1 text-sm text-foreground-muted">{attorney.jobTitle}</p>}
+      <div className="mt-4 flex justify-center">
+        <ViewProfileCue />
       </div>
     </Link>
   )

@@ -215,6 +215,7 @@ export const structure = (S: StructureBuilder) =>
               S.documentTypeListItem('badgesSection').title('Badges Sections'),
               S.documentTypeListItem('ctaSection').title('Banner CTA Sections'),
               S.documentTypeListItem('faqSection').title('FAQ Sections'),
+              S.documentTypeListItem('practiceAreaNav').title('Practice Area Nav Sections'),
               S.documentTypeListItem('reviewsSection').title('Reviews Sections'),
               S.documentTypeListItem('videoSection').title('Video Sections'),
             ])

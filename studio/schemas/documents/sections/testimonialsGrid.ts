@@ -1,11 +1,13 @@
 import {defineType} from 'sanity'
 import {TokenStringInput} from '../../../components/TokenStringInput'
 import {TokenTextInput} from '../../../components/TokenTextInput'
+import {appearanceFieldset, appearanceFields} from '../../objects/appearanceFields'
 
 export const testimonialsGrid = defineType({
   name: 'testimonialsGrid',
   title: 'Grid Testimonials Section',
   type: 'document',
+  fieldsets: [appearanceFieldset],
   fields: [
     {
       name: 'name',
@@ -40,6 +42,7 @@ export const testimonialsGrid = defineType({
       of: [{type: 'reference', to: [{type: 'testimonial'}]}],
       validation: (Rule) => Rule.min(1).warning('At least one testimonial is required'),
     },
+    ...appearanceFields({defaultSurface: 'tint'}),
   ],
   preview: {
     select: {title: 'name', subtitle: 'heading'},

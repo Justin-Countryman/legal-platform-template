@@ -45,11 +45,48 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
   heading,
   description,
   layout,
+  sectionLayout,
+  gridMode,
   cardStyle,
+  hoverEffects,
+  showArrow,
+  iconPosition,
   mode,
   reviewsEmbed,
   footerHeading,
   footerDescription,
+  "appearance": {
+    "surface": surface,
+    "spacing": spacing,
+    "backgroundImage": sectionBackgroundImage{
+      "src": asset->url
+    }
+  },
+  // practiceAreaNav (silo nav): resolve each item's page reference to an href +
+  // auto-pulled title/description, with per-item overrides; or auto-list all
+  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").
+  "items": select(
+    _type == "practiceAreaNav" && mode == "allTopLevel" =>
+      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{
+        "_key": _id,
+        "label": title,
+        "href": "/" + slug.current + "/",
+        "description": metaDescription,
+        "icon": null,
+        "image": null,
+        "featured": false
+      } | order(title asc),
+    _type == "practiceAreaNav" =>
+      items[defined(page->slug.current)]{
+        _key,
+        "label": coalesce(label, page->title),
+        "href": "/" + page->slug.current + "/",
+        "description": coalesce(description, page->metaDescription),
+        "icon": icon{"src": asset->url, "alt": alt, "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height},
+        "image": image{"src": asset->url, "alt": alt, "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height},
+        "featured": featured
+      }
+  ),
   "buttons": buttons[]{title, url, variant},
   "footerButton": footerButton{title, url, variant},
   "image": image{
@@ -601,6 +638,16 @@ export const NAP_TOKENS_QUERY = groq`
       emergency24_7,
       emergencyPhone
     },
+  }
+`
+
+// ─── Homepage ─────────────────────────────────────────────────────────────────
+// The homepage's full-width sections (silo nav, CTA, testimonials, …). The unique
+// homepage hero is a separate build; this projects the stacked sections so they
+// render below it.
+export const HOME_QUERY = groq`
+  *[_type == "homePage"][0]{
+    "sections": sections ${SECTIONS_FRAGMENT}
   }
 `
 
