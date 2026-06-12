@@ -89,6 +89,23 @@ export const practiceAreaNav = defineType({
       initialValue: 'centered',
     },
     {
+      name: 'mobileDisplay',
+      title: 'Mobile Display',
+      type: 'string',
+      fieldset: 'navigation',
+      description:
+        'How this section presents on phones (under ~768px). Desktop always uses the Button Layout above. Carousel = swipe through cards with a peek + dots. Stacked = full cards in a vertical list (all visible). Compact list = icon + label rows, no photos (fastest, most scannable).',
+      options: {
+        list: [
+          {title: 'Carousel — swipe through cards (peek + dots)', value: 'carousel'},
+          {title: 'Stacked — full cards, vertical (all visible)', value: 'stacked'},
+          {title: 'Compact list — icon + label rows, no photos', value: 'list'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'carousel',
+    },
+    {
       name: 'iconPosition',
       title: 'Icon Position',
       type: 'string',

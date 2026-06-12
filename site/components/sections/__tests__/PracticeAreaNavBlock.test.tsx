@@ -41,9 +41,13 @@ describe('PracticeAreaNavBlock — section layouts', () => {
     expect(container.querySelector(`[data-section-layout="${sectionLayout}"]`)).not.toBeNull()
     // header survives every arrangement
     expect(screen.getByRole('heading', {name: 'How we can help'})).toBeTruthy()
-    // the silo nav landmark is always named + present
-    const nav = screen.getByRole('navigation', {name: 'How we can help'})
-    expect(within(nav).getAllByRole('listitem')).toHaveLength(2)
+    // Two named silo-nav renderings — the mobile carousel + the desktop grid — one
+    // shown per breakpoint via CSS (md:hidden / hidden md:block). jsdom can't apply
+    // the CSS, so both are present here; in a browser only one is in the a11y tree.
+    expect(screen.getAllByRole('navigation', {name: 'How we can help'})).toHaveLength(2)
+    // the desktop grid (the @container nav) lists every item
+    const gridNav = container.querySelector('nav.\\@container') as HTMLElement
+    expect(within(gridNav).getAllByRole('listitem')).toHaveLength(2)
   })
 
   it('defaults to centered when no section layout is set', () => {
@@ -76,10 +80,42 @@ describe('PracticeAreaNavBlock — section layouts', () => {
       {_key: 'a', label: 'Family Law', href: '/family-law/', description: null},
       {_key: 'b', label: 'Estate Planning', href: '/estate-planning/', description: null, featured: true},
     ]
-    render(<PracticeAreaNavBlock data={data({gridMode: 'bentoLeft', layout: 'inline', items})} />)
-    const nav = screen.getByRole('navigation', {name: 'How we can help'})
-    const lis = within(nav).getAllByRole('listitem')
+    const {container} = render(<PracticeAreaNavBlock data={data({gridMode: 'bentoLeft', layout: 'inline', items})} />)
+    // the desktop bento (the @container nav) reorders; the mobile carousel keeps
+    // source order, so assert against the bento grid specifically.
+    const gridNav = container.querySelector('nav.\\@container') as HTMLElement
+    const lis = within(gridNav).getAllByRole('listitem')
     // hero (featured) first, regardless of source order
     expect(within(lis[0]).getByText('Estate Planning')).toBeTruthy()
+  })
+})
+
+describe('PracticeAreaNavBlock — mobile display axis', () => {
+  it('carousel (default): a mobile swipe carousel + the desktop grid (two renderings)', () => {
+    const {container} = render(<PracticeAreaNavBlock data={data({mobileDisplay: 'carousel'})} />)
+    expect(screen.getAllByRole('navigation', {name: 'How we can help'})).toHaveLength(2)
+    // the mobile rendering is a scroll-snap carousel
+    expect(container.querySelector('ul.snap-mandatory')).not.toBeNull()
+    // the desktop grid is hidden on mobile
+    expect(container.querySelector('.hidden.md\\:block')).not.toBeNull()
+  })
+
+  it('stacked: a SINGLE grid rendering shown at all widths (no mobile-only sibling, no carousel)', () => {
+    const {container} = render(<PracticeAreaNavBlock data={data({mobileDisplay: 'stacked'})} />)
+    expect(screen.getAllByRole('navigation', {name: 'How we can help'})).toHaveLength(1)
+    expect(container.querySelector('ul.snap-mandatory')).toBeNull()
+    // grid is not wrapped in a hidden-on-mobile container
+    expect(container.querySelector('.hidden.md\\:block')).toBeNull()
+  })
+
+  it('list: a mobile compact list (icon+label rows, no photos) + the desktop grid', () => {
+    const {container} = render(<PracticeAreaNavBlock data={data({mobileDisplay: 'list'})} />)
+    expect(screen.getAllByRole('navigation', {name: 'How we can help'})).toHaveLength(2)
+    // compact list is the md:hidden nav with divided rows — and no carousel
+    expect(container.querySelector('ul.snap-mandatory')).toBeNull()
+    const mobileNav = container.querySelector('nav.md\\:hidden')
+    expect(mobileNav?.querySelector('ul.divide-y')).not.toBeNull()
+    // no full-bleed photos in the list
+    expect(container.querySelector('nav.md\\:hidden [class*="object-cover"]')).toBeNull()
   })
 })

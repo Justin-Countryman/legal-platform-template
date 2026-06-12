@@ -29,15 +29,30 @@ export function SiloNav({ariaLabel, className, children}: {ariaLabel: string; cl
 /** Whole-tile link: the focus-ring contract + group + relative are always present.
  *  `dark` flips the ring-context (image tiles render white text over the scrim). */
 export function TileLink({
-  href, dark, className, children,
+  href, dark, className, children, press = 'scale',
 }: {
   href: string
   dark?: boolean
   className: string
   children: React.ReactNode
+  /** Touch press feedback. 'scale' (default) presses the whole card down — right for
+   *  cards. 'wash' tints the background instead — right for full-width list rows,
+   *  where a scale would gap the row inside its divider/border. */
+  press?: 'scale' | 'wash'
 }) {
+  // Hover effects never fire on touch, so a tap needs its own feedback.
+  // scale: standard `transition-transform` eases the scale (Tailwind-v4 caveat) and
+  // composes with any lift effect. wash: a subtle bg tint on press.
+  const pressClass =
+    press === 'wash'
+      ? 'transition-colors duration-ui-fast active:bg-foreground/[0.06]'
+      : 'transition-transform duration-ui-fast ease-gentle active:scale-95'
   return (
-    <Link href={href} data-ring-context={dark ? 'dark' : undefined} className={`group relative overflow-hidden ${FOCUS} ${className}`}>
+    <Link
+      href={href}
+      data-ring-context={dark ? 'dark' : undefined}
+      className={`group relative overflow-hidden ${pressClass} ${FOCUS} ${className}`}
+    >
       {children}
     </Link>
   )

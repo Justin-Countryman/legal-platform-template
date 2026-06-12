@@ -62,11 +62,11 @@ export const mainNavigation = defineType({
       description: 'Choose the mobile header style. Action bar variants use the CTA button and phone fields — configure those in the Phone and CTA Buttons sections.',
       options: {
         list: [
-          {title: 'Standard — logo left, hamburger right (single row)', value: 'standard'},
-          {title: 'Action Bar Top — MENU / EMAIL / CALL action strip above the logo', value: 'bar-top'},
-          {title: 'Action Bar Bottom — logo above the MENU / EMAIL / CALL action strip', value: 'bar-bottom'},
+          {title: 'Standard — logo left, hamburger menu right (single row)', value: 'standard'},
+          {title: 'Action Bar Top — Menu · Email · Call strip above a centered logo', value: 'bar-top'},
+          {title: 'Action Bar Bottom — centered logo above the Menu · Email · Call strip', value: 'bar-bottom'},
           {title: 'Phone Split — logo row, then phone number left + menu button right', value: 'phone-split'},
-          {title: 'Logo Split — logo + menu button top row, phone number below', value: 'logo-split'},
+          {title: 'Logo Split — logo + menu button on top, phone number below', value: 'logo-split'},
         ],
         layout: 'radio',
       },
@@ -163,11 +163,19 @@ export const mainNavigation = defineType({
 
     // ─── Top Bar ──────────────────────────────────────────────────────────────
     {
-      name: 'topBarEnabled',
-      title: 'Show Top Bar',
+      name: 'topBarDesktop',
+      title: 'Show Top Bar on Desktop',
       type: 'boolean',
       fieldset: 'topBar',
-      description: 'Display a thin strip above the main header with contact info or a quick message. Always collapses first when the user scrolls.',
+      description: 'Display the thin strip above the main header on desktop. Always collapses first when the user scrolls. The right-side message is desktop-only.',
+      initialValue: false,
+    },
+    {
+      name: 'topBarMobile',
+      title: 'Show Top Bar on Mobile',
+      type: 'boolean',
+      fieldset: 'topBar',
+      description: 'Display the top bar on mobile. Only the left-side message shows on mobile (the right-side content is desktop-only). Controlled independently from desktop.',
       initialValue: false,
     },
     {

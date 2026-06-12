@@ -2178,7 +2178,8 @@ const SAMPLE_HEADER_DATA: HeaderData = {
   compactStyle: null,
   defaultScheme: 'dark',
   scrolledScheme: null,
-  topBarEnabled: true,
+  topBarDesktop: true,
+  topBarMobile: false,
   topBarPinSide: 'left',
   topBarLeft: 'Springfield, IL',
   topBarRight: 'Office hours: Mon-Fri 8:30am-5:30pm',
@@ -2669,7 +2670,8 @@ function LayoutsPanel() {
         <Heading>TopBar</Heading>
         <Note>
           Page-frame chrome rendered above headers when{' '}
-          <code>data.topBarEnabled</code> is true. Two content slots:
+          <code>data.topBarDesktop</code> or <code>data.topBarMobile</code> is
+          {' '}true (independent breakpoint toggles). Two content slots:
           {' '}<code>left</code> (mobile + desktop) and <code>right</code>
           {' '}(desktop only). Optional <code>pinSide</code> renders an
           <code> MdLocationPin</code> glyph. Two visual styles —

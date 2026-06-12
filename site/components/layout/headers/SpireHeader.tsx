@@ -27,7 +27,7 @@ export function SpireHeader({data}: Props) {
   const {
     heroMerge, sticky, stickyHideSupplementary, compactStyle,
     defaultScheme, scrolledScheme,
-    topBarEnabled, topBarPinSide, topBarLeft, topBarRight, topBarStyle,
+    topBarDesktop, topBarMobile, topBarPinSide, topBarLeft, topBarRight, topBarStyle,
     headerPhone, headerPhone2, phone, tollFreePhone,
     headerPhoneTagline,
     headerCtaLabel, headerCtaUrl, headerCtaLabel2, headerCtaUrl2,
@@ -68,8 +68,8 @@ export function SpireHeader({data}: Props) {
   return (
     <header ref={headerRef} data-ring-context={dataRingContext} className={`${posClass} transition-colors duration-structural-slow ease-balanced ${floatingActive ? 'bg-transparent' : `${bgClass} ${textClass}`}`}>
 
-      {topBarEnabled && (
-        <TopBar left={topBarLeft} right={topBarRight} style={topBarStyle} visible={!scrolled} pinSide={topBarPinSide} />
+      {(topBarDesktop || topBarMobile) && (
+        <TopBar desktop={topBarDesktop} mobile={topBarMobile} left={topBarLeft} right={topBarRight} style={topBarStyle} visible={!scrolled} pinSide={topBarPinSide} />
       )}
 
       {/* ── Mobile header row — outside padding container for full-bleed layouts ── */}
@@ -80,6 +80,7 @@ export function SpireHeader({data}: Props) {
           onToggle={() => setMenuOpen((p) => !p)}
           scheme={scheme}
           hoverTextClass={hoverTextClass}
+          compact={hideSupplementary}
           triggerRef={menuBtnRef}
         />
       </div>

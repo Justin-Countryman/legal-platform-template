@@ -192,7 +192,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-const DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN ?? 'kmwasche.com'
+const DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN ?? 'example.com'
 
 export default async function CatchAllPage({params}: Props) {
   const {slug} = await params

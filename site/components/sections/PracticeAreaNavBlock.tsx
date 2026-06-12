@@ -6,8 +6,10 @@ import {
   SiloSpotlight, SiloFeature, SiloTileLayout, SiloInline, SiloSplit,
 } from './silo/SiloLayouts'
 import {SiloBento} from './silo/SiloBento'
+import {SiloCarousel} from './silo/SiloCarousel'
+import {SiloCompactList} from './silo/SiloCompactList'
 import {isBentoMode} from './silo/bento'
-import type {SiloNavItem, SiloLayout, SiloIconPosition, SiloSectionLayout, SiloGridMode} from './silo/types'
+import type {SiloNavItem, SiloLayout, SiloIconPosition, SiloSectionLayout, SiloGridMode, SiloMobileDisplay} from './silo/types'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -19,6 +21,7 @@ export type PracticeAreaNavBlockData = {
   layout?: SiloLayout | null
   sectionLayout?: SiloSectionLayout | null
   gridMode?: SiloGridMode | null
+  mobileDisplay?: SiloMobileDisplay | null
   hoverEffects?: string[] | null
   showArrow?: boolean | null
   iconPosition?: SiloIconPosition | null
@@ -85,7 +88,20 @@ export function PracticeAreaNavBlock({
   const sectionLayout: SiloSectionLayout = data.sectionLayout ?? 'centered'
   const hasHeader = !!(heading || tagline)
 
-  const buttons = (
+  // Mobile Display axis (< md). Desktop (≥ md) always uses the chosen grid layout.
+  //   carousel → swipe row of cards + dots (the rich grid is hidden on mobile)
+  //   list     → compact icon+label rows (the rich grid is hidden on mobile)
+  //   stacked  → no separate mobile rendering; the grid simply shows at all widths
+  // For carousel/list only the visible rendering is in the a11y tree (the other is
+  // display:none). Stacked renders a single nav at all widths (no duplication).
+  const mobileDisplay: SiloMobileDisplay = data.mobileDisplay ?? 'carousel'
+  const mobileNav =
+    mobileDisplay === 'list' ? (
+      <SiloCompactList items={items} ariaLabel={navLabel} hoverEffects={hoverEffects} showArrow={showArrow} className="md:hidden" />
+    ) : mobileDisplay === 'carousel' ? (
+      <SiloCarousel items={items} ariaLabel={navLabel} hoverEffects={hoverEffects} showArrow={showArrow} className="md:hidden" />
+    ) : null
+  const desktopGrid = (
     <SiloVariant
       layout={data.layout}
       gridMode={data.gridMode}
@@ -95,6 +111,12 @@ export function PracticeAreaNavBlock({
       showArrow={showArrow}
       iconPosition={iconPosition}
     />
+  )
+  const buttons = (
+    <>
+      {mobileNav}
+      {mobileDisplay === 'stacked' ? desktopGrid : <div className="hidden md:block">{desktopGrid}</div>}
+    </>
   )
 
   return (

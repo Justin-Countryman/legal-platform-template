@@ -44,7 +44,8 @@ export type HeaderData = {
   compactStyle?: string | null
   defaultScheme?: string | null
   scrolledScheme?: string | null
-  topBarEnabled?: boolean | null
+  topBarDesktop?: boolean | null
+  topBarMobile?: boolean | null
   topBarPinSide?: string | null
   topBarLeft?: string | null
   topBarRight?: string | null
@@ -333,19 +334,26 @@ type TopBarProps = {
   style?: string | null
   visible: boolean
   pinSide?: string | null
+  /** Show on desktop (≥ md). */
+  desktop?: boolean | null
+  /** Show on mobile (< md). Independent from desktop. */
+  mobile?: boolean | null
 }
 
-export function TopBar({left, right, style, visible, pinSide}: TopBarProps) {
+export function TopBar({left, right, style, visible, pinSide, desktop, mobile}: TopBarProps) {
+  if (!desktop && !mobile) return null
   if (!left && !right) return null
   const bg = TOP_BAR_BG[style ?? 'primary'] ?? TOP_BAR_BG.primary
   const fg = TOP_BAR_FG[style ?? 'primary'] ?? TOP_BAR_FG.primary
   const pin = pinSide && pinSide !== 'none'
     ? <MdLocationPin className="shrink-0 text-sm" aria-hidden="true" />
     : null
+  // Which breakpoints the bar appears at — desktop and mobile toggle independently.
+  const breakpointClass = desktop && mobile ? '' : desktop ? 'hidden md:block' : 'md:hidden'
   return (
     <div
       aria-hidden={!visible}
-      className={`overflow-hidden transition-[max-height,opacity] duration-structural-slow ease-balanced ${
+      className={`${breakpointClass} overflow-hidden transition-[max-height,opacity] duration-structural-slow ease-balanced ${
         visible ? 'max-h-10 opacity-100' : 'max-h-0 opacity-0'
       }`}
     >
@@ -701,6 +709,10 @@ type MobileRowVariantProps = {
   scheme: string
   hoverTextClass: string
   triggerRef: React.RefObject<HTMLButtonElement | null>
+  /** Compact-on-scroll state (= scrolled && stickyHideSupplementary). When true,
+   *  the action-bar layouts collapse their logo row so only the Menu/Email/Call
+   *  strip stays pinned — matching the top-bar collapse. */
+  compact?: boolean
 }
 
 export function MobileHeaderRow(props: MobileRowVariantProps) {
@@ -787,26 +799,40 @@ function MobileActionBar({data, isOpen, onToggle, hoverTextClass, triggerRef}: A
 
 // ─── Bar-Top — action bar on top, logo centered below ─────────────────────────
 
-function MobileBarTop({data, isOpen, onToggle, scheme, hoverTextClass, triggerRef}: MobileRowVariantProps) {
+function MobileBarTop({data, isOpen, onToggle, scheme, hoverTextClass, triggerRef, compact}: MobileRowVariantProps) {
   return (
     <div>
       <MobileActionBar data={data} isOpen={isOpen} onToggle={onToggle} hoverTextClass={hoverTextClass} triggerRef={triggerRef} />
-      <div className="flex justify-center px-[5%] py-3">
-        <HeaderLogo data={data} scheme={scheme} className="h-10 w-auto" />
-      </div>
+      <CollapsibleLogoRow scheme={scheme} data={data} compact={!!compact} />
     </div>
   )
 }
 
 // ─── Bar-Bottom — logo centered on top, action bar below ──────────────────────
 
-function MobileBarBottom({data, isOpen, onToggle, scheme, hoverTextClass, triggerRef}: MobileRowVariantProps) {
+function MobileBarBottom({data, isOpen, onToggle, scheme, hoverTextClass, triggerRef, compact}: MobileRowVariantProps) {
   return (
     <div>
+      <CollapsibleLogoRow scheme={scheme} data={data} compact={!!compact} />
+      <MobileActionBar data={data} isOpen={isOpen} onToggle={onToggle} hoverTextClass={hoverTextClass} triggerRef={triggerRef} />
+    </div>
+  )
+}
+
+// Logo row for the action-bar layouts. Collapses (height + fade) on scroll when
+// `compact`, so the Menu/Email/Call strip is the only thing left pinned at the
+// top — same transition tokens as the top-bar collapse for one coherent motion.
+function CollapsibleLogoRow({data, scheme, compact}: {data: HeaderData; scheme: string; compact: boolean}) {
+  return (
+    <div
+      aria-hidden={compact}
+      className={`overflow-hidden transition-[max-height,opacity] duration-structural-slow ease-balanced ${
+        compact ? 'max-h-0 opacity-0' : 'max-h-20 opacity-100'
+      }`}
+    >
       <div className="flex justify-center px-[5%] py-3">
         <HeaderLogo data={data} scheme={scheme} className="h-10 w-auto" />
       </div>
-      <MobileActionBar data={data} isOpen={isOpen} onToggle={onToggle} hoverTextClass={hoverTextClass} triggerRef={triggerRef} />
     </div>
   )
 }

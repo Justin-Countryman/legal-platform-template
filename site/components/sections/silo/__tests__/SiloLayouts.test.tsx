@@ -64,6 +64,15 @@ describe.each(LAYOUTS)('Silo layout: %s — a11y contract', (_name, Layout) => {
     expect(heading.closest('a')).not.toBeNull()
   })
 
+  it('every tile gives a touch press-down (active:scale-95) — feedback where hover cannot fire', () => {
+    render(<Layout {...props()} />)
+    for (const link of screen.getAllByRole('link')) {
+      const cls = link.getAttribute('class') ?? ''
+      expect(cls).toContain('active:scale-95')
+      expect(cls).toContain('transition-transform')
+    }
+  })
+
   it('media is decorative (empty alt) — never exposed to assistive tech', () => {
     render(<Layout {...props()} />)
     expect(screen.queryAllByRole('img')).toHaveLength(0)

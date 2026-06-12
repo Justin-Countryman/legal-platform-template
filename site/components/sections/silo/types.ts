@@ -29,3 +29,8 @@ export type SiloSectionLayout = 'centered' | 'left' | 'aside' | 'banner'
 // remaining tiles for editorial rhythm; 'bentoList' pairs the hero with a scannable
 // list of the rest.
 export type SiloGridMode = 'equal' | 'bentoLeft' | 'bentoMosaic' | 'bentoList'
+
+// Mobile display — how the section presents on phones (< md). Desktop always uses
+// the chosen button layout. 'carousel' = horizontal swipe; 'stacked' = the desktop
+// grid shown at all widths (full cards, vertical); 'list' = compact icon+label rows.
+export type SiloMobileDisplay = 'carousel' | 'stacked' | 'list'

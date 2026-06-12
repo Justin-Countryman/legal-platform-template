@@ -1954,6 +1954,27 @@
         },
         "optional": true
       },
+      "mobileDisplay": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "carousel"
+            },
+            {
+              "type": "string",
+              "value": "stacked"
+            },
+            {
+              "type": "string",
+              "value": "list"
+            }
+          ]
+        },
+        "optional": true
+      },
       "iconPosition": {
         "type": "objectAttribute",
         "value": {
@@ -5269,7 +5290,14 @@
         },
         "optional": true
       },
-      "topBarEnabled": {
+      "topBarDesktop": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "topBarMobile": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"

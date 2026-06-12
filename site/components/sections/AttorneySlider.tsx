@@ -2,6 +2,7 @@
 
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {IconButton} from '@/components/ui/IconButton'
+import {CAROUSEL_SCROLLER, CAROUSEL_SLIDE_BASIS} from './carouselClasses'
 import {AttorneyCard, type AttorneyCardStyle} from './AttorneyCard'
 import {type AttorneyCard as AttorneyCardData} from './AttorneyCardParts'
 
@@ -93,15 +94,9 @@ export function AttorneySlider({
 
   return (
     <div className="relative" role="region" aria-roledescription="carousel" aria-label="Attorneys">
-      {/* overflow-x:auto forces overflow-y to auto, which clips the cards' hover
-          lift + shadow + focus ring. p-4 gives the scrollport room; the matching
-          -m-4 offsets it so the track still aligns to the container. */}
-      <ul
-        ref={scroller}
-        role="list"
-        aria-label="Attorneys"
-        className="flex gap-6 overflow-x-auto snap-x snap-mandatory p-4 -m-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
+      {/* Shared carousel scroller (see carouselClasses): bleeds for shadow room
+          AND scroll-padding-aligns the first card to the section content edge. */}
+      <ul ref={scroller} role="list" aria-label="Attorneys" className={CAROUSEL_SCROLLER}>
         {attorneys.map((attorney, i) => (
           <li
             key={attorney._id}
@@ -109,7 +104,7 @@ export function AttorneySlider({
             role="group"
             aria-roledescription="slide"
             aria-label={`${i + 1} of ${attorneys.length}`}
-            className="shrink-0 snap-start basis-[85%] sm:basis-[calc(50%-0.75rem)] lg:basis-[calc(33.333%-1rem)]"
+            className={`shrink-0 snap-start ${CAROUSEL_SLIDE_BASIS} lg:basis-[calc((100%-2rem)/3)]`}
           >
             <AttorneyCard attorney={attorney} cardStyle={cardStyle} />
           </li>

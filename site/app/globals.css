@@ -467,15 +467,6 @@
   }
 }
 
-/* Smooth-scroll carve-out — html { scroll-behavior: smooth } at the Base
-   Styles block below must yield to the OS-level reduced-motion preference.
-   Kept as a separate @media block (not folded into the motion-var clamp
-   above) so the smooth-scroll concern stays semantically distinct from
-   the motion-duration tokens. */
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-}
-
 /* ─── Brand Design System ─────────────────────────────────────────────────── */
 
 /* @theme inline — values that are themselves var() references; inlined into utilities */
@@ -614,9 +605,11 @@
 }
 
 /* ─── Base Styles ─────────────────────────────────────────────────────────── */
-html {
-  scroll-behavior: smooth;
-}
+/* No global `scroll-behavior: smooth` on <html>: with the App Router it makes
+   the route-change scroll-to-top animate, which reads as a jarring "back to
+   top" scroll instead of simply landing at the top of a new page. Intentional
+   smooth scrolls (Back to Top button, attorney slider) call
+   scrollTo({behavior: 'smooth'}) in JS, so they are unaffected. */
 
 body {
   font-family: var(--dynamic-font-body, system-ui), sans-serif;
