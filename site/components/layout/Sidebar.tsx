@@ -839,6 +839,7 @@ function SidebarCtaBox({component, napTokens}: {component: SidebarCtaBoxComponen
         <Button
           href={href}
           fullWidth
+          className="mt-4"
           target={href.startsWith('http') ? '_blank' : undefined}
         >
           {button.title}
