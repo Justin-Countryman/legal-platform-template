@@ -394,7 +394,14 @@ export const FOOTER_QUERY = groq`{
     actionButton1Url,
     actionButton2Label,
     actionButton2Url,
-    "column1": column1[]{label, href},
+    // Practice Areas column auto-lists top-level areas of law LIVE from the
+    // practiceArea docs — label = title, href = slug — so it stays in sync with
+    // the header nav and sidebar nav (single source of truth = practiceArea.title).
+    // The stored column1 field is ignored.
+    "column1": *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{
+      "label": title,
+      "href": "/" + slug.current + "/"
+    } | order(title asc),
     "column2": column2[]{label, href},
     facebookUrl,
     instagramUrl,

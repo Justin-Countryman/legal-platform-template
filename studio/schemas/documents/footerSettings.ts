@@ -121,9 +121,15 @@ export const footerSettings = defineType({
     // ─── Footer Navigation ─────────────────────────────────────────────────────
     {
       name: 'column1',
-      title: 'Footer Nav — Column 1',
+      title: 'Footer — Practice Areas (auto-generated)',
       type: 'array',
       fieldset: 'navigation',
+      // The footer Practice Areas column is auto-listed LIVE on the site from
+      // your top-level practice areas (label = the practice area's Page Title),
+      // so it always matches the header + sidebar nav. Hidden because it's no
+      // longer hand-edited — to change a footer label, edit that practice
+      // area's Page Title. Any legacy stored items are retained but ignored.
+      hidden: true,
       of: [
         {
           type: 'object',
