@@ -75,10 +75,12 @@ const VARIANTS: Record<'primary' | 'secondary', Record<ButtonContext, string>> =
   },
   secondary: {
     light: 'bg-transparent border border-action text-action-text hover:bg-action hover:text-action-fg hover:border-action active:brightness-95 focus-visible:ring-focus',
-    // Secondary text uses cascade-aware text-action-text on dark too — resolves
-    // to raw action color on dark surfaces (passes contrast against brand-dark).
-    // Ring stays explicit white for visibility against the action-color border.
-    dark:  'bg-transparent border border-action text-action-text hover:bg-action hover:text-action-fg hover:border-action active:brightness-95 focus-visible:ring-white focus-visible:ring-offset-brand-dark',
+    // On dark surfaces the outline + text use the on-dark foreground (white via
+    // the cascade) instead of the action color. The raw action color can sit too
+    // close to the dark brand surface for monochromatic/dark palettes (e.g. dark
+    // green on dark green), failing WCAG contrast. White outline guarantees
+    // contrast on ANY dark brand; the action color still fills on hover.
+    dark:  'bg-transparent border border-current text-foreground hover:bg-action hover:text-action-fg hover:border-action active:brightness-95 focus-visible:ring-white focus-visible:ring-offset-brand-dark',
   },
 }
 

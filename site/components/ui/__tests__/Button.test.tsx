@@ -54,13 +54,17 @@ describe('Button — variant class strings', () => {
     expect(btn.className).toContain('active:brightness-95')
   })
 
-  it('secondary.dark renders border-action and cascade-aware text-action-text', () => {
+  it('secondary.dark uses on-dark foreground outline (WCAG-safe on any dark brand)', () => {
     render(<Button variant="secondary" context="dark">Click</Button>)
     const btn = screen.getByRole('button')
-    expect(btn.className).toContain('border-action')
-    // Post-WS5: cascade-aware text-action-text resolves to raw action color on dark surfaces.
-    expect(btn.className).toContain('text-action-text')
+    // Outline + text use the on-dark foreground (white) instead of the action
+    // color, which can fail contrast on monochromatic/dark brand surfaces.
+    expect(btn.className).toContain('border-current')
+    expect(btn.className).toContain('text-foreground')
+    expect(btn.className).not.toContain('text-action-text')
+    // Action color still fills on hover.
     expect(btn.className).toContain('hover:bg-action')
+    expect(btn.className).toContain('hover:border-action')
     expect(btn.className).toContain('active:brightness-95')
   })
 
