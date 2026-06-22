@@ -155,13 +155,19 @@ describe('FontPreset type compatibility', () => {
 // ─── Preload manifest (buildFontPreloads) ───────────────────────────────────
 
 describe('buildFontPreloads()', () => {
-  it('returns 2 entries when heading and body resolve to distinct files', () => {
-    const r = resolvefonts(1, null, null)  // Classical Authority — two-font preset
+  it('preloads heading regular + heading bold + body regular (distinct-file preset)', () => {
+    const r = resolvefonts(1, null, null)  // Classical Authority — Playfair has regular+bold
     const preloads = buildFontPreloads(r.heading, r.body)
-    expect(preloads).toHaveLength(2)
-    expect(preloads[0].key).toBe('font-heading')
-    expect(preloads[1].key).toBe('font-body')
-    expect(preloads[0].href).not.toBe(preloads[1].href)
+    expect(preloads.map((p) => p.key)).toEqual(['font-heading', 'font-heading-bold', 'font-body'])
+    // all three are distinct files
+    expect(new Set(preloads.map((p) => p.href)).size).toBe(3)
+  })
+
+  it('preloads the heading BOLD weight — the internal/PA hero H1 renders in bold', () => {
+    const r = resolvefonts(6, null, null)  // Humanist Trust — Lora + Work Sans
+    const preloads = buildFontPreloads(r.heading, r.body)
+    const bold = preloads.find((p) => p.key === 'font-heading-bold')
+    expect(bold?.href).toContain('Lora-Bold')
   })
 
   it('dedupes to 1 entry when a mono-pair resolves heading.regular === body.regular', () => {

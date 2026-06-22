@@ -1,7 +1,10 @@
 'use client'
 
 import {useEffect, useLayoutEffect, useRef, useState, forwardRef} from 'react'
-import {motion} from 'framer-motion'
+// `m` (not `motion`) so the header binds to the async-loaded features provided
+// by <LazyMotion> in MotionRoot — keeps the Framer Motion runtime out of initial
+// hydration. See components/ui/MotionRoot.tsx.
+import {m} from 'framer-motion'
 import {motionConfig} from '@/lib/motionConfig'
 import {RxChevronDown} from 'react-icons/rx'
 import {MdPhone, MdLocationPin, MdEmail, MdClose} from 'react-icons/md'
@@ -585,14 +588,14 @@ export function SubMenu({navItem, isMobile, textClass, hoverTextClass, ringClass
             aria-label={`Toggle ${navItem.label} submenu`}
             onClick={toggle}
           >
-            <motion.span
+            <m.span
               aria-hidden="true"
               animate={isOpen ? {rotate: 180} : {rotate: 0}}
               transition={motionConfig.chevron}
               className="flex-shrink-0"
             >
               <RxChevronDown />
-            </motion.span>
+            </m.span>
           </button>
         </div>
       ) : (
@@ -606,18 +609,18 @@ export function SubMenu({navItem, isMobile, textClass, hoverTextClass, ringClass
           onClick={toggle}
         >
           <span>{navItem.label}</span>
-          <motion.span
+          <m.span
             aria-hidden="true"
             animate={isOpen ? {rotate: 180} : {rotate: 0}}
             transition={motionConfig.chevron}
             className="flex-shrink-0"
           >
             <RxChevronDown />
-          </motion.span>
+          </m.span>
         </button>
       )}
 
-      <motion.ul
+      <m.ul
         ref={menuRef}
         id={menuId}
         role="list"
@@ -648,7 +651,7 @@ export function SubMenu({navItem, isMobile, textClass, hoverTextClass, ringClass
             </Link>
           </li>
         ))}
-      </motion.ul>
+      </m.ul>
     </div>
   )
 }
@@ -658,9 +661,9 @@ export function SubMenu({navItem, isMobile, textClass, hoverTextClass, ringClass
 function HamburgerLines({isOpen}: {isOpen: boolean}) {
   return (
     <>
-      <motion.span aria-hidden="true" className="my-[3px] h-0.5 w-6 bg-current" animate={isOpen ? ['open', 'rotatePhase'] : 'closed'} variants={topLineVariants} />
-      <motion.span aria-hidden="true" className="my-[3px] h-0.5 w-6 bg-current" animate={isOpen ? 'open' : 'closed'} variants={middleLineVariants} />
-      <motion.span aria-hidden="true" className="my-[3px] h-0.5 w-6 bg-current" animate={isOpen ? ['open', 'rotatePhase'] : 'closed'} variants={bottomLineVariants} />
+      <m.span aria-hidden="true" className="my-[3px] h-0.5 w-6 bg-current" animate={isOpen ? ['open', 'rotatePhase'] : 'closed'} variants={topLineVariants} />
+      <m.span aria-hidden="true" className="my-[3px] h-0.5 w-6 bg-current" animate={isOpen ? 'open' : 'closed'} variants={middleLineVariants} />
+      <m.span aria-hidden="true" className="my-[3px] h-0.5 w-6 bg-current" animate={isOpen ? ['open', 'rotatePhase'] : 'closed'} variants={bottomLineVariants} />
     </>
   )
 }
@@ -1042,7 +1045,7 @@ export function MobileDrawer({data, isOpen, items, onClose, triggerRef}: MobileD
   }
 
   return (
-    <motion.div
+    <m.div
       ref={drawerRef}
       id={NAV_PANEL_ID}
       role="dialog"
@@ -1128,7 +1131,7 @@ export function MobileDrawer({data, isOpen, items, onClose, triggerRef}: MobileD
         {/* Drawer surface is always dark (bg-brand-dark + data-ring-context="dark") regardless of header scheme. */}
         <CtaButtons data={data} context="dark" className="mt-6 pb-2" />
       </nav>
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -1165,15 +1168,15 @@ function MobileSubMenu({navItem, pathname}: {navItem: NavItem; pathname: string}
         onClick={() => setIsOpen((p) => !p)}
       >
         <span>{navItem.label}</span>
-        <motion.span
+        <m.span
           aria-hidden="true"
           animate={isOpen ? {rotate: 180} : {rotate: 0}}
           transition={motionConfig.chevron}
         >
           <RxChevronDown />
-        </motion.span>
+        </m.span>
       </button>
-      <motion.ul
+      <m.ul
         id={submenuId}
         role="list"
         aria-hidden={!isOpen}
@@ -1203,7 +1206,7 @@ function MobileSubMenu({navItem, pathname}: {navItem: NavItem; pathname: string}
             </li>
           )
         })}
-      </motion.ul>
+      </m.ul>
     </div>
   )
 }

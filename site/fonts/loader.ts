@@ -56,10 +56,20 @@ function presetToFontData(preset: FontPreset): ResolvedFontData {
 }
 
 // Build the <link rel="preload"> manifest for the active heading + body fonts.
-// Preloads regular-weight only — bold/italic swap in via font-display:swap and
-// preloading every weight would inflate the critical path. When heading and
-// body resolve to the same woff2 URL (mono-pair preset), the second entry is
-// skipped so the browser doesn't preload the same file twice.
+//
+// Preloads the weights that paint ABOVE THE FOLD: heading regular + heading
+// BOLD, and body regular. The internal/practice-area hero renders its H1 in the
+// heading family's BOLD weight, so preloading heading-regular only meant the H1
+// font was discovered late (after the inline @font-face <style> parses) — it
+// landed on the LCP critical path and its late swap drove measurable CLS
+// (platform perf QA found Lora-Bold flagged as both a render-blocking critical
+// request AND a layout-shift culprit). Preloading the bold weight pulls it
+// forward so the swap happens at/near first paint.
+//
+// Still bounded on purpose: italic, medium, semibold, and body-bold continue to
+// swap in via font-display:swap — preloading every weight would re-inflate the
+// critical path. Duplicate hrefs are skipped (mono-pair presets, or a family
+// whose bold === regular URL).
 //
 // Consumers render each entry as
 //   <link rel="preload" href={href} as="font" type="font/woff2"
@@ -76,12 +86,16 @@ export function buildFontPreloads(
   body: ResolvedFontData['body'],
 ): FontPreloadEntry[] {
   const entries: FontPreloadEntry[] = []
-  if (heading?.regular) {
-    entries.push({key: 'font-heading', href: heading.regular})
+  const seen = new Set<string>()
+  const push = (key: string, href: string | undefined | null) => {
+    if (href && !seen.has(href)) {
+      seen.add(href)
+      entries.push({key, href})
+    }
   }
-  if (body?.regular && body.regular !== heading?.regular) {
-    entries.push({key: 'font-body', href: body.regular})
-  }
+  push('font-heading', heading?.regular)
+  push('font-heading-bold', heading?.bold) // H1 weight on internal/PA heroes
+  push('font-body', body?.regular)
   return entries
 }
 

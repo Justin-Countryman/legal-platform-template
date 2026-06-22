@@ -2,6 +2,15 @@
   "name": "site",
   "version": "0.1.0",
   "private": true,
+  "comment:browserslist": "Modern floor covering the JS features Next/SWC would otherwise polyfill (Array.at, Array.flat/flatMap, Object.fromEntries/hasOwn, String.trimStart/End). Safari 15.4 (Mar 2022) is the binding constraint. NOTE: Next 16 currently injects the core-js polyfills regardless of this floor (confirmed in both Webpack and Turbopack), so this is correct-intent hygiene that should start trimming ~14 KiB once Next honors the target for feature polyfills. Widen only if analytics shows real older-browser traffic.",
+  "browserslist": [
+    "chrome >= 92",
+    "edge >= 92",
+    "firefox >= 90",
+    "safari >= 15.4",
+    "not dead",
+    "not op_mini all"
+  ],
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",

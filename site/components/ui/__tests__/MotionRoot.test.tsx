@@ -5,6 +5,13 @@ import {render, screen} from '@testing-library/react'
 // MotionRoot passes reducedMotion="user" through to MotionConfig without
 // requiring framer-motion's full runtime in jsdom.
 vi.mock('framer-motion', () => ({
+  // LazyMotion defers feature loading; for the render-shape test it just needs
+  // to pass children through (and expose that it received a `features` loader).
+  LazyMotion: vi.fn(({features, children}) => (
+    <div data-testid="lazy-motion" data-has-features={typeof features === 'function'}>
+      {children}
+    </div>
+  )),
   MotionConfig: vi.fn(({reducedMotion, children}) => (
     <div data-testid="motion-config" data-reduced-motion={reducedMotion}>
       {children}
@@ -54,5 +61,27 @@ describe('MotionRoot — reducedMotion contract', () => {
     )
     const wrapper = screen.getByTestId('motion-config')
     expect(wrapper.getAttribute('data-reduced-motion')).toBe('user')
+  })
+})
+
+// ─── lazy feature-loading contract ──────────────────────────────────────────
+//
+// MotionRoot wraps the tree in <LazyMotion features={loader}> so Framer Motion's
+// animation runtime loads on demand (first interaction) rather than during
+// initial hydration. The header uses `m.*` components that bind to these
+// async-loaded features. Regression net for the perf fix that took the runtime
+// off the LCP critical path (platform perf QA).
+
+describe('MotionRoot — lazy feature loading', () => {
+  it('wraps children in LazyMotion with an async features loader', () => {
+    render(
+      <MotionRoot>
+        <p data-testid="child">x</p>
+      </MotionRoot>,
+    )
+    const lazy = screen.getByTestId('lazy-motion')
+    expect(lazy.getAttribute('data-has-features')).toBe('true')
+    // LazyMotion is the outer wrapper; MotionConfig nests inside it.
+    expect(lazy.contains(screen.getByTestId('motion-config'))).toBe(true)
   })
 })
