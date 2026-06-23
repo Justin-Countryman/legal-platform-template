@@ -574,14 +574,14 @@ export function SubMenu({navItem, isMobile, textClass, hoverTextClass, ringClass
         <div className="flex w-full items-center md:flex-none">
           <Link
             href={parentHref}
-            className={`block flex-1 rounded-ui py-3 text-left text-sm font-medium tracking-wide transition-colors duration-ui-fast ${hoverTextClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${ringClass} md:flex-none md:px-4 md:py-2 ${textClass}`}
+            className={`block flex-1 rounded-ui py-3 text-left text-sm font-medium tracking-wide transition-colors duration-ui-fast ${hoverTextClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${ringClass} md:flex-none md:pl-4 md:pr-0 md:py-2 ${textClass}`}
           >
             {navItem.label}
           </Link>
           <button
             ref={buttonRef}
             type="button"
-            className={`flex items-center justify-center rounded-ui px-3 py-3 transition-colors duration-ui-fast ${hoverTextClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${ringClass} md:py-2 ${textClass}`}
+            className={`flex items-center justify-center rounded-ui px-3 py-3 transition-colors duration-ui-fast ${hoverTextClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${ringClass} md:pl-2 md:pr-4 md:py-2 ${textClass}`}
             aria-expanded={isOpen}
             aria-haspopup="true"
             aria-controls={menuId}
