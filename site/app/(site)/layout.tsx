@@ -130,6 +130,16 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
   // buildFontPreloads() in fonts/loader.ts for the dedupe and selection rules.
   const fontPreloads = buildFontPreloads(resolvedHeading, resolvedBody)
 
+  // CLS guard: when heroMerge is off, the header sits in normal flow and the hero
+  // adds NO header-height padding — useHeaderHeight sets --header-height to 0 after
+  // hydration. Pin it to 0 at SSR too, so the hero's
+  // calc(var(--header-height, 8rem) + …) doesn't render with the 8rem placeholder
+  // and then jump up ~128px once JS runs (this was the 0.134 CLS on internal pages).
+  // heroMerge-on keeps the 8rem fallback (the header overlaps; useHeaderHeight then
+  // refines --header-height to the measured value).
+  const heroMerge = headerData?.mainNavigation?.heroMerge ?? false
+  const headerHeightSSR = heroMerge ? '' : ':root{--header-height:0px;}'
+
   return (
     <>
       {fontPreloads.map(({key, href}) => (
@@ -142,7 +152,7 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
           crossOrigin="anonymous"
         />
       ))}
-      <style dangerouslySetInnerHTML={{__html: tokenCSS + colorCSS}} />
+      <style dangerouslySetInnerHTML={{__html: tokenCSS + colorCSS + headerHeightSSR}} />
       {fontCSS && <style dangerouslySetInnerHTML={{__html: fontCSS}} />}
       <div data-button-animation={buttonAnimation}>
       <MotionRoot>
