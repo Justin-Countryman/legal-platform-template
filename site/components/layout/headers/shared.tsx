@@ -302,12 +302,17 @@ export function HeaderLogo({data, scheme, useMark = false, className = 'h-10 lg:
       className={`min-w-max flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${ringClass}`}
     >
       {asset?.src ? (
+        // Cap the logo width so wide wordmark logos (high aspect ratio) don't
+        // blow out the header and starve the nav column. object-contain scales
+        // an over-wide logo down within the height box (preserving ratio, no
+        // distortion); normal/square logos never reach the cap so they're
+        // unaffected. Budget scales up with the viewport.
         <Image
           src={asset.src}
           alt={asset.alt ?? ''}
           width={asset.width}
           height={asset.height}
-          className={`w-auto transition-[height] duration-structural-slow ease-balanced ${className}`}
+          className={`w-auto max-w-[14rem] object-contain transition-[height,max-width] duration-structural-slow ease-balanced md:max-w-[18rem] lg:max-w-[22rem] ${className}`}
           priority
         />
       ) : data.firmName ? (
