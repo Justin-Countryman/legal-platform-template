@@ -931,6 +931,10 @@ function SidebarAttorneyList({component}: {component: SidebarAttorneyListCompone
                       noArrow={noArrow}
                       href={href}
                       className={[
+                        // Match the practice-area nav rows (HierarchyNavRow): allow the
+                        // label to wrap so the leading chevron aligns identically across
+                        // attorney + practice-area rows (Button base is whitespace-nowrap).
+                        '!whitespace-normal',
                         extraClassName,
                         active ? ACTIVE_TERTIARY_CLASS : '',
                       ].filter(Boolean).join(' ') || undefined}

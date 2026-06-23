@@ -430,8 +430,10 @@ export const FOOTER_QUERY = groq`{
 
 // ─── Sidebar Fragment ─────────────────────────────────────────────────────────
 // Shared sidebar projection for practice area, location, and content pages.
-// Blog post pages use an inline variant (the recentPosts sub-query requires
-// a context reference, ^.^.slug.current, that cannot be extracted into a fragment).
+// Blog post pages use an inline variant. (Historically the recentPosts sub-query
+// relied on a ^.^.slug.current parent-reference — which actually resolved to null
+// and so never excluded the current post; it now uses the $slug query param. The
+// inline variant could be unified with this fragment in a future cleanup.)
 //
 // WS-Sidebar Phase 2.3 — areasOfLaw + orderedAolIds project the full AOL tree
 // (parent → child → grandchild) for context-aware hierarchy rendering. The
@@ -1199,9 +1201,10 @@ export const BLOG_POST_PAGE_QUERY = groq`
         phoneNumber,
         "button": button{title, url, variant},
         // WS-Sidebar Phase 2.3 — see SIDEBAR_FRAGMENT comment block. This
-        // inline projection (blog post page) must stay in sync with the
-        // fragment because the recentPosts sub-query below requires the
-        // ^.^.slug.current parent-reference that prevents fragment extraction.
+        // inline projection (blog post page) must stay in sync with the fragment.
+        // (The recentPosts sub-query below now uses the $slug query param; the
+        // earlier ^.^.slug.current parent-reference resolved to null and listed the
+        // current post — that bug was the practical reason it stayed inline.)
         "orderedAolIds": *[_type == "mainNavigation"][0]
           .items[_type == "navItemPracticeAreas"][0]
           .practiceAreaOrder[]._ref,
@@ -1241,7 +1244,7 @@ export const BLOG_POST_PAGE_QUERY = groq`
           title
         },
         "posts": select(
-          mode == "recentPosts" => *[_type == "blogPost" && slug.current != ^.^.slug.current] | order(publishedAt desc)[0..20]{
+          mode == "recentPosts" => *[_type == "blogPost" && slug.current != $slug] | order(publishedAt desc)[0..20]{
             h1,
             "slug": slug.current
           },

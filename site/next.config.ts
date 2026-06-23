@@ -1,5 +1,5 @@
 import type {NextConfig} from 'next'
-import {readFileSync} from 'node:fs'
+import {readFileSync, existsSync} from 'node:fs'
 import {resolve} from 'node:path'
 
 // ─── Security headers ─────────────────────────────────────────────────────────
@@ -51,8 +51,21 @@ function loadRedirects(): {source: string; destination: string; statusCode: numb
   try {
     raw = readFileSync(csvPath, 'utf8')
   } catch {
-    // First-time clients without a redirects.csv aren't an error — return
-    // an empty list and let the build proceed.
+    // A missing redirects.csv is fine for a brand-new firm. But a MIGRATED client has a
+    // CS-Sitemap.csv full of legacy URLs and MUST ship redirects — a missing file there
+    // is a real defect that previously failed silently and 404'd every legacy URL.
+    // Warn loudly at build time so it can never ship empty unnoticed again.
+    try {
+      if (existsSync(resolve(__dirname, '../CS/CS-Sitemap.csv'))) {
+        console.warn(
+          '[redirects] WARNING: CS/redirects.csv not found but CS-Sitemap.csv exists — ' +
+            'this migrated client will ship ZERO redirects and legacy URLs will 404. ' +
+            'Seed CS/redirects.csv via Site-Prep generate_redirects.',
+        )
+      }
+    } catch {
+      /* ignore */
+    }
     return []
   }
 
