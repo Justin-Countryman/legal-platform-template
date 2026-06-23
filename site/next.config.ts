@@ -88,6 +88,12 @@ function loadRedirects(): {source: string; destination: string; statusCode: numb
   return out
 }
 
+// NOTE: experimental.inlineCss was tested here (2026-06-23) to drop the one
+// render-blocking stylesheet. It cleared that diagnostic but REGRESSED prod LCP/score
+// (≈97 → ≈79, LCP 2.6s → 4.3s, measured prod-vs-prod 3 runs): inlining ~17.6 KiB of CSS
+// bloats the HTML document, and since the LCP element is text IN that document, the
+// bigger response costs more than the saved request saves. Left as a separate
+// (Brotli-compressed, cacheable) stylesheet on purpose. Do not re-enable without measuring.
 const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
