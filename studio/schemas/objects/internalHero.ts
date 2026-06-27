@@ -63,6 +63,36 @@ export const internalHero = defineType({
       description: 'Force a plain background even if the site has a default image. Ignored when you upload your own image above.',
       initialValue: false,
     },
+    heroImageField({
+      name: 'sectionBackgroundImage',
+      title: 'Section Background',
+      description:
+        'Upload to override the site default section background (the full-bleed pattern/texture behind heroes with no focal Background Image) on this page. Leave empty to inherit the site default.',
+      altLabel: 'hero section background',
+      fit: {coverTitle: 'Cover (single texture)', tileTitle: 'Tile (repeat pattern)'},
+    }),
+    {
+      name: 'sectionBackgroundNone',
+      title: 'No section background on this page',
+      type: 'boolean',
+      description: 'Force no section background even if the site has a default. Ignored when you upload your own image above.',
+      initialValue: false,
+    },
+    {
+      name: 'scrimStyleOverride',
+      title: 'Scrim Style',
+      type: 'string',
+      description: 'Override the site default scrim style (flat vs gradient) over the background image for this page.',
+      options: {
+        list: [
+          {title: 'Inherit site default', value: 'inherit'},
+          {title: 'Flat (even overlay)', value: 'flat'},
+          {title: 'Gradient (directional fade)', value: 'gradient'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'inherit',
+    },
     {
       name: 'scrimOpacityOverride',
       title: 'Scrim Opacity Override',

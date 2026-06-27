@@ -10,6 +10,7 @@ const PROTECTED_TYPES = [
   'designSettings',
   'mainNavigation',
   'footerSettings',
+  'heroSettings',
   'globalCta',
   'redirects',
   'homePage',

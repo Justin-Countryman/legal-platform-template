@@ -33,6 +33,15 @@ export const structure = (S: StructureBuilder) =>
             .title('Header Settings')
         ),
       S.listItem()
+        .title('Hero Settings')
+        .id('heroSettings')
+        .child(
+          S.document()
+            .schemaType('heroSettings')
+            .documentId('heroSettings')
+            .title('Hero Settings')
+        ),
+      S.listItem()
         .title('Footer Settings')
         .id('footerSettings')
         .child(

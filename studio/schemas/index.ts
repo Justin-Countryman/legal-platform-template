@@ -28,6 +28,7 @@ import {eventIndex} from './documents/eventIndex'
 import {globalCta} from './documents/globalCta'
 import {mainNavigation} from './documents/mainNavigation'
 import {footerSettings} from './documents/footerSettings'
+import {heroSettings} from './documents/heroSettings'
 import {siteForm} from './documents/siteForm'
 import {redirects} from './documents/redirects'
 import {testimonial} from './documents/testimonial'
@@ -91,6 +92,7 @@ export const schemaTypes = [
   globalCta,
   mainNavigation,
   footerSettings,
+  heroSettings,
   siteForm,
   redirects,
   testimonial,

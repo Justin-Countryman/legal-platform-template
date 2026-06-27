@@ -50,6 +50,8 @@ type ImageFieldOpts = {
   altLabel: string
   description?: string
   fieldset?: string
+  /** Sanity field group(s) — for docs that organize fields into tabs (e.g. heroSettings). */
+  group?: string | string[]
   hidden?: HiddenFn
   /** Pass an (optionally configured) fit radio. Omit for images that never tile (e.g. foreground cut-outs). */
   fit?: FitOpts
@@ -61,6 +63,7 @@ export const heroImageField = (opts: ImageFieldOpts): FieldDef =>
     title: opts.title,
     type: 'image',
     ...(opts.fieldset ? {fieldset: opts.fieldset} : {}),
+    ...(opts.group ? {group: opts.group} : {}),
     ...(opts.description ? {description: opts.description} : {}),
     options: {hotspot: true},
     fields: [heroAltField(opts.altLabel), ...(opts.fit ? [heroFitField(opts.fit)] : [])],
