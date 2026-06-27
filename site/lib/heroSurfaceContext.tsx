@@ -6,15 +6,25 @@
 // supports per-route overrides); this carries only the new image/scrim defaults.
 
 import {createContext, useContext} from 'react'
-import {DEFAULT_SCRIM_OPACITY, type HeroImage} from './heroSurface'
+import {DEFAULT_SCRIM_OPACITY, type HeroImage, type HeroScrimStyle} from './heroSurface'
 
 export type HeroSurfaceDefaults = {
   bgImage: HeroImage
   foreground: HeroImage
   scrimOpacity: number
+  // Site-level scrim style + section background (full-bleed pattern behind heroes
+  // with no focal bg image), sourced from Hero Settings.
+  scrimStyle: HeroScrimStyle
+  sectionBg: HeroImage
 }
 
-const DEFAULT: HeroSurfaceDefaults = {bgImage: null, foreground: null, scrimOpacity: DEFAULT_SCRIM_OPACITY}
+const DEFAULT: HeroSurfaceDefaults = {
+  bgImage: null,
+  foreground: null,
+  scrimOpacity: DEFAULT_SCRIM_OPACITY,
+  scrimStyle: 'flat',
+  sectionBg: null,
+}
 
 const HeroSurfaceContext = createContext<HeroSurfaceDefaults>(DEFAULT)
 

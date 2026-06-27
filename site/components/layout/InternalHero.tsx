@@ -8,6 +8,7 @@ import {
   heroSurfaceBgClass,
   type HeroImage,
   type HeroSchemePref,
+  type HeroScrimStylePref,
 } from '@/lib/heroSurface'
 import {HeroBackdrop} from '@/components/layout/HeroBackdrop'
 import {HeroForeground} from '@/components/layout/HeroForeground'
@@ -34,13 +35,16 @@ export type InternalHeroData = {
   foregroundImage?: HeroImage
   foregroundNone?: boolean | null
   scrimOpacityOverride?: number | null
+  scrimStyleOverride?: HeroScrimStylePref | null
+  sectionBackgroundImage?: HeroImage
+  sectionBackgroundNone?: boolean | null
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function InternalHero({data, napTokens}: {data: InternalHeroData; napTokens?: NapTokens | null}) {
   const siteScheme = useHeroScheme()
-  const {bgImage: siteBgImage, foreground: siteForeground, scrimOpacity: siteScrim} = useHeroSurfaceDefaults()
+  const {bgImage: siteBgImage, foreground: siteForeground, scrimOpacity: siteScrim, scrimStyle: siteScrimStyle, sectionBg: siteSectionBg} = useHeroSurfaceDefaults()
 
   const resolved = napTokens
     ? {
@@ -57,7 +61,7 @@ export function InternalHero({data, napTokens}: {data: InternalHeroData; napToke
 
   // Effective surface: page overrides > site defaults > none.
   const surface = resolveHeroSurface(
-    {scheme: siteScheme, bgImage: siteBgImage, foreground: siteForeground, scrimOpacity: siteScrim},
+    {scheme: siteScheme, bgImage: siteBgImage, foreground: siteForeground, scrimOpacity: siteScrim, scrimStyle: siteScrimStyle, sectionBg: siteSectionBg},
     {
       schemeOverride: data.schemeOverride,
       backgroundImage: data.backgroundImage,
@@ -65,9 +69,17 @@ export function InternalHero({data, napTokens}: {data: InternalHeroData; napToke
       foregroundImage: data.foregroundImage,
       foregroundNone: data.foregroundNone,
       scrimOpacityOverride: data.scrimOpacityOverride,
+      scrimStyleOverride: data.scrimStyleOverride,
+      sectionBackgroundImage: data.sectionBackgroundImage,
+      sectionBackgroundNone: data.sectionBackgroundNone,
     },
   )
   const {isDark, hasImage} = surface
+  // A Section Background renders only when there's no focal background image (it's
+  // the subtle textured ground behind a scheme-colored hero). The focal image, when
+  // present, already fills the bleed. Buttons read as image-backed only when dark.
+  const showSection = !hasImage && surface.hasSectionBg
+  const imageBacked = hasImage || (showSection && isDark)
   const hasButtons = buttons && buttons.length > 0
   // A bare h1 (no description, no buttons) is vertically centered in a min-height
   // band; once there's a description or buttons the content stacks from the top.
@@ -77,7 +89,7 @@ export function InternalHero({data, napTokens}: {data: InternalHeroData; napToke
     <section
       style={{paddingTop: HERO_HEADER_CLEARANCE}}
       data-ring-context={isDark ? 'dark' : undefined}
-      data-hero-image={hasImage ? 'true' : undefined}
+      data-hero-image={imageBacked ? 'true' : undefined}
       className={[
         // overflow-hidden lets the foreground subject bleed off the bottom edge;
         // min-height (lg+) gives a standing figure room so its head isn't clipped.
@@ -136,8 +148,16 @@ export function InternalHero({data, napTokens}: {data: InternalHeroData; napToke
         <HeroForeground surface={surface} />
       </div>
 
-      {/* Background image + configurable scrim — z-0 below content */}
-      <HeroBackdrop surface={surface} />
+      {/* Full-bleed background — the focal image when present, else the Section
+          Background (textured ground). Configurable flat/gradient scrim, z-0. */}
+      {hasImage ? (
+        <HeroBackdrop surface={surface} scrimStyle={surface.scrimStyle} />
+      ) : showSection ? (
+        <HeroBackdrop
+          surface={{...surface, bgImage: surface.sectionBg, hasImage: true, fit: surface.sectionBgFit}}
+          scrimStyle={surface.scrimStyle}
+        />
+      ) : null}
     </section>
   )
 }

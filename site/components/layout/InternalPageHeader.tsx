@@ -26,7 +26,7 @@ type Props = {title: string}
 
 export function InternalPageHeader({title}: Props) {
   const siteScheme = useHeroScheme()
-  const {bgImage: siteBgImage, foreground: siteForeground, scrimOpacity: siteScrim} = useHeroSurfaceDefaults()
+  const {bgImage: siteBgImage, foreground: siteForeground, scrimOpacity: siteScrim, scrimStyle: siteScrimStyle, sectionBg: siteSectionBg} = useHeroSurfaceDefaults()
 
   // No page overrides — resolve to pure site defaults (shared surface: site bg
   // image + foreground appear here too, so defaults show site-wide).
@@ -35,14 +35,18 @@ export function InternalPageHeader({title}: Props) {
     bgImage: siteBgImage,
     foreground: siteForeground,
     scrimOpacity: siteScrim,
+    scrimStyle: siteScrimStyle,
+    sectionBg: siteSectionBg,
   })
   const {isDark, hasImage} = surface
+  const showSection = !hasImage && surface.hasSectionBg
+  const imageBacked = hasImage || (showSection && isDark)
 
   return (
     <header
       style={{paddingTop: HERO_HEADER_CLEARANCE}}
       data-ring-context={isDark ? 'dark' : undefined}
-      data-hero-image={hasImage ? 'true' : undefined}
+      data-hero-image={imageBacked ? 'true' : undefined}
       className={[
         // overflow-hidden lets a site-default foreground subject bleed off the
         // bottom; min-height (lg+) gives a standing figure room (head not clipped).
@@ -76,8 +80,16 @@ export function InternalPageHeader({title}: Props) {
         <HeroForeground surface={surface} />
       </div>
 
-      {/* Site-default background image + scrim — z-0 below content */}
-      <HeroBackdrop surface={surface} />
+      {/* Site-default full-bleed background — focal image when present, else the
+          Section Background. Configurable flat/gradient scrim, z-0 below content. */}
+      {hasImage ? (
+        <HeroBackdrop surface={surface} scrimStyle={surface.scrimStyle} />
+      ) : showSection ? (
+        <HeroBackdrop
+          surface={{...surface, bgImage: surface.sectionBg, hasImage: true, fit: surface.sectionBgFit}}
+          scrimStyle={surface.scrimStyle}
+        />
+      ) : null}
     </header>
   )
 }

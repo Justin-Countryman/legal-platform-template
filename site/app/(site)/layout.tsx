@@ -3,7 +3,7 @@
 // Layout itself has no revalidate export — Next inherits the route's.
 
 import {client} from '@/lib/sanity/client'
-import {HEADER_QUERY, FOOTER_QUERY, DESIGN_TOKENS_QUERY} from '@/lib/sanity/queries'
+import {HEADER_QUERY, FOOTER_QUERY, DESIGN_TOKENS_QUERY, HERO_SETTINGS_QUERY} from '@/lib/sanity/queries'
 import {resolveTokenString, formatPhone} from '@/lib/tokens'
 import {buildDesignTokenCSS, buildColorCSS, buildFontCSS, resolveSidebarDesignSettings} from '@/lib/designTokens'
 import {HeroSchemeProvider} from '@/lib/heroSchemeContext'
@@ -64,11 +64,29 @@ function buildNavItems(rawItems: unknown[]): NavItem[] {
 // ──────────────────────────────────────────────────────────────────────────────
 
 export default async function SiteLayout({children}: {children: React.ReactNode}) {
-  const [headerData, footerData, designTokens] = await Promise.all([
+  const [headerData, footerData, designTokens, heroSettings] = await Promise.all([
     client.fetch(HEADER_QUERY),
     client.fetch(FOOTER_QUERY),
     client.fetch(DESIGN_TOKENS_QUERY),
+    client.fetch(HERO_SETTINGS_QUERY),
   ])
+
+  // Site-level internal-hero defaults now come from Hero Settings, with a
+  // transitional fallback to the legacy designSettings fields (removed once the
+  // migration runs). scrimStyle + section background are new (Hero Settings only).
+  const heroSite = {
+    scheme: (heroSettings?.scheme ?? designTokens?.internalHeroBackground) === 'light' ? ('light' as const) : ('dark' as const),
+    bgImage: heroSettings?.backgroundImage ?? designTokens?.siteHeroBackgroundImage ?? null,
+    foreground: heroSettings?.foregroundImage ?? designTokens?.siteHeroForegroundImage ?? null,
+    scrimOpacity:
+      typeof heroSettings?.scrimOpacity === 'number'
+        ? heroSettings.scrimOpacity
+        : typeof designTokens?.heroScrimOpacity === 'number'
+          ? designTokens.heroScrimOpacity
+          : DEFAULT_SCRIM_OPACITY,
+    scrimStyle: heroSettings?.scrimStyle === 'gradient' ? ('gradient' as const) : ('flat' as const),
+    sectionBg: heroSettings?.sectionBackgroundImage ?? null,
+  }
 
   const tokenCSS = buildDesignTokenCSS(
     designTokens?.uiRadius,
@@ -114,10 +132,12 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
   // image⇒dark rule comes through resolveHeroSurface().isDark. Solid header
   // schemes (no overlay) and heroMerge-off are left untouched.
   const siteHeroSurface = resolveHeroSurface({
-    scheme: designTokens?.internalHeroBackground === 'light' ? 'light' : 'dark',
-    bgImage: designTokens?.siteHeroBackgroundImage ?? null,
-    foreground: designTokens?.siteHeroForegroundImage ?? null,
-    scrimOpacity: DEFAULT_SCRIM_OPACITY,
+    scheme: heroSite.scheme,
+    bgImage: heroSite.bgImage,
+    foreground: heroSite.foreground,
+    scrimOpacity: heroSite.scrimOpacity,
+    scrimStyle: heroSite.scrimStyle,
+    sectionBg: heroSite.sectionBg,
   })
   const mergedDefaultScheme = resolveMergedHeaderScheme(
     headerData?.mainNavigation?.defaultScheme ?? 'light',
@@ -189,15 +209,14 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
           navItems: buildNavItems(headerData?.mainNavigation?.navItems ?? []),
         }}
       />
-      <HeroSchemeProvider scheme={designTokens?.internalHeroBackground === 'light' ? 'light' : 'dark'}>
+      <HeroSchemeProvider scheme={heroSite.scheme}>
         <HeroSurfaceProvider
           value={{
-            bgImage: designTokens?.siteHeroBackgroundImage ?? null,
-            foreground: designTokens?.siteHeroForegroundImage ?? null,
-            scrimOpacity:
-              typeof designTokens?.heroScrimOpacity === 'number'
-                ? designTokens.heroScrimOpacity
-                : DEFAULT_SCRIM_OPACITY,
+            bgImage: heroSite.bgImage,
+            foreground: heroSite.foreground,
+            scrimOpacity: heroSite.scrimOpacity,
+            scrimStyle: heroSite.scrimStyle,
+            sectionBg: heroSite.sectionBg,
           }}
         >
           <SidebarDesignSettingsProvider value={resolveSidebarDesignSettings(designTokens)}>

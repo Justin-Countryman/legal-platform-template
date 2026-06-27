@@ -247,6 +247,38 @@ describe('InternalHero — background image composition', () => {
     expect(getByTestId('hero-bg-tile')).not.toBeNull()
     expect(queryByTestId('hero-bg')).toBeNull()
   })
+
+  it('renders a gradient scrim when scrimStyleOverride is "gradient"', () => {
+    const {getByTestId} = render(<InternalHero data={{...WITH_IMAGE, scrimStyleOverride: 'gradient'}} />)
+    const scrim = getByTestId('hero-scrim') as HTMLElement
+    expect(scrim.style.backgroundImage).toContain('linear-gradient')
+    expect(scrim.className).not.toContain('bg-brand-dark')
+  })
+})
+
+// ─── Section background (textured ground behind a scheme-colored hero) ────────
+const WITH_SECTION = {
+  ...BASE_DATA,
+  sectionBackgroundImage: {src: '/pattern.png', alt: 'Subtle pattern', width: 1200, height: 800, fit: 'cover' as const},
+}
+
+describe('InternalHero — section background', () => {
+  it('renders the section backdrop + scrim when set and there is no focal image', () => {
+    const {getByTestId} = render(<InternalHero data={WITH_SECTION} />)
+    expect(getByTestId('hero-backdrop')).not.toBeNull()
+    expect(getByTestId('hero-scrim')).not.toBeNull()
+  })
+
+  it('does not render a section backdrop when there is none', () => {
+    const {queryByTestId} = render(<InternalHero data={BASE_DATA} />)
+    expect(queryByTestId('hero-backdrop')).toBeNull()
+  })
+
+  it('a focal background image takes precedence over the section background', () => {
+    // Both set → the focal image wins; the rendered backdrop image is /hero.jpg.
+    const {getByTestId} = render(<InternalHero data={{...WITH_IMAGE, sectionBackgroundImage: WITH_SECTION.sectionBackgroundImage}} />)
+    expect((getByTestId('hero-bg') as HTMLImageElement).getAttribute('src')).toBe('/hero.jpg')
+  })
 })
 
 // ─── Foreground image (InternalHero only) ────────────────────────────────────

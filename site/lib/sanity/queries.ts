@@ -520,9 +520,22 @@ export const INTERNAL_HERO_OVERRIDE_FIELDS = groq`
 `
 
 // Embed in page queries as: hero ${INTERNAL_HERO_FRAGMENT}
+// The section-background + scrim-style overrides are internal-page-only (the
+// homepage hero has its own equivalents in HOME_HERO_FRAGMENT), so they live here
+// rather than in the shared INTERNAL_HERO_OVERRIDE_FIELDS to avoid a duplicate key.
 export const INTERNAL_HERO_FRAGMENT = groq`{
   heading,
-  ${INTERNAL_HERO_OVERRIDE_FIELDS}
+  ${INTERNAL_HERO_OVERRIDE_FIELDS},
+  scrimStyleOverride,
+  sectionBackgroundNone,
+  "sectionBackgroundImage": sectionBackgroundImage{
+    "src": asset->url,
+    "alt": alt,
+    "fit": fit,
+    "hotspot": hotspot{x, y},
+    "width": asset->metadata.dimensions.width,
+    "height": asset->metadata.dimensions.height
+  }
 }`
 
 // ─── Homepage Hero Fragment ───────────────────────────────────────────────────
@@ -628,6 +641,41 @@ export const DESIGN_TOKENS_QUERY = groq`
     },
   }
 `
+
+// ─── Hero Settings ────────────────────────────────────────────────────────────
+// Site-level internal-hero design defaults. New home for what used to live in
+// designSettings' "Internal Hero" fieldset, plus the new scrimStyle + section
+// background. The layout coalesces each field with the legacy designSettings
+// value (transitional fallback) until the migration runs and those fields are
+// removed from designSettings.
+export const HERO_SETTINGS_QUERY = groq`*[_type == "heroSettings"][0]{
+  scheme,
+  scrimStyle,
+  scrimOpacity,
+  "backgroundImage": backgroundImage{
+    "src": asset->url,
+    "alt": alt,
+    "fit": fit,
+    "hotspot": hotspot{x, y},
+    "width": asset->metadata.dimensions.width,
+    "height": asset->metadata.dimensions.height
+  },
+  "foregroundImage": foregroundImage{
+    "src": asset->url,
+    "alt": alt,
+    "hotspot": hotspot{x, y},
+    "width": asset->metadata.dimensions.width,
+    "height": asset->metadata.dimensions.height
+  },
+  "sectionBackgroundImage": sectionBackgroundImage{
+    "src": asset->url,
+    "alt": alt,
+    "fit": fit,
+    "hotspot": hotspot{x, y},
+    "width": asset->metadata.dimensions.width,
+    "height": asset->metadata.dimensions.height
+  }
+}`
 
 // ─── Global CTA ───────────────────────────────────────────────────────────────
 //
