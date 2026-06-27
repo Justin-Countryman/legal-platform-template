@@ -8,8 +8,21 @@
 
 import Image from 'next/image'
 import {heroObjectPosition, type ResolvedHeroSurface} from '@/lib/heroSurface'
+import {HeroScrim, type HeroScrimStyle, type HeroScrimAlign} from './HeroScrim'
 
-export function HeroBackdrop({surface}: {surface: ResolvedHeroSurface}) {
+// The scrim tone follows the resolved surface: a dark surface (photo / dark band)
+// gets the brand-dark scrim + white text; a light surface (subtle pattern) gets the
+// page-background scrim + dark text. Internal-hero backdrops are always dark (an
+// image forces isDark), so they keep their existing flat brand-dark scrim.
+export function HeroBackdrop({
+  surface,
+  scrimStyle = 'flat',
+  align = 'left',
+}: {
+  surface: ResolvedHeroSurface
+  scrimStyle?: HeroScrimStyle
+  align?: HeroScrimAlign
+}) {
   if (!surface.hasImage || !surface.bgImage?.src) return null
   const {bgImage, fit, scrimOpacity} = surface
 
@@ -34,12 +47,7 @@ export function HeroBackdrop({surface}: {surface: ResolvedHeroSurface}) {
           sizes="100vw"
         />
       )}
-      {/* Configurable scrim — opacity from the cascade resolver (was hardcoded /80). */}
-      <div
-        className="absolute inset-0 bg-brand-dark"
-        style={{opacity: scrimOpacity / 100}}
-        data-testid="hero-scrim"
-      />
+      <HeroScrim style={scrimStyle} opacity={scrimOpacity} align={align} tone={surface.isDark ? 'dark' : 'light'} />
     </div>
   )
 }
