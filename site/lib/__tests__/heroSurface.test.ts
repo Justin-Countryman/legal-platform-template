@@ -203,3 +203,56 @@ describe('heroSurfaceBgClass — light-tint fix', () => {
     expect(cls).toBe('')
   })
 })
+
+describe('resolveHeroSurface — scrim style (page > site > flat)', () => {
+  it('defaults to flat when neither site nor page set it', () => {
+    expect(resolveHeroSurface(siteDark).scrimStyle).toBe('flat')
+  })
+
+  it('inherits the site scrim style', () => {
+    expect(resolveHeroSurface({...siteDark, scrimStyle: 'gradient'}).scrimStyle).toBe('gradient')
+  })
+
+  it('page override wins over the site default', () => {
+    expect(resolveHeroSurface({...siteDark, scrimStyle: 'gradient'}, {scrimStyleOverride: 'flat'}).scrimStyle).toBe('flat')
+    expect(resolveHeroSurface(siteDark, {scrimStyleOverride: 'gradient'}).scrimStyle).toBe('gradient')
+  })
+
+  it("page 'inherit' falls through to the site default", () => {
+    expect(resolveHeroSurface({...siteDark, scrimStyle: 'gradient'}, {scrimStyleOverride: 'inherit'}).scrimStyle).toBe('gradient')
+  })
+})
+
+describe('resolveHeroSurface — section background cascade (upload > none > site)', () => {
+  const SITE_SECTION: HeroImage = {src: '/site-pattern.png', alt: 'Pattern', fit: 'tile'}
+  const PAGE_SECTION: HeroImage = {src: '/page-pattern.png', alt: 'Page pattern', fit: 'cover'}
+  const siteWithSection: HeroSiteDefaults = {scheme: 'dark', bgImage: null, foreground: null, scrimOpacity: 80, sectionBg: SITE_SECTION}
+
+  it('inherits the site section background', () => {
+    const r = resolveHeroSurface(siteWithSection)
+    expect(r.hasSectionBg).toBe(true)
+    expect(r.sectionBg?.src).toBe('/site-pattern.png')
+    expect(r.sectionBgFit).toBe('tile')
+  })
+
+  it('page upload overrides the site section background', () => {
+    const r = resolveHeroSurface(siteWithSection, {sectionBackgroundImage: PAGE_SECTION})
+    expect(r.sectionBg?.src).toBe('/page-pattern.png')
+    expect(r.sectionBgFit).toBe('cover')
+  })
+
+  it('page "none" force-blanks even when the site has one', () => {
+    const r = resolveHeroSurface(siteWithSection, {sectionBackgroundNone: true})
+    expect(r.hasSectionBg).toBe(false)
+    expect(r.sectionBg).toBeNull()
+  })
+
+  it('a page upload beats the none flag', () => {
+    const r = resolveHeroSurface(siteWithSection, {sectionBackgroundImage: PAGE_SECTION, sectionBackgroundNone: true})
+    expect(r.sectionBg?.src).toBe('/page-pattern.png')
+  })
+
+  it('no site + no page → no section background', () => {
+    expect(resolveHeroSurface(siteDark).hasSectionBg).toBe(false)
+  })
+})

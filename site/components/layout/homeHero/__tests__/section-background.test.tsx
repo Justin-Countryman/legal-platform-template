@@ -35,6 +35,10 @@ function surface(over: Partial<ResolvedHeroSurface> = {}): ResolvedHeroSurface {
     foreground: null,
     hasForeground: false,
     scrimOpacity: 80,
+    scrimStyle: 'flat',
+    sectionBg: null,
+    hasSectionBg: false,
+    sectionBgFit: 'cover',
     ...over,
   }
 }

@@ -72,6 +72,10 @@ export function HomepageHero({data, napTokens}: {data: HomeHeroData; napTokens?:
         foreground: null,
         hasForeground: false,
         scrimOpacity: effectiveSurface.scrimOpacity,
+        scrimStyle: effectiveSurface.scrimStyle,
+        sectionBg: null,
+        hasSectionBg: false,
+        sectionBgFit: 'cover',
       }
     : null
 

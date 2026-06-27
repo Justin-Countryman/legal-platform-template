@@ -14,6 +14,9 @@
 export type HeroScheme = 'dark' | 'light'
 export type HeroSchemePref = 'inherit' | 'dark' | 'light'
 export type HeroFit = 'cover' | 'tile'
+export type HeroScrimStyle = 'flat' | 'gradient'
+// Per-page scrim-style override: 'inherit' falls back to the site default.
+export type HeroScrimStylePref = 'inherit' | 'flat' | 'gradient'
 
 export type HeroImage = {
   src: string
@@ -44,6 +47,10 @@ export type HeroSiteDefaults = {
   bgImage: HeroImage
   foreground: HeroImage
   scrimOpacity: number
+  // Site-level scrim style + section background (full-bleed pattern behind heroes
+  // with no focal bg image). Optional so existing callers stay valid (default flat / none).
+  scrimStyle?: HeroScrimStyle | null
+  sectionBg?: HeroImage
 }
 
 // Per-page overrides — the page's internalHero object fields. Each image cascades
@@ -56,6 +63,9 @@ export type HeroPageOverrides = {
   foregroundImage?: HeroImage
   foregroundNone?: boolean | null
   scrimOpacityOverride?: number | null
+  scrimStyleOverride?: HeroScrimStylePref | null
+  sectionBackgroundImage?: HeroImage
+  sectionBackgroundNone?: boolean | null
 } | null | undefined
 
 export type ResolvedHeroSurface = {
@@ -67,6 +77,13 @@ export type ResolvedHeroSurface = {
   foreground: HeroImage
   hasForeground: boolean
   scrimOpacity: number
+  // Scrim style (flat | gradient) for whichever full-bleed background is active.
+  scrimStyle: HeroScrimStyle
+  // Section background — the full-bleed pattern/texture shown behind heroes that
+  // have NO focal bg image. Independent of bgImage.
+  sectionBg: HeroImage
+  hasSectionBg: boolean
+  sectionBgFit: HeroFit
 }
 
 export const DEFAULT_SCRIM_OPACITY = 80
@@ -120,8 +137,36 @@ export function resolveHeroSurface(
         : DEFAULT_SCRIM_OPACITY
   const scrimOpacity = clampScrim(scrimRaw)
 
+  // 4. Scrim style — page override (inherit falls through) > site default > flat.
+  const scrimStyle: HeroScrimStyle =
+    p.scrimStyleOverride === 'flat' || p.scrimStyleOverride === 'gradient'
+      ? p.scrimStyleOverride
+      : site.scrimStyle === 'flat' || site.scrimStyle === 'gradient'
+        ? site.scrimStyle
+        : 'flat'
+
+  // 5. Section background — same cascade as the images (page upload > page none >
+  //    site). Independent of the focal bg image; rendered only when there's no
+  //    focal image (the consumer decides). Fit derived from the resolved image.
+  const sectionBg = resolveImageCascade(p.sectionBackgroundImage, p.sectionBackgroundNone, site.sectionBg ?? null)
+  const hasSectionBg = !!sectionBg?.src
+  const sectionBgFit: HeroFit = sectionBg?.fit === 'tile' ? 'tile' : 'cover'
+
   const isDark = scheme === 'dark' || hasImage
-  return {scheme, isDark, bgImage, hasImage, fit, foreground, hasForeground, scrimOpacity}
+  return {
+    scheme,
+    isDark,
+    bgImage,
+    hasImage,
+    fit,
+    foreground,
+    hasForeground,
+    scrimOpacity,
+    scrimStyle,
+    sectionBg,
+    hasSectionBg,
+    sectionBgFit,
+  }
 }
 
 // Wrapper background class for the hero section/header element. With an image
