@@ -10,29 +10,19 @@
 
 import Image from 'next/image'
 import {HeroForeground} from '@/components/layout/HeroForeground'
+import {HeroBackdrop} from '@/components/layout/HeroBackdrop'
+import {HeroScrim} from '@/components/layout/HeroScrim'
 import {heroForegroundVars, HERO_BAND_MIN_H_LG} from '@/lib/heroLayout'
 import {HeroBand, HeroTextBlock} from '../shared'
 import {HeroSiloStrip} from '../HeroSiloStrip'
-import type {HeroConfig, ResolvedHomeContent, SkeletonProps, ScrimStyle, ContentAlign} from '../types'
+import type {HeroConfig, ResolvedHomeContent, SkeletonProps} from '../types'
 import {heroObjectPosition, type ResolvedHeroSurface, type HeroImage} from '@/lib/heroSurface'
 
 // ─── Backdrop (image | mosaic) + scrim ────────────────────────────────────────
 // Mosaic tiles are capped at 6 (the 2/3-col grid) and built immutably so we never
-// mutate the shared galleryImages array.
+// mutate the shared galleryImages array. The legibility scrim (flat | gradient) is
+// the shared HeroScrim — always dark here (the backdrop is a focal photo / mosaic).
 const MOSAIC_MAX = 6
-// Backdrop legibility scrim. Flat = even brand-dark overlay at Scrim Opacity.
-// Gradient = full strength on the text side fading to ~25% toward the photo
-// (horizontal for left-aligned content, bottom-up for centered) — the opacity is
-// baked into the gradient stops via color-mix, so no separate opacity layer.
-function Scrim({style, opacity, align}: {style: ScrimStyle; opacity: number; align: ContentAlign}) {
-  if (style !== 'gradient') {
-    return <div className="absolute inset-0 bg-brand-dark" style={{opacity: opacity / 100}} />
-  }
-  const strong = `color-mix(in srgb, var(--color-brand-dark) ${opacity}%, transparent)`
-  const weak = `color-mix(in srgb, var(--color-brand-dark) ${Math.round(opacity * 0.25)}%, transparent)`
-  const dir = align === 'center' ? 'to top' : 'to right'
-  return <div className="absolute inset-0" style={{backgroundImage: `linear-gradient(${dir}, ${strong}, ${weak})`}} />
-}
 
 function Backdrop({config, surface, content}: {config: HeroConfig; surface: ResolvedHeroSurface; content: ResolvedHomeContent}) {
   const mosaicTiles: HeroImage[] = (
@@ -42,28 +32,35 @@ function Backdrop({config, surface, content}: {config: HeroConfig; surface: Reso
   return (
     <div className="absolute inset-0 z-0 overflow-hidden">
       {config.backdrop === 'mosaic' ? (
-        <div className="grid size-full grid-cols-2 md:grid-cols-3">
+        <ul role="list" aria-label="Background image mosaic" className="grid size-full grid-cols-2 md:grid-cols-3">
           {mosaicTiles.map((img, i) => (
-            <div key={i} className="relative">
+            <li key={i} className="relative">
               <Image src={img!.src} alt={img!.alt ?? ''} fill priority={i === 0} className="object-cover" style={{objectPosition: heroObjectPosition(img)}} sizes="(min-width:768px) 34vw, 50vw" />
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       ) : (
         surface.bgImage && (
           <Image src={surface.bgImage.src} alt={surface.bgImage.alt ?? ''} fill priority className="object-cover" style={{objectPosition: heroObjectPosition(surface.bgImage)}} sizes="100vw" />
         )
       )}
-      <Scrim style={config.scrimStyle} opacity={surface.scrimOpacity} align={config.contentAlign} />
+      <HeroScrim style={config.scrimStyle} opacity={surface.scrimOpacity} align={config.contentAlign} tone="dark" />
     </div>
   )
 }
 
-export function Overlay({config, content, surface}: SkeletonProps) {
+export function Overlay({config, content, surface, sectionBackground}: SkeletonProps) {
   const fullViewport = config.heightMode === 'fullViewport'
   const centered = config.contentAlign === 'center'
   const hasBackdrop = config.backdrop === 'image' || config.backdrop === 'mosaic'
-  const backdropNode = hasBackdrop ? <Backdrop config={config} surface={surface} content={content} /> : undefined
+  // The Section Background only applies when this overlay has no focal backdrop of
+  // its own (backdrop = none) — otherwise the backdrop already fills the bleed.
+  const sectionNode =
+    !hasBackdrop && sectionBackground ? (
+      <HeroBackdrop surface={sectionBackground} scrimStyle={config.scrimStyle} align={config.contentAlign} />
+    ) : undefined
+  const backdropNode = hasBackdrop ? <Backdrop config={config} surface={surface} content={content} /> : sectionNode
+  const imageBacked = hasBackdrop || (!!sectionNode && !!sectionBackground?.isDark)
   // Foreground figure pairs with left-aligned text (bottom-right two-column) —
   // not applicable when content is centered.
   const hasFigure = config.foreground && surface.hasForeground && config.contentAlign !== 'center'
@@ -88,7 +85,7 @@ export function Overlay({config, content, surface}: SkeletonProps) {
       surface={surface}
       fullViewport={fullViewport}
       backdropNode={backdropNode}
-      imageBacked={hasBackdrop}
+      imageBacked={imageBacked}
       center={!config.contentStrip}
       className={hasFigure ? HERO_BAND_MIN_H_LG : undefined}
     >

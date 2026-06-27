@@ -12,6 +12,7 @@
 import Image from 'next/image'
 import {MdPlayArrow} from 'react-icons/md'
 import {DialogPanel} from '@/components/ui/DialogPanel'
+import {HeroBackdrop} from '@/components/layout/HeroBackdrop'
 import {getEmbedUrl} from '@/lib/videoEmbed'
 import {HeroBand, HeroTextBlock, HERO_HEADER_CLEARANCE} from '../shared'
 import {HeroSiloStrip} from '../HeroSiloStrip'
@@ -154,10 +155,18 @@ function VideoMedia({content, surface, aspect}: {content: ResolvedHomeContent; s
   )
 }
 
-export function Split({config, content, surface}: SkeletonProps) {
+export function Split({config, content, surface, sectionBackground}: SkeletonProps) {
   const fullViewport = config.heightMode === 'fullViewport'
   const mediaLeft = config.mediaSide === 'left'
   const isOverlap = config.textTreatment === 'overlap'
+
+  // Optional full-bleed Section Background (pattern/texture + scrim) behind both
+  // columns. Rendered as the band's z-0 backdrop; the content/media wrappers below
+  // carry `relative z-10` so they sit above it.
+  const sectionNode = sectionBackground ? (
+    <HeroBackdrop surface={sectionBackground} scrimStyle={config.scrimStyle} align={config.contentAlign} />
+  ) : undefined
+  const imageBacked = !!sectionNode && !!sectionBackground?.isDark
 
   // ─── Media column by type ───────────────────────────────────────────────────
   let media: React.ReactNode = null
@@ -217,8 +226,8 @@ export function Split({config, content, surface}: SkeletonProps) {
     )
 
     return (
-      <HeroBand surface={surface} fullViewport={fullViewport} center>
-        <div className="container">
+      <HeroBand surface={surface} fullViewport={fullViewport} center backdropNode={sectionNode} imageBacked={imageBacked}>
+        <div className="container relative z-10">
           <div className="relative py-6 lg:py-12">
             {/* Image 60% on one side; card 48% on the other → a guaranteed ~8% overlap
                 at every width (percentage widths, no max-width cap that would re-open a gap). */}
@@ -252,8 +261,8 @@ export function Split({config, content, surface}: SkeletonProps) {
     const im = surface.bgImage
     const fullAlign = config.contentAlign === 'center' ? 'center' : 'start'
     return (
-      <HeroBand surface={surface} fullViewport={fullViewport} flush>
-        <div className="grid grid-cols-1 lg:grid-cols-2 lg:items-stretch">
+      <HeroBand surface={surface} fullViewport={fullViewport} flush backdropNode={sectionNode} imageBacked={imageBacked}>
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 lg:items-stretch">
           {/* Text column owns the header clearance + vertical padding (the band is flush). */}
           <div
             className={['flex items-center px-[5%] pb-12 md:pb-16 lg:pb-20', mediaLeft ? 'lg:order-2' : ''].join(' ')}
@@ -282,8 +291,8 @@ export function Split({config, content, surface}: SkeletonProps) {
 
   // ─── Inline — standard side-by-side split (contained panel) ─────────────────
   return (
-    <HeroBand surface={surface} fullViewport={fullViewport} center>
-      <div className="container grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
+    <HeroBand surface={surface} fullViewport={fullViewport} center backdropNode={sectionNode} imageBacked={imageBacked}>
+      <div className="container relative z-10 grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <div className={mediaLeft ? 'lg:order-2' : ''}>{textBlock}</div>
         <div className={mediaLeft ? 'lg:order-1' : ''}>{media}</div>
       </div>

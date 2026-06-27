@@ -547,6 +547,14 @@ export const HOME_HERO_FRAGMENT = groq`{
   mediaSide,
   motion,
   ${INTERNAL_HERO_OVERRIDE_FIELDS},
+  "sectionBackgroundImage": sectionBackgroundImage{
+    "src": asset->url,
+    "alt": alt,
+    "fit": fit,
+    "hotspot": hotspot{x, y},
+    "width": asset->metadata.dimensions.width,
+    "height": asset->metadata.dimensions.height
+  },
   "galleryImages": galleryImages[]{
     "src": asset->url,
     "alt": alt,

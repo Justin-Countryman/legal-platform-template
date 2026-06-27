@@ -94,6 +94,10 @@ export type HomeHeroData = {
   foregroundImage?: HeroImage
   foregroundNone?: boolean | null
   scrimOpacityOverride?: number | null
+  // Section Background — a full-bleed pattern/texture behind the ENTIRE hero
+  // (both layouts), with the shared scrim. Page-only (no site default), so its
+  // mere presence = "on"; no *None flag. Scheme + scrim controls are reused.
+  sectionBackgroundImage?: HeroImage
   // Assets
   galleryImages?: HeroImage[] | null
   videoUrl?: string | null
@@ -116,4 +120,7 @@ export type SkeletonProps = {
   config: HeroConfig
   content: ResolvedHomeContent
   surface: ResolvedHeroSurface
+  // The resolved full-bleed Section Background, or null when none is set. Rendered
+  // as the band's z-0 backdrop (with scrim) beneath the layout's content + media.
+  sectionBackground?: ResolvedHeroSurface | null
 }
