@@ -2,7 +2,7 @@ import {defineType} from 'sanity'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
 
-// Existing Sanity fields: h1, metaDescription, noIndex, seoTitle, slug
+// Existing Sanity fields: metaDescription, noIndex, seoTitle, slug
 // Additional fields added per BI-UX.md homePage spec
 
 export const homePage = defineType({
@@ -90,14 +90,14 @@ export const homePage = defineType({
       fieldset: 'seo',
       description: 'Override only — the canonical URL is set automatically from the page slug. Only fill this in if you need to point to a different URL.',
     },
-    // ─── Content ──────────────────────────────────────────────────────────────
+    // ─── Hero ───────────────────────────────────────────────────────────────
     {
-      name: 'h1',
-      title: 'H1',
-      type: 'string',
-      description: 'The primary headline displayed on the homepage',
-      validation: (Rule) => Rule.required().warning(),
+      name: 'hero',
+      title: 'Homepage Hero',
+      type: 'homeHero',
+      description: 'The unique homepage hero section. Pick a layout variant and fill in the content; settings are grouped into accordions.',
     },
+    // ─── Content ──────────────────────────────────────────────────────────────
     {
       name: 'reviewsEmbed',
       title: 'Reviews Embed Code',

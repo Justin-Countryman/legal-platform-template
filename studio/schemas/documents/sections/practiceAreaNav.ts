@@ -175,49 +175,7 @@ export const practiceAreaNav = defineType({
       hidden: ({document}) => document?.mode === 'allTopLevel',
       description:
         'Pick the practice-area pages to feature, in order of importance. Title, description, and image auto-fill from each page — override per item if needed.',
-      of: [
-        {
-          type: 'object',
-          name: 'practiceAreaNavItem',
-          fields: [
-            {
-              name: 'page',
-              title: 'Practice Area Page',
-              type: 'reference',
-              to: [{type: 'practiceArea'}, {type: 'geoPracticeArea'}, {type: 'serviceAreaPage'}],
-              validation: (Rule) => Rule.required().warning(),
-            },
-            {
-              name: 'featured',
-              title: 'Primary',
-              type: 'boolean',
-              description: 'Mark the firm’s priority practice area — it becomes the large hero tile in Bento grid mode.',
-              initialValue: false,
-            },
-            {name: 'label', title: 'Label (override)', type: 'string', description: 'Defaults to the page title'},
-            {
-              name: 'description',
-              title: 'Description (override)',
-              type: 'text',
-              rows: 2,
-              description: 'Defaults to the page meta description',
-            },
-            {name: 'icon', title: 'Icon', type: 'image', description: 'Optional line/glyph icon for icon-based layouts'},
-            {
-              name: 'image',
-              title: 'Image (override)',
-              type: 'image',
-              description: 'Defaults to the page hero image — used by image-based layouts',
-            },
-          ],
-          preview: {
-            select: {title: 'page.title', label: 'label', media: 'icon', featured: 'featured'},
-            prepare({title, label, media, featured}) {
-              return {title: label || title || 'Practice area', subtitle: featured ? '★ Primary' : undefined, media}
-            },
-          },
-        },
-      ],
+      of: [{type: 'practiceAreaNavItem'}],
       validation: (Rule) =>
         Rule.custom((items: unknown[] | undefined, context) => {
           if (context.document?.mode !== 'allTopLevel' && (!items || items.length === 0)) {

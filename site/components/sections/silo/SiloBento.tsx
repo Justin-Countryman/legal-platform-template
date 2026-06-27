@@ -1,4 +1,5 @@
 import {siloHover, type SiloHoverEffect, type SiloHoverClasses} from '@/lib/siloHover'
+import {hasImage} from '@/lib/sanity/image'
 import type {SiloNavItem, SiloIconPosition, SiloGridMode} from './types'
 import {
   SiloNav, TileLink, TileImage, TileFill, TileGlow, TileBorder, TileIcon, TileLabel, TileBlurb, TileArrow,
@@ -29,7 +30,7 @@ function BentoTile({
   showArrow: boolean
   showIcon: boolean
 }) {
-  const onImage = !!item.image?.src
+  const onImage = hasImage(item.image)
   return (
     <TileLink
       href={item.href ?? '#'}

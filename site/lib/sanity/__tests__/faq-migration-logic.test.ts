@@ -1,7 +1,7 @@
 import {describe, it, expect} from 'vitest'
 
 // ─── MIRROR of pure helpers from the migration script ────────────────────────
-// Source of truth: Clients/henningson-snoxell-ltd/studio/migrations/faq-inline-to-reference.ts
+// Source of truth: studio/migrations/faq-inline-to-reference.ts
 // (the studio workspace doesn't host vitest, so the helpers are mirrored here
 // for coverage. If the helpers change in the migration script, update this
 // mirror in lockstep — the tests below verify the mirrored shape against the

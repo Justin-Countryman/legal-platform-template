@@ -1,5 +1,6 @@
-import Image from 'next/image'
 import {TertiaryArrow} from '@/components/ui/TertiaryArrow'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 
 // ─── Shared card data + primitives ─────────────────────────────────────────────
 // Leaf module: the canonical AttorneyCard shape plus the bits every card style
@@ -13,12 +14,7 @@ export type AttorneyCard = {
   h1?: string | null
   jobTitle?: string | null
   bio?: string | null
-  photo?: {
-    src: string
-    alt?: string | null
-    width?: number | null
-    height?: number | null
-  } | null
+  photo?: SanityImageData | null
 }
 
 export function attorneyName(a: AttorneyCard): string {
@@ -69,13 +65,13 @@ export function CardImage({
     : ['relative overflow-hidden', ratio, className]
   return (
     <div className={wrapper.filter(Boolean).join(' ')}>
-      {attorney.photo?.src ? (
-        <Image
-          src={attorney.photo.src}
+      {hasImage(attorney.photo) ? (
+        <SanityImage
+          image={attorney.photo}
+          mode="fill"
           alt={attorney.photo.alt ?? name}
-          fill
           sizes={sizes}
-          className={['object-cover object-top', imgClassName].filter(Boolean).join(' ')}
+          className={imgClassName}
         />
       ) : (
         <AttorneyMonogram name={name} />

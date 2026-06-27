@@ -1,12 +1,9 @@
 // Staff profile page — canonical type used by all layout variants.
 // Shape mirrors the output of STAFF_PAGE_QUERY.
+import type {SanityImage} from '@/lib/sanity/image'
 
-export type StaffPhoto = {
-  src: string
-  alt: string
-  width?: number | null
-  height?: number | null
-}
+// Projected via IMAGE_FRAGMENT — render with <SanityImage> (honors hotspot/crop).
+export type StaffPhoto = SanityImage
 
 export type StaffLocation = {
   city?: string | null

@@ -19,7 +19,7 @@ import type {SiloNavItem, SiloGridMode} from '../types'
 import type {SiloHoverEffect} from '@/lib/siloHover'
 
 const ITEMS: SiloNavItem[] = [
-  {_key: 'a', label: 'Family Law', href: '/family-law/', description: 'Divorce and custody.', image: {src: '/fam.jpg'}},
+  {_key: 'a', label: 'Family Law', href: '/family-law/', description: 'Divorce and custody.', image: {asset: {_ref: 'image-test-200x200-jpg', _type: 'reference'}}},
   {_key: 'b', label: 'Estate Planning', href: '/estate-planning/', description: 'Wills and trusts.', featured: true},
   {_key: 'c', label: 'Real Estate', href: '/real-estate/', description: null},
   {_key: 'd', label: 'Divorce', href: '/family-law/divorce/', description: null},

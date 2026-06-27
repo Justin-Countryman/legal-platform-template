@@ -22,7 +22,7 @@
 // ── Safety guards ────────────────────────────────────────────────────────────
 //
 // Forward live mode (`--apply` without `--reverse`) refuses to run unless
-//   `Clients/henningson-snoxell-ltd/audits/WS-Outstanding-Phase-4/dry-run-report.md`
+//   `audits/WS-Outstanding-Phase-4/dry-run-report.md`
 // exists relative to the project root. This enforces the workflow:
 //   1. Run dry-run, capture output to audit folder
 //   2. Walkthrough gate #2 review
@@ -104,10 +104,8 @@ const direction: 'forward' | 'reverse' = isReverse ? 'reverse' : 'forward'
 // ── Safety guards ─────────────────────────────────────────────────────────────
 
 // Compute audit-folder path relative to cwd (typically studio/ when invoked
-// via `npx sanity exec`). The studio dir sits at
-//   Clients/henningson-snoxell-ltd/studio/
-// and the audit folder at
-//   Clients/henningson-snoxell-ltd/audits/WS-Outstanding-Phase-4/
+// via `npx sanity exec`). The studio dir sits at the client repo's `studio/`
+// and the audit folder at the client repo's `audits/WS-Outstanding-Phase-4/`.
 const AUDIT_DIR = resolve(process.cwd(), '../audits/WS-Outstanding-Phase-4')
 const DRY_RUN_REPORT_PATH = resolve(AUDIT_DIR, 'dry-run-report.md')
 const MIGRATION_LOG_PATH = resolve(AUDIT_DIR, 'migration-log.md')

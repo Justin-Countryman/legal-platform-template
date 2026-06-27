@@ -26,9 +26,9 @@
 // ── Safety guards ────────────────────────────────────────────────────────────
 //
 // Forward live mode (`--apply` without `--reverse`) refuses to run unless
-//   `Clients/henningson-snoxell-ltd/audits/WS-FAQ-Migration/dry-run-report.md`
+//   `audits/WS-FAQ-Migration/dry-run-report.md`
 // exists. Reverse live mode (`--reverse --apply`) refuses to run unless
-//   `.../audits/WS-FAQ-Migration/migration-log.md`
+//   `audits/WS-FAQ-Migration/migration-log.md`
 // exists. Same audit-folder discipline as migrate-ctaFormOverride-buttons.ts.
 //
 // ── Idempotency ──────────────────────────────────────────────────────────────

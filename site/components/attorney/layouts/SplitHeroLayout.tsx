@@ -2,7 +2,8 @@
 // Contained card: photo left + dark info panel right.
 // Below: 2-col biography (left) + credential stack (right).
 
-import Image from 'next/image'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage} from '@/lib/sanity/image'
 import {MdEmail} from 'react-icons/md'
 import {Button} from '@/components/ui/Button'
 import {Chip} from '@/components/ui/Chip'
@@ -28,12 +29,13 @@ export function SplitHeroLayout({attorney, napTokens, cta = {label: 'Contact Us'
 
           {/* Photo */}
           <div className="relative flex items-center justify-center bg-muted min-h-[300px]">
-            {attorney.photo?.src ? (
-              <Image
-                src={attorney.photo.src}
+            {hasImage(attorney.photo) ? (
+              <SanityImage
+                image={attorney.photo}
+                mode="natural"
                 alt={attorney.photo.alt || name}
-                width={attorney.photo.width ?? 400}
-                height={attorney.photo.height ?? 500}
+                width={400}
+                height={500}
                 sizes="(max-width: 1024px) 100vw, 42vw"
                 className="w-full max-w-[360px] object-contain"
                 priority

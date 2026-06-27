@@ -3,6 +3,19 @@ import {groq} from 'next-sanity'
 // ─── Reusable Fragments ───────────────────────────────────────────────────────
 // Declared first — used by queries throughout this file.
 
+// Canonical image projection. Spreads the image object (keeping the raw `asset`
+// reference + `hotspot` + `crop` so @sanity/image-url can honor the editor's
+// focal crop), and adds dereffed `lqip` (blur-up) + intrinsic `dimensions`.
+// Apply as `"field": field ${IMAGE_FRAGMENT}` and render with <SanityImage>.
+// Replaces the legacy `{ "src": asset->url, ... }` shape (which discarded crop +
+// hotspot + lqip + the asset ref the URL builder needs).
+export const IMAGE_FRAGMENT = groq`{
+  ...,
+  "alt": coalesce(alt, ""),
+  "lqip": asset->metadata.lqip,
+  "dimensions": asset->metadata.dimensions
+}`
+
 // Explicit projection per blockContent schema (object/blockContent.ts):
 // allowed array members are `block` and `image`. The `block` fields cover
 // standard PortableText shape; the conditional resolves image assets +
@@ -16,11 +29,11 @@ export const BLOCK_CONTENT_FRAGMENT = groq`[]{
   listItem,
   level,
   _type == "image" => {
-    alt,
+    ...,
+    "alt": coalesce(alt, ""),
     caption,
-    "src": asset->url,
-    "width": asset->metadata.dimensions.width,
-    "height": asset->metadata.dimensions.height
+    "lqip": asset->metadata.lqip,
+    "dimensions": asset->metadata.dimensions
   },
   _type == "officeHours" => {
     title
@@ -29,12 +42,7 @@ export const BLOCK_CONTENT_FRAGMENT = groq`[]{
 
 const TESTIMONIAL_FIELDS_FRAGMENT = groq`{
   _id, quote, name, caseType, numberOfStars,
-  "avatar": avatar{
-    "src": asset->url,
-    "alt": alt,
-    "width": asset->metadata.dimensions.width,
-    "height": asset->metadata.dimensions.height
-  }
+  "avatar": avatar ${IMAGE_FRAGMENT}
 }`
 
 export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
@@ -59,9 +67,7 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
   "appearance": {
     "surface": surface,
     "spacing": spacing,
-    "backgroundImage": sectionBackgroundImage{
-      "src": asset->url
-    }
+    "backgroundImage": sectionBackgroundImage ${IMAGE_FRAGMENT}
   },
   // practiceAreaNav (silo nav): resolve each item's page reference to an href +
   // auto-pulled title/description, with per-item overrides; or auto-list all
@@ -83,19 +89,14 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
         "label": coalesce(label, page->title),
         "href": "/" + page->slug.current + "/",
         "description": coalesce(description, page->metaDescription),
-        "icon": icon{"src": asset->url, "alt": alt, "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height},
-        "image": image{"src": asset->url, "alt": alt, "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height},
+        "icon": icon ${IMAGE_FRAGMENT},
+        "image": image ${IMAGE_FRAGMENT},
         "featured": featured
       }
   ),
   "buttons": buttons[]{title, url, variant},
   "footerButton": footerButton{title, url, variant},
-  "image": image{
-    "src": asset->url,
-    "alt": alt,
-    "width": asset->metadata.dimensions.width,
-    "height": asset->metadata.dimensions.height
-  },
+  "image": image ${IMAGE_FRAGMENT},
   "testimonials": testimonials[defined(@->_id)]->${TESTIMONIAL_FIELDS_FRAGMENT},
   "testimonial": testimonial->${TESTIMONIAL_FIELDS_FRAGMENT},
   "questions": questions[defined(@->_id)]->{
@@ -118,30 +119,15 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
   "attorneys": select(
     mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{
       _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
-      "photo": photo{
-        "src": asset->url,
-        "alt": coalesce(alt, ""),
-        "width": asset->metadata.dimensions.width,
-        "height": asset->metadata.dimensions.height
-      }
+      "photo": photo ${IMAGE_FRAGMENT}
     },
     mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{
       _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
-      "photo": photo{
-        "src": asset->url,
-        "alt": coalesce(alt, ""),
-        "width": asset->metadata.dimensions.width,
-        "height": asset->metadata.dimensions.height
-      }
+      "photo": photo ${IMAGE_FRAGMENT}
     },
     mode == 'manual' => attorneys[defined(@->_id)]->{
       _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
-      "photo": photo{
-        "src": asset->url,
-        "alt": coalesce(alt, ""),
-        "width": asset->metadata.dimensions.width,
-        "height": asset->metadata.dimensions.height
-      }
+      "photo": photo ${IMAGE_FRAGMENT}
     },
     []
   ),
@@ -489,9 +475,9 @@ export const SIDEBAR_FRAGMENT = groq`sidebar[]{
       null
     ),
     "attorneys": select(
-      mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo{"src": asset->url, "alt": coalesce(alt, "")}},
-      mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, title, "slug": slug.current, "photo": photo{"src": asset->url, "alt": coalesce(alt, "")}},
-      attorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo{"src": asset->url, "alt": coalesce(alt, "")}}
+      mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}},
+      mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, title, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}},
+      attorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}}
     ),
     "links": links[defined(@->_id)]->{
       _id,
@@ -520,6 +506,7 @@ export const INTERNAL_HERO_OVERRIDE_FIELDS = groq`
     "src": asset->url,
     "alt": alt,
     "fit": fit,
+    "hotspot": hotspot{x, y},
     "width": asset->metadata.dimensions.width,
     "height": asset->metadata.dimensions.height
   },
@@ -536,6 +523,47 @@ export const INTERNAL_HERO_OVERRIDE_FIELDS = groq`
 export const INTERNAL_HERO_FRAGMENT = groq`{
   heading,
   ${INTERNAL_HERO_OVERRIDE_FIELDS}
+}`
+
+// ─── Homepage Hero Fragment ───────────────────────────────────────────────────
+// Reuses every internal-hero override field (so resolveHeroSurface works
+// identically) and adds the homepage-only fields: layout (skeleton + settings),
+// height, eyebrow, mosaic gallery, video URL, and the practice-area silo nav.
+export const HOME_HERO_FRAGMENT = groq`{
+  heading,
+  eyebrow,
+  skeleton,
+  heightMode,
+  contentAlign,
+  backdrop,
+  foreground,
+  contentStrip,
+  siloLayout,
+  scrimStyle,
+  splitMedia,
+  splitImageStyle,
+  splitImageRatio,
+  textTreatment,
+  mediaSide,
+  motion,
+  ${INTERNAL_HERO_OVERRIDE_FIELDS},
+  "galleryImages": galleryImages[]{
+    "src": asset->url,
+    "alt": alt,
+    "hotspot": hotspot{x, y},
+    "width": asset->metadata.dimensions.width,
+    "height": asset->metadata.dimensions.height
+  },
+  videoUrl,
+  "practiceAreaItems": practiceAreaItems[defined(page->slug.current)]{
+    _key,
+    "label": coalesce(label, page->title),
+    "href": "/" + page->slug.current + "/",
+    "description": coalesce(description, page->metaDescription),
+    "icon": icon ${IMAGE_FRAGMENT},
+    "image": image ${IMAGE_FRAGMENT},
+    "featured": featured
+  }
 }`
 
 // ─── Design Tokens ────────────────────────────────────────────────────────────
@@ -658,6 +686,7 @@ export const NAP_TOKENS_QUERY = groq`
 // render below it.
 export const HOME_QUERY = groq`
   *[_type == "homePage"][0]{
+    "hero": hero ${HOME_HERO_FRAGMENT},
     "sections": sections ${SECTIONS_FRAGMENT}
   }
 `
@@ -695,12 +724,7 @@ export const TESTIMONIALS_PAGE_QUERY = groq`
       name,
       caseType,
       numberOfStars,
-      "avatar": avatar{
-        "src": asset->url,
-        "alt": alt,
-        "width": asset->metadata.dimensions.width,
-        "height": asset->metadata.dimensions.height
-      }
+      "avatar": avatar ${IMAGE_FRAGMENT}
     }
   }
 `
@@ -733,12 +757,7 @@ export const ATTORNEY_INDEX_QUERY = groq`
       h1,
       jobTitle,
       linkedIn,
-      "photo": photo{
-        "src": asset->url,
-        "alt": coalesce(alt, ""),
-        "width": asset->metadata.dimensions.width,
-        "height": asset->metadata.dimensions.height
-      },
+      "photo": photo ${IMAGE_FRAGMENT},
       "practiceAreas": practiceAreas[]{
         label,
         "slug": page->slug.current
@@ -757,12 +776,7 @@ export const ATTORNEY_PAGES_QUERY = groq`
     h1,
     jobTitle,
     linkedIn,
-    "photo": photo{
-      "src": asset->url,
-      "alt": coalesce(alt, ""),
-      "width": asset->metadata.dimensions.width,
-      "height": asset->metadata.dimensions.height
-    },
+    "photo": photo ${IMAGE_FRAGMENT},
     "practiceAreas": practiceAreas[]{
       label,
       "slug": page->slug.current
@@ -791,12 +805,7 @@ export const STAFF_INDEX_QUERY = groq`
       firstName,
       lastName,
       jobTitle,
-      "photo": photo{
-        "src": asset->url,
-        "alt": coalesce(alt, ""),
-        "width": asset->metadata.dimensions.width,
-        "height": asset->metadata.dimensions.height
-      }
+      "photo": photo ${IMAGE_FRAGMENT}
     }
   }
 `
@@ -807,12 +816,7 @@ export const STAFF_PAGES_QUERY = groq`
     firstName,
     lastName,
     jobTitle,
-    "photo": photo{
-      "src": asset->url,
-      "alt": coalesce(alt, ""),
-      "width": asset->metadata.dimensions.width,
-      "height": asset->metadata.dimensions.height
-    }
+    "photo": photo ${IMAGE_FRAGMENT}
   }
 `
 
@@ -828,12 +832,7 @@ export const STAFF_PAGE_QUERY = groq`
     jobTitle,
     email,
     phone,
-    "photo": photo{
-      "src": asset->url,
-      "alt": coalesce(alt, ""),
-      "width": asset->metadata.dimensions.width,
-      "height": asset->metadata.dimensions.height
-    },
+    "photo": photo ${IMAGE_FRAGMENT},
     "biography": biography ${BLOCK_CONTENT_FRAGMENT},
     "location": location->{
       city,
@@ -892,12 +891,7 @@ export const ATTORNEY_PAGE_QUERY = groq`
     h1,
     jobTitle,
     "ctaOverride": ctaOverride{label, url},
-    "photo": photo{
-      "src": asset->url,
-      "alt": coalesce(alt, ""),
-      "width": asset->metadata.dimensions.width,
-      "height": asset->metadata.dimensions.height
-    },
+    "photo": photo ${IMAGE_FRAGMENT},
     email,
     showEmail,
     showLocations,
@@ -1069,12 +1063,7 @@ const VIDEO_CARD_FRAGMENT = groq`{
   description,
   videoType,
   duration,
-  "thumbnail": thumbnail{
-    "src": asset->url,
-    "alt": coalesce(alt, ""),
-    "width": asset->metadata.dimensions.width,
-    "height": asset->metadata.dimensions.height
-  }
+  "thumbnail": thumbnail ${IMAGE_FRAGMENT}
 }`
 
 export const VIDEO_INDEX_PAGE_QUERY = groq`
@@ -1155,12 +1144,7 @@ export const BLOG_POST_PAGE_QUERY = groq`
     canonicalUrl,
     publishedAt,
     lastModified,
-    "featuredImage": featuredImage{
-      "src": asset->url,
-      "alt": alt,
-      "width": asset->metadata.dimensions.width,
-      "height": asset->metadata.dimensions.height
-    },
+    "featuredImage": featuredImage ${IMAGE_FRAGMENT},
     "bodyText": pt::text(body),
     "body": body ${BLOCK_CONTENT_FRAGMENT},
     "authors": authors[defined(@->_id)]->{
@@ -1169,12 +1153,7 @@ export const BLOG_POST_PAGE_QUERY = groq`
       lastName,
       jobTitle,
       "slug": slug.current,
-      "photo": photo{
-        "src": asset->url,
-        "alt": alt,
-        "width": asset->metadata.dimensions.width,
-        "height": asset->metadata.dimensions.height
-      }
+      "photo": photo ${IMAGE_FRAGMENT}
     },
     "category": category->{
       title,
@@ -1233,9 +1212,9 @@ export const BLOG_POST_PAGE_QUERY = groq`
           null
         ),
         "attorneys": select(
-          mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo{"src": asset->url, "alt": coalesce(alt, "")}},
-          mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, title, "slug": slug.current, "photo": photo{"src": asset->url, "alt": coalesce(alt, "")}},
-          attorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo{"src": asset->url, "alt": coalesce(alt, "")}}
+          mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}},
+          mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, title, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}},
+          attorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}}
         ),
         "links": links[defined(@->_id)]->{
           _id,

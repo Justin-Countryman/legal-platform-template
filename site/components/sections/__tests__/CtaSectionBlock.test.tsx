@@ -40,7 +40,7 @@ const BACKGROUND_DATA: CtaSectionBlockData = {
   heading: 'Talk to an attorney today',
   description: 'Schedule a consultation.',
   buttons: [{title: 'Contact us', url: '/contact', variant: 'primary'}],
-  image: {src: '/cta-bg.jpg', alt: 'Office', width: 1920, height: 1080},
+  image: {asset: {_ref: 'image-test-200x200-jpg', _type: 'reference'}, alt: 'Office'},
 }
 
 // ─── BackgroundCta scrim — the canonical image-scrim composition ──────────────
@@ -56,7 +56,7 @@ describe('CtaSectionBlock — BackgroundCta scrim composition', () => {
   it('renders the <Image> background when image.src is present', () => {
     const {getByTestId} = render(<CtaSectionBlock data={BACKGROUND_DATA} />)
     const img = getByTestId('cta-bg') as HTMLImageElement
-    expect(img.getAttribute('src')).toBe('/cta-bg.jpg')
+    expect(img.getAttribute('src')).toContain('cdn.sanity.io')
     expect(img.getAttribute('data-fill')).toBe('true')
   })
 

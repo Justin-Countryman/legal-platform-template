@@ -2,7 +2,8 @@
 
 import {useEffect, useId, useState} from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import {usePathname} from 'next/navigation'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {FormEmbed} from '@/components/layout/footers/FormEmbed'
@@ -105,7 +106,7 @@ function separatorClass(
 // Sidebar System workstream"`. Re-introduction is guarded by
 // `eslint.config.mjs` (file-scoped no-restricted-syntax block).
 
-export type SidebarPhoto = {src?: string; alt?: string} | null
+export type SidebarPhoto = SanityImageData | null
 
 export type SidebarAttorney = {
   _id: string
@@ -908,12 +909,11 @@ function SidebarAttorneyList({component}: {component: SidebarAttorneyListCompone
                       aria-current={active ? 'page' : undefined}
                     >
                       <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full bg-muted border border-border">
-                        {attorney.photo?.src && (
-                          <Image
-                            src={attorney.photo.src}
+                        {hasImage(attorney.photo) && (
+                          <SanityImage
+                            image={attorney.photo}
+                            mode="fill"
                             alt={attorney.photo.alt ?? attorney.title ?? ''}
-                            fill
-                            className="object-cover object-top"
                             sizes="36px"
                           />
                         )}

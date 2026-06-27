@@ -3,7 +3,8 @@
 // Below: sticky sidebar (photo + practice areas) beside a main column
 // that flows biography → credential sections sequentially.
 
-import Image from 'next/image'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage} from '@/lib/sanity/image'
 import {MdEmail, MdPhone, MdOpenInNew} from 'react-icons/md'
 import {Button} from '@/components/ui/Button'
 import {Tagline} from '@/components/ui/Tagline'
@@ -79,13 +80,14 @@ export function ClassicSidebarLayout({attorney, napTokens, cta = {label: 'Contac
             aria-label="Attorney photo and practice areas"
           >
             {/* Photo */}
-            {attorney.photo?.src ? (
+            {hasImage(attorney.photo) ? (
               <div className="flex items-start justify-center bg-muted">
-                <Image
-                  src={attorney.photo.src}
+                <SanityImage
+                  image={attorney.photo}
+                  mode="natural"
                   alt={attorney.photo.alt || name}
-                  width={attorney.photo.width ?? 340}
-                  height={attorney.photo.height ?? 420}
+                  width={340}
+                  height={420}
                   className="w-full max-w-[340px] object-contain"
                   sizes="(max-width: 1024px) 100vw, 340px"
                   priority

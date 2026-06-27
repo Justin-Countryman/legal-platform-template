@@ -1,5 +1,6 @@
-import Image from 'next/image'
 import {StarRating} from '@/components/ui/StarRating'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage} from '@/lib/sanity/image'
 import {Tagline} from '@/components/ui/Tagline'
 import {type TestimonialData} from '@/components/ui/TestimonialCard'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
@@ -55,12 +56,14 @@ export function FeaturedTestimonialSection({
 
           {/* eslint-disable-next-line platform/footer-landmark-naming -- attribution footer inside <blockquote>, not a page-footer landmark; SectionShell wraps the <section> so the rule can't see the sectioning ancestor */}
           <footer className="mt-8 flex items-center gap-3">
-            {t.avatar?.src && (
-              <Image
-                src={t.avatar.src}
+            {hasImage(t.avatar) && (
+              <SanityImage
+                image={t.avatar}
+                mode="fixed"
+                width={96}
+                height={96}
                 alt={t.avatar.alt ?? t.name}
-                width={48}
-                height={48}
+                sizes="48px"
                 className="h-12 w-12 rounded-full object-cover"
               />
             )}

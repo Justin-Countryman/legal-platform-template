@@ -29,6 +29,16 @@ The CI seed-validation gate enforces this — a schema-change PR without a match
 
 ## Changelog
 
+### v0.3.0 — 2026-06-26
+
+Lands the **homepage hero builder** and a **canonical Sanity image pipeline** in the template (ported from the Dudley dogfood). MINOR per the tag scheme — net-additive (one new object type, new components, additive fields); the single field removal is an unused legacy fallback with no query consumer, non-breaking for fresh provisioning.
+
+- **Homepage Hero builder** (`studio/schemas/objects/homeHero.ts` + `homeHeroReveal.ts` + `heroSurfaceFields.ts` + `practiceAreaNavItem.ts`; `site/components/layout/homeHero/*`). A Sanity-driven wizard: pick a Layout (Overlay | Split), relevant fields reveal. Renders via a client dispatcher that code-splits one of two skeletons composed from a shared atoms layer; reuses the internal-hero surface/scheme/backdrop/button infrastructure. New layout controls this release: **Silo Nav card layout** (`siloLayout`: cards | spotlight | tile — reuses the silo library's photo-forward layouts on the hero band), **Scrim Style** (`scrimStyle`: flat | gradient), Fit hidden on Split, and the Silo Nav strip works on both Overlay and Split. The `Primary` toggle on practice-area items is hidden outside the Practice Area Navigation section (Bento-only).
+- **Canonical Sanity image pipeline** (`site/lib/sanity/image.ts`, `site/components/ui/SanityImage.tsx`, `IMAGE_FRAGMENT` in `queries.ts`). One GROQ fragment projects the asset ref + `hotspot` + `crop` + `lqip` + dimensions; `<SanityImage>` (fixed | fill | natural modes) renders via `@sanity/image-url` + `next-sanity`'s loader so the editor's **crop + hotspot are honored** (was discarded before — images center-cropped regardless of focal point). LQIP blur-up included. Migrated every focal-sensitive render (attorney/staff photos, testimonial avatars, video thumbnails, section/CTA images, silo cards, blog featured image, PortableText body images). Logos/badges/profile object-contain images stay on `next/image` (no crop). `vitest.setup.ts` stubs `next-sanity/image` (its loader's extensionless `next/image` import fails Vitest ESM; production is unaffected).
+- **homePage schema:** removed the unused `h1` SEO-fallback field (the visible H1 comes from the hero; the field had no query consumer).
+
+**Seed regen still pending.** `homePage` singleton shape changed (h1 removed) + the new `homeHero` object — per policy `studio/seedData/sampleFirm.ndjson` should be regenerated, but the seed still isn't committed (the `seed-validation` job remains a soft warn). Non-blocking for fresh provisioning; owed alongside the still-open initial-seed commit.
+
 ### v0.2.0 — 2026-05-27
 
 Ports two improvements from the monorepo's client builds (source commits `6e4032c`, `b8e9762` in `Justin-Countryman/legal-platform`). MINOR per the tag scheme — additive schema fields + an inert one-shot migration; safe for new clients pinned at v0.2.0.

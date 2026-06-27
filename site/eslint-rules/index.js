@@ -5,8 +5,8 @@
 // in `meta.docs.description`.
 //
 // Phase 2 plan: rules ship one-per-commit (or in small thematic batches)
-// after Commit 3 lands the scaffold. See the WS8 Phase 1 audit at
-// `Clients/henningson-snoxell-ltd/audits/ws8-eslint-enforcement-audit.md`
+// after Commit 3 lands the scaffold. See the WS8 Phase 1 audit
+// (`audits/ws8-eslint-enforcement-audit.md` in the platform audit history)
 // for the full rule roster and `eslint-rules/README.md` for the
 // rule-authoring contract.
 

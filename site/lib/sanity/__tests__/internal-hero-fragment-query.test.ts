@@ -45,7 +45,7 @@ describe('INTERNAL_HERO_FRAGMENT — cascade override projection', () => {
     expect(out.foregroundImage).toBeNull()
   })
 
-  it('derefs a custom backgroundImage to {src, alt, fit, width, height}', async () => {
+  it('derefs a custom backgroundImage to {src, alt, fit, hotspot, width, height}', async () => {
     const out = await fetchHero(
       {
         heading: 'Custom bg',
@@ -53,6 +53,7 @@ describe('INTERNAL_HERO_FRAGMENT — cascade override projection', () => {
           _type: 'image',
           alt: 'Office',
           fit: 'cover',
+          hotspot: {x: 0.4, y: 0.3},
           asset: {_type: 'reference', _ref: 'image-bg'},
         },
       },
@@ -62,6 +63,7 @@ describe('INTERNAL_HERO_FRAGMENT — cascade override projection', () => {
       src: 'https://cdn/bg.jpg',
       alt: 'Office',
       fit: 'cover',
+      hotspot: {x: 0.4, y: 0.3},
       width: 1600,
       height: 900,
     })

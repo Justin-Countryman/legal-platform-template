@@ -1,6 +1,7 @@
 import {defineType} from 'sanity'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
+import {heroImageField} from './heroSurfaceFields'
 
 export const internalHero = defineType({
   name: 'internalHero',
@@ -44,35 +45,17 @@ export const internalHero = defineType({
       },
       initialValue: 'inherit',
     },
-    {
+    heroImageField({
       name: 'backgroundImage',
       title: 'Background Image',
-      type: 'image',
       description: 'Upload to override the site default background image on this page (uses a dark scrim, white text). Leave empty to inherit the site default.',
-      options: {hotspot: true},
-      fields: [
-        {
-          name: 'alt',
-          type: 'string',
-          title: 'Alt Text',
-          validation: (Rule) => Rule.required().error('Alt text is required for the hero background image'),
-        },
-        {
-          name: 'fit',
-          type: 'string',
-          title: 'Fit',
-          description: 'Cover fills the band (cropped). Tile repeats the image as a pattern.',
-          options: {
-            list: [
-              {title: 'Cover — fill the band', value: 'cover'},
-              {title: 'Tile — repeat as a pattern', value: 'tile'},
-            ],
-            layout: 'radio',
-          },
-          initialValue: 'cover',
-        },
-      ],
-    },
+      altLabel: 'hero background image',
+      fit: {
+        description: 'Cover fills the band (cropped). Tile repeats the image as a pattern.',
+        coverTitle: 'Cover — fill the band',
+        tileTitle: 'Tile — repeat as a pattern',
+      },
+    }),
     {
       name: 'backgroundNone',
       title: 'No background image on this page',
@@ -87,21 +70,12 @@ export const internalHero = defineType({
       description: 'Optional. Override the site default scrim strength (0–100) over the background image for this page. Leave empty to inherit.',
       validation: (Rule) => Rule.min(0).max(100),
     },
-    {
+    heroImageField({
       name: 'foregroundImage',
       title: 'Foreground Image',
-      type: 'image',
       description: 'Upload to override the site default foreground subject on this page (shown bottom-right, full color above the scrim, hidden on mobile). Leave empty to inherit the site default.',
-      options: {hotspot: true},
-      fields: [
-        {
-          name: 'alt',
-          type: 'string',
-          title: 'Alt Text',
-          validation: (Rule) => Rule.required().error('Alt text is required for the hero foreground image'),
-        },
-      ],
-    },
+      altLabel: 'hero foreground image',
+    }),
     {
       name: 'foregroundNone',
       title: 'No foreground image on this page',

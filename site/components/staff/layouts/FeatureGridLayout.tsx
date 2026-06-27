@@ -2,7 +2,8 @@
 // Feature row: photo left + name / biography right.
 // Clean light background, no credentials grid.
 
-import Image from 'next/image'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage} from '@/lib/sanity/image'
 import {MdEmail} from 'react-icons/md'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {Button} from '@/components/ui/Button'
@@ -40,13 +41,14 @@ export function FeatureGridLayout({member, napTokens, cta = {label: 'Contact Us'
 
           {/* Photo */}
           <div>
-            {member.photo?.src && (
+            {hasImage(member.photo) && (
               <div className="flex items-start justify-center bg-muted p-6">
-                <Image
-                  src={member.photo.src}
+                <SanityImage
+                  image={member.photo}
+                  mode="natural"
                   alt={member.photo.alt || name}
-                  width={member.photo.width ?? 400}
-                  height={member.photo.height ?? 500}
+                  width={400}
+                  height={500}
                   className="w-full max-w-[320px] object-contain"
                   sizes="(max-width: 1024px) 100vw, 42vw"
                   priority

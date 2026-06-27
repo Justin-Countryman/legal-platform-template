@@ -1,4 +1,5 @@
 import {siloHover, type SiloHoverEffect} from '@/lib/siloHover'
+import {hasImage} from '@/lib/sanity/image'
 import type {SiloNavItem, SiloIconPosition} from './types'
 import {
   SiloNav, TileLink, TileImage, TileFill, TileGlow, TileBorder, TileIcon, TileLabel, TileBlurb, TileArrow,
@@ -49,7 +50,7 @@ export function SiloSpotlight({items, ariaLabel, hoverEffects, showArrow, iconPo
   return (
     <SiloNav ariaLabel={ariaLabel} className={CARD_GRID}>
       {items.map((item) => {
-        const onImage = !!item.image?.src
+        const onImage = hasImage(item.image)
         return (
           <li key={item._key}>
             <TileLink href={item.href ?? '#'} dark={onImage} className={`${CARD} min-h-[14rem] ${fx.container}`}>
@@ -83,7 +84,7 @@ export function SiloFeature({items, ariaLabel, hoverEffects, showArrow, iconPosi
   return (
     <SiloNav ariaLabel={ariaLabel} className={CARD_GRID}>
       {items.map((item) => {
-        const onImage = !!item.image?.src
+        const onImage = hasImage(item.image)
         return (
           <li key={item._key}>
             <TileLink href={item.href ?? '#'} className={`${CARD} min-h-[20rem] overflow-hidden ${fx.container}`}>
@@ -124,7 +125,7 @@ export function SiloTileLayout({items, ariaLabel, hoverEffects, iconPosition}: S
   return (
     <SiloNav ariaLabel={ariaLabel} className={CARD_GRID}>
       {items.map((item) => {
-        const onImage = !!item.image?.src
+        const onImage = hasImage(item.image)
         return (
           <li key={item._key}>
             <TileLink
@@ -187,7 +188,7 @@ export function SiloSplit({items, ariaLabel, hoverEffects, showArrow, iconPositi
   return (
     <SiloNav ariaLabel={ariaLabel} className={CARD_GRID}>
       {items.map((item) => {
-        const onImage = !!item.image?.src
+        const onImage = hasImage(item.image)
         return (
           <li key={item._key}>
             <TileLink

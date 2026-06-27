@@ -3,7 +3,8 @@
 // right half shows the staff name at display scale with contact actions.
 // Biography uses a vertical label + prose layout below.
 
-import Image from 'next/image'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage} from '@/lib/sanity/image'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {Button} from '@/components/ui/Button'
 import {Chip} from '@/components/ui/Chip'
@@ -41,12 +42,13 @@ export function PremiumHorizontalLayout({member, napTokens, cta = {label: 'Conta
       >
         {/* Photo */}
         <div className="order-last flex items-start justify-center bg-muted p-8 lg:order-first">
-          {member.photo?.src ? (
-            <Image
-              src={member.photo.src}
+          {hasImage(member.photo) ? (
+            <SanityImage
+              image={member.photo}
+              mode="natural"
               alt={member.photo.alt || name}
-              width={member.photo.width ?? 400}
-              height={member.photo.height ?? 500}
+              width={400}
+              height={500}
               sizes="(max-width: 1024px) 100vw, 45vw"
               className="w-full max-w-[360px] object-contain"
               priority

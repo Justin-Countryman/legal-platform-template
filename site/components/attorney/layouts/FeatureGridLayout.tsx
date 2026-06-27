@@ -3,7 +3,8 @@
 // Below: 3-column credential grid on a gray-50 background.
 // Inspired by the HDImmigration Law layout pattern.
 
-import Image from 'next/image'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage} from '@/lib/sanity/image'
 import {MdEmail, MdOpenInNew} from 'react-icons/md'
 import {Button} from '@/components/ui/Button'
 import {Tagline} from '@/components/ui/Tagline'
@@ -45,13 +46,14 @@ export function FeatureGridLayout({attorney, napTokens, cta = {label: 'Contact U
 
           {/* Photo + Practice Areas */}
           <div className="flex flex-col gap-6">
-            {attorney.photo?.src && (
+            {hasImage(attorney.photo) && (
               <div className="flex items-start justify-center bg-muted p-6">
-                <Image
-                  src={attorney.photo.src}
+                <SanityImage
+                  image={attorney.photo}
+                  mode="natural"
                   alt={attorney.photo.alt || name}
-                  width={attorney.photo.width ?? 400}
-                  height={attorney.photo.height ?? 500}
+                  width={400}
+                  height={500}
                   className="w-full max-w-[320px] object-contain"
                   sizes="(max-width: 1024px) 100vw, 42vw"
                   priority

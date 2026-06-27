@@ -2,8 +2,8 @@
 
 WS8 custom ESLint rules for the Legal Platform. Each rule enforces a posture that's already locked in `BI-PRINCIPLES.md`, `BI-FOUNDATIONS.md`, or a `BI/skills/skill-*` file. Rules don't introduce new patterns — they enforce existing ones.
 
-The full WS8 rule roster + sources is in the WS8 Phase 1 audit at
-`Clients/henningson-snoxell-ltd/audits/ws8-eslint-enforcement-audit.md`.
+The full WS8 rule roster + sources is in the WS8 Phase 1 audit
+(`audits/ws8-eslint-enforcement-audit.md` in the platform audit history).
 
 ## Layout
 
@@ -245,6 +245,6 @@ npm run lint
 
 ## Cross-references
 
-- Phase 1 audit: `Clients/henningson-snoxell-ltd/audits/ws8-eslint-enforcement-audit.md`
+- Phase 1 audit: `audits/ws8-eslint-enforcement-audit.md` (platform audit history)
 - Locked postures: `BI/BI-PRINCIPLES.md`, `BI/BI-FOUNDATIONS.md`, `BI/skills/skill-color-system/SKILL.md`, `BI/skills/skill-typography/SKILL.md`, `BI/skills/skill-component-patterns/SKILL.md`, `BI/skills/skill-sanity-schema/SKILL.md`
 - WS8 OUTSTANDING tracker: `BI/OUTSTANDING.md → "Heading-cascade discipline (WS8 ESLint candidate)"` and the WS8 Decision-2 deferral entry.

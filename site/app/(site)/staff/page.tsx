@@ -1,7 +1,8 @@
 export const revalidate = 3600
 
 import type {Metadata} from 'next'
-import Image from 'next/image'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import Link from 'next/link'
 import {client} from '@/lib/sanity/client'
 import {
@@ -25,7 +26,7 @@ type StaffCard = {
   firstName: string | null
   lastName: string | null
   jobTitle: string | null
-  photo: {src: string; alt: string; width: number; height: number} | null
+  photo: SanityImageData | null
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -67,15 +68,14 @@ function StaffCard({member, priority = false}: {member: StaffCard; priority?: bo
       {/* Photo */}
       <Link href={href} className="group mb-5 block overflow-hidden md:mb-6">
         <div className="relative h-72 w-full overflow-hidden bg-muted">
-          {member.photo?.src ? (
-            <Image
-              src={member.photo.src}
+          {hasImage(member.photo) ? (
+            <SanityImage
+              image={member.photo}
+              mode="fill"
               alt={member.photo.alt || name}
-              width={member.photo.width ?? 400}
-              height={member.photo.height ?? 533}
               sizes="(min-width: 1024px) 22vw, (min-width: 640px) 45vw, 90vw"
               priority={priority}
-              className="h-full w-full object-cover object-top transition-transform duration-ui-slow ease-smooth group-hover:scale-[1.03]"
+              className="transition-transform duration-ui-slow ease-smooth group-hover:scale-[1.03]"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-3xl font-bold text-foreground-muted">

@@ -110,17 +110,17 @@ describe('TestimonialCard — avatar composition', () => {
   it('renders <Image> when avatar.src is present', () => {
     render(
       <TestimonialCard
-        t={{...BASE, avatar: {src: '/avatar.jpg', alt: 'Jane portrait'}}}
+        t={{...BASE, avatar: {asset: {_ref: 'image-test-200x200-jpg', _type: 'reference'}, alt: 'Jane portrait'}}}
       />,
     )
     const img = screen.getByTestId('avatar') as HTMLImageElement
-    expect(img.getAttribute('src')).toBe('/avatar.jpg')
+    expect(img.getAttribute('src')).toContain('cdn.sanity.io')
   })
 
   it('uses avatar.alt when provided', () => {
     render(
       <TestimonialCard
-        t={{...BASE, avatar: {src: '/avatar.jpg', alt: 'Jane portrait'}}}
+        t={{...BASE, avatar: {asset: {_ref: 'image-test-200x200-jpg', _type: 'reference'}, alt: 'Jane portrait'}}}
       />,
     )
     expect(screen.getByTestId('avatar').getAttribute('alt')).toBe('Jane portrait')
@@ -128,16 +128,16 @@ describe('TestimonialCard — avatar composition', () => {
 
   it('falls back to t.name as alt when avatar.alt is missing', () => {
     render(
-      <TestimonialCard t={{...BASE, avatar: {src: '/avatar.jpg'}}} />,
+      <TestimonialCard t={{...BASE, avatar: {asset: {_ref: 'image-test-200x200-jpg', _type: 'reference'}}}} />,
     )
     expect(screen.getByTestId('avatar').getAttribute('alt')).toBe('Jane Doe')
   })
 
-  it('forwards 40×40 dimensions to <Image>', () => {
-    render(<TestimonialCard t={{...BASE, avatar: {src: '/avatar.jpg'}}} />)
+  it('forwards 80×80 (2× of the 40px display) dimensions to <Image>', () => {
+    render(<TestimonialCard t={{...BASE, avatar: {asset: {_ref: 'image-test-200x200-jpg', _type: 'reference'}}}} />)
     const img = screen.getByTestId('avatar')
-    expect(img.getAttribute('width')).toBe('40')
-    expect(img.getAttribute('height')).toBe('40')
+    expect(img.getAttribute('width')).toBe('80')
+    expect(img.getAttribute('height')).toBe('80')
   })
 
   it('omits <Image> when avatar is null', () => {
@@ -146,7 +146,7 @@ describe('TestimonialCard — avatar composition', () => {
   })
 
   it('omits <Image> when avatar.src is missing (defensive)', () => {
-    render(<TestimonialCard t={{...BASE, avatar: {src: ''}}} />)
+    render(<TestimonialCard t={{...BASE, avatar: null}} />)
     expect(screen.queryByTestId('avatar')).toBeNull()
   })
 })
@@ -194,7 +194,7 @@ describe('TestimonialCard — cascade-aware contract', () => {
           ...BASE,
           numberOfStars: 5,
           caseType: 'Family Law',
-          avatar: {src: '/a.jpg', alt: 'a'},
+          avatar: {asset: {_ref: 'image-test-200x200-jpg', _type: 'reference'}, alt: 'a'},
         }}
       />,
     )

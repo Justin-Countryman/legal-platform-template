@@ -16,7 +16,7 @@ vi.mock('next/image', () => ({
 import {SiloCarousel} from '../SiloCarousel'
 
 const ITEMS = [
-  {_key: 'a', label: 'Family Law', href: '/family-law/', image: {src: '/fam.jpg'}, icon: {src: '/i1.png'}},
+  {_key: 'a', label: 'Family Law', href: '/family-law/', image: {asset: {_ref: 'image-test-200x200-jpg', _type: 'reference'}}, icon: {asset: {_ref: 'image-test-200x200-jpg', _type: 'reference'}}},
   {_key: 'b', label: 'Estate Planning', href: '/estate-planning/', description: 'Wills and trusts.'},
   {_key: 'c', label: 'Real Estate', href: '/real-estate/'},
 ]

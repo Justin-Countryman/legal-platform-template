@@ -20,7 +20,7 @@ import {useHeroSurfaceDefaults} from '@/lib/heroSurfaceContext'
 import {resolveHeroSurface, heroSurfaceBgClass} from '@/lib/heroSurface'
 import {HeroBackdrop} from '@/components/layout/HeroBackdrop'
 import {HeroForeground} from '@/components/layout/HeroForeground'
-import {HERO_BAND_MIN_H_LG, HERO_BAND_BASE_MIN_H_LG, heroForegroundVars} from '@/lib/heroLayout'
+import {HERO_BAND_MIN_H_LG, HERO_BAND_BASE_MIN_H_LG, HERO_HEADER_CLEARANCE, heroForegroundVars} from '@/lib/heroLayout'
 
 type Props = {title: string}
 
@@ -40,7 +40,7 @@ export function InternalPageHeader({title}: Props) {
 
   return (
     <header
-      style={{paddingTop: 'calc(var(--header-height, 8rem) + var(--hero-pt, 4rem))'}}
+      style={{paddingTop: HERO_HEADER_CLEARANCE}}
       data-ring-context={isDark ? 'dark' : undefined}
       data-hero-image={hasImage ? 'true' : undefined}
       className={[

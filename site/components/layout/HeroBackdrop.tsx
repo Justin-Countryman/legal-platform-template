@@ -7,7 +7,7 @@
 // image — the section/header element paints its own solid bg in that case.
 
 import Image from 'next/image'
-import type {ResolvedHeroSurface} from '@/lib/heroSurface'
+import {heroObjectPosition, type ResolvedHeroSurface} from '@/lib/heroSurface'
 
 export function HeroBackdrop({surface}: {surface: ResolvedHeroSurface}) {
   if (!surface.hasImage || !surface.bgImage?.src) return null
@@ -30,6 +30,7 @@ export function HeroBackdrop({surface}: {surface: ResolvedHeroSurface}) {
           fill
           priority
           className="object-cover"
+          style={{objectPosition: heroObjectPosition(bgImage)}}
           sizes="100vw"
         />
       )}

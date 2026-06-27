@@ -1,4 +1,5 @@
-import Image from 'next/image'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {ButtonGroup, toCtaItems} from '@/components/ui/ButtonGroup'
 import {SectionHeader} from '@/components/ui/SectionHeader'
@@ -19,7 +20,7 @@ export type CtaSectionBlockData = {
   description?: string | null
   layout?: 'centered' | 'split' | 'background' | 'textOnly' | null
   buttons?: CtaButton[] | null
-  image?: {src: string; alt?: string | null; width?: number | null; height?: number | null} | null
+  image?: SanityImageData | null
 }
 
 // ─── Centered layout ──────────────────────────────────────────────────────────
@@ -69,14 +70,13 @@ function SplitCta({data}: {data: CtaSectionBlockData}) {
           {buttons && <ButtonGroup items={toCtaItems(buttons)} className="mt-6 md:mt-8" />}
         </div>
 
-        {image?.src && (
-          <div className="relative overflow-hidden">
-            <Image
-              src={image.src}
+        {hasImage(image) && (
+          <div className="relative h-96 w-full overflow-hidden">
+            <SanityImage
+              image={image}
+              mode="fill"
               alt={image.alt ?? ''}
-              width={image.width ?? 800}
-              height={image.height ?? 600}
-              className="w-full max-h-96 object-cover"
+              sizes="(min-width:1024px) 50vw, 100vw"
             />
           </div>
         )}
@@ -94,15 +94,9 @@ function BackgroundCta({data}: {data: CtaSectionBlockData}) {
 
   return (
     <section className="relative px-[5%] py-16 md:py-24 lg:py-28" data-ring-context="dark">
-      {image?.src && (
+      {hasImage(image) && (
         <>
-          <Image
-            src={image.src}
-            alt={image.alt ?? ''}
-            fill
-            className="object-cover"
-            aria-hidden="true"
-          />
+          <SanityImage image={image} mode="fill" alt={image.alt ?? ''} sizes="100vw" />
           <div className="absolute inset-0 bg-brand-dark/80" aria-hidden="true" />
         </>
       )}

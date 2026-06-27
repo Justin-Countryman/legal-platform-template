@@ -3,7 +3,7 @@ export const revalidate = 3600
 import type {ReactNode} from 'react'
 import {notFound} from 'next/navigation'
 import type {Metadata} from 'next'
-import Image from 'next/image'
+import {SanityImage} from '@/components/ui/SanityImage'
 import Link from 'next/link'
 import {client} from '@/lib/sanity/client'
 import {
@@ -170,7 +170,7 @@ export default async function BlogPostPage({params}: Props) {
   // Belt-and-suspenders null filter — paired with GROQ post-projection
   // [defined(_id)] on authors (see queries.ts BLOG_POST_PAGE_QUERY).
   const authors: unknown[] = (post.authors ?? []).filter((a: unknown) => a !== null)
-  const hasImage = !!post.featuredImage?.src
+  const hasImage = !!post.featuredImage?.asset?._ref
   const h1 = resolveTokenString(post.h1, tokens)
 
   const breadcrumbItems = [
@@ -241,12 +241,11 @@ export default async function BlogPostPage({params}: Props) {
 
               {/* Right: featured image */}
               <div className="relative aspect-video w-full overflow-hidden">
-                <Image
-                  src={post.featuredImage.src}
-                  alt={post.featuredImage.alt ?? h1}
-                  width={post.featuredImage.width}
-                  height={post.featuredImage.height}
-                  className="h-full w-full object-cover"
+                <SanityImage
+                  image={post.featuredImage}
+                  mode="fill"
+                  alt={post.featuredImage.alt || h1}
+                  sizes="(min-width:1024px) 50vw, 100vw"
                   priority
                 />
               </div>

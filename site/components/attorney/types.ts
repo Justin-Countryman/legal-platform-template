@@ -1,12 +1,9 @@
 // Attorney profile page — canonical type used by all layout variants.
 // Shape mirrors the output of ATTORNEY_PAGE_QUERY.
+import type {SanityImage} from '@/lib/sanity/image'
 
-export type AttorneyPhoto = {
-  src: string
-  alt: string
-  width: number
-  height: number
-}
+// Projected via IMAGE_FRAGMENT — render with <SanityImage> (honors hotspot/crop).
+export type AttorneyPhoto = SanityImage
 
 export type PracticeAreaItem = {
   label: string

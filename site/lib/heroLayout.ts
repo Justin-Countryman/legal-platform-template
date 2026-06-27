@@ -27,6 +27,13 @@ import type {CSSProperties} from 'react'
 // the non-merged path is left exactly as it was). SSR falls back to 0px.
 export const HERO_BAND_MIN_H_LG = 'lg:min-h-[calc(var(--header-height,0px)+25rem)]'
 
+// Header-clearance top padding for a hero band: reserves the merged (overlaid)
+// header height (--header-height, guarded to 8rem at SSR) plus the responsive
+// hero top-padding ramp (--hero-pt). One source of truth for every band —
+// HeroBand, the Split full-bleed flush layout, InternalHero and
+// InternalPageHeader all import this so the clearance can never drift apart.
+export const HERO_HEADER_CLEARANCE = 'calc(var(--header-height, 8rem) + var(--hero-pt, 4rem))'
+
 // Base band height (lg+) for a bare h1 hero (no description / buttons, no
 // foreground figure): a modest banner that gives the h1 room to be vertically
 // centered. Foreground heroes use the taller HERO_BAND_MIN_H_LG instead. Same

@@ -1,7 +1,8 @@
 'use client'
 
 import {useState} from 'react'
-import Image from 'next/image'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {DialogPanel} from '@/components/ui/DialogPanel'
 import {getEmbedUrl, autoThumbnails} from '@/lib/videoEmbed'
@@ -15,12 +16,7 @@ export type VideoCardData = {
   description?: string | null
   videoType?: string | null
   duration?: string | null
-  thumbnail?: {
-    src: string
-    alt?: string | null
-    width?: number | null
-    height?: number | null
-  } | null
+  thumbnail?: SanityImageData | null
 }
 
 // Canonical videoType order (mirrors the schema enum) — drives chip ordering.
@@ -52,8 +48,8 @@ function Thumb({video, featured}: {video: VideoCardData; featured?: boolean}) {
 
   return (
     <div className="relative aspect-video overflow-hidden bg-hero-tint">
-      {video.thumbnail?.src ? (
-        <Image src={video.thumbnail.src} alt="" fill className="object-cover" sizes={sizes} />
+      {hasImage(video.thumbnail) ? (
+        <SanityImage image={video.thumbnail} mode="fill" alt="" sizes={sizes} />
       ) : autoSrc ? (
         // eslint-disable-next-line @next/next/no-img-element -- external poster host not in next.config remotePatterns
         <img

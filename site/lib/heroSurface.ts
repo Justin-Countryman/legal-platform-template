@@ -26,6 +26,15 @@ export type HeroImage = {
   hotspot?: {x: number; y: number} | null
 } | null
 
+// CSS object-position string from a Sanity hotspot (0–1 → percentage), so an
+// object-cover crop keeps the focal point (e.g. a face) in frame instead of
+// always centering. Returns undefined when there's no hotspot (→ default center).
+export function heroObjectPosition(img: HeroImage): string | undefined {
+  const h = img?.hotspot
+  if (!h || typeof h.x !== 'number' || typeof h.y !== 'number') return undefined
+  return `${(h.x * 100).toFixed(2)}% ${(h.y * 100).toFixed(2)}%`
+}
+
 // Site-level defaults — designSettings (internalHeroBackground +
 // siteHeroBackgroundImage + siteHeroForegroundImage + heroScrimOpacity),
 // reaching the components via context (scheme through heroSchemeContext,

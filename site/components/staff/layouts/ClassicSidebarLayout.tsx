@@ -2,7 +2,8 @@
 // Dark banner at top with name, title, and contact CTAs.
 // Below: sticky sidebar (photo) beside a main bio column.
 
-import Image from 'next/image'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage} from '@/lib/sanity/image'
 import {MdEmail} from 'react-icons/md'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {Button} from '@/components/ui/Button'
@@ -86,13 +87,14 @@ export function ClassicSidebarLayout({member, napTokens, cta = {label: 'Contact 
 
           {/* ── Sidebar ───────────────────────────────────────────────────── */}
           <aside className="lg:sticky lg:top-8 lg:self-start" aria-label="Staff photo">
-            {member.photo?.src ? (
+            {hasImage(member.photo) ? (
               <div className="flex items-start justify-center bg-muted">
-                <Image
-                  src={member.photo.src}
+                <SanityImage
+                  image={member.photo}
+                  mode="natural"
                   alt={member.photo.alt || name}
-                  width={member.photo.width ?? 340}
-                  height={member.photo.height ?? 420}
+                  width={340}
+                  height={420}
                   className="w-full max-w-[340px] object-contain"
                   sizes="(max-width: 1024px) 100vw, 340px"
                   priority

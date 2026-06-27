@@ -6,7 +6,8 @@
 // Credentials render as flex-wrap "card row" — each credential is a white card
 // with a bold top border, so editors only see cards that have content.
 
-import Image from 'next/image'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage} from '@/lib/sanity/image'
 import {Button} from '@/components/ui/Button'
 import {Chip} from '@/components/ui/Chip'
 import {Tagline} from '@/components/ui/Tagline'
@@ -53,12 +54,13 @@ export function PremiumHorizontalLayout({attorney, napTokens, cta = {label: 'Con
       >
         {/* Photo */}
         <div className="order-last flex items-start justify-center bg-muted p-8 lg:order-first">
-          {attorney.photo?.src ? (
-            <Image
-              src={attorney.photo.src}
+          {hasImage(attorney.photo) ? (
+            <SanityImage
+              image={attorney.photo}
+              mode="natural"
               alt={attorney.photo.alt || name}
-              width={attorney.photo.width ?? 400}
-              height={attorney.photo.height ?? 500}
+              width={400}
+              height={500}
               sizes="(max-width: 1024px) 100vw, 45vw"
               className="w-full max-w-[360px] object-contain"
               priority

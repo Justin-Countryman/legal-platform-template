@@ -1,6 +1,7 @@
 'use client'
 
 import {useCallback, useEffect, useRef, useState} from 'react'
+import {hasImage} from '@/lib/sanity/image'
 import {siloHover, type SiloHoverEffect} from '@/lib/siloHover'
 import {CAROUSEL_SCROLLER, CAROUSEL_SLIDE_BASIS} from '../carouselClasses'
 import type {SiloNavItem} from './types'
@@ -75,7 +76,7 @@ export function SiloCarousel({
     <nav aria-label={ariaLabel} className={className}>
       <ul ref={scroller} role="list" className={CAROUSEL_SCROLLER}>
         {items.map((item, i) => {
-          const onImage = !!item.image?.src
+          const onImage = hasImage(item.image)
           return (
             <li
               key={item._key}

@@ -11,6 +11,7 @@ import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {VideoLibraryClient, type VideoCardData} from '@/components/sections/VideoLibraryClient'
+import {urlForImage, hasImage} from '@/lib/sanity/image'
 
 type VideoIndexData = {
   slug?: string | null
@@ -53,7 +54,9 @@ function videoJsonLd(videos: VideoCardData[]) {
     .map((v) => {
       const embedUrl = getEmbedUrl(v.youTubeUrl)
       if (!embedUrl) return null
-      const thumbnailUrl = v.thumbnail?.src ?? autoThumbnails(v.youTubeUrl)?.primary
+      const thumbnailUrl = hasImage(v.thumbnail)
+        ? urlForImage(v.thumbnail).width(1280).height(720).fit('crop').url()
+        : autoThumbnails(v.youTubeUrl)?.primary
       const iso = toIsoDuration(v.duration)
       return {
         '@type': 'VideoObject',

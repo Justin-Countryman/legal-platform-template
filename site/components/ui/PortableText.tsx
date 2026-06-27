@@ -1,6 +1,7 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import {PortableText, type PortableTextComponents} from 'next-sanity'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage} from '@/lib/sanity/image'
 import {resolveToken, type NapTokens} from '@/lib/tokens'
 import {OfficeHoursBlock} from '@/components/location/OfficeHoursBlock'
 
@@ -35,22 +36,20 @@ function makeComponents(napTokens: NapTokens | null | undefined): PortableTextCo
       },
       officeHours: ({value}) => <OfficeHoursBlock title={value?.title} />,
       image: ({value}) => {
-        const src = value?.src ?? value?.asset?.url
-        if (!src) return null
-        const width = value?.width ?? value?.asset?.metadata?.dimensions?.width ?? 800
-        const height = value?.height ?? value?.asset?.metadata?.dimensions?.height ?? 450
+        const caption = (value as {caption?: string})?.caption
+        if (!hasImage(value)) return null
         return (
           <figure className="my-8">
-            <Image
-              src={src}
+            <SanityImage
+              image={value}
+              mode="natural"
               alt={value?.alt ?? ''}
-              width={width}
-              height={height}
-              className="w-full rounded-ui object-cover"
+              sizes="(min-width:768px) 768px, 100vw"
+              className="w-full rounded-ui"
             />
-            {value?.caption && (
+            {caption && (
               <figcaption className="mt-2 text-center text-sm text-foreground-muted">
-                {value.caption}
+                {caption}
               </figcaption>
             )}
           </figure>

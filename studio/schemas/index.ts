@@ -40,6 +40,8 @@ import {contentToken} from './objects/contentToken'
 import {officeHours} from './objects/officeHours'
 import {ctaButton} from './objects/ctaButton'
 import {internalHero} from './objects/internalHero'
+import {homeHero} from './objects/homeHero'
+import {practiceAreaNavItem} from './objects/practiceAreaNavItem'
 import {ctaFormSection} from './objects/ctaFormSection'
 import {sidebarTableOfContents} from './objects/sidebarComponents'
 import {sidebarNav} from './documents/sidebar/sidebarNav'
@@ -122,6 +124,8 @@ export const schemaTypes = [
   officeHours,
   ctaButton,
   internalHero,
+  homeHero,
+  practiceAreaNavItem,
   ctaFormSection,
   sidebarTableOfContents,
 ]

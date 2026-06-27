@@ -1,4 +1,5 @@
-import Image from 'next/image'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import {
   sectionSurface, SECTION_SPACING, DEFAULT_SECTION_SPACING,
   type SectionSurface, type SectionSpacing, type ResolvedSectionSurface,
@@ -14,7 +15,7 @@ import {
 export type SectionAppearance = {
   surface?: SectionSurface | null
   spacing?: SectionSpacing | null
-  backgroundImage?: {src: string; alt?: string | null} | null
+  backgroundImage?: SanityImageData | null
 }
 
 type SectionShellProps = {
@@ -42,7 +43,7 @@ export function SectionShell({
   const resolved = sectionSurface(appearance?.surface)
   const spacing = SECTION_SPACING[appearance?.spacing ?? DEFAULT_SECTION_SPACING]
   const bg = appearance?.backgroundImage
-  const showImage = resolved.isImage && !!bg?.src
+  const showImage = resolved.isImage && hasImage(bg)
   const inner = typeof children === 'function' ? children(resolved) : children
 
   return (
@@ -54,7 +55,7 @@ export function SectionShell({
     >
       {showImage && (
         <>
-          <Image src={bg!.src} alt="" fill className="object-cover" aria-hidden="true" sizes="100vw" />
+          <SanityImage image={bg} mode="fill" alt="" sizes="100vw" />
           <div className="absolute inset-0 bg-brand-dark/80" aria-hidden="true" />
         </>
       )}

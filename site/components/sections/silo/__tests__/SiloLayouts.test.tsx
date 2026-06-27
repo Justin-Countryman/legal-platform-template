@@ -19,8 +19,8 @@ import {SiloSpotlight, SiloFeature, SiloTileLayout, SiloInline, SiloSplit} from 
 import type {SiloLayoutProps} from '../SiloLayouts'
 
 const ITEMS = [
-  {_key: 'a', label: 'Family Law', href: '/family-law/', description: 'Divorce, custody, support.', image: {src: '/fam.jpg'}, icon: {src: '/i1.png'}},
-  {_key: 'b', label: 'Estate Planning', href: '/estate-planning/', description: 'Wills and trusts.', icon: {src: '/i2.png'}},
+  {_key: 'a', label: 'Family Law', href: '/family-law/', description: 'Divorce, custody, support.', image: {asset: {_ref: 'image-test-200x200-jpg', _type: 'reference'}}, icon: {asset: {_ref: 'image-test-200x200-jpg', _type: 'reference'}}},
+  {_key: 'b', label: 'Estate Planning', href: '/estate-planning/', description: 'Wills and trusts.', icon: {asset: {_ref: 'image-test-200x200-jpg', _type: 'reference'}}},
   {_key: 'c', label: 'Divorce', href: '/family-law/divorce/', description: null},
 ]
 

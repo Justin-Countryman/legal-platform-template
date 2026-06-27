@@ -408,8 +408,8 @@ describe('SidebarAttorneyList — active state', () => {
       mode: 'manual',
       layout: 'avatar',
       attorneys: [
-        {_id: 'a1', title: 'Jane Doe', slug: 'jane-doe', photo: {src: '', alt: ''}},
-        {_id: 'a2', title: 'John Roe', slug: 'john-roe', photo: {src: '', alt: ''}},
+        {_id: 'a1', title: 'Jane Doe', slug: 'jane-doe', photo: {asset: {_ref: 'image-a1-100x100-jpg', _type: 'reference'}, alt: ''}},
+        {_id: 'a2', title: 'John Roe', slug: 'john-roe', photo: {asset: {_ref: 'image-a2-100x100-jpg', _type: 'reference'}, alt: ''}},
       ],
     },
   ]

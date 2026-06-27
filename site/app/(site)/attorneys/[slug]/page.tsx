@@ -11,6 +11,7 @@ import {
   NAP_TOKENS_QUERY,
 } from '@/lib/sanity/queries'
 import {resolveTokenString, expandNapTokens} from '@/lib/tokens'
+import {urlForImage, hasImage} from '@/lib/sanity/image'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {SplitHeroLayout} from '@/components/attorney/layouts/SplitHeroLayout'
@@ -52,7 +53,9 @@ function buildPersonSchema(attorney: Attorney, napTokens: NapTokens) {
     .filter((u): u is string => typeof u === 'string' && u.length > 0)
 
   const url = `https://${DOMAIN}/${attorney.slug}/`
-  const photoUrl = attorney.photo?.src
+  const photoUrl = hasImage(attorney.photo)
+    ? urlForImage(attorney.photo).width(800).height(800).fit('crop').url()
+    : undefined
 
   const address = attorney.location && attorney.location.address1
     ? {

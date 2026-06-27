@@ -300,17 +300,16 @@ describe('PortableTextRenderer — link mark', () => {
 // ─── Image type serializer ────────────────────────────────────────────────────
 
 describe('PortableTextRenderer — image type', () => {
-  it('renders <figure> + next/image when value.src is provided', () => {
+  it('renders <figure> + a Sanity CDN image (natural mode) when an asset is provided', () => {
     const {container} = render(
       <PortableTextRenderer
         value={[
           {
             _key: 'i1',
             _type: 'image',
-            src: '/photo.jpg',
+            asset: {_ref: 'image-test-1200x800-jpg', _type: 'reference'},
             alt: 'Office photo',
-            width: 1200,
-            height: 800,
+            dimensions: {width: 1200, height: 800},
           } as unknown,
         ] as unknown[]}
       />,
@@ -318,31 +317,21 @@ describe('PortableTextRenderer — image type', () => {
     const figure = container.querySelector('figure')
     expect(figure).not.toBeNull()
     const img = container.querySelector('[data-testid="pt-image"]') as HTMLImageElement
-    expect(img.getAttribute('src')).toBe('/photo.jpg')
+    expect(img.getAttribute('src')).toContain('cdn.sanity.io')
     expect(img.getAttribute('alt')).toBe('Office photo')
+    // Natural mode lays out at the projected intrinsic dimensions.
     expect(img.getAttribute('width')).toBe('1200')
     expect(img.getAttribute('height')).toBe('800')
   })
 
-  it('falls back to value.asset.url + asset.metadata.dimensions when src/width/height absent', () => {
+  it('renders nothing when the image has no asset reference (defensive)', () => {
     const {container} = render(
       <PortableTextRenderer
-        value={[
-          {
-            _key: 'i1',
-            _type: 'image',
-            asset: {
-              url: '/asset-fallback.jpg',
-              metadata: {dimensions: {width: 640, height: 480}},
-            },
-          } as unknown,
-        ] as unknown[]}
+        value={[{_key: 'i1', _type: 'image', alt: 'no asset'} as unknown] as unknown[]}
       />,
     )
-    const img = container.querySelector('[data-testid="pt-image"]') as HTMLImageElement
-    expect(img.getAttribute('src')).toBe('/asset-fallback.jpg')
-    expect(img.getAttribute('width')).toBe('640')
-    expect(img.getAttribute('height')).toBe('480')
+    expect(container.querySelector('[data-testid="pt-image"]')).toBeNull()
+    expect(container.querySelector('figure')).toBeNull()
   })
 
   it('renders <figcaption> with cascade-aware text-foreground-muted when caption is provided', () => {
@@ -352,7 +341,7 @@ describe('PortableTextRenderer — image type', () => {
           {
             _key: 'i1',
             _type: 'image',
-            src: '/p.jpg',
+            asset: {_ref: 'image-test-800x600-jpg', _type: 'reference'},
             caption: 'Our office front',
           } as unknown,
         ] as unknown[]}

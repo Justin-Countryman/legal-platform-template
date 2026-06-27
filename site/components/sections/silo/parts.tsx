@@ -1,6 +1,7 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import {MdArrowForward} from 'react-icons/md'
+import {SanityImage} from '@/components/ui/SanityImage'
+import {hasImage} from '@/lib/sanity/image'
 import type {SiloHoverClasses} from '@/lib/siloHover'
 import type {SiloNavItem} from './types'
 
@@ -62,16 +63,15 @@ export function TileLink({
  *  scale + filter so Image Zoom and Grayscale ease. Renders nothing without an image.
  *  `scrim={false}` for a photo PANEL that carries no overlaid text (Split). */
 export function TileImage({item, fx, scrim = true}: {item: SiloNavItem; fx: SiloHoverClasses; scrim?: boolean}) {
-  if (!item.image?.src) return null
+  if (!hasImage(item.image)) return null
   return (
     <>
-      <Image
-        src={item.image.src}
+      <SanityImage
+        image={item.image}
+        mode="fill"
         alt=""
-        aria-hidden="true"
-        fill
         sizes={CARD_SIZES}
-        className={`object-cover transition-[scale,filter] duration-ui-slow ease-gentle ${fx.image}`}
+        className={`transition-[scale,filter] duration-ui-slow ease-gentle ${fx.image}`}
       />
       {scrim && (
         <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-brand-dark/95 via-brand-dark/55 to-brand-dark/30" />
@@ -115,7 +115,7 @@ export function TileIcon({
   onImage?: boolean
   size?: 'sm' | 'md' | 'lg'
 }) {
-  if (!item.icon?.src) return null
+  if (!hasImage(item.icon)) return null
   const chip = size === 'lg' ? 'size-16' : size === 'sm' ? 'size-10' : 'size-12'
   const glyph = size === 'lg' ? 'size-9' : size === 'sm' ? 'size-5' : 'size-7'
   return (
@@ -127,7 +127,7 @@ export function TileIcon({
         fx.icon,
       ].join(' ')}
     >
-      <Image src={item.icon.src} alt="" aria-hidden="true" width={36} height={36} className={`${glyph} object-contain`} />
+      <SanityImage image={item.icon} mode="natural" alt="" width={36} height={36} className={`${glyph} object-contain`} />
     </span>
   )
 }

@@ -1,12 +1,14 @@
 // Shared shape for one practice-area "silo" navigation item — already resolved in
 // GROQ (page reference → href + auto-pulled label/description, with overrides).
+import type {SanityImage} from '@/lib/sanity/image'
+
 export type SiloNavItem = {
   _key: string
   label?: string | null
   href?: string | null
   description?: string | null
-  icon?: {src: string; alt?: string | null; width?: number | null; height?: number | null} | null
-  image?: {src: string; alt?: string | null; width?: number | null; height?: number | null} | null
+  icon?: SanityImage | null
+  image?: SanityImage | null
   /** Marks the firm's priority practice area — becomes the hero tile in Bento mode. */
   featured?: boolean | null
 }
