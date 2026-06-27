@@ -78,9 +78,20 @@ export const show = {
     const c = cfg(p)
     return c.skeleton === 'split' && c.splitMedia === 'video'
   },
+  // The Section Background (full-bleed pattern/texture behind the whole hero) is
+  // offered on Split (any style) and on Overlay when it has no backdrop of its own
+  // (backdrop = none) — an Overlay image/mosaic backdrop already fills the bleed.
+  sectionBg: (p: Parent) => {
+    const c = cfg(p)
+    return c.skeleton === 'split' || (c.skeleton === 'overlay' && c.backdrop === 'none')
+  },
+  // Scrim controls apply to whichever full-bleed background is active: the Overlay
+  // image/mosaic backdrop, OR a Section Background once one is actually uploaded.
   scrim: (p: Parent) => {
     const c = cfg(p)
-    return c.skeleton === 'overlay' && (c.backdrop === 'image' || c.backdrop === 'mosaic')
+    const overlayBackdrop = c.skeleton === 'overlay' && (c.backdrop === 'image' || c.backdrop === 'mosaic')
+    const sectionActive = show.sectionBg(p) && !!(p?.sectionBackgroundImage as {asset?: unknown} | undefined)?.asset
+    return overlayBackdrop || sectionActive
   },
   scheme: (p: Parent) => {
     const c = cfg(p)

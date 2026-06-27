@@ -68,34 +68,48 @@ export const homeHero = defineType({
       title: 'Background Scheme',
       type: 'string',
       fieldset: 'background',
-      description: 'Color scheme for the text area (when text is not over a full-bleed image).',
+      description: 'Color scheme for the hero band: Dark = brand color + white text, Light = neutral tint + dark text. Also sets the Section Background scrim tone (dark scheme → dark scrim, light scheme → light scrim).',
       options: radio([{title: 'Inherit site default', value: 'inherit'}, {title: 'Dark — brand color, white text', value: 'dark'}, {title: 'Light — neutral tint, dark text', value: 'light'}]),
       initialValue: 'inherit',
       hidden: hide(show.scheme),
     }),
+    // The full-bleed wallpaper behind the WHOLE hero (both layouts). Page-only (no
+    // site default), so its presence = on — no "None" toggle. Pairs with the Scrim
+    // controls below + the Background Scheme above (which sets the scrim tone).
+    heroImageField({
+      name: 'sectionBackgroundImage',
+      title: 'Section Background',
+      fieldset: 'background',
+      altLabel: 'hero section background',
+      description:
+        'Optional full-bleed texture or repeating pattern behind the ENTIRE hero (Overlay with no backdrop, or Split — behind the text + media). Use Tile for a seamless pattern, Cover for a single texture. Keep it subtle — for a focal photo use the Backdrop / Feature Image below.',
+      fit: {coverTitle: 'Cover (single texture)', tileTitle: 'Tile (repeat pattern)'},
+      hidden: hide(show.sectionBg),
+    }),
     heroImageField({
       name: 'backgroundImage',
-      title: 'Background / Feature Image',
+      title: 'Backdrop / Feature Image',
       fieldset: 'background',
       altLabel: 'hero background image',
+      description: 'Overlay: the full-bleed backdrop photo. Split: the side feature image / video poster.',
       // Tile only applies to the full-bleed Overlay backdrop; in Split the image is
       // always a cover panel/poster, so hide Fit there. `document.hero` is the
       // homeHero object (homePage.hero) — the nested field can't see it via `parent`.
       fit: {hidden: ({document}) => show.split((document as {hero?: Record<string, unknown>})?.hero)},
       hidden: hide(show.bgImage),
     }),
-    defineField({name: 'backgroundNone', title: 'No background image', type: 'boolean', fieldset: 'background', initialValue: false, hidden: hide(show.bgImage)}),
+    defineField({name: 'backgroundNone', title: 'No backdrop / feature image', type: 'boolean', fieldset: 'background', initialValue: false, hidden: hide(show.bgImage)}),
     defineField({
       name: 'scrimStyle',
       title: 'Scrim Style',
       type: 'string',
       fieldset: 'background',
-      description: 'Flat = even dark overlay. Gradient = fades from full strength on the text side toward the photo (more premium, keeps the image clearer).',
+      description: 'Applies to the active full-bleed background (the Overlay backdrop or the Section Background). Flat = even overlay. Gradient = fades from full strength on the text side toward the image (more premium, keeps the image clearer).',
       options: radio([{title: 'Flat (even overlay)', value: 'flat'}, {title: 'Gradient (directional fade)', value: 'gradient'}]),
       initialValue: 'flat',
       hidden: hide(show.scrim),
     }),
-    defineField({name: 'scrimOpacityOverride', title: 'Scrim Opacity (0–100)', type: 'number', fieldset: 'background', description: 'Dark overlay strength over the background image, for text legibility. Leave empty to inherit.', validation: (Rule) => Rule.min(0).max(100), hidden: hide(show.scrim)}),
+    defineField({name: 'scrimOpacityOverride', title: 'Scrim Opacity (0–100)', type: 'number', fieldset: 'background', description: 'Overlay strength over the active background image (backdrop or Section Background), for text legibility. Leave empty to inherit.', validation: (Rule) => Rule.min(0).max(100), hidden: hide(show.scrim)}),
 
     // ─── Foreground figure ────────────────────────────────────────────────────
     heroImageField({name: 'foregroundImage', title: 'Foreground Image (cut-out)', fieldset: 'foreground', description: 'Cut-out subject (attorney, team) shown in front of the background.', altLabel: 'hero foreground image', hidden: hide(show.foreground)}),
