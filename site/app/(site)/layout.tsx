@@ -86,6 +86,9 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
           : DEFAULT_SCRIM_OPACITY,
     scrimStyle: heroSettings?.scrimStyle === 'gradient' ? ('gradient' as const) : ('flat' as const),
     sectionBg: heroSettings?.sectionBackgroundImage ?? null,
+    // Site-wide default internal-hero CTA buttons (Hero Settings only — no
+    // designSettings fallback; this is new in Phase 2).
+    defaultButtons: heroSettings?.defaultButtons ?? [],
   }
 
   const tokenCSS = buildDesignTokenCSS(
@@ -217,6 +220,7 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
             scrimOpacity: heroSite.scrimOpacity,
             scrimStyle: heroSite.scrimStyle,
             sectionBg: heroSite.sectionBg,
+            defaultButtons: heroSite.defaultButtons,
           }}
         >
           <SidebarDesignSettingsProvider value={resolveSidebarDesignSettings(designTokens)}>

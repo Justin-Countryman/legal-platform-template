@@ -28,7 +28,15 @@ export const internalHero = defineType({
       name: 'buttons',
       title: 'Buttons',
       type: 'array',
+      description: 'Override the site-wide default hero buttons (Hero Settings → Internal Hero) for this page. Leave empty to inherit the default.',
       of: [{type: 'ctaButton'}],
+    },
+    {
+      name: 'buttonsNone',
+      title: 'No buttons on this page',
+      type: 'boolean',
+      description: 'Show no hero buttons here even if a site-wide default is set. Ignored when you add your own buttons above.',
+      initialValue: false,
     },
     {
       name: 'schemeOverride',

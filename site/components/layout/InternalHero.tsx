@@ -27,6 +27,9 @@ export type InternalHeroData = {
   heading: string
   description?: string | null
   buttons?: CtaButtonData[] | null
+  // Buttons cascade: page buttons override the site-wide default; buttonsNone
+  // suppresses both. (See lib/heroSurfaceContext.ts defaultButtons.)
+  buttonsNone?: boolean | null
   // Cascade overrides (see lib/heroSurface.ts) — each image: upload to override,
   // *None to force-blank, otherwise inherit the site default.
   schemeOverride?: HeroSchemePref | null
@@ -44,19 +47,26 @@ export type InternalHeroData = {
 
 export function InternalHero({data, napTokens}: {data: InternalHeroData; napTokens?: NapTokens | null}) {
   const siteScheme = useHeroScheme()
-  const {bgImage: siteBgImage, foreground: siteForeground, scrimOpacity: siteScrim, scrimStyle: siteScrimStyle, sectionBg: siteSectionBg} = useHeroSurfaceDefaults()
+  const {bgImage: siteBgImage, foreground: siteForeground, scrimOpacity: siteScrim, scrimStyle: siteScrimStyle, sectionBg: siteSectionBg, defaultButtons: siteDefaultButtons} = useHeroSurfaceDefaults()
+
+  // Buttons cascade — mirrors the image cascade (page > none > site): the page's
+  // own buttons win; else an explicit "no buttons" suppresses (→ none) even when a
+  // site default is set; else the site-wide default. Empty page buttons + no toggle
+  // falls through to the default — a distinct path from explicit-none.
+  const pageButtons = data.buttons ?? []
+  const rawButtons: CtaButtonData[] = pageButtons.length > 0 ? pageButtons : data.buttonsNone ? [] : siteDefaultButtons
 
   const resolved = napTokens
     ? {
         ...data,
         heading: resolveTokenString(data.heading, napTokens) || data.heading,
         description: resolveTokenString(data.description, napTokens) || data.description,
-        buttons: data.buttons?.map((btn) => ({
+        buttons: rawButtons.map((btn) => ({
           ...btn,
           title: resolveTokenString(btn.title, napTokens) || btn.title,
         })),
       }
-    : data
+    : {...data, buttons: rawButtons}
   const {heading, description, buttons} = resolved
 
   // Effective surface: page overrides > site defaults > none.

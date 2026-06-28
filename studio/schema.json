@@ -5147,6 +5147,28 @@
         },
         "optional": true
       },
+      "defaultButtons": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "_key": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                }
+              }
+            },
+            "rest": {
+              "type": "inline",
+              "name": "ctaButton"
+            }
+          }
+        },
+        "optional": true
+      },
       "homepageHero": {
         "type": "objectAttribute",
         "value": {
@@ -16477,6 +16499,13 @@
                 "name": "ctaButton"
               }
             }
+          },
+          "optional": true
+        },
+        "buttonsNone": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
           },
           "optional": true
         },

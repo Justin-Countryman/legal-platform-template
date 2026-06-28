@@ -498,6 +498,7 @@ export const SIDEBAR_FRAGMENT = groq`sidebar[]{
 export const INTERNAL_HERO_OVERRIDE_FIELDS = groq`
   description,
   "buttons": buttons[]{title, url, variant},
+  buttonsNone,
   schemeOverride,
   backgroundNone,
   foregroundNone,
@@ -681,6 +682,7 @@ export const HERO_SETTINGS_QUERY = groq`*[_type == "heroSettings"][0]{
   scheme,
   scrimStyle,
   scrimOpacity,
+  "defaultButtons": defaultButtons[]{title, url, variant},
   "backgroundImage": backgroundImage{
     "src": asset->url,
     "alt": alt,

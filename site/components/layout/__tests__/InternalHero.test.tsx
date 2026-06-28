@@ -45,6 +45,7 @@ vi.mock('@/components/ui/ButtonGroup', () => ({
 
 import {InternalHero} from '../InternalHero'
 import {HeroSchemeProvider} from '@/lib/heroSchemeContext'
+import {HeroSurfaceProvider, type HeroSurfaceDefaults} from '@/lib/heroSurfaceContext'
 import {
   HERO_BAND_MIN_H_LG,
   HERO_BAND_BASE_MIN_H_LG,
@@ -591,5 +592,46 @@ describe('InternalHero — cascade-aware contract', () => {
     expect(html).not.toMatch(/\btext-foreground-on-light\b/)
     expect(html).not.toMatch(/\btext-foreground-on-dark\b/)
     expect(html).not.toMatch(/#[0-9a-fA-F]{3,8}/)
+  })
+})
+
+// ─── Buttons cascade (site default → per-page override → "none" toggle) ───────
+const SITE_DEFAULT_BTNS = [{title: 'Free Consultation', url: '/contact', variant: 'primary' as const}]
+
+function surfaceValue(defaultButtons: HeroSurfaceDefaults['defaultButtons']): HeroSurfaceDefaults {
+  return {bgImage: null, foreground: null, scrimOpacity: 80, scrimStyle: 'flat', sectionBg: null, defaultButtons}
+}
+
+function renderWithDefaultButtons(data: Parameters<typeof InternalHero>[0]['data'], defaultButtons = SITE_DEFAULT_BTNS) {
+  return render(
+    <HeroSurfaceProvider value={surfaceValue(defaultButtons)}>
+      <InternalHero data={data} />
+    </HeroSurfaceProvider>,
+  )
+}
+
+describe('InternalHero — buttons cascade', () => {
+  it('per-page buttons override the site default', () => {
+    const {getByTestId, getAllByTestId} = renderWithDefaultButtons(WITH_BUTTONS)
+    expect(getByTestId('button-group').getAttribute('data-item-count')).toBe('2')
+    const titles = getAllByTestId('bg-item').map((s) => s.textContent)
+    expect(titles).toEqual(['Schedule a call', 'Learn more'])
+    expect(titles).not.toContain('Free Consultation')
+  })
+
+  it('no per-page buttons → the site default renders (unset falls through)', () => {
+    const {getByTestId, getAllByTestId} = renderWithDefaultButtons({heading: 'X'})
+    expect(getByTestId('button-group').getAttribute('data-item-count')).toBe('1')
+    expect(getAllByTestId('bg-item').map((s) => s.textContent)).toEqual(['Free Consultation'])
+  })
+
+  it('"no buttons here" suppresses even when a default is set (explicit-none ≠ unset)', () => {
+    const {queryByTestId} = renderWithDefaultButtons({heading: 'X', buttonsNone: true})
+    expect(queryByTestId('button-group')).toBeNull()
+  })
+
+  it('with no per-page buttons AND no site default → nothing renders', () => {
+    const {queryByTestId} = renderWithDefaultButtons({heading: 'X'}, [])
+    expect(queryByTestId('button-group')).toBeNull()
   })
 })
