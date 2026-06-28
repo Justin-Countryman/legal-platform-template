@@ -6,8 +6,9 @@ import {heroImageField} from '../objects/heroSurfaceFields'
 //   • Internal Hero — site-level design defaults for every internal page hero
 //     (scheme / background / foreground / scrim / scrim style / section bg). Each
 //     page can override these in its own Hero settings (precedence: page > site).
-//   • Homepage Hero — added in Phase 2 (its own design/layout, decoupled from the
-//     internal defaults; content stays on the Homepage document).
+//   • Homepage Hero — the homepage hero's design/layout (object `homeHeroDesign`),
+//     decoupled from the internal defaults; the homepage hero's CONTENT (eyebrow /
+//     heading / description / buttons) stays on the Homepage document.
 //
 // These defaults were moved here out of Design Settings ("Internal Hero" fieldset)
 // to give hero a clear, prominent home. The Hero Merge / transparent-header
@@ -18,8 +19,8 @@ export const heroSettings = defineType({
   title: 'Hero Settings',
   type: 'document',
   groups: [
-    // 'homepage' group is added in Phase 2.
     {name: 'internal', title: 'Internal Hero', default: true},
+    {name: 'homepage', title: 'Homepage Hero'},
   ],
   fields: [
     defineField({
@@ -93,6 +94,19 @@ export const heroSettings = defineType({
       altLabel: 'internal hero foreground image',
       description:
         'Optional site-wide foreground subject (e.g. attorney, building) shown bottom-right of every internal page hero, in full color above the scrim. Hidden on mobile. A page can override or hide it.',
+    }),
+
+    // ─── Homepage Hero (design) ───────────────────────────────────────────────
+    // The homepage hero's design + layout. Its CONTENT (eyebrow / heading /
+    // description / buttons) stays on the Homepage document (homePage.hero); only
+    // the design lives here, so homepage + internal hero design sit side-by-side.
+    defineField({
+      name: 'homepageHero',
+      title: 'Homepage Hero Design',
+      type: 'homeHeroDesign',
+      group: 'homepage',
+      description:
+        'Design + layout for the homepage hero (the single unique hero on `/`). Pick a layout and set the backdrop / split / surface / scrim / section background / silo options here; the headline, copy, and buttons are authored on the Homepage document.',
     }),
   ],
   preview: {
