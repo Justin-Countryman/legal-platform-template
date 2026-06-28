@@ -29,7 +29,7 @@ export const heroSettings = defineType({
       type: 'string',
       group: 'internal',
       description:
-        'Default color scheme for internal page heroes when NO background image is present. Dark = brand color + white text; Light = neutral tint + dark text. A page can override this. Also sets the Section Background scrim tone (dark → dark scrim, light → light scrim).',
+        'Default color scheme for internal page heroes when NO background image is present. Dark = brand color + white text; Light = neutral tint + dark text. A page can override this. Also sets the Section Background scrim tone (dark → dark scrim, light → light scrim). • Hero Merge: when “Hero Merge” is enabled in Header Settings, the at-top header is transparent and overlays the hero — its text/logo polarity follows this scheme. (Hero Merge applies to internal heroes and the homepage hero alike; it’s configured in Header Settings → Layout & Behavior.)',
       options: {
         list: [
           {title: 'Dark — brand color, white text', value: 'dark'},
@@ -119,7 +119,7 @@ export const heroSettings = defineType({
       type: 'homeHeroDesign',
       group: 'homepage',
       description:
-        'Design + layout for the homepage hero (the single unique hero on `/`). Pick a layout and set the backdrop / split / surface / scrim / section background / silo options here; the headline, copy, and buttons are authored on the Homepage document.',
+        'Design + layout for the homepage hero (the single unique hero on `/`). Pick a layout and set the backdrop / split / surface / scrim / section background / silo options here; the headline, copy, and buttons are authored on the Homepage document. • Hero Merge: when “Hero Merge” is enabled in Header Settings, the transparent header overlays this hero and the hero reserves the header’s clearance automatically — its header text/logo polarity follows the Background Scheme below. (Hero Merge is configured in Header Settings → Layout & Behavior.)',
     }),
   ],
   preview: {
