@@ -95,6 +95,19 @@ export const heroSettings = defineType({
       description:
         'Optional site-wide foreground subject (e.g. attorney, building) shown bottom-right of every internal page hero, in full color above the scrim. Hidden on mobile. A page can override or hide it.',
     }),
+    // Site-wide default internal-hero CTA buttons. Same shape as the per-page
+    // internalHero `buttons` field (array of ctaButton) so the cascade (page
+    // buttons override the site default, or "no buttons" on the page) resolves
+    // without a shape mismatch. Wired in the runtime in commit 5.
+    defineField({
+      name: 'defaultButtons',
+      title: 'Default Hero Buttons',
+      type: 'array',
+      group: 'internal',
+      description:
+        'Site-wide default CTA buttons shown on internal page heroes. Each page can override these with its own buttons, or suppress them, in its Hero settings.',
+      of: [{type: 'ctaButton'}],
+    }),
 
     // ─── Homepage Hero (design) ───────────────────────────────────────────────
     // The homepage hero's design + layout. Its CONTENT (eyebrow / heading /
