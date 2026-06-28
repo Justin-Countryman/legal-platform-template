@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import { client } from '@/lib/sanity/client'
-import { HEADER_QUERY, HOME_QUERY, NAP_TOKENS_QUERY } from '@/lib/sanity/queries'
+import { HEADER_QUERY, HOME_QUERY, HOME_HERO_DESIGN_QUERY, NAP_TOKENS_QUERY } from '@/lib/sanity/queries'
 import {Tagline} from '@/components/ui/Tagline'
 import {PageSections, type PageSectionData} from '@/components/sections/PageSections'
 import {HomepageHero} from '@/components/layout/homeHero'
@@ -11,24 +11,34 @@ export const metadata: Metadata = {
   alternates: {canonical: '/'},
 }
 
+// Phase 2: the homepage hero is split — CONTENT on homePage.hero, DESIGN on
+// heroSettings.homepageHero — merged here. Hard cut: no fallback to the old
+// homePage.hero design fields.
+type HomeHeroContent = Pick<HomeHeroData, 'heading' | 'eyebrow' | 'description' | 'buttons'>
+type HomeHeroDesign = Omit<HomeHeroData, 'heading' | 'eyebrow' | 'description' | 'buttons'>
 type HomeData = {
-  hero?: HomeHeroData | null
+  hero?: HomeHeroContent | null
   sections?: PageSectionData[] | null
 }
 
 export default async function HomePage() {
-  const [header, home, tokens] = await Promise.all([
+  const [header, home, design, tokens] = await Promise.all([
     client.fetch(HEADER_QUERY),
     client.fetch<HomeData>(HOME_QUERY),
+    client.fetch<HomeHeroDesign | null>(HOME_HERO_DESIGN_QUERY),
     client.fetch<NapTokens>(NAP_TOKENS_QUERY),
   ])
   const siteSettings = header?.siteSettings
-  const hero = home?.hero
+  const content = home?.hero
+  // Render the hero only when content has a heading AND the design is
+  // authored/migrated. An empty/unmigrated heroSettings.homepageHero falls through
+  // to the placeholder band — the hard-cut safety net, never a crash.
+  const hero: HomeHeroData | null = content?.heading && design ? {...design, ...content} : null
   const sections = home?.sections ?? []
 
   return (
     <>
-      {hero?.heading ? (
+      {hero ? (
         <HomepageHero data={hero} napTokens={tokens} />
       ) : (
         // Fallback when the homepage hero hasn't been authored yet.

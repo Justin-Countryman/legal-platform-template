@@ -8,13 +8,11 @@
 import {type ComponentType} from 'react'
 import dynamic from 'next/dynamic'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
-import {useHeroScheme} from '@/lib/heroSchemeContext'
-import {useHeroSurfaceDefaults} from '@/lib/heroSurfaceContext'
 import {toCtaItems} from '@/components/ui/ButtonGroup'
 import {resolveVariantSurface} from './shared'
 import {resolveHeroConfig, imageRoleFor} from './config'
 import {type HomeHeroData, type ResolvedHomeContent, type Skeleton, type SkeletonProps} from './types'
-import {type ResolvedHeroSurface} from '@/lib/heroSurface'
+import {DEFAULT_SCRIM_OPACITY, type ResolvedHeroSurface} from '@/lib/heroSurface'
 
 const SKELETONS: Record<Skeleton, ComponentType<SkeletonProps>> = {
   overlay: dynamic(() => import('./skeletons/Overlay').then((m) => m.Overlay)),
@@ -31,14 +29,16 @@ function resolveCtas(buttons: HomeHeroData['buttons'], tokens?: NapTokens | null
 }
 
 export function HomepageHero({data, napTokens}: {data: HomeHeroData; napTokens?: NapTokens | null}) {
-  const siteScheme = useHeroScheme()
-  const {bgImage: siteBgImage, foreground: siteForeground, scrimOpacity: siteScrim} = useHeroSurfaceDefaults()
-
   const config = resolveHeroConfig(data)
   const Skeleton = SKELETONS[config.skeleton]
 
+  // Phase 2: the homepage hero is fully DECOUPLED from the internal site defaults
+  // — its design (incl. surface) is self-contained in heroSettings.homepageHero,
+  // and the migration resolved any previously-inherited surface to concrete values.
+  // No useHeroScheme()/useHeroSurfaceDefaults() here; a neutral site default is only
+  // the ultimate fallback for an unauthored homepage (which renders placeholder).
   const surface = resolveVariantSurface(
-    {scheme: siteScheme, bgImage: siteBgImage, foreground: siteForeground, scrimOpacity: siteScrim},
+    {scheme: 'dark', bgImage: null, foreground: null, scrimOpacity: DEFAULT_SCRIM_OPACITY},
     {
       schemeOverride: data.schemeOverride,
       backgroundImage: data.backgroundImage,

@@ -65,7 +65,7 @@ export type PracticeAreaItem = {
   featured?: boolean | null
 }
 
-// ─── Raw Sanity shape (from HOME_HERO_FRAGMENT) ───────────────────────────────
+// ─── Raw Sanity shape (merged from HOME_HERO_CONTENT_FRAGMENT + HOME_HERO_DESIGN_FRAGMENT) ─
 export type HomeHeroData = {
   // Content
   eyebrow?: string | null

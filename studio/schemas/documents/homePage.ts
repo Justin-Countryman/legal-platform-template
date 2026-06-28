@@ -94,8 +94,8 @@ export const homePage = defineType({
     {
       name: 'hero',
       title: 'Homepage Hero',
-      type: 'homeHero',
-      description: 'The unique homepage hero section. Pick a layout variant and fill in the content; settings are grouped into accordions.',
+      type: 'homeHeroContent',
+      description: 'The unique homepage hero — content only (headline, copy, buttons). Its design + layout (skeleton, backdrop, split, surface, scrim, section background, silo) are set in Hero Settings → Homepage Hero.',
     },
     // ─── Content ──────────────────────────────────────────────────────────────
     {

@@ -521,7 +521,7 @@ export const INTERNAL_HERO_OVERRIDE_FIELDS = groq`
 
 // Embed in page queries as: hero ${INTERNAL_HERO_FRAGMENT}
 // The section-background + scrim-style overrides are internal-page-only (the
-// homepage hero has its own equivalents in HOME_HERO_FRAGMENT), so they live here
+// homepage hero has its own equivalents in HOME_HERO_DESIGN_FRAGMENT), so they live here
 // rather than in the shared INTERNAL_HERO_OVERRIDE_FIELDS to avoid a duplicate key.
 export const INTERNAL_HERO_FRAGMENT = groq`{
   heading,
@@ -538,13 +538,20 @@ export const INTERNAL_HERO_FRAGMENT = groq`{
   }
 }`
 
-// ─── Homepage Hero Fragment ───────────────────────────────────────────────────
-// Reuses every internal-hero override field (so resolveHeroSurface works
-// identically) and adds the homepage-only fields: layout (skeleton + settings),
-// height, eyebrow, mosaic gallery, video URL, and the practice-area silo nav.
-export const HOME_HERO_FRAGMENT = groq`{
+// ─── Homepage Hero Fragments ──────────────────────────────────────────────────
+// Phase 2 split the homepage hero across two documents: CONTENT on `homePage.hero`
+// (homeHeroContent) and DESIGN on `heroSettings.homepageHero` (homeHeroDesign).
+// app/(site)/page.tsx fetches both and merges them. The design fragment is
+// projected explicitly — NOT via INTERNAL_HERO_OVERRIDE_FIELDS, which bundles the
+// content fields (description / buttons).
+export const HOME_HERO_CONTENT_FRAGMENT = groq`{
   heading,
   eyebrow,
+  description,
+  "buttons": buttons[]{title, url, variant}
+}`
+
+export const HOME_HERO_DESIGN_FRAGMENT = groq`{
   skeleton,
   heightMode,
   contentAlign,
@@ -559,7 +566,25 @@ export const HOME_HERO_FRAGMENT = groq`{
   textTreatment,
   mediaSide,
   motion,
-  ${INTERNAL_HERO_OVERRIDE_FIELDS},
+  schemeOverride,
+  backgroundNone,
+  foregroundNone,
+  scrimOpacityOverride,
+  "backgroundImage": backgroundImage{
+    "src": asset->url,
+    "alt": alt,
+    "fit": fit,
+    "hotspot": hotspot{x, y},
+    "width": asset->metadata.dimensions.width,
+    "height": asset->metadata.dimensions.height
+  },
+  "foregroundImage": foregroundImage{
+    "src": asset->url,
+    "alt": alt,
+    "hotspot": hotspot{x, y},
+    "width": asset->metadata.dimensions.width,
+    "height": asset->metadata.dimensions.height
+  },
   "sectionBackgroundImage": sectionBackgroundImage{
     "src": asset->url,
     "alt": alt,
@@ -586,6 +611,10 @@ export const HOME_HERO_FRAGMENT = groq`{
     "featured": featured
   }
 }`
+
+// The homepage hero's design, read from the Hero Settings singleton. Null until
+// authored / migrated — the page renders its placeholder band in that case.
+export const HOME_HERO_DESIGN_QUERY = groq`*[_type == "heroSettings"][0].homepageHero ${HOME_HERO_DESIGN_FRAGMENT}`
 
 // ─── Design Tokens ────────────────────────────────────────────────────────────
 export const DESIGN_TOKENS_QUERY = groq`
@@ -742,7 +771,7 @@ export const NAP_TOKENS_QUERY = groq`
 // render below it.
 export const HOME_QUERY = groq`
   *[_type == "homePage"][0]{
-    "hero": hero ${HOME_HERO_FRAGMENT},
+    "hero": hero ${HOME_HERO_CONTENT_FRAGMENT},
     "sections": sections ${SECTIONS_FRAGMENT}
   }
 `
