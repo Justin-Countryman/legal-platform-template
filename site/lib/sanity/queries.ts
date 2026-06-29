@@ -718,9 +718,9 @@ export const HERO_SETTINGS_QUERY = groq`*[_type == "heroSettings"][0]{
 // Migration history: the schema previously used `primaryButton` /
 // `secondaryButton` named slots, and this fragment synthesized a 2-element
 // array from them to keep a single runtime shape. Migrated in
-// WS-Outstanding-Phase-4 (2026-05-11) — see
-// Clients/henningson-snoxell-ltd/audits/WS-Outstanding-Phase-4/migration-log.md
-// for the per-document migration log and rollback reference.
+// WS-Outstanding-Phase-4 (2026-05-11) — see the WS-Outstanding-Phase-4
+// migration log in the platform audit history for the per-document log
+// and rollback reference.
 export const CTA_OVERRIDE_FRAGMENT = groq`{
   tagline,
   heading,
