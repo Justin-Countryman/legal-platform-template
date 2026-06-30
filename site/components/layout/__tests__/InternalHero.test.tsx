@@ -599,7 +599,7 @@ describe('InternalHero — cascade-aware contract', () => {
 const SITE_DEFAULT_BTNS = [{title: 'Free Consultation', url: '/contact', variant: 'primary' as const}]
 
 function surfaceValue(defaultButtons: HeroSurfaceDefaults['defaultButtons']): HeroSurfaceDefaults {
-  return {bgImage: null, foreground: null, scrimOpacity: 80, scrimStyle: 'flat', sectionBg: null, defaultButtons}
+  return {bgImage: null, foreground: null, scrimOpacity: 80, scrimStyle: 'flat', scrimColor: 'auto', scrimDirection: 'auto', sectionBg: null, defaultButtons}
 }
 
 function renderWithDefaultButtons(data: Parameters<typeof InternalHero>[0]['data'], defaultButtons = SITE_DEFAULT_BTNS) {

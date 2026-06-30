@@ -9,6 +9,8 @@ import {
   type HeroImage,
   type HeroSchemePref,
   type HeroScrimStylePref,
+  type HeroScrimColorPref,
+  type HeroScrimDirectionPref,
 } from '@/lib/heroSurface'
 import {HeroBackdrop} from '@/components/layout/HeroBackdrop'
 import {HeroForeground} from '@/components/layout/HeroForeground'
@@ -39,6 +41,8 @@ export type InternalHeroData = {
   foregroundNone?: boolean | null
   scrimOpacityOverride?: number | null
   scrimStyleOverride?: HeroScrimStylePref | null
+  scrimColorOverride?: HeroScrimColorPref | null
+  scrimDirectionOverride?: HeroScrimDirectionPref | null
   sectionBackgroundImage?: HeroImage
   sectionBackgroundNone?: boolean | null
 }
@@ -47,7 +51,7 @@ export type InternalHeroData = {
 
 export function InternalHero({data, napTokens}: {data: InternalHeroData; napTokens?: NapTokens | null}) {
   const siteScheme = useHeroScheme()
-  const {bgImage: siteBgImage, foreground: siteForeground, scrimOpacity: siteScrim, scrimStyle: siteScrimStyle, sectionBg: siteSectionBg, defaultButtons: siteDefaultButtons} = useHeroSurfaceDefaults()
+  const {bgImage: siteBgImage, foreground: siteForeground, scrimOpacity: siteScrim, scrimStyle: siteScrimStyle, scrimColor: siteScrimColor, scrimDirection: siteScrimDirection, sectionBg: siteSectionBg, defaultButtons: siteDefaultButtons} = useHeroSurfaceDefaults()
 
   // Buttons cascade — mirrors the image cascade (page > none > site): the page's
   // own buttons win; else an explicit "no buttons" suppresses (→ none) even when a
@@ -71,7 +75,7 @@ export function InternalHero({data, napTokens}: {data: InternalHeroData; napToke
 
   // Effective surface: page overrides > site defaults > none.
   const surface = resolveHeroSurface(
-    {scheme: siteScheme, bgImage: siteBgImage, foreground: siteForeground, scrimOpacity: siteScrim, scrimStyle: siteScrimStyle, sectionBg: siteSectionBg},
+    {scheme: siteScheme, bgImage: siteBgImage, foreground: siteForeground, scrimOpacity: siteScrim, scrimStyle: siteScrimStyle, scrimColor: siteScrimColor, scrimDirection: siteScrimDirection, sectionBg: siteSectionBg},
     {
       schemeOverride: data.schemeOverride,
       backgroundImage: data.backgroundImage,
@@ -80,6 +84,8 @@ export function InternalHero({data, napTokens}: {data: InternalHeroData; napToke
       foregroundNone: data.foregroundNone,
       scrimOpacityOverride: data.scrimOpacityOverride,
       scrimStyleOverride: data.scrimStyleOverride,
+      scrimColorOverride: data.scrimColorOverride,
+      scrimDirectionOverride: data.scrimDirectionOverride,
       sectionBackgroundImage: data.sectionBackgroundImage,
       sectionBackgroundNone: data.sectionBackgroundNone,
     },
@@ -161,11 +167,13 @@ export function InternalHero({data, napTokens}: {data: InternalHeroData; napToke
       {/* Full-bleed background — the focal image when present, else the Section
           Background (textured ground). Configurable flat/gradient scrim, z-0. */}
       {hasImage ? (
-        <HeroBackdrop surface={surface} scrimStyle={surface.scrimStyle} />
+        <HeroBackdrop surface={surface} scrimStyle={surface.scrimStyle} scrimColor={surface.scrimColor} scrimDirection={surface.scrimDirection} />
       ) : showSection ? (
         <HeroBackdrop
           surface={{...surface, bgImage: surface.sectionBg, hasImage: true, fit: surface.sectionBgFit}}
           scrimStyle={surface.scrimStyle}
+          scrimColor={surface.scrimColor}
+          scrimDirection={surface.scrimDirection}
         />
       ) : null}
     </section>

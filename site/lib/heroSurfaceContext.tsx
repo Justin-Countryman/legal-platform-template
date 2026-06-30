@@ -6,7 +6,7 @@
 // supports per-route overrides); this carries only the new image/scrim defaults.
 
 import {createContext, useContext} from 'react'
-import {DEFAULT_SCRIM_OPACITY, type HeroImage, type HeroScrimStyle} from './heroSurface'
+import {DEFAULT_SCRIM_OPACITY, type HeroImage, type HeroScrimStyle, type HeroScrimColor, type HeroScrimDirection} from './heroSurface'
 
 // Minimal CTA button shape for the site-wide default internal-hero buttons.
 // Declared here (not imported from InternalHero) to avoid a lib→component cycle;
@@ -20,6 +20,9 @@ export type HeroSurfaceDefaults = {
   // Site-level scrim style + section background (full-bleed pattern behind heroes
   // with no focal bg image), sourced from Hero Settings.
   scrimStyle: HeroScrimStyle
+  // Site-level gradient color + direction (gradient style only).
+  scrimColor: HeroScrimColor
+  scrimDirection: HeroScrimDirection
   sectionBg: HeroImage
   // Site-wide default internal-hero CTA buttons (Hero Settings). A page overrides
   // with its own buttons or suppresses them (buttonsNone); cascade in InternalHero.
@@ -31,6 +34,8 @@ const DEFAULT: HeroSurfaceDefaults = {
   foreground: null,
   scrimOpacity: DEFAULT_SCRIM_OPACITY,
   scrimStyle: 'flat',
+  scrimColor: 'auto',
+  scrimDirection: 'auto',
   sectionBg: null,
   defaultButtons: [],
 }

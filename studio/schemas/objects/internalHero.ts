@@ -108,6 +108,48 @@ export const internalHero = defineType({
       description: 'Optional. Override the site default scrim strength (0–100) over the background image for this page. Leave empty to inherit.',
       validation: (Rule) => Rule.min(0).max(100),
     },
+    // Gradient-only color + direction overrides for this page. Shown only when this
+    // page's Scrim Style is set to Gradient. 'Inherit' falls back to the site default.
+    {
+      name: 'scrimColorOverride',
+      title: 'Gradient Color',
+      type: 'string',
+      description: 'Override the gradient scrim color for this page. Inherit = use the site default.',
+      options: {
+        list: [
+          {title: 'Inherit site default', value: 'inherit'},
+          {title: 'Auto — from scheme', value: 'auto'},
+          {title: 'Action (CTA color)', value: 'action'},
+          {title: 'Black (neutral darken)', value: 'black'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'inherit',
+      hidden: ({parent}: {parent?: {scrimStyleOverride?: string}}) => parent?.scrimStyleOverride !== 'gradient',
+    },
+    {
+      name: 'scrimDirectionOverride',
+      title: 'Gradient Direction',
+      type: 'string',
+      description: 'Override the gradient fade direction for this page. Inherit = use the site default; Auto = follow content alignment.',
+      options: {
+        list: [
+          {title: 'Inherit site default', value: 'inherit'},
+          {title: 'Auto — follow text alignment', value: 'auto'},
+          {title: 'To right →', value: 'to-right'},
+          {title: 'To left ←', value: 'to-left'},
+          {title: 'To top ↑', value: 'to-top'},
+          {title: 'To bottom ↓', value: 'to-bottom'},
+          {title: 'To top-right ↗', value: 'to-top-right'},
+          {title: 'To top-left ↖', value: 'to-top-left'},
+          {title: 'To bottom-right ↘', value: 'to-bottom-right'},
+          {title: 'To bottom-left ↙', value: 'to-bottom-left'},
+        ],
+        layout: 'dropdown',
+      },
+      initialValue: 'inherit',
+      hidden: ({parent}: {parent?: {scrimStyleOverride?: string}}) => parent?.scrimStyleOverride !== 'gradient',
+    },
     heroImageField({
       name: 'foregroundImage',
       title: 'Foreground Image',

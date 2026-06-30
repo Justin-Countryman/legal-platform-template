@@ -8,7 +8,7 @@
 
 import Image from 'next/image'
 import {heroObjectPosition, type ResolvedHeroSurface} from '@/lib/heroSurface'
-import {HeroScrim, type HeroScrimStyle, type HeroScrimAlign} from './HeroScrim'
+import {HeroScrim, type HeroScrimStyle, type HeroScrimAlign, type HeroScrimColor, type HeroScrimDirection} from './HeroScrim'
 
 // The scrim tone follows the resolved surface: a dark surface (photo / dark band)
 // gets the brand-dark scrim + white text; a light surface (subtle pattern) gets the
@@ -17,10 +17,15 @@ import {HeroScrim, type HeroScrimStyle, type HeroScrimAlign} from './HeroScrim'
 export function HeroBackdrop({
   surface,
   scrimStyle = 'flat',
+  scrimColor = 'auto',
+  scrimDirection = 'auto',
   align = 'left',
 }: {
   surface: ResolvedHeroSurface
   scrimStyle?: HeroScrimStyle
+  // Gradient-only color + direction (passed through to HeroScrim). Default 'auto'.
+  scrimColor?: HeroScrimColor
+  scrimDirection?: HeroScrimDirection
   align?: HeroScrimAlign
 }) {
   if (!surface.hasImage || !surface.bgImage?.src) return null
@@ -47,7 +52,7 @@ export function HeroBackdrop({
           sizes="100vw"
         />
       )}
-      <HeroScrim style={scrimStyle} opacity={scrimOpacity} align={align} tone={surface.isDark ? 'dark' : 'light'} />
+      <HeroScrim style={scrimStyle} color={scrimColor} direction={scrimDirection} opacity={scrimOpacity} align={align} tone={surface.isDark ? 'dark' : 'light'} />
     </div>
   )
 }

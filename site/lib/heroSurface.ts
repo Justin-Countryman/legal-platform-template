@@ -17,6 +17,15 @@ export type HeroFit = 'cover' | 'tile'
 export type HeroScrimStyle = 'flat' | 'gradient'
 // Per-page scrim-style override: 'inherit' falls back to the site default.
 export type HeroScrimStylePref = 'inherit' | 'flat' | 'gradient'
+// Gradient scrim color + direction (applied only when scrimStyle is 'gradient').
+// 'auto' = derive (color from scheme tone, direction from content alignment).
+export type HeroScrimColor = 'auto' | 'action' | 'black'
+export type HeroScrimDirection =
+  | 'auto' | 'to-right' | 'to-left' | 'to-top' | 'to-bottom'
+  | 'to-top-right' | 'to-top-left' | 'to-bottom-right' | 'to-bottom-left'
+// Per-page overrides: 'inherit' falls back to the site default.
+export type HeroScrimColorPref = 'inherit' | HeroScrimColor
+export type HeroScrimDirectionPref = 'inherit' | HeroScrimDirection
 
 export type HeroImage = {
   src: string
@@ -50,6 +59,9 @@ export type HeroSiteDefaults = {
   // Site-level scrim style + section background (full-bleed pattern behind heroes
   // with no focal bg image). Optional so existing callers stay valid (default flat / none).
   scrimStyle?: HeroScrimStyle | null
+  // Site-level gradient color + direction (gradient style only). Optional → 'auto'.
+  scrimColor?: HeroScrimColor | null
+  scrimDirection?: HeroScrimDirection | null
   sectionBg?: HeroImage
 }
 
@@ -64,6 +76,8 @@ export type HeroPageOverrides = {
   foregroundNone?: boolean | null
   scrimOpacityOverride?: number | null
   scrimStyleOverride?: HeroScrimStylePref | null
+  scrimColorOverride?: HeroScrimColorPref | null
+  scrimDirectionOverride?: HeroScrimDirectionPref | null
   sectionBackgroundImage?: HeroImage
   sectionBackgroundNone?: boolean | null
 } | null | undefined
@@ -79,6 +93,10 @@ export type ResolvedHeroSurface = {
   scrimOpacity: number
   // Scrim style (flat | gradient) for whichever full-bleed background is active.
   scrimStyle: HeroScrimStyle
+  // Gradient scrim color + direction (used only when scrimStyle is 'gradient';
+  // 'auto' = derive from tone / content alignment).
+  scrimColor: HeroScrimColor
+  scrimDirection: HeroScrimDirection
   // Section background — the full-bleed pattern/texture shown behind heroes that
   // have NO focal bg image. Independent of bgImage.
   sectionBg: HeroImage
@@ -145,6 +163,17 @@ export function resolveHeroSurface(
         ? site.scrimStyle
         : 'flat'
 
+  // 4b. Gradient color + direction — same precedence (page 'inherit' falls
+  //     through to site, missing site → 'auto' = the derived legacy behavior).
+  const scrimColor: HeroScrimColor =
+    p.scrimColorOverride && p.scrimColorOverride !== 'inherit'
+      ? p.scrimColorOverride
+      : site.scrimColor ?? 'auto'
+  const scrimDirection: HeroScrimDirection =
+    p.scrimDirectionOverride && p.scrimDirectionOverride !== 'inherit'
+      ? p.scrimDirectionOverride
+      : site.scrimDirection ?? 'auto'
+
   // 5. Section background — same cascade as the images (page upload > page none >
   //    site). Independent of the focal bg image; rendered only when there's no
   //    focal image (the consumer decides). Fit derived from the resolved image.
@@ -163,6 +192,8 @@ export function resolveHeroSurface(
     hasForeground,
     scrimOpacity,
     scrimStyle,
+    scrimColor,
+    scrimDirection,
     sectionBg,
     hasSectionBg,
     sectionBgFit,

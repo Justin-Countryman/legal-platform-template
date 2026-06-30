@@ -44,7 +44,7 @@ function Backdrop({config, surface, content}: {config: HeroConfig; surface: Reso
           <Image src={surface.bgImage.src} alt={surface.bgImage.alt ?? ''} fill priority className="object-cover" style={{objectPosition: heroObjectPosition(surface.bgImage)}} sizes="100vw" />
         )
       )}
-      <HeroScrim style={config.scrimStyle} opacity={surface.scrimOpacity} align={config.contentAlign} tone="dark" />
+      <HeroScrim style={config.scrimStyle} color={config.scrimColor} direction={config.scrimDirection} opacity={surface.scrimOpacity} align={config.contentAlign} tone="dark" />
     </div>
   )
 }
@@ -57,7 +57,7 @@ export function Overlay({config, content, surface, sectionBackground}: SkeletonP
   // its own (backdrop = none) — otherwise the backdrop already fills the bleed.
   const sectionNode =
     !hasBackdrop && sectionBackground ? (
-      <HeroBackdrop surface={sectionBackground} scrimStyle={config.scrimStyle} align={config.contentAlign} />
+      <HeroBackdrop surface={sectionBackground} scrimStyle={config.scrimStyle} scrimColor={config.scrimColor} scrimDirection={config.scrimDirection} align={config.contentAlign} />
     ) : undefined
   const backdropNode = hasBackdrop ? <Backdrop config={config} surface={surface} content={content} /> : sectionNode
   const imageBacked = hasBackdrop || (!!sectionNode && !!sectionBackground?.isDark)

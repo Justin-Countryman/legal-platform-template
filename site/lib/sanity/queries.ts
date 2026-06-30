@@ -528,6 +528,8 @@ export const INTERNAL_HERO_FRAGMENT = groq`{
   heading,
   ${INTERNAL_HERO_OVERRIDE_FIELDS},
   scrimStyleOverride,
+  scrimColorOverride,
+  scrimDirectionOverride,
   sectionBackgroundNone,
   "sectionBackgroundImage": sectionBackgroundImage{
     "src": asset->url,
@@ -561,6 +563,8 @@ export const HOME_HERO_DESIGN_FRAGMENT = groq`{
   contentStrip,
   siloLayout,
   scrimStyle,
+  scrimColor,
+  scrimDirection,
   splitMedia,
   splitImageStyle,
   splitImageRatio,
@@ -568,8 +572,6 @@ export const HOME_HERO_DESIGN_FRAGMENT = groq`{
   mediaSide,
   motion,
   schemeOverride,
-  backgroundNone,
-  foregroundNone,
   scrimOpacityOverride,
   "backgroundImage": backgroundImage{
     "src": asset->url,
@@ -681,6 +683,8 @@ export const DESIGN_TOKENS_QUERY = groq`
 export const HERO_SETTINGS_QUERY = groq`*[_type == "heroSettings"][0]{
   scheme,
   scrimStyle,
+  scrimColor,
+  scrimDirection,
   scrimOpacity,
   "defaultButtons": defaultButtons[]{title, url, variant},
   "backgroundImage": backgroundImage{

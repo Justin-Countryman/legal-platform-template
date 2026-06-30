@@ -25,6 +25,12 @@ export type HeightMode = 'content' | 'fullViewport'
 // overlay at Scrim Opacity (legacy). 'gradient' = directional fade (full strength on
 // the text side, lighter toward the photo) for a more premium, photo-forward look.
 export type ScrimStyle = 'flat' | 'gradient'
+// Gradient scrim color + direction (gradient style only). 'auto' = derived (color
+// from scheme tone, direction from content alignment). Mirrors lib/heroSurface.
+export type ScrimColor = 'auto' | 'action' | 'black'
+export type ScrimDirection =
+  | 'auto' | 'to-right' | 'to-left' | 'to-top' | 'to-bottom'
+  | 'to-top-right' | 'to-top-left' | 'to-bottom-right' | 'to-bottom-left'
 // Silo Nav strip card style. Only the photo-cover layouts from the shared silo
 // library work on the (typically dark) hero band — they carry their own surface
 // via the image + scrim. 'cards' is the hero's own solid bg-background card
@@ -43,6 +49,8 @@ export type HeroConfig = {
   contentStrip: boolean
   siloLayout: HeroSiloLayout
   scrimStyle: ScrimStyle
+  scrimColor: ScrimColor
+  scrimDirection: ScrimDirection
   // split
   splitMedia: SplitMedia
   splitImageStyle: SplitImageStyle
@@ -81,6 +89,8 @@ export type HomeHeroData = {
   contentStrip?: boolean | null
   siloLayout?: HeroSiloLayout | null
   scrimStyle?: ScrimStyle | null
+  scrimColor?: ScrimColor | null
+  scrimDirection?: ScrimDirection | null
   splitMedia?: SplitMedia | null
   splitImageStyle?: SplitImageStyle | null
   splitImageRatio?: SplitImageRatio | null
@@ -90,9 +100,7 @@ export type HomeHeroData = {
   // Shared surface cascade — inherits SITE defaults (identical to internalHero)
   schemeOverride?: HeroSchemePref | null
   backgroundImage?: HeroImage
-  backgroundNone?: boolean | null
   foregroundImage?: HeroImage
-  foregroundNone?: boolean | null
   scrimOpacityOverride?: number | null
   // Section Background — a full-bleed pattern/texture behind the ENTIRE hero
   // (both layouts), with the shared scrim. Page-only (no site default), so its

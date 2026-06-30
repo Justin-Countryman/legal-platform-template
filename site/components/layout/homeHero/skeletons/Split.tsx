@@ -164,7 +164,7 @@ export function Split({config, content, surface, sectionBackground}: SkeletonPro
   // columns. Rendered as the band's z-0 backdrop; the content/media wrappers below
   // carry `relative z-10` so they sit above it.
   const sectionNode = sectionBackground ? (
-    <HeroBackdrop surface={sectionBackground} scrimStyle={config.scrimStyle} align={config.contentAlign} />
+    <HeroBackdrop surface={sectionBackground} scrimStyle={config.scrimStyle} scrimColor={config.scrimColor} scrimDirection={config.scrimDirection} align={config.contentAlign} />
   ) : undefined
   const imageBacked = !!sectionNode && !!sectionBackground?.isDark
 

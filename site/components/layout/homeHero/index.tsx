@@ -42,9 +42,7 @@ export function HomepageHero({data, napTokens}: {data: HomeHeroData; napTokens?:
     {
       schemeOverride: data.schemeOverride,
       backgroundImage: data.backgroundImage,
-      backgroundNone: data.backgroundNone,
       foregroundImage: data.foregroundImage,
-      foregroundNone: data.foregroundNone,
       scrimOpacityOverride: data.scrimOpacityOverride,
     },
     imageRoleFor(config),
@@ -73,6 +71,10 @@ export function HomepageHero({data, napTokens}: {data: HomeHeroData; napTokens?:
         hasForeground: false,
         scrimOpacity: effectiveSurface.scrimOpacity,
         scrimStyle: effectiveSurface.scrimStyle,
+        // Gradient color/direction are passed to HeroBackdrop from config (the
+        // homepage authoring surface); carried here only to satisfy the type.
+        scrimColor: config.scrimColor,
+        scrimDirection: config.scrimDirection,
         sectionBg: null,
         hasSectionBg: false,
         sectionBgFit: 'cover',

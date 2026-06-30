@@ -118,7 +118,7 @@ describe('InternalPageHeader — useHeroScheme integration', () => {
   it('renders the shared site background image + scrim when provided via HeroSurfaceProvider', () => {
     const {getByTestId} = render(
       <HeroSchemeProvider scheme="light">
-        <HeroSurfaceProvider value={{bgImage: {src: '/site-hero.jpg', alt: 'Skyline', fit: 'cover'}, foreground: null, scrimOpacity: 60, scrimStyle: 'flat', sectionBg: null, defaultButtons: []}}>
+        <HeroSurfaceProvider value={{bgImage: {src: '/site-hero.jpg', alt: 'Skyline', fit: 'cover'}, foreground: null, scrimOpacity: 60, scrimStyle: 'flat', scrimColor: 'auto', scrimDirection: 'auto', sectionBg: null, defaultButtons: []}}>
           <InternalPageHeader title="X" />
         </HeroSurfaceProvider>
       </HeroSchemeProvider>,
@@ -131,7 +131,7 @@ describe('InternalPageHeader — useHeroScheme integration', () => {
   it('renders the shared site FOREGROUND (two-column) on the no-hero band', () => {
     const {getByTestId} = render(
       <HeroSchemeProvider scheme="light">
-        <HeroSurfaceProvider value={{bgImage: null, foreground: {src: '/partner.png', alt: 'Partner', width: 800, height: 1200}, scrimOpacity: 80, scrimStyle: 'flat', sectionBg: null, defaultButtons: []}}>
+        <HeroSurfaceProvider value={{bgImage: null, foreground: {src: '/partner.png', alt: 'Partner', width: 800, height: 1200}, scrimOpacity: 80, scrimStyle: 'flat', scrimColor: 'auto', scrimDirection: 'auto', sectionBg: null, defaultButtons: []}}>
           <InternalPageHeader title="X" />
         </HeroSurfaceProvider>
       </HeroSchemeProvider>,

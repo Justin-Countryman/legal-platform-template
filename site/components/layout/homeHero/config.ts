@@ -15,6 +15,8 @@ export function resolveHeroConfig(data: HomeHeroData): HeroConfig {
     contentStrip: data.contentStrip ?? false,
     siloLayout: data.siloLayout ?? 'cards',
     scrimStyle: data.scrimStyle ?? 'flat',
+    scrimColor: data.scrimColor ?? 'auto',
+    scrimDirection: data.scrimDirection ?? 'auto',
     splitMedia: data.splitMedia ?? 'image',
     splitImageStyle: data.splitImageStyle ?? 'contained',
     splitImageRatio: data.splitImageRatio ?? 'landscape',

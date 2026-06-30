@@ -47,8 +47,6 @@ export const homeHeroDesign = defineType({
     defineField({name: 'contentAlign', title: 'Content Alignment', type: 'string', fieldset: 'layout', options: radio([{title: 'Left', value: 'left'}, {title: 'Center', value: 'center'}]), initialValue: 'left'}),
     // Overlay options
     defineField({name: 'backdrop', title: 'Backdrop', type: 'string', fieldset: 'layout', options: radio([{title: 'None (scheme color)', value: 'none'}, {title: 'Single image', value: 'image'}, {title: 'Image mosaic', value: 'mosaic'}]), initialValue: 'image', hidden: hide(show.overlay)}),
-    defineField({name: 'foreground', title: 'Foreground figure', type: 'boolean', fieldset: 'layout', description: 'Cut-out subject in front of the backdrop (left-aligned overlays only).', initialValue: false, hidden: hide(show.foregroundToggle)}),
-    defineField({name: 'contentStrip', title: 'Silo Nav strip', type: 'boolean', fieldset: 'layout', description: 'Practice-area card row beneath the hero content (works on both Overlay and Split).', initialValue: false}),
     // Split options
     defineField({name: 'splitMedia', title: 'Media type', type: 'string', fieldset: 'layout', options: radio([{title: 'Image', value: 'image'}, {title: 'Video lightbox', value: 'video'}]), initialValue: 'image', hidden: hide(show.split)}),
     defineField({name: 'splitImageStyle', title: 'Image style', type: 'string', fieldset: 'layout', description: 'Contained = rounded panel (set ratio below). Full = edge-to-edge. Overlap = 3-image collage (uses Gallery Images).', options: radio([{title: 'Contained (rounded panel)', value: 'contained'}, {title: 'Full (edge-to-edge)', value: 'full'}, {title: 'Overlap (3-image collage)', value: 'overlap'}]), initialValue: 'contained', hidden: hide(show.imageStyle)}),
@@ -94,7 +92,6 @@ export const homeHeroDesign = defineType({
       fit: {hidden: ({document}) => show.split((document as {homepageHero?: Record<string, unknown>})?.homepageHero)},
       hidden: hide(show.bgImage),
     }),
-    defineField({name: 'backgroundNone', title: 'No backdrop / feature image', type: 'boolean', fieldset: 'background', initialValue: false, hidden: hide(show.bgImage)}),
     defineField({
       name: 'scrimStyle',
       title: 'Scrim Style',
@@ -106,10 +103,35 @@ export const homeHeroDesign = defineType({
       hidden: hide(show.scrim),
     }),
     defineField({name: 'scrimOpacityOverride', title: 'Scrim Opacity (0–100)', type: 'number', fieldset: 'background', description: 'Overlay strength over the active background image (backdrop or Section Background), for text legibility. Leave empty to inherit.', validation: (Rule) => Rule.min(0).max(100), hidden: hide(show.scrim)}),
+    // Gradient-only color + direction — shown when the scrim is active AND set to
+    // Gradient. 'auto' keeps the derived look (color from scheme, direction from align).
+    defineField({
+      name: 'scrimColor',
+      title: 'Gradient Color',
+      type: 'string',
+      fieldset: 'background',
+      description: 'Color of the gradient scrim. Auto follows the Background Scheme; Action uses your CTA color; Black is a neutral darken.',
+      options: radio([{title: 'Auto — from scheme', value: 'auto'}, {title: 'Action (CTA color)', value: 'action'}, {title: 'Black (neutral darken)', value: 'black'}]),
+      initialValue: 'auto',
+      hidden: ({parent}) => !(show.scrim(parent) && (parent as {scrimStyle?: string})?.scrimStyle === 'gradient'),
+    }),
+    defineField({
+      name: 'scrimDirection',
+      title: 'Gradient Direction',
+      type: 'string',
+      fieldset: 'background',
+      description: 'Direction the gradient fades. Auto follows content alignment (left text → fades right; centered → fades up).',
+      options: {list: [{title: 'Auto — follow text alignment', value: 'auto'}, {title: 'To right →', value: 'to-right'}, {title: 'To left ←', value: 'to-left'}, {title: 'To top ↑', value: 'to-top'}, {title: 'To bottom ↓', value: 'to-bottom'}, {title: 'To top-right ↗', value: 'to-top-right'}, {title: 'To top-left ↖', value: 'to-top-left'}, {title: 'To bottom-right ↘', value: 'to-bottom-right'}, {title: 'To bottom-left ↙', value: 'to-bottom-left'}], layout: 'dropdown'},
+      initialValue: 'auto',
+      hidden: ({parent}) => !(show.scrim(parent) && (parent as {scrimStyle?: string})?.scrimStyle === 'gradient'),
+    }),
 
     // ─── Foreground figure ────────────────────────────────────────────────────
+    // Toggle sits with its image upload (moved out of Layout) so the on/off control
+    // and the asset live together. Shown for left-aligned overlays; the image field
+    // reveals once the toggle is on.
+    defineField({name: 'foreground', title: 'Foreground figure', type: 'boolean', fieldset: 'foreground', description: 'Cut-out subject in front of the backdrop (left-aligned overlays only).', initialValue: false, hidden: hide(show.foregroundToggle)}),
     heroImageField({name: 'foregroundImage', title: 'Foreground Image (cut-out)', fieldset: 'foreground', description: 'Cut-out subject (attorney, team) shown in front of the background.', altLabel: 'hero foreground image', hidden: hide(show.foreground)}),
-    defineField({name: 'foregroundNone', title: 'No foreground image', type: 'boolean', fieldset: 'foreground', initialValue: false, hidden: hide(show.foreground)}),
 
     // ─── Media ────────────────────────────────────────────────────────────────
     defineField({
@@ -132,6 +154,9 @@ export const homeHeroDesign = defineType({
     }),
 
     // ─── Silo Nav ─────────────────────────────────────────────────────────────
+    // Toggle sits with its options (moved out of Layout). The card-layout field
+    // reveals once the strip is on (show.strip).
+    defineField({name: 'contentStrip', title: 'Silo Nav strip', type: 'boolean', fieldset: 'strip', description: 'Practice-area card row beneath the hero content (works on both Overlay and Split).', initialValue: false}),
     defineField({
       name: 'siloLayout',
       title: 'Card layout',

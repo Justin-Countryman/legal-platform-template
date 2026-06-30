@@ -85,6 +85,9 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
           ? designTokens.heroScrimOpacity
           : DEFAULT_SCRIM_OPACITY,
     scrimStyle: heroSettings?.scrimStyle === 'gradient' ? ('gradient' as const) : ('flat' as const),
+    // Gradient color + direction (gradient style only). Default 'auto' = derived.
+    scrimColor: heroSettings?.scrimColor ?? ('auto' as const),
+    scrimDirection: heroSettings?.scrimDirection ?? ('auto' as const),
     sectionBg: heroSettings?.sectionBackgroundImage ?? null,
     // Site-wide default internal-hero CTA buttons (Hero Settings only — no
     // designSettings fallback; this is new in Phase 2).
@@ -140,6 +143,8 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
     foreground: heroSite.foreground,
     scrimOpacity: heroSite.scrimOpacity,
     scrimStyle: heroSite.scrimStyle,
+    scrimColor: heroSite.scrimColor,
+    scrimDirection: heroSite.scrimDirection,
     sectionBg: heroSite.sectionBg,
   })
   const mergedDefaultScheme = resolveMergedHeaderScheme(
@@ -219,6 +224,8 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
             foreground: heroSite.foreground,
             scrimOpacity: heroSite.scrimOpacity,
             scrimStyle: heroSite.scrimStyle,
+            scrimColor: heroSite.scrimColor,
+            scrimDirection: heroSite.scrimDirection,
             sectionBg: heroSite.sectionBg,
             defaultButtons: heroSite.defaultButtons,
           }}
