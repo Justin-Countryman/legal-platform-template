@@ -15,6 +15,13 @@
 // site reads heroSettings with a transitional fallback to designSettings, so
 // nothing breaks before or after this runs.
 //
+// AUTHORING NOTE (bug class): a singleton setIfMissing must reconcile drafts.<id>
+// too; prefer fetch-by-_type-and-iterate so BOTH the published and draft ids are
+// caught. A hardcoded published-only write left an unpublished draft heroSettings
+// unpopulated — the previewDrafts surface renders stale, and publishing that draft
+// loses the fields in production. We reconcile the draft ONLY if it already exists
+// (never manufacture one on a clean client), setIfMissing only.
+//
 // Run with:
 //   Dry run (default):  npx sanity exec migrations/move-hero-settings-from-design.ts --with-user-token
 //   Apply:              npx sanity exec migrations/move-hero-settings-from-design.ts --with-user-token -- --apply
@@ -54,9 +61,23 @@ async function main() {
   if (ds.siteHeroBackgroundImage) fields.backgroundImage = ds.siteHeroBackgroundImage
   if (ds.siteHeroForegroundImage) fields.foregroundImage = ds.siteHeroForegroundImage
 
+  // Fetch-by-_type returns published AND drafts.<id> in one pass; we patch each
+  // doc._id below so both are reconciled. The draft appears here only if it exists.
+  const targets = await client.fetch<{_id: string}[]>(`*[_type=="heroSettings"]{_id}`)
+  const drafts = targets.filter((t) => t._id.startsWith('drafts.'))
+
   console.log(`Mode: ${isApply ? 'APPLY (will mutate)' : 'DRY RUN (no mutations)'}`)
-  console.log('Target: heroSettings (singleton, _id "heroSettings")')
-  console.log('Fields to setIfMissing:')
+  console.log('Target heroSettings documents (published + any draft):')
+  if (!targets.length) {
+    console.log('  (none yet — the published singleton "heroSettings" will be created and written)')
+  } else {
+    for (const t of targets) {
+      const kind = t._id.startsWith('drafts.') ? 'draft    ' : 'published'
+      console.log(`  ${kind}  ${t._id}`)
+    }
+  }
+  if (!drafts.length) console.log('  (no draft heroSettings present — nothing to reconcile on the draft side)')
+  console.log('Fields to setIfMissing (only previously-empty fields are set, on every target):')
   for (const [k, v] of Object.entries(fields)) {
     const display = v && typeof v === 'object' ? `[${(v as {_type?: string})._type ?? 'object'}]` : JSON.stringify(v)
     console.log(`  ${k}: ${display}`)
@@ -64,9 +85,14 @@ async function main() {
   console.log()
 
   if (isApply) {
+    // Ensure the published singleton exists, then reconcile every existing id —
+    // published + any draft.
     await client.createIfNotExists({_id: 'heroSettings', _type: 'heroSettings'})
-    await client.patch('heroSettings').setIfMissing(fields).commit()
-    console.log('✓ heroSettings populated (only previously-empty fields were set).')
+    const ids = (await client.fetch<{_id: string}[]>(`*[_type=="heroSettings"]{_id}`)).map((d) => d._id)
+    for (const _id of ids) {
+      await client.patch(_id).setIfMissing(fields).commit()
+      console.log(`✓ ${_id}: heroSettings populated (only previously-empty fields were set).`)
+    }
   } else {
     console.log('(dry-run — no mutation). Re-run with -- --apply to commit.')
   }
