@@ -16,6 +16,15 @@
 // `homePage.hero` design *data* is left intact; the cutover commit removes only the
 // schema fields, so rollback is just reverting code.
 //
+// AUTHORING NOTE (bug class): a singleton setIfMissing must reconcile drafts.<id>
+// too; prefer fetch-by-_type-and-iterate so BOTH the published and draft ids are
+// caught. Writing only the hardcoded published id left an unpublished draft
+// heroSettings without homepageHero — the previewDrafts surface then rendered a
+// fallback hero, and publishing that draft wiped homepageHero in production. We
+// reconcile the draft ONLY if it already exists (never manufacture a draft on a
+// clean client), and setIfMissing only (an editor's in-progress draft hero is
+// never clobbered).
+//
 // Run from a CLIENT studio (real projectId + data), migration BEFORE the cutover deploy:
 //   Dry run:  npx sanity exec migrations/move-homepage-hero-to-settings.ts --with-user-token
 //   Apply:    npx sanity exec migrations/move-homepage-hero-to-settings.ts --with-user-token -- --apply
@@ -94,13 +103,27 @@ async function main() {
     inherited.push('foregroundImage  <- internal default image  (homePage.hero: unset)')
   }
 
-  // ── Idempotency: report the target's current state + the setIfMissing decision ──
-  const existing = await client.fetch(`*[_type=="heroSettings"][0].homepageHero`)
-  const targetState = existing ? 'EXISTS' : 'MISSING'
-  const decision = existing ? 'SKIP — setIfMissing no-op, changes nothing' : 'WRITE the resolved object below'
+  // ── Idempotency: report every target's current state + the setIfMissing decision ──
+  // Fetch-by-_type returns published AND drafts.<id> in one pass; we patch each
+  // doc._id below so both are reconciled. The draft appears here only if it exists.
+  const targets = await client.fetch<{_id: string; hasHomepageHero: boolean}[]>(
+    `*[_type=="heroSettings"]{_id, "hasHomepageHero": defined(homepageHero)}`,
+  )
+  const drafts = targets.filter((t) => t._id.startsWith('drafts.'))
 
   console.log(`Mode: ${isApply ? 'APPLY (will mutate)' : 'DRY RUN (no mutations)'}`)
-  console.log(`Target heroSettings.homepageHero: ${targetState}  →  setIfMissing decision: ${decision}`)
+  console.log('Target heroSettings documents (published + any draft):')
+  if (!targets.length) {
+    console.log('  (none yet — the published singleton "heroSettings" will be created and written)')
+  } else {
+    for (const t of targets) {
+      const kind = t._id.startsWith('drafts.') ? 'draft    ' : 'published'
+      const state = t.hasHomepageHero ? 'EXISTS' : 'MISSING'
+      const decision = t.hasHomepageHero ? 'SKIP — setIfMissing no-op, changes nothing' : 'WRITE the resolved object below'
+      console.log(`  ${kind}  ${t._id}: homepageHero ${state}  →  ${decision}`)
+    }
+  }
+  if (!drafts.length) console.log('  (no draft heroSettings present — nothing to reconcile on the draft side)')
   console.log('')
   console.log('Resolved fields captured FROM inheritance (would be blank with a naive copy):')
   console.log(inherited.length ? inherited.map((s) => '  ' + s).join('\n') : '  (none — homePage.hero set every surface field explicitly)')
@@ -109,9 +132,14 @@ async function main() {
   console.log(JSON.stringify(design, null, 2))
 
   if (isApply) {
+    // Ensure the published singleton exists (the source here is homePage.hero,
+    // not heroSettings), then reconcile every existing id — published + any draft.
     await client.createIfNotExists({_id: 'heroSettings', _type: 'heroSettings'})
-    await client.patch('heroSettings').setIfMissing({homepageHero: design}).commit()
-    console.log('\n✓ heroSettings.homepageHero populated (no-op if it already existed).')
+    const ids = (await client.fetch<{_id: string}[]>(`*[_type=="heroSettings"]{_id}`)).map((d) => d._id)
+    for (const _id of ids) {
+      await client.patch(_id).setIfMissing({homepageHero: design}).commit()
+      console.log(`✓ ${_id}: heroSettings.homepageHero setIfMissing applied (no-op if it already existed).`)
+    }
   } else {
     console.log('\n(dry-run — no mutation). Re-run with -- --apply to commit.')
   }
