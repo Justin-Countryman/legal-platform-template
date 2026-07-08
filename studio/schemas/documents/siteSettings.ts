@@ -109,11 +109,17 @@ export const siteSettings = defineType({
 
     // ─── Scripts ──────────────────────────────────────────────────────────────
     {
+      name: 'gscVerification',
+      title: 'Google Search Console Verification Token',
+      type: 'string',
+      description: 'Token only (the content value of the google-site-verification meta tag, not the full tag). Rendered server-side into <head> so Search Console can verify — its crawler does not run JavaScript.',
+    },
+    {
       name: 'scriptsNoConsent',
       title: 'Scripts — No Consent Required',
       type: 'text',
       rows: 5,
-      description: 'Always renders — e.g. GSC verification, Bing verification',
+      description: 'Always renders — e.g. Bing verification, other non-tracking tags',
     },
     {
       name: 'scriptsRequireConsent',

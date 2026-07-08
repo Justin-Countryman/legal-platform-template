@@ -99,13 +99,16 @@ export async function generateMetadata(): Promise<Metadata> {
   const data = await client.fetch<{
     firmName?: string
     primaryDomain?: string
+    gscVerification?: string | null
     faviconUrl?: string | null
     faviconMime?: string | null
     webclipUrl?: string | null
   } | null>(SITE_METADATA_QUERY)
   const firmName = data?.firmName ?? 'Site'
   const domain = data?.primaryDomain ?? process.env.NEXT_PUBLIC_SITE_DOMAIN ?? 'localhost:3000'
-  const gscVerification = process.env.NEXT_PUBLIC_GSC_VERIFICATION
+  // GSC verification token is entered in Sanity (Site Settings) and rendered
+  // server-side into <head> — Google's verification crawler does not run JS.
+  const gscVerification = data?.gscVerification || undefined
 
   // Browser-tab favicon + Apple touch icon are sourced from Design Settings
   // (designSettings.favicon / webclipImage). The asset URLs are absolute Sanity

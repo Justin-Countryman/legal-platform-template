@@ -19310,6 +19310,13 @@
         },
         "optional": true
       },
+      "gscVerification": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "scriptsNoConsent": {
         "type": "objectAttribute",
         "value": {

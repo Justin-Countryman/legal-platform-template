@@ -145,6 +145,7 @@ export const SITE_METADATA_QUERY = groq`
   *[_type == "siteSettings"][0]{
     firmName,
     primaryDomain,
+    gscVerification,
     "faviconUrl":  *[_type == "designSettings"][0].favicon.asset->url,
     "faviconMime": *[_type == "designSettings"][0].favicon.asset->mimeType,
     "webclipUrl":  *[_type == "designSettings"][0].webclipImage.asset->url,
