@@ -10113,14 +10113,6 @@
         },
         "optional": true
       },
-      "languages": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "inline",
-          "name": "blockContent"
-        },
-        "optional": true
-      },
       "avvo": {
         "type": "objectAttribute",
         "value": {

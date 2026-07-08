@@ -371,13 +371,6 @@ export const attorneyPage = defineType({
       description: 'Title, organization, years per entry',
       fieldset: 'credentials',
     }),
-    defineField({
-      name: 'languages',
-      title: 'Languages',
-      type: 'blockContent',
-      description: 'Additional languages spoken',
-      fieldset: 'credentials',
-    }),
 
     // ─── Directory Profiles (collapsed) ───────────────────────────────────────
     defineField({
