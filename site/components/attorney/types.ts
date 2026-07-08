@@ -48,6 +48,7 @@ export type Attorney = {
   findLaw: string | null
   martindale: string | null
   lawyersCom: string | null
+  justia: string | null
 
   // Biography
   fullBiography: unknown[] | null

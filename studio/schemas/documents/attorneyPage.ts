@@ -404,6 +404,13 @@ export const attorneyPage = defineType({
       type: 'url',
       fieldset: 'directoryProfiles',
     }),
+    defineField({
+      name: 'justia',
+      title: 'Justia URL',
+      type: 'url',
+      description: 'Used in structured data sameAs — not displayed on page',
+      fieldset: 'directoryProfiles',
+    }),
 
     // ─── CTA Settings (collapsed) ─────────────────────────────────────────────
     defineField({
