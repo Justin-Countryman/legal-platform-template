@@ -1453,6 +1453,7 @@ export const LOCATION_PAGE_QUERY = groq`
       city,
       state,
       ${GATED_STREET_FRAGMENT}
+      "geo": select(locationType in ["Physical", "Shared"] => geo{lat, lng}, null),
       officePhone,
       officeFax,
       tollFreePhone,

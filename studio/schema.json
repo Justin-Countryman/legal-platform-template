@@ -19675,6 +19675,14 @@
         },
         "optional": true
       },
+      "geo": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "geopoint"
+        },
+        "optional": true
+      },
       "officePhone": {
         "type": "objectAttribute",
         "value": {

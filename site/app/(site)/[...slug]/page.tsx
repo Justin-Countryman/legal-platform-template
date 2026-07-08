@@ -61,6 +61,7 @@ type LocationData = {
   emergencyPhone?: string | null
   appointmentRequired?: string | null
   gbpCidUrl?: string | null
+  geo?: {lat?: number | null; lng?: number | null} | null
 }
 
 const DAY_PREFIXES: Array<{prefix: string; schema: string}> = [
@@ -99,6 +100,11 @@ function buildLocalBusinessSchema(
 ) {
   const loc = page.locationData ?? {}
   const sameAs = [loc.gbpCidUrl].filter((u): u is string => typeof u === 'string' && u.length > 0)
+  // GeoCoordinates — gated to Physical/Shared at the query layer (D9), so
+  // Virtual/Home never emit coordinates. Both lat and lng must be present.
+  const geo = typeof loc.geo?.lat === 'number' && typeof loc.geo?.lng === 'number'
+    ? {'@type': 'GeoCoordinates', latitude: loc.geo.lat, longitude: loc.geo.lng}
+    : undefined
   const address = loc.address1
     ? {
         '@type': 'PostalAddress',
@@ -118,6 +124,7 @@ function buildLocalBusinessSchema(
     url: `https://${domain}/${page.slug}/`,
     telephone: loc.officePhone ?? undefined,
     address,
+    geo,
     // Service area — kept for Virtual/Home locations where the street address
     // is gated out (D9); still valid (and harmless) for Physical/Shared.
     areaServed: loc.city ?? loc.state ?? undefined,

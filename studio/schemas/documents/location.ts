@@ -125,6 +125,13 @@ export const location = defineType({
       fieldset: 'address',
       description: 'Used in LocalBusiness structured data — e.g. "Hennepin"',
     },
+    {
+      name: 'geo',
+      title: 'Geo Coordinates',
+      type: 'geopoint',
+      fieldset: 'address',
+      description: 'Latitude/longitude for LocalBusiness GeoCoordinates structured data. Only emitted for Physical/Shared locations (gated like the street address).',
+    },
     // ─── Contact ──────────────────────────────────────────────────────────────
     {
       name: 'officePhone',
