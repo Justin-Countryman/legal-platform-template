@@ -4844,6 +4844,14 @@
           "type": "string"
         }
       },
+      "homepageHero": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "homeHeroDesign"
+        },
+        "optional": true
+      },
       "scheme": {
         "type": "objectAttribute",
         "value": {
@@ -5071,6 +5079,72 @@
         },
         "optional": true
       },
+      "scrimColor": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "auto"
+            },
+            {
+              "type": "string",
+              "value": "action"
+            },
+            {
+              "type": "string",
+              "value": "black"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "scrimDirection": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "auto"
+            },
+            {
+              "type": "string",
+              "value": "to-right"
+            },
+            {
+              "type": "string",
+              "value": "to-left"
+            },
+            {
+              "type": "string",
+              "value": "to-top"
+            },
+            {
+              "type": "string",
+              "value": "to-bottom"
+            },
+            {
+              "type": "string",
+              "value": "to-top-right"
+            },
+            {
+              "type": "string",
+              "value": "to-top-left"
+            },
+            {
+              "type": "string",
+              "value": "to-bottom-right"
+            },
+            {
+              "type": "string",
+              "value": "to-bottom-left"
+            }
+          ]
+        },
+        "optional": true
+      },
       "foregroundImage": {
         "type": "objectAttribute",
         "value": {
@@ -5168,14 +5242,6 @@
           }
         },
         "optional": true
-      },
-      "homepageHero": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "inline",
-          "name": "homeHeroDesign"
-        },
-        "optional": true
       }
     }
   },
@@ -5261,20 +5327,6 @@
                 "value": "mosaic"
               }
             ]
-          },
-          "optional": true
-        },
-        "foreground": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "boolean"
-          },
-          "optional": true
-        },
-        "contentStrip": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "boolean"
           },
           "optional": true
         },
@@ -5627,13 +5679,6 @@
           },
           "optional": true
         },
-        "backgroundNone": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "boolean"
-          },
-          "optional": true
-        },
         "scrimStyle": {
           "type": "objectAttribute",
           "value": {
@@ -5655,6 +5700,79 @@
           "type": "objectAttribute",
           "value": {
             "type": "number"
+          },
+          "optional": true
+        },
+        "scrimColor": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "auto"
+              },
+              {
+                "type": "string",
+                "value": "action"
+              },
+              {
+                "type": "string",
+                "value": "black"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "scrimDirection": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "auto"
+              },
+              {
+                "type": "string",
+                "value": "to-right"
+              },
+              {
+                "type": "string",
+                "value": "to-left"
+              },
+              {
+                "type": "string",
+                "value": "to-top"
+              },
+              {
+                "type": "string",
+                "value": "to-bottom"
+              },
+              {
+                "type": "string",
+                "value": "to-top-right"
+              },
+              {
+                "type": "string",
+                "value": "to-top-left"
+              },
+              {
+                "type": "string",
+                "value": "to-bottom-right"
+              },
+              {
+                "type": "string",
+                "value": "to-bottom-left"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "foreground": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
           },
           "optional": true
         },
@@ -5731,13 +5849,6 @@
                 }
               }
             }
-          },
-          "optional": true
-        },
-        "foregroundNone": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "boolean"
           },
           "optional": true
         },
@@ -5835,6 +5946,13 @@
           "type": "objectAttribute",
           "value": {
             "type": "string"
+          },
+          "optional": true
+        },
+        "contentStrip": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
           },
           "optional": true
         },
@@ -16755,6 +16873,80 @@
           "type": "objectAttribute",
           "value": {
             "type": "number"
+          },
+          "optional": true
+        },
+        "scrimColorOverride": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "inherit"
+              },
+              {
+                "type": "string",
+                "value": "auto"
+              },
+              {
+                "type": "string",
+                "value": "action"
+              },
+              {
+                "type": "string",
+                "value": "black"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "scrimDirectionOverride": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "inherit"
+              },
+              {
+                "type": "string",
+                "value": "auto"
+              },
+              {
+                "type": "string",
+                "value": "to-right"
+              },
+              {
+                "type": "string",
+                "value": "to-left"
+              },
+              {
+                "type": "string",
+                "value": "to-top"
+              },
+              {
+                "type": "string",
+                "value": "to-bottom"
+              },
+              {
+                "type": "string",
+                "value": "to-top-right"
+              },
+              {
+                "type": "string",
+                "value": "to-top-left"
+              },
+              {
+                "type": "string",
+                "value": "to-bottom-right"
+              },
+              {
+                "type": "string",
+                "value": "to-bottom-left"
+              }
+            ]
           },
           "optional": true
         },
