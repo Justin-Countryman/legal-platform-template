@@ -251,7 +251,11 @@ export const location = defineType({
   ],
 
   preview: {
-    select: {title: 'title', subtitle: 'city'},
+    // title source is `city` (not `title`): the Zite Location Name is no longer
+    // written to `title` (D16/M4), so keying the list on it would show "Location"
+    // for every doc. subtitle is the street address to distinguish offices in
+    // the same city.
+    select: {title: 'city', subtitle: 'address1'},
     prepare({title, subtitle}) {
       return {title: title ?? 'Location', subtitle}
     },
