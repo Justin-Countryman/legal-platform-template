@@ -2068,6 +2068,7 @@ const SAMPLE_ATTORNEY: Attorney = {
   superLawyers: null,
   findLaw: null,
   martindale: null,
+  lawyersCom: null,
   fullBiography: pt('Jane has practiced estate planning and probate law for over twenty years. She is admitted to the Minnesota bar and serves clients across the Twin Cities metro. Her practice emphasizes clear documentation, deliberate decision-making, and long relationships with the families she represents.', 'bio1'),
   practiceAreas: [
     {label: 'Estate Planning', slug: 'estate-planning'},

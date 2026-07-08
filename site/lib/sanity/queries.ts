@@ -1003,6 +1003,7 @@ export const ATTORNEY_PAGE_QUERY = groq`
     superLawyers,
     findLaw,
     martindale,
+    lawyersCom,
     "fullBiography": fullBiography ${BLOCK_CONTENT_FRAGMENT},
     "practiceAreas": practiceAreas[]{
       label,

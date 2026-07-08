@@ -47,6 +47,7 @@ export type Attorney = {
   superLawyers: string | null
   findLaw: string | null
   martindale: string | null
+  lawyersCom: string | null
 
   // Biography
   fullBiography: unknown[] | null

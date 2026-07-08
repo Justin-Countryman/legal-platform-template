@@ -49,7 +49,7 @@ function buildPersonSchema(attorney: Attorney, napTokens: NapTokens) {
   const suffix = (attorney.suffix ?? '').trim()
   const name = [firstName, middleName, lastName, suffix].filter(Boolean).join(' ')
 
-  const sameAs = [attorney.linkedIn, attorney.avvo, attorney.superLawyers, attorney.findLaw, attorney.martindale]
+  const sameAs = [attorney.linkedIn, attorney.avvo, attorney.superLawyers, attorney.findLaw, attorney.martindale, attorney.lawyersCom]
     .filter((u): u is string => typeof u === 'string' && u.length > 0)
 
   const url = `https://${DOMAIN}/${attorney.slug}/`
