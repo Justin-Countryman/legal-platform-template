@@ -73,14 +73,27 @@ function buildOrganizationSchema(data: OrganizationData) {
       }
     : undefined
 
+  // Office phone is the primary ContactPoint; toll-free (when present) is its
+  // own ContactPoint in the array — not an alternateName (that property is a
+  // text label, not a phone number).
   const contactPoint = data.address?.officePhone
-    ? {
-        '@type': 'ContactPoint',
-        telephone: data.address.officePhone,
-        contactType: 'customer service',
-        areaServed: 'US',
-        ...(data.address.tollFreePhone ? {alternateName: data.address.tollFreePhone} : {}),
-      }
+    ? [
+        {
+          '@type': 'ContactPoint',
+          telephone: data.address.officePhone,
+          contactType: 'customer service',
+          areaServed: 'US',
+        },
+        ...(data.address.tollFreePhone
+          ? [
+              {
+                '@type': 'ContactPoint',
+                telephone: data.address.tollFreePhone,
+                contactType: 'customer service',
+              },
+            ]
+          : []),
+      ]
     : undefined
 
   return {
