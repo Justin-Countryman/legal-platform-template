@@ -118,6 +118,9 @@ function buildLocalBusinessSchema(
     url: `https://${domain}/${page.slug}/`,
     telephone: loc.officePhone ?? undefined,
     address,
+    // Service area — kept for Virtual/Home locations where the street address
+    // is gated out (D9); still valid (and harmless) for Physical/Shared.
+    areaServed: loc.city ?? loc.state ?? undefined,
     openingHoursSpecification: buildOpeningHours(loc.hours),
     sameAs: sameAs.length > 0 ? sameAs : undefined,
     parentOrganization: {

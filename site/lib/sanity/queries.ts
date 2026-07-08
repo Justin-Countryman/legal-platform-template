@@ -45,6 +45,22 @@ const TESTIMONIAL_FIELDS_FRAGMENT = groq`{
   "avatar": avatar ${IMAGE_FRAGMENT}
 }`
 
+// Gated street address (D9 location-type privacy). Physical/Shared locations
+// expose their street address + zip publicly; Virtual and Home locations — and
+// any location that has not set a type — null them, so no consumer renders or
+// emits a private/home street address. city/state stay so areaServed and
+// city-derived titles still work. Interpolate inside a location projection
+// (primaryLocation->{…}, locationRef->{…}, or a location[] element), alongside
+// the city/state/phone fields it keeps. Plain string (not groq-tagged) so
+// typegen does not parse this bare projection fragment as a standalone query;
+// it still inlines into the groq-tagged queries that interpolate it.
+const GATED_STREET_FRAGMENT = `
+  "address1": select(locationType in ["Physical", "Shared"] => address1, null),
+  "address2": select(locationType in ["Physical", "Shared"] => address2, null),
+  "address3": select(locationType in ["Physical", "Shared"] => address3, null),
+  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),
+`
+
 export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
   _id,
   _type,
@@ -179,10 +195,9 @@ export const ORGANIZATION_SCHEMA_QUERY = groq`{
   "domain":   *[_type == "siteSettings"][0].primaryDomain,
   "logo":     *[_type == "designSettings"][0].logoOnLight.asset->url,
   "address":  *[_type == "siteSettings"][0].primaryLocation->{
-    address1,
+    ${GATED_STREET_FRAGMENT}
     city,
     state,
-    zip,
     officePhone,
     tollFreePhone
   },
@@ -369,12 +384,9 @@ export const FOOTER_QUERY = groq`{
     disclaimerUrl,
     cookiesUrl,
     "address": primaryLocation->{
-      address1,
-      address2,
-      address3,
+      ${GATED_STREET_FRAGMENT}
       city,
       state,
-      zip,
       officePhone,
       tollFreePhone,
       emergency24_7,
@@ -411,11 +423,8 @@ export const FOOTER_QUERY = groq`{
   "locations": *[_type == "location" && locationStatus == "Active"] | order(isPrimary desc, city asc) {
     _id,
     city,
-    address1,
-    address2,
-    address3,
+    ${GATED_STREET_FRAGMENT}
     state,
-    zip,
     officePhone,
     tollFreePhone,
     emergency24_7,
@@ -1400,10 +1409,9 @@ export const REVIEW_PAGE_QUERY = groq`{
   "firmInfo": *[_type == "siteSettings"][0]{
     firmName,
     "address": primaryLocation->{
-      address1,
+      ${GATED_STREET_FRAGMENT}
       city,
       state,
-      zip,
       officePhone
     }
   }
@@ -1444,10 +1452,7 @@ export const LOCATION_PAGE_QUERY = groq`
       "_id": _id,
       city,
       state,
-      address1,
-      address2,
-      address3,
-      zip,
+      ${GATED_STREET_FRAGMENT}
       officePhone,
       officeFax,
       tollFreePhone,
