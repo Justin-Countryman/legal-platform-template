@@ -185,7 +185,11 @@ export const ORGANIZATION_SCHEMA_QUERY = groq`{
     linkedInUrl,
     youTubeUrl,
     avvoUrl,
-    justiaUrl
+    justiaUrl,
+    findLawUrl,
+    martindaleUrl,
+    lawyersComUrl,
+    yelpUrl
   }
 }`
 

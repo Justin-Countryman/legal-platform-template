@@ -231,6 +231,34 @@ export const footerSettings = defineType({
       fieldset: 'social',
       description: 'Firm-level Justia profile. Surfaced in Organization JSON-LD `sameAs`; attorney-level Justia profiles live on attorneyPage.',
     },
+    {
+      name: 'findLawUrl',
+      title: 'FindLaw URL (firm)',
+      type: 'url',
+      fieldset: 'social',
+      description: 'Firm-level FindLaw directory profile. Surfaced in Organization JSON-LD `sameAs`.',
+    },
+    {
+      name: 'martindaleUrl',
+      title: 'Martindale URL (firm)',
+      type: 'url',
+      fieldset: 'social',
+      description: 'Firm-level Martindale directory profile. Surfaced in Organization JSON-LD `sameAs`.',
+    },
+    {
+      name: 'lawyersComUrl',
+      title: 'Lawyers.com URL (firm)',
+      type: 'url',
+      fieldset: 'social',
+      description: 'Firm-level Lawyers.com directory profile. Surfaced in Organization JSON-LD `sameAs`.',
+    },
+    {
+      name: 'yelpUrl',
+      title: 'Yelp URL (firm)',
+      type: 'url',
+      fieldset: 'social',
+      description: 'Firm-level Yelp profile. Surfaced in Organization JSON-LD `sameAs`.',
+    },
 
   ],
 
