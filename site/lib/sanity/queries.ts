@@ -152,6 +152,13 @@ export const SITE_METADATA_QUERY = groq`
   }
 `
 
+// ─── Consent-gated scripts (GA4 etc.) ─────────────────────────────────────────
+// Operator-pasted <script> blob (siteSettings.scriptsRequireConsent) rendered
+// client-side in the body so embedded scripts execute (defines gtag for GA4).
+export const SITE_SCRIPTS_QUERY = groq`
+  *[_type == "siteSettings"][0].scriptsRequireConsent
+`
+
 // ─── OG image composition ─────────────────────────────────────────────────────
 // Used by `app/api/og/route.tsx` to render branded 1200×630 social cards.
 // `primaryColor` falls back at render time to a neutral background when

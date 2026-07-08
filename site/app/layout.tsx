@@ -1,8 +1,8 @@
 import type {Metadata} from 'next'
-import {Analytics} from '@vercel/analytics/next'
-import {SpeedInsights} from '@vercel/speed-insights/next'
 import {client} from '@/lib/sanity/client'
-import {ORGANIZATION_SCHEMA_QUERY, SITE_METADATA_QUERY} from '@/lib/sanity/queries'
+import {ORGANIZATION_SCHEMA_QUERY, SITE_METADATA_QUERY, SITE_SCRIPTS_QUERY} from '@/lib/sanity/queries'
+import {HtmlEmbed} from '@/components/ui/HtmlEmbed'
+import {WebVitals} from '@/components/analytics/WebVitals'
 import './globals.css'
 
 // Typography is fully driven at runtime by the active fontPairingPreset (or
@@ -154,7 +154,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const orgData = await client.fetch<OrganizationData>(ORGANIZATION_SCHEMA_QUERY)
+  const [orgData, consentScripts] = await Promise.all([
+    client.fetch<OrganizationData>(ORGANIZATION_SCHEMA_QUERY),
+    client.fetch<string | null>(SITE_SCRIPTS_QUERY),
+  ])
   const organizationSchema = buildOrganizationSchema(orgData)
 
   return (
@@ -172,9 +175,11 @@ export default async function RootLayout({
           Skip to Main Content
         </a>
         {children}
-        {/* Vercel runtime instrumentation — no-ops outside Vercel deploys */}
-        <Analytics />
-        <SpeedInsights />
+        {/* GA4 (consent-gated, opt-out model) — operator-pasted snippet from
+            Site Settings; HtmlEmbed executes its <script> tags and defines gtag. */}
+        {consentScripts && <HtmlEmbed html={consentScripts} />}
+        {/* Core Web Vitals → GA4 events (free; replaces Vercel Speed Insights). */}
+        <WebVitals />
       </body>
     </html>
   )
