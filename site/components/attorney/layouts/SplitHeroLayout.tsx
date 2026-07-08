@@ -204,12 +204,6 @@ export function SplitHeroLayout({attorney, napTokens, cta = {label: 'Contact Us'
               headingClassName="mb-4 font-heading text-2xl font-extrabold uppercase tracking-wide text-foreground"
               className="border-t border-border pt-8 pb-8"
             />
-            <CredentialSection
-              title="Languages"
-              content={attorney.languages}
-              headingClassName="mb-4 font-heading text-2xl font-extrabold uppercase tracking-wide text-foreground"
-              className="border-t border-border pt-8 pb-8"
-            />
             {attorney.yearAdmittedToBar && (
               <dl className="border-t border-border pt-8">
                 <dt className="tagline mb-4">Year Admitted to Bar</dt>

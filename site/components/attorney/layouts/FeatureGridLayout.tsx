@@ -33,7 +33,6 @@ export function FeatureGridLayout({attorney, napTokens, cta = {label: 'Contact U
     {title: 'Presentations & Seminars', content: attorney.presentationsSeminars},
     {title: 'Representative Cases', content: attorney.representativeCases},
     {title: 'Past Positions', content: attorney.pastPositions},
-    {title: 'Languages', content: attorney.languages},
   ].filter(({content}) => content?.length)
 
   const hasCredentials = credentialItems.length > 0 || !!attorney.yearAdmittedToBar

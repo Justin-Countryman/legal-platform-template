@@ -2094,7 +2094,6 @@ const SAMPLE_ATTORNEY: Attorney = {
   presentationsSeminars: null,
   representativeCases: null,
   pastPositions: null,
-  languages: null,
   hideCtaForm: false,
   ctaFormOverride: null,
 }

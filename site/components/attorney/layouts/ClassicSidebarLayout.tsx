@@ -157,7 +157,6 @@ export function ClassicSidebarLayout({attorney, napTokens, cta = {label: 'Contac
                 {title: 'Presentations & Seminars', content: attorney.presentationsSeminars},
                 {title: 'Representative Cases', content: attorney.representativeCases},
                 {title: 'Past Positions', content: attorney.pastPositions},
-                {title: 'Languages', content: attorney.languages},
               ].map(({title, content}) => (
                 <CredentialSection
                   key={title}

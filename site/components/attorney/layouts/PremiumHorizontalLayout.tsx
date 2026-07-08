@@ -32,7 +32,6 @@ const CREDENTIAL_DEFS: Array<{title: string; field: keyof Attorney}> = [
   {title: 'Presentations & Seminars', field: 'presentationsSeminars'},
   {title: 'Representative Cases', field: 'representativeCases'},
   {title: 'Past Positions', field: 'pastPositions'},
-  {title: 'Languages', field: 'languages'},
 ]
 
 export function PremiumHorizontalLayout({attorney, napTokens, cta = {label: 'Contact Us', href: '/contact/'}}: Props) {

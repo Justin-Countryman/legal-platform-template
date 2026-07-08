@@ -69,7 +69,6 @@ export type Attorney = {
   presentationsSeminars: unknown[] | null
   representativeCases: unknown[] | null
   pastPositions: unknown[] | null
-  languages: unknown[] | null
 
   // CTA
   hideCtaForm: boolean
