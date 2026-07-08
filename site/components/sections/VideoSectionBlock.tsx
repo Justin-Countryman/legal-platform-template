@@ -1,16 +1,9 @@
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {getEmbedUrl} from '@/lib/videoEmbed'
+import {VideoEmbed, type VideoItem} from '@/components/media/VideoEmbed'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-
-type VideoItem = {
-  _id: string
-  title: string
-  youTubeUrl: string
-  description?: string | null
-  videoType?: string | null
-}
 
 export type VideoSectionBlockData = {
   _type: 'videoSection'
@@ -19,36 +12,6 @@ export type VideoSectionBlockData = {
   description?: string | null
   layout?: 'centered' | 'split' | null
   videos?: VideoItem[] | null
-}
-
-// ─── Single video ─────────────────────────────────────────────────────────────
-
-function VideoEmbed({video}: {video: VideoItem}) {
-  const embedUrl = getEmbedUrl(video.youTubeUrl)
-  if (!embedUrl) return null
-
-  return (
-    <figure>
-      <div className="relative aspect-video overflow-hidden rounded-ui shadow-elevation-sm">
-        <iframe
-          src={embedUrl}
-          title={video.title}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="absolute inset-0 h-full w-full border-0"
-          loading="lazy"
-        />
-      </div>
-      {(video.title || video.description) && (
-        <figcaption className="mt-3">
-          <p className="font-medium text-foreground">{video.title}</p>
-          {video.description && (
-            <p className="mt-1 text-sm text-foreground-muted">{video.description}</p>
-          )}
-        </figcaption>
-      )}
-    </figure>
-  )
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────

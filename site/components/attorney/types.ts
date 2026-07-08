@@ -1,6 +1,7 @@
 // Attorney profile page — canonical type used by all layout variants.
 // Shape mirrors the output of ATTORNEY_PAGE_QUERY.
 import type {SanityImage} from '@/lib/sanity/image'
+import type {VideoItem} from '@/components/media/VideoEmbed'
 
 // Projected via IMAGE_FRAGMENT — render with <SanityImage> (honors hotspot/crop).
 export type AttorneyPhoto = SanityImage
@@ -69,6 +70,9 @@ export type Attorney = {
   presentationsSeminars: unknown[] | null
   representativeCases: unknown[] | null
   pastPositions: unknown[] | null
+
+  // Bio video(s) — "Attorney Bio" video docs linked via attorneyPage.videos
+  videos: VideoItem[] | null
 
   // CTA
   hideCtaForm: boolean

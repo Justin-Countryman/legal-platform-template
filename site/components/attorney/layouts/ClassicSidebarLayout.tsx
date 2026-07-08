@@ -12,6 +12,7 @@ import {PracticeAreaList} from '@/components/ui/PracticeAreaList'
 import {BiLogoLinkedinSquare} from 'react-icons/bi'
 import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {CredentialSection} from '@/components/attorney/CredentialSection'
+import {AttorneyVideo} from '@/components/attorney/AttorneyVideo'
 import {buildFullName, formatAddress, type Attorney} from '@/components/attorney/types'
 import type {NapTokens} from '@/lib/tokens'
 
@@ -69,6 +70,8 @@ export function ClassicSidebarLayout({attorney, napTokens, cta = {label: 'Contac
           </div>
         </div>
       </div>
+
+      <AttorneyVideo attorney={attorney} />
 
       {/* ── Main layout ───────────────────────────────────────────────────── */}
       <div className="px-[5%] py-12 md:py-16">

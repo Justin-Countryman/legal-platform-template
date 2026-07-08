@@ -1016,6 +1016,9 @@ export const ATTORNEY_PAGE_QUERY = groq`
     "presentationsSeminars": presentationsSeminars ${BLOCK_CONTENT_FRAGMENT},
     "representativeCases": representativeCases ${BLOCK_CONTENT_FRAGMENT},
     "pastPositions": pastPositions ${BLOCK_CONTENT_FRAGMENT},
+    "videos": videos[defined(@->_id)]->{
+      _id, title, youTubeUrl, description, videoType
+    },
     hideCtaForm,
     "ctaFormOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT}
   }

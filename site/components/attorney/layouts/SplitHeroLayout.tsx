@@ -11,6 +11,7 @@ import {PracticeAreaList} from '@/components/ui/PracticeAreaList'
 import {BiLogoLinkedinSquare} from 'react-icons/bi'
 import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {CredentialSection} from '@/components/attorney/CredentialSection'
+import {AttorneyVideo} from '@/components/attorney/AttorneyVideo'
 import {buildFullName, formatAddress, type Attorney} from '@/components/attorney/types'
 import type {NapTokens} from '@/lib/tokens'
 
@@ -121,6 +122,8 @@ export function SplitHeroLayout({attorney, napTokens, cta = {label: 'Contact Us'
           </div>
         </div>
       </section>
+
+      <AttorneyVideo attorney={attorney} />
 
       {/* ── Biography + Credentials ───────────────────────────────────────── */}
       <section className="bg-background px-[5%] py-14 md:py-20" aria-label="Biography and credentials">

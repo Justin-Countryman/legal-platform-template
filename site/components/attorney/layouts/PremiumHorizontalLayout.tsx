@@ -15,6 +15,7 @@ import {PracticeAreaList} from '@/components/ui/PracticeAreaList'
 import {BiLogoLinkedinSquare} from 'react-icons/bi'
 import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {CredentialSection} from '@/components/attorney/CredentialSection'
+import {AttorneyVideo} from '@/components/attorney/AttorneyVideo'
 import {buildFullName, formatAddress, type Attorney} from '@/components/attorney/types'
 import type {NapTokens} from '@/lib/tokens'
 
@@ -159,6 +160,8 @@ export function PremiumHorizontalLayout({attorney, napTokens, cta = {label: 'Con
           </div>
         </div>
       )}
+
+      <AttorneyVideo attorney={attorney} />
 
       {/* ── Biography ─────────────────────────────────────────────────────── */}
       {attorney.fullBiography && (
