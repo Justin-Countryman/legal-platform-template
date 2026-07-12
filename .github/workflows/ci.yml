@@ -65,3 +65,72 @@ jobs:
             exit 0
           fi
           echo "Seed file present ($(wc -l < studio/seedData/sampleFirm.ndjson) lines)."
+
+      # Presence is a warning. THIS IS A HARD FAIL, and it is the point.
+      #
+      # Site Build composes six configuration singletons and writes each of them
+      # CREATE-ONLY: if the document already exists in the dataset, the composed
+      # version is thrown away and the existing one preserved. That is intended,
+      # and it is what protects the design an operator tuned in Studio from being
+      # clobbered by a rebuild.
+      #
+      # The seed is imported into a client's dataset BEFORE Site Build ever runs.
+      # So a seed carrying those documents WINS, permanently: the client silently
+      # inherits the sample firm's design, navigation, footer, global CTA and site
+      # settings, and the documents composed from that client's own data are
+      # discarded. The failure mode is a PRESERVE, not a warning. It reports
+      # "Warnings: 0" and exits 0. It looks exactly like a successful build.
+      #
+      # This guard exists because the seed's OWN regeneration spec used to tell
+      # its author to include those singletons, and a `sanity dataset export`
+      # emits them by default. The landmine was the documented procedure, so a
+      # rule that lives only in a document is not enough. It has to fail here.
+      #
+      # Belt and braces: the Client Provisioning Tool also strips these documents
+      # out before importing, so the tool path is closed even if a bad seed lands.
+      # This closes the OTHER path, the one that tool cannot see: a human running
+      # `sanity dataset import` by hand, which regenerate.md's recovery section
+      # tells them to do. Two independent layers, on purpose.
+      - name: Verify the seed carries no create-only singleton documents
+        run: |
+          set -euo pipefail
+          SEED=studio/seedData/sampleFirm.ndjson
+          if [ ! -s "$SEED" ]; then
+            echo "No seed committed, so there is nothing to check."
+            exit 0
+          fi
+
+          # Must match BE/_shared/sanity_singletons.py::CREATE_ONLY_SINGLETONS,
+          # which is bound by test to Site Build's COMPOSER_REGISTRY. If a seventh
+          # create-only singleton is ever added there, add it here too.
+          SINGLETONS='["siteSettings","designSettings","mainNavigation","footerSettings","globalCta","redirects"]'
+
+          # Matches on _type AND on _id, drafts. prefix included: a draft singleton
+          # is still a singleton. A malformed seed fails jq, which fails the job,
+          # which is correct: an unparseable seed is not a passing seed.
+          # Both fields are bound BEFORE the pipe into index(). Inside `$s | index(X)`
+          # jq rebinds `.` to $s, so a bare `._type` there indexes the ARRAY, not the
+          # document, and the filter dies on every real seed. It failed closed rather
+          # than open, but only by luck. Caught by running this against a dirty seed.
+          OFFENDERS=$(jq -r --argjson s "$SINGLETONS" '
+            ((._id // "") | sub("^drafts\\."; "")) as $id
+            | (._type // "") as $type
+            | select(($s | index($id)) != null or ($s | index($type)) != null)
+            | "  \(._id // "<no _id>")  (_type: \($type))"
+          ' "$SEED")
+
+          if [ -n "$OFFENDERS" ]; then
+            echo "::error::The seed carries documents Site Build writes create-only."
+            echo "The following documents must NOT be in sampleFirm.ndjson:"
+            echo "$OFFENDERS"
+            echo ""
+            echo "Importing them into a client's dataset before Site Build runs means"
+            echo "Site Build PRESERVES them and discards the documents it composed from"
+            echo "that client's own data. Every client would silently inherit the sample"
+            echo "firm's design, navigation, footer, global CTA and site settings."
+            echo "There is no warning and no non-zero exit. It looks like success."
+            echo ""
+            echo "Fix: filter them out at export. See studio/seedData/regenerate.md."
+            exit 1
+          fi
+          echo "Seed carries no create-only singletons."
