@@ -192,3 +192,25 @@ jobs:
             exit 1
           fi
           echo "Sanity schema + generated types are up to date."
+
+  a11y-shared-components:
+    name: Shared component a11y invariants
+    runs-on: ubuntu-latest
+    # Fleet-wide accessibility contracts for the shared blog collection
+    # components (RelatedPosts / BlogIndexFallback / BlogIndexClient): explicit
+    # role="list" collection semantics, and unique "Read More" link names that
+    # carry the post title (WCAG 2.4.4 Link Purpose — a page of identical
+    # "Read More" links is a screen-reader failure). A regression ships to every
+    # client site built from this template at once, so it fails CI here instead
+    # of surfacing in a per-client QA pass.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install site deps
+        working-directory: site
+        run: npm ci
+      - name: Run shared-component a11y tests
+        working-directory: site
+        run: npx vitest run components/sections/__tests__/a11y-shared-components.test.tsx
