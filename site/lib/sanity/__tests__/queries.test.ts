@@ -187,7 +187,7 @@ describe('GROQ canonical filter-before-dereference pattern', () => {
   // See BI/skills/skill-sanity-schema/SKILL.md → "Reference array dereferencing"
   // for the mechanism + consumer-side belt-and-suspenders pairing.
 
-  it('catalog-stability: queries.ts contains exactly 23 canonical filter-before-deref patterns', () => {
+  it('catalog-stability: queries.ts contains exactly 24 canonical filter-before-deref patterns', () => {
     // If this count changes, the catalog has drifted. Update this number in
     // lockstep with any new []-> projection and verify the new projection ships
     // with the canonical [defined(@->_id)]-> shape.
@@ -195,8 +195,13 @@ describe('GROQ canonical filter-before-dereference pattern', () => {
     // on practiceArea/geoPracticeArea/serviceAreaPage/faqPage + `questions[]`
     // on faqSection migrated from inline `faqItem` objects to references.
     // Grew 22 → 23 with VIDEO_INDEX_PAGE_QUERY.videos[] (Video Library).
+    // Grew 23 → 24 with a video/attorney-section reference dereference added
+    // after v0.1.0; that addition never bumped this assertion, so the source
+    // carried 24 while this test asserted 23. Corrected to 24 after confirming
+    // all 24 occurrences are genuine, distinct field[defined(@->_id)]->
+    // projections (no stray or duplicated pattern).
     const matches = QUERIES_SRC.match(/\[defined\(@->_id\)\]->/g) ?? []
-    expect(matches.length).toBe(23)
+    expect(matches.length).toBe(24)
   })
 
   it('source-text meta: queries.ts contains zero broken-pattern occurrences', () => {
