@@ -40,6 +40,8 @@ type OrganizationData = {
     martindaleUrl?: string | null
     lawyersComUrl?: string | null
     yelpUrl?: string | null
+    superLawyersUrl?: string | null
+    lawInfoUrl?: string | null
   } | null
 }
 
@@ -60,6 +62,8 @@ function buildOrganizationSchema(data: OrganizationData) {
     data.socials?.martindaleUrl,
     data.socials?.lawyersComUrl,
     data.socials?.yelpUrl,
+    data.socials?.superLawyersUrl,
+    data.socials?.lawInfoUrl,
   ].filter((u): u is string => typeof u === 'string' && u.length > 0)
 
   const address = data.address && data.address.address1

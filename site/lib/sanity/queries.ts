@@ -212,7 +212,9 @@ export const ORGANIZATION_SCHEMA_QUERY = groq`{
     findLawUrl,
     martindaleUrl,
     lawyersComUrl,
-    yelpUrl
+    yelpUrl,
+    superLawyersUrl,
+    lawInfoUrl
   }
 }`
 

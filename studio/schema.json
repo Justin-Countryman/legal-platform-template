@@ -6327,6 +6327,20 @@
           "type": "string"
         },
         "optional": true
+      },
+      "superLawyersUrl": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "lawInfoUrl": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
       }
     }
   },

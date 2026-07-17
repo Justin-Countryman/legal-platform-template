@@ -259,6 +259,20 @@ export const footerSettings = defineType({
       fieldset: 'social',
       description: 'Firm-level Yelp profile. Surfaced in Organization JSON-LD `sameAs`.',
     },
+    {
+      name: 'superLawyersUrl',
+      title: 'Super Lawyers URL (firm)',
+      type: 'url',
+      fieldset: 'social',
+      description: 'Firm-level Super Lawyers directory profile. Surfaced in Organization JSON-LD `sameAs`.',
+    },
+    {
+      name: 'lawInfoUrl',
+      title: 'LawInfo URL (firm)',
+      type: 'url',
+      fieldset: 'social',
+      description: 'Firm-level LawInfo directory profile. Surfaced in Organization JSON-LD `sameAs`.',
+    },
 
   ],
 

@@ -934,6 +934,8 @@ export type FooterSettings = {
   martindaleUrl?: string;
   lawyersComUrl?: string;
   yelpUrl?: string;
+  superLawyersUrl?: string;
+  lawInfoUrl?: string;
 };
 
 export type MainNavigation = {
@@ -3300,7 +3302,7 @@ export type OG_DATA_QUERYResult = {
   primaryColor: string | null;
 };
 // Variable: ORGANIZATION_SCHEMA_QUERY
-// Query: {  "firmName": *[_type == "siteSettings"][0].firmName,  "domain":   *[_type == "siteSettings"][0].primaryDomain,  "logo":     *[_type == "designSettings"][0].logoOnLight.asset->url,  "address":  *[_type == "siteSettings"][0].primaryLocation->{      "address1": select(locationType in ["Physical", "Shared"] => address1, null),  "address2": select(locationType in ["Physical", "Shared"] => address2, null),  "address3": select(locationType in ["Physical", "Shared"] => address3, null),  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),    city,    state,    officePhone,    tollFreePhone  },  "socials":  *[_type == "footerSettings"][0]{    facebookUrl,    instagramUrl,    twitterUrl,    linkedInUrl,    youTubeUrl,    avvoUrl,    justiaUrl,    findLawUrl,    martindaleUrl,    lawyersComUrl,    yelpUrl  }}
+// Query: {  "firmName": *[_type == "siteSettings"][0].firmName,  "domain":   *[_type == "siteSettings"][0].primaryDomain,  "logo":     *[_type == "designSettings"][0].logoOnLight.asset->url,  "address":  *[_type == "siteSettings"][0].primaryLocation->{      "address1": select(locationType in ["Physical", "Shared"] => address1, null),  "address2": select(locationType in ["Physical", "Shared"] => address2, null),  "address3": select(locationType in ["Physical", "Shared"] => address3, null),  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),    city,    state,    officePhone,    tollFreePhone  },  "socials":  *[_type == "footerSettings"][0]{    facebookUrl,    instagramUrl,    twitterUrl,    linkedInUrl,    youTubeUrl,    avvoUrl,    justiaUrl,    findLawUrl,    martindaleUrl,    lawyersComUrl,    yelpUrl,    superLawyersUrl,    lawInfoUrl  }}
 export type ORGANIZATION_SCHEMA_QUERYResult = {
   firmName: string | null;
   domain: string | null;
@@ -3327,6 +3329,8 @@ export type ORGANIZATION_SCHEMA_QUERYResult = {
     martindaleUrl: string | null;
     lawyersComUrl: string | null;
     yelpUrl: string | null;
+    superLawyersUrl: string | null;
+    lawInfoUrl: string | null;
   } | null;
 };
 // Variable: ATTORNEY_SLUGS_QUERY
@@ -12427,7 +12431,7 @@ declare module "@sanity/client" {
     "\n  *[_type == \"siteSettings\"][0]{\n    firmName,\n    primaryDomain,\n    gscVerification,\n    \"faviconUrl\":  *[_type == \"designSettings\"][0].favicon.asset->url,\n    \"faviconMime\": *[_type == \"designSettings\"][0].favicon.asset->mimeType,\n    \"webclipUrl\":  *[_type == \"designSettings\"][0].webclipImage.asset->url,\n  }\n": SITE_METADATA_QUERYResult;
     "\n  *[_type == \"siteSettings\"][0].scriptsRequireConsent\n": SITE_SCRIPTS_QUERYResult;
     "{\n  \"firmName\":     *[_type == \"siteSettings\"][0].firmName,\n  \"logo\":         *[_type == \"designSettings\"][0].logoOnDark.asset->url,\n  \"primaryColor\": *[_type == \"designSettings\"][0].primaryColor,\n}": OG_DATA_QUERYResult;
-    "{\n  \"firmName\": *[_type == \"siteSettings\"][0].firmName,\n  \"domain\":   *[_type == \"siteSettings\"][0].primaryDomain,\n  \"logo\":     *[_type == \"designSettings\"][0].logoOnLight.asset->url,\n  \"address\":  *[_type == \"siteSettings\"][0].primaryLocation->{\n    \n  \"address1\": select(locationType in [\"Physical\", \"Shared\"] => address1, null),\n  \"address2\": select(locationType in [\"Physical\", \"Shared\"] => address2, null),\n  \"address3\": select(locationType in [\"Physical\", \"Shared\"] => address3, null),\n  \"zip\":      select(locationType in [\"Physical\", \"Shared\"] => zip, null),\n\n    city,\n    state,\n    officePhone,\n    tollFreePhone\n  },\n  \"socials\":  *[_type == \"footerSettings\"][0]{\n    facebookUrl,\n    instagramUrl,\n    twitterUrl,\n    linkedInUrl,\n    youTubeUrl,\n    avvoUrl,\n    justiaUrl,\n    findLawUrl,\n    martindaleUrl,\n    lawyersComUrl,\n    yelpUrl\n  }\n}": ORGANIZATION_SCHEMA_QUERYResult;
+    "{\n  \"firmName\": *[_type == \"siteSettings\"][0].firmName,\n  \"domain\":   *[_type == \"siteSettings\"][0].primaryDomain,\n  \"logo\":     *[_type == \"designSettings\"][0].logoOnLight.asset->url,\n  \"address\":  *[_type == \"siteSettings\"][0].primaryLocation->{\n    \n  \"address1\": select(locationType in [\"Physical\", \"Shared\"] => address1, null),\n  \"address2\": select(locationType in [\"Physical\", \"Shared\"] => address2, null),\n  \"address3\": select(locationType in [\"Physical\", \"Shared\"] => address3, null),\n  \"zip\":      select(locationType in [\"Physical\", \"Shared\"] => zip, null),\n\n    city,\n    state,\n    officePhone,\n    tollFreePhone\n  },\n  \"socials\":  *[_type == \"footerSettings\"][0]{\n    facebookUrl,\n    instagramUrl,\n    twitterUrl,\n    linkedInUrl,\n    youTubeUrl,\n    avvoUrl,\n    justiaUrl,\n    findLawUrl,\n    martindaleUrl,\n    lawyersComUrl,\n    yelpUrl,\n    superLawyersUrl,\n    lawInfoUrl\n  }\n}": ORGANIZATION_SCHEMA_QUERYResult;
     "\n  *[_type == \"attorneyPage\" && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)].slug.current\n": ATTORNEY_SLUGS_QUERYResult;
     "\n  *[_type == \"staffPage\" && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)].slug.current\n": STAFF_SLUGS_QUERYResult;
     "\n  *[_type == \"blogPost\" && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)].slug.current\n": BLOG_POST_SLUGS_QUERYResult;
