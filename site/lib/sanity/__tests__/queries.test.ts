@@ -2,6 +2,7 @@ import {describe, expect, it} from 'vitest'
 import {readFileSync} from 'node:fs'
 import path from 'node:path'
 import {parse, evaluate} from 'groq-js'
+import {FOOTER_QUERY, NAP_TOKENS_QUERY} from '../queries'
 
 // ─── Source-text inputs ───────────────────────────────────────────────────────
 // Read queries.ts as a string so source-text meta-tests cover every []->
@@ -287,6 +288,105 @@ describe('GROQ canonical filter-before-dereference pattern', () => {
     )
     expect(canonicalResult).toHaveLength(2)
     expect(canonicalResult.every((s: unknown) => s !== null)).toBe(true)
+  })
+})
+
+// ─── displayOnWebsite deny-by-default on location listings ────────────────────
+// A location marked displayOnWebsite=false must not render anywhere the public
+// site lists offices (footer, contact page, location index, LocalBusiness
+// JSON-LD). Every one of those surfaces is fed by one of the two location-
+// COLLECTION selects — FOOTER_QUERY (queries.ts:425) and NAP_TOKENS_QUERY
+// (queries.ts:780) — and before this fix both filtered only on
+// `locationStatus == "Active"`, so a do-not-display office rendered everywhere.
+//
+// The filter is deny-by-default: the office renders only on an explicit
+// `displayOnWebsite == true`. An unset field suppresses. This is the OPPOSITE
+// polarity from the writer's tri-state default (BE/_shared/zite.py:
+// `displayOnWebsite unanswered -> True`), and it is safe only because the
+// writer now writes an explicit boolean on every location it creates and the
+// Studio schema sets `initialValue: true` — so no real location doc lacks the
+// field (verified against the sole live dataset at the time of this fix: 1
+// location, field defined, 0 missing). The deny-by-default read filter is the
+// belt to that suspenders: a legacy or hand-created doc missing the field is
+// suppressed rather than leaked.
+//
+// The fixture mirrors the real location payload shape (_type location, city,
+// locationStatus Active, displayOnWebsite boolean, locationType Physical) plus
+// two divergent offices no live dataset yet contains but the schema permits:
+// one explicitly false, one with the field unset.
+
+const LOCATION_FIXTURE = [
+  // siteSettings host — NAP_TOKENS_QUERY roots on this doc; without it the
+  // whole projection is null and .locations can't be read.
+  {
+    _id: 'siteSettings',
+    _type: 'siteSettings',
+    _rev: '1',
+    firmName: 'Example Law Firm, P.A.',
+    primaryLocation: {_type: 'reference', _ref: 'loc-visible'},
+  },
+  // Visible office — Active + explicit displayOnWebsite true. Must render.
+  {
+    _id: 'loc-visible',
+    _type: 'location',
+    _rev: '1',
+    city: 'Visible City',
+    locationStatus: 'Active',
+    locationType: 'Physical',
+    isPrimary: true,
+    displayOnWebsite: true,
+    address1: '1000 Visible Way',
+    officePhone: '651-555-0100',
+  },
+  // Hidden office — Active but displayOnWebsite EXPLICITLY false. The bug:
+  // pre-fix this renders everywhere. Must be suppressed.
+  {
+    _id: 'loc-hidden',
+    _type: 'location',
+    _rev: '1',
+    city: 'Hidden City',
+    locationStatus: 'Active',
+    locationType: 'Physical',
+    isPrimary: false,
+    displayOnWebsite: false,
+    address1: '2000 Hidden Way',
+    officePhone: '651-555-0200',
+  },
+  // Legacy office — Active, displayOnWebsite UNSET. Deny-by-default: suppressed.
+  {
+    _id: 'loc-unset',
+    _type: 'location',
+    _rev: '1',
+    city: 'Legacy City',
+    locationStatus: 'Active',
+    locationType: 'Physical',
+    isPrimary: false,
+    address1: '3000 Legacy Way',
+    officePhone: '651-555-0300',
+  },
+]
+
+async function runAgainstLocations(query: string) {
+  const tree = parse(query)
+  const result = await evaluate(tree, {dataset: LOCATION_FIXTURE, params: {}})
+  return result.get()
+}
+
+describe('displayOnWebsite deny-by-default on location listings', () => {
+  it('FOOTER_QUERY excludes displayOnWebsite=false and unset locations', async () => {
+    const result = await runAgainstLocations(FOOTER_QUERY)
+    const cities = (result.locations ?? []).map((l: {city: string}) => l.city)
+    expect(cities).toEqual(['Visible City'])
+    expect(cities).not.toContain('Hidden City')
+    expect(cities).not.toContain('Legacy City')
+  })
+
+  it('NAP_TOKENS_QUERY excludes displayOnWebsite=false and unset locations', async () => {
+    const result = await runAgainstLocations(NAP_TOKENS_QUERY)
+    const cities = (result.locations ?? []).map((l: {city: string}) => l.city)
+    expect(cities).toEqual(['Visible City'])
+    expect(cities).not.toContain('Hidden City')
+    expect(cities).not.toContain('Legacy City')
   })
 })
 

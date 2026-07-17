@@ -422,7 +422,7 @@ export const FOOTER_QUERY = groq`{
     youTubeUrl,
     "formEmbed": form->formEmbed,
   },
-  "locations": *[_type == "location" && locationStatus == "Active"] | order(isPrimary desc, city asc) {
+  "locations": *[_type == "location" && locationStatus == "Active" && displayOnWebsite == true] | order(isPrimary desc, city asc) {
     _id,
     city,
     ${GATED_STREET_FRAGMENT}
@@ -777,7 +777,7 @@ export const NAP_TOKENS_QUERY = groq`
     "primaryPhone": primaryLocation->officePhone,
     "primaryTollFree": primaryLocation->tollFreePhone,
     "primaryLocationId": primaryLocation->_id,
-    "locations": *[_type == "location" && locationStatus == "Active"]{
+    "locations": *[_type == "location" && locationStatus == "Active" && displayOnWebsite == true]{
       "_id": _id,
       "phone": officePhone,
       "fax": officeFax,
