@@ -518,7 +518,13 @@ export const SIDEBAR_FRAGMENT = groq`sidebar[]{
 // cascade (scheme / bg / foreground / none / scrim / fit) — not just the few that
 // used INTERNAL_HERO_FRAGMENT. Embed as:
 //   "hero": hero{ "heading": coalesce(heading, "X"), ${INTERNAL_HERO_OVERRIDE_FIELDS} }
-export const INTERNAL_HERO_OVERRIDE_FIELDS = groq`
+// This is a PARTIAL projection (a bare field list), only ever interpolated inside
+// a hero{ … } projection — never run standalone. It is deliberately NOT groq-
+// tagged: the `groq` tag makes `sanity typegen generate` extract it as a
+// standalone query and emit a syntax error ("Unexpected end of query"), because
+// a brace-less field list is not a complete GROQ query. Interpolation is plain
+// string concatenation, so dropping the tag does not change the composed queries.
+export const INTERNAL_HERO_OVERRIDE_FIELDS = `
   description,
   "buttons": buttons[]{title, url, variant},
   buttonsNone,
