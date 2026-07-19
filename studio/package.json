@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@sanity/vision": "^3.65.0",
+    "culori": "^4.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sanity": "^3.65.0",
