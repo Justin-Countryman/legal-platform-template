@@ -96,6 +96,29 @@ export const siteSettings = defineType({
       description: 'Optional — most law firm sites do not have a cookie policy',
     },
 
+    // ─── Results Disclaimer ───────────────────────────────────────────────────
+    // Wording OVERRIDE only. The site renders a built-in default whenever this
+    // is blank, so case results can never publish without a disclaimer — see
+    // `site/lib/legal.ts` for why the default lives in code and not here.
+    //
+    // Deliberately NO initialValue. Pre-filling this would bake a copy of the
+    // default into every new client's dataset, and a later compliance fix to
+    // the constant would then silently fail to reach them — the stale-copy
+    // version of the same failure the code constant exists to prevent. Blank
+    // means "use the current standard text", which is what an operator who
+    // has no jurisdiction-specific requirement actually wants. Studio cannot
+    // import the constant from `site/` either: that cross-package import is
+    // what breaks Sanity config load in CI (OUTSTANDING item 22).
+    {
+      name: 'resultsDisclaimer',
+      title: 'Case Results Disclaimer',
+      type: 'text',
+      rows: 2,
+      description:
+        'Rendered automatically wherever case results appear — required by bar advertising rules. Leave blank to use the standard disclaimer; fill this in only if your jurisdiction requires different wording.',
+      components: {input: TokenTextInput},
+    },
+
     // ─── Cookie Consent ───────────────────────────────────────────────────────
     {
       name: 'cookieBannerText',

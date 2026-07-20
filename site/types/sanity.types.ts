@@ -621,6 +621,24 @@ export type TestimonialsGrid = {
   spacing?: "compact" | "normal" | "spacious";
 };
 
+export type CaseResult = {
+  _id: string;
+  _type: "caseResult";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  amount?: string;
+  caseType?: string;
+  caption?: string;
+  year?: number;
+  practiceArea?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "practiceArea";
+  };
+};
+
 export type FaqItem = {
   _id: string;
   _type: "faqItem";
@@ -3081,6 +3099,7 @@ export type SiteSettings = {
   privacyPolicyUrl?: string;
   disclaimerUrl?: string;
   cookiesUrl?: string;
+  resultsDisclaimer?: string;
   cookieBannerText?: string;
   gscVerification?: string;
   scriptsNoConsent?: string;
@@ -3259,7 +3278,7 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = SidebarTableOfContents | PracticeAreaNavItem | OfficeHours | ContentToken | BlockContent | SidebarFormEmbed | SidebarCtaBox | SidebarAttorneyList | SidebarNav | VideoIndex | Video | PracticeAreaNav | VideoSection | ReviewsSection | AttorneySection | BadgesSection | FaqSection | CtaButton | CtaSection | FeaturedTestimonial | TestimonialsGrid | FaqItem | TestimonialsPage | Testimonial | Redirects | HeroSettings | HomeHeroDesign | FooterSettings | MainNavigation | GlobalCta | EventIndex | EventPage | EventCategory | ReviewPage | LandingPage | StaffIndex | StaffPage | AttorneyIndex | AttorneyPage | LocationPage | BlogTag | BlogPost | BlogCategory | BlogIndex | FaqPage | ContactPage | SiteForm | ServiceAreaIndex | ServiceAreaPage | GeoPracticeArea | PracticeArea | GeneralPage | AboutPage | InternalHero | HomePage | CtaFormSection | HomeHeroContent | DesignSettings | SiteSettings | Location | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = SidebarTableOfContents | PracticeAreaNavItem | OfficeHours | ContentToken | BlockContent | SidebarFormEmbed | SidebarCtaBox | SidebarAttorneyList | SidebarNav | VideoIndex | Video | PracticeAreaNav | VideoSection | ReviewsSection | AttorneySection | BadgesSection | FaqSection | CtaButton | CtaSection | FeaturedTestimonial | TestimonialsGrid | CaseResult | FaqItem | TestimonialsPage | Testimonial | Redirects | HeroSettings | HomeHeroDesign | FooterSettings | MainNavigation | GlobalCta | EventIndex | EventPage | EventCategory | ReviewPage | LandingPage | StaffIndex | StaffPage | AttorneyIndex | AttorneyPage | LocationPage | BlogTag | BlogPost | BlogCategory | BlogIndex | FaqPage | ContactPage | SiteForm | ServiceAreaIndex | ServiceAreaPage | GeoPracticeArea | PracticeArea | GeneralPage | AboutPage | InternalHero | HomePage | CtaFormSection | HomeHeroContent | DesignSettings | SiteSettings | Location | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ../site/lib/sanity/queries.ts
 // Variable: IMAGE_FRAGMENT

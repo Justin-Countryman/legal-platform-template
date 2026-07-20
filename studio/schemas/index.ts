@@ -34,6 +34,7 @@ import {redirects} from './documents/redirects'
 import {testimonial} from './documents/testimonial'
 import {testimonialsPage} from './documents/testimonialsPage'
 import {faqItem} from './documents/faqItem'
+import {caseResult} from './documents/caseResult'
 
 // ─── Object Types ─────────────────────────────────────────────────────────────
 import {blockContent} from './objects/blockContent'
@@ -99,6 +100,7 @@ export const schemaTypes = [
   testimonial,
   testimonialsPage,
   faqItem,
+  caseResult,
 
   // Page Sections (documents)
   testimonialsGrid,

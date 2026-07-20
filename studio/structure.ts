@@ -260,6 +260,7 @@ export const structure = (S: StructureBuilder) =>
               S.documentTypeListItem('location').title('Location Records'),
               S.documentTypeListItem('siteForm').title('Forms'),
               S.documentTypeListItem('video').title('Videos'),
+              S.documentTypeListItem('caseResult').title('Case Results'),
             ])
         ),
 
