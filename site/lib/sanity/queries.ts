@@ -122,7 +122,7 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
     "slug": slug.current,
     tags
   },
-  "badges": badges[]{
+  "badges": badges[defined(@->_id)]->{
     "src": image.asset->url,
     "alt": image.alt,
     "width": image.asset->metadata.dimensions.width,

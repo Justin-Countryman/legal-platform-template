@@ -262,6 +262,7 @@ export const structure = (S: StructureBuilder) =>
               S.documentTypeListItem('video').title('Videos'),
               S.documentTypeListItem('caseResult').title('Case Results'),
               S.documentTypeListItem('pressItem').title('Press Mentions'),
+              S.documentTypeListItem('badge').title('Badges / Awards'),
             ])
         ),
 

@@ -43,36 +43,10 @@ export const badgesSection = defineType({
       name: 'badges',
       title: 'Badges',
       type: 'array',
+      description:
+        'Select from the badges you have built under Individual Items. Build each badge once and reuse it across sections — there is no inline badge here by design.',
       validation: (Rule) => Rule.min(1).warning('At least one badge is required'),
-      of: [
-        {
-          type: 'object',
-          name: 'badge',
-          fields: [
-            {
-              name: 'image',
-              title: 'Badge Image',
-              type: 'image',
-              options: {hotspot: true},
-              validation: (Rule) => Rule.required().warning(),
-              fields: [
-                {
-                  name: 'alt',
-                  title: 'Alt Text',
-                  type: 'string',
-                  validation: (Rule) => Rule.required().warning('Alt text is required for all badge images'),
-                },
-              ],
-            },
-          ],
-          preview: {
-            select: {title: 'image.alt', media: 'image'},
-            prepare({title, media}: {title?: string; media?: any}) {
-              return {title: title ?? 'Badge', media}
-            },
-          },
-        },
-      ],
+      of: [{type: 'reference', to: [{type: 'badge'}]}],
     },
     {
       name: 'layout',
