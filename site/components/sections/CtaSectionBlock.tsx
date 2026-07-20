@@ -126,14 +126,16 @@ function TextOnlyCta({data}: {data: CtaSectionBlockData}) {
     <section className="px-[5%] py-16 md:py-24 lg:py-28 bg-muted">
       <div className="container grid grid-cols-1 gap-8 md:grid-cols-2 md:items-center md:gap-12">
 
-        <div>
-          {tagline && (
-            <Tagline as="p">
-              {tagline}
-            </Tagline>
-          )}
-          <h2 className="text-3xl font-bold text-foreground md:text-4xl lg:text-5xl">{heading}</h2>
-        </div>
+        {/* Column-only header — the description and buttons live in the RIGHT column,
+            so the header's canonical trailing gap has nothing below it and would only
+            add height to the left column, shifting the grid's md:items-center row. */}
+        <SectionHeader
+          tagline={tagline}
+          heading={heading}
+          scale="lg"
+          alignment="left"
+          noTrailingGap
+        />
 
         <div>
           {description && <p className="mb-6 text-foreground-muted">{description}</p>}

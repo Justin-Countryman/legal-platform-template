@@ -35,6 +35,18 @@ export type SectionHeaderProps = {
    */
   alignment?:   SectionHeaderAlignment
   /**
+   * Suppresses the h2's scale-paired trailing `mb-X`. Opt-in, default `false` —
+   * the canonical gap stays the default for every other consumer.
+   *
+   * For column-only headers that place their own content directly beneath the
+   * header rather than below the description: CtaSectionBlock's TextOnlyCta
+   * puts tagline + h2 in the left grid column under `md:items-center`, where
+   * the canonical gap becomes column height and shifts the row's vertical
+   * centering. The prop names that intent so the exception reads as a decision
+   * rather than as a spacing override at the callsite.
+   */
+  noTrailingGap?: boolean
+  /**
    * Wrapper className for layout overrides (max-width, margin, grid placement).
    * Spacing belongs to typed props — do NOT pass h2 `mb-X` or description color
    * through className.
@@ -60,6 +72,21 @@ export const SECTION_HEADER_H2_CLASS: Record<SectionHeaderScale, string> = {
   xl: 'mb-5 text-4xl font-bold text-foreground md:mb-6 md:text-5xl',
 }
 
+// ─── Trailing-gap suppression ─────────────────────────────────────────────────
+//
+// Derives the `noTrailingGap` variant from the canonical tier class above by
+// dropping every `mb-` token, responsive prefixes included (xl carries both
+// `mb-5` and `md:mb-6`). Derived rather than tabled a second time so the tier
+// table stays the single source of the type scale — a new tier gets its
+// suppressed form for free, and the two cannot drift apart.
+
+export function stripTrailingGap(h2Class: string): string {
+  return h2Class
+    .split(' ')
+    .filter((token) => !/^(?:[a-z]+:)?mb-/.test(token))
+    .join(' ')
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function SectionHeader({
@@ -68,6 +95,7 @@ export function SectionHeader({
   description,
   scale = 'md',
   alignment = 'center',
+  noTrailingGap = false,
   className,
 }: SectionHeaderProps) {
   const wrapperClass = [
@@ -75,10 +103,14 @@ export function SectionHeader({
     className,
   ].filter(Boolean).join(' ')
 
+  const h2Class = noTrailingGap
+    ? stripTrailingGap(SECTION_HEADER_H2_CLASS[scale])
+    : SECTION_HEADER_H2_CLASS[scale]
+
   return (
     <div className={wrapperClass || undefined}>
       {tagline && <Tagline as="p">{tagline}</Tagline>}
-      <h2 className={SECTION_HEADER_H2_CLASS[scale]}>{heading}</h2>
+      <h2 className={h2Class}>{heading}</h2>
       {description && <p className="text-foreground-muted">{description}</p>}
     </div>
   )

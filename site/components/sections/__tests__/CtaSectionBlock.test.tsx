@@ -43,6 +43,63 @@ const BACKGROUND_DATA: CtaSectionBlockData = {
   image: {asset: {_ref: 'image-test-200x200-jpg', _type: 'reference'}, alt: 'Office'},
 }
 
+const TEXT_ONLY_DATA: CtaSectionBlockData = {
+  _type: 'ctaSection',
+  layout: 'textOnly',
+  tagline: 'Schedule a consultation',
+  heading: 'Talk with an attorney',
+  description: 'A 30-minute conversation about your goals.',
+  buttons: [{title: 'Contact us', url: '/contact', variant: 'primary'}],
+}
+
+// ─── TextOnlyCta — SectionHeader consumption with noTrailingGap ───────────────
+//
+// TextOnlyCta splits the header across grid columns: tagline + h2 LEFT,
+// description + buttons RIGHT, under `md:grid-cols-2 md:items-center`. It was
+// hand-rolled for exactly that reason — the canonical `mb-5` would have become
+// left-column height and shifted the row's vertical centering. It now consumes
+// the primitive and opts out of the gap by name. See
+// `skill-component-patterns → SectionHeader` and BI/OUTSTANDING.md item 16.
+
+describe('CtaSectionBlock — TextOnlyCta header', () => {
+  it('renders the header through SectionHeader (Tagline primitive, not a hand-rolled span)', () => {
+    const {container} = render(<CtaSectionBlock data={TEXT_ONLY_DATA} />)
+    const tagline = container.querySelector('.tagline') as HTMLElement
+    expect(tagline).not.toBeNull()
+    expect(tagline.tagName).toBe('P')
+    expect(tagline.textContent).toBe('Schedule a consultation')
+  })
+
+  it('renders the h2 at the lg tier with NO trailing margin', () => {
+    const {container} = render(<CtaSectionBlock data={TEXT_ONLY_DATA} />)
+    const h2 = container.querySelector('h2') as HTMLElement
+    expect(h2.textContent).toBe('Talk with an attorney')
+    expect(h2.className).toBe('text-3xl font-bold text-foreground md:text-4xl lg:text-5xl')
+    expect(h2.className).not.toContain('mb-')
+  })
+
+  it('keeps the description and buttons in the right column, outside the header', () => {
+    const {container, getByTestId} = render(<CtaSectionBlock data={TEXT_ONLY_DATA} />)
+    const grid = container.querySelector('.container') as HTMLElement
+    expect(grid.className).toContain('md:items-center')
+    // Two grid children: the SectionHeader wrapper, then the description column.
+    expect(grid.children.length).toBe(2)
+    expect(grid.children[0].querySelector('h2')).not.toBeNull()
+    expect(grid.children[1].querySelector('h2')).toBeNull()
+    const desc = grid.children[1].querySelector('p') as HTMLElement
+    expect(desc.textContent).toBe('A 30-minute conversation about your goals.')
+    expect(grid.children[1].contains(getByTestId('button-group'))).toBe(true)
+  })
+
+  it('is the layout fallback when layout is absent or unrecognized', () => {
+    const {container} = render(
+      <CtaSectionBlock data={{...TEXT_ONLY_DATA, layout: null}} />,
+    )
+    const h2 = container.querySelector('h2') as HTMLElement
+    expect(h2.className).not.toContain('mb-')
+  })
+})
+
 // ─── BackgroundCta scrim — the canonical image-scrim composition ──────────────
 //
 // BackgroundCta is the platform's second image+scrim composition (alongside

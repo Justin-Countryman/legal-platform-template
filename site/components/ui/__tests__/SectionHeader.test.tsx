@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest'
 import {render} from '@testing-library/react'
-import {SectionHeader, SECTION_HEADER_H2_CLASS} from '../SectionHeader'
+import {SectionHeader, SECTION_HEADER_H2_CLASS, stripTrailingGap} from '../SectionHeader'
 
 // ─── Render shape ─────────────────────────────────────────────────────────────
 
@@ -108,6 +108,84 @@ describe('SectionHeader — scale prop', () => {
     const h2B = withDesc.container.querySelector('h2') as HTMLElement
     expect(h2A.className).toBe(h2B.className)
     expect(h2A.className).toContain('mb-4')
+  })
+})
+
+// ─── noTrailingGap prop ───────────────────────────────────────────────────────
+//
+// Opt-in suppression of the h2's scale-paired trailing gap, for column-only
+// headers (CtaSectionBlock TextOnlyCta) that place their own content beneath
+// the header rather than below the description. Default off — the canonical
+// gap is unchanged for every consumer that does not pass it.
+
+describe('SectionHeader — noTrailingGap prop', () => {
+  it('defaults to off — the h2 carries its canonical mb-X when the prop is absent', () => {
+    const {container} = render(<SectionHeader heading="x" scale="lg" />)
+    const h2 = container.querySelector('h2') as HTMLElement
+    expect(h2.className).toBe(SECTION_HEADER_H2_CLASS.lg)
+    expect(h2.className).toContain('mb-5')
+  })
+
+  it('is identical to the default when passed explicitly false', () => {
+    const {container} = render(<SectionHeader heading="x" scale="lg" noTrailingGap={false} />)
+    const h2 = container.querySelector('h2') as HTMLElement
+    expect(h2.className).toBe(SECTION_HEADER_H2_CLASS.lg)
+  })
+
+  it('drops mb-5 from the lg tier and keeps the full type scale', () => {
+    const {container} = render(<SectionHeader heading="x" scale="lg" noTrailingGap />)
+    const h2 = container.querySelector('h2') as HTMLElement
+    expect(h2.className).toBe('text-3xl font-bold text-foreground md:text-4xl lg:text-5xl')
+    expect(h2.className).not.toContain('mb-')
+  })
+
+  it('drops mb-4 from the md tier', () => {
+    const {container} = render(<SectionHeader heading="x" noTrailingGap />)
+    const h2 = container.querySelector('h2') as HTMLElement
+    expect(h2.className).toBe('text-3xl font-bold text-foreground md:text-4xl')
+  })
+
+  it('drops the responsive md:mb-6 as well as mb-5 from the xl tier', () => {
+    // xl is the only tier carrying a breakpoint-prefixed margin — a naive
+    // `mb-X` strip would leave md:mb-6 behind and the gap would survive at md+.
+    const {container} = render(<SectionHeader heading="x" scale="xl" noTrailingGap />)
+    const h2 = container.querySelector('h2') as HTMLElement
+    expect(h2.className).toBe('text-4xl font-bold text-foreground md:text-5xl')
+    expect(h2.className).not.toContain('mb-5')
+    expect(h2.className).not.toContain('md:mb-6')
+  })
+
+  it('leaves the canonical tier table itself untouched', () => {
+    // The prop derives a variant; it must not mutate the shared lookup map.
+    render(<SectionHeader heading="x" scale="lg" noTrailingGap />)
+    expect(SECTION_HEADER_H2_CLASS.md).toContain('mb-4')
+    expect(SECTION_HEADER_H2_CLASS.lg).toContain('mb-5')
+    expect(SECTION_HEADER_H2_CLASS.xl).toContain('mb-5')
+    expect(SECTION_HEADER_H2_CLASS.xl).toContain('md:mb-6')
+  })
+
+  it('changes nothing outside the h2 — wrapper, tagline and description are unaffected', () => {
+    const withGap = render(
+      <SectionHeader tagline="t" heading="h" description="d" scale="lg" className="max-w-lg" />
+    )
+    const without = render(
+      <SectionHeader tagline="t" heading="h" description="d" scale="lg" className="max-w-lg" noTrailingGap />
+    )
+    const wrapperA = withGap.container.firstChild as HTMLElement
+    const wrapperB = without.container.firstChild as HTMLElement
+    expect(wrapperA.className).toBe(wrapperB.className)
+    expect(wrapperA.querySelector('.tagline')?.className)
+      .toBe(wrapperB.querySelector('.tagline')?.className)
+    const descA = wrapperA.querySelectorAll('p')[1] as HTMLElement
+    const descB = wrapperB.querySelectorAll('p')[1] as HTMLElement
+    expect(descA.className).toBe(descB.className)
+  })
+
+  it('stripTrailingGap removes only margin-bottom tokens, preserving order', () => {
+    expect(stripTrailingGap('mb-5 text-3xl md:mb-6 md:text-4xl')).toBe('text-3xl md:text-4xl')
+    // Sibling spacing utilities that merely start with `m` are not margin-bottom.
+    expect(stripTrailingGap('mx-auto mt-4 mb-2 max-w-2xl')).toBe('mx-auto mt-4 max-w-2xl')
+    expect(stripTrailingGap('text-3xl font-bold')).toBe('text-3xl font-bold')
   })
 })
 
