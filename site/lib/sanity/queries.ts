@@ -824,7 +824,13 @@ const CANVAS_FRAGMENT = groq`[]{
     "attorneys": select(
       mode == "manual" => attorneys[defined(@->_id)]->{
         _id,
-        "name": coalesce(h1, title),
+        // Built from the name fields, NOT from title. Zite's displayName carries
+        // the firm suffix, so title reads "Joseph Dudley - Firm, P.A." and would
+        // render that on an attorney card. The platform already ruled that
+        // display names build from name fields (_format_display_name); h1 wins
+        // when an operator has set one. No backticks in here: this comment sits
+        // inside a groq template literal and a backtick would close it.
+        "name": coalesce(h1, firstName + " " + lastName),
         jobTitle,
         "href": "/" + slug.current,
         "photo": {
@@ -836,7 +842,13 @@ const CANVAS_FRAGMENT = groq`[]{
       },
       *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{
         _id,
-        "name": coalesce(h1, title),
+        // Built from the name fields, NOT from title. Zite's displayName carries
+        // the firm suffix, so title reads "Joseph Dudley - Firm, P.A." and would
+        // render that on an attorney card. The platform already ruled that
+        // display names build from name fields (_format_display_name); h1 wins
+        // when an operator has set one. No backticks in here: this comment sits
+        // inside a groq template literal and a backtick would close it.
+        "name": coalesce(h1, firstName + " " + lastName),
         jobTitle,
         "href": "/" + slug.current,
         "photo": {
