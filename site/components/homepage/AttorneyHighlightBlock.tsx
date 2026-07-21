@@ -82,7 +82,7 @@ export function AttorneyHighlightBlock({data}: {data: AttorneyHighlightBlockData
                   link is a worse tap target on mobile. */}
               <Link
                 href={a.href as string}
-                className="group block overflow-hidden rounded-ui bg-surface-muted shadow-card transition-shadow duration-ui-base hover:shadow-card-hover"
+                className="group block overflow-hidden rounded-ui bg-muted shadow-card-rest transition-shadow duration-ui-base hover:shadow-card-hover"
               >
                 {a.photo?.src ? (
                   <Image

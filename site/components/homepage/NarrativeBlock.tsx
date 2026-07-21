@@ -114,7 +114,7 @@ export function NarrativeBlock({
         </div>
 
         {hasImage ? (
-          <div className="overflow-hidden rounded-ui shadow-card">
+          <div className="overflow-hidden rounded-ui shadow-card-rest">
             <Image
               src={data.image?.src as string}
               alt={data.image?.alt ?? ''}

@@ -80,7 +80,7 @@ export function CaseResultsBlock({
       <div className="container mx-auto mt-12 max-w-6xl">
         <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {results.map((r, i) => (
-            <li key={r._id ?? i} className="rounded-ui bg-surface-muted p-6 shadow-card md:p-8">
+            <li key={r._id ?? i} className="rounded-ui bg-muted p-6 shadow-card-rest md:p-8">
               {r.amount ? (
                 // The result itself is the loudest thing in the card. h3, so it
                 // sits under the block's single h2.

@@ -88,7 +88,7 @@ export function DifferentiatorBlock({data}: {data: DifferentiatorBlockData}) {
             {items.map((d, i) => (
               <li
                 key={d._key ?? i}
-                className="rounded-ui bg-surface-muted p-6 shadow-card md:p-8"
+                className="rounded-ui bg-muted p-6 shadow-card-rest md:p-8"
               >
                 {d.title ? (
                   <h3 className="font-heading text-xl font-bold text-foreground">{d.title}</h3>

@@ -19,9 +19,9 @@ import Image from 'next/image'
 // TOKENS ONLY. No hex, no font family, no raw radius, no raw shadow. Every
 // value below resolves through the design-token vocabulary, which is what keeps
 // per-client theming and WCAG validation working across bespoke builds:
-//   surface + text     role tokens (bg-surface-muted, text-brand-dark)
+//   surface + text     role tokens (bg-muted, text-brand-dark)
 //   radius             --radius-ui, via rounded-ui
-//   elevation          --shadow-card-rest, via shadow-card
+//   elevation          --shadow-card-rest
 //   type scale         marketing-h* utilities, driven by the marketing scale
 // Hardcoding any one of them silently opts that element out of both systems.
 //
@@ -79,7 +79,7 @@ export function BadgesBlock({data}: {data: BadgesBlockData}) {
           radius and the global card elevation, so the block inherits whatever
           spatial language the client's design settings establish. */}
       <div className="container mx-auto mt-12 max-w-5xl">
-        <ul className="flex flex-wrap items-center justify-center gap-8 rounded-ui bg-surface-muted px-8 py-10 shadow-card md:gap-12">
+        <ul className="flex flex-wrap items-center justify-center gap-8 rounded-ui bg-muted px-8 py-10 shadow-card-rest md:gap-12">
           {badges.map((badge, i) => (
             <li key={i} className="flex items-center justify-center">
               <Image
