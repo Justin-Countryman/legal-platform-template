@@ -1,9 +1,16 @@
 import type {Metadata} from 'next'
 import { client } from '@/lib/sanity/client'
-import { HEADER_QUERY, HOME_QUERY, HOME_HERO_DESIGN_QUERY, NAP_TOKENS_QUERY } from '@/lib/sanity/queries'
+import {
+  HEADER_QUERY,
+  HOME_QUERY,
+  HOME_HERO_DESIGN_QUERY,
+  NAP_TOKENS_QUERY,
+  GLOBAL_CTA_QUERY,
+} from '@/lib/sanity/queries'
 import {Tagline} from '@/components/ui/Tagline'
 import {PageSections, type PageSectionData} from '@/components/sections/PageSections'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
+import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
 import {HomepageHero} from '@/components/layout/homeHero'
 import {type HomeHeroData} from '@/components/layout/homeHero/types'
 import {type NapTokens} from '@/lib/tokens'
@@ -23,15 +30,18 @@ type HomeData = {
   // sections, which stay on homePage for now and are a separate decision.
   canvas?: HomepageBlock[] | null
   resultsDisclaimer?: string | null
+  hideCtaForm?: boolean | null
+  ctaOverride?: Partial<HomepageCtaData> | null
   sections?: PageSectionData[] | null
 }
 
 export default async function HomePage() {
-  const [header, home, design, tokens] = await Promise.all([
+  const [header, home, design, tokens, globalCtaData] = await Promise.all([
     client.fetch(HEADER_QUERY),
     client.fetch<HomeData>(HOME_QUERY),
     client.fetch<HomeHeroDesign | null>(HOME_HERO_DESIGN_QUERY),
     client.fetch<NapTokens>(NAP_TOKENS_QUERY),
+    client.fetch<HomepageCtaData | null>(GLOBAL_CTA_QUERY),
   ])
   const siteSettings = header?.siteSettings
   const content = home?.hero
@@ -65,6 +75,13 @@ export default async function HomePage() {
       />
 
       {sections.length > 0 && <PageSections sections={sections} napTokens={tokens} />}
+
+      {/* Beat 9. Bookend, after the canvas and before the footer. `hideCtaForm`
+          is now live; it gated nothing before this. The coda bookend follows
+          this once its text has a home (ruled: homePage.codaLine). */}
+      {!home?.hideCtaForm && (
+        <HomepageCta data={globalCtaData} override={home?.ctaOverride} />
+      )}
     </>
   )
 }

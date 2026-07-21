@@ -897,6 +897,13 @@ export const HOME_QUERY = groq`
     // the same one-liner any other page rendering case results will need. Raw
     // and nullable here; resolveResultsDisclaimer() supplies the floor.
     "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer,
+    // Beat 9 is a BOOKEND sourced from the globalCta singleton with this page's
+    // ctaFormOverride layered on top, exactly as every interior page does it.
+    // Both were missing here: the homepage rendered no CTA at all and
+    // ctaFormOverride was projected by twelve interior queries and not this one,
+    // which left homePage.hideCtaForm and ctaFormOverride inert (item 53).
+    "hideCtaForm": hideCtaForm,
+    "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT},
     "sections": sections ${SECTIONS_FRAGMENT}
   }
 `
