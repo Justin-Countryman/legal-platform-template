@@ -105,6 +105,31 @@ export const homePage = defineType({
       rows: 5,
       description: 'Homepage-specific reviews embed (optional — used as an alternative to the Reviews Section component)',
     },
+    // ─── Homepage Canvas ──────────────────────────────────────────────────────
+    // The composed mid-page: everything between the hero and the footer, as an
+    // ordered list of BLOCKS that belong to this homepage alone.
+    //
+    // DELIBERATELY SEPARATE FROM `sections` BELOW, which is the interior-page
+    // system. `sections` holds REFERENCES to standalone documents shared across
+    // pages, so editing one changes every page that uses it. A block is an
+    // INLINE object owned by this document. Two entries that look identical in
+    // one list but behave differently, where one silently edits other pages, is
+    // the failure this separation exists to prevent (ruled 2026-07-20).
+    //
+    // FOLLOW-UP, not done here: `sections` should eventually come off homePage
+    // entirely, since the homepage is not meant to use the interior section
+    // system at all. That removal has a wider blast radius than one block and is
+    // its own decision. Until then both lists render, and an operator can still
+    // add an interior section to the wrong one.
+    {
+      name: 'canvas',
+      fieldset: 'layout',
+      title: 'Homepage Canvas (Blocks)',
+      type: 'array',
+      description:
+        'The composed mid-page, in order. These blocks belong to this homepage only. To reuse content across pages, reference an item (badges, case results, testimonials) rather than retyping it here.',
+      of: [{type: 'badgesBlock'}],
+    },
     // ─── Page Sections ────────────────────────────────────────────────────────
     {
       name: 'sections',

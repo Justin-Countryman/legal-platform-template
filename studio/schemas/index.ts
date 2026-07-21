@@ -48,6 +48,9 @@ import {homeHeroContent} from './objects/homeHeroContent'
 import {homeHeroDesign} from './objects/homeHeroDesign'
 import {practiceAreaNavItem} from './objects/practiceAreaNavItem'
 import {ctaFormSection} from './objects/ctaFormSection'
+// Homepage canvas blocks — inline objects owned by the homepage that holds
+// them, never standalone documents. See objects/blocks/badgesBlock.ts.
+import {badgesBlock} from './objects/blocks/badgesBlock'
 import {sidebarTableOfContents} from './objects/sidebarComponents'
 import {sidebarNav} from './documents/sidebar/sidebarNav'
 import {sidebarAttorneyList} from './documents/sidebar/sidebarAttorneyList'
@@ -138,4 +141,7 @@ export const schemaTypes = [
   practiceAreaNavItem,
   ctaFormSection,
   sidebarTableOfContents,
+
+  // Homepage canvas blocks (inline objects, not documents)
+  badgesBlock,
 ]
