@@ -136,6 +136,35 @@ export const homePage = defineType({
         {type: 'badgesBlock'},
       ],
     },
+    // ─── Coda ─────────────────────────────────────────────────────────────────
+    // The closing line: one centered statement on a quiet band after the final
+    // CTA and before the footer, closing the page's emotional arc. A BOOKEND,
+    // not a canvas unit: fixed position, fixed shape, not composed and not
+    // editable per block.
+    //
+    // WHY IT LIVES ON homePage AND NOT SOMEWHERE SHARED. Both obvious homes are
+    // wrong. `globalCta` is a shared singleton AND an ask, where a coda closes
+    // one page's arc and is a statement rather than a call to action; putting it
+    // there would give every page one page's closing line. `siteSettings` is
+    // site-wide for the same mismatch. The coda is written to follow THIS page's
+    // narrative, so it belongs beside `hero` and `canvas`.
+    //
+    // KNOWN AND DELIBERATE: this does not generalize. BI-Library calls the coda
+    // a platform default and it appears on most premium reference sites, so a
+    // landing page may want one later. A `homePage`-only field will not serve
+    // that, and that is the platform's standing one-consumer posture rather than
+    // an oversight (BI-Library cites it at OUTSTANDING items 14 and 15). Adding
+    // the same field to `landingPage` when a second consumer exists is additive
+    // and invalidates nothing authored here. The trigger is a real landing page
+    // that wants a coda.
+    {
+      name: 'codaLine',
+      title: 'Coda Line',
+      type: 'string',
+      description:
+        'One sentence, centered on a quiet band after the final CTA. Closes the page rather than asking for anything. Deliberately a single line: a paragraph here reads as a second CTA.',
+      components: {input: TokenStringInput},
+    },
     // ─── Page Sections ────────────────────────────────────────────────────────
     {
       name: 'sections',

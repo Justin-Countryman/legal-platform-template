@@ -17262,6 +17262,13 @@
         },
         "optional": true
       },
+      "codaLine": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "sections": {
         "type": "objectAttribute",
         "value": {

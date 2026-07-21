@@ -10,6 +10,7 @@ import {
 import {Tagline} from '@/components/ui/Tagline'
 import {PageSections, type PageSectionData} from '@/components/sections/PageSections'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
+import {HomepageCoda} from '@/components/layout/HomepageCoda'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
 import {HomepageHero} from '@/components/layout/homeHero'
 import {type HomeHeroData} from '@/components/layout/homeHero/types'
@@ -32,6 +33,7 @@ type HomeData = {
   resultsDisclaimer?: string | null
   hideCtaForm?: boolean | null
   ctaOverride?: Partial<HomepageCtaData> | null
+  codaLine?: string | null
   sections?: PageSectionData[] | null
 }
 
@@ -77,11 +79,13 @@ export default async function HomePage() {
       {sections.length > 0 && <PageSections sections={sections} napTokens={tokens} />}
 
       {/* Beat 9. Bookend, after the canvas and before the footer. `hideCtaForm`
-          is now live; it gated nothing before this. The coda bookend follows
-          this once its text has a home (ruled: homePage.codaLine). */}
+          is now live; it gated nothing before this. */}
       {!home?.hideCtaForm && (
         <HomepageCta data={globalCtaData} override={home?.ctaOverride} />
       )}
+
+      {/* The coda closes the arc after the CTA. Last thing before the footer. */}
+      <HomepageCoda text={home?.codaLine} />
     </>
   )
 }

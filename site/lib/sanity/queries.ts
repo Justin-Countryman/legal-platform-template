@@ -904,6 +904,9 @@ export const HOME_QUERY = groq`
     // which left homePage.hideCtaForm and ctaFormOverride inert (item 53).
     "hideCtaForm": hideCtaForm,
     "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT},
+    // The coda bookend's text. Lives on homePage because it closes THIS page's
+    // arc; see the schema for why globalCta and siteSettings were both wrong.
+    codaLine,
     "sections": sections ${SECTIONS_FRAGMENT}
   }
 `
