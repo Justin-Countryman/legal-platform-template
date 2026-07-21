@@ -187,7 +187,7 @@ describe('GROQ canonical filter-before-dereference pattern', () => {
   // See BI/skills/skill-sanity-schema/SKILL.md → "Reference array dereferencing"
   // for the mechanism + consumer-side belt-and-suspenders pairing.
 
-  it('catalog-stability: queries.ts contains exactly 25 canonical filter-before-deref patterns', () => {
+  it('catalog-stability: queries.ts contains exactly 26 canonical filter-before-deref patterns', () => {
     // If this count changes, the catalog has drifted. Update this number in
     // lockstep with any new []-> projection and verify the new projection ships
     // with the canonical [defined(@->_id)]-> shape.
@@ -204,8 +204,13 @@ describe('GROQ canonical filter-before-dereference pattern', () => {
     // `badges[]` on badgesSection migrated from inline badge objects to
     // `badge` item references, the same inline-to-reference promotion the
     // faqItem migration made above.
+    // Grew 25 → 26 in WS-Homepage-Canvas Phase 3a (2026-07-20) with
+    // CANVAS_FRAGMENT's `badges[]` on badgesBlock. Note this is a SECOND
+    // dereference of the same `badge` item type: the homepage block and the
+    // interior-page section reference badges independently, which is the
+    // expected shape now that blocks and sections are separate systems.
     const matches = QUERIES_SRC.match(/\[defined\(@->_id\)\]->/g) ?? []
-    expect(matches.length).toBe(25)
+    expect(matches.length).toBe(26)
   })
 
   it('source-text meta: queries.ts contains zero broken-pattern occurrences', () => {

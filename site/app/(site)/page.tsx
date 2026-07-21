@@ -3,6 +3,7 @@ import { client } from '@/lib/sanity/client'
 import { HEADER_QUERY, HOME_QUERY, HOME_HERO_DESIGN_QUERY, NAP_TOKENS_QUERY } from '@/lib/sanity/queries'
 import {Tagline} from '@/components/ui/Tagline'
 import {PageSections, type PageSectionData} from '@/components/sections/PageSections'
+import {HomepageCanvas, type HomepageBlock} from '@/components/homepage/HomepageCanvas'
 import {HomepageHero} from '@/components/layout/homeHero'
 import {type HomeHeroData} from '@/components/layout/homeHero/types'
 import {type NapTokens} from '@/lib/tokens'
@@ -18,6 +19,9 @@ type HomeHeroContent = Pick<HomeHeroData, 'heading' | 'eyebrow' | 'description' 
 type HomeHeroDesign = Omit<HomeHeroData, 'heading' | 'eyebrow' | 'description' | 'buttons'>
 type HomeData = {
   hero?: HomeHeroContent | null
+  // The composed mid-page. Renders between the hero and the interior-page
+  // sections, which stay on homePage for now and are a separate decision.
+  canvas?: HomepageBlock[] | null
   sections?: PageSectionData[] | null
 }
 
@@ -52,6 +56,8 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      <HomepageCanvas blocks={home?.canvas} />
 
       {sections.length > 0 && <PageSections sections={sections} napTokens={tokens} />}
     </>

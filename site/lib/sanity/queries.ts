@@ -804,9 +804,33 @@ export const NAP_TOKENS_QUERY = groq`
 // The homepage's full-width sections (silo nav, CTA, testimonials, …). The unique
 // homepage hero is a separate build; this projects the stacked sections so they
 // render below it.
+// The composed mid-page canvas. Blocks are INLINE objects on homePage, so
+// unlike SECTIONS_FRAGMENT this projects the array directly: there is no
+// document behind a block to dereference. `_type` and `_key` are projected
+// because the renderer dispatches on the first and keys on the second.
+//
+// Reference arrays INSIDE a block still take the canonical filter-before-
+// dereference shape. A badge deleted out from under a homepage has to drop out
+// of the list rather than render as a null hole.
+const CANVAS_FRAGMENT = groq`[]{
+  _type,
+  _key,
+  _type == "badgesBlock" => {
+    heading,
+    description,
+    "badges": badges[defined(@->_id)]->{
+      "src": image.asset->url,
+      "alt": image.alt,
+      "width": image.asset->metadata.dimensions.width,
+      "height": image.asset->metadata.dimensions.height
+    }
+  }
+}`
+
 export const HOME_QUERY = groq`
   *[_type == "homePage"][0]{
     "hero": hero ${HOME_HERO_CONTENT_FRAGMENT},
+    "canvas": canvas ${CANVAS_FRAGMENT},
     "sections": sections ${SECTIONS_FRAGMENT}
   }
 `
