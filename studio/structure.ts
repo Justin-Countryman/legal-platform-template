@@ -66,7 +66,18 @@ export const structure = (S: StructureBuilder) =>
                 .child(
                   S.document()
                     .schemaType('homePage')
-                    .documentId('homePage')
+                    // `homePage-home`, NOT `homePage`. Site Build writes page
+                    // documents as `<type>-<slug>` and homePage's slug is fixed
+                    // to `home` (readOnly, initialValue). Pinning the bare id
+                    // opened a document that does not exist, so Studio showed an
+                    // empty form while the site read the real one via
+                    // *[_type == "homePage"][0]. Worse than cosmetic: saving that
+                    // empty form would have created a SECOND homePage document,
+                    // and `homePage` sorts before `homePage-home`, so the
+                    // operator's blank page could have taken over the site.
+                    // Found 2026-07-20 when the composed canvas rendered on the
+                    // site and appeared empty in Studio.
+                    .documentId('homePage-home')
                     .title('Homepage')
                 ),
               S.listItem()
