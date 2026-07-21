@@ -132,6 +132,7 @@ export const homePage = defineType({
         {type: 'narrativeBlock'},
         {type: 'differentiatorBlock'},
         {type: 'caseResultsBlock'},
+        {type: 'attorneyHighlightBlock'},
         {type: 'badgesBlock'},
       ],
     },

@@ -187,7 +187,7 @@ describe('GROQ canonical filter-before-dereference pattern', () => {
   // See BI/skills/skill-sanity-schema/SKILL.md → "Reference array dereferencing"
   // for the mechanism + consumer-side belt-and-suspenders pairing.
 
-  it('catalog-stability: queries.ts contains exactly 27 canonical filter-before-deref patterns', () => {
+  it('catalog-stability: queries.ts contains exactly 29 canonical filter-before-deref patterns', () => {
     // If this count changes, the catalog has drifted. Update this number in
     // lockstep with any new []-> projection and verify the new projection ships
     // with the canonical [defined(@->_id)]-> shape.
@@ -216,8 +216,12 @@ describe('GROQ canonical filter-before-dereference pattern', () => {
     // than as the array element, so it takes the
     // `items[defined(page->slug.current)]{ page-> }` shape instead. The count
     // tracks reference ARRAYS, not blocks; it is not a block census.
+    // Grew 27 -> 29 with attorneyHighlightBlock, which adds TWO: its `all` and
+    // `manual` modes are separate branches of a select() and each dereferences
+    // its own reference array. A block contributes one pattern per reference
+    // ARRAY it projects, not one per block.
     const matches = QUERIES_SRC.match(/\[defined\(@->_id\)\]->/g) ?? []
-    expect(matches.length).toBe(27)
+    expect(matches.length).toBe(29)
   })
 
   it('source-text meta: queries.ts contains zero broken-pattern occurrences', () => {

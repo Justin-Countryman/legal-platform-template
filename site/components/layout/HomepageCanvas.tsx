@@ -9,6 +9,10 @@ import {
   CaseResultsBlock,
   type CaseResultsBlockData,
 } from '@/components/homepage/CaseResultsBlock'
+import {
+  AttorneyHighlightBlock,
+  type AttorneyHighlightBlockData,
+} from '@/components/homepage/AttorneyHighlightBlock'
 import {resolveResultsDisclaimer} from '@/lib/legal'
 import {type NapTokens} from '@/lib/tokens'
 
@@ -54,6 +58,7 @@ export type HomepageBlock =
   | DifferentiatorBlockData
   | NarrativeBlockData
   | CaseResultsBlockData
+  | AttorneyHighlightBlockData
 
 // The disclaimer is resolved HERE, not in the block, and passed as a required
 // prop. Bar advertising rules require past results to be paired with a
@@ -71,6 +76,8 @@ function renderBlock(
       return (
         <CaseResultsBlock data={block} disclaimer={resolveResultsDisclaimer(resultsDisclaimer)} />
       )
+    case 'attorneyHighlightBlock':
+      return <AttorneyHighlightBlock data={block} />
     case 'narrativeBlock':
       return <NarrativeBlock data={block} napTokens={napTokens} />
     case 'differentiatorBlock':

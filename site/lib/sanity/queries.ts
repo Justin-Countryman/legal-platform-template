@@ -815,6 +815,39 @@ export const NAP_TOKENS_QUERY = groq`
 const CANVAS_FRAGMENT = groq`[]{
   _type,
   _key,
+  _type == "attorneyHighlightBlock" => {
+    tagline,
+    heading,
+    mode,
+    // 'all' reads the Attorney Index order so the homepage row matches the
+    // attorney index and the header nav; 'manual' uses the block's own order.
+    "attorneys": select(
+      mode == "manual" => attorneys[defined(@->_id)]->{
+        _id,
+        "name": coalesce(h1, title),
+        jobTitle,
+        "href": "/" + slug.current,
+        "photo": {
+          "src": photo.asset->url,
+          "alt": photo.alt,
+          "width": photo.asset->metadata.dimensions.width,
+          "height": photo.asset->metadata.dimensions.height
+        }
+      },
+      *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{
+        _id,
+        "name": coalesce(h1, title),
+        jobTitle,
+        "href": "/" + slug.current,
+        "photo": {
+          "src": photo.asset->url,
+          "alt": photo.alt,
+          "width": photo.asset->metadata.dimensions.width,
+          "height": photo.asset->metadata.dimensions.height
+        }
+      }
+    )
+  },
   _type == "caseResultsBlock" => {
     heading,
     intro,
