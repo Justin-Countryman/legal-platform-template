@@ -1,10 +1,25 @@
 import {ScrollReveal} from '@/components/ui/ScrollReveal'
-import {BadgesBlock, type BadgesBlockData} from './BadgesBlock'
+import {BadgesBlock, type BadgesBlockData} from '@/components/homepage/BadgesBlock'
 
 // ─── Homepage canvas ──────────────────────────────────────────────────────────
 //
 // Renders the composed mid-page: the ordered blocks between the hero primitive
 // and the footer primitive.
+//
+// PLATFORM-OWNED, and deliberately NOT in `components/homepage/`. This file is
+// identical on every client and it carries the first-block motion rule, so a
+// client-owned copy forks that rule per client and nothing reports the
+// divergence. It sits with the other page-shell primitives (Header, Footer,
+// homeHero, InternalHero) because it is one: the structural container for the
+// homepage mid-page.
+//
+// THE CONTRACT WITH THE CLIENT-OWNED SIDE. `components/homepage/` holds block
+// components only, never plumbing. Each block ships at a fixed path and export
+// name (`components/homepage/<Name>Block.tsx` exporting `<Name>Block`), so the
+// imports below are stable on every client. A client rewrites the MARKUP inside
+// a block file; it never renames the file or its export, and it never edits
+// this dispatcher. That is what keeps the treatment bespoke and the wiring
+// identical everywhere.
 //
 // THIS IS NOT PageSections. PageSections renders the interior-page section
 // system, which produces fixed stacked bands and forbids crossing between them.

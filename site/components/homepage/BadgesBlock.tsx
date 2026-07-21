@@ -2,11 +2,19 @@ import Image from 'next/image'
 
 // ─── Badges / Awards block ────────────────────────────────────────────────────
 //
-// The bespoke half of the first homepage block. The schema
-// (studio/schemas/objects/blocks/badgesBlock.ts) is standard and identical on
-// every client; THIS FILE IS NOT. It is the reference rendering, and a client
-// whose homepage wants a different badge treatment rewrites it here rather than
-// adding a `layout` field to the schema.
+// CLIENT-OWNED. `components/homepage/` is the designated client-owned location
+// and holds block components ONLY, never plumbing: the dispatcher that places
+// blocks and carries the first-block motion rule is platform-owned, at
+// `components/layout/HomepageCanvas.tsx`.
+//
+// The schema (studio/schemas/objects/blocks/badgesBlock.ts) is standard and
+// identical on every client; THIS FILE IS NOT. It is the reference rendering,
+// and a client whose homepage wants a different badge treatment rewrites it
+// here rather than adding a `layout` field to the schema.
+//
+// Keep the file path and the export name. The platform dispatcher imports
+// `BadgesBlock` from this exact path on every client, so renaming either breaks
+// the wiring; the markup inside is yours to replace wholesale.
 //
 // TOKENS ONLY. No hex, no font family, no raw radius, no raw shadow. Every
 // value below resolves through the design-token vocabulary, which is what keeps
