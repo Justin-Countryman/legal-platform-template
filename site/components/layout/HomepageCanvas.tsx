@@ -4,6 +4,8 @@ import {
   DifferentiatorBlock,
   type DifferentiatorBlockData,
 } from '@/components/homepage/DifferentiatorBlock'
+import {NarrativeBlock, type NarrativeBlockData} from '@/components/homepage/NarrativeBlock'
+import {type NapTokens} from '@/lib/tokens'
 
 // ─── Homepage canvas ──────────────────────────────────────────────────────────
 //
@@ -42,10 +44,12 @@ import {
 // The rule is therefore applied HERE, by index, which is the only place that
 // knows a block's position. A block cannot know whether it is first, which is
 // also why blocks do not wrap themselves.
-export type HomepageBlock = BadgesBlockData | DifferentiatorBlockData
+export type HomepageBlock = BadgesBlockData | DifferentiatorBlockData | NarrativeBlockData
 
-function renderBlock(block: HomepageBlock) {
+function renderBlock(block: HomepageBlock, napTokens?: NapTokens | null) {
   switch (block._type) {
+    case 'narrativeBlock':
+      return <NarrativeBlock data={block} napTokens={napTokens} />
     case 'differentiatorBlock':
       return <DifferentiatorBlock data={block} />
     case 'badgesBlock':
@@ -58,13 +62,19 @@ function renderBlock(block: HomepageBlock) {
   }
 }
 
-export function HomepageCanvas({blocks}: {blocks?: HomepageBlock[] | null}) {
+export function HomepageCanvas({
+  blocks,
+  napTokens,
+}: {
+  blocks?: HomepageBlock[] | null
+  napTokens?: NapTokens | null
+}) {
   if (!blocks || blocks.length === 0) return null
 
   return (
     <>
       {blocks.map((block, i) => {
-        const rendered = renderBlock(block)
+        const rendered = renderBlock(block, napTokens)
         if (!rendered) return null
         // Index 0 is the first block after the hero: no motion, ever.
         return i === 0 ? (

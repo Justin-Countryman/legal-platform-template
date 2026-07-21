@@ -815,6 +815,22 @@ export const NAP_TOKENS_QUERY = groq`
 const CANVAS_FRAGMENT = groq`[]{
   _type,
   _key,
+  _type == "narrativeBlock" => {
+    heading,
+    "body": body ${BLOCK_CONTENT_FRAGMENT},
+    "image": {
+      "src": image.asset->url,
+      "alt": image.alt,
+      "width": image.asset->metadata.dimensions.width,
+      "height": image.asset->metadata.dimensions.height
+    },
+    "ctaButton": ctaButton{title, url, variant},
+    "internalLinks": internalLinks[defined(page->slug.current)]{
+      _key,
+      anchorText,
+      "href": "/" + page->slug.current + "/"
+    }
+  },
   _type == "differentiatorBlock" => {
     heading,
     intro,

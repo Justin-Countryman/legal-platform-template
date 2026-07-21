@@ -57,7 +57,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      <HomepageCanvas blocks={home?.canvas} />
+      <HomepageCanvas blocks={home?.canvas} napTokens={tokens} />
 
       {sections.length > 0 && <PageSections sections={sections} napTokens={tokens} />}
     </>
