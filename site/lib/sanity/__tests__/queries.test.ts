@@ -187,7 +187,7 @@ describe('GROQ canonical filter-before-dereference pattern', () => {
   // See BI/skills/skill-sanity-schema/SKILL.md → "Reference array dereferencing"
   // for the mechanism + consumer-side belt-and-suspenders pairing.
 
-  it('catalog-stability: queries.ts contains exactly 26 canonical filter-before-deref patterns', () => {
+  it('catalog-stability: queries.ts contains exactly 27 canonical filter-before-deref patterns', () => {
     // If this count changes, the catalog has drifted. Update this number in
     // lockstep with any new []-> projection and verify the new projection ships
     // with the canonical [defined(@->_id)]-> shape.
@@ -209,8 +209,15 @@ describe('GROQ canonical filter-before-dereference pattern', () => {
     // dereference of the same `badge` item type: the homepage block and the
     // interior-page section reference badges independently, which is the
     // expected shape now that blocks and sections are separate systems.
+    // Grew 26 -> 27 in WS-Homepage-Canvas Phase 4 with CANVAS_FRAGMENT's
+    // `caseResults[]` on caseResultsBlock. Note which blocks DID NOT move it:
+    // differentiatorBlock holds no references at all, and narrativeBlock's
+    // `internalLinks` puts its reference on an object INSIDE the array rather
+    // than as the array element, so it takes the
+    // `items[defined(page->slug.current)]{ page-> }` shape instead. The count
+    // tracks reference ARRAYS, not blocks; it is not a block census.
     const matches = QUERIES_SRC.match(/\[defined\(@->_id\)\]->/g) ?? []
-    expect(matches.length).toBe(26)
+    expect(matches.length).toBe(27)
   })
 
   it('source-text meta: queries.ts contains zero broken-pattern occurrences', () => {

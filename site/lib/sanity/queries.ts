@@ -815,6 +815,14 @@ export const NAP_TOKENS_QUERY = groq`
 const CANVAS_FRAGMENT = groq`[]{
   _type,
   _key,
+  _type == "caseResultsBlock" => {
+    heading,
+    intro,
+    "caseResults": caseResults[defined(@->_id)]->{
+      _id, amount, caseType, caption, year
+    },
+    "ctaButton": ctaButton{title, url, variant}
+  },
   _type == "narrativeBlock" => {
     heading,
     "body": body ${BLOCK_CONTENT_FRAGMENT},
@@ -852,6 +860,10 @@ export const HOME_QUERY = groq`
   *[_type == "homePage"][0]{
     "hero": hero ${HOME_HERO_CONTENT_FRAGMENT},
     "canvas": canvas ${CANVAS_FRAGMENT},
+    // Site-level, projected alongside the canvas rather than fetched separately:
+    // the same one-liner any other page rendering case results will need. Raw
+    // and nullable here; resolveResultsDisclaimer() supplies the floor.
+    "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer,
     "sections": sections ${SECTIONS_FRAGMENT}
   }
 `

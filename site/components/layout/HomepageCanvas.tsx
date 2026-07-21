@@ -5,6 +5,11 @@ import {
   type DifferentiatorBlockData,
 } from '@/components/homepage/DifferentiatorBlock'
 import {NarrativeBlock, type NarrativeBlockData} from '@/components/homepage/NarrativeBlock'
+import {
+  CaseResultsBlock,
+  type CaseResultsBlockData,
+} from '@/components/homepage/CaseResultsBlock'
+import {resolveResultsDisclaimer} from '@/lib/legal'
 import {type NapTokens} from '@/lib/tokens'
 
 // ─── Homepage canvas ──────────────────────────────────────────────────────────
@@ -44,10 +49,28 @@ import {type NapTokens} from '@/lib/tokens'
 // The rule is therefore applied HERE, by index, which is the only place that
 // knows a block's position. A block cannot know whether it is first, which is
 // also why blocks do not wrap themselves.
-export type HomepageBlock = BadgesBlockData | DifferentiatorBlockData | NarrativeBlockData
+export type HomepageBlock =
+  | BadgesBlockData
+  | DifferentiatorBlockData
+  | NarrativeBlockData
+  | CaseResultsBlockData
 
-function renderBlock(block: HomepageBlock, napTokens?: NapTokens | null) {
+// The disclaimer is resolved HERE, not in the block, and passed as a required
+// prop. Bar advertising rules require past results to be paired with a
+// disclaimer, always, and the guarantee has to sit somewhere a client rewriting
+// its own block markup cannot reach. `resolveResultsDisclaimer` returns a
+// non-empty string for every possible input, so the block receives a value it
+// can render unconditionally and has no nullable case to get wrong.
+function renderBlock(
+  block: HomepageBlock,
+  napTokens?: NapTokens | null,
+  resultsDisclaimer?: string | null,
+) {
   switch (block._type) {
+    case 'caseResultsBlock':
+      return (
+        <CaseResultsBlock data={block} disclaimer={resolveResultsDisclaimer(resultsDisclaimer)} />
+      )
     case 'narrativeBlock':
       return <NarrativeBlock data={block} napTokens={napTokens} />
     case 'differentiatorBlock':
@@ -65,16 +88,20 @@ function renderBlock(block: HomepageBlock, napTokens?: NapTokens | null) {
 export function HomepageCanvas({
   blocks,
   napTokens,
+  resultsDisclaimer,
 }: {
   blocks?: HomepageBlock[] | null
   napTokens?: NapTokens | null
+  /** Raw siteSettings.resultsDisclaimer. Nullable by design: the resolver
+   *  supplies the code constant whenever it is absent or blank. */
+  resultsDisclaimer?: string | null
 }) {
   if (!blocks || blocks.length === 0) return null
 
   return (
     <>
       {blocks.map((block, i) => {
-        const rendered = renderBlock(block, napTokens)
+        const rendered = renderBlock(block, napTokens, resultsDisclaimer)
         if (!rendered) return null
         // Index 0 is the first block after the hero: no motion, ever.
         return i === 0 ? (

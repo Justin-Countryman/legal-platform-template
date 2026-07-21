@@ -53,6 +53,7 @@ import {ctaFormSection} from './objects/ctaFormSection'
 import {badgesBlock} from './objects/blocks/badgesBlock'
 import {differentiatorBlock} from './objects/blocks/differentiatorBlock'
 import {narrativeBlock} from './objects/blocks/narrativeBlock'
+import {caseResultsBlock} from './objects/blocks/caseResultsBlock'
 import {blockProse} from './objects/blocks/blockProse'
 import {sidebarTableOfContents} from './objects/sidebarComponents'
 import {sidebarNav} from './documents/sidebar/sidebarNav'
@@ -149,5 +150,6 @@ export const schemaTypes = [
   badgesBlock,
   differentiatorBlock,
   narrativeBlock,
+  caseResultsBlock,
   blockProse,
 ]

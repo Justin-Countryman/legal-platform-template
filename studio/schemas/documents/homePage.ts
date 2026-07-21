@@ -128,7 +128,12 @@ export const homePage = defineType({
       type: 'array',
       description:
         'The composed mid-page, in order. These blocks belong to this homepage only. To reuse content across pages, reference an item (badges, case results, testimonials) rather than retyping it here.',
-      of: [{type: 'narrativeBlock'}, {type: 'differentiatorBlock'}, {type: 'badgesBlock'}],
+      of: [
+        {type: 'narrativeBlock'},
+        {type: 'differentiatorBlock'},
+        {type: 'caseResultsBlock'},
+        {type: 'badgesBlock'},
+      ],
     },
     // ─── Page Sections ────────────────────────────────────────────────────────
     {

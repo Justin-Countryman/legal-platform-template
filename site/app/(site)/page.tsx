@@ -22,6 +22,7 @@ type HomeData = {
   // The composed mid-page. Renders between the hero and the interior-page
   // sections, which stay on homePage for now and are a separate decision.
   canvas?: HomepageBlock[] | null
+  resultsDisclaimer?: string | null
   sections?: PageSectionData[] | null
 }
 
@@ -57,7 +58,11 @@ export default async function HomePage() {
         </section>
       )}
 
-      <HomepageCanvas blocks={home?.canvas} napTokens={tokens} />
+      <HomepageCanvas
+        blocks={home?.canvas}
+        napTokens={tokens}
+        resultsDisclaimer={home?.resultsDisclaimer}
+      />
 
       {sections.length > 0 && <PageSections sections={sections} napTokens={tokens} />}
     </>
