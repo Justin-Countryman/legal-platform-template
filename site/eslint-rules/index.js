@@ -27,6 +27,8 @@ const collectionGridListSemantics = require('./rules/collection-grid-list-semant
 const headingCascadeDiscipline = require('./rules/heading-cascade-discipline')
 const noTextActionRaw = require('./rules/no-text-action-raw')
 const noTextAccentOnBgMuted = require('./rules/no-text-accent-on-bg-muted')
+const noRawColorValue = require('./rules/no-raw-color-value')
+const noHardcodedFontFamily = require('./rules/no-hardcoded-font-family')
 
 const rules = {
   'no-arbitrary-color':              noArbitraryColor,                // T1
@@ -44,6 +46,8 @@ const rules = {
   'heading-cascade-discipline':      headingCascadeDiscipline,        // A2
   'no-text-action-raw':              noTextActionRaw,                 // T5a
   'no-text-accent-on-bg-muted':      noTextAccentOnBgMuted,           // T5b
+  'no-raw-color-value':              noRawColorValue,                 // T7
+  'no-hardcoded-font-family':        noHardcodedFontFamily,           // T8
 }
 
 module.exports = {

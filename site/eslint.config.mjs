@@ -53,6 +53,26 @@ const eslintConfig = [
       // tagline, sr-only. Skips opaque tokenizations per false-negatives-
       // over-false-positives. The WS8 anchor rule.
       "platform/heading-cascade-discipline": "error",
+      // T7 — `BI-FOUNDATIONS.md → "Token-first, not value-first"` +
+      // `skill-color-system → Anti-patterns`. Companion to T1
+      // (no-arbitrary-color), which reads className ONLY. T7 catches raw
+      // color values everywhere else: inline `style`, TS constants,
+      // template CSS. OUTSTANDING item 46 named the gap, and it matters
+      // more now that homepage block components exist: a block that
+      // hardcodes a color renders correctly on the client it was written
+      // for and silently opts out of per-client theming and WCAG
+      // validation on every other one. Token-system boundary files are
+      // scoped out structurally rather than carrying inline disables —
+      // see eslint-rules/lib/token-boundary.js for each file and reason.
+      "platform/no-raw-color-value": "error",
+      // T8 — `BI-PRINCIPLES.md → Performance / Fonts` +
+      // `skill-typography → CSS chain`. The existing font restrictions
+      // block font FETCHING (Google CDN hosts, next/font/google); neither
+      // catches a font VALUE typed into a component, which is the other
+      // half of item 46. A hardcoded family keeps rendering after an
+      // operator changes `fontPairingPreset`, so the design setting
+      // appears to work and does nothing. Same boundary carve-out.
+      "platform/no-hardcoded-font-family": "error",
       // A3 — `BI-PRINCIPLES.md → Landmarks` ("Every <footer> carries
       // aria-labelledby='footer-heading' and contains <h2 id='footer-
       // heading' className='sr-only'>...</h2> as its first child").
