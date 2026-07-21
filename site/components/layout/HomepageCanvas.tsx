@@ -1,5 +1,9 @@
 import {ScrollReveal} from '@/components/ui/ScrollReveal'
 import {BadgesBlock, type BadgesBlockData} from '@/components/homepage/BadgesBlock'
+import {
+  DifferentiatorBlock,
+  type DifferentiatorBlockData,
+} from '@/components/homepage/DifferentiatorBlock'
 
 // ─── Homepage canvas ──────────────────────────────────────────────────────────
 //
@@ -38,10 +42,12 @@ import {BadgesBlock, type BadgesBlockData} from '@/components/homepage/BadgesBlo
 // The rule is therefore applied HERE, by index, which is the only place that
 // knows a block's position. A block cannot know whether it is first, which is
 // also why blocks do not wrap themselves.
-export type HomepageBlock = BadgesBlockData
+export type HomepageBlock = BadgesBlockData | DifferentiatorBlockData
 
 function renderBlock(block: HomepageBlock) {
   switch (block._type) {
+    case 'differentiatorBlock':
+      return <DifferentiatorBlock data={block} />
     case 'badgesBlock':
       return <BadgesBlock data={block} />
     // No default case that renders something generic. An unknown block type

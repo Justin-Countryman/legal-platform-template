@@ -815,6 +815,11 @@ export const NAP_TOKENS_QUERY = groq`
 const CANVAS_FRAGMENT = groq`[]{
   _type,
   _key,
+  _type == "differentiatorBlock" => {
+    heading,
+    intro,
+    "differentiators": differentiators[]{_key, title, body}
+  },
   _type == "badgesBlock" => {
     heading,
     description,

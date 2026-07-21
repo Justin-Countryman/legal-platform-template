@@ -1,5 +1,79 @@
 [
   {
+    "name": "differentiatorBlock",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "differentiatorBlock"
+          }
+        },
+        "heading": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "intro": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "differentiators": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "array",
+            "of": {
+              "type": "object",
+              "attributes": {
+                "title": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "body": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "_type": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string",
+                    "value": "differentiator"
+                  }
+                }
+              },
+              "rest": {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
     "name": "badgesBlock",
     "type": "type",
     "value": {
@@ -17640,19 +17714,39 @@
         "value": {
           "type": "array",
           "of": {
-            "type": "object",
-            "attributes": {
-              "_key": {
-                "type": "objectAttribute",
-                "value": {
-                  "type": "string"
+            "type": "union",
+            "of": [
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "differentiatorBlock"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "badgesBlock"
                 }
               }
-            },
-            "rest": {
-              "type": "inline",
-              "name": "badgesBlock"
-            }
+            ]
           }
         },
         "optional": true
