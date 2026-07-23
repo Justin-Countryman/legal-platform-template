@@ -11,7 +11,7 @@ import {
   GLOBAL_CTA_QUERY,
   NAP_TOKENS_QUERY,
 } from '@/lib/sanity/queries'
-import {resolveTokenString, expandNapTokens} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString, titleFragment} from '@/lib/tokens'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
@@ -45,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const tokens = expandNapTokens(rawTokens)
   if (!indexPage) return {title: 'Our Team'}
 
-  const title = resolveTokenString(indexPage.seoTitle, tokens)
+  const title = titleFragment(indexPage.seoTitle, indexPage.title, tokens)
   const description = resolveTokenString(indexPage.metaDescription, tokens)
   return {
     title,

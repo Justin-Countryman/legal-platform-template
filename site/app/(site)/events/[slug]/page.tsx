@@ -5,7 +5,7 @@ import type {Metadata} from 'next'
 import Link from 'next/link'
 import {client} from '@/lib/sanity/client'
 import {EVENT_PAGE_QUERY, EVENT_SLUGS_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
-import {resolveTokenString, expandNapTokens, type NapTokens} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString, titleFragment, type NapTokens} from '@/lib/tokens'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
@@ -121,7 +121,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const tokens = expandNapTokens(rawTokens)
   if (!event) return {}
 
-  const title = resolveTokenString(event.seoTitle, tokens)
+  const title = titleFragment(event.seoTitle, event.title, tokens)
   const description = resolveTokenString(event.metaDescription, tokens)
   return {
     title,

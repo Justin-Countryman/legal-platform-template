@@ -144,7 +144,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
       default: firmName,
-      template: `%s | ${firmName}`,
+      template: `%s - ${firmName}`,
     },
     metadataBase: new URL(`https://${domain}`),
     ...(icons ? {icons} : {}),

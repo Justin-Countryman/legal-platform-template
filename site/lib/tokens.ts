@@ -46,6 +46,29 @@ export function resolveTokenString(
   })
 }
 
+/**
+ * Resolve a page's title fragment for `generateMetadata`. Doctrine:
+ * BI-Content.md "Title tags" — `seoTitle` holds the page-specific fragment,
+ * the root layout's title template appends the firm name, and no page may
+ * render a title beginning with the separator.
+ *
+ * Returns the resolved `seoTitle` when non-empty, else the resolved page
+ * name, else `undefined`. The `undefined` matters: `''` counts as a present
+ * title to Next, which takes the template branch and renders a leading
+ * separator; `undefined` falls through to the root `default` (the bare firm
+ * name), the only correct rendering left when both sources are empty.
+ */
+export function titleFragment(
+  seoTitle: string | null | undefined,
+  pageName: string | null | undefined,
+  tokens: NapTokens | null | undefined,
+): string | undefined {
+  const fragment = resolveTokenString(seoTitle, tokens).trim()
+  if (fragment) return fragment
+  const name = resolveTokenString(pageName, tokens).trim()
+  return name || undefined
+}
+
 // Computes the per-field display values for one location. Shared by the
 // location-keyed tokens (location.{_id}.field) and the current-office aliases
 // (office.field), so both stay identical.

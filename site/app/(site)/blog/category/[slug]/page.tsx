@@ -11,7 +11,7 @@ import {
   GLOBAL_CTA_QUERY,
   NAP_TOKENS_QUERY,
 } from '@/lib/sanity/queries'
-import {resolveTokenString, expandNapTokens} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString, titleFragment} from '@/lib/tokens'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
@@ -48,7 +48,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const tokens = expandNapTokens(rawTokens)
   if (!category) return {title: 'Blog Category'}
 
-  const title = resolveTokenString(category.seoTitle, tokens)
+  const title = titleFragment(category.seoTitle, category.title, tokens)
   const description = resolveTokenString(category.metaDescription, tokens)
   return {
     title,

@@ -926,6 +926,7 @@ export const HOME_QUERY = groq`
 // ─── Contact Page ─────────────────────────────────────────────────────────────
 export const CONTACT_PAGE_QUERY = groq`
   *[_type == "contactPage"][0]{
+    "title": coalesce(title, "Contact"),
     seoTitle,
     metaDescription,
     noIndex,
@@ -1207,6 +1208,7 @@ export const PRACTICE_AREA_QUERY = groq`
 export const EVENT_INDEX_PAGE_QUERY = groq`
   *[_type == "eventIndex"][0]{
     "slug": slug.current,
+    "title": coalesce(hero.heading, "Events"),
     seoTitle,
     metaDescription,
     noIndex,

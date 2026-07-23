@@ -10,7 +10,7 @@ import {
   GLOBAL_CTA_QUERY,
   NAP_TOKENS_QUERY,
 } from '@/lib/sanity/queries'
-import {resolveTokenString, expandNapTokens} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString, titleFragment} from '@/lib/tokens'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {SplitHeroLayout} from '@/components/staff/layouts/SplitHeroLayout'
@@ -70,15 +70,18 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
   if (!member) return {title: 'Staff Profile'}
 
   const tokens = expandNapTokens(rawTokens)
+  const title = titleFragment(
+    member.seoTitle,
+    [member.firstName, member.lastName].filter(Boolean).join(' '),
+    tokens,
+  )
+  const description = resolveTokenString(member.metaDescription, tokens)
   return {
-    title: resolveTokenString(member.seoTitle, tokens),
-    description: resolveTokenString(member.metaDescription, tokens),
+    title,
+    description,
     ...(member.noIndex ? {robots: {index: false, follow: false}} : {}),
     alternates: {canonical: member.canonicalUrl ?? `/staff/${slug}`},
-    ...buildSocialMeta(
-      resolveTokenString(member.seoTitle, tokens),
-      resolveTokenString(member.metaDescription, tokens),
-    ),
+    ...buildSocialMeta(title, description),
   }
 }
 

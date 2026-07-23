@@ -14,7 +14,7 @@ import {
   NAP_TOKENS_QUERY,
   RELATED_POSTS_QUERY,
 } from '@/lib/sanity/queries'
-import {resolveTokenString, expandNapTokens, type NapTokens} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString, titleFragment, type NapTokens} from '@/lib/tokens'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
@@ -86,7 +86,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const tokens = expandNapTokens(rawTokens)
   if (!post) return {title: 'Blog Post'}
 
-  const title = resolveTokenString(post.seoTitle, tokens)
+  const title = titleFragment(post.seoTitle, post.title, tokens)
   const description = resolveTokenString(post.metaDescription, tokens)
   return {
     title,

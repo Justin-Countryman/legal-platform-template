@@ -10,9 +10,10 @@ import {
   GLOBAL_CTA_QUERY,
   NAP_TOKENS_QUERY,
 } from '@/lib/sanity/queries'
-import {resolveTokenString, expandNapTokens} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString, titleFragment} from '@/lib/tokens'
 import {urlForImage, hasImage} from '@/lib/sanity/image'
 import {buildSocialMeta} from '@/lib/socialMeta'
+import {buildFullName} from '@/components/attorney/types'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {SplitHeroLayout} from '@/components/attorney/layouts/SplitHeroLayout'
 import {ClassicSidebarLayout} from '@/components/attorney/layouts/ClassicSidebarLayout'
@@ -124,7 +125,7 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
   if (!attorney) return {title: 'Attorney Profile'}
 
   const tokens = expandNapTokens(rawTokens)
-  const title = resolveTokenString(attorney.seoTitle, tokens)
+  const title = titleFragment(attorney.seoTitle, buildFullName(attorney), tokens)
   const description = resolveTokenString(attorney.metaDescription, tokens)
   return {
     title,

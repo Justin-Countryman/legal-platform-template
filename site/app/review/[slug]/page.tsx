@@ -1,6 +1,7 @@
 export const revalidate = 3600
 
 import {notFound} from 'next/navigation'
+import {titleFragment} from '@/lib/tokens'
 import type {Metadata} from 'next'
 import {client} from '@/lib/sanity/client'
 import {REVIEW_PAGE_QUERY, REVIEW_SLUGS_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
@@ -25,7 +26,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const data = await client.fetch(REVIEW_PAGE_QUERY, {slug})
   if (!data?.page) return {}
   return {
-    title: data.page.seoTitle ?? data.page.h1 ?? undefined,
+    title: titleFragment(data.page.seoTitle, data.page.h1, null),
     robots: {index: false, follow: false},
   }
 }

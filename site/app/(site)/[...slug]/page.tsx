@@ -10,7 +10,7 @@ import {notFound} from 'next/navigation'
 import type {Metadata} from 'next'
 import {client} from '@/lib/sanity/client'
 import {PRACTICE_AREA_QUERY, LOCATION_PAGE_QUERY, CONTENT_PAGE_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
-import {resolveTokenString, expandNapTokens, type NapTokens} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString, titleFragment, type NapTokens} from '@/lib/tokens'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {ContentSidebarLayout} from '@/components/layout/ContentSidebarLayout'
 import {InternalHero} from '@/components/layout/InternalHero'
@@ -188,7 +188,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   if (!page) return {}
 
   const tokens = expandNapTokens(rawTokens)
-  const title = resolveTokenString(page.seoTitle, tokens)
+  const title = titleFragment(page.seoTitle, page.title, tokens)
   const description = resolveTokenString(page.metaDescription, tokens)
 
   return {

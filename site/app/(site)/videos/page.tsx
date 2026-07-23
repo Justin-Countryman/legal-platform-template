@@ -3,7 +3,7 @@ export const revalidate = 3600
 import type {Metadata} from 'next'
 import {client} from '@/lib/sanity/client'
 import {VIDEO_INDEX_PAGE_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
-import {resolveTokenString, expandNapTokens} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString, titleFragment} from '@/lib/tokens'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {getEmbedUrl, autoThumbnails, toIsoDuration} from '@/lib/videoEmbed'
 import {InternalHero, type InternalHeroData} from '@/components/layout/InternalHero'
@@ -37,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
   ])
   if (!indexPage) return {title: 'Video Library'}
   const tokens = expandNapTokens(rawTokens)
-  const title = resolveTokenString(indexPage.seoTitle, tokens)
+  const title = titleFragment(indexPage.seoTitle, indexPage.title, tokens)
   const description = resolveTokenString(indexPage.metaDescription, tokens)
   return {
     title,

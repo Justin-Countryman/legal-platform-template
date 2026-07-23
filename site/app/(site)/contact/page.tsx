@@ -3,7 +3,7 @@ export const revalidate = 3600
 import type {Metadata} from 'next'
 import {client} from '@/lib/sanity/client'
 import {CONTACT_PAGE_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
-import {resolveTokenString, expandNapTokens} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString, titleFragment} from '@/lib/tokens'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!page) return {title: 'Contact'}
   const tokens = expandNapTokens(rawTokens)
 
-  const title = resolveTokenString(page.seoTitle, tokens)
+  const title = titleFragment(page.seoTitle, page.title, tokens)
   const description = resolveTokenString(page.metaDescription, tokens)
   return {
     title,
