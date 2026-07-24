@@ -3,6 +3,7 @@ import { client } from '@/lib/sanity/client'
 import {
   HEADER_QUERY,
   HOME_QUERY,
+  HOME_METADATA_QUERY,
   HOME_HERO_DESIGN_QUERY,
   NAP_TOKENS_QUERY,
   GLOBAL_CTA_QUERY,
@@ -14,10 +15,46 @@ import {HomepageCoda} from '@/components/layout/HomepageCoda'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
 import {HomepageHero} from '@/components/layout/homeHero'
 import {type HomeHeroData} from '@/components/layout/homeHero/types'
-import {type NapTokens} from '@/lib/tokens'
+import {expandNapTokens, titleFragment, type NapTokens} from '@/lib/tokens'
 
-export const metadata: Metadata = {
-  alternates: {canonical: '/'},
+// ─── Metadata ─────────────────────────────────────────────────────────────────
+//
+// The homepage now does what every other page does — carries its stored
+// seoTitle through — with the one homepage-specific twist item 32 anticipated:
+// it renders ABSOLUTE, bypassing the root layout's "%s - <firm name>" template.
+// A homepage seoTitle from Screaming Frog almost always already contains the
+// firm name (Dudley's is "Dudley & Smith |"), so routing it through the
+// template would render the firm name twice. (Ruled 2026-07-24; the homepage
+// was deliberately left off the shared titleFragment path in f2115ce, "blocked
+// on items 44 and 40", until this decision.)
+export async function generateMetadata(): Promise<Metadata> {
+  const [home, rawTokens] = await Promise.all([
+    client.fetch<{seoTitle?: string | null} | null>(HOME_METADATA_QUERY),
+    client.fetch<NapTokens>(NAP_TOKENS_QUERY),
+  ])
+  const tokens = expandNapTokens(rawTokens)
+  // titleFragment resolves tokens + treats an empty seoTitle as absent, exactly
+  // as the other fifteen routes do; the homepage has no page-name fallback
+  // (its fallback is the formula below), so the second arg is null.
+  const stored = titleFragment(home?.seoTitle, null, tokens)
+
+  if (stored) {
+    // PRESENT — carry through verbatim. `absolute` bypasses the firm-name
+    // template so the title is exactly the stored value, no doubling.
+    return {title: {absolute: stored}, alternates: {canonical: '/'}}
+  }
+
+  // ABSENT — item 32's from-scratch homepage title formula belongs here. It has
+  // two shapes: (1) lead with the firm's top-ranked area of law, or (2) lead
+  // with the firm name; which shape is a per-client setup question. THE FORMULA
+  // IS NOT YET BUILT — this is the seam. When it lands, compose it and return
+  // `{title: {absolute: composed}, alternates: {canonical: '/'}}`. Until then
+  // the route returns no title, so Next falls to the root layout's
+  // `title.default` (the bare firm name) — which IS shape (2), so the deferred
+  // state already renders one of the two correct shapes rather than anything
+  // broken. Do NOT wire this to homepageApproach — that field has no title role
+  // (item 44); the shape selector, when built, is its own input.
+  return {alternates: {canonical: '/'}}
 }
 
 // Phase 2: the homepage hero is split — CONTENT on homePage.hero, DESIGN on

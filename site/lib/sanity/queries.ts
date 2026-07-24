@@ -901,6 +901,14 @@ const CANVAS_FRAGMENT = groq`[]{
   }
 }`
 
+// Homepage <title> source. Kept separate from HOME_QUERY (the heavy page-content
+// query) so generateMetadata fetches only what it needs. The homepage carries a
+// stored seoTitle through VERBATIM (item 32; ruled 2026-07-24) — see the route's
+// generateMetadata for why it renders absolute rather than through the template.
+export const HOME_METADATA_QUERY = groq`
+  *[_type == "homePage"][0]{seoTitle}
+`
+
 export const HOME_QUERY = groq`
   *[_type == "homePage"][0]{
     "hero": hero ${HOME_HERO_CONTENT_FRAGMENT},
