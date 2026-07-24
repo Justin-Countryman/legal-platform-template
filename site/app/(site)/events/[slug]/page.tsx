@@ -16,12 +16,16 @@ import {Chip} from '@/components/ui/Chip'
 import type {ChipIcon} from '@/components/ui/icons'
 
 // ─── Static params ────────────────────────────────────────────────────────────
-// Event slugs are bare in Sanity (no `events/` prefix); the URL segment
-// matches one-for-one.
+// Event slugs are stored as `events/{name}` — the stored slug IS the URL path
+// (single-convention ruling, item 69). The URL segment is the bare `{name}`;
+// strip the prefix so Next gets the route-shaped param. Same idiom as
+// attorneys/[slug] and blog/[slug].
 
 export async function generateStaticParams() {
   const slugs = await client.fetch<string[]>(EVENT_SLUGS_QUERY)
-  return slugs.map((slug) => ({slug}))
+  return slugs
+    .filter((s) => s.startsWith('events/'))
+    .map((s) => ({slug: s.slice('events/'.length)}))
 }
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -113,7 +117,8 @@ function buildEventSchema(event: unknown, tokens: NapTokens | null, domain: stri
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
-  const {slug} = await params
+  const {slug: slugParam} = await params
+  const slug = `events/${slugParam}`
   const [event, rawTokens] = await Promise.all([
     client.fetch(EVENT_PAGE_QUERY, {slug}),
     client.fetch(NAP_TOKENS_QUERY),
@@ -127,7 +132,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     title,
     description,
     ...(event.noIndex ? {robots: {index: false, follow: false}} : {}),
-    alternates: {canonical: event.canonicalUrl ?? `/events/${slug}`},
+    alternates: {canonical: event.canonicalUrl ?? `/${slug}`},
     ...buildSocialMeta(title, description),
   }
 }
@@ -137,7 +142,8 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 const DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN ?? 'example.com'
 
 export default async function EventDetailPage({params}: Props) {
-  const {slug} = await params
+  const {slug: slugParam} = await params
+  const slug = `events/${slugParam}`
   const [event, rawTokens, globalCtaData] = await Promise.all([
     client.fetch(EVENT_PAGE_QUERY, {slug}),
     client.fetch(NAP_TOKENS_QUERY),
@@ -173,7 +179,7 @@ export default async function EventDetailPage({params}: Props) {
           <Breadcrumbs items={[
             {label: 'Home', href: '/'},
             {label: 'Events', href: '/events/'},
-            {label: event.title, href: `/events/${event.slug}/`},
+            {label: event.title, href: `/${event.slug}/`},
           ]} />
         </div>
       </div>

@@ -32,10 +32,14 @@ export const staffPage = defineType({
       fieldset: 'pageSettings',
       title: 'Slug',
       type: 'slug',
-      description: 'e.g. staff/jane-doe/ (multiple staff) or jane-doe/ (single staff)',
+      description: 'Click Generate after setting the name — auto-prefixed with staff/ (the stored slug is the full URL path, e.g. staff/jane-doe)',
       options: {
-        source: (doc: {firstName?: string; lastName?: string}) =>
-          `${doc.firstName ?? ''} ${doc.lastName ?? ''}`.trim(),
+        source: (doc: {firstName?: string; lastName?: string}) => {
+          const name = `${doc.firstName ?? ''} ${doc.lastName ?? ''}`.trim()
+          if (!name) return ''
+          const slug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+          return `staff/${slug}`
+        },
       },
       validation: (Rule) => Rule.required().error(),
     },

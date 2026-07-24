@@ -22,15 +22,15 @@ type SitemapData = {
   catchAll: SanityNode[]
 }
 
-// Slug-to-URL mapping per route family. URLs emit WITHOUT a trailing slash
-// to match Next.js's default `trailingSlash: false` canonical form (and
-// avoid an unnecessary 308 hop on every crawl):
-// - attorneyPage: Sanity slug already carries the `attorneys/` prefix.
-// - blogPost:     Sanity slug already carries the `blog/` prefix.
-// - staffPage:    bare slug; route prepends `/staff/`.
-// - eventPage:    bare slug; route prepends `/events/`.
-// - blogCategory: bare slug; route prepends `/blog/category/`.
-// - catch-all:    slug rendered at `/{slug}` via `app/(site)/[...slug]/page.tsx`.
+// Slug-to-URL mapping. URLs emit WITHOUT a trailing slash to match
+// Next.js's default `trailingSlash: false` canonical form (and avoid an
+// unnecessary 308 hop on every crawl).
+//
+// Single slug convention (ruled, item 69): EVERY type stores the whole URL
+// path in `slug.current` — `attorneys/jane-doe`, `blog/foo`, `staff/jane-doe`,
+// `events/open-house`, `blog/category/family-law`. The stored slug IS the URL;
+// nothing here (or anywhere) prepends a prefix onto a stored slug. What an
+// operator sees in Studio is what the URL is.
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const data = await client.fetch<SitemapData>(SITEMAP_QUERY)
@@ -60,12 +60,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // /contact is dedicated (no singleton _updatedAt fetched); use build time.
   push('/contact', undefined, 0.7)
 
-  // Collection routes
+  // Collection routes — every stored slug is the full URL path
   for (const n of data.attorneys) push(`/${n.slug}`, n._updatedAt, 0.7)
-  for (const n of data.staff) push(`/staff/${n.slug}`, n._updatedAt, 0.6)
+  for (const n of data.staff) push(`/${n.slug}`, n._updatedAt, 0.6)
   for (const n of data.blogPosts) push(`/${n.slug}`, n._updatedAt, 0.6)
-  for (const n of data.blogCategories) push(`/blog/category/${n.slug}`, n._updatedAt, 0.5)
-  for (const n of data.events) push(`/events/${n.slug}`, n._updatedAt, 0.5)
+  for (const n of data.blogCategories) push(`/${n.slug}`, n._updatedAt, 0.5)
+  for (const n of data.events) push(`/${n.slug}`, n._updatedAt, 0.5)
   for (const n of data.catchAll) push(`/${n.slug}`, n._updatedAt, 0.7)
 
   return entries

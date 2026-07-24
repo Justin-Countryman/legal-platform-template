@@ -108,7 +108,7 @@ function EventCard({event, tokens}: {event: EventCard; tokens: NapTokens}) {
 
   return (
     <Link
-      href={`/events/${event.slug}/`}
+      href={`/${event.slug}/`}
       aria-label={`${past ? 'Past event: ' : ''}${event.title}, ${dateLabel}`}
       className={[
         'group flex flex-col overflow-hidden rounded-ui border bg-background shadow-card-rest transition-[translate,box-shadow,border-color] duration-ui-slow ease-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',

@@ -21,12 +21,16 @@ import type {StaffMember} from '@/components/staff/types'
 import type {NapTokens} from '@/lib/tokens'
 
 // ─── Static params ────────────────────────────────────────────────────────────
-// Staff slugs are bare in Sanity (no `staff/` prefix); the URL segment
-// matches one-for-one.
+// Staff slugs are stored as `staff/{name}` — the stored slug IS the URL path
+// (single-convention ruling, item 69). The URL segment is the bare `{name}`;
+// strip the prefix so Next gets the route-shaped param. Same idiom as
+// attorneys/[slug] and blog/[slug].
 
 export async function generateStaticParams() {
   const slugs = await client.fetch<string[]>(STAFF_SLUGS_QUERY)
-  return slugs.map((slug) => ({slug}))
+  return slugs
+    .filter((s) => s.startsWith('staff/'))
+    .map((s) => ({slug: s.slice('staff/'.length)}))
 }
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -62,7 +66,7 @@ function StaffLayout({member, napTokens, isDark}: {member: StaffMember; napToken
 
 export async function generateMetadata({params}: PageProps): Promise<Metadata> {
   const {slug: slugParam} = await params
-  const slug = slugParam
+  const slug = `staff/${slugParam}`
   const [member, rawTokens] = await Promise.all([
     client.fetch(STAFF_PAGE_QUERY, {slug}),
     client.fetch(NAP_TOKENS_QUERY),
@@ -80,7 +84,7 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
     title,
     description,
     ...(member.noIndex ? {robots: {index: false, follow: false}} : {}),
-    alternates: {canonical: member.canonicalUrl ?? `/staff/${slug}`},
+    alternates: {canonical: member.canonicalUrl ?? `/${slug}`},
     ...buildSocialMeta(title, description),
   }
 }
@@ -89,7 +93,7 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
 
 export default async function StaffProfilePage({params}: PageProps) {
   const {slug: slugParam} = await params
-  const slug = slugParam
+  const slug = `staff/${slugParam}`
 
   const [member, globalCtaData, rawTokens, designTokens] = await Promise.all([
     client.fetch(STAFF_PAGE_QUERY, {slug}),

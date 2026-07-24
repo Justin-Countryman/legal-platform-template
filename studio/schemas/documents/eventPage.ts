@@ -51,12 +51,13 @@ export const eventPage = defineType({
       fieldset: 'pageSettings',
       title: 'Slug',
       type: 'slug',
-      description: 'Click Generate after setting Event Title',
+      description: 'Click Generate after setting Event Title — auto-prefixed with events/ (the stored slug is the full URL path, e.g. events/open-house)',
       options: {
         source: (doc) => {
           const title = ((doc as {title?: string}).title) || ''
           if (!title) return ''
-          return title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+          const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+          return `events/${slug}`
         },
       },
       validation: (Rule) => Rule.required().error(),

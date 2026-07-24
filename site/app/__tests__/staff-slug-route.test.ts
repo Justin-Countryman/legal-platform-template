@@ -26,7 +26,7 @@ const findStaffCall = () =>
   vi.mocked(client.fetch).mock.calls.find(([q]) => q === STAFF_PAGE_QUERY)
 
 describe('staff/[slug] route — slug argument shape (regression)', () => {
-  it('StaffProfilePage passes the bare slug to STAFF_PAGE_QUERY (no `staff/` prefix)', async () => {
+  it('StaffProfilePage passes the full stored slug to STAFF_PAGE_QUERY (`staff/` prefix — single-convention ruling, item 69)', async () => {
     // notFound() throws in test env when member is null — expected; the test
     // just needs the fetch argument shape, which has already been captured by
     // the time the throw happens.
@@ -37,16 +37,16 @@ describe('staff/[slug] route — slug argument shape (regression)', () => {
     }
     const call = findStaffCall()
     expect(call).toBeTruthy()
-    expect(call?.[1]).toEqual({slug: 'john-doe'})
-    expect(call?.[1]).not.toEqual({slug: 'staff/john-doe'})
+    expect(call?.[1]).toEqual({slug: 'staff/john-doe'})
+    expect(call?.[1]).not.toEqual({slug: 'john-doe'})
   })
 
-  it('generateMetadata passes the bare slug to STAFF_PAGE_QUERY (no `staff/` prefix)', async () => {
+  it('generateMetadata passes the full stored slug to STAFF_PAGE_QUERY (`staff/` prefix — single-convention ruling, item 69)', async () => {
     await generateMetadata({params: Promise.resolve({slug: 'john-doe'})})
     const call = findStaffCall()
     expect(call).toBeTruthy()
-    expect(call?.[1]).toEqual({slug: 'john-doe'})
-    expect(call?.[1]).not.toEqual({slug: 'staff/john-doe'})
+    expect(call?.[1]).toEqual({slug: 'staff/john-doe'})
+    expect(call?.[1]).not.toEqual({slug: 'john-doe'})
   })
 
   it('generateMetadata returns a generic title fallback when member is null (does not throw)', async () => {
