@@ -1,12 +1,19 @@
 #!/usr/bin/env node
 /**
- * Sample Firm seed bootstrap
+ * Sample Firm seed bootstrap — TEMPLATE DEVELOPMENT ONLY
  *
- * Creates the 16 sample documents the Provisioning Tool will import into
- * every new client's empty Sanity dataset (5 main pages + 5 singletons + 6
+ * Creates the 16 sample documents (5 main pages + 5 singletons + 6
  * reference-target docs: location, siteForm, badge, caseResult, faqItem,
- * testimonial), plus one uploaded badge image asset. After this script
- * populates the scratch project, export AND FILTER per
+ * testimonial), plus one uploaded badge image asset, in a SCRATCH/DEV
+ * dataset so template development has content to render against.
+ *
+ * NEVER a client's dataset. Ruled 2026-07-23 (monorepo BI/OUTSTANDING.md
+ * item 43): no fake content on real client sites — a newly provisioned
+ * client starts empty and gets everything from its own data. The Client
+ * Provisioning Tool has no seed-import path (removed under that ruling;
+ * pinned by test). See studio/seedData/regenerate.md, Purpose section.
+ *
+ * After this script populates the scratch project, export AND FILTER per
  * studio/seedData/regenerate.md step 6 to produce
  * `studio/seedData/sampleFirm.ndjson` — never export straight to that path.
  *

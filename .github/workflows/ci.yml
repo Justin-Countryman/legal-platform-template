@@ -56,17 +56,21 @@ jobs:
       - uses: actions/checkout@v4
       - name: Verify seed file presence
         run: |
-          # v0.1.0 ships WITHOUT the seed NDJSON — Phase C will commit it.
-          # This job warns but does not fail until v0.2.0.
+          # The seed is a TEMPLATE-DEVELOPMENT rendering fixture ONLY. It is
+          # NEVER imported into a client's dataset — ruled 2026-07-23 (monorepo
+          # BI/OUTSTANDING.md item 43: no fake content on real client sites);
+          # the Client Provisioning Tool's import path was removed under that
+          # ruling, and its absence is pinned by test. A missing seed therefore
+          # harms no client and is NOT a failure — this step is informational.
+          # (A prior version promised a v0.2.0 hard-fail on absence; that
+          # promise died with the ruling.)
           if [ ! -s studio/seedData/sampleFirm.ndjson ]; then
-            echo "::warning::studio/seedData/sampleFirm.ndjson is missing or empty"
-            echo "::warning::Schema-change PRs must regenerate the seed — see studio/seedData/regenerate.md"
-            echo "::warning::Phase C will commit the initial seed; this becomes a hard-fail in v0.2.0"
+            echo "::notice::studio/seedData/sampleFirm.ndjson is not committed — fine for clients (never imported), but template development has no rendering fixture. See studio/seedData/regenerate.md."
             exit 0
           fi
           echo "Seed file present ($(wc -l < studio/seedData/sampleFirm.ndjson) lines)."
 
-      # Presence is a warning. THIS IS A HARD FAIL, and it is the point.
+      # Presence is informational. THIS IS A HARD FAIL, and it is the point.
       #
       # Site Build composes six configuration singletons and writes each of them
       # CREATE-ONLY: if the document already exists in the dataset, the composed
@@ -74,23 +78,23 @@ jobs:
       # and it is what protects the design an operator tuned in Studio from being
       # clobbered by a rebuild.
       #
-      # The seed is imported into a client's dataset BEFORE Site Build ever runs.
-      # So a seed carrying those documents WINS, permanently: the client silently
-      # inherits the sample firm's design, navigation, footer, global CTA and site
-      # settings, and the documents composed from that client's own data are
-      # discarded. The failure mode is a PRESERVE, not a warning. It reports
+      # Any dataset the seed lands in BEFORE Site Build runs, a seed carrying
+      # those documents WINS the create-only race, permanently and silently:
+      # the dataset inherits the sample firm's design, navigation, footer,
+      # global CTA and site settings, and the documents composed from real data
+      # are discarded. The failure mode is a PRESERVE, not a warning. It reports
       # "Warnings: 0" and exits 0. It looks exactly like a successful build.
       #
-      # This guard exists because the seed's OWN regeneration spec used to tell
-      # its author to include those singletons, and a `sanity dataset export`
-      # emits them by default. The landmine was the documented procedure, so a
-      # rule that lives only in a document is not enough. It has to fail here.
-      #
-      # Belt and braces: the Client Provisioning Tool also strips these documents
-      # out before importing, so the tool path is closed even if a bad seed lands.
-      # This closes the OTHER path, the one that tool cannot see: a human running
-      # `sanity dataset import` by hand, which regenerate.md's recovery section
-      # tells them to do. Two independent layers, on purpose.
+      # Since 2026-07-23 NO tool imports the seed anywhere (the Client
+      # Provisioning Tool's import path was removed under the no-fake-content
+      # ruling — monorepo BI/OUTSTANDING.md item 43). The only remaining
+      # import path is a human running `sanity dataset import` by hand into a
+      # scratch/dev dataset, which regenerate.md's recovery section instructs.
+      # This guard covers exactly that path, and it stays because the seed's
+      # OWN regeneration spec once told its author to include the singletons,
+      # and a raw `sanity dataset export` emits them by default. The landmine
+      # was the documented procedure, so a rule that lives only in a document
+      # is not enough. It has to fail here.
       - name: Verify the seed carries no create-only singleton documents
         run: |
           set -euo pipefail

@@ -1,6 +1,12 @@
 # Sample Firm seed — regeneration workflow
 
-`sampleFirm.ndjson` is a Sanity NDJSON export of the 11 sample CONTENT documents (5 pages + 6 reference targets — see the table below). The Client Provisioning Tool imports this into every new client's empty Sanity dataset post-clone, giving the client a working deployable site before SBT overwrites with real client data.
+`sampleFirm.ndjson` is a Sanity NDJSON export of the 11 sample CONTENT documents (5 pages + 6 reference targets — see the table below).
+
+## Purpose — TEMPLATE DEVELOPMENT ONLY. Never imported into a client.
+
+**Ruled 2026-07-23 (monorepo `BI/OUTSTANDING.md` item 43): no fake content on real client sites.** A newly provisioned client starts EMPTY and gets everything from its own data. Fake badges, fake case results and fake testimonials must never reach a real firm's Sanity project. The Client Provisioning Tool **has no seed-import path** — it was removed under this ruling, deliberately, and its absence is pinned by test (`NoSeedImportEverTest`). If you are reading this believing the missing import is an oversight to fix: it is not. Do not reinstate it.
+
+The seed exists so **template development** has realistic content to render against — a scratch/dev dataset for the template's own site and Studio, nothing else. Import it only into a dataset no client will ever use.
 
 ## READ THIS FIRST: the seed must NOT contain the configuration singletons
 
@@ -10,11 +16,11 @@
 
 **Why.** Site Build composes those six documents from the client's own data and writes them **create-only**: if the document already exists in the dataset, Site Build **preserves it and throws its composed version away**. That is intended, and it is load-bearing. It is what stops a rebuild from clobbering the design an operator tuned in Studio.
 
-But the seed is imported **before** Site Build ever runs. So a seed carrying those documents **wins the race, permanently**. The client silently inherits the sample firm's design, navigation, footer, global CTA and site settings, and the documents composed from that client's real data are discarded. `CS-DESIGN-SYSTEM.md` is ignored entirely.
+But a seed import lands in a dataset **before** Site Build ever runs against it. So a seed carrying those documents **wins the race, permanently**. The dataset silently inherits the sample firm's design, navigation, footer, global CTA and site settings, and the documents composed from real data are discarded. `CS-DESIGN-SYSTEM.md` is ignored entirely. (No tool imports the seed anywhere since 2026-07-23; this hazard now applies to the hand-import path into a dev dataset.)
 
 **Nothing reports it.** The failure mode is a *preserve*, not an error: the build says `Warnings: 0` and exits 0. It looks exactly like success, and the wrong site is traceable to nothing.
 
-**Two guards, and you do not get to rely on either.** The Client Provisioning Tool strips these documents out before importing, and CI fails a seed that carries them. Both exist because a rule that lives only in a document does not survive the next person who follows the document. Keep them out of the seed anyway.
+**One guard remains, and you do not get to rely on it.** CI fails a committed seed that carries these documents. (The Client Provisioning Tool used to strip them before importing as a second layer; that whole import path was removed 2026-07-23 under the no-fake-content ruling above, so the tool-path guard went with it.) The CI guard exists because a rule that lives only in a document does not survive the next person who follows the document. Keep the singletons out of the seed anyway — the hand-import path into a dev dataset still exists, and a seed carrying them would poison whatever dataset it lands in.
 
 The site renders fine without them: the singletons are Site Build's to write, and a client dataset with no seeded singletons is exactly the state the platform has always shipped in.
 
@@ -32,7 +38,7 @@ Regenerate `sampleFirm.ndjson` whenever ANY of these occur:
 - **Project name:** `legal-platform-template-seed`
 - **Owner:** Justin Countryman (single-owner write access; prevents drift)
 - **Dataset:** `production`
-- **Project ID:** stored in `~/.legal-platform/tokens.json` under `seedProjectId` (run the Client Provisioning Tool once to populate)
+- **Project ID:** stored in `~/.legal-platform/tokens.json` under `seedProjectId` (add it by hand when creating the scratch project — no tool populates it; a prior version of this line claimed the Client Provisioning Tool did, which was never true)
 - **Read token:** stored in same file under `seedReadToken`
 
 ## Sample documents (do not rename or change `_id` values)
@@ -113,4 +119,4 @@ If the scratch project is deleted or its credentials are lost, recreate it:
 4. Open the studio, verify all sample docs render correctly.
 5. Future regenerations proceed normally.
 
-**The import in step 3 targets the SCRATCH project. Never point it at a client's dataset.** A hand-run `sanity dataset import` is the one path that bypasses the Client Provisioning Tool, and therefore the one path its filter cannot protect. The committed seed is clean because CI enforces it, so importing the committed file is safe; importing a locally regenerated one that has not been through step 6's filter is not. If you are seeding a client, use the Client Provisioning Tool and let it do the filtering.
+**The import in step 3 targets the SCRATCH project. Never point it at a client's dataset — for any reason.** Since 2026-07-23 there is NO sanctioned path that puts seed content into a client's dataset: not provisioning (the import was removed under the no-fake-content ruling — see the Purpose section at the top), and not a hand-run `sanity dataset import`. A hand import into a client dataset is both a ruling violation (fake content on a real firm's site) and the create-only-singleton landmine if the file was never filtered. The seed goes into scratch/dev datasets only.
