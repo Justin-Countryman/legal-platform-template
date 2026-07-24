@@ -65,6 +65,7 @@ export function resolveVariantSurface(
 export function HeroBand({
   surface,
   fullViewport,
+  uncapped = false,
   backdrop = false,
   backdropNode,
   imageBacked,
@@ -76,6 +77,15 @@ export function HeroBand({
 }: {
   surface: ResolvedHeroSurface
   fullViewport: boolean
+  /** Drop the full-viewport height ceiling so the band grows to fit its
+   * content. Passed when the practice-area content strip renders (ruled
+   * 2026-07-23, item 58): the strip may extend below the fold — the visitor
+   * scrolls — but it must never be cut, which is exactly what the
+   * `max-h-[60rem]` cap + `overflow-hidden` did (measured: a 412px strip
+   * with 98px visible). No other consumer relies on the cap; it exists to
+   * keep a strip-less full-viewport hero from stretching on very tall
+   * displays, and that behavior is unchanged. */
+  uncapped?: boolean
   /** Render the shared full-bleed background image + scrim (HeroBackdrop) behind the content. */
   backdrop?: boolean
   /** A custom full-bleed backdrop element (image+motion, mosaic, …) rendered at z-0 instead of HeroBackdrop. */
@@ -105,7 +115,7 @@ export function HeroBand({
         flush ? '' : 'px-[5%] pb-12 md:pb-16 lg:pb-20',
         '[--hero-pt:2rem] md:[--hero-pt:3rem] lg:[--hero-pt:4rem]',
         'flex flex-col',
-        fullViewport ? 'min-h-svh max-h-[60rem]' : '',
+        fullViewport ? (uncapped ? 'min-h-svh' : 'min-h-svh max-h-[60rem]') : '',
         center ? 'justify-center' : '',
         hasFullBackdrop ? '' : surface.isDark ? 'bg-brand-dark' : 'bg-hero-tint',
         className ?? '',

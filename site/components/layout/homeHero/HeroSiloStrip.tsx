@@ -16,8 +16,17 @@ import type {SiloNavItem} from '@/components/sections/silo/types'
 import {resolveHovers} from '@/lib/siloHover'
 import type {HeroConfig, PracticeAreaItem} from './types'
 
+// Single source for "the strip actually renders": the toggle is on AND there
+// are items. HeroBand's height ceiling keys off this same predicate (ruled
+// 2026-07-23, item 58: with a strip present the hero has no height cap — a
+// strip below the fold is fine, a cut-off strip is not), so the cap can never
+// disagree with what the strip itself decides to render.
+export function heroStripActive(config: HeroConfig, items: PracticeAreaItem[]): boolean {
+  return !!config.contentStrip && items.length > 0
+}
+
 export function HeroSiloStrip({config, items}: {config: HeroConfig; items: PracticeAreaItem[]}) {
-  if (!config.contentStrip || !items.length) return null
+  if (!heroStripActive(config, items)) return null
   if (config.siloLayout === 'cards') return <CardsStrip items={items} />
 
   // Identical GROQ output to SiloNavItem; just guarantee a string _key.

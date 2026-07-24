@@ -14,7 +14,7 @@ import {HeroBackdrop} from '@/components/layout/HeroBackdrop'
 import {HeroScrim} from '@/components/layout/HeroScrim'
 import {heroForegroundVars, HERO_BAND_MIN_H_LG} from '@/lib/heroLayout'
 import {HeroBand, HeroTextBlock} from '../shared'
-import {HeroSiloStrip} from '../HeroSiloStrip'
+import {HeroSiloStrip, heroStripActive} from '../HeroSiloStrip'
 import type {HeroConfig, ResolvedHomeContent, SkeletonProps} from '../types'
 import {heroObjectPosition, type ResolvedHeroSurface, type HeroImage} from '@/lib/heroSurface'
 
@@ -84,6 +84,7 @@ export function Overlay({config, content, surface, sectionBackground}: SkeletonP
     <HeroBand
       surface={surface}
       fullViewport={fullViewport}
+      uncapped={heroStripActive(config, content.practiceAreaItems)}
       backdropNode={backdropNode}
       imageBacked={imageBacked}
       center={!config.contentStrip}
