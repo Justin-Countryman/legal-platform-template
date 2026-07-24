@@ -122,8 +122,8 @@ export const mainNavigation = defineType({
         list: [
           {title: 'Light — white background, dark text and logo', value: 'light'},
           {title: 'Dark — dark background, white text and logo', value: 'dark'},
-          {title: 'Glass Light — white tint with blur, white text', value: 'glass'},
-          {title: 'Glass Dark — dark tint with blur, white text', value: 'glass-dark'},
+          {title: 'Glass Light — frosted white tint with blur, dark text and logo', value: 'glass'},
+          {title: 'Glass Dark — frosted dark tint with blur, white text and logo', value: 'glass-dark'},
         ],
         layout: 'radio',
       },

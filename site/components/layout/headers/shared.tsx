@@ -215,11 +215,20 @@ export function useScrollLock(isLocked: boolean) {
 
 // ─── Scheme helpers ───────────────────────────────────────────────────────────
 
+// Glass tints are 80%, not decorative 15/40% — the surface must ESTABLISH the
+// text contrast, not borrow it from whatever page content scrolls underneath
+// (item 55). At 80% + blur the frosted look survives while the worst case
+// stays readable: glass (white tint, dark text) over a brand-dark section
+// composites to a light surface; glass-dark (dark tint, white text) over a
+// white body composites to a dark one. `glass` is a LIGHT surface — white
+// tint, dark text and logo — and is classified accordingly in isDarkSurface
+// below; the old 15%-tint-with-white-text combination was invisible over any
+// light page body by construction.
 const BG: Record<string, string> = {
   light:               'bg-background',
   dark:                'bg-brand-dark',
-  glass:               'bg-background/15 backdrop-blur-md',
-  'glass-dark':        'bg-brand-dark/40 backdrop-blur-md',
+  glass:               'bg-background/80 backdrop-blur-md',
+  'glass-dark':        'bg-brand-dark/80 backdrop-blur-md',
   'transparent-dark':  'bg-transparent',
   'transparent-light': 'bg-transparent',
 }
@@ -252,8 +261,14 @@ export function schemeBg(scheme: string, scrolled: boolean, floating = false): s
 }
 
 export function isDarkSurface(scheme: string): boolean {
-  return scheme === 'dark' || scheme === 'glass' || scheme === 'glass-dark' || scheme === 'transparent-dark'
-  // transparent-light intentionally excluded — light surface, dark text and dark logo
+  return scheme === 'dark' || scheme === 'glass-dark' || scheme === 'transparent-dark'
+  // transparent-light intentionally excluded — light surface, dark text and dark logo.
+  // `glass` intentionally excluded (item 55): its fill is a WHITE tint
+  // (BG.glass above), so it is a light surface — dark text, dark logo. It was
+  // classified dark here while filled light, the one internally inconsistent
+  // entry in the map, which put near-white text and a white logo on a white
+  // tint. Dudley's client tree carried this same removal as a UAT-only edit
+  // since 2026-07-21; this generalizes it to canonical.
 }
 
 // Same set of schemes considered dark for ring-color cascade purposes.

@@ -54,6 +54,25 @@ describe('merged header — transparent overlay scheme at the top of the hero', 
   })
 })
 
+describe('glass schemes — the surface establishes its own contrast (item 55)', () => {
+  it('glass is a LIGHT surface: 80% white tint, dark text and logo', () => {
+    // The pre-fix combination — 15% white tint classified as a dark surface —
+    // put near-white text and a white logo on a translucent light film,
+    // invisible over any light page body by construction.
+    expect(schemeBg('glass', true, true)).toContain('bg-background/80')
+    expect(schemeBg('glass', true, true)).toContain('backdrop-blur')
+    expect(isDarkSurface('glass')).toBe(false)
+  })
+
+  it('glass-dark is a dark surface: 80% dark tint, white text and logo', () => {
+    // 40% was too translucent: composited over a white page body the surface
+    // went light while the text stayed white.
+    expect(schemeBg('glass-dark', true, true)).toContain('bg-brand-dark/80')
+    expect(schemeBg('glass-dark', true, true)).toContain('backdrop-blur')
+    expect(isDarkSurface('glass-dark')).toBe(true)
+  })
+})
+
 describe('merged header — contrast guardrail follows the EFFECTIVE hero scheme', () => {
   const darkHero: HeroSiteDefaults = {scheme: 'dark', bgImage: null, foreground: null, scrimOpacity: 80}
   const lightHero: HeroSiteDefaults = {scheme: 'light', bgImage: null, foreground: null, scrimOpacity: 80}
