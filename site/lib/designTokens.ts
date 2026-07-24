@@ -185,6 +185,49 @@ function ringFocusOnDark(actionHex: string, brandDark: string, taglineOnDark: st
   return onBrandDark >= 3.0 ? normHex(actionHex) : taglineOnDark
 }
 
+// Filled-star outline — WCAG SC 1.4.11 (OUTSTANDING item 13, ruled 2026-07-19
+// under "Accessibility wins over convention"). The star FILL stays the raw
+// action color on every surface (the stars-are-gold cultural convention); the
+// OUTLINE is what carries the 3:1 non-text contrast requirement for the
+// star's shape, so the convention and the requirement are both satisfied.
+//
+// Two tokens, one per surface family, swapped by the standard dark-surface
+// cascade rule in globals.css (the ring-focus / border / accent precedent):
+//
+//   --color-star-outline          light surfaces (white bg-background,
+//                                 bg-muted, bg-hero-tint)
+//   --color-star-outline-on-dark  bg-brand-dark sections
+//
+// Derivation principle: the outline only MATERIALIZES where the fill alone
+// cannot carry the shape. If the fill already clears 3:1 against every
+// surface in the family, the outline token is the fill color itself — an
+// invisible stroke, so a dark-green action star stays pure dark-green on
+// white, and a gold star stays pure gold on brand-dark. Where the fill
+// fails, the outline steps in:
+//   - light surfaces: step the fill's OKLCH lightness down (hue and chroma
+//     preserved, so it reads as "darker gold", not a foreign ring) until it
+//     clears 3:1 against all three light surfaces; brand-dark fallback if
+//     stepping bottoms out (brand-dark is light-surface-safe by construction).
+//   - brand-dark: taglineOnDark, which is brightened to pass on brand-dark
+//     by construction (validated in validateWcag) — a light rim that keeps a
+//     dark fill's shape perceivable on dark sections.
+function starOutline(fillHex: string, brandDark: string, lightSurfaces: string[]): string {
+  const clears = (hex: string) =>
+    lightSurfaces.every((bg) => ((wcagContrast(hex, bg) as number | undefined) ?? 1) >= 3.0)
+  if (clears(fillHex)) return normHex(fillHex)
+  const f = parseOklch(fillHex)
+  for (let l = f.l - 0.08; l >= 0.12; l -= 0.02) {
+    const candidate = toHex(l, f.c, f.h)
+    if (clears(candidate)) return candidate
+  }
+  return brandDark
+}
+
+function starOutlineOnDark(fillHex: string, brandDark: string, taglineOnDark: string): string {
+  const onBrandDark = (wcagContrast(fillHex, brandDark) as number | undefined) ?? 1
+  return onBrandDark >= 3.0 ? normHex(fillHex) : taglineOnDark
+}
+
 // Hover-wash role tokens are CSS expressions, not hex values. They reference
 // --shadow-rgb (light) and --color-foreground-on-dark (dark) — both injected by
 // buildColorCSS — so the wash auto-tunes per brand. Identical across all
@@ -648,6 +691,28 @@ export function buildColorCSS(settings: DesignColorSettings): string {
   vars['--color-hover-wash-on-dark'] = roles['role-hover-wash-on-dark']
   vars['--color-ring-focus']         = ringFocus(roles['role-action'], roles['role-brand-dark'], roles['role-muted'])
   vars['--color-ring-focus-on-dark'] = ringFocusOnDark(roles['role-action'], roles['role-brand-dark'], roles['role-tagline-on-dark'])
+  // Star tokens — StarRating fill + shape outline (WCAG SC 1.4.11, item 13).
+  // Fill = raw action color (stars-are-gold convention; anchored, never
+  // cascades — the whole point is that filled stars look the same on every
+  // surface). Outline = cascade-aware pair derived to clear 3:1 on every
+  // surface StarRating renders on: --color-star-outline holds the
+  // light-surface value at :root and the standard dark-surface cascade rule
+  // swaps it to --color-star-outline-on-dark inside .bg-brand-dark /
+  // [data-ring-context="dark"] containers. See starOutline()/
+  // starOutlineOnDark() for the derivation contract. Dedicated tokens rather
+  // than raw `text-action` so the component needs no
+  // `platform/no-text-action-raw` carve-out — the rule keeps zero exceptions.
+  vars['--color-star-fill']    = roles['role-action']
+  vars['--color-star-outline'] = starOutline(
+    roles['role-action'],
+    roles['role-brand-dark'],
+    ['#ffffff', roles['role-muted'], vars['--color-hero-tint'] as string],
+  )
+  vars['--color-star-outline-on-dark'] = starOutlineOnDark(
+    roles['role-action'],
+    roles['role-brand-dark'],
+    roles['role-tagline-on-dark'],
+  )
   // Cascade-aware accent — --color-accent holds the light-surface value at :root
   // (= tagline color) and is reassigned to var(--color-accent-on-dark) inside
   // .bg-brand-dark and [data-ring-context="dark"] containers via the cascade rule.

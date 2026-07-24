@@ -498,6 +498,9 @@
   --color-brand-dark:          #1a1a1a;   /* dark sections, footer, overlays                */
   --color-accent:              #666666;   /* tagline accent (cascade-aware)                 */
   --color-accent-on-dark:      #666666;   /* accent brightened for dark bg                  */
+  --color-star-fill:           #4a4a4a;   /* StarRating fill — raw action color (stars-are-gold convention; anchored, never cascades) */
+  --color-star-outline:        #1a1a1a;   /* StarRating shape outline, light surfaces — >=3:1 vs bg-background/bg-muted/bg-hero-tint (WCAG SC 1.4.11, item 13); runtime value from starOutline(); cascade swaps to -on-dark inside dark containers */
+  --color-star-outline-on-dark: #f5f5f5;  /* StarRating shape outline, dark surfaces — fill color when the fill clears 3:1 on brand-dark (invisible stroke), else brightened tagline-on-dark; runtime value from starOutlineOnDark() */
 
   /* ── Neutral scale — branded-derived; overridden at runtime by buildColorCSS ─
      The four light-surface neutrals (foreground/muted/subtle/border) ship only
@@ -652,6 +655,7 @@ h1, h2, h3, h4, h5, h6 {
   --color-foreground-muted:  var(--color-foreground-muted-on-dark,  #f5f5f5);
   --color-foreground-subtle: var(--color-foreground-subtle-on-dark, #666666);
   --color-hover-wash:        var(--color-hover-wash-on-dark);
+  --color-star-outline:      var(--color-star-outline-on-dark,      #f5f5f5);
 }
 
 /* Light-surface containers nested inside dark-context ancestors: re-declare
@@ -676,4 +680,5 @@ h1, h2, h3, h4, h5, h6 {
   --color-foreground-muted:  #4a4a4a;
   --color-foreground-subtle: #666666;
   --color-hover-wash:        rgb(var(--shadow-rgb) / 0.06);
+  --color-star-outline:      #1a1a1a;
 }

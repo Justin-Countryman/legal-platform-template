@@ -40,13 +40,16 @@
 // `text-action-text` also accepts variant prefixes (`hover:text-action-text`)
 // and is the canonical replacement.
 //
-// No detection-level carve-out for `<svg>` elements. StarRating's filled
-// stars are the single legitimate raw-amber-on-light site on the platform
-// (semantic gold-star convention — see `skill-color-system → Stars
-// semantic color doctrine`), tracked via per-site `eslint-disable-next-line
-// platform/no-text-action-raw` comment + OUTSTANDING entry. Rule #6 of
-// the rule-authoring contract: prefer per-site disable over loosening
-// the rule when the violation is one site mapped to a tracked posture.
+// No detection-level carve-out for `<svg>` elements, and — since the
+// OUTSTANDING item 13 outline landed (2026-07-24) — no per-site disable
+// anywhere: this rule has ZERO standing exceptions. StarRating, formerly
+// the single legitimate raw-amber-on-light site (semantic gold-star
+// convention), now renders via dedicated `text-star-fill` +
+// `--color-star-outline` tokens (see `skill-color-system → Stars semantic
+// color doctrine`), so it never touches `text-action` at all. If a new
+// site genuinely needs raw action color, rule #6 of the rule-authoring
+// contract still applies: prefer a per-site disable mapped to a tracked
+// posture over loosening the rule.
 //
 // Auto-fix: NOT provided. The replacement (`text-action-text`) is correct
 // in 100% of body-text cases, but for the rare design-driven raw-amber

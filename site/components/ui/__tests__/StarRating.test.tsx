@@ -63,6 +63,38 @@ describe('StarRating — rating-semantics A11y', () => {
   })
 })
 
+// ─── Shape outline (WCAG SC 1.4.11 — OUTSTANDING item 13) ─────────────────────
+//
+// Filled stars carry the derived outline that makes the star SHAPE meet the
+// 3:1 non-text contrast threshold; the fill stays the dedicated anchored
+// star-fill token (stars-are-gold convention). Empty stars are unoutlined
+// border-color glyphs. The outline's contrast guarantees are pinned in
+// lib/__tests__/designTokens.test.ts (starOutline derivation); this block
+// pins the component's wiring to those tokens.
+
+describe('StarRating — SC 1.4.11 shape outline', () => {
+  it('filled stars use text-star-fill (not raw text-action) and carry the outline stroke', () => {
+    const {container} = render(<StarRating count={2} total={5} />)
+    const svgs = Array.from(container.querySelectorAll('svg'))
+    svgs.slice(0, 2).forEach((svg) => {
+      expect(svg.classList.contains('text-star-fill')).toBe(true)
+      expect(svg.classList.contains('text-action')).toBe(false)
+      expect(svg.getAttribute('stroke')).toBe('var(--color-star-outline)')
+      expect(svg.getAttribute('stroke-width')).toBe('1.5')
+      expect(svg.getAttribute('stroke-linejoin')).toBe('round')
+    })
+  })
+
+  it('empty stars stay unoutlined text-border glyphs', () => {
+    const {container} = render(<StarRating count={2} total={5} />)
+    const svgs = Array.from(container.querySelectorAll('svg'))
+    svgs.slice(2).forEach((svg) => {
+      expect(svg.classList.contains('text-border')).toBe(true)
+      expect(svg.getAttribute('stroke')).toBeNull()
+    })
+  })
+})
+
 // ─── Size prop ────────────────────────────────────────────────────────────────
 
 describe('StarRating — size prop', () => {
@@ -96,16 +128,16 @@ describe('StarRating — className composition', () => {
   })
 })
 
-// ─── Cascade-aware contract (filled vs empty colors) ──────────────────────────
+// ─── Token contract (filled vs empty colors) ──────────────────────────────────
 
-describe('StarRating — cascade-aware contract', () => {
-  it('first `count` stars use cascade-aware text-action; remaining use text-border', () => {
+describe('StarRating — token contract', () => {
+  it('first `count` stars use anchored text-star-fill; remaining use text-border', () => {
     const {container} = render(<StarRating count={3} total={5} />)
     const svgs = container.querySelectorAll('svg')
     // Stars 0..2 filled, 3..4 empty.
-    expect(svgs[0].classList.contains('text-action')).toBe(true)
-    expect(svgs[1].classList.contains('text-action')).toBe(true)
-    expect(svgs[2].classList.contains('text-action')).toBe(true)
+    expect(svgs[0].classList.contains('text-star-fill')).toBe(true)
+    expect(svgs[1].classList.contains('text-star-fill')).toBe(true)
+    expect(svgs[2].classList.contains('text-star-fill')).toBe(true)
     expect(svgs[3].classList.contains('text-border')).toBe(true)
     expect(svgs[4].classList.contains('text-border')).toBe(true)
   })
@@ -116,10 +148,10 @@ describe('StarRating — cascade-aware contract', () => {
     svgs.forEach((svg) => expect(svg.classList.contains('text-border')).toBe(true))
   })
 
-  it('count=total → all stars use text-action', () => {
+  it('count=total → all stars use text-star-fill', () => {
     const {container} = render(<StarRating count={5} total={5} />)
     const svgs = container.querySelectorAll('svg')
-    svgs.forEach((svg) => expect(svg.classList.contains('text-action')).toBe(true))
+    svgs.forEach((svg) => expect(svg.classList.contains('text-star-fill')).toBe(true))
   })
 
   it('does not emit anchored aliases or hex literals', () => {

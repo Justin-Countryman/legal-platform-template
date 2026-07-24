@@ -702,6 +702,87 @@ describe('--color-ring-focus-on-dark: uses action when it passes 3:1 on brand-da
   })
 })
 
+// ─── Star tokens (WCAG SC 1.4.11, OUTSTANDING item 13) ───────────────────────
+
+describe('--color-star-fill / --color-star-outline derivation', () => {
+  const extract = (css: string, name: string) => css.match(new RegExp(`${name}:([^;}]+)`))?.[1] ?? ''
+
+  it('buildColorCSS emits all three star tokens', () => {
+    const css = buildColorCSS({primaryColor: '#821428'})
+    expect(css).toContain('--color-star-fill:')
+    expect(css).toContain('--color-star-outline:')
+    expect(css).toContain('--color-star-outline-on-dark:')
+  })
+
+  it('star-fill is the raw action color (stars-are-gold convention)', () => {
+    const css = buildColorCSS({
+      colorApproach: 'analogous-accent',
+      primaryColor:  '#821428',
+      accent1Color:  '#E68F1A',
+      accent2Color:  '#F5A623',
+    })
+    const roles = buildRoleMap('analogous-accent', {primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623'})
+    expect(extract(css, '--color-star-fill').toLowerCase()).toBe(roles['role-action'].toLowerCase())
+  })
+
+  it('amber (light) fill: light-surface outline is a darkened variant clearing 3:1; on-dark outline collapses to the fill (gold stays pure gold on brand-dark)', () => {
+    const css = buildColorCSS({
+      colorApproach: 'analogous-accent',
+      primaryColor:  '#821428',
+      accent1Color:  '#E68F1A',
+      accent2Color:  '#F5A623',
+    })
+    const outline  = extract(css, '--color-star-outline')
+    const fill     = extract(css, '--color-star-fill')
+    const muted    = extract(css, '--color-muted')
+    const heroTint = extract(css, '--color-hero-tint')
+    const dark     = extract(css, '--color-brand-dark')
+    // Light fill fails light surfaces on its own → the outline must be a
+    // distinct darker value that carries the shape there.
+    expect(outline.toLowerCase()).not.toBe(fill.toLowerCase())
+    for (const [label, bg] of [['white', '#ffffff'], ['bg-muted', muted], ['bg-hero-tint', heroTint]] as const) {
+      const ratio = wcagContrast(outline, bg) as number
+      expect(ratio, `outline vs ${label} must clear SC 1.4.11 3:1`).toBeGreaterThanOrEqual(3.0)
+    }
+    // Amber clears 3:1 on brand-dark by itself → the on-dark outline is the
+    // fill color (invisible stroke; the fill carries the shape).
+    const onDark = extract(css, '--color-star-outline-on-dark')
+    expect(wcagContrast(fill, dark) as number).toBeGreaterThanOrEqual(3.0)
+    expect(onDark.toLowerCase()).toBe(fill.toLowerCase())
+  })
+
+  it('every test palette: the shape boundary clears 3:1 on every star surface (light via outline, brand-dark via on-dark outline or the fill itself)', () => {
+    const palettes = [
+      {approach: 'analogous-accent' as const, primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623'},
+      {approach: 'monochromatic'    as const, primary: '#1E3A8A'},
+      {approach: 'analogous-accent' as const, primary: '#065F46', accent1: '#D97706', accent2: '#C2410C'},
+    ]
+    for (const p of palettes) {
+      const css = buildColorCSS({
+        colorApproach: p.approach,
+        primaryColor:  p.primary,
+        accent1Color:  'accent1' in p ? p.accent1 : undefined,
+        accent2Color:  'accent2' in p ? p.accent2 : undefined,
+      })
+      const outline  = extract(css, '--color-star-outline')
+      const onDark   = extract(css, '--color-star-outline-on-dark')
+      const fill     = extract(css, '--color-star-fill')
+      const muted    = extract(css, '--color-muted')
+      const heroTint = extract(css, '--color-hero-tint')
+      const dark     = extract(css, '--color-brand-dark')
+      for (const [label, bg] of [['white', '#ffffff'], ['bg-muted', muted], ['bg-hero-tint', heroTint]] as const) {
+        const ratio = wcagContrast(outline, bg) as number
+        expect(ratio, `${p.primary}: outline vs ${label}`).toBeGreaterThanOrEqual(3.0)
+      }
+      // Dark surface: either the on-dark outline rims the star at >=3:1, or
+      // it collapsed to the fill because the fill itself clears 3:1 there.
+      const boundary = onDark.toLowerCase() === fill.toLowerCase() ? fill : onDark
+      const darkRatio = wcagContrast(boundary, dark) as number
+      expect(darkRatio, `${p.primary}: dark-surface shape boundary vs brand-dark`).toBeGreaterThanOrEqual(3.0)
+    }
+  })
+})
+
 // ─── --color-border (cascade-aware) ──────────────────────────────────────────
 
 describe('--color-border cascade-aware token', () => {
