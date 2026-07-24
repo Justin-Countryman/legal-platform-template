@@ -177,7 +177,7 @@ export default async function BlogPostPage({params}: Props) {
     {label: 'Home', href: '/'},
     {label: 'Blog', href: '/blog/'},
     ...(post.category
-      ? [{label: post.category.title, href: `/blog/category/${post.category.slug}/`}]
+      ? [{label: post.category.title, href: `/${post.category.slug}/`}]
       : []),
   ]
 
@@ -229,7 +229,7 @@ export default async function BlogPostPage({params}: Props) {
                           variant="secondary"
                           size="small"
                           context={isDark ? 'dark' : 'light'}
-                          href={`/blog/category/${post.category.slug}/`}
+                          href={`/${post.category.slug}/`}
                         >
                           {post.category.title}
                         </Button>
@@ -279,7 +279,7 @@ export default async function BlogPostPage({params}: Props) {
                         variant="secondary"
                         size="small"
                         context={isDark ? 'dark' : 'light'}
-                        href={`/blog/category/${post.category.slug}/`}
+                        href={`/${post.category.slug}/`}
                       >
                         {post.category.title}
                       </Button>

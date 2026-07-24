@@ -42,12 +42,13 @@ export const blogCategory = defineType({
       fieldset: 'pageSettings',
       title: 'Slug',
       type: 'slug',
-      description: 'Click Generate after setting Page Title — bare slug (e.g. "family-law"); the site serves it at /blog/category/<slug>/',
+      description: 'Click Generate after setting Page Title — auto-prefixed with blog/category/',
       options: {
         source: (doc) => {
           const name = ((doc as {title?: string}).title) ?? ''
           if (!name) return ''
-          return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+          const slug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+          return `blog/category/${slug}`
         },
       },
       validation: (Rule) => Rule.required().error(),

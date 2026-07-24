@@ -69,7 +69,7 @@ export function RelatedPosts({
                     <Button
                       variant="secondary"
                       size="small"
-                      href={`/blog/category/${post.category.slug}/`}
+                      href={`/${post.category.slug}/`}
                     >
                       {post.category.title}
                     </Button>
