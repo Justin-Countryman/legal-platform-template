@@ -216,7 +216,7 @@ export function BlogIndexClient({
                       variant="tertiary"
                       context="light"
                       href={`/${post.slug}/`}
-                      aria-label={`Read article: ${resolveTokenString(post.h1, tokens)}`}
+                      aria-label={`Read More: ${resolveTokenString(post.h1, tokens)}`}
                     >
                       Read More
                     </Button>
