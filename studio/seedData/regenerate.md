@@ -1,6 +1,6 @@
 # Sample Firm seed — regeneration workflow
 
-`sampleFirm.ndjson` is a Sanity NDJSON export of the 5 sample CONTENT documents. The Client Provisioning Tool imports this into every new client's empty Sanity dataset post-clone, giving the client a working deployable site before SBT overwrites with real client data.
+`sampleFirm.ndjson` is a Sanity NDJSON export of the 11 sample CONTENT documents (5 pages + 6 reference targets — see the table below). The Client Provisioning Tool imports this into every new client's empty Sanity dataset post-clone, giving the client a working deployable site before SBT overwrites with real client data.
 
 ## READ THIS FIRST: the seed must NOT contain the configuration singletons
 
@@ -22,10 +22,10 @@ The site renders fine without them: the singletons are Site Build's to write, an
 
 Regenerate `sampleFirm.ndjson` whenever ANY of these occur:
 
-1. A document schema in `studio/schemas/documents/{homePage,practiceArea,attorneyPage,contactPage,locationPage}.ts` changes shape: new required field, type change, validation change. **The six configuration singletons are deliberately not in this list.** They are not in the seed, so their schemas changing does not require a seed regen.
+1. A document schema in `studio/schemas/documents/{homePage,practiceArea,attorneyPage,contactPage,locationPage,location,siteForm,badge,caseResult,faqItem,testimonial}.ts` changes shape: new required field, type change, validation change. **The six configuration singletons are deliberately not in this list.** They are not in the seed, so their schemas changing does not require a seed regen.
 2. Sanity Studio major version bump that affects NDJSON format compatibility.
 
-The CI `seed-validation` job (`.github/workflows/ci.yml`) refuses to merge a schema-change PR without a matching seed regen, and hard-fails a seed carrying any create-only singleton.
+**Enforcement, honestly stated:** the CI `seed-validation` job (`.github/workflows/ci.yml`) hard-fails a committed seed carrying any create-only singleton, and only **warns** when the seed file is missing (the promised v0.2.0 hard-fail was never flipped — it cannot be until a seed is committed at all). **Nothing couples a schema change to a seed regen.** The regen-on-schema-change rule above is enforced by this document and reviewer discipline alone; a schema-change PR with a stale seed merges clean. (This paragraph previously claimed CI refuses such a PR. It does not, and never has.)
 
 ## Scratch project
 
@@ -39,13 +39,19 @@ The CI `seed-validation` job (`.github/workflows/ci.yml`) refuses to merge a sch
 
 | `_id` | Type | Slug | Notes |
 |---|---|---|---|
-| `sample-home` | `homePage` | (singleton) | Hero with neutral copy, single CTA, no testimonials, no attorneys-section |
+| `sample-home` | `homePage` | (singleton) | Hero with neutral copy, single CTA; canvas carries a case-results block and a badges block wired to the reference-target docs below (item 43 — reference-only blocks must not render empty on a fresh client) |
 | `sample-practice-area` | `practiceArea` | `general-practice` | Title "General Practice", 2-paragraph generic blurb, no FAQ items |
-| `sample-attorney` | `attorneyPage` | `jane-doe` | Jane Doe, J.D., "Partner", neutral 1-paragraph bio, no admissions/awards/education |
+| `sample-attorney` | `attorneyPage` | `attorneys/jane-doe` | Jane Doe, J.D., "Partner", neutral 1-paragraph bio, no admissions/awards/education |
 | `sample-contact` | `contactPage` | `contact` | Placeholder "123 Example St, Springfield, IL 62701", "+1 (555) 555-0100", contact form embed |
 | `sample-location` | `locationPage` | `springfield-office` | "Springfield Office", same placeholder address, no GBP embed |
+| `sample-location-record` | `location` | — | Reference target for `locationPage`/`siteSettings` |
+| `sample-contact-form` | `siteForm` | — | Reference target for `contactPage` |
+| `sample-badge` | `badge` | — | "Sample Legal Excellence Award", generated placeholder seal artwork (embedded PNG uploaded by the bootstrap); wired into `sample-home`'s badges block |
+| `sample-case-result` | `caseResult` | — | Non-monetary "Favorable Outcome" (sample content must not ship a fabricated dollar figure); the results disclaimer renders automatically from `site/lib/legal.ts`; wired into `sample-home`'s case-results block |
+| `sample-faq-item` | `faqItem` | `what-should-i-bring-to-my-first-consultation` | Reference target for the operator to wire; no `faqSection` document ships in the seed, so nothing renders empty |
+| `sample-testimonial` | `testimonial` | — | "Jordan D.", 5 stars; reference target for the operator to wire; no `testimonialsGrid`/`featuredTestimonial` document ships in the seed |
 
-**That is the whole seed.** The configuration singletons are NOT part of it. See the warning at the top of this file.
+**That is the whole seed.** The configuration singletons are NOT part of it. See the warning at the top of this file. Two types are deliberately absent: `video` (its section embeds an external video URL a sample cannot honestly provide) and `pressItem` (no section, query, or component renders the type — orphaned; see OUTSTANDING items 43/66).
 
 ## Regeneration procedure
 
@@ -53,7 +59,7 @@ In your schema-change PR branch:
 
 1. Apply the schema change locally; verify it builds: `cd studio && npm run build`.
 2. Deploy the schema to the scratch project: `npx sanity deploy` (uses the scratch project ID + token from `~/.legal-platform/tokens.json`).
-3. If the schema added or changed a required field on any of the 5 seed docs, update `scripts/seed-bootstrap.mjs` to populate the new field with a neutral default (no client names; "Springfield, IL" or generic placeholders only).
+3. If the schema added or changed a required field on any of the seed docs, update `scripts/seed-bootstrap.mjs` to populate the new field with a neutral default (no client names; "Springfield, IL" or generic placeholders only).
 4. Re-run the bootstrap to overwrite docs in the scratch project (`createOrReplace` is idempotent):
    ```bash
    SANITY_SEED_PROJECT_ID=<scratch-id> SANITY_SEED_TOKEN=<token> \
@@ -104,7 +110,7 @@ If the scratch project is deleted or its credentials are lost, recreate it:
 1. `sanity.io/manage` → create project `legal-platform-template-seed`, dataset `production`.
 2. Update `~/.legal-platform/tokens.json` with the new `seedProjectId` + a fresh read token.
 3. Run the import from the current `sampleFirm.ndjson` to seed the new project: `sanity dataset import seedData/sampleFirm.ndjson production --replace`.
-4. Open the studio, verify all 5 sample docs render correctly.
+4. Open the studio, verify all sample docs render correctly.
 5. Future regenerations proceed normally.
 
 **The import in step 3 targets the SCRATCH project. Never point it at a client's dataset.** A hand-run `sanity dataset import` is the one path that bypasses the Client Provisioning Tool, and therefore the one path its filter cannot protect. The committed seed is clean because CI enforces it, so importing the committed file is safe; importing a locally regenerated one that has not been through step 6's filter is not. If you are seeding a client, use the Client Provisioning Tool and let it do the filtering.
