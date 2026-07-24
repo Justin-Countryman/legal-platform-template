@@ -99,15 +99,6 @@ function makeComponents(napTokens: NapTokens | null | undefined): PortableTextCo
     block: {
       normal: ({children, value}) =>
         paragraphResolvesEmpty(value, napTokens) ? null : <p className="mb-4 last:mb-0">{children}</p>,
-      // h1 arrives via MIGRATION ONLY: Studio's body editor offers Normal +
-      // H2-H6 + Quote, but the scraper carries a legacy page's second heading
-      // over as authored (ruling 2026-07-22, OUTSTANDING item 41 — migration
-      // is fidelity, not SEO optimization; levels are never rewritten).
-      // Without this entry a body h1 fell through to the library default and
-      // rendered unstyled in the body font. One step above h2 on the scale.
-      h1: ({children}) => (
-        <h1 className="mb-4 mt-8 font-heading text-3xl font-bold text-foreground first:mt-0 md:text-4xl">{children}</h1>
-      ),
       h2: ({children}) => (
         <h2 className="mb-4 mt-8 font-heading text-3xl font-bold text-foreground first:mt-0">{children}</h2>
       ),

@@ -102,24 +102,6 @@ describe('PortableTextRenderer — block serializers', () => {
     expect(p.className).toContain('last:mb-0')
   })
 
-  it('h1 renders a styled <h1> at text-4xl — migration-only style, item 41', () => {
-    // A body h1 arrives only via migration (Studio's body editor offers
-    // Normal + H2-H6 + Quote); the scraper carries a legacy second heading
-    // over as authored. Before this entry existed, the block fell through to
-    // the library default and rendered unstyled in the body font. The level
-    // is never rewritten — fidelity, not SEO optimization.
-    const {container} = render(
-      <PortableTextRenderer value={[makeBlock('h1', 'Legacy Heading')]} />,
-    )
-    const h = container.querySelector('h1') as HTMLElement
-    expect(h.textContent).toBe('Legacy Heading')
-    expect(h.className).toContain('font-heading')
-    // Mobile floor text-3xl (platform/h1-mobile-cap), one step above h2 at md+.
-    expect(h.className).toContain('text-3xl')
-    expect(h.className).toContain('md:text-4xl')
-    expect(h.className).toContain('text-foreground')
-  })
-
   it('h2 renders an <h2> with font-heading + text-3xl + text-foreground', () => {
     const {container} = render(
       <PortableTextRenderer value={[makeBlock('h2', 'Heading 2')]} />,
