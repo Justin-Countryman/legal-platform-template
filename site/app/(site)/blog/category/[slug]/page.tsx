@@ -21,14 +21,12 @@ import {BlogIndexClient} from '@/components/sections/BlogIndexClient'
 import {BlogIndexFallback} from '@/components/sections/BlogIndexFallback'
 
 // ─── Static params ────────────────────────────────────────────────────────────
-// Blog category slugs are stored as `blog/category/{name}`; the URL segment
-// is the bare `{name}`. Strip the prefix so Next gets the route-shaped param.
+// Blog category slugs are bare in Sanity (no `blog/category/` prefix); the
+// route prepends the prefix when composing URLs. Same pattern as staff/events.
 
 export async function generateStaticParams() {
   const slugs = await client.fetch<string[]>(BLOG_CATEGORY_SLUGS_QUERY)
-  return slugs
-    .filter((s) => s.startsWith('blog/category/'))
-    .map((s) => ({slug: s.slice('blog/category/'.length)}))
+  return slugs.map((slug) => ({slug}))
 }
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -39,10 +37,9 @@ type Props = {params: Promise<{slug: string}>}
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {slug} = await params
-  const fullSlug = `blog/category/${slug}`
 
   const [category, rawTokens] = await Promise.all([
-    client.fetch(BLOG_CATEGORY_PAGE_QUERY, {slug: fullSlug}),
+    client.fetch(BLOG_CATEGORY_PAGE_QUERY, {slug}),
     client.fetch(NAP_TOKENS_QUERY),
   ])
   const tokens = expandNapTokens(rawTokens)
@@ -63,10 +60,9 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
 export default async function BlogCategoryPage({params}: Props) {
   const {slug} = await params
-  const fullSlug = `blog/category/${slug}`
 
   const [category, posts, categories, globalCtaData, rawTokens] = await Promise.all([
-    client.fetch(BLOG_CATEGORY_PAGE_QUERY, {slug: fullSlug}),
+    client.fetch(BLOG_CATEGORY_PAGE_QUERY, {slug}),
     client.fetch(BLOG_POSTS_QUERY),
     client.fetch(BLOG_CATEGORIES_QUERY),
     client.fetch(GLOBAL_CTA_QUERY),
@@ -93,7 +89,7 @@ export default async function BlogCategoryPage({params}: Props) {
           <Breadcrumbs items={[
             {label: 'Home', href: '/'},
             {label: 'Blog', href: '/blog/'},
-            {label: category.title, href: `/${category.slug}/`},
+            {label: category.title, href: `/blog/category/${category.slug}/`},
           ]} />
         </div>
       </div>
@@ -109,7 +105,7 @@ export default async function BlogCategoryPage({params}: Props) {
               <BlogIndexFallback
                 posts={posts ?? []}
                 tokens={tokens ?? null}
-                initialCategory={fullSlug}
+                initialCategory={slug}
               />
             }
           >
@@ -117,7 +113,7 @@ export default async function BlogCategoryPage({params}: Props) {
               posts={posts ?? []}
               categories={categories ?? []}
               tokens={tokens ?? null}
-              initialCategory={fullSlug}
+              initialCategory={slug}
             />
           </Suspense>
         </div>

@@ -182,13 +182,14 @@ export function BlogIndexClient({
                   </h2>
 
                   {/* Metadata row — Tag + read time as flex siblings.
-                      post.category.slug is already prefixed (e.g. "blog/category/foo"). */}
+                      post.category.slug is bare (e.g. "family-law"); prepend
+                      the category route prefix. */}
                   <div className="mb-4 mt-3 flex flex-wrap items-center gap-3">
                     {post.category && (
                       <Button
                         variant="secondary"
                         size="small"
-                        href={`/${post.category.slug}/`}
+                        href={`/blog/category/${post.category.slug}/`}
                       >
                         {post.category.title}
                       </Button>
