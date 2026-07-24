@@ -11,8 +11,13 @@ import {LazyMotion, MotionConfig} from 'framer-motion'
 // CSS/fonts). Subtree components use `m.*` (not `motion.*`) to bind these
 // async-loaded features; the feature set lives in ./motionFeatures.
 //
-// Also routes the user's prefers-reduced-motion OS setting through MotionConfig
-// (CSS transitions are handled by the global media query in globals.css).
+// Also routes the user's prefers-reduced-motion OS setting through MotionConfig.
+// NOTE this gate covers only framer's POSITIONAL keys (transforms, x/y,
+// width/height) — opacity is not one of them. The full division of labor is
+// the item 38 ruling documented in lib/motionConfig.ts: positional snaps here,
+// everything else collapses to ~10ms via useMotionConfig() (framer) and the
+// global media query in globals.css (CSS), and JS smooth-scroll reads
+// matchMedia at call time.
 const loadMotionFeatures = () => import('./motionFeatures').then((mod) => mod.default)
 
 export function MotionRoot({children}: {children: React.ReactNode}) {

@@ -5,7 +5,7 @@ import {useEffect, useLayoutEffect, useRef, useState, forwardRef} from 'react'
 // by <LazyMotion> in MotionRoot — keeps the Framer Motion runtime out of initial
 // hydration. See components/ui/MotionRoot.tsx.
 import {m} from 'framer-motion'
-import {motionConfig} from '@/lib/motionConfig'
+import {motionConfig, useMotionConfig} from '@/lib/motionConfig'
 import {RxChevronDown} from 'react-icons/rx'
 import {MdPhone, MdLocationPin, MdEmail, MdClose} from 'react-icons/md'
 import Link from 'next/link'
@@ -542,6 +542,9 @@ function colClass(total: number): string {
 }
 
 export function SubMenu({navItem, isMobile, textClass, hoverTextClass, ringClass = 'focus-visible:ring-focus'}: {navItem: NavItem; isMobile: boolean; textClass: string; hoverTextClass: string; ringClass?: string}) {
+  // Reduced-motion-aware configs (item 38): the dropdown animates opacity,
+  // which MotionConfig's positional gate does not cover.
+  const mc = useMotionConfig()
   const [isOpen, setIsOpen]       = useState(false)
   const [alignRight, setAlignRight] = useState(false)
   const menuId      = `nav-submenu-${navItem.label.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`
@@ -643,7 +646,7 @@ export function SubMenu({navItem, isMobile, textClass, hoverTextClass, ringClass
             <m.span
               aria-hidden="true"
               animate={isOpen ? {rotate: 180} : {rotate: 0}}
-              transition={motionConfig.chevron}
+              transition={mc.chevron}
               className="flex-shrink-0"
             >
               <RxChevronDown />
@@ -664,7 +667,7 @@ export function SubMenu({navItem, isMobile, textClass, hoverTextClass, ringClass
           <m.span
             aria-hidden="true"
             animate={isOpen ? {rotate: 180} : {rotate: 0}}
-            transition={motionConfig.chevron}
+            transition={mc.chevron}
             className="flex-shrink-0"
           >
             <RxChevronDown />
@@ -680,7 +683,7 @@ export function SubMenu({navItem, isMobile, textClass, hoverTextClass, ringClass
         data-ring-context="light"
         initial={false}
         animate={{opacity: isOpen ? 1 : 0, y: isOpen ? 0 : -6}}
-        transition={motionConfig.dropdown}
+        transition={mc.dropdown}
         className={[
           'bg-muted text-foreground rounded-ui',
           colClass(flatItems.length),
@@ -1010,6 +1013,9 @@ type MobileDrawerProps = {
 }
 
 export function MobileDrawer({data, isOpen, items, onClose, triggerRef}: MobileDrawerProps) {
+  // Reduced-motion-aware configs (item 38): the drawer animates opacity,
+  // which MotionConfig's positional gate does not cover.
+  const mc = useMotionConfig()
   const phone    = data.headerPhone || data.tollFreePhone || data.phone
   const phone2   = data.headerPhone2 || null
   const drawerRef    = useRef<HTMLDivElement>(null)
@@ -1112,7 +1118,7 @@ export function MobileDrawer({data, isOpen, items, onClose, triggerRef}: MobileD
       }}
       initial="close"
       animate={isOpen ? 'open' : 'close'}
-      transition={motionConfig.drawer}
+      transition={mc.drawer}
       // Measured fill-height (see effect above); h-[100dvh] is the SSR/no-JS
       // fallback the inline style overrides once mounted.
       style={fillHeight ? {height: fillHeight} : undefined}
@@ -1188,6 +1194,9 @@ export function MobileDrawer({data, isOpen, items, onClose, triggerRef}: MobileD
 }
 
 function MobileSubMenu({navItem, pathname}: {navItem: NavItem; pathname: string}) {
+  // Reduced-motion-aware configs (item 38): the accordion animates opacity
+  // alongside height; the positional gate covers only the height half.
+  const mc = useMotionConfig()
   const parentHref = navItem.href ?? null
   const childItems = flattenChildren(navItem)
   // On mobile a parent row is a pure accordion toggle (a disclosure — it never
@@ -1223,7 +1232,7 @@ function MobileSubMenu({navItem, pathname}: {navItem: NavItem; pathname: string}
         <m.span
           aria-hidden="true"
           animate={isOpen ? {rotate: 180} : {rotate: 0}}
-          transition={motionConfig.chevron}
+          transition={mc.chevron}
         >
           <RxChevronDown />
         </m.span>
@@ -1234,7 +1243,7 @@ function MobileSubMenu({navItem, pathname}: {navItem: NavItem; pathname: string}
         aria-hidden={!isOpen}
         initial={false}
         animate={{height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0}}
-        transition={motionConfig.subnav}
+        transition={mc.subnav}
         className="overflow-hidden pb-2"
       >
         {listItems.map((item, i) => {

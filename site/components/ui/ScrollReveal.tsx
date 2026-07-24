@@ -72,9 +72,13 @@ export function ScrollReveal({
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [phase, setPhase] = useState<Phase>('unset')
-  // Reactive: reflects a mid-session OS toggle, unlike a bare matchMedia read.
-  // Returns null during SSR and before mount, which coerces to "not reduced" —
-  // safe here because nothing is applied until the effect below runs anyway.
+  // NOT reactive, stated honestly (item 38 — verified in the installed
+  // framer-motion 12.38.0 source): useReducedMotion reads the preference ONCE
+  // per mount (`useState(prefersReducedMotion.current)`), so a mid-session OS
+  // toggle applies from the next mount/navigation, not the same frame. The
+  // prior comment here claimed the opposite. Returns null during SSR and
+  // before mount, which coerces to "not reduced" — safe here because nothing
+  // is applied until the effect below runs anyway.
   const reduce = useReducedMotion() ?? false
 
   // Armed once. Guarding on a ref rather than on `phase` keeps `phase` out of

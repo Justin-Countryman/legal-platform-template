@@ -2,7 +2,7 @@
 
 import {useState, useMemo} from 'react'
 import {AnimatePresence, motion} from 'framer-motion'
-import {motionConfig} from '@/lib/motionConfig'
+import {useMotionConfig} from '@/lib/motionConfig'
 import {CardLink} from '@/components/ui/CardLink'
 import {Input} from '@/components/ui/Input'
 import {TertiaryArrow} from '@/components/ui/TertiaryArrow'
@@ -17,6 +17,9 @@ export type ServiceAreaCard = {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function ServiceAreaIndexClient({pages}: {pages: ServiceAreaCard[]}) {
+  // Reduced-motion-aware configs (item 38): the crossfade is pure opacity,
+  // which MotionConfig's positional gate does not cover.
+  const mc = useMotionConfig()
   const [search, setSearch] = useState('')
   const [activeLetter, setActiveLetter] = useState<string | null>(null)
 
@@ -122,7 +125,7 @@ export function ServiceAreaIndexClient({pages}: {pages: ServiceAreaCard[]}) {
           initial={{opacity: 0}}
           animate={{opacity: 1}}
           exit={{opacity: 0}}
-          transition={motionConfig.crossfade}
+          transition={mc.crossfade}
         >
           {filtered.length > 0 ? (
             <ul role="list" aria-label="Service areas" className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4">

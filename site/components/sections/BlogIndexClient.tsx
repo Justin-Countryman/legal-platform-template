@@ -10,7 +10,7 @@ import {Select} from '@/components/ui/Select'
 import {AnimatePresence, motion} from 'framer-motion'
 
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
-import {motionConfig} from '@/lib/motionConfig'
+import {useMotionConfig} from '@/lib/motionConfig'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -57,6 +57,9 @@ export function BlogIndexClient({
   // without triggering a server round-trip.
   const searchParams = useSearchParams()
   const initialSearch = searchParams.get('q') ?? ''
+  // Reduced-motion-aware configs (item 38): the crossfade is pure opacity,
+  // which MotionConfig's positional gate does not cover.
+  const mc = useMotionConfig()
   const [activeCategory, setActiveCategory] = useState<string | null>(initialCategory)
   const [search, setSearch] = useState(initialSearch)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
@@ -159,7 +162,7 @@ export function BlogIndexClient({
           initial={{opacity: 0}}
           animate={{opacity: 1}}
           exit={{opacity: 0}}
-          transition={motionConfig.crossfade}
+          transition={mc.crossfade}
         >
           {visible.length > 0 ? (
             <ul role="list" aria-label="Blog posts" className="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 md:gap-y-16 lg:grid-cols-3">
