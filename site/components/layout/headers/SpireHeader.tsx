@@ -20,9 +20,6 @@ import {Button} from '@/components/ui/Button'
 
 type Props = {data: HeaderData}
 
-// Column 1 is the `1fr` right column — fluid, never include in the fits measurement.
-const SKIP_FLUID_COLS = [1] as const
-
 export function SpireHeader({data}: Props) {
   const {
     heroMerge, sticky, stickyHideSupplementary, compactStyle,
@@ -41,7 +38,7 @@ export function SpireHeader({data}: Props) {
   const headerRef  = useRef<HTMLElement>(null)
   const desktopRef = useRef<HTMLDivElement>(null)
   const menuBtnRef = useRef<HTMLButtonElement>(null)
-  const fits       = useHeaderFits(desktopRef, SKIP_FLUID_COLS)
+  const fits       = useHeaderFits(desktopRef)
   useHeaderHeight(headerRef, !!heroMerge, scrolled)
   useScrollLock(menuOpen)
 

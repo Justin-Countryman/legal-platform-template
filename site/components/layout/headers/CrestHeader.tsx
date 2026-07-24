@@ -16,10 +16,6 @@ import {
 
 type Props = {data: HeaderData}
 
-// Columns 0 and 2 are `1fr` (nav and phone+CTA) — fluid, never include in the fits measurement.
-// Only the center `auto` logo column (index 1) determines whether the layout overflows.
-const SKIP_FLUID_COLS = [0, 2] as const
-
 export function CrestHeader({data}: Props) {
   const {
     heroMerge, sticky, stickyHideSupplementary, compactStyle,
@@ -37,7 +33,7 @@ export function CrestHeader({data}: Props) {
   const headerRef  = useRef<HTMLElement>(null)
   const desktopRef = useRef<HTMLDivElement>(null)
   const menuBtnRef = useRef<HTMLButtonElement>(null)
-  const fits       = useHeaderFits(desktopRef, SKIP_FLUID_COLS)
+  const fits       = useHeaderFits(desktopRef)
   useHeaderHeight(headerRef, !!heroMerge, scrolled)
   useScrollLock(menuOpen)
 

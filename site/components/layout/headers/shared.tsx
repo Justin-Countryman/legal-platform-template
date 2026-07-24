@@ -88,15 +88,36 @@ export function useScrolled(threshold = 80): boolean {
   return scrolled
 }
 
-// Measures whether the desktop header row fits without overflow.
-// Temporarily expands the row to max-content width to get its natural size,
-// then compares against the parent container's available width.
+// Measures whether the desktop header row fits without overflow, and drives
+// the content-driven desktop→mobile-nav switch (item 61 ruling: the header
+// switches to mobile navigation when the desktop layout runs out of
+// horizontal room, at whatever width that happens to be — never a fixed
+// breakpoint, never a per-site tuned value; a firm with more nav items
+// switches earlier, automatically).
+//
+// "Needed" is the row's true natural width: every grid track measured at
+// max-content and summed. Fluid `fr` tracks are INCLUDED — under max-content
+// sizing a pure-spacer track resolves to ~0 (harmless), while a fluid track
+// carrying content (a centered nav, a stacked phone/nav/CTA cluster) resolves
+// to that content's single-line width, which is exactly its minimum
+// non-broken requirement. The previous skipColumns parameter excluded fluid
+// tracks on the "they absorb free space" theory; in every header the skipped
+// track was the one HOLDING the nav/phone/CTA content, so the check was
+// blind to precisely the content that overflows — the item 61 defect (CTA
+// clipped, phone clipped mid-digit, nav wrapping, all undetected).
+//
+// Hysteresis: flipping to mobile can change page height and thus toggle a
+// classic scrollbar (~17px of viewport width), which changes `available` and
+// could re-flip the answer forever at the boundary. Re-entering desktop
+// therefore requires REENTRY_SLACK_PX of headroom beyond exact fit, so any
+// boundary feedback smaller than the slack cannot oscillate.
+//
 // Uses useLayoutEffect so the initial correction happens before first paint.
-// skipColumns: indices of grid tracks that are `fr` (fluid) and should be
-// excluded from the needed-width sum. fr tracks absorb remaining space in normal
-// layout, so including them at max-content produces false negatives.
-export function useHeaderFits(rowRef: React.RefObject<HTMLElement | null>, skipColumns?: readonly number[]): boolean {
+const REENTRY_SLACK_PX = 24
+
+export function useHeaderFits(rowRef: React.RefObject<HTMLElement | null>): boolean {
   const [fits, setFits] = useState(true)
+  const fitsRef = useRef(true)
 
   useLayoutEffect(() => {
     const el = rowRef.current
@@ -109,25 +130,21 @@ export function useHeaderFits(rowRef: React.RefObject<HTMLElement | null>, skipC
       let needed: number
 
       if (getComputedStyle(node).display === 'grid') {
-        // fr columns absorb free space without container overflow, so scrollWidth
-        // alone can't detect when content is too wide. We also can't rely on
-        // scrollWidth after setting max-content tracks because when !fits the ghost
-        // element is absolutely positioned (left-0 right-0 on the outer wrapper),
-        // inflating scrollWidth to the full viewport width and permanently latching
+        // scrollWidth alone can't detect grid overflow (fr tracks absorb space
+        // without overflowing), and we can't read scrollWidth after setting
+        // max-content tracks because when !fits the ghost element is absolutely
+        // positioned (left-0 right-0 on the outer wrapper), inflating
+        // scrollWidth to the full viewport width and permanently latching
         // fits=false. Instead: set all tracks to max-content, read the computed
-        // pixel track sizes via getComputedStyle, and sum them — this gives the
-        // true content width regardless of the ghost's positioning context.
-        // skipColumns indices (fr tracks) are excluded from the sum — they will
-        // take whatever space remains so they never cause a false overflow.
+        // pixel track sizes via getComputedStyle, and sum them — the true
+        // content width regardless of the ghost's positioning context.
         const prev = node.style.gridTemplateColumns
         node.style.gridTemplateColumns = Array.from({length: node.children.length}, () => 'max-content').join(' ')
         const computedCols = getComputedStyle(node).gridTemplateColumns
         const gap = parseFloat(getComputedStyle(node).columnGap) || 0
         const trackWidths = computedCols.split(' ').map(v => parseFloat(v) || 0)
         node.style.gridTemplateColumns = prev
-        const fixedWidths = trackWidths.filter((_, i) => !skipColumns?.includes(i))
-        // Keep full gap count — gaps exist between all tracks including fluid ones.
-        needed = fixedWidths.reduce((a, b) => a + b, 0) + gap * Math.max(0, trackWidths.length - 1)
+        needed = trackWidths.reduce((a, b) => a + b, 0) + gap * Math.max(0, trackWidths.length - 1)
       } else {
         // Flex: temporarily expand to max-content. For an absolute flex ghost the
         // explicit width overrides right-0, so scrollWidth reflects content width.
@@ -137,14 +154,29 @@ export function useHeaderFits(rowRef: React.RefObject<HTMLElement | null>, skipC
         node.style.width = prev
       }
 
-      setFits(needed <= available)
+      // Hysteresis (see header comment): desktop → mobile at exact overflow;
+      // mobile → desktop only with REENTRY_SLACK_PX of headroom.
+      const next = fitsRef.current
+        ? needed <= available
+        : needed <= available - REENTRY_SLACK_PX
+      fitsRef.current = next
+      setFits(next)
     }
 
     measure()
     const ro = new ResizeObserver(measure)
+    // Observe the parent (available width changes) AND the row itself: the
+    // compact/scrolled state swaps classes on the row's children (logo size,
+    // inline phone max-width), changing `needed` without any parent resize —
+    // e.g. a non-float compact style where the container padding never
+    // changes. The row's own box changes in those states, so observing it
+    // catches the re-measure the parent observer would miss. measure() restores
+    // all inline styles synchronously, so its own mutations produce no lasting
+    // size change and cannot self-trigger a loop.
     ro.observe(el.parentElement ?? el)
+    ro.observe(el)
     return () => ro.disconnect()
-  }, [rowRef, skipColumns])
+  }, [rowRef])
 
   return fits
 }
