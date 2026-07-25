@@ -1,7 +1,15 @@
 import {defineType} from 'sanity'
 
 // Standalone Sanity document — firm press mentions, the "In The News" /
-// "As Seen In" beat. Consumed by the Press / Media block (Phase 3).
+// "As Seen In" beat.
+//
+// NOTHING RENDERS THIS BY DEFAULT, AND THAT IS DELIBERATE. Ruled 2026-07-25
+// (Justin): a press / media block is NOT standard homepage composition. Press
+// mentions are niche enough that a firm with real press gets the block built
+// as a one-off. This type stays because it is the storage that one-off would
+// use. An earlier comment here read "Consumed by the Press / Media block
+// (Phase 3)" — that block was never standard and is not owed. Do not "restore"
+// it on the strength of finding this type unconsumed.
 //
 // OUTLET AND HEADLINE ONLY. Never the article body, never an excerpt, never a
 // pull quote. This is a copyright constraint, not a style preference: the
@@ -16,6 +24,12 @@ export const pressItem = defineType({
   name: 'pressItem',
   title: 'Press Mention',
   type: 'document',
+  description:
+    'Storage only — nothing on the site displays these by default. A press / ' +
+    'media block is not part of the standard build; a firm with real press ' +
+    'coverage gets one built as a one-off, and it reads from here. Filling ' +
+    'this in will not make anything appear on the site on its own. Outlet and ' +
+    'headline only, never the article text (copyright).',
   fields: [
     {
       name: 'outlet',
