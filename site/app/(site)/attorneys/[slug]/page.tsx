@@ -132,7 +132,7 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
     description,
     ...(attorney.noIndex ? {robots: {index: false, follow: false}} : {}),
     alternates: {canonical: attorney.canonicalUrl ?? `/${slug}`},
-    ...buildSocialMeta(title, description),
+    ...buildSocialMeta(title, description, attorney?.ogImage),
   }
 }
 

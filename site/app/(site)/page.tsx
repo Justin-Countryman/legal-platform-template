@@ -16,6 +16,7 @@ import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta
 import {HomepageHero} from '@/components/layout/homeHero'
 import {type HomeHeroData} from '@/components/layout/homeHero/types'
 import {expandNapTokens, titleFragment, type NapTokens} from '@/lib/tokens'
+import {hasImage, urlForImage, type SanityImage} from '@/lib/sanity/image'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 //
@@ -29,7 +30,9 @@ import {expandNapTokens, titleFragment, type NapTokens} from '@/lib/tokens'
 // on items 44 and 40", until this decision.)
 export async function generateMetadata(): Promise<Metadata> {
   const [home, rawTokens] = await Promise.all([
-    client.fetch<{seoTitle?: string | null} | null>(HOME_METADATA_QUERY),
+    client.fetch<{seoTitle?: string | null; ogImage?: SanityImage | null} | null>(
+      HOME_METADATA_QUERY,
+    ),
     client.fetch<NapTokens>(NAP_TOKENS_QUERY),
   ])
   const tokens = expandNapTokens(rawTokens)
@@ -38,10 +41,26 @@ export async function generateMetadata(): Promise<Metadata> {
   // (its fallback is the formula below), so the second arg is null.
   const stored = titleFragment(home?.seoTitle, null, tokens)
 
+  // Per-page social image (ruled 2026-07-25). The homepage is the ONE route
+  // that does not call buildSocialMeta: with no upload it inherits the root
+  // layout's untitled `/api/og`, and that must not change. So this adds
+  // openGraph/twitter ONLY when the operator actually uploaded an image,
+  // leaving the no-upload path byte-identical to what it was before.
+  const ogImage = home?.ogImage
+  const ogOverride = hasImage(ogImage)
+    ? (() => {
+        const url = urlForImage(ogImage).width(1200).height(630).fit('crop').url()
+        return {
+          openGraph: {images: [{url, width: 1200, height: 630, alt: ogImage.alt || ''}]},
+          twitter: {card: 'summary_large_image' as const, images: [url]},
+        }
+      })()
+    : {}
+
   if (stored) {
     // PRESENT — carry through verbatim. `absolute` bypasses the firm-name
     // template so the title is exactly the stored value, no doubling.
-    return {title: {absolute: stored}, alternates: {canonical: '/'}}
+    return {title: {absolute: stored}, alternates: {canonical: '/'}, ...ogOverride}
   }
 
   // ABSENT — item 32's from-scratch homepage title formula belongs here. It has
@@ -54,7 +73,9 @@ export async function generateMetadata(): Promise<Metadata> {
   // state already renders one of the two correct shapes rather than anything
   // broken. Do NOT wire this to homepageApproach — that field has no title role
   // (item 44); the shape selector, when built, is its own input.
-  return {alternates: {canonical: '/'}}
+  // The social-image override rides both branches — it is independent of the
+  // title question, and an operator who uploads one must get it either way.
+  return {alternates: {canonical: '/'}, ...ogOverride}
 }
 
 // Phase 2: the homepage hero is split — CONTENT on homePage.hero, DESIGN on

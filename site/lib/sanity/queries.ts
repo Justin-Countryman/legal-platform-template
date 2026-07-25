@@ -906,7 +906,8 @@ const CANVAS_FRAGMENT = groq`[]{
 // stored seoTitle through VERBATIM (item 32; ruled 2026-07-24) — see the route's
 // generateMetadata for why it renders absolute rather than through the template.
 export const HOME_METADATA_QUERY = groq`
-  *[_type == "homePage"][0]{seoTitle}
+  *[_type == "homePage"][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},seoTitle}
 `
 
 export const HOME_QUERY = groq`
@@ -934,6 +935,7 @@ export const HOME_QUERY = groq`
 // ─── Contact Page ─────────────────────────────────────────────────────────────
 export const CONTACT_PAGE_QUERY = groq`
   *[_type == "contactPage"][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     "title": coalesce(title, "Contact"),
     seoTitle,
     metaDescription,
@@ -951,6 +953,7 @@ export const CONTACT_PAGE_QUERY = groq`
 // ─── Testimonials Page ────────────────────────────────────────────────────────
 export const TESTIMONIALS_PAGE_QUERY = groq`
   *[_type == "testimonialsPage"][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     seoTitle,
     metaDescription,
     noIndex,
@@ -973,6 +976,7 @@ export const TESTIMONIALS_PAGE_QUERY = groq`
 // ─── Attorney Index ───────────────────────────────────────────────────────────
 export const ATTORNEY_INDEX_QUERY = groq`
   *[_type == "attorneyIndex"][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     "slug": slug.current,
     seoTitle,
     metaDescription,
@@ -1028,6 +1032,7 @@ export const ATTORNEY_PAGES_QUERY = groq`
 // ─── Staff Index ─────────────────────────────────────────────────────────────
 export const STAFF_INDEX_QUERY = groq`
   *[_type == "staffIndex"][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     "slug": slug.current,
     seoTitle,
     metaDescription,
@@ -1063,6 +1068,7 @@ export const STAFF_PAGES_QUERY = groq`
 
 export const STAFF_PAGE_QUERY = groq`
   *[_type == "staffPage" && slug.current == $slug][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     "slug": slug.current,
     seoTitle,
     metaDescription,
@@ -1092,6 +1098,7 @@ export const STAFF_PAGE_QUERY = groq`
 // ─── Service Area Index ───────────────────────────────────────────────────────
 export const SERVICE_AREA_INDEX_QUERY = groq`
   *[_type == "serviceAreaIndex"][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     "slug": slug.current,
     seoTitle,
     metaDescription,
@@ -1120,6 +1127,7 @@ export const SERVICE_AREA_PAGES_QUERY = groq`
 // ─── Attorney Profile Page ────────────────────────────────────────────────────
 export const ATTORNEY_PAGE_QUERY = groq`
   *[_type == "attorneyPage" && slug.current == $slug][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     "slug": slug.current,
     seoTitle,
     metaDescription,
@@ -1179,6 +1187,7 @@ export const ATTORNEY_PAGE_QUERY = groq`
 // ─── Practice Area ────────────────────────────────────────────────────────────
 export const PRACTICE_AREA_QUERY = groq`
   *[_type in ["practiceArea", "geoPracticeArea", "serviceAreaPage"] && slug.current == $slug][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     title,
     "slug": slug.current,
     seoTitle,
@@ -1215,6 +1224,7 @@ export const PRACTICE_AREA_QUERY = groq`
 // ─── Event Index Page ─────────────────────────────────────────────────────────
 export const EVENT_INDEX_PAGE_QUERY = groq`
   *[_type == "eventIndex"][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     "slug": slug.current,
     "title": coalesce(hero.heading, "Events"),
     seoTitle,
@@ -1254,6 +1264,7 @@ export const EVENT_INDEX_QUERY = groq`
 // ─── Event Detail Page ────────────────────────────────────────────────────────
 export const EVENT_PAGE_QUERY = groq`
   *[_type == "eventPage" && slug.current == $slug][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     title,
     "slug": slug.current,
     seoTitle,
@@ -1284,6 +1295,7 @@ export const EVENT_PAGE_QUERY = groq`
 // ─── Blog Index Page ──────────────────────────────────────────────────────────
 export const BLOG_INDEX_PAGE_QUERY = groq`
   *[_type == "blogIndex"][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     "slug": slug.current,
     seoTitle,
     metaDescription,
@@ -1314,6 +1326,7 @@ const VIDEO_CARD_FRAGMENT = groq`{
 
 export const VIDEO_INDEX_PAGE_QUERY = groq`
   *[_type == "videoIndex"][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     "slug": slug.current,
     seoTitle,
     metaDescription,
@@ -1382,6 +1395,7 @@ export const RELATED_POSTS_QUERY = groq`
 // ─── Blog Post Detail Page ────────────────────────────────────────────────────
 export const BLOG_POST_PAGE_QUERY = groq`
   *[_type == "blogPost" && slug.current == $slug][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     h1,
     "slug": slug.current,
     seoTitle,
@@ -1497,6 +1511,7 @@ export const BLOG_CATEGORIES_QUERY = groq`
 // ─── Blog Category Page ───────────────────────────────────────────────────────
 export const BLOG_CATEGORY_PAGE_QUERY = groq`
   *[_type == "blogCategory" && slug.current == $slug][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     title,
     "slug": slug.current,
     seoTitle,
@@ -1566,6 +1581,7 @@ export const BLOG_CATEGORY_POSTS_QUERY = groq`
 // ─── Location Page ────────────────────────────────────────────────────────────
 export const LOCATION_PAGE_QUERY = groq`
   *[_type == "locationPage" && slug.current == $slug][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     _type,
     "title": coalesce(title, ""),
     "slug": slug.current,
@@ -1609,6 +1625,7 @@ export const CONTENT_PAGE_QUERY = groq`
     slug.current == $slug &&
     _type in ["aboutPage", "contactPage", "faqPage", "generalPage", "landingPage"]
   ][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     _type,
     "title": coalesce(title, ""),
     "slug": slug.current,

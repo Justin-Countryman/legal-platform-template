@@ -196,7 +196,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     description,
     ...(page.noIndex ? {robots: {index: false, follow: false}} : {}),
     alternates: {canonical: page.canonicalUrl ?? `/${slugStr}`},
-    ...buildSocialMeta(title, description),
+    ...buildSocialMeta(title, description, page?.ogImage),
   }
 }
 

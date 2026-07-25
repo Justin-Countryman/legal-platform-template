@@ -5,6 +5,7 @@ import {client} from '@/lib/sanity/client'
 import {VIDEO_INDEX_PAGE_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
 import {expandNapTokens, resolveTokenString, titleFragment} from '@/lib/tokens'
 import {buildSocialMeta} from '@/lib/socialMeta'
+import {type SanityImage} from '@/lib/sanity/image'
 import {getEmbedUrl, autoThumbnails, toIsoDuration} from '@/lib/videoEmbed'
 import {InternalHero, type InternalHeroData} from '@/components/layout/InternalHero'
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
@@ -16,6 +17,7 @@ import {urlForImage, hasImage} from '@/lib/sanity/image'
 type VideoIndexData = {
   slug?: string | null
   seoTitle?: string | null
+  ogImage?: SanityImage | null
   metaDescription?: string | null
   noIndex?: boolean | null
   canonicalUrl?: string | null
@@ -44,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     ...(indexPage.noIndex ? {robots: {index: false, follow: false}} : {}),
     alternates: {canonical: indexPage.canonicalUrl ?? '/videos'},
-    ...buildSocialMeta(title, description),
+    ...buildSocialMeta(title, description, indexPage?.ogImage),
   }
 }
 

@@ -94,7 +94,7 @@ export const geoPracticeArea = defineType({
       name: 'ogImageOverride',
       title: 'OG Image',
       type: 'image',
-      description: '1200×630 px recommended',
+      description: '1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.',
       fieldset: 'seo',
       options: {hotspot: true},
       fields: [
