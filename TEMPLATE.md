@@ -1,6 +1,8 @@
 # Template version policy
 
-This template is versioned with semver tags. Each tag is a released, end-to-end-tested checkpoint that the Client Provisioning Tool can pin to.
+This template is versioned with semver tags. Each tag marks a released, end-to-end-tested checkpoint.
+
+> **What a tag does NOT do (corrected 2026-07-25).** A tag or Release does **not** select the code a client receives. Provisioning calls GitHub's generate-from-template endpoint, which always copies the template's **default branch** (`main`); the tool sends no `ref`. So **every new client gets `main` at the moment it is provisioned, whatever the latest tag says.** The resolved version string is a **label**, written to `template-provenance.json` and into the new repo's GitHub description, and nothing else. Cutting a release keeps that label honest; it does not change what anybody receives. Provisioning at a chosen version is not supported today (monorepo `OUTSTANDING.md` item 71).
 
 ## Tag scheme
 
@@ -8,18 +10,26 @@ This template is versioned with semver tags. Each tag is a released, end-to-end-
 - `MINOR` — additive schema fields, new components, new optional env vars. Safe for new clients pinned to the same minor on re-provision.
 - `PATCH` — bug fixes, dependency bumps, documentation updates. Always safe.
 
-## How clients pin
+## How clients pin — they do not (corrected 2026-07-25)
 
-`CS-CLIENT-CONFIG.json` per-client may specify a `template_version` field (e.g. `"v0.3.1"`). When set, the Provisioning Tool passes it as the `ref` to GitHub's generate API. When unset, the tool queries `GET /repos/Justin-Countryman/legal-platform-template/releases/latest` and uses that tag.
+**This section previously said the Provisioning Tool passes `template_version` as the `ref` to GitHub's generate API. It does not, and cannot.** GitHub's generate-from-template endpoint accepts no `ref`; the tool's request body carries only `owner`, `name`, `private`, `include_all_branches` and a description. Verified by reading `BE/Client-Provisioning-Tool/client_provisioning_tool.py` in the monorepo: `resolve_template_version()`'s result reaches only a log line, the new repo's description string, and `template-provenance.json`. It never selects code.
 
-The resolved version is persisted to `Clients/<slug>/output/template-provenance.json` for reproducibility.
+What is actually true:
+
+- `CS-CLIENT-CONFIG.json` may set `template_version`. When set it overrides the **recorded label** only. When unset the tool queries `GET /repos/Justin-Countryman/legal-platform-template/releases/latest` and records that tag as the label. If the repo has **no** Release at all the tool errors out, so at least one published Release must exist.
+- Either way the client repo is generated from **`main`**.
+- The resolved version is persisted to `Clients/<slug>/output/template-provenance.json`. Treat it as a **provenance label, not a reproducibility guarantee** — two clients provisioned weeks apart can carry the same label and different code, and nothing surfaces the difference.
+
+The workaround for genuine pinning, named in the tool's own docstring and deliberately out of scope, is to switch the template's default branch to a tag before generating. Tracked as monorepo `OUTSTANDING.md` item 71.
 
 ## How to cut a release
 
 1. Land all PRs targeting `main` through CI.
 2. Update the changelog below.
 3. Tag: `git tag -a v0.X.Y -m "release notes"` then `git push origin v0.X.Y`.
-4. Create a GitHub Release from the tag (optional; the tag itself is the source of truth).
+4. Create a GitHub Release from the tag. **Not optional.** The tool reads `/releases/latest`, not the tag list, so a tag with no Release leaves the recorded label stale on every client provisioned afterwards.
+
+> Changelog entries were skipped for v0.4.0, v0.5.0 and v0.6.0 — all three have Releases but no entry below. Not backfilled; their GitHub Release notes are the record.
 
 ## Schema-change PRs must regenerate the seed
 
@@ -28,6 +38,32 @@ Any PR that changes the shape of a singleton or a Sample Firm document type (`ho
 The CI seed-validation gate enforces this — a schema-change PR without a matching seed regen will fail merge.
 
 ## Changelog
+
+### v0.7.0 — 2026-07-25
+
+**Two breaking changes. Read these first.**
+
+1. **Every stored web address is now written out in full.** In Sanity, the address field on a page now holds the whole path, exactly as it appears in the browser: `blog/category/family-law`, not `family-law`. Before, some page types stored a short name and the code glued the rest on. It does not any more. The rule is simple now: what you see in Sanity is what the address is.
+2. **The "languages" field is gone from attorney profiles.** It was removed from the attorney page in Sanity and from what the website displays.
+
+**No existing site needs its data migrated. There are no live client sites**, so there is no firm's content to convert.
+
+**Why this is 0.7.0 and not 1.0.0.** Under this file's own rule, a breaking change is a MAJOR, which would make this 1.0.0. It is deliberately not. The project is still numbered below 1.0, where breaking changes ride the minor position by convention, and **1.0.0 is reserved for a passing end-to-end dogfood.** Recorded here so this is not reopened later.
+
+**What this release is for.** It is bookkeeping, and it is worth being precise about that. Cutting it does **not** push anything to anyone and does not change what a new client receives, because provisioning always copies `main` (see "How clients pin" above). What it fixes is the record: `main` had run 59 commits past v0.6.0, so every client provisioned in that window was stamped "v0.6.0" in its provenance file and its repo description while actually carrying much newer code. New clients are now labelled v0.7.0, which matches what they get.
+
+**What is new since v0.6.0, in plain terms:**
+
+- **A build-your-own homepage.** The homepage is now assembled from five reusable blocks (accolade badges, what-makes-us-different, a narrative section, case results, and an attorney spotlight), plus opening and closing sections. Editors arrange them in Sanity instead of getting one fixed layout.
+- **Three new content types you can create once and reuse:** accolade badges, case results, and press mentions.
+- **Fuller attorney, office and footer details** feeding both the page and the search-engine data: Justia and Lawyers.com profile links, a profile video, map coordinates, street addresses shown only for real offices, offices marked "do not display" now correctly hidden everywhere, Super Lawyers and LawInfo firm links, and a toll-free number handled as its own contact number.
+- **Google Analytics and Google Search Console are now set up inside Sanity** rather than in code or hosting settings, and the paid Vercel analytics add-on is gone.
+- **Accessibility and layout fixes:** star ratings meet the contrast standard, "reduced motion" is honoured everywhere, "Read More" links announce the article they lead to, the header switches to its mobile menu based on the space the menu actually needs, and hero sections no longer clip their content.
+- **Page titles behave.** No more stray separator on pages with no title set, and a homepage title typed in Sanity is used exactly as written instead of having the firm name appended twice.
+
+**Case results carry a legal obligation.** The case-results block renders a disclaimer, and the wording lives in one place in the code. Do not remove it per client.
+
+**Known gaps carried into this release:** the sample-firm seed file is still not committed (it is a template-development fixture only and is never imported into a client), and the automated check that generated Sanity types are current is still blind (monorepo `OUTSTANDING.md` item 22).
 
 ### v0.3.0 — 2026-06-26
 
