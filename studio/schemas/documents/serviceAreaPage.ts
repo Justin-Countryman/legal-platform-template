@@ -4,7 +4,14 @@ import {TokenTextInput} from '../../components/TokenTextInput'
 import {seoTitleValidation} from '../seoTitle'
 
 // Layout B — Content + Sidebar Shell
-// Slug: /city-practice-area/ (parent), /city-practice-area/child-page/ (child)
+// Slug: /service-area/{city}-{state}/ — e.g. /service-area/woodbury-mn/
+//
+// CORRECTED 2026-07-26. This line read `/city-practice-area/`, which is the
+// geoPracticeArea form and was never this type's URL — a copy-paste from that
+// schema. A service area page is city × WHOLE FIRM, nested under the service
+// area index; a geo page is city × ONE PRACTICE and sits at the root. Confusing
+// the two is exactly what `BI-URL-Architecture.md` → "Service Area vs. GEO"
+// exists to prevent.
 // Schema: LocalBusiness (service area, no address) + BreadcrumbList
 // No data section — purely content driven
 

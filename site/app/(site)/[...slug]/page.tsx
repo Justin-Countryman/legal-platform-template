@@ -12,7 +12,7 @@ import type {Metadata} from 'next'
 import {client} from '@/lib/sanity/client'
 import {PRACTICE_AREA_QUERY, LOCATION_PAGE_QUERY, CONTENT_PAGE_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
-import {aboutPageTitle, areaOfLawPageName, locationPageName, resolveTitle, serviceAreaPageName} from '@/lib/seoTitle'
+import {aboutPageTitle, areaOfLawPageName, geoHubPageName, geoSpokePageName, locationPageName, resolveTitle, serviceAreaPageName} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {ContentSidebarLayout} from '@/components/layout/ContentSidebarLayout'
 import {InternalHero} from '@/components/layout/InternalHero'
@@ -216,9 +216,19 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const serviceAreaName = page._type === 'serviceAreaPage'
     ? serviceAreaPageName(page.title, page.areasOfLaw ?? [])
     : ''
+  // TITLE-8 — geoPracticeArea. A hub (no parent) is titled `{city} {practice}`
+  // and renders city + the practice's stored phrase. A spoke takes the city from
+  // its hub's title via parentPage, then its own page name. Both fall back to
+  // the plain page name when the hub title cannot be split — see
+  // splitGeoHubTitle for the four ways that happens.
+  const geoName = page._type === 'geoPracticeArea'
+    ? (page.parentPage
+        ? geoSpokePageName(page.parentPage.title, page.title)
+        : geoHubPageName(page.title))
+    : ''
   const {title, label} = resolveTitle(
     page.seoTitle,
-    serviceAreaName || areaOfLawName || locationName || page.title,
+    geoName || serviceAreaName || areaOfLawName || locationName || page.title,
     tokens,
     tokens?.firmName,
     aboutTitle,

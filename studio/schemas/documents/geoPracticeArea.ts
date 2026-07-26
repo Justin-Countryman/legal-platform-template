@@ -4,9 +4,20 @@ import {TokenTextInput} from '../../components/TokenTextInput'
 import {seoTitleValidation} from '../seoTitle'
 
 // Layout B — Content + Sidebar Shell
-// Slug: /city-practice-area/ (root), /city-practice-area/child-topic/ (child)
+// Slug: /{city}-{practice}/ (hub), /{city}-{practice}/{topic}/ (spoke)
 // Schema: LegalService + BreadcrumbList
-// Geo-targeted PA silo — one root page per city/PA combo, child pages for sub-topics
+// Geo-targeted PA silo — one hub per city/practice combo, spokes for sub-topics.
+//
+// ONE HUB SHAPE, ruled by Justin 2026-07-26. A bare city hub (`/woodbury/`) was
+// dropped rather than kept as an alternative: it records nowhere which area of
+// law it targets, and a firm can lead with personal injury in one city and
+// family law in another.
+//
+// THE TITLE IS LOAD-BEARING. `BI-Content.md` TITLE-8 splits the hub's title into
+// city and practice to build the page title — `Woodbury Personal Injury` gives
+// `Woodbury Personal Injury Lawyer - <firm>`, and its spokes give
+// `Woodbury <spoke name> - <firm>`. A hub titled any other way falls back to the
+// plain page name. Doctrine: `BI-URL-Architecture.md` → the 3-Tier model.
 
 export const geoPracticeArea = defineType({
   name: 'geoPracticeArea',

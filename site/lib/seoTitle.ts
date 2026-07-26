@@ -1,5 +1,5 @@
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
-import {phraseForAreaOfLaw} from '@/lib/areaOfLawPhrases'
+import {AREA_OF_LAW_PHRASES, phraseForAreaOfLaw} from '@/lib/areaOfLawPhrases'
 
 // Title tags for the site package. Doctrine: `BI-Content.md` § Title tags,
 // rules TITLE-1 (a title is complete as authored; nothing is ever appended),
@@ -224,6 +224,96 @@ export function areaOfLawPageName(
 ): string {
   if (hasParentPage) return ''
   return phraseForAreaOfLaw(title)
+}
+
+/**
+ * TITLE-8. Split a geo hub's title into its city and its area of law.
+ *
+ * A geo hub is titled `{city} {practice}` — `Woodbury Personal Injury` — because
+ * that is the one hub shape (ruled 2026-07-26; `BI-URL-Architecture.md`). The
+ * title is the only place either value exists: `geoPracticeArea` has no city
+ * field and no reference to the practice area it targets.
+ *
+ * THE RULE: strip the longest of the fifteen canonical AREA-OF-LAW NAMES that
+ * the title ends with, on a word boundary, case-insensitively. What is left is
+ * the city. Both halves must be non-empty or the split fails.
+ *
+ * It is a lookup against a stored list, not a heuristic — which is what makes it
+ * defensible. `phraseForAreaOfLaw`'s keys are the fifteen, so the same table
+ * that supplies the phrase decides where the title divides. No two of the
+ * fifteen are suffixes of one another today (checked), so a match is
+ * unambiguous; longest-first is used anyway so a future sixteenth area cannot
+ * introduce ambiguity silently.
+ *
+ * WHAT IT WILL GET WRONG, stated rather than discovered:
+ *
+ *   1. **A practice outside the fifteen.** `Woodbury Appellate Law` does not
+ *      match, so the page falls back to its plain page name. This is the COMMON
+ *      case, not the edge: seven of Dudley's fourteen top-level practice areas
+ *      are not among the fifteen.
+ *   2. **Practice-first titles.** `Personal Injury Woodbury` does not match.
+ *   3. **No city at all.** `Personal Injury` matches the whole title, leaving no
+ *      city — guarded, falls back.
+ *   4. **A city whose name ends with an area name.** `New Business Law` would
+ *      split to city `New`, area `Business Law`. Contrived for US city names,
+ *      but it is a real property of suffix matching and the rule cannot tell.
+ *
+ * Every failure lands on the same safe outcome — the page name — so a wrong
+ * split never ships a wrong city; it ships a plainer title.
+ */
+export function splitGeoHubTitle(
+  hubTitle: string | null | undefined,
+): {city: string; areaOfLaw: string} {
+  const title = (hubTitle ?? '').trim()
+  if (!title) return {city: '', areaOfLaw: ''}
+
+  const candidates = Object.keys(AREA_OF_LAW_PHRASES)
+    .slice()
+    .sort((a, b) => b.length - a.length)
+
+  for (const area of candidates) {
+    const lower = title.toLowerCase()
+    const suffix = area.toLowerCase()
+    if (!lower.endsWith(suffix)) continue
+    const cut = title.length - area.length
+    // Word boundary: the character before the match must be whitespace, or
+    // `Woodbury Personal Injury` would also match a title like `XPersonal
+    // Injury`.
+    if (cut === 0 || !/\s/.test(title[cut - 1])) continue
+    const city = title.slice(0, cut).trim()
+    if (!city) continue
+    return {city, areaOfLaw: title.slice(cut).trim()}
+  }
+  return {city: '', areaOfLaw: ''}
+}
+
+/**
+ * TITLE-8, hub: the city, then the practice's stored phrase.
+ * `Woodbury Personal Injury` -> `Woodbury Personal Injury Lawyer`
+ */
+export function geoHubPageName(hubTitle: string | null | undefined): string {
+  const {city, areaOfLaw} = splitGeoHubTitle(hubTitle)
+  if (!city) return ''
+  const phrase = phraseForAreaOfLaw(areaOfLaw)
+  return phrase ? `${city} ${phrase}` : ''
+}
+
+/**
+ * TITLE-8, spoke: the city from its HUB, then the spoke's own page name.
+ * `Woodbury Personal Injury` + `Car Accidents` -> `Woodbury Car Accidents`
+ *
+ * The spoke's own name is used verbatim, with no phrase lookup — TITLE-5 was
+ * retired, so a practice beneath an area of law has no stored phrase and no
+ * derived one. The spoke reaches its hub through `parentPage`.
+ */
+export function geoSpokePageName(
+  hubTitle: string | null | undefined,
+  spokeTitle: string | null | undefined,
+): string {
+  const {city} = splitGeoHubTitle(hubTitle)
+  const spoke = (spokeTitle ?? '').trim()
+  if (!city || !spoke) return ''
+  return `${city} ${spoke}`
 }
 
 /**

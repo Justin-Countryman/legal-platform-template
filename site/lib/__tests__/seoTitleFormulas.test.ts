@@ -4,10 +4,13 @@ import {
   aboutPageTitle,
   areaOfLawPageName,
   composeTitle,
+  geoHubPageName,
+  geoSpokePageName,
   homepageTitle,
   locationPageName,
   resolveTitle,
   serviceAreaPageName,
+  splitGeoHubTitle,
 } from '../seoTitle'
 
 /**
@@ -158,5 +161,81 @@ describe('a practice area page: area-of-law level versus beneath one', () => {
     // `Workers' Compensation` by an apostrophe, which is a real client case.
     expect(areaOfLawPageName('Appellate Law', false)).toBe('')
     expect(areaOfLawPageName('Workers Compensation', false)).toBe('')
+  })
+})
+
+describe('TITLE-8 — splitting a geo hub title', () => {
+  it('splits city from area of law on a word boundary', () => {
+    expect(splitGeoHubTitle('Woodbury Personal Injury'))
+      .toEqual({city: 'Woodbury', areaOfLaw: 'Personal Injury'})
+  })
+
+  it('handles a multi-word city', () => {
+    expect(splitGeoHubTitle('Saint Louis Park Family Law'))
+      .toEqual({city: 'Saint Louis Park', areaOfLaw: 'Family Law'})
+  })
+
+  it('handles the apostrophe area', () => {
+    expect(splitGeoHubTitle("Woodbury Workers' Compensation"))
+      .toEqual({city: 'Woodbury', areaOfLaw: "Workers' Compensation"})
+  })
+
+  it('is case-insensitive on the area name', () => {
+    expect(splitGeoHubTitle('woodbury personal injury').city).toBe('woodbury')
+  })
+
+  // ── The four documented failure modes. Each must land on "no split", so the
+  // ── caller falls back to the page name rather than shipping a wrong city.
+  it('FAILS on a practice outside the fifteen — the common case', () => {
+    expect(splitGeoHubTitle('Woodbury Appellate Law')).toEqual({city: '', areaOfLaw: ''})
+  })
+
+  it('FAILS on a practice-first title', () => {
+    expect(splitGeoHubTitle('Personal Injury Woodbury')).toEqual({city: '', areaOfLaw: ''})
+  })
+
+  it('FAILS when there is no city', () => {
+    expect(splitGeoHubTitle('Personal Injury')).toEqual({city: '', areaOfLaw: ''})
+  })
+
+  it('requires a word boundary, so a fused word does not match', () => {
+    expect(splitGeoHubTitle('XPersonal Injury')).toEqual({city: '', areaOfLaw: ''})
+  })
+
+  it('empty in, empty out', () => {
+    expect(splitGeoHubTitle('')).toEqual({city: '', areaOfLaw: ''})
+    expect(splitGeoHubTitle(null)).toEqual({city: '', areaOfLaw: ''})
+  })
+})
+
+describe('TITLE-8 — the two geo page shapes', () => {
+  it('a hub is the city then the practice phrase', () => {
+    expect(geoHubPageName('Woodbury Personal Injury')).toBe('Woodbury Personal Injury Lawyer')
+  })
+
+  it('a spoke is the city from its HUB then its own page name', () => {
+    expect(geoSpokePageName('Woodbury Personal Injury', 'Car Accidents'))
+      .toBe('Woodbury Car Accidents')
+  })
+
+  it('a spoke name is used VERBATIM — TITLE-5 was retired, so no phrase lookup', () => {
+    // `Tax Law` is one of the fifteen, but a spoke gets no phrase for it.
+    expect(geoSpokePageName('Woodbury Business Law', 'Tax Law')).toBe('Woodbury Tax Law')
+  })
+
+  it('both return empty when the hub title cannot be split', () => {
+    expect(geoHubPageName('Woodbury Appellate Law')).toBe('')
+    expect(geoSpokePageName('Woodbury Appellate Law', 'Appeals')).toBe('')
+  })
+
+  it('a hub whose area has no stored phrase returns empty', () => {
+    // Split succeeds only for the fifteen, which all have phrases — so this is
+    // guarded rather than reachable today. Asserted so a future sixteenth area
+    // added without a phrase cannot ship a bare city as a title.
+    expect(geoHubPageName('Woodbury')).toBe('')
+  })
+
+  it('a spoke with no name returns empty', () => {
+    expect(geoSpokePageName('Woodbury Personal Injury', '')).toBe('')
   })
 })
