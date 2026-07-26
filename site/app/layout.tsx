@@ -146,12 +146,32 @@ export async function generateMetadata(): Promise<Metadata> {
     : undefined
 
   return {
-    title: {
-      default: firmName,
-      // Separator lives in lib/seoTitle.ts so the length check, the 404 title
-      // and this template cannot disagree about what a rendered title is.
-      template: titleTemplate(firmName),
-    },
+    // NO `template`, deliberately (TITLE-1, 2026-07-26). A title is complete as
+    // authored and NOTHING is ever appended to it, so there is no template for
+    // a page title to pass through. Every route returns `title.absolute` via
+    // `resolveTitle` in lib/seoTitle.ts.
+    //
+    // `default` stays: it is what renders when a route supplies no title at all
+    // — today only the homepage with no stored seoTitle, whose from-scratch
+    // formula (TITLE-7) is not built yet. Re-adding `template` here would
+    // silently restore appending for any route that returns a plain string.
+    // TITLE-1 (2026-07-26): a title is complete as authored and nothing is
+    // appended to it. Every route therefore returns `title.absolute` via
+    // `resolveTitle` (lib/seoTitle.ts) and NONE of them passes through the
+    // template below.
+    //
+    // The template survives for EXACTLY ONE CONSUMER: the two not-found
+    // boundaries. A not-found boundary cannot run `generateMetadata` — measured
+    // 2026-07-26 with a clean build cache, it emits no title at all — so it
+    // cannot read the firm name, and `Page Not Found - <firm name>` is what
+    // doctrine's page-type table specifies. A static string plus this template
+    // is the only way it gets one.
+    //
+    // **If you add a route that returns a plain-string title, it will silently
+    // gain a firm-name suffix.** Return `resolveTitle(...).title` instead. The
+    // route sweep in lib/__tests__/titleFallback.test.ts pins that every route
+    // does.
+    title: {default: firmName, template: titleTemplate(firmName)},
     metadataBase: new URL(`https://${domain}`),
     ...(icons ? {icons} : {}),
     openGraph: {

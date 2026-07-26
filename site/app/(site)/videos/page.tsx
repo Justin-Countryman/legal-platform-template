@@ -4,7 +4,8 @@ import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {client} from '@/lib/sanity/client'
 import {VIDEO_INDEX_PAGE_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
-import {expandNapTokens, resolveTokenString, titleFragment} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
+import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {type SanityImage} from '@/lib/sanity/image'
 import {getEmbedUrl, autoThumbnails, toIsoDuration} from '@/lib/videoEmbed'
@@ -41,14 +42,14 @@ export async function generateMetadata(): Promise<Metadata> {
   ])
   if (!indexPage) return {title: 'Video Library'}
   const tokens = expandNapTokens(rawTokens)
-  const title = titleFragment(indexPage.seoTitle, indexPage.title, tokens)
+  const {title, label} = resolveTitle(indexPage.seoTitle, indexPage.title, tokens, tokens?.firmName)
   const description = resolveTokenString(indexPage.metaDescription, tokens)
   return {
     title,
     description,
     ...(await buildRobotsMeta(indexPage.noIndex, indexPage.noFollow)),
     alternates: {canonical: indexPage.canonicalUrl ?? '/videos'},
-    ...buildSocialMeta(title, description, indexPage?.ogImage),
+    ...buildSocialMeta(label, description, indexPage?.ogImage),
   }
 }
 

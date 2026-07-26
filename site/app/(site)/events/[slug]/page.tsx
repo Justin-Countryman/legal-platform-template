@@ -6,7 +6,8 @@ import type {Metadata} from 'next'
 import Link from 'next/link'
 import {client} from '@/lib/sanity/client'
 import {EVENT_PAGE_QUERY, EVENT_SLUGS_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
-import {expandNapTokens, resolveTokenString, titleFragment, type NapTokens} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
+import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
@@ -127,14 +128,14 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const tokens = expandNapTokens(rawTokens)
   if (!event) return {}
 
-  const title = titleFragment(event.seoTitle, event.title, tokens)
+  const {title, label} = resolveTitle(event.seoTitle, event.title, tokens, tokens?.firmName)
   const description = resolveTokenString(event.metaDescription, tokens)
   return {
     title,
     description,
     ...(await buildRobotsMeta(event.noIndex, event.noFollow)),
     alternates: {canonical: event.canonicalUrl ?? `/${slug}`},
-    ...buildSocialMeta(title, description, event?.ogImage),
+    ...buildSocialMeta(label, description, event?.ogImage),
   }
 }
 

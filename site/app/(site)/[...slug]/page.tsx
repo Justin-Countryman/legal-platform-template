@@ -11,7 +11,8 @@ import {buildRobotsMeta} from '@/lib/robotsMeta'
 import type {Metadata} from 'next'
 import {client} from '@/lib/sanity/client'
 import {PRACTICE_AREA_QUERY, LOCATION_PAGE_QUERY, CONTENT_PAGE_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
-import {expandNapTokens, resolveTokenString, titleFragment, type NapTokens} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
+import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {ContentSidebarLayout} from '@/components/layout/ContentSidebarLayout'
 import {InternalHero} from '@/components/layout/InternalHero'
@@ -189,7 +190,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   if (!page) return {}
 
   const tokens = expandNapTokens(rawTokens)
-  const title = titleFragment(page.seoTitle, page.title, tokens)
+  const {title, label} = resolveTitle(page.seoTitle, page.title, tokens, tokens?.firmName)
   const description = resolveTokenString(page.metaDescription, tokens)
 
   return {
@@ -197,7 +198,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     description,
     ...(await buildRobotsMeta(page.noIndex, page.noFollow)),
     alternates: {canonical: page.canonicalUrl ?? `/${slugStr}`},
-    ...buildSocialMeta(title, description, page?.ogImage),
+    ...buildSocialMeta(label, description, page?.ogImage),
   }
 }
 

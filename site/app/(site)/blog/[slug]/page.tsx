@@ -15,7 +15,8 @@ import {
   NAP_TOKENS_QUERY,
   RELATED_POSTS_QUERY,
 } from '@/lib/sanity/queries'
-import {expandNapTokens, resolveTokenString, titleFragment, type NapTokens} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
+import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
@@ -91,14 +92,14 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   // derived from the h1), so `post.title` was always undefined and an empty
   // seoTitle fell through to the bare firm name instead of the headline. The
   // review route has always passed `h1` here for the same reason.
-  const title = titleFragment(post.seoTitle, post.h1, tokens)
+  const {title, label} = resolveTitle(post.seoTitle, post.h1, tokens, tokens?.firmName)
   const description = resolveTokenString(post.metaDescription, tokens)
   return {
     title,
     description,
     ...(await buildRobotsMeta(post.noIndex, post.noFollow)),
     alternates: {canonical: post.canonicalUrl ?? `/${fullSlug}`},
-    ...buildSocialMeta(title, description, post?.ogImage),
+    ...buildSocialMeta(label, description, post?.ogImage),
   }
 }
 

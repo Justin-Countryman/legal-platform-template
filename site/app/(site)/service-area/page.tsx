@@ -9,7 +9,8 @@ import {
   GLOBAL_CTA_QUERY,
   NAP_TOKENS_QUERY,
 } from '@/lib/sanity/queries'
-import {expandNapTokens, resolveTokenString, titleFragment} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
+import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
@@ -28,14 +29,14 @@ export async function generateMetadata(): Promise<Metadata> {
   const tokens = expandNapTokens(rawTokens)
   if (!indexPage) return {title: 'Service Area'}
 
-  const title = titleFragment(indexPage.seoTitle, indexPage.title, tokens)
+  const {title, label} = resolveTitle(indexPage.seoTitle, indexPage.title, tokens, tokens?.firmName)
   const description = resolveTokenString(indexPage.metaDescription, tokens)
   return {
     title,
     description,
     ...(await buildRobotsMeta(indexPage.noIndex, indexPage.noFollow)),
     alternates: {canonical: indexPage.canonicalUrl ?? '/service-area'},
-    ...buildSocialMeta(title, description, indexPage?.ogImage),
+    ...buildSocialMeta(label, description, indexPage?.ogImage),
   }
 }
 

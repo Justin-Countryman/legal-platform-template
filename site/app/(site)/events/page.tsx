@@ -5,7 +5,8 @@ import {buildRobotsMeta} from '@/lib/robotsMeta'
 import Link from 'next/link'
 import {client} from '@/lib/sanity/client'
 import {EVENT_INDEX_PAGE_QUERY, EVENT_INDEX_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
-import {expandNapTokens, resolveTokenString, titleFragment, type NapTokens} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
+import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
@@ -88,14 +89,14 @@ export async function generateMetadata(): Promise<Metadata> {
   const tokens = expandNapTokens(rawTokens)
   if (!indexPage) return {title: 'Events'}
 
-  const title = titleFragment(indexPage.seoTitle, indexPage.title, tokens)
+  const {title, label} = resolveTitle(indexPage.seoTitle, indexPage.title, tokens, tokens?.firmName)
   const description = resolveTokenString(indexPage.metaDescription, tokens)
   return {
     title,
     description,
     ...(await buildRobotsMeta(indexPage.noIndex, indexPage.noFollow)),
     alternates: {canonical: indexPage.canonicalUrl ?? '/events'},
-    ...buildSocialMeta(title, description, indexPage?.ogImage),
+    ...buildSocialMeta(label, description, indexPage?.ogImage),
   }
 }
 

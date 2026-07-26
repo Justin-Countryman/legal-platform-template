@@ -4,7 +4,8 @@ import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {client} from '@/lib/sanity/client'
 import {CONTACT_PAGE_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
-import {expandNapTokens, resolveTokenString, titleFragment} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
+import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
@@ -21,14 +22,14 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!page) return {title: 'Contact'}
   const tokens = expandNapTokens(rawTokens)
 
-  const title = titleFragment(page.seoTitle, page.title, tokens)
+  const {title, label} = resolveTitle(page.seoTitle, page.title, tokens, tokens?.firmName)
   const description = resolveTokenString(page.metaDescription, tokens)
   return {
     title,
     description,
     ...(await buildRobotsMeta(page.noIndex, page.noFollow)),
     alternates: {canonical: page.canonicalUrl ?? '/contact'},
-    ...buildSocialMeta(title, description, page?.ogImage),
+    ...buildSocialMeta(label, description, page?.ogImage),
   }
 }
 

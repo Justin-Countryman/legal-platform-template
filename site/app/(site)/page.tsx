@@ -15,7 +15,8 @@ import {HomepageCoda} from '@/components/layout/HomepageCoda'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
 import {HomepageHero} from '@/components/layout/homeHero'
 import {type HomeHeroData} from '@/components/layout/homeHero/types'
-import {expandNapTokens, titleFragment, type NapTokens} from '@/lib/tokens'
+import {expandNapTokens, type NapTokens} from '@/lib/tokens'
+import {resolveTitle} from '@/lib/seoTitle'
 import {hasImage, urlForImage, type SanityImage} from '@/lib/sanity/image'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -39,7 +40,10 @@ export async function generateMetadata(): Promise<Metadata> {
   // titleFragment resolves tokens + treats an empty seoTitle as absent, exactly
   // as the other fifteen routes do; the homepage has no page-name fallback
   // (its fallback is the formula below), so the second arg is null.
-  const stored = titleFragment(home?.seoTitle, null, tokens)
+  // Same shared resolver as every other route. With no page-name rung, a
+  // missing cell yields `undefined` — which falls to the root `title` (the bare
+  // firm name) and IS the TITLE-7 seam described below.
+  const {title: stored, label} = resolveTitle(home?.seoTitle, null, tokens, tokens?.firmName)
 
   // Per-page social image (ruled 2026-07-25). The homepage is the ONE route
   // that does not call buildSocialMeta: with no upload it inherits the root
@@ -58,21 +62,27 @@ export async function generateMetadata(): Promise<Metadata> {
     : {}
 
   if (stored) {
-    // PRESENT — carry through verbatim. `absolute` bypasses the firm-name
-    // template so the title is exactly the stored value, no doubling.
-    return {title: {absolute: stored}, alternates: {canonical: '/'}, ...ogOverride}
+    // PRESENT — carry through verbatim. This was the homepage's special case
+    // until 2026-07-26; TITLE-1 generalised it to every page type, so it is no
+    // longer special, just first.
+    return {title: stored, alternates: {canonical: '/'}, ...ogOverride}
   }
+  void label
 
-  // ABSENT — item 32's from-scratch homepage title formula belongs here. It has
-  // two shapes: (1) lead with the firm's top-ranked area of law, or (2) lead
-  // with the firm name; which shape is a per-client setup question. THE FORMULA
-  // IS NOT YET BUILT — this is the seam. When it lands, compose it and return
-  // `{title: {absolute: composed}, alternates: {canonical: '/'}}`. Until then
-  // the route returns no title, so Next falls to the root layout's
-  // `title.default` (the bare firm name) — which IS shape (2), so the deferred
-  // state already renders one of the two correct shapes rather than anything
-  // broken. Do NOT wire this to homepageApproach — that field has no title role
-  // (item 44); the shape selector, when built, is its own input.
+  // ABSENT — TITLE-7's from-scratch homepage formula belongs here. Two shapes:
+  // one area of law gives `<stored phrase> - <firm>`, more than one gives
+  // `<firm> - <city> Law Firm`. Scope is read from the firm's practice area
+  // selections. THE FORMULA IS NOT YET BUILT — this is the seam.
+  //
+  // When it lands, compose the complete title and hand it back the way every
+  // other route does: `composeTitle` for the firm-name half, returned as the
+  // `title` of a `resolveTitle`-shaped result. Do not hand-roll an absolute
+  // object here; that is a second implementation of TITLE-1 and is pinned
+  // against in lib/__tests__/titleFallback.test.ts.
+  //
+  // Until then the route returns no title, so Next falls to the root layout's
+  // default (the bare firm name). Do NOT wire this to homepageApproach — that
+  // field has no title role (item 44); the shape selector is its own input.
   // The social-image override rides both branches — it is independent of the
   // title question, and an operator who uploads one must get it either way.
   return {alternates: {canonical: '/'}, ...ogOverride}

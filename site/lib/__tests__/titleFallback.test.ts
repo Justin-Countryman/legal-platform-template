@@ -67,7 +67,7 @@ function routeSource(rel: string): string {
 }
 
 /**
- * The 2nd argument of every `titleFragment(...)` call in a route file.
+ * The 2nd argument of every `resolveTitle(...)` call in a route file.
  *
  * A plain `source.includes(accessor)` is NOT enough and was the first version
  * of this check: it passed while the blog route read `post.title`, because
@@ -76,9 +76,9 @@ function routeSource(rel: string): string {
  * `post.title` back and expecting red — is what exposed it. So this scans the
  * call itself, with balanced brackets, and compares the argument.
  */
-function titleFragmentFallbackArgs(source: string): string[] {
+function resolveTitleFallbackArgs(source: string): string[] {
   const out: string[] = []
-  const marker = 'titleFragment('
+  const marker = 'resolveTitle('
   let i = source.indexOf(marker)
   while (i !== -1) {
     let depth = 1
@@ -356,8 +356,8 @@ describe('every title fallback reaches the page\'s own name', () => {
       expect(fragment, `${c.name}: fallback rung is empty — this is the blogPost bug`).toBe(c.expected)
     })
 
-    it(`${c.name} — route's titleFragment still falls back to ${c.accessor}`, () => {
-      expect(titleFragmentFallbackArgs(routeSource(c.route))).toContain(c.accessor)
+    it(`${c.name} — route's resolveTitle still falls back to ${c.accessor}`, () => {
+      expect(resolveTitleFallbackArgs(routeSource(c.route))).toContain(c.accessor)
     })
   }
 })
@@ -366,6 +366,45 @@ describe('the homepage is the one deliberate exception', () => {
   it('has no page-name rung, by design', () => {
     // Its absent branch is the unruled from-scratch formula seam, not a
     // fallback. BI-Content.md § Title tags → What is not settled.
-    expect(routeSource('(site)/page.tsx')).toContain('titleFragment(home?.seoTitle, null, tokens)')
+    expect(routeSource('(site)/page.tsx')).toContain('resolveTitle(home?.seoTitle, null, tokens')
   })
+})
+
+describe('the 404 title depends on three things staying true', () => {
+  /**
+   * Each of these is individually reasonable to "clean up", and removing any
+   * one drops the firm name from the 404 title WITHOUT failing anything else.
+   * That is the whole reason they are pinned here.
+   */
+  it('the root layout still carries a template', () => {
+    // TITLE-1 removed appending for every route. The template survives for the
+    // 404 alone, because a not-found boundary cannot compute its own title.
+    expect(routeSource('layout.tsx')).toContain('template: titleTemplate(firmName)')
+  })
+
+  for (const boundary of ['(site)/not-found.tsx', 'not-found.tsx']) {
+    it(`${boundary} exports STATIC metadata, not generateMetadata`, () => {
+      const src = routeSource(boundary)
+      expect(src).toContain('export const metadata')
+      // `generateMetadata` in a not-found boundary emits NO title at all —
+      // measured 2026-07-26 with a clean .next. It fails silently, which is
+      // why this is asserted rather than left to review.
+      expect(src).not.toContain('export async function generateMetadata')
+    })
+  }
+})
+
+describe('every route composes its title through the one shared function', () => {
+  const ROUTES = [...new Set(CASES.map((c) => c.route)), '(site)/page.tsx']
+  for (const route of ROUTES) {
+    it(`${route} calls resolveTitle`, () => {
+      expect(routeSource(route)).toContain('resolveTitle(')
+    })
+    it(`${route} hand-rolls no absolute title`, () => {
+      // A route building `{absolute: ...}` itself is a second implementation of
+      // TITLE-1 and will drift from resolveTitle. The homepage used to do this
+      // and no longer does.
+      expect(routeSource(route)).not.toContain('title: {absolute:')
+    })
+  }
 })

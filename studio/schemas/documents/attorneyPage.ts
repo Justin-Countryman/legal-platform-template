@@ -101,14 +101,18 @@ export const attorneyPage = defineType({
     }),
 
     // ─── SEO Settings (collapsed) ─────────────────────────────────────────────
-    defineField({
+    // NOT wrapped in defineField, unlike its neighbours: the wrapper narrows
+    // the validation rule to `StringRule` while every other schema in the studio
+    // passes `Rule`, and one shared validator cannot be typed for both. The
+    // field definition is identical either way; the shared rule is what matters.
+    {
       name: 'seoTitle',
       title: 'Title Tag',
       type: 'string',
       fieldset: 'seo',
       components: {input: TokenStringInput},
       validation: seoTitleValidation,
-    }),
+    },
     defineField({
       name: 'metaDescription',
       title: 'Meta Description',

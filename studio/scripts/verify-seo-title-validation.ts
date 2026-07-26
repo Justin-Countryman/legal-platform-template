@@ -9,11 +9,13 @@
  * markers that come back — the same code path Studio uses to decide whether a
  * save is allowed. Nothing about the rule is re-implemented here.
  *
- * The case that matters most is the first one: a 40-character field at a firm
- * with a 20-character name. The old `Rule.max(60)` measured the FIELD, saw 40,
- * and said nothing while the browser shipped a 63-character title. That was
- * OUTSTANDING item 32 defect (c), and it is what "measure the right thing"
- * means.
+ * WHAT "the right thing" MEANS CHANGED ON 2026-07-26, and this script changed
+ * with it. For a few hours the field was a FRAGMENT and the browser appended
+ * ` - <firm name>`, so the rule fetched the firm name and measured the sum —
+ * and this script asserted a 40-character field warned at 63. TITLE-1 then made
+ * a stored value the COMPLETE title with nothing appended, so a 40-character
+ * field is a 40-character title and must NOT warn. The first case below is that
+ * exact inversion, kept because it is the one most likely to be "fixed" back.
  *
  * Exits non-zero on any failed expectation, so it can be wired into CI.
  *
@@ -42,8 +44,10 @@ const schema = createSchema({
   }] as never,
 })
 
-const FIRM = 'Dudley & Smith, P.A.' // 20 chars; " - " + this = 23 appended
-const fakeClient = {fetch: async () => FIRM, withConfig: () => fakeClient} as never
+// The validator no longer reads the dataset at all (TITLE-1: nothing is
+// appended, so there is no firm name to fetch). The client stub stays only
+// because `validateDocument` requires one.
+const fakeClient = {fetch: async () => null, withConfig: () => fakeClient} as never
 const getClient = () => fakeClient
 
 type Marker = {level?: string; item?: {message?: string}}
@@ -72,32 +76,31 @@ async function expectLevels(
   const markers = await markersFor(seoTitle)
   const errors = markers.filter((m) => m.level === 'error')
   const warnings = markers.filter((m) => m.level === 'warning')
-  const rendered = seoTitle ? `${seoTitle} - ${FIRM}`.length : 0
   const ok = errors.length === want.errors && warnings.length === want.warnings
   if (!ok) failures++
   console.log(`${ok ? 'PASS' : 'FAIL'}  ${label}`)
-  console.log(`      field=${seoTitle?.length ?? 0} rendered=${rendered} ` +
+  console.log(`      title=${seoTitle?.length ?? 0} chars ` +
               `errors=${errors.length} (want ${want.errors}) ` +
               `warnings=${warnings.length} (want ${want.warnings})`)
   for (const m of markers) console.log(`      ${m.level}: ${m.item?.message ?? ''}`)
 }
 
-// 40-char field at a 20-char firm = 63 rendered. Passes the OLD field-level
-// cap and ships a long title. THE CASE THE OLD RULE COULD NOT SEE.
+// 40 characters IS the whole title under TITLE-1. Nothing is appended, so
+// nothing to warn about — even though this same value warned earlier today.
 await expectLevels(
-  'field 40 / rendered 63 — warns on the rendered length, saves',
+  'field 40 — the whole title, under the limit, silent',
   'Minnesota Appellate Litigation Attorneys',
-  {errors: 0, warnings: 1},
+  {errors: 0, warnings: 0},
 )
 
 // 82-char field. The old rule REFUSED THE SAVE. It must not any more.
 await expectLevels(
-  'field 82 — no longer blocks the save',
+  'title 82 — warns, and no longer blocks the save',
   'Minnesota Appellate and Post-Conviction Litigation Attorneys Serving Ramsey County',
   {errors: 0, warnings: 1},
 )
 
-await expectLevels('short field — no markers at all', 'Appeals', {errors: 0, warnings: 0})
+await expectLevels('short title — no markers at all', 'Appeals', {errors: 0, warnings: 0})
 
 // `required` is deliberately NOT part of the length ruling and still errors.
 // Recorded so its survival is a decision rather than an oversight; see the

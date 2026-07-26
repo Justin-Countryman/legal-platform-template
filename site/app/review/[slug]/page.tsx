@@ -2,7 +2,7 @@ export const revalidate = 3600
 
 import {notFound} from 'next/navigation'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
-import {titleFragment} from '@/lib/tokens'
+import {resolveTitle} from '@/lib/seoTitle'
 import type {Metadata} from 'next'
 import {client} from '@/lib/sanity/client'
 import {REVIEW_PAGE_QUERY, REVIEW_SLUGS_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
@@ -24,8 +24,14 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {slug} = await params
-  const data = await client.fetch(REVIEW_PAGE_QUERY, {slug})
+  const [data, rawTokens] = await Promise.all([
+    client.fetch(REVIEW_PAGE_QUERY, {slug}),
+    client.fetch(NAP_TOKENS_QUERY),
+  ])
   if (!data?.page) return {}
+  // This route is outside the (site) group and did not previously read NAP
+  // tokens in generateMetadata. TITLE-2 needs the firm name, so it does now.
+  const tokens = expandNapTokens(rawTokens)
   // Search visibility comes from the DATA, like every other route — the review
   // shell is written `noIndex: true` by Site-Prep, which is the one place that
   // decides (BE/_shared/search_visibility.py). This route used to hardcode
@@ -34,7 +40,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   // 2026-07-25 ruling collapsed them to one. Doctrine:
   // `BI-URL-Architecture.md` → Search visibility.
   return {
-    title: titleFragment(data.page.seoTitle, data.page.h1, null),
+    title: resolveTitle(data.page.seoTitle, data.page.h1, tokens, tokens?.firmName).title,
     ...(await buildRobotsMeta(data.page.noIndex, data.page.noFollow)),
   }
 }

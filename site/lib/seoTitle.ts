@@ -1,5 +1,8 @@
-// Title-tag constants for the site package. Doctrine: `BI-Content.md` §
-// Title tags.
+import {resolveTokenString, type NapTokens} from '@/lib/tokens'
+
+// Title tags for the site package. Doctrine: `BI-Content.md` § Title tags,
+// rules TITLE-1 (a title is complete as authored; nothing is ever appended),
+// TITLE-2 (every formula ends with the firm name) and TITLE-3 (length).
 //
 // THREE COPIES OF THE SEPARATOR EXIST, DELIBERATELY, AND THIS IS ONE OF THEM.
 // The other two are `studio/schemas/seoTitle.ts` and `BE/_shared/seo_title.py`.
@@ -27,22 +30,66 @@ export const TITLE_SEPARATOR = ' - '
  */
 export const RENDERED_TITLE_MAX = 60
 
-/** Next's `title.template` value for the root layout. */
+/** The root layout's title template. Its ONLY consumer is the 404 — see the
+ * note in app/layout.tsx. */
 export function titleTemplate(firmName: string): string {
   return `%s${TITLE_SEPARATOR}${firmName}`
 }
 
 /**
- * What the browser will show for a page whose fragment is `fragment`.
- * An empty fragment renders the firm name alone (Next falls to
- * `title.default`), which is why this returns the bare firm name rather than
- * a string starting with the separator.
+ * A formula's output: the page's own name, then the firm name (TITLE-2).
+ *
+ * Called only when there is NO stored cell. An empty firm name yields the page
+ * name alone rather than a string ending in a dangling separator.
  */
-export function renderedTitle(fragment: string | null | undefined, firmName: string): string {
-  const f = (fragment ?? '').trim()
-  if (!f) return firmName
-  if (!firmName) return f
-  return `${f}${TITLE_SEPARATOR}${firmName}`
+export function composeTitle(pageName: string | null | undefined, firmName: string | null | undefined): string {
+  const name = (pageName ?? '').trim()
+  const firm = (firmName ?? '').trim()
+  if (!name) return firm
+  if (!firm) return name
+  return `${name}${TITLE_SEPARATOR}${firm}`
+}
+
+/**
+ * THE ONE PLACE A PAGE TITLE IS DECIDED. Every route uses this.
+ *
+ * TITLE-1: a stored CS-SITEMAP cell is the complete, finished title and is used
+ * EXACTLY as written. A formula runs only when there is no cell, and produces a
+ * complete title of its own. Either way **nothing is appended afterwards** —
+ * which is why this always returns `absolute`, bypassing the root layout's
+ * template. That template still exists, but for one consumer only: the 404,
+ * which cannot compute its own title. See app/layout.tsx.
+ *
+ * Returns TWO values, and the second is not an afterthought:
+ *
+ *   `title` — the complete document title, for `<title>`.
+ *   `label` — the page-specific part, for the OG card and `openGraph.title`.
+ *
+ * They diverge for a page with a cell, and keeping them separate is what stops
+ * the social card reading "Dudley & Smith" above "Appeals | Dudley & Smith".
+ * Before TITLE-1 there was only one value because the title WAS the label; now
+ * the caller needs both. Passing `title` to `buildSocialMeta` would change every
+ * card on the site, which is not what this ruling asked for.
+ *
+ * Both are `undefined` when there is nothing to say, never `''`, so Next falls
+ * to the root `title.default` (the bare firm name) rather than rendering an
+ * empty or separator-led title.
+ */
+export function resolveTitle(
+  seoTitle: string | null | undefined,
+  pageName: string | null | undefined,
+  tokens: NapTokens | null | undefined,
+  firmName: string | null | undefined,
+): {title: {absolute: string} | undefined; label: string | undefined} {
+  const cell = resolveTokenString(seoTitle, tokens).trim()
+  if (cell) {
+    // The cell is the whole title. Verbatim, including any firm name it
+    // already carries — that is no longer a defect to guard against.
+    return {title: {absolute: cell}, label: cell}
+  }
+  const name = resolveTokenString(pageName, tokens).trim()
+  if (!name) return {title: undefined, label: undefined}
+  return {title: {absolute: composeTitle(name, firmName)}, label: name}
 }
 
 /**
