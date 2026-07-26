@@ -123,7 +123,7 @@ const CASES: Case[] = [
   {
     name: 'practiceArea (catch-all)',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'locationName || page.title',
+    accessor: 'serviceAreaName || areaOfLawName || locationName || page.title',
     query: PRACTICE_AREA_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 'p', _type: 'practiceArea', slug: {current: SLUG}, title: 'Family Law'}],
@@ -133,7 +133,7 @@ const CASES: Case[] = [
   {
     name: 'geoPracticeArea (catch-all, same query)',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'locationName || page.title',
+    accessor: 'serviceAreaName || areaOfLawName || locationName || page.title',
     query: PRACTICE_AREA_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 'g', _type: 'geoPracticeArea', slug: {current: SLUG}, title: 'Divorce in Blaine'}],
@@ -143,7 +143,7 @@ const CASES: Case[] = [
   {
     name: 'serviceAreaPage (catch-all, same query)',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'locationName || page.title',
+    accessor: 'serviceAreaName || areaOfLawName || locationName || page.title',
     query: PRACTICE_AREA_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 's', _type: 'serviceAreaPage', slug: {current: SLUG}, title: 'Blaine'}],
@@ -153,7 +153,7 @@ const CASES: Case[] = [
   {
     name: 'locationPage (catch-all)',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'locationName || page.title',
+    accessor: 'serviceAreaName || areaOfLawName || locationName || page.title',
     query: LOCATION_PAGE_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 'l', _type: 'locationPage', slug: {current: SLUG}, title: 'St. Paul Office'}],
@@ -163,7 +163,7 @@ const CASES: Case[] = [
   {
     name: 'generalPage (catch-all) — thank-you / privacy / disclaimer live here',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'locationName || page.title',
+    accessor: 'serviceAreaName || areaOfLawName || locationName || page.title',
     query: CONTENT_PAGE_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 'gp', _type: 'generalPage', slug: {current: SLUG}, title: 'Thank You'}],
@@ -173,7 +173,7 @@ const CASES: Case[] = [
   {
     name: 'aboutPage (catch-all, same query)',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'locationName || page.title',
+    accessor: 'serviceAreaName || areaOfLawName || locationName || page.title',
     query: CONTENT_PAGE_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 'ab', _type: 'aboutPage', slug: {current: SLUG}, title: 'About'}],
@@ -183,7 +183,7 @@ const CASES: Case[] = [
   {
     name: 'faqPage (catch-all, same query)',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'locationName || page.title',
+    accessor: 'serviceAreaName || areaOfLawName || locationName || page.title',
     query: CONTENT_PAGE_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 'fq', _type: 'faqPage', slug: {current: SLUG}, title: 'FAQ'}],
@@ -193,7 +193,7 @@ const CASES: Case[] = [
   {
     name: 'landingPage (catch-all, same query)',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'locationName || page.title',
+    accessor: 'serviceAreaName || areaOfLawName || locationName || page.title',
     query: CONTENT_PAGE_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 'lp', _type: 'landingPage', slug: {current: SLUG}, title: 'Free Consultation'}],
@@ -370,7 +370,7 @@ describe('the homepage is the one deliberate exception', () => {
   it('has no page-name rung, by design', () => {
     // Its absent branch is the unruled from-scratch formula seam, not a
     // fallback. BI-Content.md § Title tags → What is not settled.
-    expect(routeSource('(site)/page.tsx')).toContain('resolveTitle(home?.seoTitle, null, tokens')
+    expect(routeSource('(site)/page.tsx')).toContain('resolveTitle(\n    home?.seoTitle,\n    null,')
   })
 })
 

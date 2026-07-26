@@ -1,4 +1,5 @@
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
+import {phraseForAreaOfLaw} from '@/lib/areaOfLawPhrases'
 
 // Title tags for the site package. Doctrine: `BI-Content.md` § Title tags,
 // rules TITLE-1 (a title is complete as authored; nothing is ever appended),
@@ -126,6 +127,103 @@ export function locationPageName(
   const s = (state ?? '').trim()
   if (!c) return ''
   return s ? `${c}, ${s} Law Office` : `${c} Law Office`
+}
+
+/**
+ * TITLE-7. The homepage title when there is no stored cell, built from the
+ * firm's practice SCOPE.
+ *
+ * WHERE SCOPE COMES FROM, established rather than assumed: the firm's
+ * **top-level practice area pages** — `practiceArea` documents with no
+ * `parentPage`. That is already this codebase's idiom for "area of law": the
+ * silo nav's `allTopLevel` mode selects on exactly `!defined(parentPage)`.
+ *
+ * It is NOT read from Zite's `clientPracticeAreaSelections`, which is where a
+ * reader might expect it: those 872 rows carry opaque UUID refs rather than
+ * names, and a client site cannot read `CS-FIRM-DATA.json` at all.
+ *
+ * Two shapes:
+ *   one area of law  -> `<stored phrase> - <firm>`
+ *   more than one    -> `<firm> - <city> Law Firm`
+ *
+ * The single-area shape needs a phrase, and a lone area whose name is not one
+ * of the fifteen has none — so that case takes the second shape too. Returning
+ * `<name> Attorney` for it is the derivation TITLE-4 rejected.
+ */
+export function homepageTitle(
+  areasOfLaw: readonly string[],
+  firmName: string | null | undefined,
+  primaryCity: string | null | undefined,
+): string {
+  const firm = (firmName ?? '').trim()
+  if (!firm) return ''
+  const areas = areasOfLaw.map((a) => (a ?? '').trim()).filter(Boolean)
+
+  if (areas.length === 1) {
+    const phrase = phraseForAreaOfLaw(areas[0])
+    if (phrase) return `${phrase}${TITLE_SEPARATOR}${firm}`
+  }
+
+  const city = (primaryCity ?? '').trim()
+  if (!city) return ''
+  return `${firm}${TITLE_SEPARATOR}${city} Law Firm`
+}
+
+/**
+ * TITLE-9. A service area page: the city, then the firm's PRIMARY
+ * area-of-law phrase. The homepage formula aimed at one city.
+ *
+ * **"Primary" is only determinable when the firm has exactly one area of law**,
+ * and that is a real limitation rather than a shortcut — see the note in
+ * `BI-Content.md` TITLE-9. Nothing in Sanity records which area of law ranks
+ * first: `mainNavigation.practiceAreaOrder` is deliberately left for the
+ * operator to drag and is empty on a fresh build (its fallback is alphabetical,
+ * which would make "Appellate Law" primary for Dudley purely because of the A),
+ * and Zite's `areaOfLawRanking` is captured into CS-FIRM-DATA and consumed by
+ * nothing.
+ *
+ * So this returns empty for a multi-area firm and the page falls back to its
+ * own name. Guessing would put a confidently wrong phrase on every service area
+ * page of every multi-area client.
+ */
+export function serviceAreaPageName(
+  city: string | null | undefined,
+  areasOfLaw: readonly string[],
+): string {
+  const c = (city ?? '').trim()
+  if (!c) return ''
+  const areas = areasOfLaw.map((a) => (a ?? '').trim()).filter(Boolean)
+  if (areas.length !== 1) return ''
+  const phrase = phraseForAreaOfLaw(areas[0])
+  return phrase ? `${c} ${phrase}` : ''
+}
+
+/**
+ * A practice area page AT AREA-OF-LAW LEVEL uses the stored phrase directly.
+ *
+ * HOW THE CODE TELLS THE TWO APART: a `practiceArea` with no `parentPage` is at
+ * area-of-law level; one beneath an area of law has a parent. Site-Build sets
+ * `parentPage` from the slug — a nested slug like `family-law/divorce` gets
+ * one, a single-segment `family-law` does not — and the same `!defined(parentPage)`
+ * test already drives the silo nav. Dudley's real data splits 14 top-level to
+ * 28 beneath, so it is populated rather than theoretical.
+ *
+ * BOTH conditions are required: no parent AND a title that is one of the
+ * fifteen. The title check alone would catch a page named `Tax Law` sitting
+ * BENEATH `Business Law`; the parent check alone would hand a phrase to
+ * Dudley's `Appellate Law`, which has none.
+ *
+ * **Pages beneath an area of law get nothing from here, deliberately.** Ruled
+ * 2026-07-26: there is no derived formula and no stored list for the 195, so
+ * they fall back to their page name and the operator corrects individual pages
+ * in Sanity after checking the live site.
+ */
+export function areaOfLawPageName(
+  title: string | null | undefined,
+  hasParentPage: boolean,
+): string {
+  if (hasParentPage) return ''
+  return phraseForAreaOfLaw(title)
 }
 
 /**

@@ -907,10 +907,19 @@ const CANVAS_FRAGMENT = groq`[]{
 // query) so generateMetadata fetches only what it needs. The homepage carries a
 // stored seoTitle through VERBATIM (item 32; ruled 2026-07-24) — see the route's
 // generateMetadata for why it renders absolute rather than through the template.
-export const HOME_METADATA_QUERY = groq`
-  *[_type == "homePage"][0]{
-    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},seoTitle}
-`
+// The firm's areas of law: top-level practice areas, i.e. those with no
+// parent. `!defined(parentPage)` is this codebase's existing test for it — the
+// silo nav's `allTopLevel` mode uses the same one. Titles only; the callers
+// need the COUNT and, when there is exactly one, its name (TITLE-7, TITLE-9).
+const AREAS_OF_LAW_FRAGMENT = groq`*[
+  _type == "practiceArea" && !defined(parentPage) && defined(slug.current)
+].title`
+
+export const HOME_METADATA_QUERY = groq`{
+  "seoTitle": *[_type == "homePage"][0].seoTitle,
+  "ogImage": *[_type == "homePage"][0].ogImageOverride ${IMAGE_FRAGMENT},
+  "areasOfLaw": ${AREAS_OF_LAW_FRAGMENT}
+}`
 
 export const HOME_QUERY = groq`
   *[_type == "homePage"][0]{
@@ -1197,7 +1206,9 @@ export const ATTORNEY_PAGE_QUERY = groq`
 export const PRACTICE_AREA_QUERY = groq`
   *[_type in ["practiceArea", "geoPracticeArea", "serviceAreaPage"] && slug.current == $slug][0]{
     "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
+    _type,
     title,
+    "areasOfLaw": ${AREAS_OF_LAW_FRAGMENT},
     "slug": slug.current,
     seoTitle,
     metaDescription,

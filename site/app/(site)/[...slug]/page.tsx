@@ -12,7 +12,7 @@ import type {Metadata} from 'next'
 import {client} from '@/lib/sanity/client'
 import {PRACTICE_AREA_QUERY, LOCATION_PAGE_QUERY, CONTENT_PAGE_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
-import {aboutPageTitle, locationPageName, resolveTitle} from '@/lib/seoTitle'
+import {aboutPageTitle, areaOfLawPageName, locationPageName, resolveTitle, serviceAreaPageName} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {ContentSidebarLayout} from '@/components/layout/ContentSidebarLayout'
 import {InternalHero} from '@/components/layout/InternalHero'
@@ -204,9 +204,21 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const aboutTitle = page._type === 'aboutPage'
     ? aboutPageTitle(tokens?.firmName, tokens?.['office.city'])
     : ''
+  // A practice area AT AREA-OF-LAW LEVEL uses its stored phrase. One BENEATH an
+  // area of law gets nothing here and falls back to its page name — ruled
+  // 2026-07-26: no derived formula and no stored list for the 195, the operator
+  // corrects individual pages in Sanity.
+  const areaOfLawName = page._type === 'practiceArea'
+    ? areaOfLawPageName(page.title, Boolean(page.parentPage))
+    : ''
+  // TITLE-9 — serviceAreaPage: the homepage formula aimed at one city. Empty
+  // for a multi-area firm, because nothing records which area of law is primary.
+  const serviceAreaName = page._type === 'serviceAreaPage'
+    ? serviceAreaPageName(page.title, page.areasOfLaw ?? [])
+    : ''
   const {title, label} = resolveTitle(
     page.seoTitle,
-    locationName || page.title,
+    serviceAreaName || areaOfLawName || locationName || page.title,
     tokens,
     tokens?.firmName,
     aboutTitle,

@@ -16,7 +16,7 @@ import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta
 import {HomepageHero} from '@/components/layout/homeHero'
 import {type HomeHeroData} from '@/components/layout/homeHero/types'
 import {expandNapTokens, type NapTokens} from '@/lib/tokens'
-import {resolveTitle} from '@/lib/seoTitle'
+import {homepageTitle, resolveTitle} from '@/lib/seoTitle'
 import {hasImage, urlForImage, type SanityImage} from '@/lib/sanity/image'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -31,19 +31,26 @@ import {hasImage, urlForImage, type SanityImage} from '@/lib/sanity/image'
 // on items 44 and 40", until this decision.)
 export async function generateMetadata(): Promise<Metadata> {
   const [home, rawTokens] = await Promise.all([
-    client.fetch<{seoTitle?: string | null; ogImage?: SanityImage | null} | null>(
-      HOME_METADATA_QUERY,
-    ),
+    client.fetch<{
+      seoTitle?: string | null
+      ogImage?: SanityImage | null
+      areasOfLaw?: string[] | null
+    } | null>(HOME_METADATA_QUERY),
     client.fetch<NapTokens>(NAP_TOKENS_QUERY),
   ])
   const tokens = expandNapTokens(rawTokens)
-  // titleFragment resolves tokens + treats an empty seoTitle as absent, exactly
-  // as the other fifteen routes do; the homepage has no page-name fallback
-  // (its fallback is the formula below), so the second arg is null.
-  // Same shared resolver as every other route. With no page-name rung, a
-  // missing cell yields `undefined` — which falls to the root `title` (the bare
-  // firm name) and IS the TITLE-7 seam described below.
-  const {title: stored, label} = resolveTitle(home?.seoTitle, null, tokens, tokens?.firmName)
+  // Same shared resolver as every other route. The homepage has no page-name
+  // rung — a page name is not a thing it has — so the second argument is null
+  // and TITLE-7's formula is supplied as the complete-title argument instead.
+  // See `homepageTitle` for where practice scope is read from, and why it is
+  // NOT Zite's selections.
+  const {title: stored, label} = resolveTitle(
+    home?.seoTitle,
+    null,
+    tokens,
+    tokens?.firmName,
+    homepageTitle(home?.areasOfLaw ?? [], tokens?.firmName, tokens?.['office.city']),
+  )
 
   // Per-page social image (ruled 2026-07-25). The homepage is the ONE route
   // that does not call buildSocialMeta: with no upload it inherits the root
@@ -69,20 +76,11 @@ export async function generateMetadata(): Promise<Metadata> {
   }
   void label
 
-  // ABSENT — TITLE-7's from-scratch homepage formula belongs here. Two shapes:
-  // one area of law gives `<stored phrase> - <firm>`, more than one gives
-  // `<firm> - <city> Law Firm`. Scope is read from the firm's practice area
-  // selections. THE FORMULA IS NOT YET BUILT — this is the seam.
+  // NO TITLE AT ALL. Reached only when there is no cell AND TITLE-7's formula
+  // could not build one — a firm with no city and no single phrased area of
+  // law. Next then falls to the root layout's title, the bare firm name, which
+  // is the right answer for a firm we know almost nothing about.
   //
-  // When it lands, compose the complete title and hand it back the way every
-  // other route does: `composeTitle` for the firm-name half, returned as the
-  // `title` of a `resolveTitle`-shaped result. Do not hand-roll an absolute
-  // object here; that is a second implementation of TITLE-1 and is pinned
-  // against in lib/__tests__/titleFallback.test.ts.
-  //
-  // Until then the route returns no title, so Next falls to the root layout's
-  // default (the bare firm name). Do NOT wire this to homepageApproach — that
-  // field has no title role (item 44); the shape selector is its own input.
   // The social-image override rides both branches — it is independent of the
   // title question, and an operator who uploads one must get it either way.
   return {alternates: {canonical: '/'}, ...ogOverride}

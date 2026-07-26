@@ -2,9 +2,12 @@ import {describe, expect, it} from 'vitest'
 import {
   SERVICE_AREA_INDEX_PAGE_NAME,
   aboutPageTitle,
+  areaOfLawPageName,
   composeTitle,
+  homepageTitle,
   locationPageName,
   resolveTitle,
+  serviceAreaPageName,
 } from '../seoTitle'
 
 /**
@@ -78,5 +81,82 @@ describe('every formula still loses to a stored cell (TITLE-1)', () => {
   it('the label stays the page name so the social card is unaffected', () => {
     const {label} = resolveTitle(null, 'About', tokens, FIRM, aboutPageTitle(FIRM, 'Saint Paul'))
     expect(label).toBe('About')
+  })
+})
+
+describe('TITLE-7 — the homepage built from practice scope', () => {
+  it('one area of law uses that area\'s stored phrase, then the firm', () => {
+    expect(homepageTitle(['Personal Injury'], FIRM, 'Saint Paul'))
+      .toBe('Personal Injury Lawyer - Dudley & Smith, P.A.')
+  })
+
+  it('more than one uses the firm, then the city and a legal term', () => {
+    expect(homepageTitle(['Family Law', 'Personal Injury'], FIRM, 'Saint Paul'))
+      .toBe('Dudley & Smith, P.A. - Saint Paul Law Firm')
+  })
+
+  it('a LONE area with no stored phrase takes the second shape, not a guess', () => {
+    // Dudley has seven such top-level areas. `Appellate Law Attorney` is the
+    // derivation TITLE-4 rejected, so the firm-name shape is used instead.
+    expect(homepageTitle(['Appellate Law'], FIRM, 'Saint Paul'))
+      .toBe('Dudley & Smith, P.A. - Saint Paul Law Firm')
+  })
+
+  it('returns empty with no city and no single phrase, so the route falls back', () => {
+    expect(homepageTitle(['Appellate Law'], FIRM, '')).toBe('')
+    expect(homepageTitle([], FIRM, '')).toBe('')
+  })
+
+  it('a single phrased area does NOT need a city', () => {
+    expect(homepageTitle(['Tax Law'], FIRM, '')).toBe('Tax Attorney - Dudley & Smith, P.A.')
+  })
+})
+
+describe('TITLE-9 — service area page', () => {
+  it('is the city then the primary phrase, when primary is unambiguous', () => {
+    expect(serviceAreaPageName('Woodbury', ['Personal Injury']))
+      .toBe('Woodbury Personal Injury Lawyer')
+  })
+
+  it('RETURNS EMPTY for a multi-area firm — primary is not determinable', () => {
+    // Nothing in Sanity records which area of law ranks first. Guessing would
+    // put a confidently wrong phrase on every service area page of every
+    // multi-area client. See BI-Content.md TITLE-9.
+    expect(serviceAreaPageName('Woodbury', ['Family Law', 'Personal Injury'])).toBe('')
+  })
+
+  it('returns empty when the lone area has no stored phrase', () => {
+    expect(serviceAreaPageName('Woodbury', ['Appellate Law'])).toBe('')
+  })
+
+  it('returns empty with no city', () => {
+    expect(serviceAreaPageName('', ['Personal Injury'])).toBe('')
+  })
+})
+
+describe('a practice area page: area-of-law level versus beneath one', () => {
+  it('at area-of-law level uses the stored phrase', () => {
+    expect(areaOfLawPageName('Personal Injury', false)).toBe('Personal Injury Lawyer')
+  })
+
+  it('BENEATH an area of law gets nothing, so it falls back to its page name', () => {
+    // Ruled 2026-07-26: no derived formula and no stored list for the 195.
+    // `Car Accidents` renders `Car Accidents - <firm>` and that is accepted;
+    // the operator corrects individual pages in Sanity.
+    expect(areaOfLawPageName('Car Accidents', true)).toBe('')
+  })
+
+  it('BOTH conditions are required — a phrased title beneath a parent gets nothing', () => {
+    // `/business-law/tax-law/` is titled `Tax Law`, which IS one of the
+    // fifteen. The parent check is what stops it taking the phrase.
+    expect(areaOfLawPageName('Tax Law', true)).toBe('')
+    expect(areaOfLawPageName('Tax Law', false)).toBe('Tax Attorney')
+  })
+
+  it('a top-level area with no stored phrase gets nothing', () => {
+    // Seven of Dudley's fourteen. `Workers Compensation` misses
+    // `Workers' Compensation` by an apostrophe, which is a real client case.
+    expect(areaOfLawPageName('Appellate Law', false)).toBe('')
+    expect(areaOfLawPageName('Workers Compensation', false)).toBe('')
   })
 })
