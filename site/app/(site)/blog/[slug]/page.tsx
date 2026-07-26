@@ -87,7 +87,11 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const tokens = expandNapTokens(rawTokens)
   if (!post) return {title: 'Blog Post'}
 
-  const title = titleFragment(post.seoTitle, post.title, tokens)
+  // Fallback is `h1`, NOT `title`: blogPost has no `title` field (its slug is
+  // derived from the h1), so `post.title` was always undefined and an empty
+  // seoTitle fell through to the bare firm name instead of the headline. The
+  // review route has always passed `h1` here for the same reason.
+  const title = titleFragment(post.seoTitle, post.h1, tokens)
   const description = resolveTokenString(post.metaDescription, tokens)
   return {
     title,

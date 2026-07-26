@@ -1,5 +1,6 @@
 import type {Metadata} from 'next'
 import {resolveHidden} from '@/lib/searchVisibility'
+import {titleTemplate} from '@/lib/seoTitle'
 import {client} from '@/lib/sanity/client'
 import {ORGANIZATION_SCHEMA_QUERY, SITE_METADATA_QUERY, SITE_SCRIPTS_QUERY} from '@/lib/sanity/queries'
 import {HtmlEmbed} from '@/components/ui/HtmlEmbed'
@@ -147,7 +148,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
       default: firmName,
-      template: `%s - ${firmName}`,
+      // Separator lives in lib/seoTitle.ts so the length check, the 404 title
+      // and this template cannot disagree about what a rendered title is.
+      template: titleTemplate(firmName),
     },
     metadataBase: new URL(`https://${domain}`),
     ...(icons ? {icons} : {}),

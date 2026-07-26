@@ -1,6 +1,7 @@
 import {defineType} from 'sanity'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
+import {seoTitleValidation} from '../seoTitle'
 
 // Existing Sanity fields: metaDescription, noIndex, seoTitle, slug
 // Additional fields added per BI-UX.md homePage spec
@@ -49,7 +50,7 @@ export const homePage = defineType({
       type: 'string',
       fieldset: 'seo',
       components: {input: TokenStringInput},
-      validation: (Rule) => Rule.required().max(60).error(),
+      validation: seoTitleValidation,
     },
     {
       name: 'metaDescription',

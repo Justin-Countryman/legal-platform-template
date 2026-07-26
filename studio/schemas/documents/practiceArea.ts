@@ -1,6 +1,7 @@
 import {defineType} from 'sanity'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
+import {seoTitleValidation} from '../seoTitle'
 
 // Layout B — Content + Sidebar Shell
 
@@ -76,7 +77,7 @@ export const practiceArea = defineType({
       type: 'string',
       fieldset: 'seo',
       components: {input: TokenStringInput},
-      validation: (Rule) => Rule.required().max(60).error(),
+      validation: seoTitleValidation,
     },
     {
       name: 'metaDescription',

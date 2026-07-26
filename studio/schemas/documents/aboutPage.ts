@@ -1,6 +1,7 @@
 import {defineType} from 'sanity'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
+import {seoTitleValidation} from '../seoTitle'
 
 // Auto-created by Site Build Tool on every site — always at /about/
 // Never in CS-SITEMAP.csv
@@ -58,7 +59,7 @@ export const aboutPage = defineType({
       type: 'string',
       fieldset: 'seo',
       components: {input: TokenStringInput},
-      validation: (Rule) => Rule.required().max(60).error(),
+      validation: seoTitleValidation,
     },
     {
       name: 'metaDescription',

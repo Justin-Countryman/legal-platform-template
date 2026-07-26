@@ -2,6 +2,7 @@ import {defineType, defineField} from 'sanity'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
 import {PageLinkInput} from '../../components/PageLinkInput'
+import {seoTitleValidation} from '../seoTitle'
 
 export const attorneyPage = defineType({
   name: 'attorneyPage',
@@ -106,7 +107,7 @@ export const attorneyPage = defineType({
       type: 'string',
       fieldset: 'seo',
       components: {input: TokenStringInput},
-      validation: (Rule) => Rule.required().max(60).error('SEO title is required (keep under 60 characters)'),
+      validation: seoTitleValidation,
     }),
     defineField({
       name: 'metaDescription',

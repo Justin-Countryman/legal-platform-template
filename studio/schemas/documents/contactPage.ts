@@ -1,6 +1,7 @@
 import {defineType} from 'sanity'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
+import {seoTitleValidation} from '../seoTitle'
 
 // Existing Sanity fields: h1, metaDescription, noIndex, seoTitle, slug
 // Layout A — Full Width Content Shell
@@ -57,7 +58,7 @@ export const contactPage = defineType({
       type: 'string',
       fieldset: 'seo',
       components: {input: TokenStringInput},
-      validation: (Rule) => Rule.required().max(60).error(),
+      validation: seoTitleValidation,
     },
     {
       name: 'metaDescription',
