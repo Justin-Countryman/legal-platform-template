@@ -31,7 +31,12 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/', '/review/', '/design-studio/', '/design-preview/'],
+        // `/review/` was REMOVED 2026-07-25. A Disallow stops the crawler
+        // fetching the page, so it can never read the noindex the page
+        // carries — keeping both left the weaker signal winning. Review pages
+        // are hidden by their own `noIndex`, which is now the single decider.
+        // Doctrine: `BI-URL-Architecture.md` → Search visibility.
+        disallow: ['/api/', '/design-studio/', '/design-preview/'],
       },
     ],
     sitemap: `${base}/sitemap.xml`,

@@ -25,9 +25,16 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {slug} = await params
   const data = await client.fetch(REVIEW_PAGE_QUERY, {slug})
   if (!data?.page) return {}
+  // Search visibility comes from the DATA, like every other route — the review
+  // shell is written `noIndex: true` by Site-Prep, which is the one place that
+  // decides (BE/_shared/search_visibility.py). This route used to hardcode
+  // `{index:false, follow:false}` and ignore the `noIndex` it already
+  // projected; that was one of three mechanisms hiding review pages, and the
+  // 2026-07-25 ruling collapsed them to one. Doctrine:
+  // `BI-URL-Architecture.md` → Search visibility.
   return {
     title: titleFragment(data.page.seoTitle, data.page.h1, null),
-    robots: {index: false, follow: false},
+    ...(data.page.noIndex ? {robots: {index: false, follow: false}} : {}),
   }
 }
 
