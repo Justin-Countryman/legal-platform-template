@@ -12,7 +12,7 @@ import type {Metadata} from 'next'
 import {client} from '@/lib/sanity/client'
 import {PRACTICE_AREA_QUERY, LOCATION_PAGE_QUERY, CONTENT_PAGE_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
-import {resolveTitle} from '@/lib/seoTitle'
+import {aboutPageTitle, locationPageName, resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {ContentSidebarLayout} from '@/components/layout/ContentSidebarLayout'
 import {InternalHero} from '@/components/layout/InternalHero'
@@ -190,7 +190,27 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   if (!page) return {}
 
   const tokens = expandNapTokens(rawTokens)
-  const {title, label} = resolveTitle(page.seoTitle, page.title, tokens, tokens?.firmName)
+  // Per-type formulas for the two types in this route that have one. Every
+  // other type here falls back to its own page name (TITLE-2).
+  //
+  // TITLE-11 — locationPage: the city and state of the location THIS page is
+  // for, read off `locationData`, not the firm's primary office.
+  const locationName = page._type === 'locationPage'
+    ? locationPageName(page.locationData?.city, page.locationData?.state)
+    : ''
+  // The about page's formula is a COMPLETE title, not a page name: it puts the
+  // firm name in the middle and closes on "Law Firm". Primary geo is the firm's
+  // primary location city, which arrives as the `office.city` NAP token.
+  const aboutTitle = page._type === 'aboutPage'
+    ? aboutPageTitle(tokens?.firmName, tokens?.['office.city'])
+    : ''
+  const {title, label} = resolveTitle(
+    page.seoTitle,
+    locationName || page.title,
+    tokens,
+    tokens?.firmName,
+    aboutTitle,
+  )
   const description = resolveTokenString(page.metaDescription, tokens)
 
   return {

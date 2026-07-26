@@ -4,6 +4,7 @@ import path from 'node:path'
 import {evaluate, parse} from 'groq-js'
 import {titleFragment} from '../tokens'
 import {buildFullName} from '@/components/attorney/types'
+import {SERVICE_AREA_INDEX_PAGE_NAME} from '../seoTitle'
 import {
   ATTORNEY_INDEX_QUERY,
   ATTORNEY_PAGE_QUERY,
@@ -122,7 +123,7 @@ const CASES: Case[] = [
   {
     name: 'practiceArea (catch-all)',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'page.title',
+    accessor: 'locationName || page.title',
     query: PRACTICE_AREA_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 'p', _type: 'practiceArea', slug: {current: SLUG}, title: 'Family Law'}],
@@ -132,7 +133,7 @@ const CASES: Case[] = [
   {
     name: 'geoPracticeArea (catch-all, same query)',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'page.title',
+    accessor: 'locationName || page.title',
     query: PRACTICE_AREA_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 'g', _type: 'geoPracticeArea', slug: {current: SLUG}, title: 'Divorce in Blaine'}],
@@ -142,7 +143,7 @@ const CASES: Case[] = [
   {
     name: 'serviceAreaPage (catch-all, same query)',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'page.title',
+    accessor: 'locationName || page.title',
     query: PRACTICE_AREA_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 's', _type: 'serviceAreaPage', slug: {current: SLUG}, title: 'Blaine'}],
@@ -152,7 +153,7 @@ const CASES: Case[] = [
   {
     name: 'locationPage (catch-all)',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'page.title',
+    accessor: 'locationName || page.title',
     query: LOCATION_PAGE_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 'l', _type: 'locationPage', slug: {current: SLUG}, title: 'St. Paul Office'}],
@@ -162,7 +163,7 @@ const CASES: Case[] = [
   {
     name: 'generalPage (catch-all) — thank-you / privacy / disclaimer live here',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'page.title',
+    accessor: 'locationName || page.title',
     query: CONTENT_PAGE_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 'gp', _type: 'generalPage', slug: {current: SLUG}, title: 'Thank You'}],
@@ -172,7 +173,7 @@ const CASES: Case[] = [
   {
     name: 'aboutPage (catch-all, same query)',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'page.title',
+    accessor: 'locationName || page.title',
     query: CONTENT_PAGE_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 'ab', _type: 'aboutPage', slug: {current: SLUG}, title: 'About'}],
@@ -182,7 +183,7 @@ const CASES: Case[] = [
   {
     name: 'faqPage (catch-all, same query)',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'page.title',
+    accessor: 'locationName || page.title',
     query: CONTENT_PAGE_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 'fq', _type: 'faqPage', slug: {current: SLUG}, title: 'FAQ'}],
@@ -192,7 +193,7 @@ const CASES: Case[] = [
   {
     name: 'landingPage (catch-all, same query)',
     route: '(site)/[...slug]/page.tsx',
-    accessor: 'page.title',
+    accessor: 'locationName || page.title',
     query: CONTENT_PAGE_QUERY,
     params: {slug: SLUG},
     dataset: [{_id: 'lp', _type: 'landingPage', slug: {current: SLUG}, title: 'Free Consultation'}],
@@ -306,13 +307,16 @@ const CASES: Case[] = [
     expected: 'Video Library',
   },
   {
-    name: 'serviceAreaIndex — page name is the GROQ literal',
+    // TITLE-10 (2026-07-26): the title-tag fallback is a FIXED page name and
+    // no longer the query's `title`. The query still has to match, because the
+    // route reads its seoTitle — that is what the dataset row guards.
+    name: 'serviceAreaIndex — TITLE-10 fixed page name, not the GROQ literal',
     route: '(site)/service-area/page.tsx',
-    accessor: 'indexPage.title',
+    accessor: 'SERVICE_AREA_INDEX_PAGE_NAME',
     query: SERVICE_AREA_INDEX_QUERY,
     dataset: [{_id: 'sa', _type: 'serviceAreaIndex'}],
-    fallback: (d) => d.title as string,
-    expected: 'Service Area',
+    fallback: () => SERVICE_AREA_INDEX_PAGE_NAME,
+    expected: 'Areas We Serve',
   },
   {
     name: 'attorneyPage — falls back to the joined name fields',

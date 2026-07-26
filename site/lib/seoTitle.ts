@@ -80,6 +80,7 @@ export function resolveTitle(
   pageName: string | null | undefined,
   tokens: NapTokens | null | undefined,
   firmName: string | null | undefined,
+  completeTitle?: string | null,
 ): {title: {absolute: string} | undefined; label: string | undefined} {
   const cell = resolveTokenString(seoTitle, tokens).trim()
   if (cell) {
@@ -88,8 +89,66 @@ export function resolveTitle(
     return {title: {absolute: cell}, label: cell}
   }
   const name = resolveTokenString(pageName, tokens).trim()
+  const complete = (completeTitle ?? '').trim()
+  if (complete) {
+    // A formula whose shape is not `<page name> - <firm name>`. Today only the
+    // about page: `About <firm> - <city> Law Firm` puts the firm in the middle
+    // and closes on "Law Firm", so it cannot be composed and is supplied whole.
+    // The label stays the page's own name so the social card is unaffected.
+    return {title: {absolute: complete}, label: name || complete}
+  }
   if (!name) return {title: undefined, label: undefined}
   return {title: {absolute: composeTitle(name, firmName)}, label: name}
+}
+
+// ─── Per-page-type formulas ───────────────────────────────────────────────────
+// Each produces the title used when a page has NO stored cell. They live here
+// rather than in the routes so the shapes are readable side by side and cannot
+// drift from `composeTitle`.
+
+/** TITLE-10. Fixed; no per-client variation. */
+export const SERVICE_AREA_INDEX_PAGE_NAME = 'Areas We Serve'
+
+/**
+ * TITLE-11. `Woodbury, MN Law Office`, composed with the firm name by the
+ * caller. City and state come from the location the page is FOR, not from the
+ * firm's primary office — a location page for Woodbury must not be titled with
+ * the head office's city.
+ *
+ * Degrades rather than emitting punctuation with nothing around it: no city
+ * yields an empty string, and the route then falls back to the page's own name.
+ */
+export function locationPageName(
+  city: string | null | undefined,
+  state: string | null | undefined,
+): string {
+  const c = (city ?? '').trim()
+  const s = (state ?? '').trim()
+  if (!c) return ''
+  return s ? `${c}, ${s} Law Office` : `${c} Law Office`
+}
+
+/**
+ * The about page's formula: `About <firm> - <primary geo> Law Firm`.
+ *
+ * A COMPLETE title, not a page name — it puts the firm name in the middle and
+ * closes on "Law Firm", so it is a named exception to TITLE-2 rather than
+ * something `composeTitle` can build. TITLE-7's second shape is the other one.
+ *
+ * Primary geo is the firm's PRIMARY location's city, which reaches the route as
+ * the `office.city` NAP token (`expandNapTokens` resolves `office.*` to
+ * `siteSettings.primaryLocation` when no location id is passed). With no city,
+ * this returns empty and the caller falls back to the page name — `About` — so
+ * a firm with no location data still gets a sensible title.
+ */
+export function aboutPageTitle(
+  firmName: string | null | undefined,
+  primaryCity: string | null | undefined,
+): string {
+  const firm = (firmName ?? '').trim()
+  const city = (primaryCity ?? '').trim()
+  if (!firm || !city) return ''
+  return `About ${firm}${TITLE_SEPARATOR}${city} Law Firm`
 }
 
 /**

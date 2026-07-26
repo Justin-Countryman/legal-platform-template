@@ -10,7 +10,7 @@ import {
   NAP_TOKENS_QUERY,
 } from '@/lib/sanity/queries'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
-import {resolveTitle} from '@/lib/seoTitle'
+import {resolveTitle, SERVICE_AREA_INDEX_PAGE_NAME} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
@@ -29,7 +29,15 @@ export async function generateMetadata(): Promise<Metadata> {
   const tokens = expandNapTokens(rawTokens)
   if (!indexPage) return {title: 'Service Area'}
 
-  const {title, label} = resolveTitle(indexPage.seoTitle, indexPage.title, tokens, tokens?.firmName)
+  // TITLE-10: the title-tag fallback is a fixed page name, deliberately NOT
+  // `indexPage.title` (which is the hero heading, else "Service Area", and is
+  // what the H1 and breadcrumb use). Only the title tag changes.
+  const {title, label} = resolveTitle(
+    indexPage.seoTitle,
+    SERVICE_AREA_INDEX_PAGE_NAME,
+    tokens,
+    tokens?.firmName,
+  )
   const description = resolveTokenString(indexPage.metaDescription, tokens)
   return {
     title,
