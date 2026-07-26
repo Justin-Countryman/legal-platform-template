@@ -1,6 +1,7 @@
 export const revalidate = 3600
 
 import type {ReactNode} from 'react'
+import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {notFound} from 'next/navigation'
 import type {Metadata} from 'next'
 import {SanityImage} from '@/components/ui/SanityImage'
@@ -91,7 +92,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   return {
     title,
     description,
-    ...(post.noIndex ? {robots: {index: false, follow: false}} : {}),
+    ...buildRobotsMeta(post.noIndex, post.noFollow),
     alternates: {canonical: post.canonicalUrl ?? `/${fullSlug}`},
     ...buildSocialMeta(title, description, post?.ogImage),
   }

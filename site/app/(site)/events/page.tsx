@@ -1,6 +1,7 @@
 export const revalidate = 3600
 
 import type {Metadata} from 'next'
+import {buildRobotsMeta} from '@/lib/robotsMeta'
 import Link from 'next/link'
 import {client} from '@/lib/sanity/client'
 import {EVENT_INDEX_PAGE_QUERY, EVENT_INDEX_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
@@ -92,7 +93,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    ...(indexPage.noIndex ? {robots: {index: false, follow: false}} : {}),
+    ...buildRobotsMeta(indexPage.noIndex, indexPage.noFollow),
     alternates: {canonical: indexPage.canonicalUrl ?? '/events'},
     ...buildSocialMeta(title, description, indexPage?.ogImage),
   }

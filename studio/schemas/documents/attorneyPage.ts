@@ -140,6 +140,18 @@ export const attorneyPage = defineType({
       initialValue: false,
       fieldset: 'seo',
     }),
+      // Ruled 2026-07-25: INDEPENDENT of No Index. Hiding a page does NOT
+      // stop crawlers following its links — see BI-URL-Architecture.md,
+      // Search visibility. Defaults OFF, nothing sets it on; it exists for
+      // a client who one day needs it.
+      defineField({
+        name: 'noFollow',
+        title: 'No Follow',
+        type: 'boolean',
+        initialValue: false,
+        fieldset: 'seo',
+        description: 'Stops search engines following links on this page. Independent of No Index — a hidden page still follows its links unless this is on. Leave off unless you have a specific reason.',
+      }),
     defineField({
       name: 'canonicalUrl',
       title: 'Canonical URL (override)',

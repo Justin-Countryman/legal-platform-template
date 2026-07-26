@@ -1,6 +1,7 @@
 export const revalidate = 3600
 
 import type {Metadata} from 'next'
+import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {client} from '@/lib/sanity/client'
 import {CONTACT_PAGE_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
 import {expandNapTokens, resolveTokenString, titleFragment} from '@/lib/tokens'
@@ -25,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    ...(page.noIndex ? {robots: {index: false, follow: false}} : {}),
+    ...buildRobotsMeta(page.noIndex, page.noFollow),
     alternates: {canonical: page.canonicalUrl ?? '/contact'},
     ...buildSocialMeta(title, description, page?.ogImage),
   }

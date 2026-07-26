@@ -1,6 +1,7 @@
 export const revalidate = 3600
 
 import {notFound} from 'next/navigation'
+import {buildRobotsMeta} from '@/lib/robotsMeta'
 import type {Metadata} from 'next'
 import Link from 'next/link'
 import {client} from '@/lib/sanity/client'
@@ -131,7 +132,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   return {
     title,
     description,
-    ...(event.noIndex ? {robots: {index: false, follow: false}} : {}),
+    ...buildRobotsMeta(event.noIndex, event.noFollow),
     alternates: {canonical: event.canonicalUrl ?? `/${slug}`},
     ...buildSocialMeta(title, description, event?.ogImage),
   }

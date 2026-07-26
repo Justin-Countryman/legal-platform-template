@@ -1,6 +1,7 @@
 export const revalidate = 3600
 
 import type {Metadata} from 'next'
+import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {client} from '@/lib/sanity/client'
 import {VIDEO_INDEX_PAGE_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
 import {expandNapTokens, resolveTokenString, titleFragment} from '@/lib/tokens'
@@ -20,6 +21,7 @@ type VideoIndexData = {
   ogImage?: SanityImage | null
   metaDescription?: string | null
   noIndex?: boolean | null
+  noFollow?: boolean | null
   canonicalUrl?: string | null
   hero?: InternalHeroData | null
   title?: string | null
@@ -44,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    ...(indexPage.noIndex ? {robots: {index: false, follow: false}} : {}),
+    ...buildRobotsMeta(indexPage.noIndex, indexPage.noFollow),
     alternates: {canonical: indexPage.canonicalUrl ?? '/videos'},
     ...buildSocialMeta(title, description, indexPage?.ogImage),
   }

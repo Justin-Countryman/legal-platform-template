@@ -1,6 +1,7 @@
 export const revalidate = 3600
 
 import {notFound} from 'next/navigation'
+import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {titleFragment} from '@/lib/tokens'
 import type {Metadata} from 'next'
 import {client} from '@/lib/sanity/client'
@@ -34,7 +35,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   // `BI-URL-Architecture.md` → Search visibility.
   return {
     title: titleFragment(data.page.seoTitle, data.page.h1, null),
-    ...(data.page.noIndex ? {robots: {index: false, follow: false}} : {}),
+    ...buildRobotsMeta(data.page.noIndex, data.page.noFollow),
   }
 }
 

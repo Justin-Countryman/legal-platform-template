@@ -1,6 +1,7 @@
 export const revalidate = 3600
 
 import type {Metadata} from 'next'
+import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import Link from 'next/link'
@@ -50,7 +51,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    ...(indexPage.noIndex ? {robots: {index: false, follow: false}} : {}),
+    ...buildRobotsMeta(indexPage.noIndex, indexPage.noFollow),
     alternates: {canonical: indexPage.canonicalUrl ?? '/staff'},
     ...buildSocialMeta(title, description, indexPage?.ogImage),
   }

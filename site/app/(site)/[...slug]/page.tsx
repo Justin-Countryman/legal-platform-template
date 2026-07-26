@@ -7,6 +7,7 @@ export const revalidate = 3600
 export const dynamicParams = true
 
 import {notFound} from 'next/navigation'
+import {buildRobotsMeta} from '@/lib/robotsMeta'
 import type {Metadata} from 'next'
 import {client} from '@/lib/sanity/client'
 import {PRACTICE_AREA_QUERY, LOCATION_PAGE_QUERY, CONTENT_PAGE_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
@@ -194,7 +195,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   return {
     title,
     description,
-    ...(page.noIndex ? {robots: {index: false, follow: false}} : {}),
+    ...buildRobotsMeta(page.noIndex, page.noFollow),
     alternates: {canonical: page.canonicalUrl ?? `/${slugStr}`},
     ...buildSocialMeta(title, description, page?.ogImage),
   }
