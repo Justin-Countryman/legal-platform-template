@@ -35,7 +35,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   // `BI-URL-Architecture.md` → Search visibility.
   return {
     title: titleFragment(data.page.seoTitle, data.page.h1, null),
-    ...buildRobotsMeta(data.page.noIndex, data.page.noFollow),
+    ...(await buildRobotsMeta(data.page.noIndex, data.page.noFollow)),
   }
 }
 

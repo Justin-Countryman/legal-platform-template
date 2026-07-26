@@ -27,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    ...buildRobotsMeta(page.noIndex, page.noFollow),
+    ...(await buildRobotsMeta(page.noIndex, page.noFollow)),
     alternates: {canonical: page.canonicalUrl ?? '/testimonials'},
     ...buildSocialMeta(title, description, page?.ogImage),
   }

@@ -131,7 +131,7 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
   return {
     title,
     description,
-    ...buildRobotsMeta(attorney.noIndex, attorney.noFollow),
+    ...(await buildRobotsMeta(attorney.noIndex, attorney.noFollow)),
     alternates: {canonical: attorney.canonicalUrl ?? `/${slug}`},
     ...buildSocialMeta(title, description, attorney?.ogImage),
   }

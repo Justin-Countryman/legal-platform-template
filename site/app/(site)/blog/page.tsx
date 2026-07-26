@@ -35,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    ...buildRobotsMeta(indexPage.noIndex, indexPage.noFollow),
+    ...(await buildRobotsMeta(indexPage.noIndex, indexPage.noFollow)),
     alternates: {canonical: indexPage.canonicalUrl ?? '/blog'},
     ...buildSocialMeta(title, description, indexPage?.ogImage),
   }

@@ -54,7 +54,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   return {
     title,
     description,
-    ...buildRobotsMeta(category.noIndex, category.noFollow),
+    ...(await buildRobotsMeta(category.noIndex, category.noFollow)),
     alternates: {canonical: category.canonicalUrl ?? `/blog/category/${slug}`},
     ...buildSocialMeta(title, description, category?.ogImage),
   }
