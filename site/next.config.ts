@@ -1,6 +1,7 @@
 import type {NextConfig} from 'next'
 import {readFileSync, existsSync} from 'node:fs'
 import {resolve} from 'node:path'
+import {fetchSiteHiddenAtBuild} from './lib/searchVisibility'
 
 // ─── Security headers ─────────────────────────────────────────────────────────
 // Platform-portable security headers. CSP intentionally deferred to a
@@ -105,11 +106,25 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Site-wide search visibility (ruled 2026-07-25). The meta tag in
+  // app/layout.tsx only reaches HTML documents; this header reaches EVERY
+  // response on `/:path*` — sitemap.xml, /api/og, RSC payloads, images — which
+  // is what makes hiding genuine rather than cosmetic. Resolved at BUILD time
+  // from the same `siteSettings.hideFromSearch` the rest of the site reads:
+  // headers cannot change without a rebuild anyway, and both transitions (on at
+  // build, off at launch) involve a deploy. FAIL-CLOSED — an unreachable
+  // dataset or an unset field yields the header, never its absence.
+  //
+  // This REPLACES the hand-edit pattern: no client tree should ever again carry
+  // a TEMPORARY X-Robots-Tag here.
   async headers() {
+    const hidden = await fetchSiteHiddenAtBuild()
     return [
       {
         source: '/:path*',
-        headers: securityHeaders,
+        headers: hidden
+          ? [...securityHeaders, {key: 'X-Robots-Tag', value: 'noindex, nofollow'}]
+          : securityHeaders,
       },
     ]
   },

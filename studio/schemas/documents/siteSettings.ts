@@ -130,6 +130,26 @@ export const siteSettings = defineType({
       initialValue: 'We use cookies to improve your experience. You can opt out at any time.',
     },
 
+    // ─── Search visibility ────────────────────────────────────────────────────
+    // Ruled 2026-07-25 (Justin). Doctrine: BI-URL-Architecture.md → Search
+    // visibility. This replaces the hand-edit pattern (a `robots` block in
+    // app/layout.tsx plus an X-Robots-Tag in next.config.ts) that used to hide
+    // a site: hiding is an operator setting now, never a code change.
+    //
+    // `initialValue` below is UI sugar for a Studio-created document ONLY. It
+    // is NOT what makes a built site hidden — Site Build writes siteSettings
+    // create-only and initialValue never fires for a tool-created document. The
+    // real guarantee is fail-closed on the read side: only an explicit `false`
+    // makes a site visible. See site/lib/searchVisibility.ts.
+    {
+      name: 'hideFromSearch',
+      title: 'Hide this site from search engines',
+      type: 'boolean',
+      initialValue: true,
+      description:
+        'ON while a site is being built, and ON is what an unset value means — a site is hidden unless this is explicitly switched off. Turn it OFF at launch, when the live domain is attached. While ON: every page carries a noindex tag, every response carries a noindex header (so the sitemap, images and the social-share image are covered, not just pages), robots.txt disallows everything, and the sitemap is emitted empty.',
+    },
+
     // ─── Scripts ──────────────────────────────────────────────────────────────
     {
       name: 'gscVerification',

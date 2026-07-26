@@ -162,6 +162,7 @@ export const SITE_METADATA_QUERY = groq`
     firmName,
     primaryDomain,
     gscVerification,
+    hideFromSearch,
     "faviconUrl":  *[_type == "designSettings"][0].favicon.asset->url,
     "faviconMime": *[_type == "designSettings"][0].favicon.asset->mimeType,
     "webclipUrl":  *[_type == "designSettings"][0].webclipImage.asset->url,
@@ -249,6 +250,7 @@ export const REVIEW_SLUGS_QUERY = groq`
 // corresponding hard-coded route; collection documents supply slug + updatedAt.
 export const SITEMAP_QUERY = groq`{
   "domain": *[_type == "siteSettings"][0].primaryDomain,
+  "hideFromSearch": *[_type == "siteSettings"][0].hideFromSearch,
   "home":             *[_type == "homePage"][0]{_updatedAt},
   "attorneyIndex":    *[_type == "attorneyIndex"][0]{_updatedAt},
   "staffIndex":       *[_type == "staffIndex"][0]{_updatedAt},

@@ -1,6 +1,7 @@
 import type {MetadataRoute} from 'next'
 import {client} from '@/lib/sanity/client'
 import {SITEMAP_QUERY} from '@/lib/sanity/queries'
+import {resolveHidden} from '@/lib/searchVisibility'
 
 type SanityNode = {slug: string; _updatedAt: string}
 type SingletonNode = {_updatedAt: string} | null
@@ -20,6 +21,7 @@ type SitemapData = {
   blogCategories: SanityNode[]
   events: SanityNode[]
   catchAll: SanityNode[]
+  hideFromSearch?: unknown
 }
 
 // Slug-to-URL mapping. URLs emit WITHOUT a trailing slash to match
@@ -34,6 +36,14 @@ type SitemapData = {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const data = await client.fetch<SitemapData>(SITEMAP_QUERY)
+
+  // Site-wide hide (ruled 2026-07-25). A hidden site emits an EMPTY sitemap —
+  // listing URLs a noindex header is simultaneously suppressing would just
+  // invite crawls of pages we are telling crawlers to drop. FAIL-CLOSED: absent
+  // or unset resolves to hidden, so a freshly built client ships empty until an
+  // operator explicitly unhides. Rule: lib/searchVisibility.ts.
+  if (resolveHidden(data.hideFromSearch)) return []
+
   const domain = data.domain ?? process.env.NEXT_PUBLIC_SITE_DOMAIN ?? 'localhost:3000'
   const base = `https://${domain}`
   const buildDate = new Date()

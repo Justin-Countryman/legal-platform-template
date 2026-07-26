@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import {resolveHidden} from '@/lib/searchVisibility'
 import {client} from '@/lib/sanity/client'
 import {ORGANIZATION_SCHEMA_QUERY, SITE_METADATA_QUERY, SITE_SCRIPTS_QUERY} from '@/lib/sanity/queries'
 import {HtmlEmbed} from '@/components/ui/HtmlEmbed'
@@ -117,6 +118,7 @@ export async function generateMetadata(): Promise<Metadata> {
     firmName?: string
     primaryDomain?: string
     gscVerification?: string | null
+  hideFromSearch?: unknown
     faviconUrl?: string | null
     faviconMime?: string | null
     webclipUrl?: string | null
@@ -126,6 +128,7 @@ export async function generateMetadata(): Promise<Metadata> {
   // GSC verification token is entered in Sanity (Site Settings) and rendered
   // server-side into <head> — Google's verification crawler does not run JS.
   const gscVerification = data?.gscVerification || undefined
+  const hiddenFromSearch = resolveHidden(data?.hideFromSearch)
 
   // Browser-tab favicon + Apple touch icon are sourced from Design Settings
   // (designSettings.favicon / webclipImage). The asset URLs are absolute Sanity
@@ -158,10 +161,17 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       images: ['/api/og'],
     },
-    robots: {
-      index: true,
-      follow: true,
-    },
+    // Site-wide search visibility (ruled 2026-07-25). FAIL-CLOSED: an absent or
+    // unset `hideFromSearch` means hidden, so a freshly built client — whose
+    // siteSettings is created by a tool and never sees Sanity's initialValue —
+    // is hidden without anyone setting anything. Only an explicit `false`
+    // makes a site visible. The rule lives in lib/searchVisibility.ts; this is
+    // one of four surfaces it drives (meta here, header in next.config.ts,
+    // robots.txt and sitemap.xml in their own routes), because a meta tag alone
+    // does not reach sitemap.xml, the OG image route, RSC payloads or images.
+    robots: hiddenFromSearch
+      ? {index: false, follow: false}
+      : {index: true, follow: true},
     ...(gscVerification ? {verification: {google: gscVerification}} : {}),
   }
 }
