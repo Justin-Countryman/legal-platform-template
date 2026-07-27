@@ -1,4 +1,4 @@
-// The fifteen area-of-law title phrases — the SITE's mirror of doctrine.
+// The twenty-five area-of-law title phrases — the SITE's mirror of doctrine.
 //
 // **Doctrine is the source of truth.** The table under TITLE-4 in
 // `BI/BI-Content.md` (platform repo) is where these are edited. This file and
@@ -27,13 +27,23 @@
 export const AREA_OF_LAW_PHRASES: Record<string, string> = {
   'Bankruptcy': 'Bankruptcy Attorney',
   'Business Law': 'Business Attorney',
+  'Civil Litigation': 'Civil Litigation Attorney',
+  'Civil Rights': 'Civil Rights Attorney',
+  'Construction Law': 'Construction Law Attorney',
+  'Consumer Protection': 'Consumer Protection Attorney',
   'Criminal Defense': 'Criminal Defense Attorney',
+  'Education Law': 'Education Law Attorney',
   'Elder Law': 'Elder Law Attorney',
   'Employment Law': 'Employment Attorney',
   'Estate Planning': 'Estate Planning Attorney',
   'Family Law': 'Family Law Attorney',
+  'Government and Administrative Law': 'Administrative Law Attorney',
+  'Health Care Law': 'Health Care Attorney',
   'Immigration Law': 'Immigration Lawyer',
+  'Insurance Law': 'Insurance Attorney',
+  'Juvenile Law': 'Juvenile Law Attorney',
   'Medical Malpractice': 'Medical Malpractice Lawyer',
+  'Military and Veterans Law': 'Veterans Attorney',
   'Personal Injury': 'Personal Injury Lawyer',
   'Real Estate Law': 'Real Estate Attorney',
   'Social Security Disability': 'Disability Lawyer',
@@ -44,7 +54,7 @@ export const AREA_OF_LAW_PHRASES: Record<string, string> = {
 
 /**
  * The stored phrase for an area of law, or empty when it is not one of the
- * fifteen.
+ * table.
  *
  * Returns empty rather than guessing, and that case is ordinary rather than
  * exceptional: a real client carries page names the canonical taxonomy does not

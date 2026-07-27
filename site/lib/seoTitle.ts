@@ -147,7 +147,7 @@ export function locationPageName(
  *   more than one    -> `<firm> - <city> Law Firm`
  *
  * The single-area shape needs a phrase, and a lone area whose name is not one
- * of the fifteen has none — so that case takes the second shape too. Returning
+ * in the table has none — so that case takes the second shape too. Returning
  * `<name> Attorney` for it is the derivation TITLE-4 rejected.
  */
 export function homepageTitle(
@@ -233,7 +233,7 @@ export function serviceAreaPageName(
  * 28 beneath, so it is populated rather than theoretical.
  *
  * BOTH conditions are required: no parent AND a title that is one of the
- * fifteen. The title check alone would catch a page named `Tax Law` sitting
+ * table. The title check alone would catch a page named `Tax Law` sitting
  * BENEATH `Business Law`; the parent check alone would hand a phrase to
  * Dudley's `Appellate Law`, which has none.
  *
@@ -258,20 +258,21 @@ export function areaOfLawPageName(
  * title is the only place either value exists: `geoPracticeArea` has no city
  * field and no reference to the practice area it targets.
  *
- * THE RULE: strip the longest of the fifteen canonical AREA-OF-LAW NAMES that
+ * THE RULE: strip the longest of the canonical AREA-OF-LAW NAMES that
  * the title ends with, on a word boundary, case-insensitively. What is left is
  * the city. Both halves must be non-empty or the split fails.
  *
  * It is a lookup against a stored list, not a heuristic — which is what makes it
- * defensible. `phraseForAreaOfLaw`'s keys are the fifteen, so the same table
+ * defensible. `phraseForAreaOfLaw`'s keys ARE the canonical names, so the same table
  * that supplies the phrase decides where the title divides. No two of the
- * fifteen are suffixes of one another today (checked), so a match is
+ * twenty-five are suffixes of one another today (re-checked 2026-07-27 after the
+ * table grew from fifteen), so a match is
  * unambiguous; longest-first is used anyway so a future sixteenth area cannot
  * introduce ambiguity silently.
  *
  * WHAT IT WILL GET WRONG, stated rather than discovered:
  *
- *   1. **A practice outside the fifteen.** `Woodbury Appellate Law` does not
+ *   1. **A practice outside the table.** `Woodbury Appellate Law` does not
  *      match, so the page falls back to its plain page name. This is the COMMON
  *      case, not the edge: seven of Dudley's fourteen top-level practice areas
  *      are not among the fifteen.
