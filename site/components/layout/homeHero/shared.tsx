@@ -4,7 +4,7 @@
 // file is tiny and purely structural — all surface/scheme/merge/typography/CTA
 // plumbing lives here and is reused from the existing internal-hero system.
 
-import {useEffect, useState, type CSSProperties, type ReactElement, type ReactNode} from 'react'
+import {useSyncExternalStore, type CSSProperties, type ReactElement, type ReactNode} from 'react'
 import {m, useReducedMotion, type Variants} from 'framer-motion'
 import {
   resolveHeroSurface,
@@ -21,6 +21,28 @@ import type {Motion} from './types'
 
 // Re-exported for the skeletons that build their own flush layout (e.g. Split full-bleed).
 export {HERO_HEADER_CLEARANCE}
+
+// ─── Hydration gate ──────────────────────────────────────────────────────────
+// `false` on the server and through the hydration render, `true` afterwards.
+//
+// This is the useSyncExternalStore form of the mount flag rather than
+// `useState(false)` + `useEffect(() => setMounted(true), [])`. The two produce
+// the same two-phase result, but the effect form calls setState synchronously
+// inside an effect, which React's `react-hooks/set-state-in-effect` rule flags
+// as a cascading render. Here the server snapshot IS `false` and the client
+// snapshot IS `true`, so the value is read rather than assigned — no second
+// render is scheduled by us, and nothing has to be suppressed.
+//
+// `subscribe` returns a no-op unsubscribe: hydration happens once and never
+// changes again, so there is no external store to listen to.
+const subscribeToNothing = () => () => {}
+function useIsHydrated(): boolean {
+  return useSyncExternalStore(
+    subscribeToNothing,
+    () => true,  // client
+    () => false, // server + hydration render
+  )
+}
 
 // ─── Image role + scheme resolution ───────────────────────────────────────────
 // A variant interprets the background image differently:
@@ -239,8 +261,7 @@ export function HeroTextBlock({
   // `fade` animates opacity → would hide content pre-hydration; only enable it
   // after mount (SSR / no-JS / first paint stay fully visible). Transform-only
   // variants are always safe to render (content is painted, just offset).
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
+  const mounted = useIsHydrated()
 
   const centered = align === 'center'
   // mx-auto centers the max-width column when centered; explicit per-element

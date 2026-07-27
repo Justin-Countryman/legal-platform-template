@@ -34,7 +34,6 @@ import path from 'node:path'
 
 vi.mock('next/link', () => ({
   default: ({children, href, ...props}: {children: React.ReactNode; href: unknown}) => (
-    // eslint-disable-next-line jsx-a11y/anchor-has-content
     <a href={typeof href === 'string' ? href : '#'} {...props}>
       {children}
     </a>

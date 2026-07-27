@@ -218,9 +218,19 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{__html: JSON.stringify(organizationSchema)}}
         />
+        {/* The skip link's dark surface is created by a VARIANT (`focus:bg-brand-dark`),
+            which compiles to `.focus\:bg-brand-dark:focus` and therefore does not match
+            the cascade trigger `.bg-brand-dark`. `data-ring-context="dark"` is the
+            documented attribute for exactly that case — "containers whose dark
+            appearance is created by an overlay or other non-class mechanisms"
+            (app/globals.css, cascade rule) — and it lets the cascade-aware
+            `focus:text-foreground` resolve to the on-dark value instead of being
+            overridden per-component. Safe unfocused: the link is sr-only, so it has
+            no visible surface until the same :focus that paints it dark. */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-5 focus:left-5 focus:z-[999999] focus:px-5 focus:py-3 focus:bg-brand-dark focus:text-foreground-on-dark focus:font-semibold focus:rounded-btn focus:shadow-lg focus:outline-2 focus:outline-offset-2 focus:outline-foreground-on-dark/50 focus:whitespace-nowrap"
+          data-ring-context="dark"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-5 focus:left-5 focus:z-[999999] focus:px-5 focus:py-3 focus:bg-brand-dark focus:text-foreground focus:font-semibold focus:rounded-btn focus:shadow-lg focus:outline-2 focus:outline-offset-2 focus:outline-foreground-on-dark/50 focus:whitespace-nowrap"
         >
           Skip to Main Content
         </a>
