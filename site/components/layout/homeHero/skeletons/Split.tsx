@@ -136,7 +136,7 @@ function VideoMedia({content, surface, aspect}: {content: ResolvedHomeContent; s
       {poster}
       <span className="absolute inset-0 grid place-items-center">
         <span className="grid size-16 place-items-center rounded-full bg-brand-dark/30 backdrop-blur-sm transition-transform duration-structural-fast group-hover:scale-110">
-          <MdPlayArrow className="size-9 text-brand-light" aria-hidden="true" />
+          <MdPlayArrow className="size-9 text-brand-white" aria-hidden="true" />
         </span>
       </span>
     </button>

@@ -197,6 +197,45 @@ jobs:
           fi
           echo "Sanity schema + generated types are up to date."
 
+  unknown-utility-classes:
+    name: Tailwind utility names resolve
+    runs-on: ubuntu-latest
+    # Tailwind emits no CSS for a class it does not recognise, and raises no
+    # error. A misspelled utility therefore type-checks, lints, builds and tests
+    # green, and the only symptom is a style silently absent from the rendered
+    # page. `bg-surface-muted` and `shadow-card` shipped that way on the card
+    # surface of all five homepage block components — every card computed
+    # background-color: rgba(0,0,0,0) and box-shadow: none, and the composed
+    # homepage read as unstyled text on white. Nothing fired. Fixed 2026-07-21
+    # (a2b0edc); `border-on-dark` had done the same thing in WS4.
+    #
+    # This job is the thing that fires. It lives in CI rather than in `npm run
+    # lint` because lint is not wired into CI at all and is not run on the way
+    # to a deploy — a check for an invisible failure mode has to run somewhere
+    # nobody has to remember it. It needs no Sanity project, no seed and no
+    # network, so unlike a full build it can pass against a clean template.
+    #
+    # Provenance: monorepo BI/OUTSTANDING.md item 56.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install site deps
+        working-directory: site
+        run: npm ci
+      - name: Check every Tailwind class name resolves to CSS
+        working-directory: site
+        run: npm run check:classes
+      - name: Check the checker still fails on the classes that shipped broken
+        working-directory: site
+        # A guard that only ever reports zero is indistinguishable from a guard
+        # that does nothing, and this one would go green if its extractor
+        # silently stopped collecting. Run its own falsifiability tests, which
+        # plant `bg-surface-muted` / `shadow-card` in a file on disk and require
+        # a non-empty report naming the file and line.
+        run: npx vitest run scripts/__tests__/check-unknown-utility-classes.test.ts
+
   a11y-shared-components:
     name: Shared component a11y invariants
     runs-on: ubuntu-latest

@@ -72,7 +72,7 @@ export default function ElevationPreviewPage() {
           <p className="max-w-xl text-foreground-muted">
             Five elevation levels (0, 1, 2, 4, 6) with intentional gaps at 3 and 5 for future
             intermediate steps. Shadows derive from{' '}
-            <code className="rounded-ui bg-bg-mid px-1.5 py-0.5 text-sm font-mono">--shadow-rgb</code>{' '}
+            <code className="rounded-ui bg-muted px-1.5 py-0.5 text-sm font-mono">--shadow-rgb</code>{' '}
             so they stay warm or cool to match the brand. Hover each card to preview the lift effect.
           </p>
         </div>
