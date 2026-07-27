@@ -1,9 +1,18 @@
 name: CI
 
-# v0.1.0 ships only the gating guards that can pass against a clean template.
-# Lint, typecheck, vitest, and a Sanity-backed studio build are wired in v0.2.0,
-# once the Sample Firm seed is committed and a CI-scoped scratch Sanity project
-# lets the studio build succeed against a non-sentinel projectId.
+# v0.1.0 shipped only the gating guards that can pass against a clean template.
+# Lint and typecheck were deferred to v0.2.0 on the assumption that they needed
+# the Sample Firm seed and a CI-scoped scratch Sanity project. That assumption
+# was wrong for these two: neither `eslint` nor `tsc --noEmit` reads a dataset,
+# so both run offline against a clean checkout and are wired below. What still
+# genuinely waits on the seed + a non-sentinel projectId is a Sanity-backed
+# STUDIO BUILD and a full `next build` (page-data collection instantiates the
+# Sanity client and fails on the sentinel projectId) — those remain unwired.
+#
+# NOTE ON SCOPE: this file is the TEMPLATE's CI. Client repos do not inherit it.
+# Deploy-Setup-Tool's allowlist (`trees: - source: .github`) resolves against the
+# MONOREPO root, so a client repo receives the monorepo's .github/workflows/ci.yml
+# instead. Changes here affect the template only.
 
 on:
   pull_request:
@@ -196,6 +205,52 @@ jobs:
             exit 1
           fi
           echo "Sanity schema + generated types are up to date."
+
+  lint:
+    name: Lint (eslint)
+    runs-on: ubuntu-latest
+    # The platform ships 17 custom `platform/*` rules encoding locked doctrine —
+    # cascade discipline, token-first colour, heading semantics, footer landmark
+    # naming, the mobile h1 cap. Until this job existed NONE of them could block
+    # anything: `npm run lint` was never wired into CI and is not on the path to
+    # a deploy, so a rule violation reached main and stayed there. Two did, and
+    # went unnoticed long enough to become "the pre-existing baseline".
+    #
+    # eslint reads no dataset and makes no network call, so it passes against a
+    # clean template checkout with no Sanity project and no seed.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install site deps
+        working-directory: site
+        run: npm ci
+      - name: Lint
+        working-directory: site
+        # --max-warnings=0 so an unused eslint-disable directive (a warning, not
+        # an error) cannot accumulate silently. One already had.
+        run: npx eslint --max-warnings=0
+
+  typecheck:
+    name: Typecheck (tsc)
+    runs-on: ubuntu-latest
+    # `next build` runs tsc, but the build cannot complete on a clean template:
+    # page-data collection instantiates the Sanity client and dies on the
+    # scrubbed sentinel projectId. So the type check that the build would have
+    # given us never ran in CI either. `tsc --noEmit` alone needs no dataset and
+    # no network, and the generated Sanity types are committed, so it runs here.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install site deps
+        working-directory: site
+        run: npm ci
+      - name: Typecheck
+        working-directory: site
+        run: npx tsc --noEmit
 
   unknown-utility-classes:
     name: Tailwind utility names resolve
