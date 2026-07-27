@@ -171,20 +171,42 @@ export function homepageTitle(
 
 /**
  * TITLE-9. A service area page: the city, then the firm's PRIMARY
- * area-of-law phrase. The homepage formula aimed at one city.
+ * area-of-law phrase — or `<city> Law Firm` when no phrase is available.
  *
- * **"Primary" is only determinable when the firm has exactly one area of law**,
- * and that is a real limitation rather than a shortcut — see the note in
- * `BI-Content.md` TITLE-9. Nothing in Sanity records which area of law ranks
- * first: `mainNavigation.practiceAreaOrder` is deliberately left for the
+ * **It shares the homepage's PHRASE, not its construction**, and the difference
+ * is the point. TITLE-7 leads with the firm name (`<firm> - <city> Law Firm`)
+ * because the homepage is the firm's front door; that is a named exception to
+ * TITLE-2. Every INTERIOR page leads with its own subject, which is what TITLE-2
+ * requires — so this returns a plain page name and `composeTitle` puts the firm
+ * on the end like every other interior page. Same two words, different job. Do
+ * not "align" the two shapes; they are different on purpose.
+ *
+ * Four cases (operator ruling, 2026-07-27):
+ *   one area WITH a phrase     -> `<city> <phrase>`   e.g. `Woodbury Family Law Lawyer`
+ *   one area WITHOUT a phrase  -> `<city> Law Firm`
+ *   many areas, no ranking     -> `<city> Law Firm`
+ *   many areas, with a ranking -> the top-ranked area's phrase (NOT BUILT — see below)
+ *
+ * **THE PLAIN CITY NAME IS ABOLISHED as a fallback for this page type.** It said
+ * nothing about the firm at all. `Law Firm` is true of every firm regardless of
+ * practice mix, so it is the honest phrase when the leader is unknown — whereas
+ * naming ONE area of a multi-area firm asserts what kind of firm it is, on every
+ * city page, and gets it wrong.
+ *
+ * **THE GAP, still real and still unbuilt: nothing records which area of law
+ * ranks first.** `mainNavigation.practiceAreaOrder` is deliberately left for the
  * operator to drag and is empty on a fresh build (its fallback is alphabetical,
  * which would make "Appellate Law" primary for Dudley purely because of the A),
  * and Zite's `areaOfLawRanking` is captured into CS-FIRM-DATA and consumed by
- * nothing.
+ * nothing. Until that data arrives, a multi-area firm gets `<city> Law Firm`.
+ * **The gap now degrades to `Law Firm`, not to a bare city name** — weaker than
+ * the specific phrase, but honest rather than empty.
  *
- * So this returns empty for a multi-area firm and the page falls back to its
- * own name. Guessing would put a confidently wrong phrase on every service area
- * page of every multi-area client.
+ * A firm with NO recorded areas of law lands on `<city> Law Firm` too: it is
+ * still a law firm, and the bare city is abolished here either way.
+ *
+ * Only a missing CITY returns empty, because `<city>` is the whole subject and
+ * ` Law Firm` alone is not a title.
  */
 export function serviceAreaPageName(
   city: string | null | undefined,
@@ -193,9 +215,11 @@ export function serviceAreaPageName(
   const c = (city ?? '').trim()
   if (!c) return ''
   const areas = areasOfLaw.map((a) => (a ?? '').trim()).filter(Boolean)
-  if (areas.length !== 1) return ''
-  const phrase = phraseForAreaOfLaw(areas[0])
-  return phrase ? `${c} ${phrase}` : ''
+  if (areas.length === 1) {
+    const phrase = phraseForAreaOfLaw(areas[0])
+    if (phrase) return `${c} ${phrase}`
+  }
+  return `${c} Law Firm`
 }
 
 /**

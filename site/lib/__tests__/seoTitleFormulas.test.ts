@@ -119,21 +119,51 @@ describe('TITLE-9 — service area page', () => {
   it('is the city then the primary phrase, when primary is unambiguous', () => {
     expect(serviceAreaPageName('Woodbury', ['Personal Injury']))
       .toBe('Woodbury Personal Injury Lawyer')
+    // TITLE-4's stored table decides the phrase: `Family Law` -> `Family Law
+    // Attorney`, not `... Lawyer`. The table is the source, not the pattern.
+    expect(serviceAreaPageName('Woodbury', ['Family Law']))
+      .toBe('Woodbury Family Law Attorney')
   })
 
-  it('RETURNS EMPTY for a multi-area firm — primary is not determinable', () => {
-    // Nothing in Sanity records which area of law ranks first. Guessing would
-    // put a confidently wrong phrase on every service area page of every
-    // multi-area client. See BI-Content.md TITLE-9.
-    expect(serviceAreaPageName('Woodbury', ['Family Law', 'Personal Injury'])).toBe('')
+  it('a MULTI-AREA firm gets `<city> Law Firm`, NOT a bare city name', () => {
+    // Operator ruling 2026-07-27. Nothing in Sanity records which area of law
+    // ranks first, and naming one area of a multi-area firm asserts what kind
+    // of firm it is, on every city page, and gets it wrong. `Law Firm` is true
+    // of every firm regardless of practice mix. See BI-Content.md TITLE-9.
+    expect(serviceAreaPageName('Woodbury', ['Family Law', 'Personal Injury']))
+      .toBe('Woodbury Law Firm')
   })
 
-  it('returns empty when the lone area has no stored phrase', () => {
-    expect(serviceAreaPageName('Woodbury', ['Appellate Law'])).toBe('')
+  it('a LONE area with no stored phrase takes `<city> Law Firm` too', () => {
+    // Seven of Dudley's fourteen top-level areas map to no phrase, so this is
+    // ordinary rather than exceptional. Same ruling, same reason as TITLE-7's
+    // lone-unphrased-area case.
+    expect(serviceAreaPageName('Woodbury', ['Appellate Law']))
+      .toBe('Woodbury Law Firm')
+    // `Workers Compensation` misses `Workers' Compensation` by an apostrophe.
+    expect(serviceAreaPageName('Woodbury', ['Workers Compensation']))
+      .toBe('Woodbury Law Firm')
   })
 
-  it('returns empty with no city', () => {
+  it('no recorded areas of law lands on `<city> Law Firm` as well', () => {
+    // Still a law firm. The bare city is abolished here either way.
+    expect(serviceAreaPageName('Woodbury', [])).toBe('Woodbury Law Firm')
+  })
+
+  it('returns empty with no city — ` Law Firm` alone is not a title', () => {
     expect(serviceAreaPageName('', ['Personal Injury'])).toBe('')
+    expect(serviceAreaPageName('', [])).toBe('')
+  })
+
+  it('shares the homepage PHRASE but not its construction', () => {
+    // TITLE-7 leads with the firm name because the homepage is the front door —
+    // a named exception to TITLE-2. A service area page is an INTERIOR page, so
+    // it leads with its own subject. Same two words, opposite construction.
+    // This test exists so "aligning" the two shapes fails loudly.
+    expect(homepageTitle(['Family Law', 'Personal Injury'], FIRM, 'Woodbury'))
+      .toBe('Dudley & Smith, P.A. - Woodbury Law Firm')
+    expect(composeTitle(serviceAreaPageName('Woodbury', ['Family Law', 'Personal Injury']), FIRM))
+      .toBe('Woodbury Law Firm - Dudley & Smith, P.A.')
   })
 })
 

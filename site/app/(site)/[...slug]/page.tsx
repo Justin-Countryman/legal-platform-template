@@ -211,8 +211,11 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const areaOfLawName = page._type === 'practiceArea'
     ? areaOfLawPageName(page.title, Boolean(page.parentPage))
     : ''
-  // TITLE-9 — serviceAreaPage: the homepage formula aimed at one city. Empty
-  // for a multi-area firm, because nothing records which area of law is primary.
+  // TITLE-9 — serviceAreaPage: the city, then the firm's primary area-of-law
+  // phrase, or `<city> Law Firm` when no phrase is available (a multi-area firm
+  // with no ranking, or a lone area outside the fifteen). It shares the
+  // homepage's PHRASE, not its construction — this is an interior page, so it
+  // leads with its own subject and composeTitle appends the firm (TITLE-2).
   const serviceAreaName = page._type === 'serviceAreaPage'
     ? serviceAreaPageName(page.title, page.areasOfLaw ?? [])
     : ''
