@@ -94,18 +94,20 @@ const PLATFORM_HOSTS = new Map([
   ['yelp.com', 'review directory — footerSettings.yelpUrl'],
 ])
 
-// The sample firm's own placeholder domains — what the rule says BELONGS. These
-// are fixed template strings, not per-client values, so this set never grows
-// when a client is provisioned.
+// There is deliberately NO list of bespoke placeholder domains here.
 //
-// `yourfirm.com` is the "e.g." hint on the siteSettings.primaryDomain field an
-// editor sees in Studio (`initialValue: ''`, so nothing ships as data).
-// NOTE, for the operator rather than for the guard: unlike .test / .example it
-// is a REGISTRABLE domain, so someone could own it and the hint would point at
-// a live third party. Moving it to `example.com` would remove that entirely.
-// Left as-is here deliberately — it is a placeholder, not a client identifier,
-// and changing template copy was not this run's remit.
-const PLACEHOLDER_DOMAINS = new Set(['yourfirm.com'])
+// One existed briefly, holding a single registrable placeholder used as the
+// "e.g." hint on siteSettings.primaryDomain. That hint now reads a reserved
+// documentation domain covered by RESERVED_DOMAINS above, so the entry had
+// nothing left to permit. It was removed together with the literal rather than
+// left behind: a roster entry that outlives its reason is exactly what this
+// guard was rebuilt to stop, and the next reader would have had no way to tell
+// a live allowance from a dead one. Any future placeholder should use a
+// reserved ending instead of earning an entry here.
+//
+// The banned literal is deliberately not repeated in this comment — this file
+// is scanned like every other, so naming it here would fail the guard. That is
+// the guard working, not a limitation: it proves the check sees its own source.
 
 // The only Sanity project identifier the template may name.
 const PROJECT_SENTINEL = 'TEMPLATE_SANITY_PROJECT_ID'
@@ -197,7 +199,6 @@ export function isAllowedHost(host) {
 
   if (RESERVED_TLDS.includes(tld)) return true
   if (RESERVED_DOMAINS.some((d) => lower === d || lower.endsWith(`.${d}`))) return true
-  if (PLACEHOLDER_DOMAINS.has(lower)) return true
 
   // Platform hosts match on the host itself or any subdomain of it, so
   // `img.youtube.com` rides on `youtube.com` without a separate entry.

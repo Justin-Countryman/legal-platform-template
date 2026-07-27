@@ -33,7 +33,7 @@ export const siteSettings = defineType({
       name: 'primaryDomain',
       title: 'Primary Domain',
       type: 'string',
-      description: 'No https:// — e.g. yourfirm.com',
+      description: 'No https:// — e.g. example.com',
       initialValue: '',
       validation: (Rule) => Rule.required().warning(),
     },
