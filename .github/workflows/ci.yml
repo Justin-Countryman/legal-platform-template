@@ -24,65 +24,29 @@ jobs:
   template-scrub-guard:
     name: Template scrub guard
     runs-on: ubuntu-latest
+    # REPLACED the hardcoded blocklist 2026-07-27. The old guard grepped for one
+    # RETIRED client's name fragments and Sanity project ID, so it only ever
+    # caught the clients someone had remembered to add -- a CURRENT client's
+    # domain leaking into the template passed it untouched, which is the gap
+    # OUTSTANDING recorded for months. Adding today's client would have fixed it
+    # until the next one, and the template cannot derive a roster the way the
+    # monorepo guard does because `Clients/` does not exist in this repository.
+    #
+    # The rule is inverted instead: THE TEMPLATE IS A BLANK STARTING POINT. The
+    # only firm domain and Sanity project ID that belong in it are the sample
+    # firm's own placeholders; anything else is a leak, whoever it belongs to,
+    # including clients that do not exist yet. An allowlist of what belongs
+    # needs no human to remember every new client. It never needs updating.
+    #
+    # Pure Node, no dependencies -- so no `npm ci` step, and the check cannot
+    # break on an install. Provenance: OUTSTANDING items 76-79.
     steps:
       - uses: actions/checkout@v4
-      - name: Verify no client-identity leaks
-        run: |
-          set -e
-          echo "Checking for accidental client identity strings..."
-
-          # ── Why the patterns below are assembled from fragments ────────────
-          # This guard now scans YAML, and this file IS YAML. If the strings it
-          # searches for appeared here as plain literals, the guard would match
-          # ITSELF on every run and no checkout could ever pass.
-          #
-          # The obvious alternative — excluding this file, or .github, from the
-          # scan — is WRONG, and the reason is the whole point of widening it: a
-          # workflow file is exactly where the last leak lived. The monorepo's
-          # ci.yml hardcoded a retired client's Sanity project ID and site
-          # domain in an `env:` block and shipped that file into every client
-          # repo (OUTSTANDING item 76). Blinding this guard to its own file type
-          # would rebuild the hole it exists to close.
-          #
-          # So the literals are split instead, and reassembled at run time. The
-          # file stays fully scannable, including itself.
-          # DO NOT "tidy" these back into plain strings — that silently breaks
-          # the guard by making it fail on every run.
-          HS_A="$(printf '%s' 'henning' 'son')"
-          HS_B="$(printf '%s' 'snox' 'ell')"
-          HS_C="$(printf '%s' 'hennsnox' 'law')"
-          HS_PID="$(printf '%s' '5lyox4' 'tc')"
-          NAME_RE="${HS_A}|${HS_B}|${HS_C}"
-
-          # Audit-citation comments referencing the H&S source folder BY PATH
-          # are intentionally preserved — either the live path or the
-          # post-retirement `_archive` one. A raw identity literal without the
-          # path still trips the guard.
-          AUDIT_PATH_RE="Clients/(_archive/)?${HS_A}-${HS_B}-ltd/"
-
-          # One include list for both checks. They used to differ — the identity
-          # check omitted .md and the project-ID check omitted .jsx/.css — which
-          # is the same class of gap as the missing .yml, just smaller.
-          INCLUDES=(
-            --include='*.ts'  --include='*.tsx'  --include='*.js'
-            --include='*.jsx' --include='*.json' --include='*.css'
-            --include='*.md'  --include='*.yml'  --include='*.yaml'
-          )
-          EXCLUDES=(
-            --exclude-dir=node_modules --exclude-dir=.next
-            --exclude-dir=dist --exclude-dir=.sanity
-          )
-
-          if grep -rniE "$NAME_RE" "${INCLUDES[@]}" "${EXCLUDES[@]}" . \
-               | grep -v -E "$AUDIT_PATH_RE"; then
-            echo "::error::Client identity strings leaked into template source"
-            exit 1
-          fi
-          if grep -rn "$HS_PID" "${INCLUDES[@]}" "${EXCLUDES[@]}" .; then
-            echo "::error::Retired H&S Sanity project ID leaked into template"
-            exit 1
-          fi
-          echo "Template scrub guard passed (source, docs, workflows and YAML)."
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Verify the template carries no firm identity
+        run: node scripts/check-template-is-blank.mjs
 
   seed-validation:
     name: Sample Firm seed presence
