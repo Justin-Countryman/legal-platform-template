@@ -4,7 +4,18 @@ import {TokenTextInput} from '../../components/TokenTextInput'
 import {seoTitleValidation} from '../seoTitle'
 
 // Layout B — Content + Sidebar Shell
-// Slug: /service-area/{city}-{state}/ — e.g. /service-area/woodbury-mn/
+// Slug: /service-area/{city}-law-firm/ — e.g. /service-area/woodbury-law-firm/
+//
+// RE-RULED 2026-07-28: the leaf was `{city}-{state}` (`woodbury-mn`). The state
+// suffix is DROPPED so the leaf reads as what the page is about rather than as a
+// filing-system entry. The `/service-area/` parent STAYS — it is what tells the
+// index, the parent-child structure and BI-Content.md TITLE-9/TITLE-10 that
+// these pages are one set. Nothing here parses the slug, so this is the URL and
+// not an input to anything.
+//
+// The leaf is now shared with `locationPage`, which sits at the ROOT as
+// `/{city}-law-firm/`. Only the parent folder tells them apart: an office page
+// has an address, a service area page does not.
 //
 // CORRECTED 2026-07-26. This line read `/city-practice-area/`, which is the
 // geoPracticeArea form and was never this type's URL — a copy-paste from that
