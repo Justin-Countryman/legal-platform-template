@@ -1134,10 +1134,20 @@ export const SERVICE_AREA_INDEX_QUERY = groq`
   }
 `
 
+// The index card shows the CITY ALONE (ruled 2026-07-28, `BI-Workflow.md` →
+// "SERVICE AREA PAGES: the four surfaces"), which neither stored field carries:
+// under that ruling the page name and the H1 are both `{city} Law Firm`. The
+// route derives the city with `cityFromServiceAreaSlug` and falls back to
+// `title` when a slug cannot be read.
+//
+// It used to project `coalesce(hero.heading, title)`, and `hero.heading` carried
+// the FIRM'S primary office city — nine live cards read "Mendota Heights Blaine
+// Law Firm" and the like. Because the index also buckets its A-Z filter and runs
+// its search on the card label, every city sat under M.
 export const SERVICE_AREA_PAGES_QUERY = groq`
   *[_type == "serviceAreaPage"] | order(title asc) {
     "slug": slug.current,
-    "displayName": coalesce(hero.heading, title),
+    title,
   }
 `
 

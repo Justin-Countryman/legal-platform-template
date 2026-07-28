@@ -10,6 +10,7 @@ import {
   NAP_TOKENS_QUERY,
 } from '@/lib/sanity/queries'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
+import {cityFromServiceAreaSlug} from '@/lib/serviceAreaCity'
 import {resolveTitle, SERVICE_AREA_INDEX_PAGE_NAME} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {InternalHero} from '@/components/layout/InternalHero'
@@ -59,6 +60,16 @@ export default async function ServiceAreaIndexPage() {
   ])
   const tokens = expandNapTokens(rawTokens)
 
+  // The card label is the CITY ALONE (ruled 2026-07-28). Mapped here rather
+  // than inside ServiceAreaIndexClient so that component is untouched: it
+  // builds its A-Z buckets and runs its search on `displayName`, so both follow
+  // the ruling without a change of their own. That is the whole reason the
+  // label is narrowed at the source instead of being special-cased downstream.
+  const cards = ((pages ?? []) as {slug: string; title: string}[]).map((p) => ({
+    slug: p.slug,
+    displayName: cityFromServiceAreaSlug(p.slug) || p.title,
+  }))
+
   const tagline = resolveTokenString(indexPage?.tagline, tokens)
   const heading = resolveTokenString(indexPage?.heading, tokens)
   const description = resolveTokenString(indexPage?.description, tokens)
@@ -102,7 +113,7 @@ export default async function ServiceAreaIndexPage() {
       {/* City grid */}
       <section className="px-[5%] pt-8 pb-16 md:pt-10 md:pb-24 lg:pb-28">
         <div className="container">
-          <ServiceAreaIndexClient pages={pages ?? []} />
+          <ServiceAreaIndexClient pages={cards} />
         </div>
       </section>
 
