@@ -32,18 +32,47 @@ type Props = {params: Promise<{slug: string[]}>}
 
 // ─── Schema Builders ──────────────────────────────────────────────────────────
 
-function buildLegalServiceSchema(page: unknown, tokens: NapTokens | null, domain: string) {
-  const p = page as Record<string, unknown>
+/**
+ * ENTITY-1 and ENTITY-4 (`BI-PRINCIPLES.md`). ONE `LegalService` per office, named
+ * for the FIRM, with its own `@id`, `url` and address. **The address
+ * distinguishes offices, not the name.**
+ *
+ * It used to read `p.title`, so `/about` announced a law firm called "About" and
+ * `/disclaimer` one called "Disclaimer". A `LegalService` IS a law firm — not a
+ * page, not a practice area, not a topic — so the name can only ever be the
+ * firm's. There is deliberately no page fallback: a fallback would imply the
+ * page was sometimes the right source, and it never is.
+ *
+ * ENTITY-2: only a `locationPage` calls this now. Topical pages emit no
+ * top-level `LegalService` at all.
+ */
+function buildOfficeLegalServiceSchema(
+  page: {slug?: string | null; locationData?: LocationData | null},
+  tokens: NapTokens | null,
+  domain: string,
+) {
+  const loc = page.locationData ?? {}
+  // Same gating as buildLocalBusinessSchema below: no street address, no
+  // PostalAddress. Virtual and Home offices have the street gated out at the
+  // query layer (D9).
+  const address = loc.address1
+    ? {
+        '@type': 'PostalAddress',
+        streetAddress: [loc.address1, loc.address2].filter(Boolean).join(', '),
+        addressLocality: loc.city ?? undefined,
+        addressRegion: loc.state ?? undefined,
+        postalCode: loc.zip ?? undefined,
+        addressCountry: 'US',
+      }
+    : undefined
   return {
     '@context': 'https://schema.org',
     '@type': 'LegalService',
-    name: resolveTokenString(p.title as string | null | undefined, tokens),
-    description: resolveTokenString(p.metaDescription as string | null | undefined, tokens),
-    url: `https://${domain}/${p.slug}/`,
-    provider: {
-      '@type': 'LegalService',
-      name: tokens?.firmName ?? '',
-    },
+    '@id': `https://${domain}/${page.slug}/#office`,
+    name: tokens?.firmName ?? '',
+    url: `https://${domain}/${page.slug}/`,
+    telephone: loc?.officePhone ?? undefined,
+    address,
   }
 }
 
@@ -122,7 +151,8 @@ function buildLocalBusinessSchema(
   return {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    name: resolveTokenString(page.title ?? '', tokens) || tokens?.firmName || '',
+    // ENTITY-1: the firm's name, and no page fallback behind it.
+    name: tokens?.firmName ?? '',
     description: resolveTokenString(page.metaDescription ?? '', tokens) || undefined,
     url: `https://${domain}/${page.slug}/`,
     telephone: loc.officePhone ?? undefined,
@@ -275,22 +305,31 @@ export default async function CatchAllPage({params}: Props) {
 
   const content = (
     <>
-      {/* LegalService schema */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(buildLegalServiceSchema(page, tokens, siteHost())),
-        }}
-      />
+      {/* ENTITY-2 (`BI-PRINCIPLES.md`): a top-level LegalService is emitted ONLY on
+          a location page. It used to be emitted unconditionally here, on every
+          page this route serves, which is why /disclaimer announced a law firm
+          called "Disclaimer". A practice area, a service area, an about page and
+          a general page are all SUBJECTS rather than places of business, and a
+          subject is not a LegalService.
 
-      {/* LocalBusiness schema — location pages only, sits alongside LegalService */}
+          ENTITY-4: one office LegalService, plus the LocalBusiness that carries
+          the office's hours and geo. Both are named for the FIRM (ENTITY-1);
+          their `@id`, url and address are what distinguish this office. */}
       {isLocation && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(buildLocalBusinessSchema(page, tokens, siteHost())),
-          }}
-        />
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(buildOfficeLegalServiceSchema(page, tokens, siteHost())),
+            }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(buildLocalBusinessSchema(page, tokens, siteHost())),
+            }}
+          />
+        </>
       )}
 
       {/* FAQPage schema — only when FAQ items are present */}
