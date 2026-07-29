@@ -26,7 +26,6 @@ describe('root layout generateMetadata — favicon / webclip → icons', () => {
   it('emits icons.icon (with mime type) and icons.apple when both assets resolve', async () => {
     vi.mocked(client.fetch).mockResolvedValue({
       firmName: 'Example Law',
-      primaryDomain: 'example.com',
       faviconUrl: FAVICON_URL,
       faviconMime: 'image/png',
       webclipUrl: WEBCLIP_URL,
@@ -43,7 +42,6 @@ describe('root layout generateMetadata — favicon / webclip → icons', () => {
   it('emits icons.icon without a type when the favicon mime is missing', async () => {
     vi.mocked(client.fetch).mockResolvedValue({
       firmName: 'Example Law',
-      primaryDomain: 'example.com',
       faviconUrl: FAVICON_URL,
       faviconMime: null,
       webclipUrl: null,
@@ -57,7 +55,6 @@ describe('root layout generateMetadata — favicon / webclip → icons', () => {
   it('emits no icons key when neither favicon nor webclip is set', async () => {
     vi.mocked(client.fetch).mockResolvedValue({
       firmName: 'Example Law',
-      primaryDomain: 'example.com',
       faviconUrl: null,
       faviconMime: null,
       webclipUrl: null,

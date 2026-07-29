@@ -23,6 +23,7 @@ import {FeatureGridLayout} from '@/components/attorney/layouts/FeatureGridLayout
 import {PremiumHorizontalLayout} from '@/components/attorney/layouts/PremiumHorizontalLayout'
 import type {Attorney} from '@/components/attorney/types'
 import type {NapTokens} from '@/lib/tokens'
+import {siteHost} from '@/lib/siteHost'
 
 // ─── Static params ────────────────────────────────────────────────────────────
 // Sanity slugs are stored as `attorneys/{name}`; the URL segment is the
@@ -41,7 +42,6 @@ type PageProps = {params: Promise<{slug: string}>}
 type ProfileCta = {label: string; href: string}
 
 const DEFAULT_CTA: ProfileCta = {label: 'Contact Us', href: '/contact/'}
-const DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN ?? 'example.com'
 
 // ─── Schema ───────────────────────────────────────────────────────────────────
 
@@ -55,7 +55,7 @@ function buildPersonSchema(attorney: Attorney, napTokens: NapTokens) {
   const sameAs = [attorney.linkedIn, attorney.avvo, attorney.superLawyers, attorney.findLaw, attorney.martindale, attorney.lawyersCom, attorney.justia]
     .filter((u): u is string => typeof u === 'string' && u.length > 0)
 
-  const url = `https://${DOMAIN}/${attorney.slug}/`
+  const url = `https://${siteHost()}/${attorney.slug}/`
   const photoUrl = hasImage(attorney.photo)
     ? urlForImage(attorney.photo).width(800).height(800).fit('crop').url()
     : undefined
@@ -81,7 +81,7 @@ function buildPersonSchema(attorney: Attorney, napTokens: NapTokens) {
     worksFor: {
       '@type': 'LegalService',
       name: napTokens.firmName ?? '',
-      url: `https://${DOMAIN}/`,
+      url: `https://${siteHost()}/`,
     },
     telephone: attorney.location?.officePhone ?? undefined,
     address,

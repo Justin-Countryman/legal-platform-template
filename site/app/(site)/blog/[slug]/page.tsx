@@ -25,6 +25,7 @@ import {ContentSidebarLayout} from '@/components/layout/ContentSidebarLayout'
 import {Sidebar} from '@/components/layout/Sidebar'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {RelatedPosts, type RelatedPostsData} from '@/components/sections/RelatedPosts'
+import {siteHost} from '@/lib/siteHost'
 
 // ─── Static params ────────────────────────────────────────────────────────────
 // Blog post slugs are stored as `blog/{name}`; the URL segment is the bare
@@ -40,8 +41,6 @@ export async function generateStaticParams() {
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Props = {params: Promise<{slug: string}>}
-
-const DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN ?? 'example.com'
 
 // ─── Schema ───────────────────────────────────────────────────────────────────
 
@@ -61,7 +60,7 @@ function buildArticleSchema(post: unknown, tokens: NapTokens | null) {
     '@type': 'Article',
     headline: resolveTokenString(p.h1 as string | null | undefined, tokens),
     description: resolveTokenString(p.metaDescription as string | null | undefined, tokens),
-    url: `https://${DOMAIN}/${p.slug}/`,
+    url: `https://${siteHost()}/${p.slug}/`,
     datePublished: (p.publishedAt as string | undefined) ?? undefined,
     dateModified: (p.lastModified as string | undefined) ?? (p.publishedAt as string | undefined) ?? undefined,
     author: authorNames.length
@@ -70,7 +69,7 @@ function buildArticleSchema(post: unknown, tokens: NapTokens | null) {
     publisher: {
       '@type': 'Organization',
       name: tokens?.firmName ?? '',
-      url: `https://${DOMAIN}/`,
+      url: `https://${siteHost()}/`,
     },
   }
 }
@@ -210,7 +209,7 @@ export default async function BlogPostPage({params}: Props) {
 
               {/* Left: meta + title + byline */}
               <div className="flex flex-col">
-                <Breadcrumbs items={breadcrumbItems} domain={DOMAIN} />
+                <Breadcrumbs items={breadcrumbItems} domain={siteHost()} />
 
                 <h1 className="mt-6 font-bold leading-tight text-3xl md:text-4xl lg:text-5xl text-foreground">
                   {h1}
@@ -260,7 +259,7 @@ export default async function BlogPostPage({params}: Props) {
           ) : (
             /* Single-column layout when no featured image */
             <div className="max-w-3xl">
-              <Breadcrumbs items={breadcrumbItems} domain={DOMAIN} />
+              <Breadcrumbs items={breadcrumbItems} domain={siteHost()} />
 
               <h1 className="mt-6 font-bold leading-tight text-3xl md:text-4xl lg:text-5xl text-foreground">
                 {h1}

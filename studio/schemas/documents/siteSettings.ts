@@ -29,14 +29,6 @@ export const siteSettings = defineType({
       initialValue: '',
       validation: (Rule) => Rule.required().warning(),
     },
-    {
-      name: 'primaryDomain',
-      title: 'Primary Domain',
-      type: 'string',
-      description: 'No https:// — e.g. example.com',
-      initialValue: '',
-      validation: (Rule) => Rule.required().warning(),
-    },
 
     // ─── Location & Locale ────────────────────────────────────────────────────
     {

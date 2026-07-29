@@ -6,13 +6,15 @@ import {ORGANIZATION_SCHEMA_QUERY, SITE_METADATA_QUERY, SITE_SCRIPTS_QUERY} from
 import {HtmlEmbed} from '@/components/ui/HtmlEmbed'
 import {WebVitals} from '@/components/analytics/WebVitals'
 import './globals.css'
+import {siteOrigin} from '@/lib/siteHost'
 
 // Typography is fully driven at runtime by the active fontPairingPreset (or
 // custom font uploads) in Design Settings — see buildFontCSS in lib/designTokens.
 // When neither path provides fonts, --dynamic-font-* are absent and the CSS
 // chain falls through to the system serif/sans-serif stacks defined in globals.
 //
-// Metadata is generated dynamically from siteSettings (firmName + primaryDomain)
+// Metadata is generated dynamically from siteSettings (firmName). The host is
+// NOT read here: it comes from `siteHost` alone (BI-URL-Architecture HOST-1).
 // so the root shell stays client-agnostic — no hardcoded firm identity here.
 // Per-page generateMetadata() in (site) routes overrides title/description per
 // route; this root metadata supplies the title template, OG siteName, and
@@ -49,8 +51,7 @@ type OrganizationData = {
 
 function buildOrganizationSchema(data: OrganizationData) {
   const firmName = data.firmName ?? ''
-  const domain = data.domain ?? process.env.NEXT_PUBLIC_SITE_DOMAIN ?? 'localhost:3000'
-  const url = `https://${domain}/`
+  const url = `${siteOrigin()}/`
 
   const sameAs = [
     data.socials?.linkedInUrl,
@@ -117,7 +118,6 @@ function buildOrganizationSchema(data: OrganizationData) {
 export async function generateMetadata(): Promise<Metadata> {
   const data = await client.fetch<{
     firmName?: string
-    primaryDomain?: string
     gscVerification?: string | null
   hideFromSearch?: unknown
     faviconUrl?: string | null
@@ -125,7 +125,7 @@ export async function generateMetadata(): Promise<Metadata> {
     webclipUrl?: string | null
   } | null>(SITE_METADATA_QUERY)
   const firmName = data?.firmName ?? 'Site'
-  const domain = data?.primaryDomain ?? process.env.NEXT_PUBLIC_SITE_DOMAIN ?? 'localhost:3000'
+
   // GSC verification token is entered in Sanity (Site Settings) and rendered
   // server-side into <head> — Google's verification crawler does not run JS.
   const gscVerification = data?.gscVerification || undefined
@@ -172,7 +172,7 @@ export async function generateMetadata(): Promise<Metadata> {
     // route sweep in lib/__tests__/titleFallback.test.ts pins that every route
     // does.
     title: {default: firmName, template: titleTemplate(firmName)},
-    metadataBase: new URL(`https://${domain}`),
+    metadataBase: new URL(siteOrigin()),
     ...(icons ? {icons} : {}),
     openGraph: {
       siteName: firmName,

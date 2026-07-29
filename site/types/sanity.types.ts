@@ -374,6 +374,7 @@ export type VideoIndex = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hero?: InternalHero;
   tagline?: string;
@@ -825,6 +826,7 @@ export type TestimonialsPage = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hero?: InternalHero;
   testimonials?: Array<{
@@ -1215,6 +1217,7 @@ export type EventIndex = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hero?: InternalHero;
   sections?: Array<{
@@ -1286,6 +1289,7 @@ export type EventPage = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   eventDate?: string;
   eventEndDate?: string;
@@ -1352,6 +1356,7 @@ export type ReviewPage = {
     [internalGroqTypeReferenceTo]?: "siteForm";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
 };
 
 export type LandingPage = {
@@ -1378,6 +1383,7 @@ export type LandingPage = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hideCtaForm?: boolean;
   campaignForm?: {
@@ -1452,6 +1458,7 @@ export type StaffIndex = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hero?: InternalHero;
   orderedStaff?: Array<{
@@ -1524,6 +1531,7 @@ export type StaffPage = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   firstName?: string;
   lastName?: string;
@@ -1577,6 +1585,7 @@ export type AttorneyIndex = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hero?: InternalHero;
   orderedAttorneys?: Array<{
@@ -1655,6 +1664,7 @@ export type AttorneyPage = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   firstName?: string;
   lastName?: string;
@@ -1754,6 +1764,7 @@ export type LocationPage = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hero?: InternalHero;
   body?: BlockContent;
@@ -1859,6 +1870,7 @@ export type BlogPost = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   h1?: string;
   body?: BlockContent;
@@ -1990,6 +2002,7 @@ export type BlogCategory = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   h1?: string;
   tagline?: string;
@@ -2022,6 +2035,7 @@ export type BlogIndex = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hero?: InternalHero;
   sections?: Array<{
@@ -2099,6 +2113,7 @@ export type FaqPage = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hero?: InternalHero;
   body?: BlockContent;
@@ -2201,6 +2216,7 @@ export type ContactPage = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   showHero?: boolean;
   hero?: InternalHero;
@@ -2291,6 +2307,7 @@ export type ServiceAreaIndex = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hero?: InternalHero;
   tagline?: string;
@@ -2371,6 +2388,7 @@ export type ServiceAreaPage = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hero?: InternalHero;
   body?: BlockContent;
@@ -2479,6 +2497,7 @@ export type GeoPracticeArea = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hero?: InternalHero;
   body?: BlockContent;
@@ -2592,6 +2611,7 @@ export type GeneralPage = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hero?: InternalHero;
   body?: BlockContent;
@@ -2664,6 +2684,7 @@ export type AboutPage = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hero?: InternalHero;
   body?: BlockContent;
@@ -2763,6 +2784,7 @@ export type HomePage = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hero?: HomeHeroContent;
   reviewsEmbed?: string;
@@ -2858,6 +2880,7 @@ export type PracticeArea = {
     _type: "image";
   };
   noIndex?: boolean;
+  noFollow?: boolean;
   canonicalUrl?: string;
   hero?: InternalHero;
   body?: BlockContent;
@@ -3248,7 +3271,6 @@ export type SiteSettings = {
   _rev: string;
   firmName?: string;
   firmNameShort?: string;
-  primaryDomain?: string;
   primaryLocation?: {
     _ref: string;
     _type: "reference";
@@ -3262,6 +3284,7 @@ export type SiteSettings = {
   cookiesUrl?: string;
   resultsDisclaimer?: string;
   cookieBannerText?: string;
+  hideFromSearch?: boolean;
   gscVerification?: string;
   scriptsNoConsent?: string;
   scriptsRequireConsent?: string;
@@ -3462,11 +3485,11 @@ export type TESTIMONIAL_FIELDS_FRAGMENTResult = {
 // Query: [defined(@->_id)]->{  _id,  _type,  name,  tagline,  heading,  description,  layout,  sectionLayout,  gridMode,  mobileDisplay,  cardStyle,  hoverEffects,  showArrow,  iconPosition,  mode,  reviewsEmbed,  footerHeading,  footerDescription,  "appearance": {    "surface": surface,    "spacing": spacing,    "backgroundImage": sectionBackgroundImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}  },  // practiceAreaNav (silo nav): resolve each item's page reference to an href +  // auto-pulled title/description, with per-item overrides; or auto-list all  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").  "items": select(    _type == "practiceAreaNav" && mode == "allTopLevel" =>      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{        "_key": _id,        "label": title,        "href": "/" + slug.current + "/",        "description": metaDescription,        "icon": null,        "image": null,        "featured": false      } | order(title asc),    _type == "practiceAreaNav" =>      items[defined(page->slug.current)]{        _key,        "label": coalesce(label, page->title),        "href": "/" + page->slug.current + "/",        "description": coalesce(description, page->metaDescription),        "icon": icon {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "featured": featured      }  ),  "buttons": buttons[]{title, url, variant},  "footerButton": footerButton{title, url, variant},  "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  "testimonials": testimonials[defined(@->_id)]->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "testimonial": testimonial->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "questions": questions[defined(@->_id)]->{    question,    "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    category,    "slug": slug.current,    tags  },  "badges": badges[defined(@->_id)]->{    "src": image.asset->url,    "alt": image.alt,    "width": image.asset->metadata.dimensions.width,    "height": image.asset->metadata.dimensions.height  },  "orderedAttorneyIds": select(    mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,    null  ),  "attorneys": select(    mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'manual' => attorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    []  ),  "videos": videos[defined(@->_id)]->{    _id, title, youTubeUrl, description, videoType  }}
 export type SECTIONS_FRAGMENTResult = Array<never>;
 // Variable: SITE_METADATA_QUERY
-// Query: *[_type == "siteSettings"][0]{    firmName,    primaryDomain,    gscVerification,    "faviconUrl":  *[_type == "designSettings"][0].favicon.asset->url,    "faviconMime": *[_type == "designSettings"][0].favicon.asset->mimeType,    "webclipUrl":  *[_type == "designSettings"][0].webclipImage.asset->url,  }
+// Query: *[_type == "siteSettings"][0]{    firmName,    gscVerification,    hideFromSearch,    "faviconUrl":  *[_type == "designSettings"][0].favicon.asset->url,    "faviconMime": *[_type == "designSettings"][0].favicon.asset->mimeType,    "webclipUrl":  *[_type == "designSettings"][0].webclipImage.asset->url,  }
 export type SITE_METADATA_QUERYResult = {
   firmName: string | null;
-  primaryDomain: string | null;
   gscVerification: string | null;
+  hideFromSearch: boolean | null;
   faviconUrl: string | null;
   faviconMime: string | null;
   webclipUrl: string | null;
@@ -3482,10 +3505,9 @@ export type OG_DATA_QUERYResult = {
   primaryColor: string | null;
 };
 // Variable: ORGANIZATION_SCHEMA_QUERY
-// Query: {  "firmName": *[_type == "siteSettings"][0].firmName,  "domain":   *[_type == "siteSettings"][0].primaryDomain,  "logo":     *[_type == "designSettings"][0].logoOnLight.asset->url,  "address":  *[_type == "siteSettings"][0].primaryLocation->{      "address1": select(locationType in ["Physical", "Shared"] => address1, null),  "address2": select(locationType in ["Physical", "Shared"] => address2, null),  "address3": select(locationType in ["Physical", "Shared"] => address3, null),  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),    city,    state,    officePhone,    tollFreePhone  },  "socials":  *[_type == "footerSettings"][0]{    facebookUrl,    instagramUrl,    twitterUrl,    linkedInUrl,    youTubeUrl,    avvoUrl,    justiaUrl,    findLawUrl,    martindaleUrl,    lawyersComUrl,    yelpUrl,    superLawyersUrl,    lawInfoUrl  }}
+// Query: {  "firmName": *[_type == "siteSettings"][0].firmName,  "logo":     *[_type == "designSettings"][0].logoOnLight.asset->url,  "address":  *[_type == "siteSettings"][0].primaryLocation->{      "address1": select(locationType in ["Physical", "Shared"] => address1, null),  "address2": select(locationType in ["Physical", "Shared"] => address2, null),  "address3": select(locationType in ["Physical", "Shared"] => address3, null),  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),    city,    state,    officePhone,    tollFreePhone  },  "socials":  *[_type == "footerSettings"][0]{    facebookUrl,    instagramUrl,    twitterUrl,    linkedInUrl,    youTubeUrl,    avvoUrl,    justiaUrl,    findLawUrl,    martindaleUrl,    lawyersComUrl,    yelpUrl,    superLawyersUrl,    lawInfoUrl  }}
 export type ORGANIZATION_SCHEMA_QUERYResult = {
   firmName: string | null;
-  domain: string | null;
   logo: string | null;
   address: {
     address1: string | null;
@@ -3532,9 +3554,9 @@ export type EVENT_SLUGS_QUERYResult = Array<string | null>;
 // Query: *[_type == "reviewPage" && !(_id in path("drafts.**")) && defined(slug.current)].slug.current
 export type REVIEW_SLUGS_QUERYResult = Array<string | null>;
 // Variable: SITEMAP_QUERY
-// Query: {  "domain": *[_type == "siteSettings"][0].primaryDomain,  "home":             *[_type == "homePage"][0]{_updatedAt},  "attorneyIndex":    *[_type == "attorneyIndex"][0]{_updatedAt},  "staffIndex":       *[_type == "staffIndex"][0]{_updatedAt},  "blogIndex":        *[_type == "blogIndex"][0]{_updatedAt},  "eventIndex":       *[_type == "eventIndex"][0]{_updatedAt},  "serviceAreaIndex": *[_type == "serviceAreaIndex"][0]{_updatedAt},  "videoIndex":       *[_type == "videoIndex" && coalesce(noIndex, false) == false][0]{_updatedAt},  "testimonials":     *[_type == "testimonialsPage"][0]{_updatedAt},  "attorneys":        *[_type == "attorneyPage" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "staff":            *[_type == "staffPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "blogPosts":        *[_type == "blogPost"     && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "blogCategories":   *[_type == "blogCategory" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "events":           *[_type == "eventPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "catchAll":         *[    _type in ["practiceArea","locationPage","geoPracticeArea","generalPage","landingPage","aboutPage","faqPage","serviceAreaPage"]    && !(_id in path("drafts.**"))    && coalesce(noIndex, false) == false    && defined(slug.current)  ]{"slug": slug.current, _updatedAt}}
+// Query: {  "hideFromSearch": *[_type == "siteSettings"][0].hideFromSearch,  "home":             *[_type == "homePage"][0]{_updatedAt},  "attorneyIndex":    *[_type == "attorneyIndex"][0]{_updatedAt},  "staffIndex":       *[_type == "staffIndex"][0]{_updatedAt},  "blogIndex":        *[_type == "blogIndex"][0]{_updatedAt},  "eventIndex":       *[_type == "eventIndex"][0]{_updatedAt},  "serviceAreaIndex": *[_type == "serviceAreaIndex"][0]{_updatedAt},  "videoIndex":       *[_type == "videoIndex" && coalesce(noIndex, false) == false][0]{_updatedAt},  "testimonials":     *[_type == "testimonialsPage"][0]{_updatedAt},  "attorneys":        *[_type == "attorneyPage" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "staff":            *[_type == "staffPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "blogPosts":        *[_type == "blogPost"     && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "blogCategories":   *[_type == "blogCategory" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "events":           *[_type == "eventPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "catchAll":         *[    _type in ["practiceArea","locationPage","geoPracticeArea","generalPage","landingPage","aboutPage","faqPage","serviceAreaPage"]    && !(_id in path("drafts.**"))    && coalesce(noIndex, false) == false    && defined(slug.current)  ]{"slug": slug.current, _updatedAt}}
 export type SITEMAP_QUERYResult = {
-  domain: string | null;
+  hideFromSearch: boolean | null;
   home: {
     _updatedAt: string;
   } | null;
@@ -4111,6 +4133,30 @@ export type NAP_TOKENS_QUERYResult = {
 // Variable: CANVAS_FRAGMENT
 // Query: []{  _type,  _key,  _type == "attorneyHighlightBlock" => {    tagline,    heading,    mode,    // 'all' reads the Attorney Index order so the homepage row matches the    // attorney index and the header nav; 'manual' uses the block's own order.    "attorneys": select(      mode == "manual" => attorneys[defined(@->_id)]->{        _id,        // Built from the name fields, NOT from title. Zite's displayName carries        // the firm suffix, so title reads "Joseph Dudley - Firm, P.A." and would        // render that on an attorney card. The platform already ruled that        // display names build from name fields (_format_display_name); h1 wins        // when an operator has set one. No backticks in here: this comment sits        // inside a groq template literal and a backtick would close it.        "name": coalesce(h1, firstName + " " + lastName),        jobTitle,        "href": "/" + slug.current,        "photo": {          "src": photo.asset->url,          "alt": photo.alt,          "width": photo.asset->metadata.dimensions.width,          "height": photo.asset->metadata.dimensions.height        }      },      *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{        _id,        // Built from the name fields, NOT from title. Zite's displayName carries        // the firm suffix, so title reads "Joseph Dudley - Firm, P.A." and would        // render that on an attorney card. The platform already ruled that        // display names build from name fields (_format_display_name); h1 wins        // when an operator has set one. No backticks in here: this comment sits        // inside a groq template literal and a backtick would close it.        "name": coalesce(h1, firstName + " " + lastName),        jobTitle,        "href": "/" + slug.current,        "photo": {          "src": photo.asset->url,          "alt": photo.alt,          "width": photo.asset->metadata.dimensions.width,          "height": photo.asset->metadata.dimensions.height        }      }    )  },  _type == "caseResultsBlock" => {    heading,    intro,    "caseResults": caseResults[defined(@->_id)]->{      _id, amount, caseType, caption, year    },    "ctaButton": ctaButton{title, url, variant}  },  _type == "narrativeBlock" => {    heading,    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "image": {      "src": image.asset->url,      "alt": image.alt,      "width": image.asset->metadata.dimensions.width,      "height": image.asset->metadata.dimensions.height    },    "ctaButton": ctaButton{title, url, variant},    "internalLinks": internalLinks[defined(page->slug.current)]{      _key,      anchorText,      "href": "/" + page->slug.current + "/"    }  },  _type == "differentiatorBlock" => {    heading,    intro,    "differentiators": differentiators[]{_key, title, body}  },  _type == "badgesBlock" => {    heading,    description,    "badges": badges[defined(@->_id)]->{      "src": image.asset->url,      "alt": image.alt,      "width": image.asset->metadata.dimensions.width,      "height": image.asset->metadata.dimensions.height    }  }}
 export type CANVAS_FRAGMENTResult = Array<never>;
+// Variable: AREAS_OF_LAW_FRAGMENT
+// Query: *[  _type == "practiceArea" && !defined(parentPage) && defined(slug.current)].title
+export type AREAS_OF_LAW_FRAGMENTResult = Array<string | null>;
+// Variable: HOME_METADATA_QUERY
+// Query: {  "seoTitle": *[_type == "homePage"][0].seoTitle,  "ogImage": *[_type == "homePage"][0].ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  "areasOfLaw": *[  _type == "practiceArea" && !defined(parentPage) && defined(slug.current)].title}
+export type HOME_METADATA_QUERYResult = {
+  seoTitle: string | null;
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
+  areasOfLaw: Array<string | null>;
+};
 // Variable: HOME_QUERY
 // Query: *[_type == "homePage"][0]{    "hero": hero {  heading,  eyebrow,  description,  "buttons": buttons[]{title, url, variant}},    "canvas": canvas []{  _type,  _key,  _type == "attorneyHighlightBlock" => {    tagline,    heading,    mode,    // 'all' reads the Attorney Index order so the homepage row matches the    // attorney index and the header nav; 'manual' uses the block's own order.    "attorneys": select(      mode == "manual" => attorneys[defined(@->_id)]->{        _id,        // Built from the name fields, NOT from title. Zite's displayName carries        // the firm suffix, so title reads "Joseph Dudley - Firm, P.A." and would        // render that on an attorney card. The platform already ruled that        // display names build from name fields (_format_display_name); h1 wins        // when an operator has set one. No backticks in here: this comment sits        // inside a groq template literal and a backtick would close it.        "name": coalesce(h1, firstName + " " + lastName),        jobTitle,        "href": "/" + slug.current,        "photo": {          "src": photo.asset->url,          "alt": photo.alt,          "width": photo.asset->metadata.dimensions.width,          "height": photo.asset->metadata.dimensions.height        }      },      *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{        _id,        // Built from the name fields, NOT from title. Zite's displayName carries        // the firm suffix, so title reads "Joseph Dudley - Firm, P.A." and would        // render that on an attorney card. The platform already ruled that        // display names build from name fields (_format_display_name); h1 wins        // when an operator has set one. No backticks in here: this comment sits        // inside a groq template literal and a backtick would close it.        "name": coalesce(h1, firstName + " " + lastName),        jobTitle,        "href": "/" + slug.current,        "photo": {          "src": photo.asset->url,          "alt": photo.alt,          "width": photo.asset->metadata.dimensions.width,          "height": photo.asset->metadata.dimensions.height        }      }    )  },  _type == "caseResultsBlock" => {    heading,    intro,    "caseResults": caseResults[defined(@->_id)]->{      _id, amount, caseType, caption, year    },    "ctaButton": ctaButton{title, url, variant}  },  _type == "narrativeBlock" => {    heading,    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "image": {      "src": image.asset->url,      "alt": image.alt,      "width": image.asset->metadata.dimensions.width,      "height": image.asset->metadata.dimensions.height    },    "ctaButton": ctaButton{title, url, variant},    "internalLinks": internalLinks[defined(page->slug.current)]{      _key,      anchorText,      "href": "/" + page->slug.current + "/"    }  },  _type == "differentiatorBlock" => {    heading,    intro,    "differentiators": differentiators[]{_key, title, body}  },  _type == "badgesBlock" => {    heading,    description,    "badges": badges[defined(@->_id)]->{      "src": image.asset->url,      "alt": image.alt,      "width": image.asset->metadata.dimensions.width,      "height": image.asset->metadata.dimensions.height    }  }},    // Site-level, projected alongside the canvas rather than fetched separately:    // the same one-liner any other page rendering case results will need. Raw    // and nullable here; resolveResultsDisclaimer() supplies the floor.    "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer,    // Beat 9 is a BOOKEND sourced from the globalCta singleton with this page's    // ctaFormOverride layered on top, exactly as every interior page does it.    // Both were missing here: the homepage rendered no CTA at all and    // ctaFormOverride was projected by twelve interior queries and not this one,    // which left homePage.hideCtaForm and ctaFormOverride inert (item 53).    "hideCtaForm": hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}},    // The coda bookend's text. Lives on homePage because it closes THIS page's    // arc; see the schema for why globalCta and siteSettings were both wrong.    codaLine,    "sections": sections [defined(@->_id)]->{  _id,  _type,  name,  tagline,  heading,  description,  layout,  sectionLayout,  gridMode,  mobileDisplay,  cardStyle,  hoverEffects,  showArrow,  iconPosition,  mode,  reviewsEmbed,  footerHeading,  footerDescription,  "appearance": {    "surface": surface,    "spacing": spacing,    "backgroundImage": sectionBackgroundImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}  },  // practiceAreaNav (silo nav): resolve each item's page reference to an href +  // auto-pulled title/description, with per-item overrides; or auto-list all  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").  "items": select(    _type == "practiceAreaNav" && mode == "allTopLevel" =>      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{        "_key": _id,        "label": title,        "href": "/" + slug.current + "/",        "description": metaDescription,        "icon": null,        "image": null,        "featured": false      } | order(title asc),    _type == "practiceAreaNav" =>      items[defined(page->slug.current)]{        _key,        "label": coalesce(label, page->title),        "href": "/" + page->slug.current + "/",        "description": coalesce(description, page->metaDescription),        "icon": icon {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "featured": featured      }  ),  "buttons": buttons[]{title, url, variant},  "footerButton": footerButton{title, url, variant},  "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  "testimonials": testimonials[defined(@->_id)]->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "testimonial": testimonial->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "questions": questions[defined(@->_id)]->{    question,    "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    category,    "slug": slug.current,    tags  },  "badges": badges[defined(@->_id)]->{    "src": image.asset->url,    "alt": image.alt,    "width": image.asset->metadata.dimensions.width,    "height": image.asset->metadata.dimensions.height  },  "orderedAttorneyIds": select(    mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,    null  ),  "attorneys": select(    mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'manual' => attorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    []  ),  "videos": videos[defined(@->_id)]->{    _id, title, youTubeUrl, description, videoType  }}  }
 export type HOME_QUERYResult = {
@@ -4816,11 +4862,28 @@ export type HOME_QUERYResult = {
   }> | null;
 } | null;
 // Variable: CONTACT_PAGE_QUERY
-// Query: *[_type == "contactPage"][0]{    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    "showHero": coalesce(showHero, true),    "hero": hero {  heading,    description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  scrimStyleOverride,  scrimColorOverride,  scrimDirectionOverride,  sectionBackgroundNone,  "sectionBackgroundImage": sectionBackgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }},    tagline,    heading,    description,    "formEmbed": contactForm->formEmbed  }
+// Query: *[_type == "contactPage"][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    "title": coalesce(title, "Contact"),    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    "showHero": coalesce(showHero, true),    "hero": hero {  heading,    description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  scrimStyleOverride,  scrimColorOverride,  scrimDirectionOverride,  sectionBackgroundNone,  "sectionBackgroundImage": sectionBackgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }},    tagline,    heading,    description,    "formEmbed": contactForm->formEmbed  }
 export type CONTACT_PAGE_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
+  title: string | "Contact";
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   showHero: boolean | true;
   hero: {
@@ -4879,11 +4942,27 @@ export type CONTACT_PAGE_QUERYResult = {
   formEmbed: string | null;
 } | null;
 // Variable: TESTIMONIALS_PAGE_QUERY
-// Query: *[_type == "testimonialsPage"][0]{    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    "hero": hero {  heading,    description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  scrimStyleOverride,  scrimColorOverride,  scrimDirectionOverride,  sectionBackgroundNone,  "sectionBackgroundImage": sectionBackgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }},    "title": coalesce(hero.heading, title, "Testimonials"),    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}},    "testimonials": testimonials[defined(@->_id)]->{      _id,      quote,      name,      caseType,      numberOfStars,      "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    }  }
+// Query: *[_type == "testimonialsPage"][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    "hero": hero {  heading,    description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  scrimStyleOverride,  scrimColorOverride,  scrimDirectionOverride,  sectionBackgroundNone,  "sectionBackgroundImage": sectionBackgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }},    "title": coalesce(hero.heading, title, "Testimonials"),    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}},    "testimonials": testimonials[defined(@->_id)]->{      _id,      quote,      name,      caseType,      numberOfStars,      "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    }  }
 export type TESTIMONIALS_PAGE_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   hero: {
     heading: string | null;
@@ -4971,12 +5050,28 @@ export type TESTIMONIALS_PAGE_QUERYResult = {
   }> | null;
 } | null;
 // Variable: ATTORNEY_INDEX_QUERY
-// Query: *[_type == "attorneyIndex"][0]{    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    "hero": hero{      "heading": coalesce(heading, "Our Attorneys"),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "title": coalesce(hero.heading, "Our Attorneys"),    tagline,    heading,    description,    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}},    "orderedAttorneys": orderedAttorneys[defined(@->_id)]->{      _id,      "slug": slug.current,      firstName,      middleName,      lastName,      suffix,      h1,      jobTitle,      linkedIn,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},      "practiceAreas": practiceAreas[]{        label,        "slug": page->slug.current      }    }  }
+// Query: *[_type == "attorneyIndex"][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    "hero": hero{      "heading": coalesce(heading, "Our Attorneys"),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "title": coalesce(hero.heading, "Our Attorneys"),    tagline,    heading,    description,    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}},    "orderedAttorneys": orderedAttorneys[defined(@->_id)]->{      _id,      "slug": slug.current,      firstName,      middleName,      lastName,      suffix,      h1,      jobTitle,      linkedIn,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},      "practiceAreas": practiceAreas[]{        label,        "slug": page->slug.current      }    }  }
 export type ATTORNEY_INDEX_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   hero: {
     heading: string | "Our Attorneys";
@@ -5091,12 +5186,28 @@ export type ATTORNEY_PAGES_QUERYResult = Array<{
   }> | null;
 }>;
 // Variable: STAFF_INDEX_QUERY
-// Query: *[_type == "staffIndex"][0]{    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    "hero": hero{      "heading": coalesce(heading, "Our Team"),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "title": coalesce(hero.heading, "Our Team"),    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}},    "orderedStaff": orderedStaff[defined(@->_id)]->{      _id,      "slug": slug.current,      firstName,      lastName,      jobTitle,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    }  }
+// Query: *[_type == "staffIndex"][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    "hero": hero{      "heading": coalesce(heading, "Our Team"),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "title": coalesce(hero.heading, "Our Team"),    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}},    "orderedStaff": orderedStaff[defined(@->_id)]->{      _id,      "slug": slug.current,      firstName,      lastName,      jobTitle,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    }  }
 export type STAFF_INDEX_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   hero: {
     heading: string | "Our Team";
@@ -5192,12 +5303,28 @@ export type STAFF_PAGES_QUERYResult = Array<{
   } | null;
 }>;
 // Variable: STAFF_PAGE_QUERY
-// Query: *[_type == "staffPage" && slug.current == $slug][0]{    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    firstName,    lastName,    jobTitle,    email,    phone,    "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    "biography": biography []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "location": location->{      city,      address1,      address2,      address3,      state,      zip,      officePhone    },    hideCtaForm,    "ctaFormOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
+// Query: *[_type == "staffPage" && slug.current == $slug][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    firstName,    lastName,    jobTitle,    email,    phone,    "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    "biography": biography []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "location": location->{      city,      address1,      address2,      address3,      state,      zip,      officePhone    },    hideCtaForm,    "ctaFormOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
 export type STAFF_PAGE_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   firstName: string | null;
   lastName: string | null;
@@ -5296,12 +5423,28 @@ export type STAFF_PAGE_QUERYResult = {
   } | null;
 } | null;
 // Variable: SERVICE_AREA_INDEX_QUERY
-// Query: *[_type == "serviceAreaIndex"][0]{    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    "hero": hero{      "heading": coalesce(heading, "Service Area"),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "title": coalesce(hero.heading, title, "Service Area"),    tagline,    heading,    description,    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
+// Query: *[_type == "serviceAreaIndex"][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    "hero": hero{      "heading": coalesce(heading, "Service Area"),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "title": coalesce(hero.heading, title, "Service Area"),    tagline,    heading,    description,    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
 export type SERVICE_AREA_INDEX_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   hero: {
     heading: string | "Service Area";
@@ -5355,18 +5498,34 @@ export type SERVICE_AREA_INDEX_QUERYResult = {
   } | null;
 } | null;
 // Variable: SERVICE_AREA_PAGES_QUERY
-// Query: *[_type == "serviceAreaPage"] | order(title asc) {    "slug": slug.current,    "displayName": coalesce(hero.heading, title),  }
+// Query: *[_type == "serviceAreaPage"] | order(title asc) {    "slug": slug.current,    title,  }
 export type SERVICE_AREA_PAGES_QUERYResult = Array<{
   slug: string | null;
-  displayName: string | null;
+  title: string | null;
 }>;
 // Variable: ATTORNEY_PAGE_QUERY
-// Query: *[_type == "attorneyPage" && slug.current == $slug][0]{    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    firstName,    middleName,    lastName,    suffix,    h1,    jobTitle,    "ctaOverride": ctaOverride{label, url},    "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    email,    showEmail,    showLocations,    linkedIn,    avvo,    superLawyers,    findLaw,    martindale,    lawyersCom,    justia,    "fullBiography": fullBiography []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "practiceAreas": practiceAreas[]{      label,      "slug": page->slug.current    },    "location": location->{      address1,      city,      state,      zip,      officePhone,      tollFreePhone    },    yearAdmittedToBar,    "barAdmissions": barAdmissions []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "stateBarAdmissions": stateBarAdmissions []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "educationDegrees": educationDegrees []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "certifiedLegalSpecialties": certifiedLegalSpecialties []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "honors": honors []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "professionalAssociations": professionalAssociations []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "proBonoActivities": proBonoActivities []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "publications": publications []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "presentationsSeminars": presentationsSeminars []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "representativeCases": representativeCases []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "pastPositions": pastPositions []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "videos": videos[defined(@->_id)]->{      _id, title, youTubeUrl, description, videoType    },    hideCtaForm,    "ctaFormOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
+// Query: *[_type == "attorneyPage" && slug.current == $slug][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    firstName,    middleName,    lastName,    suffix,    h1,    jobTitle,    "ctaOverride": ctaOverride{label, url},    "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    email,    showEmail,    showLocations,    linkedIn,    avvo,    superLawyers,    findLaw,    martindale,    lawyersCom,    justia,    "fullBiography": fullBiography []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "practiceAreas": practiceAreas[]{      label,      "slug": page->slug.current    },    "location": location->{      address1,      city,      state,      zip,      officePhone,      tollFreePhone    },    yearAdmittedToBar,    "barAdmissions": barAdmissions []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "stateBarAdmissions": stateBarAdmissions []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "educationDegrees": educationDegrees []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "certifiedLegalSpecialties": certifiedLegalSpecialties []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "honors": honors []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "professionalAssociations": professionalAssociations []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "proBonoActivities": proBonoActivities []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "publications": publications []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "presentationsSeminars": presentationsSeminars []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "representativeCases": representativeCases []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "pastPositions": pastPositions []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "videos": videos[defined(@->_id)]->{      _id, title, youTubeUrl, description, videoType    },    hideCtaForm,    "ctaFormOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
 export type ATTORNEY_PAGE_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   firstName: string | null;
   middleName: string | null;
@@ -6096,13 +6255,1865 @@ export type ATTORNEY_PAGE_QUERYResult = {
   } | null;
 } | null;
 // Variable: PRACTICE_AREA_QUERY
-// Query: *[_type in ["practiceArea", "geoPracticeArea", "serviceAreaPage"] && slug.current == $slug][0]{    title,    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    "parentPage": parentPage->{      title,      "slug": slug.current,      "parentPage": parentPage->{        title,        "slug": slug.current      }    },    "hero": hero {      "heading": coalesce(heading, ^.title),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "faqItems": faqItems[defined(@->_id)]->{      question,      "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},      category,      "slug": slug.current,      tags    },    sidebar[]{  _type,  _key,  _type == "sidebarTableOfContents" => {    "_componentType": "sidebarTableOfContents"  },  _type == "reference" => @->{    "_componentType": _type,    name,    header,    description,    mode,    layout,    postCount,    "formEmbed": form->formEmbed,    tagline,    supportingText1,    supportingText2,    phoneNumber,    "button": button{title, url, variant},    "orderedAolIds": *[_type == "mainNavigation"][0]      .items[_type == "navItemPracticeAreas"][0]      .practiceAreaOrder[]._ref,    "areasOfLaw": *[      _type == "practiceArea" && !defined(parentPage) && defined(slug.current)    ]{      _id,      "slug": slug.current,      title,      "children": *[        _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)      ]{        _id,        "slug": slug.current,        title,        "grandchildren": *[          _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)        ]{          "slug": slug.current,          title,        } | order(title asc),      } | order(title asc),    },    "orderedAttorneyIds": select(      mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,      null    ),    "attorneys": select(      mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      attorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}}    ),    "links": links[defined(@->_id)]->{      _id,      _type,      "slug": slug.current,      title    }  }},    "sections": sections [defined(@->_id)]->{  _id,  _type,  name,  tagline,  heading,  description,  layout,  sectionLayout,  gridMode,  mobileDisplay,  cardStyle,  hoverEffects,  showArrow,  iconPosition,  mode,  reviewsEmbed,  footerHeading,  footerDescription,  "appearance": {    "surface": surface,    "spacing": spacing,    "backgroundImage": sectionBackgroundImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}  },  // practiceAreaNav (silo nav): resolve each item's page reference to an href +  // auto-pulled title/description, with per-item overrides; or auto-list all  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").  "items": select(    _type == "practiceAreaNav" && mode == "allTopLevel" =>      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{        "_key": _id,        "label": title,        "href": "/" + slug.current + "/",        "description": metaDescription,        "icon": null,        "image": null,        "featured": false      } | order(title asc),    _type == "practiceAreaNav" =>      items[defined(page->slug.current)]{        _key,        "label": coalesce(label, page->title),        "href": "/" + page->slug.current + "/",        "description": coalesce(description, page->metaDescription),        "icon": icon {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "featured": featured      }  ),  "buttons": buttons[]{title, url, variant},  "footerButton": footerButton{title, url, variant},  "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  "testimonials": testimonials[defined(@->_id)]->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "testimonial": testimonial->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "questions": questions[defined(@->_id)]->{    question,    "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    category,    "slug": slug.current,    tags  },  "badges": badges[defined(@->_id)]->{    "src": image.asset->url,    "alt": image.alt,    "width": image.asset->metadata.dimensions.width,    "height": image.asset->metadata.dimensions.height  },  "orderedAttorneyIds": select(    mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,    null  ),  "attorneys": select(    mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'manual' => attorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    []  ),  "videos": videos[defined(@->_id)]->{    _id, title, youTubeUrl, description, videoType  }},    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
+// Query: *[_type in ["practiceArea", "geoPracticeArea", "serviceAreaPage"] && slug.current == $slug][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    _type,    title,    "areasOfLaw": *[  _type == "practiceArea" && !defined(parentPage) && defined(slug.current)].title,    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    "parentPage": parentPage->{      title,      "slug": slug.current,      "parentPage": parentPage->{        title,        "slug": slug.current      }    },    "hero": hero {      "heading": coalesce(heading, ^.title),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "faqItems": faqItems[defined(@->_id)]->{      question,      "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},      category,      "slug": slug.current,      tags    },    sidebar[]{  _type,  _key,  _type == "sidebarTableOfContents" => {    "_componentType": "sidebarTableOfContents"  },  _type == "reference" => @->{    "_componentType": _type,    name,    header,    description,    mode,    layout,    postCount,    "formEmbed": form->formEmbed,    tagline,    supportingText1,    supportingText2,    phoneNumber,    "button": button{title, url, variant},    "orderedAolIds": *[_type == "mainNavigation"][0]      .items[_type == "navItemPracticeAreas"][0]      .practiceAreaOrder[]._ref,    "areasOfLaw": *[      _type == "practiceArea" && !defined(parentPage) && defined(slug.current)    ]{      _id,      "slug": slug.current,      title,      "children": *[        _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)      ]{        _id,        "slug": slug.current,        title,        "grandchildren": *[          _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)        ]{          "slug": slug.current,          title,        } | order(title asc),      } | order(title asc),    },    "orderedAttorneyIds": select(      mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,      null    ),    "attorneys": select(      mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      attorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}}    ),    "links": links[defined(@->_id)]->{      _id,      _type,      "slug": slug.current,      title    }  }},    "sections": sections [defined(@->_id)]->{  _id,  _type,  name,  tagline,  heading,  description,  layout,  sectionLayout,  gridMode,  mobileDisplay,  cardStyle,  hoverEffects,  showArrow,  iconPosition,  mode,  reviewsEmbed,  footerHeading,  footerDescription,  "appearance": {    "surface": surface,    "spacing": spacing,    "backgroundImage": sectionBackgroundImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}  },  // practiceAreaNav (silo nav): resolve each item's page reference to an href +  // auto-pulled title/description, with per-item overrides; or auto-list all  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").  "items": select(    _type == "practiceAreaNav" && mode == "allTopLevel" =>      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{        "_key": _id,        "label": title,        "href": "/" + slug.current + "/",        "description": metaDescription,        "icon": null,        "image": null,        "featured": false      } | order(title asc),    _type == "practiceAreaNav" =>      items[defined(page->slug.current)]{        _key,        "label": coalesce(label, page->title),        "href": "/" + page->slug.current + "/",        "description": coalesce(description, page->metaDescription),        "icon": icon {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "featured": featured      }  ),  "buttons": buttons[]{title, url, variant},  "footerButton": footerButton{title, url, variant},  "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  "testimonials": testimonials[defined(@->_id)]->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "testimonial": testimonial->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "questions": questions[defined(@->_id)]->{    question,    "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    category,    "slug": slug.current,    tags  },  "badges": badges[defined(@->_id)]->{    "src": image.asset->url,    "alt": image.alt,    "width": image.asset->metadata.dimensions.width,    "height": image.asset->metadata.dimensions.height  },  "orderedAttorneyIds": select(    mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,    null  ),  "attorneys": select(    mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'manual' => attorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    []  ),  "videos": videos[defined(@->_id)]->{    _id, title, youTubeUrl, description, videoType  }},    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
 export type PRACTICE_AREA_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
+  _type: "geoPracticeArea";
   title: string | null;
+  areasOfLaw: Array<string | null>;
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
+  canonicalUrl: string | null;
+  parentPage: {
+    title: string | null;
+    slug: string | null;
+    parentPage: {
+      title: string | null;
+      slug: string | null;
+    } | null;
+  } | null;
+  hero: {
+    heading: string | null;
+    description: string | null;
+    buttons: Array<{
+      title: string | null;
+      url: string | null;
+      variant: "link" | "primary" | "secondary" | null;
+    }> | null;
+    buttonsNone: boolean | null;
+    schemeOverride: "dark" | "inherit" | "light" | null;
+    backgroundNone: boolean | null;
+    foregroundNone: boolean | null;
+    scrimOpacityOverride: number | null;
+    backgroundImage: {
+      src: string | null;
+      alt: string | null;
+      fit: "cover" | "tile" | null;
+      hotspot: {
+        x: number | null;
+        y: number | null;
+      } | null;
+      width: number | null;
+      height: number | null;
+    } | null;
+    foregroundImage: {
+      src: string | null;
+      alt: string | null;
+      hotspot: {
+        x: number | null;
+        y: number | null;
+      } | null;
+      width: number | null;
+      height: number | null;
+    } | null;
+  } | null;
+  body: Array<{
+    _type: "block";
+    _key: string;
+    style: "blockquote" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal" | null;
+    markDefs: Array<{
+      tokenKey?: string;
+      _type: "contentToken";
+      _key: string;
+    } | {
+      href?: string;
+      blank?: boolean;
+      _type: "link";
+      _key: string;
+    }> | null;
+    children: Array<{
+      _key: string;
+    } & ContentToken | {
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }> | null;
+    listItem: "bullet" | "number" | null;
+    level: number | null;
+  } | {
+    _type: "image";
+    _key: string;
+    style: null;
+    markDefs: null;
+    children: null;
+    listItem: null;
+    level: null;
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    caption: string | null;
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | {
+    _type: "officeHours";
+    _key: string;
+    style: null;
+    markDefs: null;
+    children: null;
+    listItem: null;
+    level: null;
+    title: string | null;
+  }> | null;
+  faqItems: Array<{
+    question: string | null;
+    answer: Array<{
+      _type: "block";
+      _key: string;
+      style: "blockquote" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal" | null;
+      markDefs: Array<{
+        tokenKey?: string;
+        _type: "contentToken";
+        _key: string;
+      } | {
+        href?: string;
+        blank?: boolean;
+        _type: "link";
+        _key: string;
+      }> | null;
+      children: Array<{
+        _key: string;
+      } & ContentToken | {
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }> | null;
+      listItem: "bullet" | "number" | null;
+      level: number | null;
+    } | {
+      _type: "image";
+      _key: string;
+      style: null;
+      markDefs: null;
+      children: null;
+      listItem: null;
+      level: null;
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string | "";
+      caption: string | null;
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | {
+      _type: "officeHours";
+      _key: string;
+      style: null;
+      markDefs: null;
+      children: null;
+      listItem: null;
+      level: null;
+      title: string | null;
+    }> | null;
+    category: "business-law" | "construction-law" | "employment-law" | "estate-planning" | "family-law" | "general" | "litigation" | "personal-injury" | "probate" | "real-estate-law" | "workers-compensation" | null;
+    slug: string | null;
+    tags: Array<string> | null;
+  }> | null;
+  sidebar: Array<{
+    _type: "reference";
+    _key: null;
+    _componentType: "sidebarAttorneyList";
+    name: string | null;
+    header: string | null;
+    description: null;
+    mode: "all" | "manual" | "practiceArea" | null;
+    layout: "avatar" | "list" | null;
+    postCount: null;
+    formEmbed: null;
+    tagline: null;
+    supportingText1: null;
+    supportingText2: null;
+    phoneNumber: null;
+    button: null;
+    orderedAolIds: Array<string> | null;
+    areasOfLaw: Array<{
+      _id: string;
+      slug: string | null;
+      title: string | null;
+      children: Array<{
+        _id: string;
+        slug: string | null;
+        title: string | null;
+        grandchildren: Array<{
+          slug: string | null;
+          title: string | null;
+        }>;
+      }>;
+    }>;
+    orderedAttorneyIds: Array<string> | null;
+    attorneys: Array<{
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      photo: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        _type: "image";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    }> | null;
+    links: null;
+  } | {
+    _type: "reference";
+    _key: null;
+    _componentType: "sidebarCtaBox";
+    name: string | null;
+    header: string | null;
+    description: null;
+    mode: null;
+    layout: "centered" | "left" | null;
+    postCount: null;
+    formEmbed: null;
+    tagline: null;
+    supportingText1: string | null;
+    supportingText2: string | null;
+    phoneNumber: string | null;
+    button: {
+      title: string | null;
+      url: string | null;
+      variant: "link" | "primary" | "secondary" | null;
+    } | null;
+    orderedAolIds: Array<string> | null;
+    areasOfLaw: Array<{
+      _id: string;
+      slug: string | null;
+      title: string | null;
+      children: Array<{
+        _id: string;
+        slug: string | null;
+        title: string | null;
+        grandchildren: Array<{
+          slug: string | null;
+          title: string | null;
+        }>;
+      }>;
+    }>;
+    orderedAttorneyIds: null;
+    attorneys: null;
+    links: null;
+  } | {
+    _type: "reference";
+    _key: null;
+    _componentType: "sidebarFormEmbed";
+    name: string | null;
+    header: string | null;
+    description: string | null;
+    mode: null;
+    layout: null;
+    postCount: null;
+    formEmbed: string | null;
+    tagline: null;
+    supportingText1: null;
+    supportingText2: null;
+    phoneNumber: null;
+    button: null;
+    orderedAolIds: Array<string> | null;
+    areasOfLaw: Array<{
+      _id: string;
+      slug: string | null;
+      title: string | null;
+      children: Array<{
+        _id: string;
+        slug: string | null;
+        title: string | null;
+        grandchildren: Array<{
+          slug: string | null;
+          title: string | null;
+        }>;
+      }>;
+    }>;
+    orderedAttorneyIds: null;
+    attorneys: null;
+    links: null;
+  } | {
+    _type: "reference";
+    _key: null;
+    _componentType: "sidebarNav";
+    name: string | null;
+    header: string | null;
+    description: string | null;
+    mode: "custom" | "faqPosts" | "geoPracticeArea" | "practiceArea" | "recentPosts" | null;
+    layout: null;
+    postCount: number | null;
+    formEmbed: null;
+    tagline: null;
+    supportingText1: null;
+    supportingText2: null;
+    phoneNumber: null;
+    button: null;
+    orderedAolIds: Array<string> | null;
+    areasOfLaw: Array<{
+      _id: string;
+      slug: string | null;
+      title: string | null;
+      children: Array<{
+        _id: string;
+        slug: string | null;
+        title: string | null;
+        grandchildren: Array<{
+          slug: string | null;
+          title: string | null;
+        }>;
+      }>;
+    }>;
+    orderedAttorneyIds: Array<string> | null;
+    attorneys: Array<{
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      photo: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        _type: "image";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    }> | null;
+    links: Array<{
+      _id: string;
+      _type: "aboutPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "blogPost";
+      slug: string | null;
+      title: null;
+    } | {
+      _id: string;
+      _type: "contactPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "faqPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "generalPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "geoPracticeArea";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "landingPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "locationPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "practiceArea";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "reviewPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "serviceAreaPage";
+      slug: string | null;
+      title: string | null;
+    }> | null;
+  } | {
+    _type: "sidebarTableOfContents";
+    _key: string;
+    _componentType: "sidebarTableOfContents";
+  }> | null;
+  sections: Array<{
+    _id: string;
+    _type: "attorneySection";
+    name: string | null;
+    tagline: string | null;
+    heading: string | null;
+    description: string | null;
+    layout: "grid" | "slider" | null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: "avatar" | "classic" | "minimal" | "portrait" | "spotlight" | null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: "all" | "manual" | "practiceArea" | null;
+    reviewsEmbed: null;
+    footerHeading: null;
+    footerDescription: null;
+    appearance: {
+      surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+      spacing: "compact" | "normal" | "spacious" | null;
+      backgroundImage: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        alt: "";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    };
+    items: null;
+    buttons: null;
+    footerButton: null;
+    image: null;
+    testimonials: null;
+    testimonial: null;
+    questions: null;
+    badges: null;
+    orderedAttorneyIds: Array<string> | null;
+    attorneys: Array<{
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      h1: string | null;
+      jobTitle: string | null;
+      bio: string | null;
+      photo: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        _type: "image";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    }> | Array<never> | null;
+    videos: null;
+  } | {
+    _id: string;
+    _type: "badgesSection";
+    name: string | null;
+    tagline: string | null;
+    heading: string | null;
+    description: string | null;
+    layout: "centeredGrid" | "inline" | "scrolling" | "split" | null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: null;
+    reviewsEmbed: null;
+    footerHeading: null;
+    footerDescription: null;
+    appearance: {
+      surface: null;
+      spacing: null;
+      backgroundImage: null;
+    };
+    items: null;
+    buttons: Array<{
+      title: string | null;
+      url: string | null;
+      variant: "link" | "primary" | "secondary" | null;
+    }> | null;
+    footerButton: null;
+    image: null;
+    testimonials: null;
+    testimonial: null;
+    questions: null;
+    badges: Array<{
+      src: string | null;
+      alt: string | null;
+      width: number | null;
+      height: number | null;
+    }> | null;
+    orderedAttorneyIds: null;
+    attorneys: Array<never>;
+    videos: null;
+  } | {
+    _id: string;
+    _type: "ctaSection";
+    name: string | null;
+    tagline: string | null;
+    heading: string | null;
+    description: string | null;
+    layout: "background" | "centered" | "split" | "textOnly" | null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: null;
+    reviewsEmbed: null;
+    footerHeading: null;
+    footerDescription: null;
+    appearance: {
+      surface: null;
+      spacing: null;
+      backgroundImage: null;
+    };
+    items: null;
+    buttons: Array<{
+      title: string | null;
+      url: string | null;
+      variant: "link" | "primary" | "secondary" | null;
+    }> | null;
+    footerButton: null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string | "";
+      _type: "image";
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | null;
+    testimonials: null;
+    testimonial: null;
+    questions: null;
+    badges: null;
+    orderedAttorneyIds: null;
+    attorneys: Array<never>;
+    videos: null;
+  } | {
+    _id: string;
+    _type: "faqSection";
+    name: string | null;
+    tagline: null;
+    heading: string | null;
+    description: string | null;
+    layout: null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: null;
+    reviewsEmbed: null;
+    footerHeading: string | null;
+    footerDescription: string | null;
+    appearance: {
+      surface: null;
+      spacing: null;
+      backgroundImage: null;
+    };
+    items: null;
+    buttons: null;
+    footerButton: {
+      title: string | null;
+      url: string | null;
+      variant: "link" | "primary" | "secondary" | null;
+    } | null;
+    image: null;
+    testimonials: null;
+    testimonial: null;
+    questions: Array<{
+      question: string | null;
+      answer: Array<{
+        _type: "block";
+        _key: string;
+        style: "blockquote" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal" | null;
+        markDefs: Array<{
+          tokenKey?: string;
+          _type: "contentToken";
+          _key: string;
+        } | {
+          href?: string;
+          blank?: boolean;
+          _type: "link";
+          _key: string;
+        }> | null;
+        children: Array<{
+          _key: string;
+        } & ContentToken | {
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }> | null;
+        listItem: "bullet" | "number" | null;
+        level: number | null;
+      } | {
+        _type: "image";
+        _key: string;
+        style: null;
+        markDefs: null;
+        children: null;
+        listItem: null;
+        level: null;
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        caption: string | null;
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | {
+        _type: "officeHours";
+        _key: string;
+        style: null;
+        markDefs: null;
+        children: null;
+        listItem: null;
+        level: null;
+        title: string | null;
+      }> | null;
+      category: "business-law" | "construction-law" | "employment-law" | "estate-planning" | "family-law" | "general" | "litigation" | "personal-injury" | "probate" | "real-estate-law" | "workers-compensation" | null;
+      slug: string | null;
+      tags: Array<string> | null;
+    }> | null;
+    badges: null;
+    orderedAttorneyIds: null;
+    attorneys: Array<never>;
+    videos: null;
+  } | {
+    _id: string;
+    _type: "featuredTestimonial";
+    name: string | null;
+    tagline: string | null;
+    heading: string | null;
+    description: null;
+    layout: null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: null;
+    reviewsEmbed: null;
+    footerHeading: null;
+    footerDescription: null;
+    appearance: {
+      surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+      spacing: "compact" | "normal" | "spacious" | null;
+      backgroundImage: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        alt: "";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    };
+    items: null;
+    buttons: null;
+    footerButton: null;
+    image: null;
+    testimonials: null;
+    testimonial: {
+      _id: string;
+      quote: string | null;
+      name: string | null;
+      caseType: string | null;
+      numberOfStars: 1 | 2 | 3 | 4 | 5 | null;
+      avatar: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        _type: "image";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    } | null;
+    questions: null;
+    badges: null;
+    orderedAttorneyIds: null;
+    attorneys: Array<never>;
+    videos: null;
+  } | {
+    _id: string;
+    _type: "reviewsSection";
+    name: string | null;
+    tagline: string | null;
+    heading: string | null;
+    description: string | null;
+    layout: null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: null;
+    reviewsEmbed: string | null;
+    footerHeading: null;
+    footerDescription: null;
+    appearance: {
+      surface: null;
+      spacing: null;
+      backgroundImage: null;
+    };
+    items: null;
+    buttons: null;
+    footerButton: null;
+    image: null;
+    testimonials: null;
+    testimonial: null;
+    questions: null;
+    badges: null;
+    orderedAttorneyIds: null;
+    attorneys: Array<never>;
+    videos: null;
+  } | {
+    _id: string;
+    _type: "testimonialsGrid";
+    name: string | null;
+    tagline: string | null;
+    heading: string | null;
+    description: string | null;
+    layout: null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: null;
+    reviewsEmbed: null;
+    footerHeading: null;
+    footerDescription: null;
+    appearance: {
+      surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+      spacing: "compact" | "normal" | "spacious" | null;
+      backgroundImage: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        alt: "";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    };
+    items: null;
+    buttons: null;
+    footerButton: null;
+    image: null;
+    testimonials: Array<{
+      _id: string;
+      quote: string | null;
+      name: string | null;
+      caseType: string | null;
+      numberOfStars: 1 | 2 | 3 | 4 | 5 | null;
+      avatar: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        _type: "image";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    }> | null;
+    testimonial: null;
+    questions: null;
+    badges: null;
+    orderedAttorneyIds: null;
+    attorneys: Array<never>;
+    videos: null;
+  } | {
+    _id: string;
+    _type: "videoSection";
+    name: string | null;
+    tagline: string | null;
+    heading: string | null;
+    description: string | null;
+    layout: "centered" | "split" | null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: null;
+    reviewsEmbed: null;
+    footerHeading: null;
+    footerDescription: null;
+    appearance: {
+      surface: null;
+      spacing: null;
+      backgroundImage: null;
+    };
+    items: null;
+    buttons: null;
+    footerButton: null;
+    image: null;
+    testimonials: null;
+    testimonial: null;
+    questions: null;
+    badges: null;
+    orderedAttorneyIds: null;
+    attorneys: Array<never>;
+    videos: Array<{
+      _id: string;
+      title: string | null;
+      youTubeUrl: string | null;
+      description: string | null;
+      videoType: "Attorney Bio" | "Firm Overview" | "Other" | "Practice Area" | "Testimonial" | null;
+    }> | null;
+  }> | null;
+  hideCtaForm: boolean | null;
+  ctaOverride: {
+    tagline: string | null;
+    heading: string | null;
+    description: string | null;
+    buttons: Array<{
+      title: string | null;
+      url: string | null;
+      variant: "link" | "primary" | "secondary" | null;
+    }> | null;
+  } | null;
+} | {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
+  _type: "practiceArea";
+  title: string | null;
+  areasOfLaw: Array<string | null>;
+  slug: string | null;
+  seoTitle: string | null;
+  metaDescription: string | null;
+  noIndex: boolean | null;
+  noFollow: boolean | null;
+  canonicalUrl: string | null;
+  parentPage: {
+    title: string | null;
+    slug: string | null;
+    parentPage: {
+      title: string | null;
+      slug: string | null;
+    } | null;
+  } | null;
+  hero: {
+    heading: string | null;
+    description: string | null;
+    buttons: Array<{
+      title: string | null;
+      url: string | null;
+      variant: "link" | "primary" | "secondary" | null;
+    }> | null;
+    buttonsNone: boolean | null;
+    schemeOverride: "dark" | "inherit" | "light" | null;
+    backgroundNone: boolean | null;
+    foregroundNone: boolean | null;
+    scrimOpacityOverride: number | null;
+    backgroundImage: {
+      src: string | null;
+      alt: string | null;
+      fit: "cover" | "tile" | null;
+      hotspot: {
+        x: number | null;
+        y: number | null;
+      } | null;
+      width: number | null;
+      height: number | null;
+    } | null;
+    foregroundImage: {
+      src: string | null;
+      alt: string | null;
+      hotspot: {
+        x: number | null;
+        y: number | null;
+      } | null;
+      width: number | null;
+      height: number | null;
+    } | null;
+  } | null;
+  body: Array<{
+    _type: "block";
+    _key: string;
+    style: "blockquote" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal" | null;
+    markDefs: Array<{
+      tokenKey?: string;
+      _type: "contentToken";
+      _key: string;
+    } | {
+      href?: string;
+      blank?: boolean;
+      _type: "link";
+      _key: string;
+    }> | null;
+    children: Array<{
+      _key: string;
+    } & ContentToken | {
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }> | null;
+    listItem: "bullet" | "number" | null;
+    level: number | null;
+  } | {
+    _type: "image";
+    _key: string;
+    style: null;
+    markDefs: null;
+    children: null;
+    listItem: null;
+    level: null;
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    caption: string | null;
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | {
+    _type: "officeHours";
+    _key: string;
+    style: null;
+    markDefs: null;
+    children: null;
+    listItem: null;
+    level: null;
+    title: string | null;
+  }> | null;
+  faqItems: Array<{
+    question: string | null;
+    answer: Array<{
+      _type: "block";
+      _key: string;
+      style: "blockquote" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal" | null;
+      markDefs: Array<{
+        tokenKey?: string;
+        _type: "contentToken";
+        _key: string;
+      } | {
+        href?: string;
+        blank?: boolean;
+        _type: "link";
+        _key: string;
+      }> | null;
+      children: Array<{
+        _key: string;
+      } & ContentToken | {
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }> | null;
+      listItem: "bullet" | "number" | null;
+      level: number | null;
+    } | {
+      _type: "image";
+      _key: string;
+      style: null;
+      markDefs: null;
+      children: null;
+      listItem: null;
+      level: null;
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string | "";
+      caption: string | null;
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | {
+      _type: "officeHours";
+      _key: string;
+      style: null;
+      markDefs: null;
+      children: null;
+      listItem: null;
+      level: null;
+      title: string | null;
+    }> | null;
+    category: "business-law" | "construction-law" | "employment-law" | "estate-planning" | "family-law" | "general" | "litigation" | "personal-injury" | "probate" | "real-estate-law" | "workers-compensation" | null;
+    slug: string | null;
+    tags: Array<string> | null;
+  }> | null;
+  sidebar: Array<{
+    _type: "reference";
+    _key: null;
+    _componentType: "sidebarAttorneyList";
+    name: string | null;
+    header: string | null;
+    description: null;
+    mode: "all" | "manual" | "practiceArea" | null;
+    layout: "avatar" | "list" | null;
+    postCount: null;
+    formEmbed: null;
+    tagline: null;
+    supportingText1: null;
+    supportingText2: null;
+    phoneNumber: null;
+    button: null;
+    orderedAolIds: Array<string> | null;
+    areasOfLaw: Array<{
+      _id: string;
+      slug: string | null;
+      title: string | null;
+      children: Array<{
+        _id: string;
+        slug: string | null;
+        title: string | null;
+        grandchildren: Array<{
+          slug: string | null;
+          title: string | null;
+        }>;
+      }>;
+    }>;
+    orderedAttorneyIds: Array<string> | null;
+    attorneys: Array<{
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      photo: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        _type: "image";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    }> | null;
+    links: null;
+  } | {
+    _type: "reference";
+    _key: null;
+    _componentType: "sidebarCtaBox";
+    name: string | null;
+    header: string | null;
+    description: null;
+    mode: null;
+    layout: "centered" | "left" | null;
+    postCount: null;
+    formEmbed: null;
+    tagline: null;
+    supportingText1: string | null;
+    supportingText2: string | null;
+    phoneNumber: string | null;
+    button: {
+      title: string | null;
+      url: string | null;
+      variant: "link" | "primary" | "secondary" | null;
+    } | null;
+    orderedAolIds: Array<string> | null;
+    areasOfLaw: Array<{
+      _id: string;
+      slug: string | null;
+      title: string | null;
+      children: Array<{
+        _id: string;
+        slug: string | null;
+        title: string | null;
+        grandchildren: Array<{
+          slug: string | null;
+          title: string | null;
+        }>;
+      }>;
+    }>;
+    orderedAttorneyIds: null;
+    attorneys: null;
+    links: null;
+  } | {
+    _type: "reference";
+    _key: null;
+    _componentType: "sidebarFormEmbed";
+    name: string | null;
+    header: string | null;
+    description: string | null;
+    mode: null;
+    layout: null;
+    postCount: null;
+    formEmbed: string | null;
+    tagline: null;
+    supportingText1: null;
+    supportingText2: null;
+    phoneNumber: null;
+    button: null;
+    orderedAolIds: Array<string> | null;
+    areasOfLaw: Array<{
+      _id: string;
+      slug: string | null;
+      title: string | null;
+      children: Array<{
+        _id: string;
+        slug: string | null;
+        title: string | null;
+        grandchildren: Array<{
+          slug: string | null;
+          title: string | null;
+        }>;
+      }>;
+    }>;
+    orderedAttorneyIds: null;
+    attorneys: null;
+    links: null;
+  } | {
+    _type: "reference";
+    _key: null;
+    _componentType: "sidebarNav";
+    name: string | null;
+    header: string | null;
+    description: string | null;
+    mode: "custom" | "faqPosts" | "geoPracticeArea" | "practiceArea" | "recentPosts" | null;
+    layout: null;
+    postCount: number | null;
+    formEmbed: null;
+    tagline: null;
+    supportingText1: null;
+    supportingText2: null;
+    phoneNumber: null;
+    button: null;
+    orderedAolIds: Array<string> | null;
+    areasOfLaw: Array<{
+      _id: string;
+      slug: string | null;
+      title: string | null;
+      children: Array<{
+        _id: string;
+        slug: string | null;
+        title: string | null;
+        grandchildren: Array<{
+          slug: string | null;
+          title: string | null;
+        }>;
+      }>;
+    }>;
+    orderedAttorneyIds: Array<string> | null;
+    attorneys: Array<{
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      photo: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        _type: "image";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    }> | null;
+    links: Array<{
+      _id: string;
+      _type: "aboutPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "blogPost";
+      slug: string | null;
+      title: null;
+    } | {
+      _id: string;
+      _type: "contactPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "faqPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "generalPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "geoPracticeArea";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "landingPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "locationPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "practiceArea";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "reviewPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "serviceAreaPage";
+      slug: string | null;
+      title: string | null;
+    }> | null;
+  } | {
+    _type: "sidebarTableOfContents";
+    _key: string;
+    _componentType: "sidebarTableOfContents";
+  }> | null;
+  sections: Array<{
+    _id: string;
+    _type: "attorneySection";
+    name: string | null;
+    tagline: string | null;
+    heading: string | null;
+    description: string | null;
+    layout: "grid" | "slider" | null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: "avatar" | "classic" | "minimal" | "portrait" | "spotlight" | null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: "all" | "manual" | "practiceArea" | null;
+    reviewsEmbed: null;
+    footerHeading: null;
+    footerDescription: null;
+    appearance: {
+      surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+      spacing: "compact" | "normal" | "spacious" | null;
+      backgroundImage: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        alt: "";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    };
+    items: null;
+    buttons: null;
+    footerButton: null;
+    image: null;
+    testimonials: null;
+    testimonial: null;
+    questions: null;
+    badges: null;
+    orderedAttorneyIds: Array<string> | null;
+    attorneys: Array<{
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      h1: string | null;
+      jobTitle: string | null;
+      bio: string | null;
+      photo: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        _type: "image";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    }> | Array<never> | null;
+    videos: null;
+  } | {
+    _id: string;
+    _type: "badgesSection";
+    name: string | null;
+    tagline: string | null;
+    heading: string | null;
+    description: string | null;
+    layout: "centeredGrid" | "inline" | "scrolling" | "split" | null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: null;
+    reviewsEmbed: null;
+    footerHeading: null;
+    footerDescription: null;
+    appearance: {
+      surface: null;
+      spacing: null;
+      backgroundImage: null;
+    };
+    items: null;
+    buttons: Array<{
+      title: string | null;
+      url: string | null;
+      variant: "link" | "primary" | "secondary" | null;
+    }> | null;
+    footerButton: null;
+    image: null;
+    testimonials: null;
+    testimonial: null;
+    questions: null;
+    badges: Array<{
+      src: string | null;
+      alt: string | null;
+      width: number | null;
+      height: number | null;
+    }> | null;
+    orderedAttorneyIds: null;
+    attorneys: Array<never>;
+    videos: null;
+  } | {
+    _id: string;
+    _type: "ctaSection";
+    name: string | null;
+    tagline: string | null;
+    heading: string | null;
+    description: string | null;
+    layout: "background" | "centered" | "split" | "textOnly" | null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: null;
+    reviewsEmbed: null;
+    footerHeading: null;
+    footerDescription: null;
+    appearance: {
+      surface: null;
+      spacing: null;
+      backgroundImage: null;
+    };
+    items: null;
+    buttons: Array<{
+      title: string | null;
+      url: string | null;
+      variant: "link" | "primary" | "secondary" | null;
+    }> | null;
+    footerButton: null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string | "";
+      _type: "image";
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | null;
+    testimonials: null;
+    testimonial: null;
+    questions: null;
+    badges: null;
+    orderedAttorneyIds: null;
+    attorneys: Array<never>;
+    videos: null;
+  } | {
+    _id: string;
+    _type: "faqSection";
+    name: string | null;
+    tagline: null;
+    heading: string | null;
+    description: string | null;
+    layout: null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: null;
+    reviewsEmbed: null;
+    footerHeading: string | null;
+    footerDescription: string | null;
+    appearance: {
+      surface: null;
+      spacing: null;
+      backgroundImage: null;
+    };
+    items: null;
+    buttons: null;
+    footerButton: {
+      title: string | null;
+      url: string | null;
+      variant: "link" | "primary" | "secondary" | null;
+    } | null;
+    image: null;
+    testimonials: null;
+    testimonial: null;
+    questions: Array<{
+      question: string | null;
+      answer: Array<{
+        _type: "block";
+        _key: string;
+        style: "blockquote" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal" | null;
+        markDefs: Array<{
+          tokenKey?: string;
+          _type: "contentToken";
+          _key: string;
+        } | {
+          href?: string;
+          blank?: boolean;
+          _type: "link";
+          _key: string;
+        }> | null;
+        children: Array<{
+          _key: string;
+        } & ContentToken | {
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }> | null;
+        listItem: "bullet" | "number" | null;
+        level: number | null;
+      } | {
+        _type: "image";
+        _key: string;
+        style: null;
+        markDefs: null;
+        children: null;
+        listItem: null;
+        level: null;
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        caption: string | null;
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | {
+        _type: "officeHours";
+        _key: string;
+        style: null;
+        markDefs: null;
+        children: null;
+        listItem: null;
+        level: null;
+        title: string | null;
+      }> | null;
+      category: "business-law" | "construction-law" | "employment-law" | "estate-planning" | "family-law" | "general" | "litigation" | "personal-injury" | "probate" | "real-estate-law" | "workers-compensation" | null;
+      slug: string | null;
+      tags: Array<string> | null;
+    }> | null;
+    badges: null;
+    orderedAttorneyIds: null;
+    attorneys: Array<never>;
+    videos: null;
+  } | {
+    _id: string;
+    _type: "featuredTestimonial";
+    name: string | null;
+    tagline: string | null;
+    heading: string | null;
+    description: null;
+    layout: null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: null;
+    reviewsEmbed: null;
+    footerHeading: null;
+    footerDescription: null;
+    appearance: {
+      surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+      spacing: "compact" | "normal" | "spacious" | null;
+      backgroundImage: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        alt: "";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    };
+    items: null;
+    buttons: null;
+    footerButton: null;
+    image: null;
+    testimonials: null;
+    testimonial: {
+      _id: string;
+      quote: string | null;
+      name: string | null;
+      caseType: string | null;
+      numberOfStars: 1 | 2 | 3 | 4 | 5 | null;
+      avatar: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        _type: "image";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    } | null;
+    questions: null;
+    badges: null;
+    orderedAttorneyIds: null;
+    attorneys: Array<never>;
+    videos: null;
+  } | {
+    _id: string;
+    _type: "reviewsSection";
+    name: string | null;
+    tagline: string | null;
+    heading: string | null;
+    description: string | null;
+    layout: null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: null;
+    reviewsEmbed: string | null;
+    footerHeading: null;
+    footerDescription: null;
+    appearance: {
+      surface: null;
+      spacing: null;
+      backgroundImage: null;
+    };
+    items: null;
+    buttons: null;
+    footerButton: null;
+    image: null;
+    testimonials: null;
+    testimonial: null;
+    questions: null;
+    badges: null;
+    orderedAttorneyIds: null;
+    attorneys: Array<never>;
+    videos: null;
+  } | {
+    _id: string;
+    _type: "testimonialsGrid";
+    name: string | null;
+    tagline: string | null;
+    heading: string | null;
+    description: string | null;
+    layout: null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: null;
+    reviewsEmbed: null;
+    footerHeading: null;
+    footerDescription: null;
+    appearance: {
+      surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+      spacing: "compact" | "normal" | "spacious" | null;
+      backgroundImage: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        alt: "";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    };
+    items: null;
+    buttons: null;
+    footerButton: null;
+    image: null;
+    testimonials: Array<{
+      _id: string;
+      quote: string | null;
+      name: string | null;
+      caseType: string | null;
+      numberOfStars: 1 | 2 | 3 | 4 | 5 | null;
+      avatar: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        _type: "image";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    }> | null;
+    testimonial: null;
+    questions: null;
+    badges: null;
+    orderedAttorneyIds: null;
+    attorneys: Array<never>;
+    videos: null;
+  } | {
+    _id: string;
+    _type: "videoSection";
+    name: string | null;
+    tagline: string | null;
+    heading: string | null;
+    description: string | null;
+    layout: "centered" | "split" | null;
+    sectionLayout: null;
+    gridMode: null;
+    mobileDisplay: null;
+    cardStyle: null;
+    hoverEffects: null;
+    showArrow: null;
+    iconPosition: null;
+    mode: null;
+    reviewsEmbed: null;
+    footerHeading: null;
+    footerDescription: null;
+    appearance: {
+      surface: null;
+      spacing: null;
+      backgroundImage: null;
+    };
+    items: null;
+    buttons: null;
+    footerButton: null;
+    image: null;
+    testimonials: null;
+    testimonial: null;
+    questions: null;
+    badges: null;
+    orderedAttorneyIds: null;
+    attorneys: Array<never>;
+    videos: Array<{
+      _id: string;
+      title: string | null;
+      youTubeUrl: string | null;
+      description: string | null;
+      videoType: "Attorney Bio" | "Firm Overview" | "Other" | "Practice Area" | "Testimonial" | null;
+    }> | null;
+  }> | null;
+  hideCtaForm: boolean | null;
+  ctaOverride: {
+    tagline: string | null;
+    heading: string | null;
+    description: string | null;
+    buttons: Array<{
+      title: string | null;
+      url: string | null;
+      variant: "link" | "primary" | "secondary" | null;
+    }> | null;
+  } | null;
+} | {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
+  _type: "serviceAreaPage";
+  title: string | null;
+  areasOfLaw: Array<string | null>;
+  slug: string | null;
+  seoTitle: string | null;
+  metaDescription: string | null;
+  noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   parentPage: {
     title: string | null;
@@ -6998,12 +9009,29 @@ export type PRACTICE_AREA_QUERYResult = {
   } | null;
 } | null;
 // Variable: EVENT_INDEX_PAGE_QUERY
-// Query: *[_type == "eventIndex"][0]{    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    "hero": hero {  heading,    description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  scrimStyleOverride,  scrimColorOverride,  scrimDirectionOverride,  sectionBackgroundNone,  "sectionBackgroundImage": sectionBackgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }},    "sections": sections [defined(@->_id)]->{  _id,  _type,  name,  tagline,  heading,  description,  layout,  sectionLayout,  gridMode,  mobileDisplay,  cardStyle,  hoverEffects,  showArrow,  iconPosition,  mode,  reviewsEmbed,  footerHeading,  footerDescription,  "appearance": {    "surface": surface,    "spacing": spacing,    "backgroundImage": sectionBackgroundImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}  },  // practiceAreaNav (silo nav): resolve each item's page reference to an href +  // auto-pulled title/description, with per-item overrides; or auto-list all  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").  "items": select(    _type == "practiceAreaNav" && mode == "allTopLevel" =>      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{        "_key": _id,        "label": title,        "href": "/" + slug.current + "/",        "description": metaDescription,        "icon": null,        "image": null,        "featured": false      } | order(title asc),    _type == "practiceAreaNav" =>      items[defined(page->slug.current)]{        _key,        "label": coalesce(label, page->title),        "href": "/" + page->slug.current + "/",        "description": coalesce(description, page->metaDescription),        "icon": icon {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "featured": featured      }  ),  "buttons": buttons[]{title, url, variant},  "footerButton": footerButton{title, url, variant},  "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  "testimonials": testimonials[defined(@->_id)]->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "testimonial": testimonial->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "questions": questions[defined(@->_id)]->{    question,    "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    category,    "slug": slug.current,    tags  },  "badges": badges[defined(@->_id)]->{    "src": image.asset->url,    "alt": image.alt,    "width": image.asset->metadata.dimensions.width,    "height": image.asset->metadata.dimensions.height  },  "orderedAttorneyIds": select(    mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,    null  ),  "attorneys": select(    mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'manual' => attorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    []  ),  "videos": videos[defined(@->_id)]->{    _id, title, youTubeUrl, description, videoType  }},    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
+// Query: *[_type == "eventIndex"][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    "slug": slug.current,    "title": coalesce(hero.heading, "Events"),    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    "hero": hero {  heading,    description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  scrimStyleOverride,  scrimColorOverride,  scrimDirectionOverride,  sectionBackgroundNone,  "sectionBackgroundImage": sectionBackgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }},    "sections": sections [defined(@->_id)]->{  _id,  _type,  name,  tagline,  heading,  description,  layout,  sectionLayout,  gridMode,  mobileDisplay,  cardStyle,  hoverEffects,  showArrow,  iconPosition,  mode,  reviewsEmbed,  footerHeading,  footerDescription,  "appearance": {    "surface": surface,    "spacing": spacing,    "backgroundImage": sectionBackgroundImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}  },  // practiceAreaNav (silo nav): resolve each item's page reference to an href +  // auto-pulled title/description, with per-item overrides; or auto-list all  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").  "items": select(    _type == "practiceAreaNav" && mode == "allTopLevel" =>      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{        "_key": _id,        "label": title,        "href": "/" + slug.current + "/",        "description": metaDescription,        "icon": null,        "image": null,        "featured": false      } | order(title asc),    _type == "practiceAreaNav" =>      items[defined(page->slug.current)]{        _key,        "label": coalesce(label, page->title),        "href": "/" + page->slug.current + "/",        "description": coalesce(description, page->metaDescription),        "icon": icon {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "featured": featured      }  ),  "buttons": buttons[]{title, url, variant},  "footerButton": footerButton{title, url, variant},  "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  "testimonials": testimonials[defined(@->_id)]->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "testimonial": testimonial->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "questions": questions[defined(@->_id)]->{    question,    "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    category,    "slug": slug.current,    tags  },  "badges": badges[defined(@->_id)]->{    "src": image.asset->url,    "alt": image.alt,    "width": image.asset->metadata.dimensions.width,    "height": image.asset->metadata.dimensions.height  },  "orderedAttorneyIds": select(    mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,    null  ),  "attorneys": select(    mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'manual' => attorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    []  ),  "videos": videos[defined(@->_id)]->{    _id, title, youTubeUrl, description, videoType  }},    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
 export type EVENT_INDEX_PAGE_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   slug: string | null;
+  title: string | "Events";
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   hero: {
     heading: string | null;
@@ -7572,13 +9600,29 @@ export type EVENT_INDEX_QUERYResult = Array<{
   }> | null;
 }>;
 // Variable: EVENT_PAGE_QUERY
-// Query: *[_type == "eventPage" && slug.current == $slug][0]{    title,    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    eventDate,    eventEndDate,    eventType,    "category": category->title,    locationType,    locationAddress,    virtualLink,    registrationUrl,    registrationCta,    "formEmbed": registrationForm->formEmbed,    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "attorneys": attorneys[defined(@->_id)]->{      _id,      title,      "slug": slug.current    },    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
+// Query: *[_type == "eventPage" && slug.current == $slug][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    title,    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    eventDate,    eventEndDate,    eventType,    "category": category->title,    locationType,    locationAddress,    virtualLink,    registrationUrl,    registrationCta,    "formEmbed": registrationForm->formEmbed,    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "attorneys": attorneys[defined(@->_id)]->{      _id,      title,      "slug": slug.current    },    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
 export type EVENT_PAGE_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   title: string | null;
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   eventDate: string | null;
   eventEndDate: string | null;
@@ -7663,12 +9707,28 @@ export type EVENT_PAGE_QUERYResult = {
   } | null;
 } | null;
 // Variable: BLOG_INDEX_PAGE_QUERY
-// Query: *[_type == "blogIndex"][0]{    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    "hero": hero {      "heading": coalesce(heading, "Blog"),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "title": coalesce(hero.heading, "Blog"),    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
+// Query: *[_type == "blogIndex"][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    "hero": hero {      "heading": coalesce(heading, "Blog"),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "title": coalesce(hero.heading, "Blog"),    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
 export type BLOG_INDEX_PAGE_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   hero: {
     heading: string | "Blog";
@@ -7730,12 +9790,28 @@ export type VIDEO_CARD_FRAGMENTResult = {
   thumbnail: never;
 };
 // Variable: VIDEO_INDEX_PAGE_QUERY
-// Query: *[_type == "videoIndex"][0]{    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    "hero": hero {      "heading": coalesce(heading, "Video Library"),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "title": coalesce(hero.heading, "Video Library"),    tagline,    heading,    description,    "featuredVideo": featuredVideo->{  "id": _id,  title,  youTubeUrl,  description,  videoType,  duration,  "thumbnail": thumbnail {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},    "videos": videos[defined(@->_id)]->{  "id": _id,  title,  youTubeUrl,  description,  videoType,  duration,  "thumbnail": thumbnail {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
+// Query: *[_type == "videoIndex"][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    "hero": hero {      "heading": coalesce(heading, "Video Library"),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "title": coalesce(hero.heading, "Video Library"),    tagline,    heading,    description,    "featuredVideo": featuredVideo->{  "id": _id,  title,  youTubeUrl,  description,  videoType,  duration,  "thumbnail": thumbnail {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},    "videos": videos[defined(@->_id)]->{  "id": _id,  title,  youTubeUrl,  description,  videoType,  duration,  "thumbnail": thumbnail {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
 export type VIDEO_INDEX_PAGE_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   hero: {
     heading: string | "Video Library";
@@ -7872,13 +9948,29 @@ export type RELATED_POSTS_QUERYResult = {
   }>;
 };
 // Variable: BLOG_POST_PAGE_QUERY
-// Query: *[_type == "blogPost" && slug.current == $slug][0]{    h1,    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    publishedAt,    lastModified,    "featuredImage": featuredImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    "bodyText": pt::text(body),    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "authors": authors[defined(@->_id)]->{      _id,      firstName,      lastName,      jobTitle,      "slug": slug.current,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    "category": category->{      title,      "slug": slug.current    },    "sidebar": sidebar[]{      _type,      _key,      _type == "sidebarTableOfContents" => {        "_componentType": "sidebarTableOfContents"      },      _type == "reference" => @->{        "_componentType": _type,        name,        header,        description,        mode,        layout,        postCount,        "formEmbed": form->formEmbed,        tagline,        supportingText1,        supportingText2,        phoneNumber,        "button": button{title, url, variant},        // WS-Sidebar Phase 2.3 — see SIDEBAR_FRAGMENT comment block. This        // inline projection (blog post page) must stay in sync with the fragment.        // (The recentPosts sub-query below now uses the $slug query param; the        // earlier ^.^.slug.current parent-reference resolved to null and listed the        // current post — that bug was the practical reason it stayed inline.)        "orderedAolIds": *[_type == "mainNavigation"][0]          .items[_type == "navItemPracticeAreas"][0]          .practiceAreaOrder[]._ref,        "areasOfLaw": *[          _type == "practiceArea" && !defined(parentPage) && defined(slug.current)        ]{          _id,          "slug": slug.current,          title,          "children": *[            _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)          ]{            _id,            "slug": slug.current,            title,            "grandchildren": *[              _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)            ]{              "slug": slug.current,              title,            } | order(title asc),          } | order(title asc),        },        "orderedAttorneyIds": select(          mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,          null        ),        "attorneys": select(          mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},          mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},          attorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}}        ),        "links": links[defined(@->_id)]->{          _id,          _type,          "slug": slug.current,          title        },        "posts": select(          mode == "recentPosts" => *[_type == "blogPost" && slug.current != $slug] | order(publishedAt desc)[0..20]{            h1,            "slug": slug.current          },          mode == "faqPosts" => *[_type == "blogPostFaq"] | order(publishedAt desc)[0..20]{            h1,            "slug": slug.current          }        )      }    },    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
+// Query: *[_type == "blogPost" && slug.current == $slug][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    h1,    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    publishedAt,    lastModified,    "featuredImage": featuredImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    "bodyText": pt::text(body),    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "authors": authors[defined(@->_id)]->{      _id,      firstName,      lastName,      jobTitle,      "slug": slug.current,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    "category": category->{      title,      "slug": slug.current    },    "sidebar": sidebar[]{      _type,      _key,      _type == "sidebarTableOfContents" => {        "_componentType": "sidebarTableOfContents"      },      _type == "reference" => @->{        "_componentType": _type,        name,        header,        description,        mode,        layout,        postCount,        "formEmbed": form->formEmbed,        tagline,        supportingText1,        supportingText2,        phoneNumber,        "button": button{title, url, variant},        // WS-Sidebar Phase 2.3 — see SIDEBAR_FRAGMENT comment block. This        // inline projection (blog post page) must stay in sync with the fragment.        // (The recentPosts sub-query below now uses the $slug query param; the        // earlier ^.^.slug.current parent-reference resolved to null and listed the        // current post — that bug was the practical reason it stayed inline.)        "orderedAolIds": *[_type == "mainNavigation"][0]          .items[_type == "navItemPracticeAreas"][0]          .practiceAreaOrder[]._ref,        "areasOfLaw": *[          _type == "practiceArea" && !defined(parentPage) && defined(slug.current)        ]{          _id,          "slug": slug.current,          title,          "children": *[            _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)          ]{            _id,            "slug": slug.current,            title,            "grandchildren": *[              _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)            ]{              "slug": slug.current,              title,            } | order(title asc),          } | order(title asc),        },        "orderedAttorneyIds": select(          mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,          null        ),        "attorneys": select(          mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},          mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},          attorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}}        ),        "links": links[defined(@->_id)]->{          _id,          _type,          "slug": slug.current,          title        },        "posts": select(          mode == "recentPosts" => *[_type == "blogPost" && slug.current != $slug] | order(publishedAt desc)[0..20]{            h1,            "slug": slug.current          },          mode == "faqPosts" => *[_type == "blogPostFaq"] | order(publishedAt desc)[0..20]{            h1,            "slug": slug.current          }        )      }    },    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
 export type BLOG_POST_PAGE_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   h1: string | null;
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   publishedAt: string | null;
   lastModified: string | null;
@@ -8243,13 +10335,29 @@ export type BLOG_CATEGORIES_QUERYResult = Array<{
   slug: string | null;
 }>;
 // Variable: BLOG_CATEGORY_PAGE_QUERY
-// Query: *[_type == "blogCategory" && slug.current == $slug][0]{    title,    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    h1,    tagline,    heading,    description,    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
+// Query: *[_type == "blogCategory" && slug.current == $slug][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    title,    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    h1,    tagline,    heading,    description,    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
 export type BLOG_CATEGORY_PAGE_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   title: string | null;
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   h1: string | null;
   tagline: string | null;
@@ -8268,13 +10376,14 @@ export type BLOG_CATEGORY_PAGE_QUERYResult = {
   } | null;
 } | null;
 // Variable: REVIEW_PAGE_QUERY
-// Query: {  "page": *[_type == "reviewPage" && slug.current == $slug][0]{    h1,    seoTitle,    "slug": slug.current,    noIndex,    "blurb": blurb []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "reviewLinks": reviewLinks[]{      platform,      url,      label    },    "feedbackFormEmbed": feedbackForm->formEmbed  },  "logo": *[_type == "designSettings"][0]{    logoOnLight{      "src": asset->url,      "alt": alt,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    }  }.logoOnLight,  "firmInfo": *[_type == "siteSettings"][0]{    firmName,    "address": primaryLocation->{        "address1": select(locationType in ["Physical", "Shared"] => address1, null),  "address2": select(locationType in ["Physical", "Shared"] => address2, null),  "address3": select(locationType in ["Physical", "Shared"] => address3, null),  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),      city,      state,      officePhone    }  }}
+// Query: {  "page": *[_type == "reviewPage" && slug.current == $slug][0]{    h1,    seoTitle,    "slug": slug.current,    noIndex,    noFollow,    "blurb": blurb []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "reviewLinks": reviewLinks[]{      platform,      url,      label    },    "feedbackFormEmbed": feedbackForm->formEmbed  },  "logo": *[_type == "designSettings"][0]{    logoOnLight{      "src": asset->url,      "alt": alt,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    }  }.logoOnLight,  "firmInfo": *[_type == "siteSettings"][0]{    firmName,    "address": primaryLocation->{        "address1": select(locationType in ["Physical", "Shared"] => address1, null),  "address2": select(locationType in ["Physical", "Shared"] => address2, null),  "address3": select(locationType in ["Physical", "Shared"] => address3, null),  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),      city,      state,      officePhone    }  }}
 export type REVIEW_PAGE_QUERYResult = {
   page: {
     h1: string | null;
     seoTitle: null;
     slug: string | null;
     noIndex: boolean | null;
+    noFollow: boolean | null;
     blurb: Array<{
       _type: "block";
       _key: string;
@@ -8370,14 +10479,30 @@ export type BLOG_CATEGORY_POSTS_QUERYResult = Array<{
   bodyText: string;
 }>;
 // Variable: LOCATION_PAGE_QUERY
-// Query: *[_type == "locationPage" && slug.current == $slug][0]{    _type,    "title": coalesce(title, ""),    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    "hero": hero {      "heading": coalesce(heading, ^.title),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    mapEmbed,    "locationData": locationRef->{      "_id": _id,      city,      state,        "address1": select(locationType in ["Physical", "Shared"] => address1, null),  "address2": select(locationType in ["Physical", "Shared"] => address2, null),  "address3": select(locationType in ["Physical", "Shared"] => address3, null),  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),      "geo": select(locationType in ["Physical", "Shared"] => geo{lat, lng}, null),      officePhone,      officeFax,      tollFreePhone,      hours,      emergency24_7,      emergencyPhone,      appointmentRequired,      gbpCidUrl    },    sidebar[]{  _type,  _key,  _type == "sidebarTableOfContents" => {    "_componentType": "sidebarTableOfContents"  },  _type == "reference" => @->{    "_componentType": _type,    name,    header,    description,    mode,    layout,    postCount,    "formEmbed": form->formEmbed,    tagline,    supportingText1,    supportingText2,    phoneNumber,    "button": button{title, url, variant},    "orderedAolIds": *[_type == "mainNavigation"][0]      .items[_type == "navItemPracticeAreas"][0]      .practiceAreaOrder[]._ref,    "areasOfLaw": *[      _type == "practiceArea" && !defined(parentPage) && defined(slug.current)    ]{      _id,      "slug": slug.current,      title,      "children": *[        _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)      ]{        _id,        "slug": slug.current,        title,        "grandchildren": *[          _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)        ]{          "slug": slug.current,          title,        } | order(title asc),      } | order(title asc),    },    "orderedAttorneyIds": select(      mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,      null    ),    "attorneys": select(      mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      attorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}}    ),    "links": links[defined(@->_id)]->{      _id,      _type,      "slug": slug.current,      title    }  }},    "sections": sections [defined(@->_id)]->{  _id,  _type,  name,  tagline,  heading,  description,  layout,  sectionLayout,  gridMode,  mobileDisplay,  cardStyle,  hoverEffects,  showArrow,  iconPosition,  mode,  reviewsEmbed,  footerHeading,  footerDescription,  "appearance": {    "surface": surface,    "spacing": spacing,    "backgroundImage": sectionBackgroundImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}  },  // practiceAreaNav (silo nav): resolve each item's page reference to an href +  // auto-pulled title/description, with per-item overrides; or auto-list all  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").  "items": select(    _type == "practiceAreaNav" && mode == "allTopLevel" =>      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{        "_key": _id,        "label": title,        "href": "/" + slug.current + "/",        "description": metaDescription,        "icon": null,        "image": null,        "featured": false      } | order(title asc),    _type == "practiceAreaNav" =>      items[defined(page->slug.current)]{        _key,        "label": coalesce(label, page->title),        "href": "/" + page->slug.current + "/",        "description": coalesce(description, page->metaDescription),        "icon": icon {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "featured": featured      }  ),  "buttons": buttons[]{title, url, variant},  "footerButton": footerButton{title, url, variant},  "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  "testimonials": testimonials[defined(@->_id)]->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "testimonial": testimonial->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "questions": questions[defined(@->_id)]->{    question,    "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    category,    "slug": slug.current,    tags  },  "badges": badges[defined(@->_id)]->{    "src": image.asset->url,    "alt": image.alt,    "width": image.asset->metadata.dimensions.width,    "height": image.asset->metadata.dimensions.height  },  "orderedAttorneyIds": select(    mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,    null  ),  "attorneys": select(    mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'manual' => attorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    []  ),  "videos": videos[defined(@->_id)]->{    _id, title, youTubeUrl, description, videoType  }},    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
+// Query: *[_type == "locationPage" && slug.current == $slug][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    _type,    "title": coalesce(title, ""),    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    "hero": hero {      "heading": coalesce(heading, ^.title),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    mapEmbed,    "locationData": locationRef->{      "_id": _id,      city,      state,        "address1": select(locationType in ["Physical", "Shared"] => address1, null),  "address2": select(locationType in ["Physical", "Shared"] => address2, null),  "address3": select(locationType in ["Physical", "Shared"] => address3, null),  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),      "geo": select(locationType in ["Physical", "Shared"] => geo{lat, lng}, null),      officePhone,      officeFax,      tollFreePhone,      hours,      emergency24_7,      emergencyPhone,      appointmentRequired,      gbpCidUrl    },    sidebar[]{  _type,  _key,  _type == "sidebarTableOfContents" => {    "_componentType": "sidebarTableOfContents"  },  _type == "reference" => @->{    "_componentType": _type,    name,    header,    description,    mode,    layout,    postCount,    "formEmbed": form->formEmbed,    tagline,    supportingText1,    supportingText2,    phoneNumber,    "button": button{title, url, variant},    "orderedAolIds": *[_type == "mainNavigation"][0]      .items[_type == "navItemPracticeAreas"][0]      .practiceAreaOrder[]._ref,    "areasOfLaw": *[      _type == "practiceArea" && !defined(parentPage) && defined(slug.current)    ]{      _id,      "slug": slug.current,      title,      "children": *[        _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)      ]{        _id,        "slug": slug.current,        title,        "grandchildren": *[          _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)        ]{          "slug": slug.current,          title,        } | order(title asc),      } | order(title asc),    },    "orderedAttorneyIds": select(      mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,      null    ),    "attorneys": select(      mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      attorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}}    ),    "links": links[defined(@->_id)]->{      _id,      _type,      "slug": slug.current,      title    }  }},    "sections": sections [defined(@->_id)]->{  _id,  _type,  name,  tagline,  heading,  description,  layout,  sectionLayout,  gridMode,  mobileDisplay,  cardStyle,  hoverEffects,  showArrow,  iconPosition,  mode,  reviewsEmbed,  footerHeading,  footerDescription,  "appearance": {    "surface": surface,    "spacing": spacing,    "backgroundImage": sectionBackgroundImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}  },  // practiceAreaNav (silo nav): resolve each item's page reference to an href +  // auto-pulled title/description, with per-item overrides; or auto-list all  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").  "items": select(    _type == "practiceAreaNav" && mode == "allTopLevel" =>      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{        "_key": _id,        "label": title,        "href": "/" + slug.current + "/",        "description": metaDescription,        "icon": null,        "image": null,        "featured": false      } | order(title asc),    _type == "practiceAreaNav" =>      items[defined(page->slug.current)]{        _key,        "label": coalesce(label, page->title),        "href": "/" + page->slug.current + "/",        "description": coalesce(description, page->metaDescription),        "icon": icon {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "featured": featured      }  ),  "buttons": buttons[]{title, url, variant},  "footerButton": footerButton{title, url, variant},  "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  "testimonials": testimonials[defined(@->_id)]->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "testimonial": testimonial->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "questions": questions[defined(@->_id)]->{    question,    "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    category,    "slug": slug.current,    tags  },  "badges": badges[defined(@->_id)]->{    "src": image.asset->url,    "alt": image.alt,    "width": image.asset->metadata.dimensions.width,    "height": image.asset->metadata.dimensions.height  },  "orderedAttorneyIds": select(    mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,    null  ),  "attorneys": select(    mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'manual' => attorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    []  ),  "videos": videos[defined(@->_id)]->{    _id, title, youTubeUrl, description, videoType  }},    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
 export type LOCATION_PAGE_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   _type: "locationPage";
   title: string | "";
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   hero: {
     heading: string | null;
@@ -9248,14 +11373,30 @@ export type LOCATION_PAGE_QUERYResult = {
   } | null;
 } | null;
 // Variable: CONTENT_PAGE_QUERY
-// Query: *[    slug.current == $slug &&    _type in ["aboutPage", "contactPage", "faqPage", "generalPage", "landingPage"]  ][0]{    _type,    "title": coalesce(title, ""),    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    canonicalUrl,    "parentPage": parentPage->{      title,      "slug": slug.current,      "parentPage": parentPage->{        title,        "slug": slug.current      }    },    "hero": hero {      "heading": coalesce(heading, ^.title),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "faqItems": faqItems[defined(@->_id)]->{      question,      "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},      category,      "slug": slug.current,      tags    },    sidebar[]{  _type,  _key,  _type == "sidebarTableOfContents" => {    "_componentType": "sidebarTableOfContents"  },  _type == "reference" => @->{    "_componentType": _type,    name,    header,    description,    mode,    layout,    postCount,    "formEmbed": form->formEmbed,    tagline,    supportingText1,    supportingText2,    phoneNumber,    "button": button{title, url, variant},    "orderedAolIds": *[_type == "mainNavigation"][0]      .items[_type == "navItemPracticeAreas"][0]      .practiceAreaOrder[]._ref,    "areasOfLaw": *[      _type == "practiceArea" && !defined(parentPage) && defined(slug.current)    ]{      _id,      "slug": slug.current,      title,      "children": *[        _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)      ]{        _id,        "slug": slug.current,        title,        "grandchildren": *[          _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)        ]{          "slug": slug.current,          title,        } | order(title asc),      } | order(title asc),    },    "orderedAttorneyIds": select(      mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,      null    ),    "attorneys": select(      mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      attorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}}    ),    "links": links[defined(@->_id)]->{      _id,      _type,      "slug": slug.current,      title    }  }},    "sections": sections [defined(@->_id)]->{  _id,  _type,  name,  tagline,  heading,  description,  layout,  sectionLayout,  gridMode,  mobileDisplay,  cardStyle,  hoverEffects,  showArrow,  iconPosition,  mode,  reviewsEmbed,  footerHeading,  footerDescription,  "appearance": {    "surface": surface,    "spacing": spacing,    "backgroundImage": sectionBackgroundImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}  },  // practiceAreaNav (silo nav): resolve each item's page reference to an href +  // auto-pulled title/description, with per-item overrides; or auto-list all  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").  "items": select(    _type == "practiceAreaNav" && mode == "allTopLevel" =>      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{        "_key": _id,        "label": title,        "href": "/" + slug.current + "/",        "description": metaDescription,        "icon": null,        "image": null,        "featured": false      } | order(title asc),    _type == "practiceAreaNav" =>      items[defined(page->slug.current)]{        _key,        "label": coalesce(label, page->title),        "href": "/" + page->slug.current + "/",        "description": coalesce(description, page->metaDescription),        "icon": icon {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "featured": featured      }  ),  "buttons": buttons[]{title, url, variant},  "footerButton": footerButton{title, url, variant},  "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  "testimonials": testimonials[defined(@->_id)]->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "testimonial": testimonial->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "questions": questions[defined(@->_id)]->{    question,    "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    category,    "slug": slug.current,    tags  },  "badges": badges[defined(@->_id)]->{    "src": image.asset->url,    "alt": image.alt,    "width": image.asset->metadata.dimensions.width,    "height": image.asset->metadata.dimensions.height  },  "orderedAttorneyIds": select(    mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,    null  ),  "attorneys": select(    mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'manual' => attorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    []  ),  "videos": videos[defined(@->_id)]->{    _id, title, youTubeUrl, description, videoType  }},    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
+// Query: *[    slug.current == $slug &&    _type in ["aboutPage", "contactPage", "faqPage", "generalPage", "landingPage"]  ][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    _type,    "title": coalesce(title, ""),    "slug": slug.current,    seoTitle,    metaDescription,    noIndex,    noFollow,    canonicalUrl,    "parentPage": parentPage->{      title,      "slug": slug.current,      "parentPage": parentPage->{        title,        "slug": slug.current      }    },    "hero": hero {      "heading": coalesce(heading, ^.title),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "faqItems": faqItems[defined(@->_id)]->{      question,      "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},      category,      "slug": slug.current,      tags    },    sidebar[]{  _type,  _key,  _type == "sidebarTableOfContents" => {    "_componentType": "sidebarTableOfContents"  },  _type == "reference" => @->{    "_componentType": _type,    name,    header,    description,    mode,    layout,    postCount,    "formEmbed": form->formEmbed,    tagline,    supportingText1,    supportingText2,    phoneNumber,    "button": button{title, url, variant},    "orderedAolIds": *[_type == "mainNavigation"][0]      .items[_type == "navItemPracticeAreas"][0]      .practiceAreaOrder[]._ref,    "areasOfLaw": *[      _type == "practiceArea" && !defined(parentPage) && defined(slug.current)    ]{      _id,      "slug": slug.current,      title,      "children": *[        _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)      ]{        _id,        "slug": slug.current,        title,        "grandchildren": *[          _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)        ]{          "slug": slug.current,          title,        } | order(title asc),      } | order(title asc),    },    "orderedAttorneyIds": select(      mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,      null    ),    "attorneys": select(      mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      attorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}}    ),    "links": links[defined(@->_id)]->{      _id,      _type,      "slug": slug.current,      title    }  }},    "sections": sections [defined(@->_id)]->{  _id,  _type,  name,  tagline,  heading,  description,  layout,  sectionLayout,  gridMode,  mobileDisplay,  cardStyle,  hoverEffects,  showArrow,  iconPosition,  mode,  reviewsEmbed,  footerHeading,  footerDescription,  "appearance": {    "surface": surface,    "spacing": spacing,    "backgroundImage": sectionBackgroundImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}  },  // practiceAreaNav (silo nav): resolve each item's page reference to an href +  // auto-pulled title/description, with per-item overrides; or auto-list all  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").  "items": select(    _type == "practiceAreaNav" && mode == "allTopLevel" =>      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{        "_key": _id,        "label": title,        "href": "/" + slug.current + "/",        "description": metaDescription,        "icon": null,        "image": null,        "featured": false      } | order(title asc),    _type == "practiceAreaNav" =>      items[defined(page->slug.current)]{        _key,        "label": coalesce(label, page->title),        "href": "/" + page->slug.current + "/",        "description": coalesce(description, page->metaDescription),        "icon": icon {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "featured": featured      }  ),  "buttons": buttons[]{title, url, variant},  "footerButton": footerButton{title, url, variant},  "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  "testimonials": testimonials[defined(@->_id)]->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "testimonial": testimonial->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "questions": questions[defined(@->_id)]->{    question,    "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    category,    "slug": slug.current,    tags  },  "badges": badges[defined(@->_id)]->{    "src": image.asset->url,    "alt": image.alt,    "width": image.asset->metadata.dimensions.width,    "height": image.asset->metadata.dimensions.height  },  "orderedAttorneyIds": select(    mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,    null  ),  "attorneys": select(    mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'manual' => attorneys[defined(@->_id)]->{      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    []  ),  "videos": videos[defined(@->_id)]->{    _id, title, youTubeUrl, description, videoType  }},    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
 export type CONTENT_PAGE_QUERYResult = {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   _type: "aboutPage";
   title: string | "";
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   parentPage: null;
   hero: {
@@ -10176,12 +12317,28 @@ export type CONTENT_PAGE_QUERYResult = {
     }> | null;
   } | null;
 } | {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   _type: "contactPage";
   title: string | "";
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   parentPage: null;
   hero: {
@@ -10709,12 +12866,28 @@ export type CONTENT_PAGE_QUERYResult = {
   hideCtaForm: null;
   ctaOverride: null;
 } | {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   _type: "faqPage";
   title: string | "";
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   parentPage: {
     title: string | null;
@@ -11609,12 +13782,28 @@ export type CONTENT_PAGE_QUERYResult = {
     }> | null;
   } | null;
 } | {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   _type: "generalPage";
   title: string | "";
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   parentPage: {
     title: string | null;
@@ -12216,12 +14405,28 @@ export type CONTENT_PAGE_QUERYResult = {
     }> | null;
   } | null;
 } | {
+  ogImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
   _type: "landingPage";
   title: string | "";
   slug: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
   noIndex: boolean | null;
+  noFollow: boolean | null;
   canonicalUrl: string | null;
   parentPage: null;
   hero: null;
@@ -12724,17 +14929,17 @@ declare module "@sanity/client" {
     "[]{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n}": BLOCK_CONTENT_FRAGMENTResult;
     "{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n}": TESTIMONIAL_FIELDS_FRAGMENTResult;
     "[defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": title,\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(title asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, page->title),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n}": SECTIONS_FRAGMENTResult;
-    "\n  *[_type == \"siteSettings\"][0]{\n    firmName,\n    primaryDomain,\n    gscVerification,\n    \"faviconUrl\":  *[_type == \"designSettings\"][0].favicon.asset->url,\n    \"faviconMime\": *[_type == \"designSettings\"][0].favicon.asset->mimeType,\n    \"webclipUrl\":  *[_type == \"designSettings\"][0].webclipImage.asset->url,\n  }\n": SITE_METADATA_QUERYResult;
+    "\n  *[_type == \"siteSettings\"][0]{\n    firmName,\n    gscVerification,\n    hideFromSearch,\n    \"faviconUrl\":  *[_type == \"designSettings\"][0].favicon.asset->url,\n    \"faviconMime\": *[_type == \"designSettings\"][0].favicon.asset->mimeType,\n    \"webclipUrl\":  *[_type == \"designSettings\"][0].webclipImage.asset->url,\n  }\n": SITE_METADATA_QUERYResult;
     "\n  *[_type == \"siteSettings\"][0].scriptsRequireConsent\n": SITE_SCRIPTS_QUERYResult;
     "{\n  \"firmName\":     *[_type == \"siteSettings\"][0].firmName,\n  \"logo\":         *[_type == \"designSettings\"][0].logoOnDark.asset->url,\n  \"primaryColor\": *[_type == \"designSettings\"][0].primaryColor,\n}": OG_DATA_QUERYResult;
-    "{\n  \"firmName\": *[_type == \"siteSettings\"][0].firmName,\n  \"domain\":   *[_type == \"siteSettings\"][0].primaryDomain,\n  \"logo\":     *[_type == \"designSettings\"][0].logoOnLight.asset->url,\n  \"address\":  *[_type == \"siteSettings\"][0].primaryLocation->{\n    \n  \"address1\": select(locationType in [\"Physical\", \"Shared\"] => address1, null),\n  \"address2\": select(locationType in [\"Physical\", \"Shared\"] => address2, null),\n  \"address3\": select(locationType in [\"Physical\", \"Shared\"] => address3, null),\n  \"zip\":      select(locationType in [\"Physical\", \"Shared\"] => zip, null),\n\n    city,\n    state,\n    officePhone,\n    tollFreePhone\n  },\n  \"socials\":  *[_type == \"footerSettings\"][0]{\n    facebookUrl,\n    instagramUrl,\n    twitterUrl,\n    linkedInUrl,\n    youTubeUrl,\n    avvoUrl,\n    justiaUrl,\n    findLawUrl,\n    martindaleUrl,\n    lawyersComUrl,\n    yelpUrl,\n    superLawyersUrl,\n    lawInfoUrl\n  }\n}": ORGANIZATION_SCHEMA_QUERYResult;
+    "{\n  \"firmName\": *[_type == \"siteSettings\"][0].firmName,\n  \"logo\":     *[_type == \"designSettings\"][0].logoOnLight.asset->url,\n  \"address\":  *[_type == \"siteSettings\"][0].primaryLocation->{\n    \n  \"address1\": select(locationType in [\"Physical\", \"Shared\"] => address1, null),\n  \"address2\": select(locationType in [\"Physical\", \"Shared\"] => address2, null),\n  \"address3\": select(locationType in [\"Physical\", \"Shared\"] => address3, null),\n  \"zip\":      select(locationType in [\"Physical\", \"Shared\"] => zip, null),\n\n    city,\n    state,\n    officePhone,\n    tollFreePhone\n  },\n  \"socials\":  *[_type == \"footerSettings\"][0]{\n    facebookUrl,\n    instagramUrl,\n    twitterUrl,\n    linkedInUrl,\n    youTubeUrl,\n    avvoUrl,\n    justiaUrl,\n    findLawUrl,\n    martindaleUrl,\n    lawyersComUrl,\n    yelpUrl,\n    superLawyersUrl,\n    lawInfoUrl\n  }\n}": ORGANIZATION_SCHEMA_QUERYResult;
     "\n  *[_type == \"attorneyPage\" && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)].slug.current\n": ATTORNEY_SLUGS_QUERYResult;
     "\n  *[_type == \"staffPage\" && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)].slug.current\n": STAFF_SLUGS_QUERYResult;
     "\n  *[_type == \"blogPost\" && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)].slug.current\n": BLOG_POST_SLUGS_QUERYResult;
     "\n  *[_type == \"blogCategory\" && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)].slug.current\n": BLOG_CATEGORY_SLUGS_QUERYResult;
     "\n  *[_type == \"eventPage\" && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)].slug.current\n": EVENT_SLUGS_QUERYResult;
     "\n  *[_type == \"reviewPage\" && !(_id in path(\"drafts.**\")) && defined(slug.current)].slug.current\n": REVIEW_SLUGS_QUERYResult;
-    "{\n  \"domain\": *[_type == \"siteSettings\"][0].primaryDomain,\n  \"home\":             *[_type == \"homePage\"][0]{_updatedAt},\n  \"attorneyIndex\":    *[_type == \"attorneyIndex\"][0]{_updatedAt},\n  \"staffIndex\":       *[_type == \"staffIndex\"][0]{_updatedAt},\n  \"blogIndex\":        *[_type == \"blogIndex\"][0]{_updatedAt},\n  \"eventIndex\":       *[_type == \"eventIndex\"][0]{_updatedAt},\n  \"serviceAreaIndex\": *[_type == \"serviceAreaIndex\"][0]{_updatedAt},\n  \"videoIndex\":       *[_type == \"videoIndex\" && coalesce(noIndex, false) == false][0]{_updatedAt},\n  \"testimonials\":     *[_type == \"testimonialsPage\"][0]{_updatedAt},\n  \"attorneys\":        *[_type == \"attorneyPage\" && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)]{\"slug\": slug.current, _updatedAt},\n  \"staff\":            *[_type == \"staffPage\"    && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)]{\"slug\": slug.current, _updatedAt},\n  \"blogPosts\":        *[_type == \"blogPost\"     && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)]{\"slug\": slug.current, _updatedAt},\n  \"blogCategories\":   *[_type == \"blogCategory\" && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)]{\"slug\": slug.current, _updatedAt},\n  \"events\":           *[_type == \"eventPage\"    && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)]{\"slug\": slug.current, _updatedAt},\n  \"catchAll\":         *[\n    _type in [\"practiceArea\",\"locationPage\",\"geoPracticeArea\",\"generalPage\",\"landingPage\",\"aboutPage\",\"faqPage\",\"serviceAreaPage\"]\n    && !(_id in path(\"drafts.**\"))\n    && coalesce(noIndex, false) == false\n    && defined(slug.current)\n  ]{\"slug\": slug.current, _updatedAt}\n}": SITEMAP_QUERYResult;
+    "{\n  \"hideFromSearch\": *[_type == \"siteSettings\"][0].hideFromSearch,\n  \"home\":             *[_type == \"homePage\"][0]{_updatedAt},\n  \"attorneyIndex\":    *[_type == \"attorneyIndex\"][0]{_updatedAt},\n  \"staffIndex\":       *[_type == \"staffIndex\"][0]{_updatedAt},\n  \"blogIndex\":        *[_type == \"blogIndex\"][0]{_updatedAt},\n  \"eventIndex\":       *[_type == \"eventIndex\"][0]{_updatedAt},\n  \"serviceAreaIndex\": *[_type == \"serviceAreaIndex\"][0]{_updatedAt},\n  \"videoIndex\":       *[_type == \"videoIndex\" && coalesce(noIndex, false) == false][0]{_updatedAt},\n  \"testimonials\":     *[_type == \"testimonialsPage\"][0]{_updatedAt},\n  \"attorneys\":        *[_type == \"attorneyPage\" && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)]{\"slug\": slug.current, _updatedAt},\n  \"staff\":            *[_type == \"staffPage\"    && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)]{\"slug\": slug.current, _updatedAt},\n  \"blogPosts\":        *[_type == \"blogPost\"     && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)]{\"slug\": slug.current, _updatedAt},\n  \"blogCategories\":   *[_type == \"blogCategory\" && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)]{\"slug\": slug.current, _updatedAt},\n  \"events\":           *[_type == \"eventPage\"    && !(_id in path(\"drafts.**\")) && coalesce(noIndex, false) == false && defined(slug.current)]{\"slug\": slug.current, _updatedAt},\n  \"catchAll\":         *[\n    _type in [\"practiceArea\",\"locationPage\",\"geoPracticeArea\",\"generalPage\",\"landingPage\",\"aboutPage\",\"faqPage\",\"serviceAreaPage\"]\n    && !(_id in path(\"drafts.**\"))\n    && coalesce(noIndex, false) == false\n    && defined(slug.current)\n  ]{\"slug\": slug.current, _updatedAt}\n}": SITEMAP_QUERYResult;
     "{\n  \"siteSettings\": *[_type == \"siteSettings\"][0]{\n    firmName,\n    firmNameShort,\n    \"phone\": primaryLocation->officePhone,\n    \"tollFreePhone\": primaryLocation->tollFreePhone\n  },\n  \"designSettings\": *[_type == \"designSettings\"][0]{\n    \"logoOnLight\": logoOnLight{\n      \"src\": asset->url,\n      \"alt\": alt,\n      \"width\": asset->metadata.dimensions.width,\n      \"height\": asset->metadata.dimensions.height\n    },\n    \"logoOnDark\": logoOnDark{\n      \"src\": asset->url,\n      \"alt\": alt,\n      \"width\": asset->metadata.dimensions.width,\n      \"height\": asset->metadata.dimensions.height\n    },\n    \"logoMarkOnLight\": logoMarkOnLight{\n      \"src\": asset->url,\n      \"alt\": alt,\n      \"width\": asset->metadata.dimensions.width,\n      \"height\": asset->metadata.dimensions.height\n    },\n    \"logoMarkOnDark\": logoMarkOnDark{\n      \"src\": asset->url,\n      \"alt\": alt,\n      \"width\": asset->metadata.dimensions.width,\n      \"height\": asset->metadata.dimensions.height\n    }\n  },\n  \"mainNavigation\": *[_type == \"mainNavigation\"][0]{\n    headerLayout,\n    mobileLayout,\n    heroMerge,\n    sticky,\n    stickyHideSupplementary,\n    compactStyle,\n    defaultScheme,\n    scrolledScheme,\n    topBarDesktop,\n    topBarMobile,\n    topBarPinSide,\n    topBarLeft,\n    topBarRight,\n    topBarStyle,\n    headerPhone,\n    headerPhone2,\n    headerPhoneTagline,\n    headerCtaLabel,\n    headerCtaUrl,\n    headerCtaLabel2,\n    headerCtaUrl2,\n    \"navItems\": items[]{\n      _type,\n      label,\n      href,\n      displayMode,\n      \"children\": select(\n        _type == \"navItemStandard\" => children[]{label, href},\n        _type == \"navItemAttorneys\" => select(\n          count(attorneyOrder) > 0 => attorneyOrder[defined(@->_id)]->{\n            \"_id\": _id,\n            \"label\": coalesce(firstName, \"\") + \" \" + coalesce(lastName, \"\"),\n            \"href\": \"/\" + slug.current + \"/\"\n          },\n          *[_type == \"attorneyPage\"]{\n            \"label\": coalesce(firstName, \"\") + \" \" + coalesce(lastName, \"\"),\n            \"href\": \"/\" + slug.current + \"/\"\n          } | order(lastName asc, firstName asc)\n        ),\n        _type == \"navItemPracticeAreas\" => select(\n          count(practiceAreaOrder) > 0 => practiceAreaOrder[defined(@->_id)]->{\n            \"_id\": _id,\n            \"label\": title,\n            \"href\": \"/\" + slug.current + \"/\",\n            \"parentRef\": parentPage._ref\n          },\n          *[_type == \"practiceArea\"]{\n            \"_id\": _id,\n            \"label\": title,\n            \"href\": \"/\" + slug.current + \"/\",\n            \"parentRef\": parentPage._ref\n          } | order(title asc)\n        )\n      )\n    }\n  }\n}": HEADER_QUERYResult;
     "{\n  \"designSettings\": *[_type == \"designSettings\"][0]{\n    \"logoOnDark\": logoOnDark{\n      \"src\": asset->url,\n      \"alt\": alt,\n      \"width\": asset->metadata.dimensions.width,\n      \"height\": asset->metadata.dimensions.height\n    },\n    \"logoOnLight\": logoOnLight{\n      \"src\": asset->url,\n      \"alt\": alt,\n      \"width\": asset->metadata.dimensions.width,\n      \"height\": asset->metadata.dimensions.height\n    },\n    \"showBackToTop\": coalesce(showBackToTop, true)\n  },\n  \"siteSettings\": *[_type == \"siteSettings\"][0]{\n    firmName,\n    privacyPolicyUrl,\n    disclaimerUrl,\n    cookiesUrl,\n    \"address\": primaryLocation->{\n      \n  \"address1\": select(locationType in [\"Physical\", \"Shared\"] => address1, null),\n  \"address2\": select(locationType in [\"Physical\", \"Shared\"] => address2, null),\n  \"address3\": select(locationType in [\"Physical\", \"Shared\"] => address3, null),\n  \"zip\":      select(locationType in [\"Physical\", \"Shared\"] => zip, null),\n\n      city,\n      state,\n      officePhone,\n      tollFreePhone,\n      emergency24_7,\n      emergencyPhone,\n      appointmentRequired,\n      hours\n    }\n  },\n  \"footerSettings\": *[_type == \"footerSettings\"][0]{\n    footerLayout,\n    footerScheme,\n    ctaText,\n    ctaUrl,\n    actionButton1Label,\n    actionButton1Url,\n    actionButton2Label,\n    actionButton2Url,\n    // Practice Areas column auto-lists top-level areas of law LIVE from the\n    // practiceArea docs \u2014 label = title, href = slug \u2014 so it stays in sync with\n    // the header nav and sidebar nav (single source of truth = practiceArea.title).\n    // The stored column1 field is ignored.\n    \"column1\": *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n      \"label\": title,\n      \"href\": \"/\" + slug.current + \"/\"\n    } | order(title asc),\n    \"column2\": column2[]{label, href},\n    facebookUrl,\n    instagramUrl,\n    twitterUrl,\n    linkedInUrl,\n    youTubeUrl,\n    \"formEmbed\": form->formEmbed,\n  },\n  \"locations\": *[_type == \"location\" && locationStatus == \"Active\" && displayOnWebsite == true] | order(isPrimary desc, city asc) {\n    _id,\n    city,\n    \n  \"address1\": select(locationType in [\"Physical\", \"Shared\"] => address1, null),\n  \"address2\": select(locationType in [\"Physical\", \"Shared\"] => address2, null),\n  \"address3\": select(locationType in [\"Physical\", \"Shared\"] => address3, null),\n  \"zip\":      select(locationType in [\"Physical\", \"Shared\"] => zip, null),\n\n    state,\n    officePhone,\n    tollFreePhone,\n    emergency24_7,\n    emergencyPhone,\n    appointmentRequired,\n    hours,\n    \"pageSlug\": *[_type == \"locationPage\" && references(^._id)][0].slug.current\n  }\n}": FOOTER_QUERYResult;
     "sidebar[]{\n  _type,\n  _key,\n  _type == \"sidebarTableOfContents\" => {\n    \"_componentType\": \"sidebarTableOfContents\"\n  },\n  _type == \"reference\" => @->{\n    \"_componentType\": _type,\n    name,\n    header,\n    description,\n    mode,\n    layout,\n    postCount,\n    \"formEmbed\": form->formEmbed,\n    tagline,\n    supportingText1,\n    supportingText2,\n    phoneNumber,\n    \"button\": button{title, url, variant},\n    \"orderedAolIds\": *[_type == \"mainNavigation\"][0]\n      .items[_type == \"navItemPracticeAreas\"][0]\n      .practiceAreaOrder[]._ref,\n    \"areasOfLaw\": *[\n      _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n    ]{\n      _id,\n      \"slug\": slug.current,\n      title,\n      \"children\": *[\n        _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n      ]{\n        _id,\n        \"slug\": slug.current,\n        title,\n        \"grandchildren\": *[\n          _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n        ]{\n          \"slug\": slug.current,\n          title,\n        } | order(title asc),\n      } | order(title asc),\n    },\n    \"orderedAttorneyIds\": select(\n      mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n      null\n    ),\n    \"attorneys\": select(\n      mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      attorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}}\n    ),\n    \"links\": links[defined(@->_id)]->{\n      _id,\n      _type,\n      \"slug\": slug.current,\n      title\n    }\n  }\n}": SIDEBAR_FRAGMENTResult;
@@ -12748,32 +14953,34 @@ declare module "@sanity/client" {
     "\n  *[_type == \"globalCta\"][0]{\n    layout,\n    tagline,\n    heading,\n    description,\n    \"buttons\": buttons[]{title, url, variant},\n    \"formEmbed\": form->formEmbed,\n  }\n": GLOBAL_CTA_QUERYResult;
     "\n  *[_type == \"siteSettings\"][0]{\n    firmName,\n    firmNameShort,\n    \"profileLayout\": *[_type == \"designSettings\"][0].profileLayout,\n    \"profileCtaLabel\": *[_type == \"designSettings\"][0].profileCtaLabel,\n    \"profileCtaUrl\": *[_type == \"designSettings\"][0].profileCtaUrl,\n    \"primaryPhone\": primaryLocation->officePhone,\n    \"primaryTollFree\": primaryLocation->tollFreePhone,\n    \"primaryLocationId\": primaryLocation->_id,\n    \"locations\": *[_type == \"location\" && locationStatus == \"Active\" && displayOnWebsite == true]{\n      \"_id\": _id,\n      \"phone\": officePhone,\n      \"fax\": officeFax,\n      address1,\n      address2,\n      address3,\n      city,\n      state,\n      zip,\n      appointmentRequired,\n      emergency24_7,\n      emergencyPhone\n    },\n  }\n": NAP_TOKENS_QUERYResult;
     "[]{\n  _type,\n  _key,\n  _type == \"attorneyHighlightBlock\" => {\n    tagline,\n    heading,\n    mode,\n    // 'all' reads the Attorney Index order so the homepage row matches the\n    // attorney index and the header nav; 'manual' uses the block's own order.\n    \"attorneys\": select(\n      mode == \"manual\" => attorneys[defined(@->_id)]->{\n        _id,\n        // Built from the name fields, NOT from title. Zite's displayName carries\n        // the firm suffix, so title reads \"Joseph Dudley - Firm, P.A.\" and would\n        // render that on an attorney card. The platform already ruled that\n        // display names build from name fields (_format_display_name); h1 wins\n        // when an operator has set one. No backticks in here: this comment sits\n        // inside a groq template literal and a backtick would close it.\n        \"name\": coalesce(h1, firstName + \" \" + lastName),\n        jobTitle,\n        \"href\": \"/\" + slug.current,\n        \"photo\": {\n          \"src\": photo.asset->url,\n          \"alt\": photo.alt,\n          \"width\": photo.asset->metadata.dimensions.width,\n          \"height\": photo.asset->metadata.dimensions.height\n        }\n      },\n      *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n        _id,\n        // Built from the name fields, NOT from title. Zite's displayName carries\n        // the firm suffix, so title reads \"Joseph Dudley - Firm, P.A.\" and would\n        // render that on an attorney card. The platform already ruled that\n        // display names build from name fields (_format_display_name); h1 wins\n        // when an operator has set one. No backticks in here: this comment sits\n        // inside a groq template literal and a backtick would close it.\n        \"name\": coalesce(h1, firstName + \" \" + lastName),\n        jobTitle,\n        \"href\": \"/\" + slug.current,\n        \"photo\": {\n          \"src\": photo.asset->url,\n          \"alt\": photo.alt,\n          \"width\": photo.asset->metadata.dimensions.width,\n          \"height\": photo.asset->metadata.dimensions.height\n        }\n      }\n    )\n  },\n  _type == \"caseResultsBlock\" => {\n    heading,\n    intro,\n    \"caseResults\": caseResults[defined(@->_id)]->{\n      _id, amount, caseType, caption, year\n    },\n    \"ctaButton\": ctaButton{title, url, variant}\n  },\n  _type == \"narrativeBlock\" => {\n    heading,\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"image\": {\n      \"src\": image.asset->url,\n      \"alt\": image.alt,\n      \"width\": image.asset->metadata.dimensions.width,\n      \"height\": image.asset->metadata.dimensions.height\n    },\n    \"ctaButton\": ctaButton{title, url, variant},\n    \"internalLinks\": internalLinks[defined(page->slug.current)]{\n      _key,\n      anchorText,\n      \"href\": \"/\" + page->slug.current + \"/\"\n    }\n  },\n  _type == \"differentiatorBlock\" => {\n    heading,\n    intro,\n    \"differentiators\": differentiators[]{_key, title, body}\n  },\n  _type == \"badgesBlock\" => {\n    heading,\n    description,\n    \"badges\": badges[defined(@->_id)]->{\n      \"src\": image.asset->url,\n      \"alt\": image.alt,\n      \"width\": image.asset->metadata.dimensions.width,\n      \"height\": image.asset->metadata.dimensions.height\n    }\n  }\n}": CANVAS_FRAGMENTResult;
+    "*[\n  _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n].title": AREAS_OF_LAW_FRAGMENTResult;
+    "{\n  \"seoTitle\": *[_type == \"homePage\"][0].seoTitle,\n  \"ogImage\": *[_type == \"homePage\"][0].ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"areasOfLaw\": *[\n  _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n].title\n}": HOME_METADATA_QUERYResult;
     "\n  *[_type == \"homePage\"][0]{\n    \"hero\": hero {\n  heading,\n  eyebrow,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n},\n    \"canvas\": canvas []{\n  _type,\n  _key,\n  _type == \"attorneyHighlightBlock\" => {\n    tagline,\n    heading,\n    mode,\n    // 'all' reads the Attorney Index order so the homepage row matches the\n    // attorney index and the header nav; 'manual' uses the block's own order.\n    \"attorneys\": select(\n      mode == \"manual\" => attorneys[defined(@->_id)]->{\n        _id,\n        // Built from the name fields, NOT from title. Zite's displayName carries\n        // the firm suffix, so title reads \"Joseph Dudley - Firm, P.A.\" and would\n        // render that on an attorney card. The platform already ruled that\n        // display names build from name fields (_format_display_name); h1 wins\n        // when an operator has set one. No backticks in here: this comment sits\n        // inside a groq template literal and a backtick would close it.\n        \"name\": coalesce(h1, firstName + \" \" + lastName),\n        jobTitle,\n        \"href\": \"/\" + slug.current,\n        \"photo\": {\n          \"src\": photo.asset->url,\n          \"alt\": photo.alt,\n          \"width\": photo.asset->metadata.dimensions.width,\n          \"height\": photo.asset->metadata.dimensions.height\n        }\n      },\n      *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n        _id,\n        // Built from the name fields, NOT from title. Zite's displayName carries\n        // the firm suffix, so title reads \"Joseph Dudley - Firm, P.A.\" and would\n        // render that on an attorney card. The platform already ruled that\n        // display names build from name fields (_format_display_name); h1 wins\n        // when an operator has set one. No backticks in here: this comment sits\n        // inside a groq template literal and a backtick would close it.\n        \"name\": coalesce(h1, firstName + \" \" + lastName),\n        jobTitle,\n        \"href\": \"/\" + slug.current,\n        \"photo\": {\n          \"src\": photo.asset->url,\n          \"alt\": photo.alt,\n          \"width\": photo.asset->metadata.dimensions.width,\n          \"height\": photo.asset->metadata.dimensions.height\n        }\n      }\n    )\n  },\n  _type == \"caseResultsBlock\" => {\n    heading,\n    intro,\n    \"caseResults\": caseResults[defined(@->_id)]->{\n      _id, amount, caseType, caption, year\n    },\n    \"ctaButton\": ctaButton{title, url, variant}\n  },\n  _type == \"narrativeBlock\" => {\n    heading,\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"image\": {\n      \"src\": image.asset->url,\n      \"alt\": image.alt,\n      \"width\": image.asset->metadata.dimensions.width,\n      \"height\": image.asset->metadata.dimensions.height\n    },\n    \"ctaButton\": ctaButton{title, url, variant},\n    \"internalLinks\": internalLinks[defined(page->slug.current)]{\n      _key,\n      anchorText,\n      \"href\": \"/\" + page->slug.current + \"/\"\n    }\n  },\n  _type == \"differentiatorBlock\" => {\n    heading,\n    intro,\n    \"differentiators\": differentiators[]{_key, title, body}\n  },\n  _type == \"badgesBlock\" => {\n    heading,\n    description,\n    \"badges\": badges[defined(@->_id)]->{\n      \"src\": image.asset->url,\n      \"alt\": image.alt,\n      \"width\": image.asset->metadata.dimensions.width,\n      \"height\": image.asset->metadata.dimensions.height\n    }\n  }\n},\n    // Site-level, projected alongside the canvas rather than fetched separately:\n    // the same one-liner any other page rendering case results will need. Raw\n    // and nullable here; resolveResultsDisclaimer() supplies the floor.\n    \"resultsDisclaimer\": *[_type == \"siteSettings\"][0].resultsDisclaimer,\n    // Beat 9 is a BOOKEND sourced from the globalCta singleton with this page's\n    // ctaFormOverride layered on top, exactly as every interior page does it.\n    // Both were missing here: the homepage rendered no CTA at all and\n    // ctaFormOverride was projected by twelve interior queries and not this one,\n    // which left homePage.hideCtaForm and ctaFormOverride inert (item 53).\n    \"hideCtaForm\": hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n},\n    // The coda bookend's text. Lives on homePage because it closes THIS page's\n    // arc; see the schema for why globalCta and siteSettings were both wrong.\n    codaLine,\n    \"sections\": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": title,\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(title asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, page->title),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n}\n  }\n": HOME_QUERYResult;
-    "\n  *[_type == \"contactPage\"][0]{\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    \"showHero\": coalesce(showHero, true),\n    \"hero\": hero {\n  heading,\n  \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n,\n  scrimStyleOverride,\n  scrimColorOverride,\n  scrimDirectionOverride,\n  sectionBackgroundNone,\n  \"sectionBackgroundImage\": sectionBackgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n},\n    tagline,\n    heading,\n    description,\n    \"formEmbed\": contactForm->formEmbed\n  }\n": CONTACT_PAGE_QUERYResult;
-    "\n  *[_type == \"testimonialsPage\"][0]{\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    \"hero\": hero {\n  heading,\n  \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n,\n  scrimStyleOverride,\n  scrimColorOverride,\n  scrimDirectionOverride,\n  sectionBackgroundNone,\n  \"sectionBackgroundImage\": sectionBackgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n},\n    \"title\": coalesce(hero.heading, title, \"Testimonials\"),\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n},\n    \"testimonials\": testimonials[defined(@->_id)]->{\n      _id,\n      quote,\n      name,\n      caseType,\n      numberOfStars,\n      \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    }\n  }\n": TESTIMONIALS_PAGE_QUERYResult;
-    "\n  *[_type == \"attorneyIndex\"][0]{\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    \"hero\": hero{\n      \"heading\": coalesce(heading, \"Our Attorneys\"),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"title\": coalesce(hero.heading, \"Our Attorneys\"),\n    tagline,\n    heading,\n    description,\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n},\n    \"orderedAttorneys\": orderedAttorneys[defined(@->_id)]->{\n      _id,\n      \"slug\": slug.current,\n      firstName,\n      middleName,\n      lastName,\n      suffix,\n      h1,\n      jobTitle,\n      linkedIn,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n      \"practiceAreas\": practiceAreas[]{\n        label,\n        \"slug\": page->slug.current\n      }\n    }\n  }\n": ATTORNEY_INDEX_QUERYResult;
+    "\n  *[_type == \"contactPage\"][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"title\": coalesce(title, \"Contact\"),\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"showHero\": coalesce(showHero, true),\n    \"hero\": hero {\n  heading,\n  \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n,\n  scrimStyleOverride,\n  scrimColorOverride,\n  scrimDirectionOverride,\n  sectionBackgroundNone,\n  \"sectionBackgroundImage\": sectionBackgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n},\n    tagline,\n    heading,\n    description,\n    \"formEmbed\": contactForm->formEmbed\n  }\n": CONTACT_PAGE_QUERYResult;
+    "\n  *[_type == \"testimonialsPage\"][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"hero\": hero {\n  heading,\n  \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n,\n  scrimStyleOverride,\n  scrimColorOverride,\n  scrimDirectionOverride,\n  sectionBackgroundNone,\n  \"sectionBackgroundImage\": sectionBackgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n},\n    \"title\": coalesce(hero.heading, title, \"Testimonials\"),\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n},\n    \"testimonials\": testimonials[defined(@->_id)]->{\n      _id,\n      quote,\n      name,\n      caseType,\n      numberOfStars,\n      \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    }\n  }\n": TESTIMONIALS_PAGE_QUERYResult;
+    "\n  *[_type == \"attorneyIndex\"][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"hero\": hero{\n      \"heading\": coalesce(heading, \"Our Attorneys\"),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"title\": coalesce(hero.heading, \"Our Attorneys\"),\n    tagline,\n    heading,\n    description,\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n},\n    \"orderedAttorneys\": orderedAttorneys[defined(@->_id)]->{\n      _id,\n      \"slug\": slug.current,\n      firstName,\n      middleName,\n      lastName,\n      suffix,\n      h1,\n      jobTitle,\n      linkedIn,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n      \"practiceAreas\": practiceAreas[]{\n        label,\n        \"slug\": page->slug.current\n      }\n    }\n  }\n": ATTORNEY_INDEX_QUERYResult;
     "\n  *[_type == \"attorneyPage\"] | order(lastName asc, firstName asc) {\n    \"slug\": slug.current,\n    firstName,\n    middleName,\n    lastName,\n    suffix,\n    h1,\n    jobTitle,\n    linkedIn,\n    \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"practiceAreas\": practiceAreas[]{\n      label,\n      \"slug\": page->slug.current\n    }\n  }\n": ATTORNEY_PAGES_QUERYResult;
-    "\n  *[_type == \"staffIndex\"][0]{\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    \"hero\": hero{\n      \"heading\": coalesce(heading, \"Our Team\"),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"title\": coalesce(hero.heading, \"Our Team\"),\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n},\n    \"orderedStaff\": orderedStaff[defined(@->_id)]->{\n      _id,\n      \"slug\": slug.current,\n      firstName,\n      lastName,\n      jobTitle,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    }\n  }\n": STAFF_INDEX_QUERYResult;
+    "\n  *[_type == \"staffIndex\"][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"hero\": hero{\n      \"heading\": coalesce(heading, \"Our Team\"),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"title\": coalesce(hero.heading, \"Our Team\"),\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n},\n    \"orderedStaff\": orderedStaff[defined(@->_id)]->{\n      _id,\n      \"slug\": slug.current,\n      firstName,\n      lastName,\n      jobTitle,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    }\n  }\n": STAFF_INDEX_QUERYResult;
     "\n  *[_type == \"staffPage\"] | order(lastName asc, firstName asc) {\n    \"slug\": slug.current,\n    firstName,\n    lastName,\n    jobTitle,\n    \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  }\n": STAFF_PAGES_QUERYResult;
-    "\n  *[_type == \"staffPage\" && slug.current == $slug][0]{\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    firstName,\n    lastName,\n    jobTitle,\n    email,\n    phone,\n    \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"biography\": biography []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"location\": location->{\n      city,\n      address1,\n      address2,\n      address3,\n      state,\n      zip,\n      officePhone\n    },\n    hideCtaForm,\n    \"ctaFormOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": STAFF_PAGE_QUERYResult;
-    "\n  *[_type == \"serviceAreaIndex\"][0]{\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    \"hero\": hero{\n      \"heading\": coalesce(heading, \"Service Area\"),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"title\": coalesce(hero.heading, title, \"Service Area\"),\n    tagline,\n    heading,\n    description,\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": SERVICE_AREA_INDEX_QUERYResult;
-    "\n  *[_type == \"serviceAreaPage\"] | order(title asc) {\n    \"slug\": slug.current,\n    \"displayName\": coalesce(hero.heading, title),\n  }\n": SERVICE_AREA_PAGES_QUERYResult;
-    "\n  *[_type == \"attorneyPage\" && slug.current == $slug][0]{\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    firstName,\n    middleName,\n    lastName,\n    suffix,\n    h1,\n    jobTitle,\n    \"ctaOverride\": ctaOverride{label, url},\n    \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    email,\n    showEmail,\n    showLocations,\n    linkedIn,\n    avvo,\n    superLawyers,\n    findLaw,\n    martindale,\n    lawyersCom,\n    justia,\n    \"fullBiography\": fullBiography []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"practiceAreas\": practiceAreas[]{\n      label,\n      \"slug\": page->slug.current\n    },\n    \"location\": location->{\n      address1,\n      city,\n      state,\n      zip,\n      officePhone,\n      tollFreePhone\n    },\n    yearAdmittedToBar,\n    \"barAdmissions\": barAdmissions []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"stateBarAdmissions\": stateBarAdmissions []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"educationDegrees\": educationDegrees []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"certifiedLegalSpecialties\": certifiedLegalSpecialties []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"honors\": honors []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"professionalAssociations\": professionalAssociations []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"proBonoActivities\": proBonoActivities []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"publications\": publications []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"presentationsSeminars\": presentationsSeminars []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"representativeCases\": representativeCases []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"pastPositions\": pastPositions []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"videos\": videos[defined(@->_id)]->{\n      _id, title, youTubeUrl, description, videoType\n    },\n    hideCtaForm,\n    \"ctaFormOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": ATTORNEY_PAGE_QUERYResult;
-    "\n  *[_type in [\"practiceArea\", \"geoPracticeArea\", \"serviceAreaPage\"] && slug.current == $slug][0]{\n    title,\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    \"parentPage\": parentPage->{\n      title,\n      \"slug\": slug.current,\n      \"parentPage\": parentPage->{\n        title,\n        \"slug\": slug.current\n      }\n    },\n    \"hero\": hero {\n      \"heading\": coalesce(heading, ^.title),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"faqItems\": faqItems[defined(@->_id)]->{\n      question,\n      \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n      category,\n      \"slug\": slug.current,\n      tags\n    },\n    sidebar[]{\n  _type,\n  _key,\n  _type == \"sidebarTableOfContents\" => {\n    \"_componentType\": \"sidebarTableOfContents\"\n  },\n  _type == \"reference\" => @->{\n    \"_componentType\": _type,\n    name,\n    header,\n    description,\n    mode,\n    layout,\n    postCount,\n    \"formEmbed\": form->formEmbed,\n    tagline,\n    supportingText1,\n    supportingText2,\n    phoneNumber,\n    \"button\": button{title, url, variant},\n    \"orderedAolIds\": *[_type == \"mainNavigation\"][0]\n      .items[_type == \"navItemPracticeAreas\"][0]\n      .practiceAreaOrder[]._ref,\n    \"areasOfLaw\": *[\n      _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n    ]{\n      _id,\n      \"slug\": slug.current,\n      title,\n      \"children\": *[\n        _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n      ]{\n        _id,\n        \"slug\": slug.current,\n        title,\n        \"grandchildren\": *[\n          _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n        ]{\n          \"slug\": slug.current,\n          title,\n        } | order(title asc),\n      } | order(title asc),\n    },\n    \"orderedAttorneyIds\": select(\n      mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n      null\n    ),\n    \"attorneys\": select(\n      mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      attorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}}\n    ),\n    \"links\": links[defined(@->_id)]->{\n      _id,\n      _type,\n      \"slug\": slug.current,\n      title\n    }\n  }\n},\n    \"sections\": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": title,\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(title asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, page->title),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": PRACTICE_AREA_QUERYResult;
-    "\n  *[_type == \"eventIndex\"][0]{\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    \"hero\": hero {\n  heading,\n  \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n,\n  scrimStyleOverride,\n  scrimColorOverride,\n  scrimDirectionOverride,\n  sectionBackgroundNone,\n  \"sectionBackgroundImage\": sectionBackgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n},\n    \"sections\": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": title,\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(title asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, page->title),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": EVENT_INDEX_PAGE_QUERYResult;
+    "\n  *[_type == \"staffPage\" && slug.current == $slug][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    firstName,\n    lastName,\n    jobTitle,\n    email,\n    phone,\n    \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"biography\": biography []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"location\": location->{\n      city,\n      address1,\n      address2,\n      address3,\n      state,\n      zip,\n      officePhone\n    },\n    hideCtaForm,\n    \"ctaFormOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": STAFF_PAGE_QUERYResult;
+    "\n  *[_type == \"serviceAreaIndex\"][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"hero\": hero{\n      \"heading\": coalesce(heading, \"Service Area\"),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"title\": coalesce(hero.heading, title, \"Service Area\"),\n    tagline,\n    heading,\n    description,\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": SERVICE_AREA_INDEX_QUERYResult;
+    "\n  *[_type == \"serviceAreaPage\"] | order(title asc) {\n    \"slug\": slug.current,\n    title,\n  }\n": SERVICE_AREA_PAGES_QUERYResult;
+    "\n  *[_type == \"attorneyPage\" && slug.current == $slug][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    firstName,\n    middleName,\n    lastName,\n    suffix,\n    h1,\n    jobTitle,\n    \"ctaOverride\": ctaOverride{label, url},\n    \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    email,\n    showEmail,\n    showLocations,\n    linkedIn,\n    avvo,\n    superLawyers,\n    findLaw,\n    martindale,\n    lawyersCom,\n    justia,\n    \"fullBiography\": fullBiography []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"practiceAreas\": practiceAreas[]{\n      label,\n      \"slug\": page->slug.current\n    },\n    \"location\": location->{\n      address1,\n      city,\n      state,\n      zip,\n      officePhone,\n      tollFreePhone\n    },\n    yearAdmittedToBar,\n    \"barAdmissions\": barAdmissions []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"stateBarAdmissions\": stateBarAdmissions []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"educationDegrees\": educationDegrees []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"certifiedLegalSpecialties\": certifiedLegalSpecialties []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"honors\": honors []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"professionalAssociations\": professionalAssociations []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"proBonoActivities\": proBonoActivities []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"publications\": publications []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"presentationsSeminars\": presentationsSeminars []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"representativeCases\": representativeCases []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"pastPositions\": pastPositions []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"videos\": videos[defined(@->_id)]->{\n      _id, title, youTubeUrl, description, videoType\n    },\n    hideCtaForm,\n    \"ctaFormOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": ATTORNEY_PAGE_QUERYResult;
+    "\n  *[_type in [\"practiceArea\", \"geoPracticeArea\", \"serviceAreaPage\"] && slug.current == $slug][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    _type,\n    title,\n    \"areasOfLaw\": *[\n  _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n].title,\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"parentPage\": parentPage->{\n      title,\n      \"slug\": slug.current,\n      \"parentPage\": parentPage->{\n        title,\n        \"slug\": slug.current\n      }\n    },\n    \"hero\": hero {\n      \"heading\": coalesce(heading, ^.title),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"faqItems\": faqItems[defined(@->_id)]->{\n      question,\n      \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n      category,\n      \"slug\": slug.current,\n      tags\n    },\n    sidebar[]{\n  _type,\n  _key,\n  _type == \"sidebarTableOfContents\" => {\n    \"_componentType\": \"sidebarTableOfContents\"\n  },\n  _type == \"reference\" => @->{\n    \"_componentType\": _type,\n    name,\n    header,\n    description,\n    mode,\n    layout,\n    postCount,\n    \"formEmbed\": form->formEmbed,\n    tagline,\n    supportingText1,\n    supportingText2,\n    phoneNumber,\n    \"button\": button{title, url, variant},\n    \"orderedAolIds\": *[_type == \"mainNavigation\"][0]\n      .items[_type == \"navItemPracticeAreas\"][0]\n      .practiceAreaOrder[]._ref,\n    \"areasOfLaw\": *[\n      _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n    ]{\n      _id,\n      \"slug\": slug.current,\n      title,\n      \"children\": *[\n        _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n      ]{\n        _id,\n        \"slug\": slug.current,\n        title,\n        \"grandchildren\": *[\n          _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n        ]{\n          \"slug\": slug.current,\n          title,\n        } | order(title asc),\n      } | order(title asc),\n    },\n    \"orderedAttorneyIds\": select(\n      mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n      null\n    ),\n    \"attorneys\": select(\n      mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      attorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}}\n    ),\n    \"links\": links[defined(@->_id)]->{\n      _id,\n      _type,\n      \"slug\": slug.current,\n      title\n    }\n  }\n},\n    \"sections\": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": title,\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(title asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, page->title),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": PRACTICE_AREA_QUERYResult;
+    "\n  *[_type == \"eventIndex\"][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"slug\": slug.current,\n    \"title\": coalesce(hero.heading, \"Events\"),\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"hero\": hero {\n  heading,\n  \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n,\n  scrimStyleOverride,\n  scrimColorOverride,\n  scrimDirectionOverride,\n  sectionBackgroundNone,\n  \"sectionBackgroundImage\": sectionBackgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n},\n    \"sections\": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": title,\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(title asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, page->title),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": EVENT_INDEX_PAGE_QUERYResult;
     "\n  *[_type == \"eventPage\"] | order(eventDate asc) {\n    title,\n    \"slug\": slug.current,\n    eventDate,\n    eventEndDate,\n    eventType,\n    \"category\": category->title,\n    locationType,\n    locationAddress,\n    registrationUrl,\n    registrationCta,\n    \"formEmbed\": registrationForm->formEmbed,\n    \"attorneys\": attorneys[defined(@->_id)]->{\n      _id,\n      title,\n      \"slug\": slug.current\n    }\n  }\n": EVENT_INDEX_QUERYResult;
-    "\n  *[_type == \"eventPage\" && slug.current == $slug][0]{\n    title,\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    eventDate,\n    eventEndDate,\n    eventType,\n    \"category\": category->title,\n    locationType,\n    locationAddress,\n    virtualLink,\n    registrationUrl,\n    registrationCta,\n    \"formEmbed\": registrationForm->formEmbed,\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"attorneys\": attorneys[defined(@->_id)]->{\n      _id,\n      title,\n      \"slug\": slug.current\n    },\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": EVENT_PAGE_QUERYResult;
-    "\n  *[_type == \"blogIndex\"][0]{\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    \"hero\": hero {\n      \"heading\": coalesce(heading, \"Blog\"),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"title\": coalesce(hero.heading, \"Blog\"),\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": BLOG_INDEX_PAGE_QUERYResult;
+    "\n  *[_type == \"eventPage\" && slug.current == $slug][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    title,\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    eventDate,\n    eventEndDate,\n    eventType,\n    \"category\": category->title,\n    locationType,\n    locationAddress,\n    virtualLink,\n    registrationUrl,\n    registrationCta,\n    \"formEmbed\": registrationForm->formEmbed,\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"attorneys\": attorneys[defined(@->_id)]->{\n      _id,\n      title,\n      \"slug\": slug.current\n    },\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": EVENT_PAGE_QUERYResult;
+    "\n  *[_type == \"blogIndex\"][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"hero\": hero {\n      \"heading\": coalesce(heading, \"Blog\"),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"title\": coalesce(hero.heading, \"Blog\"),\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": BLOG_INDEX_PAGE_QUERYResult;
     "{\n  \"id\": _id,\n  title,\n  youTubeUrl,\n  description,\n  videoType,\n  duration,\n  \"thumbnail\": thumbnail {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n}": VIDEO_CARD_FRAGMENTResult;
-    "\n  *[_type == \"videoIndex\"][0]{\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    \"hero\": hero {\n      \"heading\": coalesce(heading, \"Video Library\"),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"title\": coalesce(hero.heading, \"Video Library\"),\n    tagline,\n    heading,\n    description,\n    \"featuredVideo\": featuredVideo->{\n  \"id\": _id,\n  title,\n  youTubeUrl,\n  description,\n  videoType,\n  duration,\n  \"thumbnail\": thumbnail {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n    \"videos\": videos[defined(@->_id)]->{\n  \"id\": _id,\n  title,\n  youTubeUrl,\n  description,\n  videoType,\n  duration,\n  \"thumbnail\": thumbnail {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": VIDEO_INDEX_PAGE_QUERYResult;
+    "\n  *[_type == \"videoIndex\"][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"hero\": hero {\n      \"heading\": coalesce(heading, \"Video Library\"),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"title\": coalesce(hero.heading, \"Video Library\"),\n    tagline,\n    heading,\n    description,\n    \"featuredVideo\": featuredVideo->{\n  \"id\": _id,\n  title,\n  youTubeUrl,\n  description,\n  videoType,\n  duration,\n  \"thumbnail\": thumbnail {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n    \"videos\": videos[defined(@->_id)]->{\n  \"id\": _id,\n  title,\n  youTubeUrl,\n  description,\n  videoType,\n  duration,\n  \"thumbnail\": thumbnail {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": VIDEO_INDEX_PAGE_QUERYResult;
     "\n  *[_type == \"blogPost\"] | order(publishedAt desc) {\n    \"slug\": slug.current,\n    h1,\n    metaDescription,\n    publishedAt,\n    \"category\": category->{\n      title,\n      \"slug\": slug.current\n    },\n    \"bodyText\": pt::text(body)\n  }\n": BLOG_POSTS_QUERYResult;
     "\n  {\n    \"byCategory\": *[\n      _type == \"blogPost\" &&\n      slug.current != $slug &&\n      defined(category._ref) &&\n      category._ref == *[_type == \"blogPost\" && slug.current == $slug][0].category._ref\n    ] | order(publishedAt desc) [0..3] {\n      \"slug\": slug.current,\n      h1,\n      metaDescription,\n      publishedAt,\n      \"category\": category->{title, \"slug\": slug.current}\n    },\n    \"fallback\": *[_type == \"blogPost\" && slug.current != $slug] | order(publishedAt desc) [0..3] {\n      \"slug\": slug.current,\n      h1,\n      metaDescription,\n      publishedAt,\n      \"category\": category->{title, \"slug\": slug.current}\n    }\n  }\n": RELATED_POSTS_QUERYResult;
-    "\n  *[_type == \"blogPost\" && slug.current == $slug][0]{\n    h1,\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    publishedAt,\n    lastModified,\n    \"featuredImage\": featuredImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"bodyText\": pt::text(body),\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"authors\": authors[defined(@->_id)]->{\n      _id,\n      firstName,\n      lastName,\n      jobTitle,\n      \"slug\": slug.current,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    \"category\": category->{\n      title,\n      \"slug\": slug.current\n    },\n    \"sidebar\": sidebar[]{\n      _type,\n      _key,\n      _type == \"sidebarTableOfContents\" => {\n        \"_componentType\": \"sidebarTableOfContents\"\n      },\n      _type == \"reference\" => @->{\n        \"_componentType\": _type,\n        name,\n        header,\n        description,\n        mode,\n        layout,\n        postCount,\n        \"formEmbed\": form->formEmbed,\n        tagline,\n        supportingText1,\n        supportingText2,\n        phoneNumber,\n        \"button\": button{title, url, variant},\n        // WS-Sidebar Phase 2.3 \u2014 see SIDEBAR_FRAGMENT comment block. This\n        // inline projection (blog post page) must stay in sync with the fragment.\n        // (The recentPosts sub-query below now uses the $slug query param; the\n        // earlier ^.^.slug.current parent-reference resolved to null and listed the\n        // current post \u2014 that bug was the practical reason it stayed inline.)\n        \"orderedAolIds\": *[_type == \"mainNavigation\"][0]\n          .items[_type == \"navItemPracticeAreas\"][0]\n          .practiceAreaOrder[]._ref,\n        \"areasOfLaw\": *[\n          _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n        ]{\n          _id,\n          \"slug\": slug.current,\n          title,\n          \"children\": *[\n            _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n          ]{\n            _id,\n            \"slug\": slug.current,\n            title,\n            \"grandchildren\": *[\n              _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n            ]{\n              \"slug\": slug.current,\n              title,\n            } | order(title asc),\n          } | order(title asc),\n        },\n        \"orderedAttorneyIds\": select(\n          mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n          null\n        ),\n        \"attorneys\": select(\n          mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n          mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n          attorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}}\n        ),\n        \"links\": links[defined(@->_id)]->{\n          _id,\n          _type,\n          \"slug\": slug.current,\n          title\n        },\n        \"posts\": select(\n          mode == \"recentPosts\" => *[_type == \"blogPost\" && slug.current != $slug] | order(publishedAt desc)[0..20]{\n            h1,\n            \"slug\": slug.current\n          },\n          mode == \"faqPosts\" => *[_type == \"blogPostFaq\"] | order(publishedAt desc)[0..20]{\n            h1,\n            \"slug\": slug.current\n          }\n        )\n      }\n    },\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": BLOG_POST_PAGE_QUERYResult;
+    "\n  *[_type == \"blogPost\" && slug.current == $slug][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    h1,\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    publishedAt,\n    lastModified,\n    \"featuredImage\": featuredImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"bodyText\": pt::text(body),\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"authors\": authors[defined(@->_id)]->{\n      _id,\n      firstName,\n      lastName,\n      jobTitle,\n      \"slug\": slug.current,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    \"category\": category->{\n      title,\n      \"slug\": slug.current\n    },\n    \"sidebar\": sidebar[]{\n      _type,\n      _key,\n      _type == \"sidebarTableOfContents\" => {\n        \"_componentType\": \"sidebarTableOfContents\"\n      },\n      _type == \"reference\" => @->{\n        \"_componentType\": _type,\n        name,\n        header,\n        description,\n        mode,\n        layout,\n        postCount,\n        \"formEmbed\": form->formEmbed,\n        tagline,\n        supportingText1,\n        supportingText2,\n        phoneNumber,\n        \"button\": button{title, url, variant},\n        // WS-Sidebar Phase 2.3 \u2014 see SIDEBAR_FRAGMENT comment block. This\n        // inline projection (blog post page) must stay in sync with the fragment.\n        // (The recentPosts sub-query below now uses the $slug query param; the\n        // earlier ^.^.slug.current parent-reference resolved to null and listed the\n        // current post \u2014 that bug was the practical reason it stayed inline.)\n        \"orderedAolIds\": *[_type == \"mainNavigation\"][0]\n          .items[_type == \"navItemPracticeAreas\"][0]\n          .practiceAreaOrder[]._ref,\n        \"areasOfLaw\": *[\n          _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n        ]{\n          _id,\n          \"slug\": slug.current,\n          title,\n          \"children\": *[\n            _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n          ]{\n            _id,\n            \"slug\": slug.current,\n            title,\n            \"grandchildren\": *[\n              _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n            ]{\n              \"slug\": slug.current,\n              title,\n            } | order(title asc),\n          } | order(title asc),\n        },\n        \"orderedAttorneyIds\": select(\n          mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n          null\n        ),\n        \"attorneys\": select(\n          mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n          mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n          attorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}}\n        ),\n        \"links\": links[defined(@->_id)]->{\n          _id,\n          _type,\n          \"slug\": slug.current,\n          title\n        },\n        \"posts\": select(\n          mode == \"recentPosts\" => *[_type == \"blogPost\" && slug.current != $slug] | order(publishedAt desc)[0..20]{\n            h1,\n            \"slug\": slug.current\n          },\n          mode == \"faqPosts\" => *[_type == \"blogPostFaq\"] | order(publishedAt desc)[0..20]{\n            h1,\n            \"slug\": slug.current\n          }\n        )\n      }\n    },\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": BLOG_POST_PAGE_QUERYResult;
     "\n  *[_type == \"blogCategory\" && count(*[_type == \"blogPost\" && references(^._id)]) > 0]{\n    title,\n    \"slug\": slug.current\n  } | order(title asc)\n": BLOG_CATEGORIES_QUERYResult;
-    "\n  *[_type == \"blogCategory\" && slug.current == $slug][0]{\n    title,\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    h1,\n    tagline,\n    heading,\n    description,\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": BLOG_CATEGORY_PAGE_QUERYResult;
-    "{\n  \"page\": *[_type == \"reviewPage\" && slug.current == $slug][0]{\n    h1,\n    seoTitle,\n    \"slug\": slug.current,\n    noIndex,\n    \"blurb\": blurb []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"reviewLinks\": reviewLinks[]{\n      platform,\n      url,\n      label\n    },\n    \"feedbackFormEmbed\": feedbackForm->formEmbed\n  },\n  \"logo\": *[_type == \"designSettings\"][0]{\n    logoOnLight{\n      \"src\": asset->url,\n      \"alt\": alt,\n      \"width\": asset->metadata.dimensions.width,\n      \"height\": asset->metadata.dimensions.height\n    }\n  }.logoOnLight,\n  \"firmInfo\": *[_type == \"siteSettings\"][0]{\n    firmName,\n    \"address\": primaryLocation->{\n      \n  \"address1\": select(locationType in [\"Physical\", \"Shared\"] => address1, null),\n  \"address2\": select(locationType in [\"Physical\", \"Shared\"] => address2, null),\n  \"address3\": select(locationType in [\"Physical\", \"Shared\"] => address3, null),\n  \"zip\":      select(locationType in [\"Physical\", \"Shared\"] => zip, null),\n\n      city,\n      state,\n      officePhone\n    }\n  }\n}": REVIEW_PAGE_QUERYResult;
+    "\n  *[_type == \"blogCategory\" && slug.current == $slug][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    title,\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    h1,\n    tagline,\n    heading,\n    description,\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": BLOG_CATEGORY_PAGE_QUERYResult;
+    "{\n  \"page\": *[_type == \"reviewPage\" && slug.current == $slug][0]{\n    h1,\n    seoTitle,\n    \"slug\": slug.current,\n    noIndex,\n    noFollow,\n    \"blurb\": blurb []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"reviewLinks\": reviewLinks[]{\n      platform,\n      url,\n      label\n    },\n    \"feedbackFormEmbed\": feedbackForm->formEmbed\n  },\n  \"logo\": *[_type == \"designSettings\"][0]{\n    logoOnLight{\n      \"src\": asset->url,\n      \"alt\": alt,\n      \"width\": asset->metadata.dimensions.width,\n      \"height\": asset->metadata.dimensions.height\n    }\n  }.logoOnLight,\n  \"firmInfo\": *[_type == \"siteSettings\"][0]{\n    firmName,\n    \"address\": primaryLocation->{\n      \n  \"address1\": select(locationType in [\"Physical\", \"Shared\"] => address1, null),\n  \"address2\": select(locationType in [\"Physical\", \"Shared\"] => address2, null),\n  \"address3\": select(locationType in [\"Physical\", \"Shared\"] => address3, null),\n  \"zip\":      select(locationType in [\"Physical\", \"Shared\"] => zip, null),\n\n      city,\n      state,\n      officePhone\n    }\n  }\n}": REVIEW_PAGE_QUERYResult;
     "\n  *[_type == \"blogPost\" && category->slug.current == $slug] | order(publishedAt desc) {\n    \"slug\": slug.current,\n    h1,\n    metaDescription,\n    publishedAt,\n    \"category\": category->{\n      title,\n      \"slug\": slug.current\n    },\n    \"bodyText\": pt::text(body)\n  }\n": BLOG_CATEGORY_POSTS_QUERYResult;
-    "\n  *[_type == \"locationPage\" && slug.current == $slug][0]{\n    _type,\n    \"title\": coalesce(title, \"\"),\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    \"hero\": hero {\n      \"heading\": coalesce(heading, ^.title),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    mapEmbed,\n    \"locationData\": locationRef->{\n      \"_id\": _id,\n      city,\n      state,\n      \n  \"address1\": select(locationType in [\"Physical\", \"Shared\"] => address1, null),\n  \"address2\": select(locationType in [\"Physical\", \"Shared\"] => address2, null),\n  \"address3\": select(locationType in [\"Physical\", \"Shared\"] => address3, null),\n  \"zip\":      select(locationType in [\"Physical\", \"Shared\"] => zip, null),\n\n      \"geo\": select(locationType in [\"Physical\", \"Shared\"] => geo{lat, lng}, null),\n      officePhone,\n      officeFax,\n      tollFreePhone,\n      hours,\n      emergency24_7,\n      emergencyPhone,\n      appointmentRequired,\n      gbpCidUrl\n    },\n    sidebar[]{\n  _type,\n  _key,\n  _type == \"sidebarTableOfContents\" => {\n    \"_componentType\": \"sidebarTableOfContents\"\n  },\n  _type == \"reference\" => @->{\n    \"_componentType\": _type,\n    name,\n    header,\n    description,\n    mode,\n    layout,\n    postCount,\n    \"formEmbed\": form->formEmbed,\n    tagline,\n    supportingText1,\n    supportingText2,\n    phoneNumber,\n    \"button\": button{title, url, variant},\n    \"orderedAolIds\": *[_type == \"mainNavigation\"][0]\n      .items[_type == \"navItemPracticeAreas\"][0]\n      .practiceAreaOrder[]._ref,\n    \"areasOfLaw\": *[\n      _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n    ]{\n      _id,\n      \"slug\": slug.current,\n      title,\n      \"children\": *[\n        _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n      ]{\n        _id,\n        \"slug\": slug.current,\n        title,\n        \"grandchildren\": *[\n          _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n        ]{\n          \"slug\": slug.current,\n          title,\n        } | order(title asc),\n      } | order(title asc),\n    },\n    \"orderedAttorneyIds\": select(\n      mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n      null\n    ),\n    \"attorneys\": select(\n      mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      attorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}}\n    ),\n    \"links\": links[defined(@->_id)]->{\n      _id,\n      _type,\n      \"slug\": slug.current,\n      title\n    }\n  }\n},\n    \"sections\": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": title,\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(title asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, page->title),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": LOCATION_PAGE_QUERYResult;
-    "\n  *[\n    slug.current == $slug &&\n    _type in [\"aboutPage\", \"contactPage\", \"faqPage\", \"generalPage\", \"landingPage\"]\n  ][0]{\n    _type,\n    \"title\": coalesce(title, \"\"),\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    canonicalUrl,\n    \"parentPage\": parentPage->{\n      title,\n      \"slug\": slug.current,\n      \"parentPage\": parentPage->{\n        title,\n        \"slug\": slug.current\n      }\n    },\n    \"hero\": hero {\n      \"heading\": coalesce(heading, ^.title),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"faqItems\": faqItems[defined(@->_id)]->{\n      question,\n      \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n      category,\n      \"slug\": slug.current,\n      tags\n    },\n    sidebar[]{\n  _type,\n  _key,\n  _type == \"sidebarTableOfContents\" => {\n    \"_componentType\": \"sidebarTableOfContents\"\n  },\n  _type == \"reference\" => @->{\n    \"_componentType\": _type,\n    name,\n    header,\n    description,\n    mode,\n    layout,\n    postCount,\n    \"formEmbed\": form->formEmbed,\n    tagline,\n    supportingText1,\n    supportingText2,\n    phoneNumber,\n    \"button\": button{title, url, variant},\n    \"orderedAolIds\": *[_type == \"mainNavigation\"][0]\n      .items[_type == \"navItemPracticeAreas\"][0]\n      .practiceAreaOrder[]._ref,\n    \"areasOfLaw\": *[\n      _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n    ]{\n      _id,\n      \"slug\": slug.current,\n      title,\n      \"children\": *[\n        _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n      ]{\n        _id,\n        \"slug\": slug.current,\n        title,\n        \"grandchildren\": *[\n          _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n        ]{\n          \"slug\": slug.current,\n          title,\n        } | order(title asc),\n      } | order(title asc),\n    },\n    \"orderedAttorneyIds\": select(\n      mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n      null\n    ),\n    \"attorneys\": select(\n      mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      attorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}}\n    ),\n    \"links\": links[defined(@->_id)]->{\n      _id,\n      _type,\n      \"slug\": slug.current,\n      title\n    }\n  }\n},\n    \"sections\": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": title,\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(title asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, page->title),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": CONTENT_PAGE_QUERYResult;
+    "\n  *[_type == \"locationPage\" && slug.current == $slug][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    _type,\n    \"title\": coalesce(title, \"\"),\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"hero\": hero {\n      \"heading\": coalesce(heading, ^.title),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    mapEmbed,\n    \"locationData\": locationRef->{\n      \"_id\": _id,\n      city,\n      state,\n      \n  \"address1\": select(locationType in [\"Physical\", \"Shared\"] => address1, null),\n  \"address2\": select(locationType in [\"Physical\", \"Shared\"] => address2, null),\n  \"address3\": select(locationType in [\"Physical\", \"Shared\"] => address3, null),\n  \"zip\":      select(locationType in [\"Physical\", \"Shared\"] => zip, null),\n\n      \"geo\": select(locationType in [\"Physical\", \"Shared\"] => geo{lat, lng}, null),\n      officePhone,\n      officeFax,\n      tollFreePhone,\n      hours,\n      emergency24_7,\n      emergencyPhone,\n      appointmentRequired,\n      gbpCidUrl\n    },\n    sidebar[]{\n  _type,\n  _key,\n  _type == \"sidebarTableOfContents\" => {\n    \"_componentType\": \"sidebarTableOfContents\"\n  },\n  _type == \"reference\" => @->{\n    \"_componentType\": _type,\n    name,\n    header,\n    description,\n    mode,\n    layout,\n    postCount,\n    \"formEmbed\": form->formEmbed,\n    tagline,\n    supportingText1,\n    supportingText2,\n    phoneNumber,\n    \"button\": button{title, url, variant},\n    \"orderedAolIds\": *[_type == \"mainNavigation\"][0]\n      .items[_type == \"navItemPracticeAreas\"][0]\n      .practiceAreaOrder[]._ref,\n    \"areasOfLaw\": *[\n      _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n    ]{\n      _id,\n      \"slug\": slug.current,\n      title,\n      \"children\": *[\n        _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n      ]{\n        _id,\n        \"slug\": slug.current,\n        title,\n        \"grandchildren\": *[\n          _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n        ]{\n          \"slug\": slug.current,\n          title,\n        } | order(title asc),\n      } | order(title asc),\n    },\n    \"orderedAttorneyIds\": select(\n      mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n      null\n    ),\n    \"attorneys\": select(\n      mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      attorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}}\n    ),\n    \"links\": links[defined(@->_id)]->{\n      _id,\n      _type,\n      \"slug\": slug.current,\n      title\n    }\n  }\n},\n    \"sections\": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": title,\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(title asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, page->title),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": LOCATION_PAGE_QUERYResult;
+    "\n  *[\n    slug.current == $slug &&\n    _type in [\"aboutPage\", \"contactPage\", \"faqPage\", \"generalPage\", \"landingPage\"]\n  ][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    _type,\n    \"title\": coalesce(title, \"\"),\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"parentPage\": parentPage->{\n      title,\n      \"slug\": slug.current,\n      \"parentPage\": parentPage->{\n        title,\n        \"slug\": slug.current\n      }\n    },\n    \"hero\": hero {\n      \"heading\": coalesce(heading, ^.title),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"faqItems\": faqItems[defined(@->_id)]->{\n      question,\n      \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n      category,\n      \"slug\": slug.current,\n      tags\n    },\n    sidebar[]{\n  _type,\n  _key,\n  _type == \"sidebarTableOfContents\" => {\n    \"_componentType\": \"sidebarTableOfContents\"\n  },\n  _type == \"reference\" => @->{\n    \"_componentType\": _type,\n    name,\n    header,\n    description,\n    mode,\n    layout,\n    postCount,\n    \"formEmbed\": form->formEmbed,\n    tagline,\n    supportingText1,\n    supportingText2,\n    phoneNumber,\n    \"button\": button{title, url, variant},\n    \"orderedAolIds\": *[_type == \"mainNavigation\"][0]\n      .items[_type == \"navItemPracticeAreas\"][0]\n      .practiceAreaOrder[]._ref,\n    \"areasOfLaw\": *[\n      _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n    ]{\n      _id,\n      \"slug\": slug.current,\n      title,\n      \"children\": *[\n        _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n      ]{\n        _id,\n        \"slug\": slug.current,\n        title,\n        \"grandchildren\": *[\n          _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n        ]{\n          \"slug\": slug.current,\n          title,\n        } | order(title asc),\n      } | order(title asc),\n    },\n    \"orderedAttorneyIds\": select(\n      mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n      null\n    ),\n    \"attorneys\": select(\n      mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      attorneys[defined(@->_id)]->{_id, title, \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}}\n    ),\n    \"links\": links[defined(@->_id)]->{\n      _id,\n      _type,\n      \"slug\": slug.current,\n      title\n    }\n  }\n},\n    \"sections\": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": title,\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(title asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, page->title),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, title, \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": CONTENT_PAGE_QUERYResult;
   }
 }

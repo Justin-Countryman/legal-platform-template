@@ -160,7 +160,6 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
 export const SITE_METADATA_QUERY = groq`
   *[_type == "siteSettings"][0]{
     firmName,
-    primaryDomain,
     gscVerification,
     hideFromSearch,
     "faviconUrl":  *[_type == "designSettings"][0].favicon.asset->url,
@@ -193,7 +192,6 @@ export const OG_DATA_QUERY = groq`{
 // directory URLs that exist; absent fields are filtered at render time.
 export const ORGANIZATION_SCHEMA_QUERY = groq`{
   "firmName": *[_type == "siteSettings"][0].firmName,
-  "domain":   *[_type == "siteSettings"][0].primaryDomain,
   "logo":     *[_type == "designSettings"][0].logoOnLight.asset->url,
   "address":  *[_type == "siteSettings"][0].primaryLocation->{
     ${GATED_STREET_FRAGMENT}
@@ -249,7 +247,6 @@ export const REVIEW_SLUGS_QUERY = groq`
 // (homePage, attorneyIndex, etc.) supply the lastModified for their
 // corresponding hard-coded route; collection documents supply slug + updatedAt.
 export const SITEMAP_QUERY = groq`{
-  "domain": *[_type == "siteSettings"][0].primaryDomain,
   "hideFromSearch": *[_type == "siteSettings"][0].hideFromSearch,
   "home":             *[_type == "homePage"][0]{_updatedAt},
   "attorneyIndex":    *[_type == "attorneyIndex"][0]{_updatedAt},

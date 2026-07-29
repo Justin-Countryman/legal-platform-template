@@ -24,6 +24,7 @@ import {Sidebar} from '@/components/layout/Sidebar'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {PageSections} from '@/components/sections/PageSections'
 import {OfficeHoursProvider} from '@/components/location/OfficeHoursContext'
+import {siteHost} from '@/lib/siteHost'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -249,8 +250,6 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-const DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN ?? 'example.com'
-
 export default async function CatchAllPage({params}: Props) {
   const {slug} = await params
   const slugStr = slug.join('/')
@@ -280,7 +279,7 @@ export default async function CatchAllPage({params}: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(buildLegalServiceSchema(page, tokens, DOMAIN)),
+          __html: JSON.stringify(buildLegalServiceSchema(page, tokens, siteHost())),
         }}
       />
 
@@ -289,7 +288,7 @@ export default async function CatchAllPage({params}: Props) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(buildLocalBusinessSchema(page, tokens, DOMAIN)),
+            __html: JSON.stringify(buildLocalBusinessSchema(page, tokens, siteHost())),
           }}
         />
       )}
@@ -315,7 +314,7 @@ export default async function CatchAllPage({params}: Props) {
       {breadcrumbs.length > 1 && (
         <div className="bg-muted border-b border-border px-[5%] py-3">
           <div className="container">
-            <Breadcrumbs items={breadcrumbs} domain={DOMAIN} />
+            <Breadcrumbs items={breadcrumbs} domain={siteHost()} />
           </div>
         </div>
       )}

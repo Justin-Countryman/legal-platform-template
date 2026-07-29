@@ -2253,6 +2253,13 @@
         },
         "optional": true
       },
+      "noFollow": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "canonicalUrl": {
         "type": "objectAttribute",
         "value": {
@@ -5270,6 +5277,13 @@
         },
         "optional": true
       },
+      "noFollow": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "canonicalUrl": {
         "type": "objectAttribute",
         "value": {
@@ -8211,6 +8225,13 @@
         },
         "optional": true
       },
+      "noFollow": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "canonicalUrl": {
         "type": "objectAttribute",
         "value": {
@@ -8604,6 +8625,13 @@
         "optional": true
       },
       "noIndex": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "noFollow": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
@@ -9064,6 +9092,13 @@
           "type": "boolean"
         },
         "optional": true
+      },
+      "noFollow": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
       }
     }
   },
@@ -9208,6 +9243,13 @@
         "optional": true
       },
       "noIndex": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "noFollow": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
@@ -9614,6 +9656,13 @@
         "optional": true
       },
       "noIndex": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "noFollow": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
@@ -10030,6 +10079,13 @@
         },
         "optional": true
       },
+      "noFollow": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "canonicalUrl": {
         "type": "objectAttribute",
         "value": {
@@ -10337,6 +10393,13 @@
         "optional": true
       },
       "noIndex": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "noFollow": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
@@ -10784,6 +10847,13 @@
         "optional": true
       },
       "noIndex": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "noFollow": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
@@ -11409,6 +11479,13 @@
         },
         "optional": true
       },
+      "noFollow": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "canonicalUrl": {
         "type": "objectAttribute",
         "value": {
@@ -11998,6 +12075,13 @@
         "optional": true
       },
       "noIndex": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "noFollow": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
@@ -12761,6 +12845,13 @@
         },
         "optional": true
       },
+      "noFollow": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "canonicalUrl": {
         "type": "objectAttribute",
         "value": {
@@ -12947,6 +13038,13 @@
         "optional": true
       },
       "noIndex": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "noFollow": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
@@ -13376,6 +13474,13 @@
         "optional": true
       },
       "noIndex": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "noFollow": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
@@ -13969,6 +14074,13 @@
         },
         "optional": true
       },
+      "noFollow": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "canonicalUrl": {
         "type": "objectAttribute",
         "value": {
@@ -14469,6 +14581,13 @@
         },
         "optional": true
       },
+      "noFollow": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "canonicalUrl": {
         "type": "objectAttribute",
         "value": {
@@ -14913,6 +15032,13 @@
         "optional": true
       },
       "noIndex": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "noFollow": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
@@ -15530,6 +15656,13 @@
         "optional": true
       },
       "noIndex": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "noFollow": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
@@ -16184,6 +16317,13 @@
         },
         "optional": true
       },
+      "noFollow": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "canonicalUrl": {
         "type": "objectAttribute",
         "value": {
@@ -16585,6 +16725,13 @@
         "optional": true
       },
       "noIndex": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "noFollow": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
@@ -17153,6 +17300,13 @@
         },
         "optional": true
       },
+      "noFollow": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "canonicalUrl": {
         "type": "objectAttribute",
         "value": {
@@ -17703,6 +17857,13 @@
         "optional": true
       },
       "noIndex": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "noFollow": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
@@ -20334,13 +20495,6 @@
         },
         "optional": true
       },
-      "primaryDomain": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
       "primaryLocation": {
         "type": "objectAttribute",
         "value": {
@@ -20447,6 +20601,13 @@
         "type": "objectAttribute",
         "value": {
           "type": "string"
+        },
+        "optional": true
+      },
+      "hideFromSearch": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
         },
         "optional": true
       },

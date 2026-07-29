@@ -2,6 +2,7 @@ import type {MetadataRoute} from 'next'
 import {client} from '@/lib/sanity/client'
 import {SITEMAP_QUERY} from '@/lib/sanity/queries'
 import {resolveHidden} from '@/lib/searchVisibility'
+import {siteOrigin} from '@/lib/siteHost'
 
 type SanityNode = {slug: string; _updatedAt: string}
 type SingletonNode = {_updatedAt: string} | null
@@ -44,8 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // operator explicitly unhides. Rule: lib/searchVisibility.ts.
   if (resolveHidden(data.hideFromSearch)) return []
 
-  const domain = data.domain ?? process.env.NEXT_PUBLIC_SITE_DOMAIN ?? 'localhost:3000'
-  const base = `https://${domain}`
+  const base = siteOrigin()
   const buildDate = new Date()
 
   const entries: MetadataRoute.Sitemap = []

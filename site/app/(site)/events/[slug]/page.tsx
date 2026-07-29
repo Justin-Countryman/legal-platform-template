@@ -16,6 +16,7 @@ import {FormModal} from '@/components/ui/FormModal'
 import {Button} from '@/components/ui/Button'
 import {Chip} from '@/components/ui/Chip'
 import type {ChipIcon} from '@/components/ui/icons'
+import {siteHost} from '@/lib/siteHost'
 
 // ─── Static params ────────────────────────────────────────────────────────────
 // Event slugs are stored as `events/{name}` — the stored slug IS the URL path
@@ -141,8 +142,6 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-const DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN ?? 'example.com'
-
 export default async function EventDetailPage({params}: Props) {
   const {slug: slugParam} = await params
   const slug = `events/${slugParam}`
@@ -171,7 +170,7 @@ export default async function EventDetailPage({params}: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(buildEventSchema(event, tokens, DOMAIN)),
+          __html: JSON.stringify(buildEventSchema(event, tokens, siteHost())),
         }}
       />
 
