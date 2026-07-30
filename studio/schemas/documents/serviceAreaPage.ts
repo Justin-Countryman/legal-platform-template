@@ -91,6 +91,13 @@ export const serviceAreaPage = defineType({
       },
       validation: (Rule) => Rule.required().error(),
     },
+    {
+      name: 'navLabel',
+      fieldset: 'pageSettings',
+      title: 'Nav Label',
+      type: 'string',
+      description: 'Short label for menus, breadcrumbs, index cards and link text. Leave blank to use the Page Title.',
+    },
     // ─── SEO Settings ─────────────────────────────────────────────────────────
     {
       name: 'seoTitle',

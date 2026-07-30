@@ -72,6 +72,13 @@ export const attorneyPage = defineType({
       validation: (Rule) => Rule.required().error(),
     }),
     defineField({
+      name: 'navLabel',
+      fieldset: 'pageSettings',
+      title: 'Nav Label',
+      type: 'string',
+      description: 'Short label for menus, breadcrumbs, index cards and link text. Leave blank to use the Page Title.',
+    }),
+    defineField({
       name: 'h1',
       title: 'H1 Override',
       type: 'string',

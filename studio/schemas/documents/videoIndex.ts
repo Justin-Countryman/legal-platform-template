@@ -35,6 +35,14 @@ export const videoIndex = defineType({
   ],
   fields: [
     {
+      name: 'title',
+      fieldset: 'pageSettings',
+      title: 'Page Title',
+      type: 'string',
+      description: 'Internal label for this page — e.g. "Video Library"',
+      validation: (Rule) => Rule.required().warning(),
+    },
+    {
       name: 'slug',
       fieldset: 'pageSettings',
       title: 'Slug',
@@ -43,6 +51,13 @@ export const videoIndex = defineType({
       readOnly: true,
       initialValue: {current: 'videos'},
       validation: (Rule) => Rule.required().error(),
+    },
+    {
+      name: 'navLabel',
+      fieldset: 'pageSettings',
+      title: 'Nav Label',
+      type: 'string',
+      description: 'Short label for menus, breadcrumbs, index cards and link text. Leave blank to use the Page Title.',
     },
     // ─── SEO Settings ─────────────────────────────────────────────────────────
     {

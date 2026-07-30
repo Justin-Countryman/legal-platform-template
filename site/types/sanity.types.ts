@@ -357,7 +357,9 @@ export type VideoIndex = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -810,6 +812,7 @@ export type TestimonialsPage = {
   _rev: string;
   title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -1200,7 +1203,9 @@ export type EventIndex = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -1273,6 +1278,7 @@ export type EventPage = {
   _rev: string;
   title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -1340,6 +1346,7 @@ export type ReviewPage = {
   _rev: string;
   title?: string;
   slug?: Slug;
+  navLabel?: string;
   h1?: string;
   blurb?: BlockContent;
   reviewLinks?: Array<{
@@ -1367,6 +1374,7 @@ export type LandingPage = {
   _rev: string;
   title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -1441,7 +1449,9 @@ export type StaffIndex = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -1514,7 +1524,9 @@ export type StaffPage = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -1568,7 +1580,9 @@ export type AttorneyIndex = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -1643,6 +1657,7 @@ export type AttorneyPage = {
   _rev: string;
   title?: string;
   slug?: Slug;
+  navLabel?: string;
   h1?: string;
   ctaOverride?: {
     label?: string;
@@ -1748,6 +1763,7 @@ export type LocationPage = {
   };
   title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -1853,7 +1869,9 @@ export type BlogPost = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -1986,6 +2004,7 @@ export type BlogCategory = {
   _rev: string;
   title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -2018,7 +2037,9 @@ export type BlogIndex = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -2097,6 +2118,7 @@ export type FaqPage = {
     [internalGroqTypeReferenceTo]?: "practiceArea";
   };
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -2200,6 +2222,7 @@ export type ContactPage = {
   _rev: string;
   title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -2291,6 +2314,7 @@ export type ServiceAreaIndex = {
   _rev: string;
   title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -2372,6 +2396,7 @@ export type ServiceAreaPage = {
     [internalGroqTypeReferenceTo]?: "serviceAreaPage";
   };
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -2481,6 +2506,7 @@ export type GeoPracticeArea = {
     [internalGroqTypeReferenceTo]?: "geoPracticeArea";
   };
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -2595,6 +2621,7 @@ export type GeneralPage = {
     [internalGroqTypeReferenceTo]?: "generalPage";
   };
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -2668,6 +2695,7 @@ export type AboutPage = {
   _rev: string;
   title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -2767,7 +2795,9 @@ export type HomePage = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  title?: string;
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -2864,6 +2894,7 @@ export type PracticeArea = {
     [internalGroqTypeReferenceTo]?: "practiceArea";
   };
   slug?: Slug;
+  navLabel?: string;
   seoTitle?: string;
   metaDescription?: string;
   ogImageOverride?: {
@@ -6626,7 +6657,7 @@ export type PRACTICE_AREA_QUERYResult = {
       _id: string;
       _type: "blogPost";
       slug: string | null;
-      title: null;
+      title: string | null;
     } | {
       _id: string;
       _type: "contactPage";
@@ -7543,7 +7574,7 @@ export type PRACTICE_AREA_QUERYResult = {
       _id: string;
       _type: "blogPost";
       slug: string | null;
-      title: null;
+      title: string | null;
     } | {
       _id: string;
       _type: "contactPage";
@@ -8460,7 +8491,7 @@ export type PRACTICE_AREA_QUERYResult = {
       _id: string;
       _type: "blogPost";
       slug: string | null;
-      title: null;
+      title: string | null;
     } | {
       _id: string;
       _type: "contactPage";
@@ -10260,7 +10291,7 @@ export type BLOG_POST_PAGE_QUERYResult = {
       _id: string;
       _type: "blogPost";
       slug: string | null;
-      title: null;
+      title: string | null;
     } | {
       _id: string;
       _type: "contactPage";
@@ -10824,7 +10855,7 @@ export type LOCATION_PAGE_QUERYResult = {
       _id: string;
       _type: "blogPost";
       slug: string | null;
-      title: null;
+      title: string | null;
     } | {
       _id: string;
       _type: "contactPage";
@@ -11676,7 +11707,7 @@ export type CONTENT_PAGE_QUERYResult = {
       _id: string;
       _type: "blogPost";
       slug: string | null;
-      title: null;
+      title: string | null;
     } | {
       _id: string;
       _type: "contactPage";
@@ -13234,7 +13265,7 @@ export type CONTENT_PAGE_QUERYResult = {
       _id: string;
       _type: "blogPost";
       slug: string | null;
-      title: null;
+      title: string | null;
     } | {
       _id: string;
       _type: "contactPage";

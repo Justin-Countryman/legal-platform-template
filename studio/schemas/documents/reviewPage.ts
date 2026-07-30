@@ -33,6 +33,13 @@ export const reviewPage = defineType({
       options: {source: 'title'},
       validation: (Rule) => Rule.required().error(),
     },
+    {
+      name: 'navLabel',
+      fieldset: 'identity',
+      title: 'Nav Label',
+      type: 'string',
+      description: 'Short label for menus, breadcrumbs, index cards and link text. Leave blank to use the Page Title.',
+    },
     // ─── Content ──────────────────────────────────────────────────────────────
     {
       name: 'h1',

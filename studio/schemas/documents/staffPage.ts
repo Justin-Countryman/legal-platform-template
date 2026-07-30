@@ -29,6 +29,14 @@ export const staffPage = defineType({
   ],
   fields: [
     {
+      name: 'title',
+      fieldset: 'pageSettings',
+      title: 'Page Title',
+      type: 'string',
+      description: 'Internal CMS label — e.g. "Jane Doe"',
+      validation: (Rule) => Rule.required().warning(),
+    },
+    {
       name: 'slug',
       fieldset: 'pageSettings',
       title: 'Slug',
@@ -43,6 +51,13 @@ export const staffPage = defineType({
         },
       },
       validation: (Rule) => Rule.required().error(),
+    },
+    {
+      name: 'navLabel',
+      fieldset: 'pageSettings',
+      title: 'Nav Label',
+      type: 'string',
+      description: 'Short label for menus, breadcrumbs, index cards and link text. Leave blank to use the Page Title.',
     },
     // ─── SEO Settings ─────────────────────────────────────────────────────────
     {
