@@ -96,3 +96,62 @@ describe('the attorney trail reads the naming fields, not a recomposed name', ()
     })
   }
 })
+
+describe('CRUMB-1: the band sits below the hero, not above it', () => {
+  /**
+   * `FeatureGridLayout` (Sanity name: Mosaic) IS EXCLUDED, and the exclusion is
+   * the finding rather than a convenience.
+   *
+   * Every other profile layout opens with a hero — photo, name, H1, contact —
+   * and closes it before the biography, so "below the hero" is a real position.
+   * Mosaic has no such boundary: ONE `<section>` holds the photo column and a
+   * content column carrying the H1, the contact chips, an `<hr>` and the whole
+   * biography, and in the staff family that section IS the entire layout. Below
+   * it is below the biography, which is not a hero position, it is the bottom of
+   * the page.
+   *
+   * So CRUMB-1 has no referent here, the same way it had none on `reviewPage`,
+   * and inventing one is a layout decision rather than a breadcrumb one. Both
+   * families are listed because both have the shape.
+   */
+  const UNPLACEABLE = ['FeatureGridLayout.tsx']
+
+  it('the exclusion list is exactly what it claims — no silent growth', () => {
+    expect(UNPLACEABLE).toEqual(['FeatureGridLayout.tsx'])
+    for (const family of FAMILIES) {
+      expect(layoutNames(family)).toContain('FeatureGridLayout.tsx')
+    }
+  })
+
+  it('Mosaic really has no hero boundary — the reason for the exclusion holds', () => {
+    // If the layout is ever split so the biography leaves the hero section, this
+    // reds and the exclusion must be revisited rather than carried forward.
+    for (const family of FAMILIES) {
+      const src = code(family, 'FeatureGridLayout.tsx')
+      const h1 = src.indexOf('<h1')
+      const closeAfterH1 = src.slice(h1).search(/\n {6}<\/(section|div)>\n/)
+      const heroBlock = src.slice(h1, h1 + closeAfterH1)
+      expect(
+        /[Bb]iography/.test(heroBlock),
+        `${family}/FeatureGridLayout.tsx now separates its hero from its body — ` +
+          `CRUMB-1 may be placeable there now`,
+      ).toBe(true)
+    }
+  })
+
+  for (const family of FAMILIES) {
+    for (const file of layoutNames(family).filter((f) => !UNPLACEABLE.includes(f))) {
+      it(`${family}/${file} renders its band after the H1`, () => {
+        const src = code(family, file)
+        const band = src.search(/<BreadcrumbBand|<Breadcrumbs/)
+        const h1 = src.indexOf('<h1')
+        expect(h1, `${file} has no h1`).toBeGreaterThan(-1)
+        expect(
+          band,
+          `${family}/${file} renders its breadcrumb ABOVE the hero — CRUMB-1 puts ` +
+            `it below. This was the shape all four staff layouts shipped with.`,
+        ).toBeGreaterThan(h1)
+      })
+    }
+  }
+})

@@ -5,7 +5,7 @@
 import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage} from '@/lib/sanity/image'
 import {MdEmail} from 'react-icons/md'
-import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
+import {BreadcrumbBand} from '@/components/ui/BreadcrumbBand'
 import {INDEX_PAGE_PRESETS} from '@/lib/pageLabel'
 import {Button} from '@/components/ui/Button'
 import {Chip} from '@/components/ui/Chip'
@@ -26,17 +26,6 @@ export function SplitHeroLayout({member, napTokens, cta = {label: 'Contact Us', 
 
   return (
     <>
-      {/* ── Breadcrumb ────────────────────────────────────────────────────── */}
-      <div className="bg-muted border-b border-border px-[5%] py-3">
-        <div className="container">
-          <Breadcrumbs items={[
-            {label: 'Home', href: '/'},
-            {label: INDEX_PAGE_PRESETS.staffIndex, href: '/staff/'},
-            {label: name, href: '#'},
-          ]} />
-        </div>
-      </div>
-
       {/* ── Profile Card ──────────────────────────────────────────────────── */}
       <section aria-labelledby="staff-h1" className="bg-background py-8 px-[5%]">
         <div className="grid grid-cols-1 overflow-hidden lg:grid-cols-[5fr_7fr]">
@@ -126,6 +115,26 @@ export function SplitHeroLayout({member, napTokens, cta = {label: 'Contact Us', 
           </div>
         </div>
       </section>
+
+      {/* CRUMB-1 (`BI-PRINCIPLES.md`): its own strip BELOW the hero. This block
+          used to be the FIRST child of the fragment, above the hero — the last
+          placement outlier, byte-identical across all four staff layouts. It is
+          the same `BreadcrumbBand` the attorney four import, so the block exists
+          once rather than four times.
+
+          `href: '#'` on the last item is carried over UNCHANGED and is a known
+          trap: it is inert today because no `domain` is passed and the component
+          emits no BreadcrumbList without one, but it would become
+          `https://<host>#` the moment the eleven-types markup pass adds one. That
+          pass owns it; this one is placement. */}
+      <BreadcrumbBand
+        items={[
+          {label: 'Home', href: '/'},
+          {label: INDEX_PAGE_PRESETS.staffIndex, href: '/staff/'},
+          {label: name, href: '#'},
+        ]}
+      />
+
 
       {/* ── Biography ─────────────────────────────────────────────────────── */}
       {member.biography && member.biography.length > 0 && (
