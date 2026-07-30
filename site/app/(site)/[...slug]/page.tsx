@@ -52,9 +52,14 @@ function buildOfficeLegalServiceSchema(
   domain: string,
 ) {
   const loc = page.locationData ?? {}
-  // Same gating as buildLocalBusinessSchema below: no street address, no
-  // PostalAddress. Virtual and Home offices have the street gated out at the
-  // query layer (D9).
+  const sameAs = [loc.gbpCidUrl].filter((u): u is string => typeof u === 'string' && u.length > 0)
+  // GeoCoordinates — gated to Physical/Shared at the query layer (D9), so
+  // Virtual/Home never emit coordinates. Both lat and lng must be present.
+  const geo = typeof loc.geo?.lat === 'number' && typeof loc.geo?.lng === 'number'
+    ? {'@type': 'GeoCoordinates', latitude: loc.geo.lat, longitude: loc.geo.lng}
+    : undefined
+  // No street address, no PostalAddress. Virtual and Home offices have the
+  // street gated out at the query layer (D9).
   const address = loc.address1
     ? {
         '@type': 'PostalAddress',
@@ -71,8 +76,22 @@ function buildOfficeLegalServiceSchema(
     '@id': `https://${domain}/${page.slug}/#office`,
     name: tokens?.firmName ?? '',
     url: `https://${domain}/${page.slug}/`,
-    telephone: loc?.officePhone ?? undefined,
+    telephone: loc.officePhone ?? undefined,
     address,
+    geo,
+    // Service area — kept for Virtual/Home locations where the street address is
+    // gated out (D9); still valid (and harmless) for Physical/Shared.
+    areaServed: loc.city ?? loc.state ?? undefined,
+    openingHoursSpecification: buildOpeningHours(loc.hours),
+    sameAs: sameAs.length > 0 ? sameAs : undefined,
+    // The office belongs to the firm. This is the ENTITY-6 nested shape and it
+    // reads the firm record, not the page.
+    parentOrganization: {
+      '@type': 'LegalService',
+      '@id': `https://${domain}/#firm`,
+      name: tokens?.firmName ?? '',
+      url: `https://${domain}/`,
+    },
   }
 }
 
@@ -123,52 +142,6 @@ function buildOpeningHours(hours: LocationHours | null | undefined) {
       closes: d.close,
     }))
   return specs.length > 0 ? specs : undefined
-}
-
-function buildLocalBusinessSchema(
-  page: {title?: string | null; slug?: string | null; metaDescription?: string | null; locationData?: LocationData | null},
-  tokens: NapTokens | null,
-  domain: string,
-) {
-  const loc = page.locationData ?? {}
-  const sameAs = [loc.gbpCidUrl].filter((u): u is string => typeof u === 'string' && u.length > 0)
-  // GeoCoordinates — gated to Physical/Shared at the query layer (D9), so
-  // Virtual/Home never emit coordinates. Both lat and lng must be present.
-  const geo = typeof loc.geo?.lat === 'number' && typeof loc.geo?.lng === 'number'
-    ? {'@type': 'GeoCoordinates', latitude: loc.geo.lat, longitude: loc.geo.lng}
-    : undefined
-  const address = loc.address1
-    ? {
-        '@type': 'PostalAddress',
-        streetAddress: [loc.address1, loc.address2].filter(Boolean).join(', '),
-        addressLocality: loc.city ?? undefined,
-        addressRegion: loc.state ?? undefined,
-        postalCode: loc.zip ?? undefined,
-        addressCountry: 'US',
-      }
-    : undefined
-
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
-    // ENTITY-1: the firm's name, and no page fallback behind it.
-    name: tokens?.firmName ?? '',
-    description: resolveTokenString(page.metaDescription ?? '', tokens) || undefined,
-    url: `https://${domain}/${page.slug}/`,
-    telephone: loc.officePhone ?? undefined,
-    address,
-    geo,
-    // Service area — kept for Virtual/Home locations where the street address
-    // is gated out (D9); still valid (and harmless) for Physical/Shared.
-    areaServed: loc.city ?? loc.state ?? undefined,
-    openingHoursSpecification: buildOpeningHours(loc.hours),
-    sameAs: sameAs.length > 0 ? sameAs : undefined,
-    parentOrganization: {
-      '@type': 'LegalService',
-      name: tokens?.firmName ?? '',
-      url: `https://${domain}/`,
-    },
-  }
 }
 
 // Post-WS-FAQ-Migration (2026-05-14): faqItems is now a dereferenced array of
@@ -312,21 +285,17 @@ export default async function CatchAllPage({params}: Props) {
           a general page are all SUBJECTS rather than places of business, and a
           subject is not a LegalService.
 
-          ENTITY-4: one office LegalService, plus the LocalBusiness that carries
-          the office's hours and geo. Both are named for the FIRM (ENTITY-1);
-          their `@id`, url and address are what distinguish this office. */}
+          ENTITY-4 (amended 2026-07-29): ONE node for the office, of the most
+          specific type that fits. The separate LocalBusiness block is gone —
+          LegalService is a SUBTYPE of LocalBusiness, so emitting both for one
+          office said two businesses share an address. Its hours, geo,
+          areaServed and sameAs moved onto this node. */}
       {isLocation && (
         <>
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
               __html: JSON.stringify(buildOfficeLegalServiceSchema(page, tokens, siteHost())),
-            }}
-          />
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(buildLocalBusinessSchema(page, tokens, siteHost())),
             }}
           />
         </>

@@ -106,6 +106,10 @@ function buildOrganizationSchema(data: OrganizationData) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
+    // ENTITY-4 (`BI-PRINCIPLES.md`): the firm is one node and the office is
+    // another. The office node carries `#office`; this is the firm, so it
+    // carries `#firm` and an office can point at it by identifier.
+    '@id': `${url}#firm`,
     name: firmName,
     url,
     logo: data.logo ?? undefined,
