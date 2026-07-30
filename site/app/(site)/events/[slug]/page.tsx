@@ -94,11 +94,8 @@ function buildEventSchema(event: unknown, tokens: NapTokens | null, domain: stri
     name: e.title,
     startDate: e.eventDate,
     url: `https://${domain}/${e.slug}/`,
-    organizer: {
-      '@type': 'LegalService',
-      name: tokens?.firmName ?? '',
-      url: `https://${domain}/`,
-    },
+    // ENTITY-6: point at the firm, do not redeclare it.
+    organizer: {'@id': `https://${domain}/#firm`},
   }
   if (e.eventEndDate) schema.endDate = e.eventEndDate
   if (e.locationType === 'virtual' || e.locationType === 'hybrid') {

@@ -78,11 +78,9 @@ function buildPersonSchema(attorney: Attorney, napTokens: NapTokens) {
     jobTitle: attorney.jobTitle ?? undefined,
     image: photoUrl ?? undefined,
     url,
-    worksFor: {
-      '@type': 'LegalService',
-      name: napTokens.firmName ?? '',
-      url: `https://${siteHost()}/`,
-    },
+    // ENTITY-6: point at the firm, do not redeclare it. The `#firm` node is
+    // emitted from the root layout on every route.
+    worksFor: {'@id': `https://${siteHost()}/#firm`},
     telephone: attorney.location?.officePhone ?? undefined,
     address,
     sameAs: sameAs.length > 0 ? sameAs : undefined,

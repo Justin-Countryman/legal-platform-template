@@ -94,6 +94,81 @@ function buildLocalBusinessSchema(page, tokens, domain) {
 }
 `
 
+/**
+ * ENTITY-6. A nested entity that IS the firm must POINT at `#firm`, not declare
+ * the firm again.
+ *
+ * What counts as redeclaring: carrying a `url`, an `address`, a `logo`, a
+ * `contactPoint` or a `sameAs` — any property the firm node already owns. A
+ * name-only nested object is a label, not a redeclaration, and is allowed.
+ */
+const NESTED_FIRM_KEYS = ['worksFor', 'publisher', 'organizer', 'provider', 'parentOrganization'] as const
+const IDENTITY_PROPS = ['url', 'address', 'logo', 'contactPoint', 'sameAs'] as const
+
+export function nestedFirmRedeclarations(source: string): string[] {
+  const findings: string[] = []
+  for (const key of NESTED_FIRM_KEYS) {
+    const marker = `${key}: {`
+    let from = 0
+    for (;;) {
+      const at = source.indexOf(marker, from)
+      if (at === -1) break
+      from = at + marker.length
+      const rest = source.slice(at)
+      const close = rest.indexOf('},')
+      const body = close === -1 ? rest.slice(0, 400) : rest.slice(0, close)
+      if (body.includes("'@id'")) continue // it points
+      const carried = IDENTITY_PROPS.filter((prop) => new RegExp(`\\b${prop}:`).test(body))
+      if (carried.length > 0) findings.push(`${key} redeclares the firm (carries ${carried.join(', ')})`)
+    }
+  }
+  return findings
+}
+
+// The blog publisher exactly as it stood before 2026-07-29, quoted.
+const PRE_FIX_PUBLISHER = [
+  "    publisher: {",
+  "      '@type': 'Organization',",
+  "      name: tokens?.firmName ?? '',",
+  "      url: `https://${siteHost()}/`,",
+  "    },",
+].join('\n')
+
+// A name-only nested object, which ENTITY-6 explicitly allows.
+const NAME_ONLY = [
+  "    publisher: {",
+  "      '@type': 'Organization',",
+  "      name: tokens?.firmName ?? '',",
+  "    },",
+].join('\n')
+
+describe('ENTITY-6: nested firm references point, they do not redeclare', () => {
+  it('goes RED on the real pre-fix blog publisher', () => {
+    expect(nestedFirmRedeclarations(PRE_FIX_PUBLISHER)).toEqual([
+      'publisher redeclares the firm (carries url)',
+    ])
+  })
+
+  it('allows a name-only nested object, which is a label not a redeclaration', () => {
+    expect(nestedFirmRedeclarations(NAME_ONLY)).toEqual([])
+  })
+
+  it('holds in every route that nests a firm reference', () => {
+    for (const rel of [
+      'app/(site)/attorneys/[slug]/page.tsx',
+      'app/(site)/blog/[slug]/page.tsx',
+      'app/(site)/events/[slug]/page.tsx',
+      'app/(site)/[...slug]/page.tsx',
+    ]) {
+      expect(nestedFirmRedeclarations(readFileSync(join(process.cwd(), rel), 'utf8'))).toEqual([])
+    }
+  })
+
+  it('the firm node the references point at is emitted sitewide', () => {
+    expect(readFileSync(LAYOUT, 'utf8')).toContain('#firm')
+  })
+})
+
 describe('the checker is falsifiable', () => {
   it('goes RED on the real pre-fix builder', () => {
     const findings = pageFieldReadsInFirmEntities(PRE_FIX_BUILDER)

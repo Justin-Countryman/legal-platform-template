@@ -66,11 +66,9 @@ function buildArticleSchema(post: unknown, tokens: NapTokens | null) {
     author: authorNames.length
       ? authorNames.map((name: string) => ({'@type': 'Person', name}))
       : undefined,
-    publisher: {
-      '@type': 'Organization',
-      name: tokens?.firmName ?? '',
-      url: `https://${siteHost()}/`,
-    },
+    // ENTITY-6: point at the firm, do not redeclare it. Every post used to
+    // emit a second, unlinked Organization at the firm's own URL.
+    publisher: {'@id': `https://${siteHost()}/#firm`},
   }
 }
 
