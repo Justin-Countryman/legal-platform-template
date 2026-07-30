@@ -22,6 +22,11 @@ export type AttorneyLocation = {
 
 export type Attorney = {
   slug: string
+  // Naming fields (NAME-1). Read by the breadcrumb through `resolvePageLabel`;
+  // the layouts still compose a display name from the name fields below for the
+  // H1, which is the Heading field and a different job.
+  title: string | null
+  navLabel: string | null
   seoTitle: string | null
   metaDescription: string | null
   noIndex: boolean

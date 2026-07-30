@@ -13,12 +13,19 @@ import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {CredentialSection} from '@/components/attorney/CredentialSection'
 import {AttorneyVideo} from '@/components/attorney/AttorneyVideo'
 import {buildFullName, formatAddress, type Attorney} from '@/components/attorney/types'
+import {BreadcrumbBand} from '@/components/ui/BreadcrumbBand'
+import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
+import {siteHost} from '@/lib/siteHost'
 import type {NapTokens} from '@/lib/tokens'
 
 type Props = {attorney: Attorney; napTokens?: NapTokens; cta?: {label: string; href: string}; isDark?: boolean}
 
 export function SplitHeroLayout({attorney, napTokens, cta = {label: 'Contact Us', href: '/contact/'}, isDark = true}: Props) {
   const name = buildFullName(attorney)
+  // The breadcrumb's own rung reads the NAMING fields through the one
+  // resolver (NAME-3); `name` above is the composed display name and feeds
+  // the H1, which is the Heading field and a different job.
+  const label = resolvePageLabel(attorney) ?? name
   const areas = attorney.practiceAreas ?? []
   const buttonContext = isDark ? 'dark' : 'light'
 
@@ -122,6 +129,20 @@ export function SplitHeroLayout({attorney, napTokens, cta = {label: 'Contact Us'
           </div>
         </div>
       </section>
+
+      {/* CRUMB-1 / CRUMB-5 (`BI-PRINCIPLES.md`): its own strip BELOW the hero.
+          This block was ABSENT from all four attorney layouts while the four
+          staff layouts of the same names carried it — nothing failed, because a
+          block you have to remember to type is not a mechanism. */}
+      <BreadcrumbBand
+        items={[
+          {label: 'Home', href: '/'},
+          {label: INDEX_PAGE_PRESETS.attorneyIndex, href: '/attorneys/'},
+          ...(label ? [{label, href: `/${attorney.slug}/`}] : []),
+        ]}
+        domain={siteHost()}
+      />
+
 
       <AttorneyVideo attorney={attorney} />
 
