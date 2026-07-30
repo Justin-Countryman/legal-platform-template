@@ -15,24 +15,43 @@
  * from, so that is what this reads.
  */
 
-import {readFileSync} from 'node:fs'
-import {join} from 'node:path'
+import {readdirSync, readFileSync} from 'node:fs'
+import {join, relative} from 'node:path'
 import {describe, expect, it} from 'vitest'
 
 import {INDEX_PAGE_PRESETS} from '../pageLabel'
 
-/** Every route that renders a breadcrumb, a page header, or an index card. */
-const ROUTES = [
-  'app/(site)/staff/page.tsx',
-  'app/(site)/attorneys/page.tsx',
-  'app/(site)/blog/page.tsx',
-  'app/(site)/blog/[slug]/page.tsx',
-  'app/(site)/service-area/page.tsx',
-  'app/(site)/testimonials/page.tsx',
-  'app/(site)/events/page.tsx',
-  'app/(site)/videos/page.tsx',
-  'app/(site)/[...slug]/page.tsx',
-]
+/**
+ * Every route under `(site)`, DISCOVERED rather than listed.
+ *
+ * THE HAND-WRITTEN LIST WAS THE SECOND GAP IN THIS GUARD, and the worse one. It
+ * named nine routes and omitted `contact`, `blog/category/[slug]` and
+ * `events/[slug]` — the exact three that still built trails from literals. So
+ * widening the match pattern alone would have changed nothing: those files were
+ * never read. **A roster maintained by hand goes stale in the direction of
+ * whatever its author had just finished looking at.**
+ *
+ * `design-studio` and `design-preview` are excluded: they are catalogs rendering
+ * components against fixtures, so a quoted label there is sample data.
+ */
+function discoverRoutes(): string[] {
+  const out: string[] = []
+  const walk = (dir: string) => {
+    for (const entry of readdirSync(dir, {withFileTypes: true})) {
+      const full = join(dir, entry.name)
+      if (entry.isDirectory()) {
+        if (entry.name.startsWith('design-')) continue
+        walk(full)
+      } else if (entry.name === 'page.tsx') {
+        out.push(relative(process.cwd(), full))
+      }
+    }
+  }
+  walk(join(process.cwd(), 'app/(site)'))
+  return out.sort()
+}
+
+const ROUTES = discoverRoutes()
 
 const STAFF_LAYOUTS = [
   'components/staff/layouts/SplitHeroLayout.tsx',
@@ -67,18 +86,65 @@ describe('no route names a page with a superseded string', () => {
   }
 })
 
+describe('the route roster is discovered, not listed', () => {
+  it('finds every (site) route, including the three a hand-list omitted', () => {
+    expect(ROUTES.length, 'discovery returned nothing').toBeGreaterThanOrEqual(12)
+    for (const rel of [
+      'app/(site)/contact/page.tsx',
+      'app/(site)/blog/category/[slug]/page.tsx',
+      'app/(site)/events/[slug]/page.tsx',
+    ]) {
+      expect(ROUTES, `${rel} is not being checked`).toContain(rel)
+    }
+  })
+})
+
 describe('no route builds a breadcrumb trail out of literals', () => {
+  // WIDENED 2026-07-29. It matched only `{label: 'Home', ...}, {label: '<lit>'`
+  // — a TWO-item trail — so three routes building THREE-item trails with a
+  // literal in the middle passed it. Written for the shape it had just fixed;
+  // it covered the instance rather than the class. `Home` stays allowed: it
+  // names the site root, not a page with naming fields.
   for (const rel of [...ROUTES, ...STAFF_LAYOUTS]) {
-    it(`${rel} resolves its trail`, () => {
-      // `items={[{label: 'Home', href: '/'}, {label: 'Our Team', href: '/staff/'}]}`
-      // is the shape. `Home` stays a literal — it names the site root, not a page
-      // with a naming field — so only a SECOND literal label is a finding.
-      const trail = code(rel).match(
-        /\{label: 'Home', href: '\/'\},\s*\{label: '[^']+'/g,
-      )
-      expect(trail, `${rel} hardcodes a breadcrumb label`).toBeNull()
+    it(`${rel} resolves every rung`, () => {
+      for (const trail of code(rel).match(/items=\{\[[\s\S]*?\]\}/g) ?? []) {
+        const literals = (trail.match(/\{label: '([^']+)'/g) ?? [])
+          .map((m) => m.slice("{label: '".length, -1))
+          .filter((l) => l !== 'Home')
+        expect(
+          literals,
+          `${rel} hardcodes ${JSON.stringify(literals)} in a breadcrumb trail — ` +
+            `resolve it through resolvePageLabel, or read INDEX_PAGE_PRESETS when ` +
+            `the label belongs to a page this route cannot fetch`,
+        ).toEqual([])
+      }
     })
   }
+})
+
+describe('CRUMB-4: a visible trail is always accompanied by markup', () => {
+  it('every breadcrumb call site passes a domain', () => {
+    // The component emits BreadcrumbList only when given one, so a call site
+    // without a domain renders a trail no crawler ever sees. Ten of thirteen
+    // were in that state until 2026-07-29.
+    for (const rel of ROUTES) {
+      for (const call of code(rel).match(/<Breadcrumbs\b[\s\S]*?\/>|<BreadcrumbBand\b[\s\S]*?\/>/g) ?? []) {
+        expect(
+          call.includes('domain='),
+          `${rel} renders a breadcrumb with no domain — CRUMB-4: markup follows ` +
+            `the visible breadcrumb, and the component emits none without it`,
+        ).toBe(true)
+      }
+    }
+  })
+
+  it('no trail carries a placeholder href', () => {
+    // `href: '#'` was inert while no domain was passed; with one it becomes
+    // `https://<host>#` as a ListItem URL.
+    for (const rel of [...ROUTES, ...STAFF_LAYOUTS]) {
+      expect(code(rel), `${rel} carries a placeholder href`).not.toContain("href: '#'")
+    }
+  })
 })
 
 describe('the index-page names live in one table', () => {

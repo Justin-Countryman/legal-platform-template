@@ -54,6 +54,10 @@ export const INDEX_PAGE_PRESETS: Record<string, string> = {
   // and they are here only so no route has to carry a literal.
   serviceAreaIndex: 'Service Area',
   testimonialsPage: 'Testimonials',
+  // NAME-4 gives this one a fixed word. It was a literal in BOTH the route and
+  // CONTACT_PAGE_QUERY's projection until 2026-07-29 — two copies of one name,
+  // agreeing, which is the shape that let `Our Team` outlive its supersession.
+  contactPage: 'Contact',
 }
 
 /** Title Case from a kebab slug leaf, mirroring `_shared/page_name.py`. */

@@ -944,7 +944,9 @@ export const HOME_QUERY = groq`
 export const CONTACT_PAGE_QUERY = groq`
   *[_type == "contactPage"][0]{
     "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
-    "title": coalesce(title, "Contact"),
+    title,
+    navLabel,
+    "slug": slug.current,
     seoTitle,
     metaDescription,
     noIndex,
@@ -1304,6 +1306,7 @@ export const EVENT_PAGE_QUERY = groq`
   *[_type == "eventPage" && slug.current == $slug][0]{
     "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     title,
+    navLabel,
     "slug": slug.current,
     seoTitle,
     metaDescription,
@@ -1559,6 +1562,7 @@ export const BLOG_CATEGORY_PAGE_QUERY = groq`
   *[_type == "blogCategory" && slug.current == $slug][0]{
     "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     title,
+    navLabel,
     "slug": slug.current,
     seoTitle,
     metaDescription,

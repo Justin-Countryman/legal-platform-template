@@ -19,6 +19,7 @@ import {InternalHero} from '@/components/layout/InternalHero'
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
+import {siteHost} from '@/lib/siteHost'
 import {Button} from '@/components/ui/Button'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 
@@ -156,7 +157,7 @@ export default async function StaffIndexPage() {
       {/* Breadcrumb */}
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/staff/'}]} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/staff/'}]} domain={siteHost()} />
         </div>
       </div>
 

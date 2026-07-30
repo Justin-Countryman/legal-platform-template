@@ -11,6 +11,7 @@ import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
+import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {FormModal} from '@/components/ui/FormModal'
 import {Button} from '@/components/ui/Button'
@@ -174,11 +175,17 @@ export default async function EventDetailPage({params}: Props) {
       {/* Breadcrumb band */}
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[
-            {label: 'Home', href: '/'},
-            {label: 'Events', href: '/events/'},
-            {label: event.title, href: `/${event.slug}/`},
-          ]} />
+          {/* NAME-3: no route names a page. The index rung was the literal
+              'Events' and the current rung read `.title` directly, bypassing the
+              nav label NAME-2 puts ahead of it. */}
+          <Breadcrumbs
+            items={[
+              {label: 'Home', href: '/'},
+              {label: INDEX_PAGE_PRESETS.eventIndex, href: '/events/'},
+              {label: resolvePageLabel(event) ?? '', href: `/${event.slug}/`},
+            ]}
+            domain={siteHost()}
+          />
         </div>
       </div>
 

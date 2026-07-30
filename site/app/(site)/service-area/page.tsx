@@ -17,6 +17,7 @@ import {InternalHero} from '@/components/layout/InternalHero'
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
+import {siteHost} from '@/lib/siteHost'
 import {Tagline} from '@/components/ui/Tagline'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {ServiceAreaIndexClient} from '@/components/sections/ServiceAreaIndexClient'
@@ -98,7 +99,7 @@ export default async function ServiceAreaIndexPage() {
       {/* Breadcrumb band */}
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/service-area/'}]} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/service-area/'}]} domain={siteHost()} />
         </div>
       </div>
 

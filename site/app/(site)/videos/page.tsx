@@ -13,6 +13,7 @@ import {InternalHero, type InternalHeroData} from '@/components/layout/InternalH
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
+import {siteHost} from '@/lib/siteHost'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {VideoLibraryClient, type VideoCardData} from '@/components/sections/VideoLibraryClient'
 import {urlForImage, hasImage} from '@/lib/sanity/image'
@@ -108,7 +109,7 @@ export default async function VideoLibraryPage() {
 
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/videos/'}]} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/videos/'}]} domain={siteHost()} />
         </div>
       </div>
 

@@ -9,6 +9,8 @@ import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
+import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
+import {siteHost} from '@/lib/siteHost'
 import {Tagline} from '@/components/ui/Tagline'
 import {FormEmbed} from '@/components/layout/footers/FormEmbed'
 
@@ -19,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
     client.fetch(CONTACT_PAGE_QUERY),
     client.fetch(NAP_TOKENS_QUERY),
   ])
-  if (!page) return {title: 'Contact'}
+  if (!page) return {title: INDEX_PAGE_PRESETS.contactPage}
   const tokens = expandNapTokens(rawTokens)
 
   const {title, label} = resolveTitle(page.seoTitle, page.title, tokens, tokens?.firmName)
@@ -48,6 +50,10 @@ export default async function ContactPage() {
   const hasIntro = tagline || heading || description
   const needsFallbackH1 = !page?.showHero  // Always render intro h1 when no hero ships above
 
+  // NAME-3: no route names a page. This carried the literal `'Contact'`, and so
+  // did CONTACT_PAGE_QUERY's projection.
+  const pageLabel = resolvePageLabel(page) ?? INDEX_PAGE_PRESETS.contactPage
+
   return (
     <>
       {/* Hero */}
@@ -56,7 +62,7 @@ export default async function ContactPage() {
       {/* Breadcrumb band */}
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: 'Contact', href: '/contact/'}]} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/contact/'}]} domain={siteHost()} />
         </div>
       </div>
 

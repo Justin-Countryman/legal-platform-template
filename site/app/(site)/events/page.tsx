@@ -11,6 +11,7 @@ import {buildSocialMeta} from '@/lib/socialMeta'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
+import {siteHost} from '@/lib/siteHost'
 import {Chip} from '@/components/ui/Chip'
 import {CalendarIcon, MapPinIcon, type ChipIcon} from '@/components/ui/icons'
 import {TertiaryArrow} from '@/components/ui/TertiaryArrow'
@@ -227,7 +228,7 @@ export default async function EventsIndexPage() {
       {/* Breadcrumb band */}
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/events/'}]} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/events/'}]} domain={siteHost()} />
         </div>
       </div>
 

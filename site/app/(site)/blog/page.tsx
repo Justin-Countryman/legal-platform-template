@@ -18,6 +18,7 @@ import {InternalHero} from '@/components/layout/InternalHero'
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
+import {siteHost} from '@/lib/siteHost'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {BlogIndexClient} from '@/components/sections/BlogIndexClient'
 import {BlogIndexFallback} from '@/components/sections/BlogIndexFallback'
@@ -69,7 +70,7 @@ export default async function BlogIndexPage() {
       {/* Breadcrumb band */}
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/blog/'}]} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/blog/'}]} domain={siteHost()} />
         </div>
       </div>
 

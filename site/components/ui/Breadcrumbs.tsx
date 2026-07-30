@@ -26,7 +26,34 @@ type Props = {
 // show two different strings for one page. `lib/pageLabel.ts` is now the only
 // answer, and it cannot see a heading at all.
 
+/**
+ * Page types that render NO breadcrumb, from `BI-PRINCIPLES.md` CRUMB-6 and
+ * CRUMB-7. A page with no position in the site's hierarchy has no trail to
+ * build, and neither does one whose layouts admit no place to put it.
+ *
+ * ONLY `landingPage` IS REACHABLE FROM HERE, and the rest are listed anyway so
+ * the roster reads as the rule rather than as one special case. `homePage` has
+ * its own route and renders none; `reviewPage` sits outside the `(site)` group
+ * entirely; `attorneyPage` and `staffPage` render through profile layouts that
+ * no longer call a breadcrumb at all.
+ *
+ * WHY THE GUARD IS HERE RATHER THAN IN THE ROUTE. `landingPage` is served by the
+ * catch-all alongside eight types that DO get a trail, and the only gate there
+ * was `breadcrumbs.length > 1` — a length check, which a landing page with a
+ * parent would pass. CRUMB-6 recorded that as "a rule the code has no way to
+ * obey". Putting the exclusion in the builder means any future caller inherits
+ * it without knowing it exists.
+ */
+export const NO_BREADCRUMB_TYPES = new Set([
+  'homePage',
+  'landingPage',
+  'reviewPage',
+  'attorneyPage',
+  'staffPage',
+])
+
 export function buildBreadcrumbs(page: {
+  _type?: string | null
   navLabel?: string | null
   title?: string | null
   slug?: string | null
@@ -41,6 +68,11 @@ export function buildBreadcrumbs(page: {
     } | null
   } | null
 }): BreadcrumbItem[] {
+  // CRUMB-6 / CRUMB-7. Empty rather than a Home-only trail: the component
+  // renders nothing below two items, but an empty array says "this page has no
+  // trail" where a one-item array says "its trail is just Home".
+  if (page._type && NO_BREADCRUMB_TYPES.has(page._type)) return []
+
   const items: BreadcrumbItem[] = [{label: 'Home', href: '/'}]
 
   const grandparent = page.parentPage?.parentPage

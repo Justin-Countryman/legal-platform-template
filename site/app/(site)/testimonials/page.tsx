@@ -11,6 +11,7 @@ import {InternalHero} from '@/components/layout/InternalHero'
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
+import {siteHost} from '@/lib/siteHost'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {TestimonialCard, type TestimonialData} from '@/components/ui/TestimonialCard'
 
@@ -65,7 +66,7 @@ export default async function TestimonialsPage() {
       {/* Breadcrumb band */}
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/testimonials/'}]} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/testimonials/'}]} domain={siteHost()} />
         </div>
       </div>
 
