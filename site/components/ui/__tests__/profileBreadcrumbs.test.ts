@@ -1,25 +1,30 @@
 /**
- * Every profile layout renders a breadcrumb, and the two families stay in step.
+ * No profile layout renders a breadcrumb, and the two families stay in step.
  *
- * `BI-PRINCIPLES.md` → CRUMB-5, ruled 2026-07-29.
+ * `BI-PRINCIPLES.md` → CRUMB-7, ruled by the operator 2026-05-08 and restored to
+ * doctrine 2026-07-29.
  *
- * WHAT THIS IS SHAPED AGAINST. `components/attorney/layouts/` and
- * `components/staff/layouts/` hold four files each, with THE SAME FOUR NAMES,
- * driven by the same `napTokens.profileLayout` switch. The staff four carried a
- * breadcrumb; the attorney four never did. Nothing failed — there was no
- * assertion in either direction, and the asymmetry survived until someone read
- * all eight files side by side.
+ * THIS FILE ASSERTED THE OPPOSITE FOR ONE DAY, and that is why it is worth
+ * having. The absence of a breadcrumb on the attorney layouts was recorded as a
+ * violation by a survey that never asked whether the absence was chosen. It had
+ * been chosen — `OUTSTANDING.md`'s Workstream 9.3 Done entry, 2026-05-08:
+ * *"Attorney layouts have NO breadcrumbs by design; out of scope."* The ruling
+ * lived only in a changelog, so nothing pointed at it from doctrine and nothing
+ * in the tree defended it. **A rule with no assertion behind it is a rule waiting
+ * to be reversed by the next person who reads the code instead of the corpus.**
  *
- * So the assertion is pairwise rather than per-file: **a layout name that exists
- * in both families must carry a breadcrumb in both.** That is the shape of the
- * original defect, and it is what catches a fifth layout added to one side only.
+ * Two facts from the previous version are deliberately KEPT rather than deleted
+ * with the rest, because each is load-bearing for CRUMB-7 rather than for the
+ * rule it replaced:
  *
- * It is deliberately AGNOSTIC about HOW the trail is rendered — `BreadcrumbBand`
- * or a hand-written band around `<Breadcrumbs>` both satisfy it. The attorney
- * four use the component; the staff four still use the inline block and will
- * migrate in the pass that moves their band below the hero. **A test that
- * demanded one spelling today would have to be edited by that pass, which is how
- * a guard becomes something you route around.**
+ *   1. **The families must agree.** A layout name present in both must behave the
+ *      same in both. That was the shape of the original defect and it is still
+ *      the shape of the next one — a fifth layout added to one family only, or a
+ *      breadcrumb re-added to one side.
+ *   2. **Mosaic has no hero boundary.** This is CRUMB-7's load-bearing evidence:
+ *      the band has no compliant position because there is nowhere below a hero
+ *      to put it. If that layout is ever split so the biography leaves the hero
+ *      section, the evidence weakens and the rule deserves re-examination.
  */
 
 import {readdirSync, readFileSync} from 'node:fs'
@@ -34,13 +39,10 @@ function layoutNames(family: string): string[] {
     .sort()
 }
 
-function source(family: string, file: string): string {
-  return readFileSync(join(process.cwd(), `components/${family}/layouts/${file}`), 'utf8')
-}
-
 /** Comments stripped — a rule quoted in prose is not a render. */
 function code(family: string, file: string): string {
-  return source(family, file).replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '')
+  return readFileSync(join(process.cwd(), `components/${family}/layouts/${file}`), 'utf8')
+    .replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '')
 }
 
 function rendersABreadcrumb(family: string, file: string): boolean {
@@ -48,14 +50,17 @@ function rendersABreadcrumb(family: string, file: string): boolean {
   return src.includes('<BreadcrumbBand') || src.includes('<Breadcrumbs')
 }
 
-describe('CRUMB-5: every profile layout renders a breadcrumb', () => {
+describe('CRUMB-7: no profile layout renders a breadcrumb', () => {
   for (const family of FAMILIES) {
     for (const file of layoutNames(family)) {
       it(`${family}/${file}`, () => {
         expect(
           rendersABreadcrumb(family, file),
-          `components/${family}/layouts/${file} renders no breadcrumb`,
-        ).toBe(true)
+          `components/${family}/layouts/${file} renders a breadcrumb. CRUMB-7: the ` +
+            `shared profile layouts admit no compliant position for the band — ` +
+            `above the hero is forbidden by CRUMB-1, and Mosaic has no hero to be ` +
+            `below. Ruled 2026-05-08, restored to doctrine 2026-07-29.`,
+        ).toBe(false)
       })
     }
   }
@@ -68,90 +73,36 @@ describe('the two layout families stay in step', () => {
     expect(layoutNames('attorney')).toEqual(layoutNames('staff'))
   })
 
-  it('a name that exists in both families carries a breadcrumb in both', () => {
+  it('a name in both families behaves the same in both', () => {
     const shared = layoutNames('attorney').filter((f) => layoutNames('staff').includes(f))
     expect(shared.length, 'no shared layout names — the pairing broke').toBeGreaterThanOrEqual(4)
     for (const file of shared) {
-      const attorney = rendersABreadcrumb('attorney', file)
-      const staff = rendersABreadcrumb('staff', file)
       expect(
-        attorney,
-        `staff/${file} has a breadcrumb and attorney/${file} does not — the exact ` +
-          `asymmetry CRUMB-5 was ruled for`,
-      ).toBe(staff)
+        rendersABreadcrumb('attorney', file),
+        `attorney/${file} and staff/${file} disagree about the breadcrumb. Either ` +
+          `both or neither — an asymmetry here is what produced two reversals.`,
+      ).toBe(rendersABreadcrumb('staff', file))
     }
   })
 })
 
-describe('the attorney trail reads the naming fields, not a recomposed name', () => {
-  for (const file of layoutNames('attorney')) {
-    it(`${file} resolves its own rung`, () => {
-      const src = code('attorney', file)
-      // NAME-3: every surface reads its field through the one resolver.
-      // `buildFullName` still composes the H1, which is the Heading field.
-      expect(src).toContain('resolvePageLabel(attorney)')
-      expect(src).toContain('INDEX_PAGE_PRESETS.attorneyIndex')
-      // CRUMB-4: the markup follows the visible trail, which needs the domain.
-      expect(src, `${file} emits no BreadcrumbList — CRUMB-4`).toContain('domain={siteHost()}')
-    })
-  }
-})
-
-describe('CRUMB-1: the band sits below the hero, not above it', () => {
-  /**
-   * `FeatureGridLayout` (Sanity name: Mosaic) IS EXCLUDED, and the exclusion is
-   * the finding rather than a convenience.
-   *
-   * Every other profile layout opens with a hero — photo, name, H1, contact —
-   * and closes it before the biography, so "below the hero" is a real position.
-   * Mosaic has no such boundary: ONE `<section>` holds the photo column and a
-   * content column carrying the H1, the contact chips, an `<hr>` and the whole
-   * biography, and in the staff family that section IS the entire layout. Below
-   * it is below the biography, which is not a hero position, it is the bottom of
-   * the page.
-   *
-   * So CRUMB-1 has no referent here, the same way it had none on `reviewPage`,
-   * and inventing one is a layout decision rather than a breadcrumb one. Both
-   * families are listed because both have the shape.
-   */
-  const UNPLACEABLE = ['FeatureGridLayout.tsx']
-
-  it('the exclusion list is exactly what it claims — no silent growth', () => {
-    expect(UNPLACEABLE).toEqual(['FeatureGridLayout.tsx'])
-    for (const family of FAMILIES) {
-      expect(layoutNames(family)).toContain('FeatureGridLayout.tsx')
-    }
-  })
-
-  it('Mosaic really has no hero boundary — the reason for the exclusion holds', () => {
-    // If the layout is ever split so the biography leaves the hero section, this
-    // reds and the exclusion must be revisited rather than carried forward.
+describe("CRUMB-7's evidence still holds", () => {
+  it('Mosaic still has no hero boundary', () => {
+    // The H1, the contact chips, an <hr> and the whole biography share one
+    // section, so there is no "below the hero" to place a band in. If a refactor
+    // ever separates them, this reds — and CRUMB-7's central argument should be
+    // re-read rather than the test relaxed.
     for (const family of FAMILIES) {
       const src = code(family, 'FeatureGridLayout.tsx')
       const h1 = src.indexOf('<h1')
+      expect(h1, 'FeatureGridLayout has no h1').toBeGreaterThan(-1)
       const closeAfterH1 = src.slice(h1).search(/\n {6}<\/(section|div)>\n/)
       const heroBlock = src.slice(h1, h1 + closeAfterH1)
       expect(
         /[Bb]iography/.test(heroBlock),
-        `${family}/FeatureGridLayout.tsx now separates its hero from its body — ` +
-          `CRUMB-1 may be placeable there now`,
+        `${family}/FeatureGridLayout.tsx now separates its hero from its body. ` +
+          `CRUMB-7's evidence has changed; re-read the rule.`,
       ).toBe(true)
     }
   })
-
-  for (const family of FAMILIES) {
-    for (const file of layoutNames(family).filter((f) => !UNPLACEABLE.includes(f))) {
-      it(`${family}/${file} renders its band after the H1`, () => {
-        const src = code(family, file)
-        const band = src.search(/<BreadcrumbBand|<Breadcrumbs/)
-        const h1 = src.indexOf('<h1')
-        expect(h1, `${file} has no h1`).toBeGreaterThan(-1)
-        expect(
-          band,
-          `${family}/${file} renders its breadcrumb ABOVE the hero — CRUMB-1 puts ` +
-            `it below. This was the shape all four staff layouts shipped with.`,
-        ).toBeGreaterThan(h1)
-      })
-    }
-  }
 })

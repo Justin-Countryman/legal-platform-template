@@ -1158,13 +1158,6 @@ export const ATTORNEY_PAGE_QUERY = groq`
   *[_type == "attorneyPage" && slug.current == $slug][0]{
     "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     "slug": slug.current,
-    // The naming fields, for the breadcrumb's last rung (CRUMB-2/CRUMB-5). NAME-3
-    // rules that every surface reads its field through the one resolver, so the
-    // trail reads these rather than recomposing a name from the firstName and
-    // lastName fields — the same string by a second route, and the second route
-    // is what drifts.
-    title,
-    navLabel,
     seoTitle,
     metaDescription,
     noIndex,

@@ -5,7 +5,6 @@
 import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage} from '@/lib/sanity/image'
 import {MdEmail} from 'react-icons/md'
-import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {INDEX_PAGE_PRESETS} from '@/lib/pageLabel'
 import {Button} from '@/components/ui/Button'
 import {Chip} from '@/components/ui/Chip'
@@ -25,17 +24,6 @@ export function FeatureGridLayout({member, napTokens, cta = {label: 'Contact Us'
 
   return (
     <>
-      {/* ── Breadcrumb ────────────────────────────────────────────────────── */}
-      <div className="bg-muted border-b border-border px-[5%] py-3">
-        <div className="container">
-          <Breadcrumbs items={[
-            {label: 'Home', href: '/'},
-            {label: INDEX_PAGE_PRESETS.staffIndex, href: '/staff/'},
-            {label: name, href: '#'},
-          ]} />
-        </div>
-      </div>
-
       {/* ── Feature row ───────────────────────────────────────────────────── */}
       <section className="px-[5%] py-12 md:py-16" aria-label="Staff profile">
         <div className="container grid grid-cols-1 items-start gap-10 lg:grid-cols-[5fr_7fr] lg:gap-16">

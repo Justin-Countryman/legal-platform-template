@@ -2049,8 +2049,6 @@ const SAMPLE_NAV_ITEMS: NavItem[] = [
 
 const SAMPLE_ATTORNEY: Attorney = {
   slug: 'jane-doe',
-  title: 'Jane Doe',
-  navLabel: null,
   seoTitle: null,
   metaDescription: null,
   noIndex: false,

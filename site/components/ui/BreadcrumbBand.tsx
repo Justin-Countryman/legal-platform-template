@@ -11,26 +11,20 @@ type Props = {
  * `BI-PRINCIPLES.md` → CRUMB-1: the breadcrumb sits in its own strip BELOW the
  * hero, every page type, every layout.
  *
- * WHY THIS EXISTS RATHER THAN THE BLOCK BEING TYPED OUT AGAIN. The band is four
- * lines of markup that had been written by hand at eighteen call sites, and the
- * defect CRUMB-5 fixes is what that costs: `components/attorney/layouts/` holds
- * four files with the same four names as `components/staff/layouts/`, driven by
- * the same layout switch, and the attorney four were simply written without the
- * block their twins carry. Nothing failed, because there was nothing to fail —
- * a block you have to remember to type is not a mechanism.
+ * WHY THIS EXISTS. The band is four lines of markup — the `bg-muted` strip and
+ * its `container` — written by hand at eighteen call sites. A block you have to
+ * remember to type is not a mechanism, and the cost of that shows up as a call
+ * site that simply never got one. Importing the band makes a change to the strip
+ * one edit, and gives a new call site something to import rather than something
+ * to copy.
  *
- * FOUR CALL SITES REMAIN AND THAT IS NOT A SHORTFALL, it is the boundary of what
- * this can fix. Each profile layout owns its own hero and closes it at a
- * different depth, so nothing above them knows where "below the hero" is. What
- * changes is that the BLOCK exists once: a change to the band, or to how the
- * trail is wrapped, is one edit rather than four, and a new layout has something
- * to import rather than something to copy. **Extracting the hero out of the four
- * layouts is what would remove the last four repetitions, and that is a
- * restructure, not a breadcrumb pass.**
- *
- * The eighteen existing hand-written bands are NOT migrated here — that is the
- * `staffPage` placement pass and the eleven-types markup pass, each of which has
- * to move or re-wire its call sites anyway. Two shapes exist until they run.
+ * **IT WAS BUILT FOR THE PROFILE LAYOUTS AND THEY NO LONGER USE IT** (CRUMB-7,
+ * 2026-07-29: profile pages render no breadcrumb at all). It is kept, and this is
+ * not sentiment — the duplication it removes is real and independent of that
+ * ruling, and the eleven page types that owe `BreadcrumbList` markup have to
+ * re-wire their call sites anyway. **New call sites use this; the eighteen
+ * hand-written bands migrate as the passes that touch them run.** Two shapes
+ * exist in the tree until then.
  */
 export function BreadcrumbBand({items, domain}: Props) {
   return (
