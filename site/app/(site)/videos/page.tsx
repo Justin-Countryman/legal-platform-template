@@ -12,6 +12,7 @@ import {getEmbedUrl, autoThumbnails, toIsoDuration} from '@/lib/videoEmbed'
 import {InternalHero, type InternalHeroData} from '@/components/layout/InternalHero'
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
+import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {VideoLibraryClient, type VideoCardData} from '@/components/sections/VideoLibraryClient'
 import {urlForImage, hasImage} from '@/lib/sanity/image'
@@ -40,9 +41,9 @@ export async function generateMetadata(): Promise<Metadata> {
     client.fetch<VideoIndexData | null>(VIDEO_INDEX_PAGE_QUERY),
     client.fetch(NAP_TOKENS_QUERY),
   ])
-  if (!indexPage) return {title: 'Video Library'}
+  if (!indexPage) return {title: INDEX_PAGE_PRESETS.videoIndex}
   const tokens = expandNapTokens(rawTokens)
-  const {title, label} = resolveTitle(indexPage.seoTitle, indexPage.title, tokens, tokens?.firmName)
+  const {title, label} = resolveTitle(indexPage.seoTitle, resolvePageLabel(indexPage, 'videoIndex') ?? '', tokens, tokens?.firmName)
   const description = resolveTokenString(indexPage.metaDescription, tokens)
   return {
     title,
@@ -84,6 +85,8 @@ export default async function VideoLibraryPage() {
     client.fetch(NAP_TOKENS_QUERY),
   ])
   const tokens = expandNapTokens(rawTokens)
+  // NAME-3: one resolver, and this route names nothing itself.
+  const pageLabel = resolvePageLabel(indexPage, 'videoIndex') ?? ''
 
   const featured = indexPage?.featuredVideo ?? null
   // Featured video is excluded from the grid (no duplicate).
@@ -100,12 +103,12 @@ export default async function VideoLibraryPage() {
       {indexPage?.hero ? (
         <InternalHero data={indexPage.hero} napTokens={tokens} />
       ) : (
-        <InternalPageHeader title={indexPage?.title ?? 'Video Library'} />
+        <InternalPageHeader title={indexPage?.hero?.heading ?? pageLabel} />
       )}
 
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: 'Video Library', href: '/videos/'}]} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/videos/'}]} />
         </div>
       </div>
 

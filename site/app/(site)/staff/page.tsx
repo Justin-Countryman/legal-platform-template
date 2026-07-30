@@ -18,6 +18,7 @@ import {buildSocialMeta} from '@/lib/socialMeta'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
+import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {Button} from '@/components/ui/Button'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 
@@ -45,9 +46,19 @@ export async function generateMetadata(): Promise<Metadata> {
     client.fetch(NAP_TOKENS_QUERY),
   ])
   const tokens = expandNapTokens(rawTokens)
-  if (!indexPage) return {title: 'Our Team'}
+  if (!indexPage) return {title: INDEX_PAGE_PRESETS.staffIndex}
 
-  const {title, label} = resolveTitle(indexPage.seoTitle, indexPage.title, tokens, tokens?.firmName)
+  // NAME-1: the Search title reads `seoTitle` and falls back to NAME (NAME-2),
+  // not to the heading. `indexPage.title` used to arrive as the hero heading via
+  // the GROQ projection, so this surface read the H1 by accident.
+  //
+  // Passed INLINE: `titleFallback.test.ts` matches the second argument of this
+  // call against a declared accessor, and a local variable name would make that
+  // check vacuous.
+  const {title, label} = resolveTitle(
+    indexPage.seoTitle, resolvePageLabel(indexPage, 'staffIndex') ?? '',
+    tokens, tokens?.firmName,
+  )
   const description = resolveTokenString(indexPage.metaDescription, tokens)
   return {
     title,
@@ -115,6 +126,8 @@ export default async function StaffIndexPage() {
     client.fetch(NAP_TOKENS_QUERY),
   ])
   const tokens = expandNapTokens(rawTokens)
+  // NAME-3: one resolver, and this route names nothing itself.
+  const pageLabel = resolvePageLabel(indexPage, 'staffIndex') ?? ''
 
   // Merge: drag-ordered staff first, then remaining alphabetically.
   // Belt-and-suspenders null + slug filter — paired with GROQ post-projection
@@ -134,13 +147,16 @@ export default async function StaffIndexPage() {
       {indexPage?.hero ? (
         <InternalHero data={indexPage.hero} napTokens={tokens} />
       ) : (
-        <InternalPageHeader title={indexPage?.title ?? 'Our Team'} />
+        // The H1 is the HEADING field (NAME-1), so it reads `hero.heading` and
+        // falls back to the page's Name — never to a literal. Both literals here
+        // said `Our Team`, which NAME-4 superseded to `Our Staff`.
+        <InternalPageHeader title={indexPage?.hero?.heading ?? pageLabel} />
       )}
 
       {/* Breadcrumb */}
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: 'Our Team', href: '/staff/'}]} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/staff/'}]} />
         </div>
       </div>
 

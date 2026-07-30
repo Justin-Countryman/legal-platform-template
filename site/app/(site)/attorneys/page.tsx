@@ -18,6 +18,7 @@ import {buildSocialMeta} from '@/lib/socialMeta'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
+import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {Button} from '@/components/ui/Button'
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {GlobalCta} from '@/components/sections/GlobalCta'
@@ -45,9 +46,9 @@ export async function generateMetadata(): Promise<Metadata> {
     client.fetch(NAP_TOKENS_QUERY),
   ])
   const tokens = expandNapTokens(rawTokens)
-  if (!indexPage) return {title: 'Our Attorneys'}
+  if (!indexPage) return {title: INDEX_PAGE_PRESETS.attorneyIndex}
 
-  const {title, label} = resolveTitle(indexPage.seoTitle, indexPage.title, tokens, tokens?.firmName)
+  const {title, label} = resolveTitle(indexPage.seoTitle, resolvePageLabel(indexPage, 'attorneyIndex') ?? '', tokens, tokens?.firmName)
   const description = resolveTokenString(indexPage.metaDescription, tokens)
   return {
     title,
@@ -156,6 +157,8 @@ export default async function AttorneyIndexPage() {
     client.fetch(NAP_TOKENS_QUERY),
   ])
   const tokens = expandNapTokens(rawTokens)
+  // NAME-3: one resolver, and this route names nothing itself.
+  const pageLabel = resolvePageLabel(indexPage, 'attorneyIndex') ?? ''
 
   // Merge: drag-ordered attorneys first, then any not yet in the list alphabetically.
   // Belt-and-suspenders null + slug filter — paired with GROQ post-projection
@@ -180,13 +183,13 @@ export default async function AttorneyIndexPage() {
       {indexPage?.hero ? (
         <InternalHero data={indexPage.hero} napTokens={tokens} />
       ) : (
-        <InternalPageHeader title={indexPage?.title ?? 'Our Attorneys'} />
+        <InternalPageHeader title={indexPage?.hero?.heading ?? pageLabel} />
       )}
 
       {/* Breadcrumb band */}
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: 'Attorneys', href: '/attorneys/'}]} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/attorneys/'}]} />
         </div>
       </div>
 

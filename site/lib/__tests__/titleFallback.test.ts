@@ -5,6 +5,7 @@ import {evaluate, parse} from 'groq-js'
 import {titleFragment} from '../tokens'
 import {buildFullName} from '@/components/attorney/types'
 import {SERVICE_AREA_INDEX_PAGE_NAME} from '../seoTitle'
+import {resolvePageLabel} from '../pageLabel'
 import {
   ATTORNEY_INDEX_QUERY,
   ATTORNEY_PAGE_QUERY,
@@ -202,14 +203,15 @@ const CASES: Case[] = [
   },
   {
     // The regression this suite exists for.
-    name: 'blogPost — falls back to h1, not the title field it does not have',
+    name: 'blogPost — the Name (NAME-4: the headline in full), then h1 for an unrebuilt post',
     route: '(site)/blog/[slug]/page.tsx',
-    accessor: 'post.h1',
+    accessor: 'resolvePageLabel(post) ?? post.h1',
     query: BLOG_POST_PAGE_QUERY,
     params: {slug: SLUG},
-    dataset: [{_id: 'bp', _type: 'blogPost', slug: {current: SLUG}, h1: 'What To Do After A Crash'}],
-    fallback: (d) => d.h1 as string,
-    expected: 'What To Do After A Crash',
+    dataset: [{_id: 'bp', _type: 'blogPost', slug: {current: SLUG}, h1: 'What To Do After A Crash',
+               title: 'What To Do After A Crash In Minnesota'}],
+    fallback: (d) => resolvePageLabel(d) ?? (d.h1 as string),
+    expected: 'What To Do After A Crash In Minnesota',
   },
   {
     name: 'blogCategory',
@@ -253,46 +255,46 @@ const CASES: Case[] = [
   {
     name: 'testimonialsPage',
     route: '(site)/testimonials/page.tsx',
-    accessor: 'page.title',
+    accessor: "resolvePageLabel(page, 'testimonialsPage') ?? ''",
     query: TESTIMONIALS_PAGE_QUERY,
     dataset: [{_id: 'tp', _type: 'testimonialsPage'}],
-    fallback: (d) => d.title as string,
+    fallback: (d) => resolvePageLabel(d, 'testimonialsPage'),
     expected: 'Testimonials',
   },
   {
-    name: 'blogIndex — page name is the GROQ literal, no title field exists',
+    name: 'blogIndex — the Name, else the per-type preset (NAME-4)',
     route: '(site)/blog/page.tsx',
-    accessor: 'indexPage.title',
+    accessor: "resolvePageLabel(indexPage, 'blogIndex') ?? ''",
     query: BLOG_INDEX_PAGE_QUERY,
     dataset: [{_id: 'bi', _type: 'blogIndex'}],
-    fallback: (d) => d.title as string,
+    fallback: (d) => resolvePageLabel(d, 'blogIndex'),
     expected: 'Blog',
   },
   {
-    name: 'attorneyIndex — page name is the GROQ literal',
+    name: 'attorneyIndex — the Name, else the per-type preset (NAME-4)',
     route: '(site)/attorneys/page.tsx',
-    accessor: 'indexPage.title',
+    accessor: "resolvePageLabel(indexPage, 'attorneyIndex') ?? ''",
     query: ATTORNEY_INDEX_QUERY,
     dataset: [{_id: 'ai', _type: 'attorneyIndex'}],
-    fallback: (d) => d.title as string,
+    fallback: (d) => resolvePageLabel(d, 'attorneyIndex'),
     expected: 'Our Attorneys',
   },
   {
-    name: 'staffIndex — page name is the GROQ literal',
+    name: 'staffIndex — Our Staff, not the superseded Our Team (NAME-4)',
     route: '(site)/staff/page.tsx',
-    accessor: 'indexPage.title',
+    accessor: "resolvePageLabel(indexPage, 'staffIndex') ?? ''",
     query: STAFF_INDEX_QUERY,
     dataset: [{_id: 'si', _type: 'staffIndex'}],
-    fallback: (d) => d.title as string,
-    expected: 'Our Team',
+    fallback: (d) => resolvePageLabel(d, 'staffIndex'),
+    expected: 'Our Staff',
   },
   {
-    name: 'eventIndex — page name is the GROQ literal',
+    name: 'eventIndex — the Name, else the per-type preset (NAME-4)',
     route: '(site)/events/page.tsx',
-    accessor: 'indexPage.title',
+    accessor: "resolvePageLabel(indexPage, 'eventIndex') ?? ''",
     query: EVENT_INDEX_PAGE_QUERY,
     dataset: [{_id: 'ei', _type: 'eventIndex'}],
-    fallback: (d) => d.title as string,
+    fallback: (d) => resolvePageLabel(d, 'eventIndex'),
     expected: 'Events',
   },
   {
@@ -300,10 +302,10 @@ const CASES: Case[] = [
     // doctrine literal was wrong; this pins the code's answer.
     name: 'videoIndex — page name is Video Library, not Videos',
     route: '(site)/videos/page.tsx',
-    accessor: 'indexPage.title',
+    accessor: "resolvePageLabel(indexPage, 'videoIndex') ?? ''",
     query: VIDEO_INDEX_PAGE_QUERY,
     dataset: [{_id: 'vi', _type: 'videoIndex'}],
-    fallback: (d) => d.title as string,
+    fallback: (d) => resolvePageLabel(d, 'videoIndex'),
     expected: 'Video Library',
   },
   {

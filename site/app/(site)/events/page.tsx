@@ -10,6 +10,7 @@ import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
+import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {Chip} from '@/components/ui/Chip'
 import {CalendarIcon, MapPinIcon, type ChipIcon} from '@/components/ui/icons'
 import {TertiaryArrow} from '@/components/ui/TertiaryArrow'
@@ -87,9 +88,9 @@ export async function generateMetadata(): Promise<Metadata> {
     client.fetch(NAP_TOKENS_QUERY),
   ])
   const tokens = expandNapTokens(rawTokens)
-  if (!indexPage) return {title: 'Events'}
+  if (!indexPage) return {title: INDEX_PAGE_PRESETS.eventIndex}
 
-  const {title, label} = resolveTitle(indexPage.seoTitle, indexPage.title, tokens, tokens?.firmName)
+  const {title, label} = resolveTitle(indexPage.seoTitle, resolvePageLabel(indexPage, 'eventIndex') ?? '', tokens, tokens?.firmName)
   const description = resolveTokenString(indexPage.metaDescription, tokens)
   return {
     title,
@@ -204,6 +205,8 @@ export default async function EventsIndexPage() {
     client.fetch(GLOBAL_CTA_QUERY),
   ])
   const tokens = expandNapTokens(rawTokens)
+  // NAME-3: one resolver, and this route names nothing itself.
+  const pageLabel = resolvePageLabel(indexPage, 'eventIndex') ?? ''
 
   const events: EventCard[] = allEvents ?? []
   const now = new Date()
@@ -224,7 +227,7 @@ export default async function EventsIndexPage() {
       {/* Breadcrumb band */}
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: 'Events', href: '/events/'}]} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/events/'}]} />
         </div>
       </div>
 

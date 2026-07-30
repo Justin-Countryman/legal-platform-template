@@ -16,6 +16,7 @@ import {buildSocialMeta} from '@/lib/socialMeta'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
+import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {Tagline} from '@/components/ui/Tagline'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {ServiceAreaIndexClient} from '@/components/sections/ServiceAreaIndexClient'
@@ -28,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
     client.fetch(NAP_TOKENS_QUERY),
   ])
   const tokens = expandNapTokens(rawTokens)
-  if (!indexPage) return {title: 'Service Area'}
+  if (!indexPage) return {title: INDEX_PAGE_PRESETS.serviceAreaIndex}
 
   // TITLE-10: the title-tag fallback is a fixed page name, deliberately NOT
   // `indexPage.title` (which is the hero heading, else "Service Area", and is
@@ -59,15 +60,25 @@ export default async function ServiceAreaIndexPage() {
     client.fetch(NAP_TOKENS_QUERY),
   ])
   const tokens = expandNapTokens(rawTokens)
+  // NAME-3: one resolver, and this route names nothing itself.
+  const pageLabel = resolvePageLabel(indexPage, 'serviceAreaIndex') ?? ''
 
-  // The card label is the CITY ALONE (ruled 2026-07-28). Mapped here rather
-  // than inside ServiceAreaIndexClient so that component is untouched: it
-  // builds its A-Z buckets and runs its search on `displayName`, so both follow
-  // the ruling without a change of their own. That is the whole reason the
-  // label is narrowed at the source instead of being special-cased downstream.
-  const cards = ((pages ?? []) as {slug: string; title: string}[]).map((p) => ({
+  // The card label is the CITY ALONE (ruled 2026-07-28, now NAME-5's first
+  // exception), and as of 2026-07-29 it is a STORED FIELD: the build writes
+  // `navLabel` = `Blaine` while the Name stays `Blaine Law Firm`. So the card,
+  // the breadcrumb and the menu read one value and cannot differ — which is what
+  // NAME-5 exists to guarantee and what deriving the city per surface could not.
+  //
+  // `cityFromServiceAreaSlug` survives as the LAST rung, for a page built before
+  // the field existed. It is no longer the primary answer, so the third copy of
+  // the city rule is now a fallback rather than a competing derivation.
+  //
+  // Mapped here rather than inside ServiceAreaIndexClient so that component is
+  // untouched: it builds its A-Z buckets and runs its search on `displayName`,
+  // so both follow the ruling without a change of their own.
+  const cards = ((pages ?? []) as {slug: string; title: string; navLabel?: string | null}[]).map((p) => ({
     slug: p.slug,
-    displayName: cityFromServiceAreaSlug(p.slug) || p.title,
+    displayName: p.navLabel?.trim() || cityFromServiceAreaSlug(p.slug) || p.title,
   }))
 
   const tagline = resolveTokenString(indexPage?.tagline, tokens)
@@ -81,13 +92,13 @@ export default async function ServiceAreaIndexPage() {
       {indexPage?.hero ? (
         <InternalHero data={indexPage.hero} napTokens={tokens} />
       ) : (
-        <InternalPageHeader title={indexPage?.title ?? 'Service Area'} />
+        <InternalPageHeader title={indexPage?.hero?.heading ?? pageLabel} />
       )}
 
       {/* Breadcrumb band */}
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: 'Service Area', href: '/service-area/'}]} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/service-area/'}]} />
         </div>
       </div>
 

@@ -10,6 +10,7 @@ import {buildSocialMeta} from '@/lib/socialMeta'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
+import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {TestimonialCard, type TestimonialData} from '@/components/ui/TestimonialCard'
 
@@ -20,10 +21,10 @@ export async function generateMetadata(): Promise<Metadata> {
     client.fetch(TESTIMONIALS_PAGE_QUERY),
     client.fetch(NAP_TOKENS_QUERY),
   ])
-  if (!page) return {title: 'Testimonials'}
+  if (!page) return {title: INDEX_PAGE_PRESETS.testimonialsPage}
   const tokens = expandNapTokens(rawTokens)
 
-  const {title, label} = resolveTitle(page.seoTitle, page.title, tokens, tokens?.firmName)
+  const {title, label} = resolveTitle(page.seoTitle, resolvePageLabel(page, 'testimonialsPage') ?? '', tokens, tokens?.firmName)
   const description = resolveTokenString(page.metaDescription, tokens)
   return {
     title,
@@ -43,6 +44,8 @@ export default async function TestimonialsPage() {
     client.fetch(NAP_TOKENS_QUERY),
   ])
   const tokens = expandNapTokens(rawTokens)
+  // NAME-3: one resolver, and this route names nothing itself.
+  const pageLabel = resolvePageLabel(page, 'testimonialsPage') ?? ''
   // Belt-and-suspenders null filter — paired with GROQ post-projection
   // [defined(_id)] (see queries.ts TESTIMONIALS_PAGE_QUERY); guards against
   // future query regressions that bypass the canonical safe-defaults pattern.
@@ -56,13 +59,13 @@ export default async function TestimonialsPage() {
       {page?.hero ? (
         <InternalHero data={page.hero} napTokens={tokens} />
       ) : (
-        <InternalPageHeader title={page?.title ?? 'Testimonials'} />
+        <InternalPageHeader title={page?.hero?.heading ?? pageLabel} />
       )}
 
       {/* Breadcrumb band */}
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: 'Testimonials', href: '/testimonials/'}]} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/testimonials/'}]} />
         </div>
       </div>
 

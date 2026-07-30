@@ -30,6 +30,32 @@ export type PageLabelFields = {
   slug?: string | null
 }
 
+/**
+ * NAME-4's five index-page names, the last resort for a document the build never
+ * wrote a `title` onto — one made by hand in Studio, or one predating the field.
+ *
+ * MIRROR of `_shared/page_name.py::STANDARD_PAGE_PRESETS`. Python cannot be
+ * imported here, so the values exist twice; same cost as `areaOfLawPhrases.ts`
+ * and `seoTitle.ts` and recorded for the same reason. **Change both together.**
+ *
+ * IT EXISTS SO THE LITERALS ARE IN ONE PLACE. Before NAME-3 each of these
+ * strings sat in a GROQ projection AND in a route file, and two of them
+ * disagreed: `staffIndex` read `Our Team` in three places in `staff/page.tsx`
+ * while doctrine had superseded it to `Our Staff`. A table cannot disagree with
+ * itself.
+ */
+export const INDEX_PAGE_PRESETS: Record<string, string> = {
+  blogIndex: 'Blog',
+  attorneyIndex: 'Our Attorneys',
+  staffIndex: 'Our Staff',
+  eventIndex: 'Events',
+  videoIndex: 'Video Library',
+  // Not in NAME-4's table; the slug leaf already gives these their ruled name,
+  // and they are here only so no route has to carry a literal.
+  serviceAreaIndex: 'Service Area',
+  testimonialsPage: 'Testimonials',
+}
+
 /** Title Case from a kebab slug leaf, mirroring `_shared/page_name.py`. */
 const MINOR_WORDS = new Set([
   'and', 'or', 'of', 'the', 'in', 'for', 'to', 'a', 'an', 'with', 'on', 'at',
@@ -49,17 +75,28 @@ export function titleCaseSlugLeaf(slug: string): string {
 }
 
 /**
- * The label for a page: Nav label, else Name, else the title-cased slug leaf.
+ * The label for a page: Nav label, else Name, else a per-type preset, else the
+ * title-cased slug leaf.
  *
- * Returns null only when the page carries none of the three, which for a routed
- * page means the document is empty.
+ * `docType` is optional and only matters for the index singletons — pass it and
+ * a document with no stored name still gets NAME-4's ruled string instead of
+ * whatever its URL happens to be (`attorneys` would give `Attorneys`, not
+ * `Our Attorneys`).
+ *
+ * Returns null only when the page carries none of them, which for a routed page
+ * means the document is empty.
  */
-export function resolvePageLabel(page: PageLabelFields | null | undefined): string | null {
+export function resolvePageLabel(
+  page: PageLabelFields | null | undefined,
+  docType?: string,
+): string | null {
   if (!page) return null
   const navLabel = page.navLabel?.trim()
   if (navLabel) return navLabel
   const title = page.title?.trim()
   if (title) return title
+  const preset = docType ? INDEX_PAGE_PRESETS[docType] : undefined
+  if (preset) return preset
   const slug = page.slug?.trim()
   if (slug) return titleCaseSlugLeaf(slug) || null
   return null

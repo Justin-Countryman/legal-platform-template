@@ -6,6 +6,7 @@ import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage} from '@/lib/sanity/image'
 import {MdEmail} from 'react-icons/md'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
+import {INDEX_PAGE_PRESETS} from '@/lib/pageLabel'
 import {Button} from '@/components/ui/Button'
 import {Chip} from '@/components/ui/Chip'
 import {Tagline} from '@/components/ui/Tagline'
@@ -29,7 +30,7 @@ export function FeatureGridLayout({member, napTokens, cta = {label: 'Contact Us'
         <div className="container">
           <Breadcrumbs items={[
             {label: 'Home', href: '/'},
-            {label: 'Our Team', href: '/staff/'},
+            {label: INDEX_PAGE_PRESETS.staffIndex, href: '/staff/'},
             {label: name, href: '#'},
           ]} />
         </div>

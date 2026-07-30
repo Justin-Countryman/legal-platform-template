@@ -969,7 +969,8 @@ export const TESTIMONIALS_PAGE_QUERY = groq`
     noFollow,
     canonicalUrl,
     "hero": hero ${INTERNAL_HERO_FRAGMENT},
-    "title": coalesce(hero.heading, title, "Testimonials"),
+    title,
+    navLabel,
     hideCtaForm,
     "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT},
     "testimonials": testimonials[defined(@->_id)]->{
@@ -994,10 +995,11 @@ export const ATTORNEY_INDEX_QUERY = groq`
     noFollow,
     canonicalUrl,
     "hero": hero{
-      "heading": coalesce(heading, "Our Attorneys"),
+      "heading": coalesce(heading, ^.title),
       ${INTERNAL_HERO_OVERRIDE_FIELDS}
     },
-    "title": coalesce(hero.heading, "Our Attorneys"),
+    title,
+    navLabel,
     tagline,
     heading,
     description,
@@ -1051,10 +1053,11 @@ export const STAFF_INDEX_QUERY = groq`
     noFollow,
     canonicalUrl,
     "hero": hero{
-      "heading": coalesce(heading, "Our Team"),
+      "heading": coalesce(heading, ^.title),
       ${INTERNAL_HERO_OVERRIDE_FIELDS}
     },
-    "title": coalesce(hero.heading, "Our Team"),
+    title,
+    navLabel,
     hideCtaForm,
     "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT},
     "orderedStaff": orderedStaff[defined(@->_id)]->{
@@ -1119,10 +1122,11 @@ export const SERVICE_AREA_INDEX_QUERY = groq`
     noFollow,
     canonicalUrl,
     "hero": hero{
-      "heading": coalesce(heading, "Service Area"),
+      "heading": coalesce(heading, ^.title),
       ${INTERNAL_HERO_OVERRIDE_FIELDS}
     },
-    "title": coalesce(hero.heading, title, "Service Area"),
+    title,
+    navLabel,
     tagline,
     heading,
     description,
@@ -1145,6 +1149,7 @@ export const SERVICE_AREA_PAGES_QUERY = groq`
   *[_type == "serviceAreaPage"] | order(title asc) {
     "slug": slug.current,
     title,
+    navLabel,
   }
 `
 
@@ -1215,6 +1220,7 @@ export const PRACTICE_AREA_QUERY = groq`
     "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     _type,
     title,
+    navLabel,
     "areasOfLaw": ${AREAS_OF_LAW_FRAGMENT},
     "slug": slug.current,
     seoTitle,
@@ -1224,9 +1230,11 @@ export const PRACTICE_AREA_QUERY = groq`
     canonicalUrl,
     "parentPage": parentPage->{
       title,
+      navLabel,
       "slug": slug.current,
       "parentPage": parentPage->{
         title,
+        navLabel,
         "slug": slug.current
       }
     },
@@ -1254,7 +1262,8 @@ export const EVENT_INDEX_PAGE_QUERY = groq`
   *[_type == "eventIndex"][0]{
     "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     "slug": slug.current,
-    "title": coalesce(hero.heading, "Events"),
+    title,
+    navLabel,
     seoTitle,
     metaDescription,
     noIndex,
@@ -1333,10 +1342,11 @@ export const BLOG_INDEX_PAGE_QUERY = groq`
     noFollow,
     canonicalUrl,
     "hero": hero {
-      "heading": coalesce(heading, "Blog"),
+      "heading": coalesce(heading, ^.title),
       ${INTERNAL_HERO_OVERRIDE_FIELDS}
     },
-    "title": coalesce(hero.heading, "Blog"),
+    title,
+    navLabel,
     hideCtaForm,
     "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT}
   }
@@ -1365,10 +1375,11 @@ export const VIDEO_INDEX_PAGE_QUERY = groq`
     noFollow,
     canonicalUrl,
     "hero": hero {
-      "heading": coalesce(heading, "Video Library"),
+      "heading": coalesce(heading, ^.title),
       ${INTERNAL_HERO_OVERRIDE_FIELDS}
     },
-    "title": coalesce(hero.heading, "Video Library"),
+    title,
+    navLabel,
     tagline,
     heading,
     description,
@@ -1429,6 +1440,8 @@ export const BLOG_POST_PAGE_QUERY = groq`
   *[_type == "blogPost" && slug.current == $slug][0]{
     "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     h1,
+    title,
+    navLabel,
     "slug": slug.current,
     seoTitle,
     metaDescription,
@@ -1619,6 +1632,7 @@ export const LOCATION_PAGE_QUERY = groq`
     "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     _type,
     "title": coalesce(title, ""),
+    navLabel,
     "slug": slug.current,
     seoTitle,
     metaDescription,
@@ -1664,6 +1678,7 @@ export const CONTENT_PAGE_QUERY = groq`
     "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     _type,
     "title": coalesce(title, ""),
+    navLabel,
     "slug": slug.current,
     seoTitle,
     metaDescription,
@@ -1672,9 +1687,11 @@ export const CONTENT_PAGE_QUERY = groq`
     canonicalUrl,
     "parentPage": parentPage->{
       title,
+      navLabel,
       "slug": slug.current,
       "parentPage": parentPage->{
         title,
+        navLabel,
         "slug": slug.current
       }
     },
