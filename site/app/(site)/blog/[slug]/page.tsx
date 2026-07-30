@@ -241,9 +241,7 @@ export default async function BlogPostPage({params}: Props) {
 
               {/* Left: meta + title + byline */}
               <div className="flex flex-col">
-                <Breadcrumbs items={breadcrumbItems} domain={siteHost()} />
-
-                <h1 className="mt-6 font-bold leading-tight text-3xl md:text-4xl lg:text-5xl text-foreground">
+                <h1 className="font-bold leading-tight text-3xl md:text-4xl lg:text-5xl text-foreground">
                   {h1}
                 </h1>
 
@@ -291,9 +289,7 @@ export default async function BlogPostPage({params}: Props) {
           ) : (
             /* Single-column layout when no featured image */
             <div className="max-w-3xl">
-              <Breadcrumbs items={breadcrumbItems} domain={siteHost()} />
-
-              <h1 className="mt-6 font-bold leading-tight text-3xl md:text-4xl lg:text-5xl text-foreground">
+              <h1 className="font-bold leading-tight text-3xl md:text-4xl lg:text-5xl text-foreground">
                 {h1}
               </h1>
 
@@ -329,6 +325,22 @@ export default async function BlogPostPage({params}: Props) {
 
         </div>
       </header>
+
+      {/* CRUMB-1 (`BI-PRINCIPLES.md`): its own strip BELOW the hero, matching the
+          eighteen types that already do this. The trail used to sit INSIDE the
+          header above, on the hero's own background, above the H1 — the only type
+          on the site that placed it there. Measured 2026-07-29: y=162 inside
+          `header.bg-brand-dark` sharing the H1's container, against y=316 in this
+          band on a practice area page.
+
+          ONE CALL SITE, NOT TWO. It was rendered once per branch (featured image /
+          no image) because it lived inside the branching layout; below the hero
+          the branches have already closed, so a single call serves both. */}
+      <div className="bg-muted border-b border-border px-[5%] py-3">
+        <div className="container">
+          <Breadcrumbs items={breadcrumbItems} domain={siteHost()} />
+        </div>
+      </div>
 
       {/* ── Body + Sidebar ───────────────────────────────────────────────── */}
       <ContentSidebarLayout

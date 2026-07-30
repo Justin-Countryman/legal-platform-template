@@ -74,3 +74,34 @@ describe('CRUMB-2: the trail ends at the parent, not at the post', () => {
     expect(items.length, 'expected exactly three: Home, Blog, category').toBe(3)
   })
 })
+describe('CRUMB-1: the breadcrumb sits in its own strip below the hero', () => {
+  const BAND = 'bg-muted border-b border-border px-[5%] py-3'
+
+  it('renders the trail in the shared band, not on the hero background', () => {
+    expect(source()).toContain(BAND)
+  })
+
+  it('the band sits AFTER the hero header closes', () => {
+    const src = source()
+    const heroClose = src.indexOf('</header>')
+    const band = src.indexOf(BAND)
+    expect(heroClose, '<header> not found — the hero was restructured').toBeGreaterThan(-1)
+    expect(band, 'the breadcrumb band is missing').toBeGreaterThan(-1)
+    expect(band, 'the breadcrumb band is inside or above the hero').toBeGreaterThan(heroClose)
+  })
+
+  it('no Breadcrumbs call remains inside the hero header', () => {
+    // The two render branches (featured image / no image) each carried one.
+    // Both had to move, and a half-migration is exactly what this catches.
+    const src = source()
+    const hero = src.slice(src.indexOf('<header'), src.indexOf('</header>'))
+    expect(hero, 'a Breadcrumbs call is still inside the hero').not.toContain('<Breadcrumbs')
+  })
+
+  it('the trail is rendered exactly once', () => {
+    // It used to appear twice, once per render branch. Moving it below the hero
+    // collapses that to one call site; two would mean two trails on one page.
+    const calls = source().match(/<Breadcrumbs\b/g) ?? []
+    expect(calls.length).toBe(1)
+  })
+})
