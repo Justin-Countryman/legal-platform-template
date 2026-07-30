@@ -94,15 +94,34 @@ export function Breadcrumbs({items, domain}: Props) {
         />
       )}
 
+      {/*
+        NAME-8: a long label is clipped VISUALLY, in CSS. The full string stays in
+        the HTML, so search engines, the BreadcrumbList schema above and screen
+        readers all get the whole thing. Nothing is shortened at source — that is
+        the half of the rule that matters, because a truncated STORED value cannot
+        be recovered and a truncated EMITTED value costs the keyword.
+
+        `max-w-*` + `truncate` is what does it: overflow hidden, one line, a real
+        ellipsis. `title` is deliberately NOT set — the visible text and the
+        accessible name are already the same complete string, and a tooltip
+        duplicating it would make a screen reader announce the label twice.
+
+        It applies to the LAST crumb only. That is the post's own title, the one
+        that runs long; every ancestor is a section name that does not. Clipping
+        the ancestors would cost the trail its shape for nothing.
+      */}
       <nav aria-label="Breadcrumb">
         <ol className="flex flex-wrap items-center gap-1 text-sm text-foreground-muted">
           {items.map((item, i) => {
             const isLast = i === items.length - 1
             return (
-              <li key={item.href} className="flex items-center gap-1">
+              <li key={item.href} className="flex min-w-0 items-center gap-1">
                 {i > 0 && <span aria-hidden="true">/</span>}
                 {isLast ? (
-                  <span className="font-medium text-foreground" aria-current="page">
+                  <span
+                    className="max-w-[18rem] truncate font-medium text-foreground sm:max-w-[28rem] lg:max-w-[40rem]"
+                    aria-current="page"
+                  >
                     {item.label}
                   </span>
                 ) : (

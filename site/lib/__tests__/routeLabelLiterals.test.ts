@@ -117,3 +117,49 @@ describe('no GROQ projection resolves a label from a heading', () => {
     expect(withoutComments).not.toContain('coalesce(hero.heading')
   })
 })
+
+describe('NAME-8: clipped in CSS, never shortened at source', () => {
+  it('no label surface shortens a string in code', () => {
+    // "Never shorten the stored or the emitted value." Truncating in code would
+    // satisfy any visual check while costing the keyword in the HTML and in the
+    // BreadcrumbList schema — invisible on screen, which is why the rule earns a
+    // structural assertion rather than a comment.
+    //
+    // MATCHED ON THE ELLIPSIS-APPEND, not on `.slice()` alone. The first draft
+    // banned `.slice(0,` outright and immediately caught
+    // `areas.slice(0, 3)` in the attorneys route — an ARRAY being cut to three
+    // practice-area chips, which is a legitimate display decision and nothing to
+    // do with a naming field. A checker that reports a defect that is not there
+    // is as bad as one that misses a real one.
+    const surfaces = [
+      'components/ui/Breadcrumbs.tsx',
+      'lib/pageLabel.ts',
+      ...ROUTES,
+      ...STAFF_LAYOUTS,
+    ]
+    const APPENDS_ELLIPSIS = /(slice|substring|substr)\([^)]*\)\s*\+\s*['"`](\.\.\.|…)/
+    for (const rel of surfaces) {
+      const source = code(rel)
+      expect(
+        APPENDS_ELLIPSIS.test(source),
+        `${rel} truncates a string and appends an ellipsis — NAME-8 clips in CSS`,
+      ).toBe(false)
+      // The same shape written the other way round.
+      expect(source, `${rel} builds a truncated label`).not.toMatch(
+        /['"`](\.\.\.|…)['"`]\s*\)?\s*:\s*\w*[Ll]abel/,
+      )
+    }
+  })
+
+  it('the breadcrumb clips the current page in CSS and sets no title tooltip', () => {
+    const source = read('components/ui/Breadcrumbs.tsx')
+    // `truncate` is Tailwind's overflow-hidden + nowrap + text-ellipsis, and it
+    // needs a width bound and a `min-w-0` flex parent to take effect at all.
+    expect(source).toContain('truncate')
+    expect(source).toMatch(/max-w-\[/)
+    expect(source).toContain('min-w-0')
+    // No `title=` tooltip: the visible text and the accessible name are already
+    // the same complete string, so a tooltip would announce the label twice.
+    expect(source).not.toMatch(/title=\{item\.label\}/)
+  })
+})
