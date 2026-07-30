@@ -229,3 +229,36 @@ describe('NAME-8: clipped in CSS, never shortened at source', () => {
     expect(source).not.toMatch(/title=\{item\.label\}/)
   })
 })
+
+describe('CRUMB-4: the visible trail and the markup are one array', () => {
+  it('an empty rung is dropped from both, not one', () => {
+    // Found on the live site the moment domains were added: `/videos` and
+    // `/testimonials` showed a one-item trail while emitting `name: ''` as a
+    // second ListItem, because their index documents do not exist on that
+    // client. Two outputs built from one filtered array cannot disagree.
+    const src = readFileSync(join(process.cwd(), 'components/ui/Breadcrumbs.tsx'), 'utf8')
+    expect(src).toContain('const resolved = items.filter')
+    expect(src).toContain('buildBreadcrumbListSchema(resolved, domain)')
+    expect(src, 'the schema and the trail must read the same array').not.toContain(
+      'buildBreadcrumbListSchema(items,',
+    )
+  })
+
+  it('a type preset survives a missing document', () => {
+    // The cause of the empty rung. `resolvePageLabel(null, 'videoIndex')` used to
+    // return null before any rung ran, so a client with no videoIndex document
+    // got no label at all — and the route feeds the same value to its H1, so the
+    // page rendered an EMPTY H1.
+    const src = readFileSync(join(process.cwd(), 'lib/pageLabel.ts'), 'utf8')
+    const body = src.slice(src.indexOf('export function resolvePageLabel'))
+    const presetAt = body.indexOf('INDEX_PAGE_PRESETS[docType]')
+    const nullGuardAt = body.indexOf('if (!page) return null')
+    expect(presetAt, 'the preset rung vanished').toBeGreaterThan(-1)
+    expect(nullGuardAt, 'the null guard vanished').toBeGreaterThan(-1)
+    expect(
+      presetAt,
+      'the null-page guard runs BEFORE the preset rung — a missing document ' +
+        'again means no label, and an empty H1 on any index page without one',
+    ).toBeLessThan(nullGuardAt)
+  })
+})

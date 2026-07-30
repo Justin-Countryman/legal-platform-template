@@ -94,13 +94,20 @@ export function resolvePageLabel(
   page: PageLabelFields | null | undefined,
   docType?: string,
 ): string | null {
-  if (!page) return null
-  const navLabel = page.navLabel?.trim()
+  const navLabel = page?.navLabel?.trim()
   if (navLabel) return navLabel
-  const title = page.title?.trim()
+  const title = page?.title?.trim()
   if (title) return title
+  // THE PRESET IS REACHED EVEN WITH NO DOCUMENT (fixed 2026-07-29). This used to
+  // `return null` on a null page before any rung ran, so a client without a
+  // `videoIndex` document got NO label at all — and the route feeds the same
+  // value to its H1, so `/videos` and `/testimonials` rendered an EMPTY H1 on
+  // Dudley. A preset is keyed on the TYPE; a missing document does not change
+  // what the type is called. NAME-4 names `videoIndex` `Video Library` whether or
+  // not anyone has created one.
   const preset = docType ? INDEX_PAGE_PRESETS[docType] : undefined
   if (preset) return preset
+  if (!page) return null
   const slug = page.slug?.trim()
   if (slug) return titleCaseSlugLeaf(slug) || null
   return null

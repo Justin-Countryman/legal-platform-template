@@ -113,7 +113,17 @@ function buildBreadcrumbListSchema(items: BreadcrumbItem[], domain: string) {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function Breadcrumbs({items, domain}: Props) {
-  if (items.length <= 1) return null
+  // A rung with no label is not a rung. Dropped BEFORE the length gate and
+  // before the schema is built, so the visible trail and the markup are the same
+  // array — CRUMB-4 says they never differ, and the way to guarantee that is one
+  // source rather than two that agree today.
+  //
+  // It is not hypothetical: adding domains on 2026-07-29 made `/videos` and
+  // `/testimonials` emit `name: ''` as a ListItem while showing nothing, because
+  // their index documents do not exist on that client. The label resolver was
+  // fixed too — this is the belt to that braces.
+  const resolved = items.filter((item) => item.label.trim().length > 0)
+  if (resolved.length <= 1) return null
 
   return (
     <>
@@ -121,7 +131,7 @@ export function Breadcrumbs({items, domain}: Props) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(buildBreadcrumbListSchema(items, domain)),
+            __html: JSON.stringify(buildBreadcrumbListSchema(resolved, domain)),
           }}
         />
       )}
@@ -144,8 +154,8 @@ export function Breadcrumbs({items, domain}: Props) {
       */}
       <nav aria-label="Breadcrumb">
         <ol className="flex flex-wrap items-center gap-1 text-sm text-foreground-muted">
-          {items.map((item, i) => {
-            const isLast = i === items.length - 1
+          {resolved.map((item, i) => {
+            const isLast = i === resolved.length - 1
             return (
               <li key={item.href} className="flex min-w-0 items-center gap-1">
                 {i > 0 && <span aria-hidden="true">/</span>}
