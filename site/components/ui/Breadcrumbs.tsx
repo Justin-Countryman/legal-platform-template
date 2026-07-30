@@ -1,5 +1,7 @@
 import Link from 'next/link'
 
+import {resolvePageLabel} from '@/lib/pageLabel'
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type BreadcrumbItem = {
@@ -18,32 +20,24 @@ type Props = {
  * Build breadcrumb items from a practiceArea page with optional parentPage chain.
  * Returns items in order: Home → [grandparent →] [parent →] current
  */
-function resolvePageLabel(page: {
-  title?: string | null
-  slug?: string | null
-  hero?: {heading?: string | null} | null
-}): string | null {
-  if (page.title) return page.title
-  if (page.hero?.heading) return page.hero.heading
-  if (page.slug) {
-    const segment = page.slug.split('/').filter(Boolean).pop() ?? ''
-    return segment.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) || null
-  }
-  return null
-}
+// The local resolver that used to sit here is GONE (2026-07-29, NAME-3). It was
+// one of the four things that answered "what is this page called", and its second
+// rung was `hero.heading` — which NAME-2 forbids and which made Dudley's /staff
+// show two different strings for one page. `lib/pageLabel.ts` is now the only
+// answer, and it cannot see a heading at all.
 
 export function buildBreadcrumbs(page: {
+  navLabel?: string | null
   title?: string | null
   slug?: string | null
-  hero?: {heading?: string | null} | null
   parentPage?: {
+    navLabel?: string | null
     title?: string | null
     slug?: string | null
-    hero?: {heading?: string | null} | null
     parentPage?: {
+      navLabel?: string | null
       title?: string | null
       slug?: string | null
-      hero?: {heading?: string | null} | null
     } | null
   } | null
 }): BreadcrumbItem[] {

@@ -173,19 +173,37 @@ describe('buildBreadcrumbs — helper', () => {
     expect(items[0]).toEqual({label: 'Home', href: '/'})
   })
 
-  it('prefers page.title when present', () => {
+  it('prefers the nav label over the title', () => {
+    // NAME-5: the types whose menu label differs from their Name. The
+    // breadcrumb, the menu and the index card share this one field.
+    const items = buildBreadcrumbs({
+      navLabel: 'Blaine', title: 'Blaine Law Firm', slug: 'service-area/blaine-law-firm',
+    })
+    expect(items[items.length - 1].label).toBe('Blaine')
+  })
+
+  it('uses page.title when there is no nav label', () => {
     const items = buildBreadcrumbs({title: 'Family Law', slug: 'family-law'})
     expect(items[items.length - 1]).toEqual({label: 'Family Law', href: '/family-law/'})
   })
 
-  it('falls back to page.hero.heading when title is absent', () => {
-    const items = buildBreadcrumbs({slug: 'family-law', hero: {heading: 'Family Law (Hero)'}})
-    expect(items[items.length - 1].label).toBe('Family Law (Hero)')
+  it('cannot fall back to a heading, because it cannot see one', () => {
+    // This asserted `.toBe('Family Law (Hero)')` until 2026-07-29. NAME-2 forbids
+    // the heading rung and NAME-3 collapsed the four resolvers onto
+    // `lib/pageLabel.ts`, whose signature carries no heading field at all — so a
+    // heading passed in is inert rather than second in line.
+    const items = buildBreadcrumbs({
+      slug: 'family-law', hero: {heading: 'Family Law (Hero)'},
+    } as Parameters<typeof buildBreadcrumbs>[0])
+    expect(items[items.length - 1].label).toBe('Family Law')
   })
 
-  it('falls back to titleized last slug segment when title and hero.heading are absent', () => {
+  it('falls back to the title-cased slug leaf, minor words lowercased', () => {
+    // `Divorce And Separation` until 2026-07-29: the old local resolver
+    // title-cased every word. The shared resolver mirrors
+    // `_shared/page_name.py::titlecase_slug`, so the two repos agree on casing.
     const items = buildBreadcrumbs({slug: 'family-law/divorce-and-separation'})
-    expect(items[items.length - 1].label).toBe('Divorce And Separation')
+    expect(items[items.length - 1].label).toBe('Divorce and Separation')
   })
 
   it('formats href with leading and trailing slash from the slug', () => {
