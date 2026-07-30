@@ -20,6 +20,7 @@ import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
+import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {Button} from '@/components/ui/Button'
 import {ContentSidebarLayout} from '@/components/layout/ContentSidebarLayout'
 import {Sidebar} from '@/components/layout/Sidebar'
@@ -85,11 +86,25 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const tokens = expandNapTokens(rawTokens)
   if (!post) return {title: 'Blog Post'}
 
-  // Fallback is `h1`, NOT `title`: blogPost has no `title` field (its slug is
-  // derived from the h1), so `post.title` was always undefined and an empty
-  // seoTitle fell through to the bare firm name instead of the headline. The
-  // review route has always passed `h1` here for the same reason.
-  const {title, label} = resolveTitle(post.seoTitle, post.h1, tokens, tokens?.firmName)
+  // NAME-1 / NAME-2: the Search title reads `seoTitle` and falls back to NAME.
+  //
+  // THE COMMENT THAT WAS HERE IS NOW FALSE and is corrected rather than deleted:
+  // "blogPost has no `title` field (its slug is derived from the h1), so
+  // `post.title` was always undefined". True until template `2fe540c`, which gave
+  // every page type all four naming fields (NAME-1); the build then fills a
+  // post's Name with its headline in full (NAME-4). Passing `h1` was the right
+  // workaround for a missing field and is the wrong source now that the field
+  // exists — the Heading is not a fallback for anything (NAME-2).
+  //
+  // `?? post.h1` remains as the last rung for a post created before the field
+  // existed and never rebuilt, so no post loses its title tag to this change.
+  // Passed INLINE, not via a local: `titleFallback.test.ts` matches the second
+  // argument of this call against a declared accessor, so a route that changes
+  // which field it falls back to fails there. Hiding it behind a variable name
+  // would make that check vacuous.
+  const {title, label} = resolveTitle(
+    post.seoTitle, resolvePageLabel(post) ?? post.h1, tokens, tokens?.firmName,
+  )
   const description = resolveTokenString(post.metaDescription, tokens)
   return {
     title,
@@ -176,12 +191,22 @@ export default async function BlogPostPage({params}: Props) {
   const hasImage = !!post.featuredImage?.asset?._ref
   const h1 = resolveTokenString(post.h1, tokens)
 
+  // NAME-3 / NAME-5. The trail HAD NO RUNG FOR THE POST: it ended at `Blog`, or
+  // at the category where one was assigned, so every post handed Google a
+  // BreadcrumbList that never named the article. Breadcrumb markup is what
+  // replaces the raw URL in a search result, so 87 Dudley posts showed a bare
+  // address. The final rung is the post's own label through the one resolver —
+  // Nav label, else Name (which NAME-4 fills with the headline in full), else the
+  // slug leaf. It is NOT the H1: `h1` is the Heading field, and a breadcrumb is a
+  // label surface.
+  const postLabel = resolvePageLabel(post)
   const breadcrumbItems = [
     {label: 'Home', href: '/'},
-    {label: 'Blog', href: '/blog/'},
+    {label: INDEX_PAGE_PRESETS.blogIndex, href: '/blog/'},
     ...(post.category
-      ? [{label: post.category.title, href: `/${post.category.slug}/`}]
+      ? [{label: resolvePageLabel(post.category) ?? '', href: `/${post.category.slug}/`}]
       : []),
+    ...(postLabel ? [{label: postLabel, href: `/${post.slug}/`}] : []),
   ]
 
   return (
