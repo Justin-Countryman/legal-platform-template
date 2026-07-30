@@ -191,22 +191,31 @@ export default async function BlogPostPage({params}: Props) {
   const hasImage = !!post.featuredImage?.asset?._ref
   const h1 = resolveTokenString(post.h1, tokens)
 
-  // NAME-3 / NAME-5. The trail HAD NO RUNG FOR THE POST: it ended at `Blog`, or
-  // at the category where one was assigned, so every post handed Google a
-  // BreadcrumbList that never named the article. Breadcrumb markup is what
-  // replaces the raw URL in a search result, so 87 Dudley posts showed a bare
-  // address. The final rung is the post's own label through the one resolver —
-  // Nav label, else Name (which NAME-4 fills with the headline in full), else the
-  // slug leaf. It is NOT the H1: `h1` is the Heading field, and a breadcrumb is a
-  // label surface.
-  const postLabel = resolvePageLabel(post)
+  // CRUMB-2 (`BI-PRINCIPLES.md`): a breadcrumb ends with the page you are on,
+  // EXCEPT where that page's name is a HEADLINE rather than a label — then it is
+  // omitted and the trail ends at its parent. `blogPost` is the only type that
+  // qualifies, and it qualifies by declaration: NAME-4 sources its name as "the
+  // post headline, in full". So the trail ends at the category, or at `Blog`.
+  //
+  // A POST RUNG WAS ADDED HERE ON 2026-07-29 AND REMOVED THE SAME DAY. The reason
+  // recorded for adding it was that "87 Dudley posts show Google a bare address",
+  // and that was false — a valid BreadcrumbList carrying `Home / Blog` was already
+  // being emitted on every post. The retraction is in `BI-Workflow.md` NAME-5,
+  // kept verbatim there because it was acted on.
+  //
+  // WHY THE OMISSION IS RIGHT rather than merely harmless: the H1 immediately
+  // below renders the same string, so a final crumb repeats the heading a few
+  // millimetres beneath it. A headline is content the page already shows; a label
+  // is a handle for finding it, and only the second belongs in a trail.
+  //
+  // The category rung goes through the SAME resolver rather than reading
+  // `category.title`, so a category with a nav label is honoured too.
   const breadcrumbItems = [
     {label: 'Home', href: '/'},
     {label: INDEX_PAGE_PRESETS.blogIndex, href: '/blog/'},
     ...(post.category
       ? [{label: resolvePageLabel(post.category) ?? '', href: `/${post.category.slug}/`}]
       : []),
-    ...(postLabel ? [{label: postLabel, href: `/${post.slug}/`}] : []),
   ]
 
   return (
