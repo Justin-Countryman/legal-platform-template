@@ -1584,6 +1584,7 @@ export const BLOG_CATEGORY_PAGE_QUERY = groq`
 export const REVIEW_PAGE_QUERY = groq`{
   "page": *[_type == "reviewPage" && slug.current == $slug][0]{
     h1,
+    title,
     seoTitle,
     "slug": slug.current,
     noIndex,

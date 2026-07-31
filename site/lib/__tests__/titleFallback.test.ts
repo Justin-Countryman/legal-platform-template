@@ -234,14 +234,29 @@ const CASES: Case[] = [
     expected: 'Open House',
   },
   {
-    name: 'reviewPage — falls back to h1 (the type has no seoTitle field at all)',
+    // CHANGED 2026-07-31. This case asserted `data.page.h1` for as long as
+    // NAME-2 had forbidden it — the rule says nothing reads the Heading as a
+    // fallback for anything, and NAME-6 named this type's behaviour change
+    // explicitly when it was ruled. The assertion held the old answer green,
+    // which is why the change never landed.
+    //
+    // The dataset carries BOTH fields deliberately: a fixture with only one of
+    // them cannot tell "reads the Name" from "reads whatever is there", and
+    // this case has to fail if the route ever falls back to the heading again.
+    name: 'reviewPage — falls back to Name (the type has no seoTitle field at all)',
     route: 'review/[slug]/page.tsx',
-    accessor: 'data.page.h1',
+    accessor: 'data.page.title',
     query: REVIEW_PAGE_QUERY,
     params: {slug: SLUG},
-    dataset: [{_id: 'rv', _type: 'reviewPage', slug: {current: SLUG}, h1: 'Review Us in St. Paul'}],
-    fallback: (d) => (d.page as Record<string, unknown>).h1 as string,
-    expected: 'Review Us in St. Paul',
+    dataset: [{
+      _id: 'rv',
+      _type: 'reviewPage',
+      slug: {current: SLUG},
+      title: 'Review Saint Paul',
+      h1: 'Review Us in St. Paul',
+    }],
+    fallback: (d) => (d.page as Record<string, unknown>).title as string,
+    expected: 'Review Saint Paul',
   },
   {
     name: 'contactPage',

@@ -39,8 +39,16 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   // projected; that was one of three mechanisms hiding review pages, and the
   // 2026-07-25 ruling collapsed them to one. Doctrine:
   // `BI-URL-Architecture.md` → Search visibility.
+  // NAME-2: an empty field uses NAME, and nothing reads the Heading as a
+  // fallback for anything. This passed `h1` until 2026-07-31, which is the one
+  // place in the site that still did — `reviewPage` carries no `seoTitle` field
+  // in its schema, so its Search title is always empty and the fallback rung is
+  // the whole of its title. NAME-6 named this behaviour change when the rule was
+  // ruled and it did not land then: the page now reads `Review Mendota Heights`
+  // rather than the H1's `Review Our Mendota Heights Office`. That is the ruling
+  // working, not a regression.
   return {
-    title: resolveTitle(data.page.seoTitle, data.page.h1, tokens, tokens?.firmName).title,
+    title: resolveTitle(data.page.seoTitle, data.page.title, tokens, tokens?.firmName).title,
     ...(await buildRobotsMeta(data.page.noIndex, data.page.noFollow)),
   }
 }
