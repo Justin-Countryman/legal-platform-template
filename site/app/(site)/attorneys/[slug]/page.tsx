@@ -45,7 +45,7 @@ const DEFAULT_CTA: ProfileCta = {label: 'Contact Us', href: '/contact/'}
 
 // ─── Schema ───────────────────────────────────────────────────────────────────
 
-function buildPersonSchema(attorney: Attorney, napTokens: NapTokens) {
+function buildPersonSchema(attorney: Attorney) {
   const firstName = (attorney.firstName ?? '').trim()
   const middleName = (attorney.middleName ?? '').trim()
   const lastName = (attorney.lastName ?? '').trim()
@@ -169,7 +169,7 @@ export default async function AttorneyProfilePage({params}: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(buildPersonSchema(attorney, napTokens)),
+          __html: JSON.stringify(buildPersonSchema(attorney)),
         }}
       />
 

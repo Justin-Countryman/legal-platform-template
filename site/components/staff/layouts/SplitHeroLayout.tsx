@@ -5,7 +5,6 @@
 import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage} from '@/lib/sanity/image'
 import {MdEmail} from 'react-icons/md'
-import {INDEX_PAGE_PRESETS} from '@/lib/pageLabel'
 import {Button} from '@/components/ui/Button'
 import {Chip} from '@/components/ui/Chip'
 import {PortableTextRenderer} from '@/components/ui/PortableText'
