@@ -14,6 +14,7 @@ import {PRACTICE_AREA_QUERY, LOCATION_PAGE_QUERY, CONTENT_PAGE_QUERY, GLOBAL_CTA
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {aboutPageTitle, areaOfLawPageName, geoHubPageName, geoSpokePageName, locationPageName, resolveTitle, serviceAreaPageName} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
+import {cityFromServiceAreaSlug} from '@/lib/serviceAreaCity'
 import {ContentSidebarLayout} from '@/components/layout/ContentSidebarLayout'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
@@ -220,8 +221,19 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   // with no ranking, or a lone area outside the fifteen). It shares the
   // homepage's PHRASE, not its construction — this is an interior page, so it
   // leads with its own subject and composeTitle appends the firm (TITLE-2).
+  //
+  // **THE ARGUMENT IS THE CITY, NOT THE PAGE NAME**, and it used to be
+  // `page.title`. That was correct when it was written on 2026-07-27 and stopped
+  // being correct on 2026-07-28, when the service area ruling made the Name
+  // `{city} Law Firm` instead of the bare city: the formula appends `Law Firm`
+  // itself, so it composed `Blaine Law Firm Law Firm`. Nothing rendered wrong,
+  // because every Dudley row carries an SEO Title cell and TITLE-1's cell rung
+  // wins before this runs — the defect was reachable only on a row with a blank
+  // cell. `cityFromServiceAreaSlug` returns '' on an unreadable leaf, and the
+  // fallback chain below then lands on `page.title`, which is the plainer
+  // answer rather than a doubled one.
   const serviceAreaName = page._type === 'serviceAreaPage'
-    ? serviceAreaPageName(page.title, page.areasOfLaw ?? [])
+    ? serviceAreaPageName(cityFromServiceAreaSlug(page.slug), page.areasOfLaw ?? [])
     : ''
   // TITLE-8 — geoPracticeArea. A hub (no parent) is titled `{city} {practice}`
   // and renders city + the practice's stored phrase. A spoke takes the city from
