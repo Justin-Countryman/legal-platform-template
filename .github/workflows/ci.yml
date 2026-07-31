@@ -66,11 +66,34 @@ jobs:
         run: node scripts/check-template-is-blank.mjs
 
   seed-validation:
-    name: Sample Firm seed presence
+    # RENAMED 2026-07-31, from "Sample Firm seed presence". The old name
+    # described the informational step rather than the assertion, and NO SEED
+    # IS COMMITTED TODAY — monorepo `BI/OUTSTANDING.md` item 43 owes it and
+    # authoring it is the operator's. So a REQUIRED status check called "seed
+    # presence" was reporting a green tick while asserting nothing at all: the
+    # presence step is informational by ruling, and the singleton guard below
+    # returns early because it has no file to read. A required context that
+    # reports success for a check that did not run is indistinguishable from
+    # one that works, which is the failure shape this platform keeps paying
+    # for. Tracked as monorepo item 108, which stays open pointing at item 43.
+    #
+    # The name now states the one thing this job actually asserts. NOTHING
+    # ABOUT THE GUARD'S LOGIC CHANGED — it was proven able to fail on
+    # 2026-07-31 by feeding it a seed carrying `drafts.designSettings`, and
+    # that proof still stands. The branch-protection required context was
+    # renamed in the same operation, adding the new name before the old one
+    # was removed, so `main` was never gated on a context that no longer
+    # reports.
+    #
+    # WHEN THE SEED LANDS (item 43), the presence step is where the promised
+    # hard-fail belongs: at that point absence becomes a real regression
+    # rather than a state the repository has always been in. See
+    # `studio/seedData/regenerate.md`.
+    name: Seed carries no create-only singletons
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Verify seed file presence
+      - name: Report whether a seed is committed (asserts nothing)
         run: |
           # The seed is a TEMPLATE-DEVELOPMENT rendering fixture ONLY. It is
           # NEVER imported into a client's dataset — ruled 2026-07-23 (monorepo
@@ -81,7 +104,14 @@ jobs:
           # (A prior version promised a v0.2.0 hard-fail on absence; that
           # promise died with the ruling.)
           if [ ! -s studio/seedData/sampleFirm.ndjson ]; then
-            echo "::notice::studio/seedData/sampleFirm.ndjson is not committed — fine for clients (never imported), but template development has no rendering fixture. See studio/seedData/regenerate.md."
+            echo "NEUTRAL: no seed is committed, so NOTHING WAS ASSERTED about one."
+            echo "This step reports a fact and passes no judgement on it. The job's"
+            echo "only assertion is the next step, and it has no file to read either."
+            echo "Harmless for clients (the seed is never imported into a client"
+            echo "dataset, ruled 2026-07-23), and it means template development has"
+            echo "no rendering fixture. Owed by monorepo OUTSTANDING item 43; this"
+            echo "job's silence is tracked as item 108."
+            echo "::notice::No seed committed — this job asserted nothing on this run. See studio/seedData/regenerate.md."
             exit 0
           fi
           echo "Seed file present ($(wc -l < studio/seedData/sampleFirm.ndjson) lines)."
@@ -116,7 +146,12 @@ jobs:
           set -euo pipefail
           SEED=studio/seedData/sampleFirm.ndjson
           if [ ! -s "$SEED" ]; then
-            echo "No seed committed, so there is nothing to check."
+            echo "NEUTRAL: no seed exists, so THIS GUARD DID NOT RUN."
+            echo "A green tick on this job today means the guard found nothing to"
+            echo "read, NOT that a seed was inspected and cleared. The guard's"
+            echo "logic is sound and was proven able to fail on 2026-07-31 against"
+            echo "a seed carrying drafts.designSettings; it has no input."
+            echo "::notice::Singleton guard did not run — no seed exists to inspect. Monorepo OUTSTANDING items 43 and 108."
             exit 0
           fi
 

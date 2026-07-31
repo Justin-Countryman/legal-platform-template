@@ -33,6 +33,10 @@ Regenerate `sampleFirm.ndjson` whenever ANY of these occur:
 
 **Enforcement, honestly stated:** the CI `seed-validation` job (`.github/workflows/ci.yml`) hard-fails a committed seed carrying any create-only singleton, and only **warns** when the seed file is missing (the promised v0.2.0 hard-fail was never flipped — it cannot be until a seed is committed at all). **Nothing couples a schema change to a seed regen.** The regen-on-schema-change rule above is enforced by this document and reviewer discipline alone; a schema-change PR with a stale seed merges clean. (This paragraph previously claimed CI refuses such a PR. It does not, and never has.)
 
+**The job was renamed 2026-07-31, and the rename is the honest version of the paragraph above.** It was called `Sample Firm seed presence`; it is now **`Seed carries no create-only singletons`**, which is the one thing it asserts. With no seed committed, the presence step is informational by ruling and the singleton guard returns early, so a REQUIRED status check was reporting a green tick for a check that never ran. Both steps now print a NEUTRAL notice saying exactly that, rather than a line that reads as a pass. The guard's logic is untouched, and it was proven able to fail the same day against a seed carrying `drafts.designSettings`. The branch-protection required context was renamed in the same operation, the new name added before the old one was removed. Tracked as monorepo `BI/OUTSTANDING.md` item 108, which stays open pointing at item 43.
+
+**THE HARD-FAIL FLIPS WHEN ITEM 43'S SEED LANDS.** Until a seed exists, absence is the state this repository has always been in, and failing on it would gate `main` on work nobody has started. Once the seed is committed, absence becomes a regression — a file that was there and is not — and the presence step is where the hard-fail belongs: change its missing-seed branch from the neutral notice to `exit 1`. Do it in the same commit that lands the seed, so there is never a window in which the file is expected and its disappearance is silent.
+
 ## Scratch project
 
 - **Project name:** `legal-platform-template-seed`
