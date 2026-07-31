@@ -9,10 +9,27 @@ name: CI
 # STUDIO BUILD and a full `next build` (page-data collection instantiates the
 # Sanity client and fails on the sentinel projectId) — those remain unwired.
 #
-# NOTE ON SCOPE: this file is the TEMPLATE's CI. Client repos do not inherit it.
-# Deploy-Setup-Tool's allowlist (`trees: - source: .github`) resolves against the
-# MONOREPO root, so a client repo receives the monorepo's .github/workflows/ci.yml
-# instead. Changes here affect the template only.
+# NOTE ON SCOPE: this file is the TEMPLATE's CI, and nothing else runs it. A
+# client repo does not inherit it and receives NO workflow at all. Changes here
+# affect the template only.
+#
+# CORRECTED 2026-07-31. The note that stood here said a client repo received the
+# MONOREPO's .github/workflows/ci.yml instead, because Deploy-Setup-Tool's
+# allowlist entry `trees: - source: .github` resolved against the monorepo root.
+# That entry was emptied by ruling 2026-07-27 — the same day this note was
+# written — and `BE/Deploy-Setup-Tool/deploy-allowlist.yaml` now reads
+# `trees: []` with `.github/` listed under `explicitly_omitted`. The monorepo
+# has no .github/ directory in any case, so the fallback this note described
+# never happened. Verified against the artifact: the provisioned client repo
+# carries no .github/ at all.
+#
+# The original reasoning, preserved because it is the evidence for whether the
+# reversal was right: a client repo should be gated like any other. The ruling
+# reversed it on two grounds — nobody writes code in a generated client repo, so
+# there is nothing for CI to gate, and Vercel deploys on push regardless of
+# Actions status (proven on Dudley, where 5 of 5 runs were red while production
+# deployed). Correctness is enforced HERE, upstream, before anything reaches a
+# client.
 
 on:
   pull_request:
