@@ -101,6 +101,16 @@ function buildLocalBusinessSchema(page, tokens, domain) {
  * What counts as redeclaring: carrying a `url`, an `address`, a `logo`, a
  * `contactPoint` or a `sameAs` — any property the firm node already owns. A
  * name-only nested object is a label, not a redeclaration, and is allowed.
+ *
+ * **AN `@id` NO LONGER EXCUSES CARRYING IDENTITY (corrected 2026-07-31), and
+ * this checker is why the defect survived a whole pass in green.** It used to
+ * `continue` the moment a body contained `'@id'`, on the reasoning that a node
+ * with an identifier points. `parentOrganization` on the office node carried
+ * `@id` AND `@type` AND `name` AND `url`, so it was skipped before any property
+ * was examined. The rule says `@id` and nothing else; the checker encoded
+ * doctrine's closing note, which had called that same object the pattern to
+ * copy. A node carrying the firm's URL is a second assertion about the firm
+ * whether or not it also carries an identifier.
  */
 const NESTED_FIRM_KEYS = ['worksFor', 'publisher', 'organizer', 'provider', 'parentOrganization'] as const
 const IDENTITY_PROPS = ['url', 'address', 'logo', 'contactPoint', 'sameAs'] as const
@@ -117,7 +127,6 @@ export function nestedFirmRedeclarations(source: string): string[] {
       const rest = source.slice(at)
       const close = rest.indexOf('},')
       const body = close === -1 ? rest.slice(0, 400) : rest.slice(0, close)
-      if (body.includes("'@id'")) continue // it points
       const carried = IDENTITY_PROPS.filter((prop) => new RegExp(`\\b${prop}:`).test(body))
       if (carried.length > 0) findings.push(`${key} redeclares the firm (carries ${carried.join(', ')})`)
     }
@@ -142,11 +151,39 @@ const NAME_ONLY = [
   "    },",
 ].join('\n')
 
+// The office node's `parentOrganization` exactly as it stood until 2026-07-31,
+// quoted. It carried an `@id` AND the firm's `url`, and the checker skipped it
+// on the `@id` alone — so this shape passed for two days while doctrine's
+// closing note recommended it. It is the reason the `@id` short-circuit is gone.
+const PRE_FIX_PARENT_ORGANIZATION = [
+  "    parentOrganization: {",
+  "      '@type': 'LegalService',",
+  "      '@id': `https://${domain}/#firm`,",
+  "      name: tokens?.firmName ?? '',",
+  "      url: `https://${domain}/`,",
+  "    },",
+].join('\n')
+
+// What ENTITY-6 actually asks for: the identifier and nothing else.
+const POINTS_ONLY = "    parentOrganization: {'@id': `https://${domain}/#firm`},"
+
 describe('ENTITY-6: nested firm references point, they do not redeclare', () => {
   it('goes RED on the real pre-fix blog publisher', () => {
     expect(nestedFirmRedeclarations(PRE_FIX_PUBLISHER)).toEqual([
       'publisher redeclares the firm (carries url)',
     ])
+  })
+
+  it('goes RED on a node that carries an @id AND the firm url', () => {
+    // An identifier makes a node linkable, not singular. This is the case the
+    // checker used to wave through.
+    expect(nestedFirmRedeclarations(PRE_FIX_PARENT_ORGANIZATION)).toEqual([
+      'parentOrganization redeclares the firm (carries url)',
+    ])
+  })
+
+  it('accepts the identifier alone', () => {
+    expect(nestedFirmRedeclarations(POINTS_ONLY)).toEqual([])
   })
 
   it('allows a name-only nested object, which is a label not a redeclaration', () => {

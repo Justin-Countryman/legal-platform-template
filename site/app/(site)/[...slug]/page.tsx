@@ -85,14 +85,16 @@ function buildOfficeLegalServiceSchema(
     areaServed: loc.city ?? loc.state ?? undefined,
     openingHoursSpecification: buildOpeningHours(loc.hours),
     sameAs: sameAs.length > 0 ? sameAs : undefined,
-    // The office belongs to the firm. This is the ENTITY-6 nested shape and it
-    // reads the firm record, not the page.
-    parentOrganization: {
-      '@type': 'LegalService',
-      '@id': `https://${domain}/#firm`,
-      name: tokens?.firmName ?? '',
-      url: `https://${domain}/`,
-    },
+    // The office belongs to the firm. ENTITY-6: a nested entity that IS the firm
+    // REFERENCES the firm's identifier and declares nothing else — not a second
+    // `@type`, not a repeated `name`, not the firm's `url`. The `#firm` node is
+    // emitted from the root layout on every route, so this always resolves.
+    //
+    // It carried `@type`, `name` and `url` alongside `@id` until 2026-07-31, and
+    // doctrine's own closing note held it up as the pattern to copy. A node
+    // carrying the firm's URL and its own identifier is still two assertions
+    // about one entity; the `@id` makes it linkable, not singular.
+    parentOrganization: {'@id': `https://${domain}/#firm`},
   }
 }
 
