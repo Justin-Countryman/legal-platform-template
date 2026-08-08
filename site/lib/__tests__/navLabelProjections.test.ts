@@ -231,54 +231,26 @@ function labelProjections(): {satisfied: Site[]; missing: Site[]} {
  * `navLabel`, each with the reason it is allowed to.
  *
  * **This is a record of what is not covered, not a list of things that are
- * fine.** Justin's 2026-08-07 ruling covered the NAV surfaces — the header
- * menu, the footer's areas-of-law column, the silo nav block and the sidebar
- * tree. Everything below is a different surface, and whether NAME-1's "index
- * cards" clause reaches it is a ruling nobody has made. Each entry says which
- * it is.
+ * fine.** It held twelve entries when this guard landed: one ruled the other
+ * way, and eleven the 2026-08-07 nav ruling had not named, carried here so the
+ * unruled set was visible in code rather than absent from the derivation.
+ *
+ * **Pass D.2, ruled 2026-08-07 by Justin, ruled those eleven IN** — the sidebar
+ * related-links widget, the sidebar attorney widget, attorney cards in a page
+ * section, attorneys listed on an event, the event index card, the blog-category
+ * chip on a post card and the blog category index. NAME-1's "index cards and
+ * link text" wording governs them, every one now resolves the label in the
+ * projection, and every one moved out of this roster and into enforcement. What
+ * is left is a ruled exemption, which is the only kind this roster may hold.
  */
 const RULED_THE_OTHER_WAY =
   'RULED, and ruled the other way. NAME-7: a reviewPage shows no nav label ' +
   'because it is hidden from search and linked from nowhere, so the field ' +
-  'going unread here is the rule being obeyed rather than a gap.'
-
-const UNRULED_ATTORNEY_CARD =
-  'Attorney cards in a page section. UNRULED. Not a nav surface, and NAME-4 ' +
-  'names an attorneyPage from its Zite name fields, so what a navLabel would ' +
-  'even mean on one is a second undecided question. Three signatures because ' +
-  'the projection has three select branches.'
-
-const UNRULED_SIDEBAR_WIDGET =
-  'The sidebar attorney widget. UNRULED. It sits on a sidebar, but the ' +
-  '2026-08-07 ruling covered the sidebar areas-of-law TREE; this is a photo ' +
-  'roster of people, and it inherits the attorneyPage question above.'
-
-const UNRULED_INDEX_CARD =
-  'An index-card surface, not nav, and UNRULED. NAME-1 does give the Nav Label ' +
-  'the "index cards" job, so this class plausibly belongs — that is exactly ' +
-  'what has not been decided.'
+  'going unread here is the rule being obeyed rather than a gap. Re-read ' +
+  '2026-08-07 against the Pass D.2 ruling and unaffected by it: that ruling ' +
+  'reached index cards and link text, and a reviewPage is neither.'
 
 const EXEMPT: Record<string, string> = {
-  'orderedAttorneys-> {_id,bio,h1,jobTitle,photo,slug,title}': UNRULED_ATTORNEY_CARD,
-  '*[_type=="attorneyPage"] {_id,bio,h1,jobTitle,photo,slug,title}': UNRULED_ATTORNEY_CARD,
-  'attorneys-> {_id,bio,h1,jobTitle,photo,slug,title}': UNRULED_ATTORNEY_CARD,
-
-  'orderedAttorneys-> {_id,photo,slug,title}': UNRULED_SIDEBAR_WIDGET,
-  '*[_type=="attorneyPage"] {_id,photo,slug,title}': UNRULED_SIDEBAR_WIDGET,
-  'attorneys-> {_id,photo,slug,title}': UNRULED_SIDEBAR_WIDGET,
-
-  'links-> {_id,_type,slug,title}':
-    'The sidebar related-links widget. UNRULED, and the closest of these to ' +
-    'the ruled scope: it is link text on a sidebar. It is listed here rather ' +
-    'than fixed because it points at arbitrary page types, not at practice ' +
-    'areas, and the ruling named the areas-of-law tree.',
-
-  '*[_type=="eventPage"] {attorneys,category,eventDate,eventEndDate,eventType,formEmbed,locationAddress,locationType,registrationCta,registrationUrl,slug,title}':
-    `Event index card. ${UNRULED_INDEX_CARD}`,
-  'attorneys-> {_id,slug,title}': `Attorneys listed on an event. ${UNRULED_INDEX_CARD}`,
-  'category-> {slug,title}': `Blog category chip on a post card. ${UNRULED_INDEX_CARD}`,
-  '*[_type=="blogCategory"] {slug,title}': `The blog category index. ${UNRULED_INDEX_CARD}`,
-
   '*[_type=="reviewPage"] {blurb,feedbackFormEmbed,h1,noFollow,noIndex,reviewLinks,seoTitle,slug,title}':
     RULED_THE_OTHER_WAY,
 }

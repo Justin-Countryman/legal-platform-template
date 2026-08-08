@@ -57,9 +57,19 @@ const TESTIMONIAL_FIELDS_FRAGMENT = groq`{
 // NOT A SECOND RESOLVER. Page-document queries project `title` and `navLabel`
 // as siblings and let `resolvePageLabel` apply the ladder in one place, which is
 // NAME-3 and stays. This expression is for the projections that emit a finished
-// STRING for a component to render — the header menu, the footer's areas-of-law
-// column, the silo nav block and the sidebar tree — none of which ever sees a
-// document to resolve.
+// STRING for a component to render, almost none of which ever sees a document
+// to resolve.
+//
+// WHICH SURFACES, and do not maintain this list by hand — the guard derives it.
+// The 2026-08-07 nav ruling brought the header menu, the footer's areas-of-law
+// column, the silo nav block and the sidebar tree. Pass D.2, ruled the same day,
+// brought the seven remaining label surfaces the guard had enumerated as
+// unruled: the sidebar related-links and attorney widgets, attorney cards in a
+// page section, attorneys listed on an event, the event index card, the
+// blog-category chip on a post card and the blog category index. NAME-1's
+// "index cards and link text" wording governs those seven.
+// `lib/__tests__/navLabelProjections.test.ts` now enforces every label
+// projection in this file except the one NAME-7 rules the other way.
 //
 // WHY `select` AND NOT A BARE `coalesce`. GROQ's `coalesce` treats `""` as
 // defined, so an operator who cleared the Studio field to an empty string would
@@ -177,17 +187,21 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
     mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,
     null
   ),
+  // The title key holds the RENDERED nav label, not the stored Name — same
+  // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,
+  // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the
+  // Nav Label. Three branches because the block has three modes.
   "attorneys": select(
     mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{
-      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
+      _id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
       "photo": photo ${IMAGE_FRAGMENT}
     },
     mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{
-      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
+      _id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
       "photo": photo ${IMAGE_FRAGMENT}
     },
     mode == 'manual' => attorneys[defined(@->_id)]->{
-      _id, title, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
+      _id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
       "photo": photo ${IMAGE_FRAGMENT}
     },
     []
@@ -545,16 +559,20 @@ export const SIDEBAR_FRAGMENT = groq`sidebar[]{
       mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,
       null
     ),
+    // Ruled 2026-08-07, Pass D.2. The attorney widget and the related-links
+    // widget are sidebar surfaces the 2026-08-07 nav ruling did not name; both
+    // now resolve the label in the projection, like the tree above. The title
+    // keys hold the RENDERED label and the consumer keys are unchanged.
     "attorneys": select(
-      mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}},
-      mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, title, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}},
-      attorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}}
+      mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}},
+      mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}},
+      attorneys[defined(@->_id)]->{_id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}}
     ),
     "links": links[defined(@->_id)]->{
       _id,
       _type,
       "slug": slug.current,
-      title
+      "title": ${NAV_LABEL_EXPR}
     }
   }
 }`
@@ -1331,7 +1349,13 @@ export const EVENT_INDEX_PAGE_QUERY = groq`
 // Fetches card-level fields for all events; sort/filter done in Next.js
 export const EVENT_INDEX_QUERY = groq`
   *[_type == "eventPage"] | order(eventDate asc) {
-    title,
+    // Ruled 2026-08-07, Pass D.2: the event index card and the attorneys it
+    // lists are index-card and link-text surfaces, which NAME-1 gives the Nav
+    // Label. Both title keys hold the RENDERED label. The category key below
+    // is a bare string with no link target beside it, so it is outside this
+    // rule and outside the guard's derivation; the index route projects it and
+    // reads it nowhere today.
+    "title": ${NAV_LABEL_EXPR},
     "slug": slug.current,
     eventDate,
     eventEndDate,
@@ -1344,7 +1368,7 @@ export const EVENT_INDEX_QUERY = groq`
     "formEmbed": registrationForm->formEmbed,
     "attorneys": attorneys[defined(@->_id)]->{
       _id,
-      title,
+      "title": ${NAV_LABEL_EXPR},
       "slug": slug.current
     }
   }
@@ -1373,9 +1397,12 @@ export const EVENT_PAGE_QUERY = groq`
     registrationCta,
     "formEmbed": registrationForm->formEmbed,
     "body": body ${BLOCK_CONTENT_FRAGMENT},
+    // The same attorney list as EVENT_INDEX_QUERY, and the same 2026-08-07
+    // Pass D.2 ruling. One signature, two addresses; the guard counts a
+    // signature satisfied only when every occurrence resolves, so both move.
     "attorneys": attorneys[defined(@->_id)]->{
       _id,
-      title,
+      "title": ${NAV_LABEL_EXPR},
       "slug": slug.current
     },
     hideCtaForm,
@@ -1450,8 +1477,11 @@ export const BLOG_POSTS_QUERY = groq`
     h1,
     metaDescription,
     publishedAt,
+    // Ruled 2026-08-07, Pass D.2. The category chip on a post card is index-card
+    // and link text, which NAME-1 gives the Nav Label. The title key holds the
+    // RENDERED label; consumers filter on the slug, never on this string.
     "category": category->{
-      title,
+      "title": ${NAV_LABEL_EXPR},
       "slug": slug.current
     },
     "bodyText": pt::text(body)
@@ -1475,14 +1505,14 @@ export const RELATED_POSTS_QUERY = groq`
       h1,
       metaDescription,
       publishedAt,
-      "category": category->{title, "slug": slug.current}
+      "category": category->{"title": ${NAV_LABEL_EXPR}, "slug": slug.current}
     },
     "fallback": *[_type == "blogPost" && slug.current != $slug] | order(publishedAt desc) [0..3] {
       "slug": slug.current,
       h1,
       metaDescription,
       publishedAt,
-      "category": category->{title, "slug": slug.current}
+      "category": category->{"title": ${NAV_LABEL_EXPR}, "slug": slug.current}
     }
   }
 `
@@ -1513,8 +1543,14 @@ export const BLOG_POST_PAGE_QUERY = groq`
       "slug": slug.current,
       "photo": photo ${IMAGE_FRAGMENT}
     },
+    // Same chip signature as BLOG_POSTS_QUERY, same 2026-08-07 Pass D.2 ruling.
+    // The blog-post route also hands this object to resolvePageLabel for the
+    // breadcrumb rung; that resolver's first rung reads navLabel, which is not
+    // projected here, so it falls to the title key — the string this expression
+    // has already resolved. Same answer either way, and NOT a second ladder:
+    // the GROQ half answers once and the resolver passes it through.
     "category": category->{
-      title,
+      "title": ${NAV_LABEL_EXPR},
       "slug": slug.current
     },
     "sidebar": sidebar[]{
@@ -1570,15 +1606,15 @@ export const BLOG_POST_PAGE_QUERY = groq`
           null
         ),
         "attorneys": select(
-          mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}},
-          mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, title, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}},
-          attorneys[defined(@->_id)]->{_id, title, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}}
+          mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}},
+          mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}},
+          attorneys[defined(@->_id)]->{_id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, "photo": photo ${IMAGE_FRAGMENT}}
         ),
         "links": links[defined(@->_id)]->{
           _id,
           _type,
           "slug": slug.current,
-          title
+          "title": ${NAV_LABEL_EXPR}
         },
         "posts": select(
           mode == "recentPosts" => *[_type == "blogPost" && slug.current != $slug] | order(publishedAt desc)[0..20]{
@@ -1601,7 +1637,11 @@ export const BLOG_POST_PAGE_QUERY = groq`
 // Only categories that have at least one published blogPost
 export const BLOG_CATEGORIES_QUERY = groq`
   *[_type == "blogCategory" && count(*[_type == "blogPost" && references(^._id)]) > 0]{
-    title,
+    // Ruled 2026-08-07, Pass D.2: the blog category index is an index-card and
+    // link-text surface, which NAME-1 gives the Nav Label. The order(title asc)
+    // clause sorts the PROJECTED key, so the list sorts by the string it
+    // displays — the same pattern as the sidebar areas-of-law tree.
+    "title": ${NAV_LABEL_EXPR},
     "slug": slug.current
   } | order(title asc)
 `
@@ -1672,8 +1712,10 @@ export const BLOG_CATEGORY_POSTS_QUERY = groq`
     h1,
     metaDescription,
     publishedAt,
+    // Same chip signature, same 2026-08-07 Pass D.2 ruling. The $slug filter
+    // above matches on the category's slug, not on this string.
     "category": category->{
-      title,
+      "title": ${NAV_LABEL_EXPR},
       "slug": slug.current
     },
     "bodyText": pt::text(body)
