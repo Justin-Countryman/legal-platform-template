@@ -45,6 +45,51 @@ const TESTIMONIAL_FIELDS_FRAGMENT = groq`{
   "avatar": avatar ${IMAGE_FRAGMENT}
 }`
 
+// ─── The nav-label expression ─────────────────────────────────────────────────
+// NAME-1 gives every page a Nav Label whose job is "menus, breadcrumbs, index
+// cards and link text"; NAME-2 rules that an empty field uses the Name. A nav
+// surface that reads bare `title` therefore renders the wrong field, and no
+// downstream resolver can repair it — NAME-2's own Hazard says why: **a rule
+// cannot bind a field a projection omits.** So the resolution happens here, in
+// the projection, on every surface that renders a label WITHOUT going through
+// `resolvePageLabel` (`lib/pageLabel.ts`).
+//
+// NOT A SECOND RESOLVER. Page-document queries project `title` and `navLabel`
+// as siblings and let `resolvePageLabel` apply the ladder in one place, which is
+// NAME-3 and stays. This expression is for the projections that emit a finished
+// STRING for a component to render — the header menu, the footer's areas-of-law
+// column, the silo nav block and the sidebar tree — none of which ever sees a
+// document to resolve.
+//
+// WHY `select` AND NOT A BARE `coalesce`. GROQ's `coalesce` treats `""` as
+// defined, so an operator who cleared the Studio field to an empty string would
+// get a BLANK menu item rather than the Name. Measured, not assumed:
+// `coalesce(navLabel, title)` returns `""` for a document storing `navLabel: ""`.
+// The build tools never write one — `page_creation.py` writes the field only
+// when `derive_nav_label` returns non-empty — so this guards the Studio path.
+//
+// KNOWN LIMIT, recorded rather than papered over: GROQ has no `trim`, so a
+// navLabel of `"   "` still wins here where `resolvePageLabel` would trim it and
+// fall through. Whitespace-only is a narrower case than empty and no GROQ
+// expression closes it.
+//
+// The last rungs of `resolvePageLabel` — the index-type presets and the
+// title-cased slug leaf — are deliberately NOT mirrored here. They exist for a
+// routed page with no stored name at all; every document these projections
+// select is one the build wrote a `title` onto.
+//
+// Plain string (not groq-tagged) so typegen does not try to parse a bare
+// expression as a standalone query; it inlines into the groq-tagged queries.
+const NAV_LABEL_EXPR = `coalesce(select(navLabel != "" => navLabel), title)`
+
+// The same expression one dereference out, for the nav blocks whose items hold a
+// REFERENCE to the page rather than being the page. Those blocks also carry a
+// per-item `label` override the operator types in Studio, which stays ahead of
+// both — an override typed on the block is more specific than a field on the
+// document. The three rungs read: this item's override, the page's Nav Label,
+// the page's Name.
+const NAV_LABEL_VIA_PAGE_EXPR = `coalesce(select(page->navLabel != "" => page->navLabel), page->title)`
+
 // Gated street address (D9 location-type privacy). Physical/Shared locations
 // expose their street address + zip publicly; Virtual and Home locations — and
 // any location that has not set a type — null them, so no consumer renders or
@@ -92,17 +137,17 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
     _type == "practiceAreaNav" && mode == "allTopLevel" =>
       *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{
         "_key": _id,
-        "label": title,
+        "label": ${NAV_LABEL_EXPR},
         "href": "/" + slug.current + "/",
         "description": metaDescription,
         "icon": null,
         "image": null,
         "featured": false
-      } | order(title asc),
+      } | order(${NAV_LABEL_EXPR} asc),
     _type == "practiceAreaNav" =>
       items[defined(page->slug.current)]{
         _key,
-        "label": coalesce(label, page->title),
+        "label": coalesce(label, ${NAV_LABEL_VIA_PAGE_EXPR}),
         "href": "/" + page->slug.current + "/",
         "description": coalesce(description, page->metaDescription),
         "icon": icon ${IMAGE_FRAGMENT},
@@ -346,16 +391,16 @@ export const HEADER_QUERY = groq`{
         _type == "navItemPracticeAreas" => select(
           count(practiceAreaOrder) > 0 => practiceAreaOrder[defined(@->_id)]->{
             "_id": _id,
-            "label": title,
+            "label": ${NAV_LABEL_EXPR},
             "href": "/" + slug.current + "/",
             "parentRef": parentPage._ref
           },
           *[_type == "practiceArea"]{
             "_id": _id,
-            "label": title,
+            "label": ${NAV_LABEL_EXPR},
             "href": "/" + slug.current + "/",
             "parentRef": parentPage._ref
-          } | order(title asc)
+          } | order(${NAV_LABEL_EXPR} asc)
         )
       )
     }
@@ -406,13 +451,13 @@ export const FOOTER_QUERY = groq`{
     actionButton2Label,
     actionButton2Url,
     // Practice Areas column auto-lists top-level areas of law LIVE from the
-    // practiceArea docs — label = title, href = slug — so it stays in sync with
-    // the header nav and sidebar nav (single source of truth = practiceArea.title).
-    // The stored column1 field is ignored.
+    // practiceArea docs — label = the nav-label expression, href = slug — so it
+    // stays in sync with the header nav and sidebar nav (single source of truth
+    // = the practiceArea document). The stored column1 field is ignored.
     "column1": *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{
-      "label": title,
+      "label": ${NAV_LABEL_EXPR},
       "href": "/" + slug.current + "/"
-    } | order(title asc),
+    } | order(${NAV_LABEL_EXPR} asc),
     "column2": column2[]{label, href},
     facebookUrl,
     instagramUrl,
@@ -472,23 +517,27 @@ export const SIDEBAR_FRAGMENT = groq`sidebar[]{
     "orderedAolIds": *[_type == "mainNavigation"][0]
       .items[_type == "navItemPracticeAreas"][0]
       .practiceAreaOrder[]._ref,
+    // The title key here holds the RENDERED nav label, not the stored Name. The
+    // key keeps its name so no consumer changes, and the value obeys NAME-1 and
+    // NAME-2. The order(title asc) clauses below sort the PROJECTED key, so the
+    // tree sorts by the same string it displays.
     "areasOfLaw": *[
       _type == "practiceArea" && !defined(parentPage) && defined(slug.current)
     ]{
       _id,
       "slug": slug.current,
-      title,
+      "title": ${NAV_LABEL_EXPR},
       "children": *[
         _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)
       ]{
         _id,
         "slug": slug.current,
-        title,
+        "title": ${NAV_LABEL_EXPR},
         "grandchildren": *[
           _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)
         ]{
           "slug": slug.current,
-          title,
+          "title": ${NAV_LABEL_EXPR},
         } | order(title asc),
       } | order(title asc),
     },
@@ -634,7 +683,7 @@ export const HOME_HERO_DESIGN_FRAGMENT = groq`{
   videoUrl,
   "practiceAreaItems": practiceAreaItems[defined(page->slug.current)]{
     _key,
-    "label": coalesce(label, page->title),
+    "label": coalesce(label, ${NAV_LABEL_VIA_PAGE_EXPR}),
     "href": "/" + page->slug.current + "/",
     "description": coalesce(description, page->metaDescription),
     "icon": icon ${IMAGE_FRAGMENT},
@@ -1501,18 +1550,18 @@ export const BLOG_POST_PAGE_QUERY = groq`
         ]{
           _id,
           "slug": slug.current,
-          title,
+          "title": ${NAV_LABEL_EXPR},
           "children": *[
             _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)
           ]{
             _id,
             "slug": slug.current,
-            title,
+            "title": ${NAV_LABEL_EXPR},
             "grandchildren": *[
               _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)
             ]{
               "slug": slug.current,
-              title,
+              "title": ${NAV_LABEL_EXPR},
             } | order(title asc),
           } | order(title asc),
         },
