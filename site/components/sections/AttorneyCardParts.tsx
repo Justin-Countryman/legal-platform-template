@@ -11,14 +11,26 @@ export type AttorneyCard = {
   _id: string
   title: string
   slug: string
-  h1?: string | null
   jobTitle?: string | null
   bio?: string | null
   photo?: SanityImageData | null
 }
 
+// The card's label is the projected `title`, which the three attorney-card
+// branches in ATTORNEY/SECTIONS queries resolve through NAV_LABEL_EXPR — the
+// Nav Label when one is authored, the Name otherwise. Every other card on the
+// platform reads that same key and nothing else; the sidebar attorney widget
+// is the nearest neighbour.
+//
+// THE HEADING IS NOT A SOURCE, and it is out of reach rather than merely
+// unread: `h1` is absent from the type above for the same reason it is absent
+// from `lib/pageLabel.ts`. This returned `a.h1 ?? a.title` until 2026-08-07,
+// which ran NAME-2 backwards at this one call site — an authored Nav Label
+// reached the projection and then lost to the SEO heading. Ruled 2026-08-07 by
+// Justin, Pass D.2b: cards use the same label chain as every other card, and an
+// h1 is not a card label.
 export function attorneyName(a: AttorneyCard): string {
-  return a.h1 ?? a.title
+  return a.title
 }
 
 function initials(name: string): string {

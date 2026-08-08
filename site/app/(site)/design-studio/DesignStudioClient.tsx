@@ -2001,9 +2001,9 @@ const SAMPLE_ATTORNEY_SECTION: AttorneySectionBlockData = {
   heading: 'Meet the attorneys who will represent you',
   description: 'Each attorney brings specialized depth in their practice area. Click through to read their full background.',
   attorneys: [
-    {_id: 'a1', title: 'Jane Doe',  slug: 'jane-doe',  h1: 'Jane Doe',  photo: null},
-    {_id: 'a2', title: 'John Roe',   slug: 'john-roe',   h1: 'John Roe',   photo: null},
-    {_id: 'a3', title: 'Maya Chen',        slug: 'maya-chen',        h1: 'Maya Chen',        photo: null},
+    {_id: 'a1', title: 'Jane Doe',  slug: 'jane-doe',  photo: null},
+    {_id: 'a2', title: 'John Roe',   slug: 'john-roe',   photo: null},
+    {_id: 'a3', title: 'Maya Chen',        slug: 'maya-chen',        photo: null},
   ],
   orderedAttorneyIds: null,
 }
