@@ -5,7 +5,6 @@
 //   • contentAlign  left | center
 //   • backdrop      none (scheme) | image | mosaic (gallery)
 //   • foreground    cut-out figure on/off
-//   • contentStrip  quick-link cards below
 //   • motion        content animation (handled by HeroTextBlock)
 
 import Image from 'next/image'
@@ -14,7 +13,6 @@ import {HeroBackdrop} from '@/components/layout/HeroBackdrop'
 import {HeroScrim} from '@/components/layout/HeroScrim'
 import {heroForegroundVars, HERO_BAND_MIN_H_LG} from '@/lib/heroLayout'
 import {HeroBand, HeroTextBlock} from '../shared'
-import {HeroSiloStrip, heroStripActive} from '../HeroSiloStrip'
 import type {HeroConfig, ResolvedHomeContent, SkeletonProps} from '../types'
 import {heroObjectPosition, type ResolvedHeroSurface, type HeroImage} from '@/lib/heroSurface'
 
@@ -64,8 +62,6 @@ export function Overlay({config, content, surface, sectionBackground}: SkeletonP
   // Foreground figure pairs with left-aligned text (bottom-right two-column) —
   // not applicable when content is centered.
   const hasFigure = config.foreground && surface.hasForeground && config.contentAlign !== 'center'
-  // With a content strip, the text top-aligns so the strip can anchor at the bottom
-  // (mt-auto); without it, the content is vertically centered in the band.
 
   const textBlock = (
     <HeroTextBlock
@@ -84,10 +80,9 @@ export function Overlay({config, content, surface, sectionBackground}: SkeletonP
     <HeroBand
       surface={surface}
       fullViewport={fullViewport}
-      uncapped={heroStripActive(config, content.practiceAreaItems)}
       backdropNode={backdropNode}
       imageBacked={imageBacked}
-      center={!config.contentStrip}
+      center
       className={hasFigure ? HERO_BAND_MIN_H_LG : undefined}
     >
       <div
@@ -102,7 +97,6 @@ export function Overlay({config, content, surface, sectionBackground}: SkeletonP
         </div>
         {hasFigure && <HeroForeground surface={surface} />}
       </div>
-      <HeroSiloStrip config={config} items={content.practiceAreaItems} />
     </HeroBand>
   )
 }

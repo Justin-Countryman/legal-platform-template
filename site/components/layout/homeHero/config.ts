@@ -12,8 +12,6 @@ export function resolveHeroConfig(data: HomeHeroData): HeroConfig {
     contentAlign: data.contentAlign ?? 'left',
     backdrop: data.backdrop ?? 'image',
     foreground: data.foreground ?? false,
-    contentStrip: data.contentStrip ?? false,
-    siloLayout: data.siloLayout ?? 'cards',
     scrimStyle: data.scrimStyle ?? 'flat',
     scrimColor: data.scrimColor ?? 'auto',
     scrimDirection: data.scrimDirection ?? 'auto',

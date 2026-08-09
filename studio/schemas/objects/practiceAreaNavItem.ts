@@ -2,10 +2,12 @@ import {defineType} from 'sanity'
 
 // Reusable practice-area nav item — references a practice-area page (title /
 // description / image auto-resolve from it) with per-item overrides. Used by BOTH
-// the full-width Practice Area Navigation section AND the homepage hero content
-// strip, so the two share one item model. Extracted from the inline definition
+// the full-width Practice Area Navigation section AND the `siloNavBlock` canvas
+// block, so the two share one item model. Extracted from the inline definition
 // that previously lived in documents/sections/practiceAreaNav.ts (same name +
-// fields, so existing section data is unaffected).
+// fields, so existing section data is unaffected). The homepage hero's content
+// strip was a third user of it until 2026-08-09, when the ruling on monorepo
+// `OUTSTANDING.md` item 163 removed that strip.
 
 export const practiceAreaNavItem = defineType({
   name: 'practiceAreaNavItem',
@@ -25,9 +27,9 @@ export const practiceAreaNavItem = defineType({
       type: 'boolean',
       description: 'Mark the firm’s priority practice area — it becomes the large hero tile in Bento grid mode.',
       initialValue: false,
-      // Bento is a Practice Area Navigation section mode only — the homepage hero
-      // strip has no Bento, so Primary does nothing there. Hide it outside the
-      // section document to keep the hero wizard clean.
+      // Bento is a Practice Area Navigation section mode only — no other surface
+      // using this item type has a Bento layout, so Primary does nothing there.
+      // Hide it outside the section document to keep those surfaces clean.
       hidden: ({document}: {document?: {_type?: string}}) => document?._type !== 'practiceAreaNav',
     },
     {name: 'label', title: 'Label (override)', type: 'string', description: 'Defaults to the page title'},

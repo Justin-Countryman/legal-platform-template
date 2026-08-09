@@ -1,7 +1,6 @@
 import type {CtaItem} from '@/components/ui/ButtonGroup'
 import type {CtaButtonData} from '@/components/layout/InternalHero'
 import type {HeroImage, HeroSchemePref, ResolvedHeroSurface} from '@/lib/heroSurface'
-import type {SanityImage} from '@/lib/sanity/image'
 
 // ─── Model ────────────────────────────────────────────────────────────────────
 // 2 SKELETONS + a flat set of direct layout settings (no presets, no inherit
@@ -31,12 +30,12 @@ export type ScrimColor = 'auto' | 'action' | 'black'
 export type ScrimDirection =
   | 'auto' | 'to-right' | 'to-left' | 'to-top' | 'to-bottom'
   | 'to-top-right' | 'to-top-left' | 'to-bottom-right' | 'to-bottom-left'
-// Silo Nav strip card style. Only the photo-cover layouts from the shared silo
-// library work on the (typically dark) hero band — they carry their own surface
-// via the image + scrim. 'cards' is the hero's own solid bg-background card
-// (image-optional, always legible). Feature/Inline/Split are intentionally NOT
-// offered here: they assume a light section surface and read dark-on-dark.
-export type HeroSiloLayout = 'cards' | 'spotlight' | 'tile'
+// The hero used to carry its own practice-area card strip (`contentStrip`,
+// `siloLayout`, `practiceAreaItems`) and a `HeroSiloLayout` vocabulary for it.
+// Removed 2026-08-09 on Justin's ruling, monorepo `OUTSTANDING.md` item 163: it
+// rendered the same SiloTileLayout the `siloNavBlock` canvas block renders, so
+// the homepage carried two look-alike practice-area surfaces under two unrelated
+// controls. The block is now the only one.
 
 // The fully-resolved layout configuration the skeleton components consume.
 export type HeroConfig = {
@@ -46,8 +45,6 @@ export type HeroConfig = {
   // overlay
   backdrop: Backdrop
   foreground: boolean
-  contentStrip: boolean
-  siloLayout: HeroSiloLayout
   scrimStyle: ScrimStyle
   scrimColor: ScrimColor
   scrimDirection: ScrimDirection
@@ -59,18 +56,6 @@ export type HeroConfig = {
   mediaSide: MediaSide
   // motion
   motion: Motion
-}
-
-// Resolved practice-area nav item (GROQ resolves the page reference → href +
-// auto-filled title/description). Shared with the Practice Area Navigation section.
-export type PracticeAreaItem = {
-  _key?: string
-  label?: string | null
-  href?: string | null
-  description?: string | null
-  icon?: SanityImage | null
-  image?: SanityImage | null
-  featured?: boolean | null
 }
 
 // ─── Raw Sanity shape (merged from HOME_HERO_CONTENT_FRAGMENT + HOME_HERO_DESIGN_FRAGMENT) ─
@@ -86,8 +71,6 @@ export type HomeHeroData = {
   contentAlign?: ContentAlign | null
   backdrop?: Backdrop | null
   foreground?: boolean | null
-  contentStrip?: boolean | null
-  siloLayout?: HeroSiloLayout | null
   scrimStyle?: ScrimStyle | null
   scrimColor?: ScrimColor | null
   scrimDirection?: ScrimDirection | null
@@ -109,7 +92,6 @@ export type HomeHeroData = {
   // Assets
   galleryImages?: HeroImage[] | null
   videoUrl?: string | null
-  practiceAreaItems?: PracticeAreaItem[] | null
 }
 
 // ─── Resolved content (NAP tokens applied, buttons mapped) ────────────────────
@@ -120,7 +102,6 @@ export type ResolvedHomeContent = {
   ctas: CtaItem[]
   galleryImages: HeroImage[]
   videoUrl?: string | null
-  practiceAreaItems: PracticeAreaItem[]
 }
 
 // ─── Skeleton component contract ──────────────────────────────────────────────

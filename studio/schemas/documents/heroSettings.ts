@@ -44,7 +44,7 @@ export const heroSettings = defineType({
       group: 'homepage',
       options: {collapsible: true, collapsed: false},
       description:
-        'Design + layout for the homepage hero (the single unique hero on `/`). Pick a layout and set the backdrop / split / surface / scrim / section background / silo options here; the headline, copy, and buttons are authored on the Homepage document. • Hero Merge: when “Hero Merge” is enabled in Header Settings, the transparent header overlays this hero and the hero reserves the header’s clearance automatically — its header text/logo polarity follows the Background Scheme below. (Hero Merge is configured in Header Settings → Layout & Behavior.)',
+        'Design + layout for the homepage hero (the single unique hero on `/`). Pick a layout and set the backdrop / split / surface / scrim / section background options here; the headline, copy, and buttons are authored on the Homepage document. Practice-area cards are NOT a hero control — the Areas of Law block on the Homepage canvas is the one place they are set. • Hero Merge: when “Hero Merge” is enabled in Header Settings, the transparent header overlays this hero and the hero reserves the header’s clearance automatically — its header text/logo polarity follows the Background Scheme below. (Hero Merge is configured in Header Settings → Layout & Behavior.)',
     }),
 
     // ─── Internal Hero (site-level defaults) ──────────────────────────────────

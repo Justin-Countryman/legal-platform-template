@@ -655,8 +655,6 @@ export const HOME_HERO_DESIGN_FRAGMENT = groq`{
   contentAlign,
   backdrop,
   foreground,
-  contentStrip,
-  siloLayout,
   scrimStyle,
   scrimColor,
   scrimDirection,
@@ -698,17 +696,15 @@ export const HOME_HERO_DESIGN_FRAGMENT = groq`{
     "width": asset->metadata.dimensions.width,
     "height": asset->metadata.dimensions.height
   },
-  videoUrl,
-  "practiceAreaItems": practiceAreaItems[defined(page->slug.current)]{
-    _key,
-    "label": coalesce(label, ${NAV_LABEL_VIA_PAGE_EXPR}),
-    "href": "/" + page->slug.current + "/",
-    "description": coalesce(description, page->metaDescription),
-    "icon": icon ${IMAGE_FRAGMENT},
-    "image": image ${IMAGE_FRAGMENT},
-    "featured": featured
-  }
+  videoUrl
 }`
+// The hero's own practice-area card strip was projected here — `contentStrip`,
+// `siloLayout` and a `practiceAreaItems[]` list resolving each page reference to
+// a label + href. Removed 2026-08-09 on Justin's ruling, monorepo
+// `OUTSTANDING.md` item 163: the strip rendered the same SiloTileLayout the
+// `siloNavBlock` canvas block renders, so the homepage carried two look-alike
+// practice-area surfaces governed by two unrelated controls. The block's own
+// projection is the surviving one, and it resolves the Nav Label the same way.
 
 // The homepage hero's design, read from the Hero Settings singleton. Null until
 // authored / migrated — the page renders its placeholder band in that case.

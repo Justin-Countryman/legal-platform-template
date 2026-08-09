@@ -55,9 +55,11 @@ import {TokenTextInput} from '../../../components/TokenTextInput'
 // change schema to get it, and the beat rule is the doctrine an operator is
 // held to rather than something this schema can enforce.
 //
-// Items are `practiceAreaNavItem`, the SAME object type the section and the hero
-// content strip already use, so the three share one item model and an operator
-// who has learned it once has learned it everywhere.
+// Items are `practiceAreaNavItem`, the SAME object type the section already
+// uses, so the two share one item model and an operator who has learned it once
+// has learned it everywhere. The homepage hero's content strip was the third
+// user of it until 2026-08-09, when the ruling on item 163 removed that strip
+// and left this block as the ONLY practice-area surface on the homepage.
 
 export const siloNavBlock = defineType({
   name: 'siloNavBlock',

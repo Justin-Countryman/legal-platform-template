@@ -9,7 +9,6 @@ type Cfg = {
   contentAlign: 'left' | 'center'
   backdrop: 'none' | 'image' | 'mosaic'
   foreground: boolean
-  contentStrip: boolean
   splitMedia: 'image' | 'video'
   splitImageStyle: 'contained' | 'full' | 'overlap'
 }
@@ -23,7 +22,6 @@ function cfg(parent: Parent): Cfg {
     contentAlign: (p.contentAlign as Cfg['contentAlign']) ?? 'left',
     backdrop: (p.backdrop as Cfg['backdrop']) ?? 'image',
     foreground: (p.foreground as boolean) ?? false,
-    contentStrip: (p.contentStrip as boolean) ?? false,
     splitMedia: (p.splitMedia as Cfg['splitMedia']) ?? 'image',
     splitImageStyle: (p.splitImageStyle as Cfg['splitImageStyle']) ?? 'contained',
   }
@@ -98,5 +96,4 @@ export const show = {
     // Scheme color only matters when text is NOT over a full-bleed image/mosaic.
     return !(c.skeleton === 'overlay' && (c.backdrop === 'image' || c.backdrop === 'mosaic'))
   },
-  strip: (p: Parent) => cfg(p).contentStrip,
 }

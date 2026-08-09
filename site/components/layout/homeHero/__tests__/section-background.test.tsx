@@ -56,8 +56,6 @@ function config(over: Partial<HeroConfig> = {}): HeroConfig {
     contentAlign: 'left',
     backdrop: 'none',
     foreground: false,
-    contentStrip: false,
-    siloLayout: 'cards',
     scrimStyle: 'flat',
     scrimColor: 'auto',
     scrimDirection: 'auto',
@@ -78,7 +76,6 @@ const content: ResolvedHomeContent = {
   ctas: [],
   galleryImages: [],
   videoUrl: null,
-  practiceAreaItems: [],
 }
 
 describe('homepage hero — Section Background', () => {

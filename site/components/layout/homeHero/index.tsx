@@ -88,8 +88,6 @@ export function HomepageHero({data, napTokens}: {data: HomeHeroData; napTokens?:
     ctas: resolveCtas(data.buttons, napTokens),
     galleryImages,
     videoUrl: data.videoUrl,
-    // Require both a label and a destination so a card never renders as a dead "#" link.
-    practiceAreaItems: (data.practiceAreaItems ?? []).filter((c) => c?.label && c?.href),
   }
 
   return <Skeleton config={config} content={content} surface={effectiveSurface} sectionBackground={sectionBackground} />

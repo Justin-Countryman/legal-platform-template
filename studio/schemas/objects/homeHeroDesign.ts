@@ -29,7 +29,6 @@ export const homeHeroDesign = defineType({
     {name: 'background', title: 'Background', options: {collapsible: true, collapsed: false}},
     {name: 'foreground', title: 'Foreground Figure', options: {collapsible: true, collapsed: false}},
     {name: 'media', title: 'Media', options: {collapsible: true, collapsed: false}},
-    {name: 'strip', title: 'Silo Nav', options: {collapsible: true, collapsed: false}},
   ],
   fields: [
     // ─── Layout ───────────────────────────────────────────────────────────────
@@ -154,33 +153,15 @@ export const homeHeroDesign = defineType({
     }),
 
     // ─── Silo Nav ─────────────────────────────────────────────────────────────
-    // Toggle sits with its options (moved out of Layout). The card-layout field
-    // reveals once the strip is on (show.strip).
-    defineField({name: 'contentStrip', title: 'Silo Nav strip', type: 'boolean', fieldset: 'strip', description: 'Practice-area card row beneath the hero content (works on both Overlay and Split).', initialValue: false}),
-    defineField({
-      name: 'siloLayout',
-      title: 'Card layout',
-      type: 'string',
-      fieldset: 'strip',
-      description:
-        'How each practice-area card looks. Only photo-forward styles are offered here — they read correctly over the hero. (The full-width Practice Area Navigation section has the complete set, incl. Feature / Inline / Bento, which need a light section background.)',
-      options: radio([
-        {title: 'Cards — solid card, photo on top, label + blurb (default)', value: 'cards'},
-        {title: 'Spotlight — photo cover, large label over it', value: 'spotlight'},
-        {title: 'Tile — compact, photo or fill with centered label', value: 'tile'},
-      ]),
-      initialValue: 'cards',
-      hidden: hide(show.strip),
-    }),
-    defineField({
-      name: 'practiceAreaItems',
-      title: 'Practice Area Items',
-      type: 'array',
-      fieldset: 'strip',
-      description: 'Quick-link practice-area cards anchored at the bottom of the hero. Same item type as the Practice Area Navigation section — each references a practice-area page (title / description / image auto-fill).',
-      of: [{type: 'practiceAreaNavItem'}],
-      hidden: hide(show.strip),
-    }),
+    // REMOVED 2026-08-09 (Justin's ruling, OUTSTANDING item 163, option (a)).
+    // `contentStrip`, `siloLayout` and `practiceAreaItems` used to put a
+    // practice-area card row inside the hero band. They rendered the SAME
+    // SiloTileLayout the `siloNavBlock` canvas block renders, so a homepage with
+    // both showed two rows of identical tiles governed by two unrelated controls
+    // in two different documents — and an operator who turned the strip off saw
+    // the block's cards remain and concluded the setting did nothing. The block
+    // is now the sole practice-area surface on the homepage, and it sits directly
+    // beneath the hero, so what was given up is a band boundary, not a position.
   ],
   preview: {
     select: {skeleton: 'skeleton'},

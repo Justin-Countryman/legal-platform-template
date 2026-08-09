@@ -7077,56 +7077,6 @@
             "type": "string"
           },
           "optional": true
-        },
-        "contentStrip": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "boolean"
-          },
-          "optional": true
-        },
-        "siloLayout": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "cards"
-              },
-              {
-                "type": "string",
-                "value": "spotlight"
-              },
-              {
-                "type": "string",
-                "value": "tile"
-              }
-            ]
-          },
-          "optional": true
-        },
-        "practiceAreaItems": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "array",
-            "of": {
-              "type": "object",
-              "attributes": {
-                "_key": {
-                  "type": "objectAttribute",
-                  "value": {
-                    "type": "string"
-                  }
-                }
-              },
-              "rest": {
-                "type": "inline",
-                "name": "practiceAreaNavItem"
-              }
-            }
-          },
-          "optional": true
         }
       }
     }

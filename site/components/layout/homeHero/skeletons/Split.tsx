@@ -15,7 +15,6 @@ import {DialogPanel} from '@/components/ui/DialogPanel'
 import {HeroBackdrop} from '@/components/layout/HeroBackdrop'
 import {getEmbedUrl} from '@/lib/videoEmbed'
 import {HeroBand, HeroTextBlock, HERO_HEADER_CLEARANCE} from '../shared'
-import {HeroSiloStrip, heroStripActive} from '../HeroSiloStrip'
 import type {HeroConfig, ResolvedHomeContent, SkeletonProps, SplitImageRatio} from '../types'
 import {heroObjectPosition, type ResolvedHeroSurface, type HeroImage} from '@/lib/heroSurface'
 
@@ -226,7 +225,7 @@ export function Split({config, content, surface, sectionBackground}: SkeletonPro
     )
 
     return (
-      <HeroBand surface={surface} fullViewport={fullViewport} uncapped={heroStripActive(config, content.practiceAreaItems)} center backdropNode={sectionNode} imageBacked={imageBacked}>
+      <HeroBand surface={surface} fullViewport={fullViewport} center backdropNode={sectionNode} imageBacked={imageBacked}>
         <div className="container relative z-10">
           <div className="relative py-6 lg:py-12">
             {/* Image 60% on one side; card 48% on the other → a guaranteed ~8% overlap
@@ -248,7 +247,6 @@ export function Split({config, content, surface, sectionBackground}: SkeletonPro
             </div>
           </div>
         </div>
-        <HeroSiloStrip config={config} items={content.practiceAreaItems} />
       </HeroBand>
     )
   }
@@ -284,7 +282,6 @@ export function Split({config, content, surface, sectionBackground}: SkeletonPro
             <Image src={im.src} alt={im.alt ?? ''} fill priority sizes="(min-width:1024px) 50vw, 100vw" className="object-cover" style={{objectPosition: heroObjectPosition(im)}} />
           </div>
         </div>
-        <HeroSiloStrip config={config} items={content.practiceAreaItems} />
       </HeroBand>
     )
   }
@@ -296,7 +293,6 @@ export function Split({config, content, surface, sectionBackground}: SkeletonPro
         <div className={mediaLeft ? 'lg:order-2' : ''}>{textBlock}</div>
         <div className={mediaLeft ? 'lg:order-1' : ''}>{media}</div>
       </div>
-      <HeroSiloStrip config={config} items={content.practiceAreaItems} />
     </HeroBand>
   )
 }
