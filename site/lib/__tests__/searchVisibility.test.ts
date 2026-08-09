@@ -89,7 +89,13 @@ describe('resolveHidden — the fail-closed truth table', () => {
 
 describe('the unreachable row — the last line of the same table', () => {
   function stubEnv() {
-    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID = 'proj123'
+    // The template's own project sentinel. `scripts/check-template-is-blank.mjs`
+    // allows exactly the sentinel and the CI throwaway as project identifiers in
+    // this repo; a bespoke stand-in is indistinguishable from a real client's ID
+    // to a guard that works by allowlist rather than by blocklist, which is the
+    // whole reason it works by allowlist. The value is never asserted on — every
+    // test below stubs `fetch` — so only its shape as an identifier matters.
+    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID = 'TEMPLATE_SANITY_PROJECT_ID'
     process.env.NEXT_PUBLIC_SANITY_DATASET = 'production'
   }
 
