@@ -964,6 +964,42 @@ const CANVAS_FRAGMENT = groq`[]{
       "width": image.asset->metadata.dimensions.width,
       "height": image.asset->metadata.dimensions.height
     }
+  },
+  // Beat 4, Areas of Law. Byte-for-byte the same item shape the interior
+  // practiceAreaNav section projects in SECTIONS_FRAGMENT, so the shared
+  // SiloNavItem type and the shared silo layouts serve both without a second
+  // model. Two branches, matching the two modes: the auto-list of every
+  // top-level practice area, and the operator's curated items[].
+  //
+  // Both resolve the label through the shared nav-label expressions rather than
+  // reading bare title, so an authored Nav Label reaches this surface (NAME-1 /
+  // NAME-2). This projection is inside the derivation of
+  // site/lib/__tests__/navLabelProjections.test.ts and satisfies it; it is
+  // deliberately NOT on that guard's EXEMPT roster.
+  _type == "siloNavBlock" => {
+    tagline,
+    heading,
+    description,
+    mode,
+    "items": select(
+      mode == "manual" =>
+        items[defined(page->slug.current)]{
+          _key,
+          "label": coalesce(label, ${NAV_LABEL_VIA_PAGE_EXPR}),
+          "href": "/" + page->slug.current + "/",
+          "description": coalesce(description, page->metaDescription),
+          "icon": icon ${IMAGE_FRAGMENT},
+          "image": image ${IMAGE_FRAGMENT}
+        },
+      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{
+        "_key": _id,
+        "label": ${NAV_LABEL_EXPR},
+        "href": "/" + slug.current + "/",
+        "description": metaDescription,
+        "icon": null,
+        "image": null
+      } | order(${NAV_LABEL_EXPR} asc)
+    )
   }
 }`
 

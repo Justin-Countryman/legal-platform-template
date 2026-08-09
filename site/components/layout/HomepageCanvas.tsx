@@ -13,6 +13,7 @@ import {
   AttorneyHighlightBlock,
   type AttorneyHighlightBlockData,
 } from '@/components/homepage/AttorneyHighlightBlock'
+import {SiloNavBlock, type SiloNavBlockData} from '@/components/homepage/SiloNavBlock'
 import {resolveResultsDisclaimer} from '@/lib/legal'
 import {type NapTokens} from '@/lib/tokens'
 
@@ -59,6 +60,7 @@ export type HomepageBlock =
   | NarrativeBlockData
   | CaseResultsBlockData
   | AttorneyHighlightBlockData
+  | SiloNavBlockData
 
 // The disclaimer is resolved HERE, not in the block, and passed as a required
 // prop. Bar advertising rules require past results to be paired with a
@@ -84,6 +86,8 @@ function renderBlock(
       return <DifferentiatorBlock data={block} />
     case 'badgesBlock':
       return <BadgesBlock data={block} />
+    case 'siloNavBlock':
+      return <SiloNavBlock data={block} napTokens={napTokens} />
     // No default case that renders something generic. An unknown block type
     // renders nothing rather than a placeholder: a block added to the schema
     // and not to this switch should be invisible, not half-drawn.

@@ -55,6 +55,7 @@ import {differentiatorBlock} from './objects/blocks/differentiatorBlock'
 import {narrativeBlock} from './objects/blocks/narrativeBlock'
 import {caseResultsBlock} from './objects/blocks/caseResultsBlock'
 import {attorneyHighlightBlock} from './objects/blocks/attorneyHighlightBlock'
+import {siloNavBlock} from './objects/blocks/siloNavBlock'
 import {blockProse} from './objects/blocks/blockProse'
 import {sidebarTableOfContents} from './objects/sidebarComponents'
 import {sidebarNav} from './documents/sidebar/sidebarNav'
@@ -153,5 +154,6 @@ export const schemaTypes = [
   narrativeBlock,
   caseResultsBlock,
   attorneyHighlightBlock,
+  siloNavBlock,
   blockProse,
 ]

@@ -162,6 +162,13 @@ export const homePage = defineType({
         {type: 'caseResultsBlock'},
         {type: 'attorneyHighlightBlock'},
         {type: 'badgesBlock'},
+        // Beat 4, Areas of Law. A canvas member rather than an interior section
+        // reference, so a Required beat can be ordered to the position the story
+        // framework specifies — a section always renders after every block, so
+        // as a section it could not reach position four by any field value
+        // (ruled 2026-08-08, item 59). `practiceAreaNav` is unchanged and still
+        // serves interior pages.
+        {type: 'siloNavBlock'},
       ],
     },
     // ─── Coda ─────────────────────────────────────────────────────────────────
