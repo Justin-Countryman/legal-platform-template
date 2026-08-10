@@ -252,12 +252,14 @@ const RULED_THE_OTHER_WAY =
 
 // The signature lost `seoTitle` on 2026-08-10 with `BI/rules/technical-seo.md`
 // queue line 11: `reviewPage` does not declare that field and the query
-// projected it anyway. The exemption is unchanged in substance and its reason
-// is untouched — this roster keys on the projected SET, so it moves whenever
-// the projection does, and the stale-exemption case going red on a projection
-// edit is that mechanism working rather than a second finding.
+// projected it anyway. It GAINED `metaDescription` the same way when the last
+// half of that queue line landed. The exemption is unchanged in substance and
+// its reason is untouched — this roster keys on the projected SET, so it moves
+// whenever the projection does, and the stale-exemption case going red on a
+// projection edit is that mechanism working rather than a second finding. It
+// has now fired twice on the same query for that reason, both times correctly.
 const EXEMPT: Record<string, string> = {
-  '*[_type=="reviewPage"] {blurb,feedbackFormEmbed,h1,noFollow,noIndex,reviewLinks,slug,title}':
+  '*[_type=="reviewPage"] {blurb,feedbackFormEmbed,h1,metaDescription,noFollow,noIndex,reviewLinks,slug,title}':
     RULED_THE_OTHER_WAY,
 }
 

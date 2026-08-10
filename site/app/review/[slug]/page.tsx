@@ -6,7 +6,7 @@ import {resolveTitle} from '@/lib/seoTitle'
 import type {Metadata} from 'next'
 import {client} from '@/lib/sanity/client'
 import {REVIEW_PAGE_QUERY, REVIEW_SLUGS_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
-import {expandNapTokens} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {ReviewPageContent} from '@/components/review/ReviewPageContent'
 
@@ -73,15 +73,23 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   // `ogImageOverride`, and the builder's contract says omitting them is correct
   // for a type that has none.
   //
-  // THE DESCRIPTION ARGUMENT IS UNDEFINED AND IS NOT AN OVERSIGHT. This type
-  // declares no `metaDescription`, so TECH-5 is unreachable here rather than
-  // satisfied here, and the card carries a title and no body text until the
-  // field lands. That is the remaining half of queue line 11.
+  // TECH-5, landed 2026-08-10 with the schema field, closing the last half of
+  // queue line 11. The description argument was `undefined` here because the type
+  // declared no `metaDescription` at all — the rule was unreachable on this page
+  // type rather than satisfied on it. It reads the stored value now, like every
+  // other route, and the card body has a fallback to read.
+  //
+  // `|| undefined` rather than the bare string, because `resolveTokenString`
+  // answers `''` for an absent field and TECH-5 rules that a page with no meta
+  // description emits NO tag. Same polarity the homepage uses.
+  const description = resolveTokenString(data.page.metaDescription, tokens) || undefined
+
   return {
     title,
+    description,
     ...(await buildRobotsMeta(data.page.noIndex, data.page.noFollow)),
     alternates: {canonical},
-    ...buildSocialMeta(label, undefined),
+    ...buildSocialMeta(label, description),
   }
 }
 

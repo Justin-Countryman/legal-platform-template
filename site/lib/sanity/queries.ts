@@ -1781,15 +1781,17 @@ export const BLOG_CATEGORY_PAGE_QUERY = groq`
 // working. A dead projection is how the next reader concludes there is a cell to
 // fill. BI/rules/technical-seo.md build queue 11.
 //
-// NO metaDescription IS PROJECTED, and that is the TYPE's gap rather than this
-// query's: reviewPage declares no such field, so TECH-5 is unreachable on this
-// page type rather than satisfied on it. Declaring it is the rest of queue
-// line 11 and did NOT land with the three halves that did — see that line.
+// `metaDescription` IS PROJECTED as of 2026-08-10, closing the last half of
+// queue line 11. It was absent because the TYPE declared no such field, which
+// made TECH-5 unreachable on this page type rather than satisfied on it; the
+// field now exists on `reviewPage` and this projection is what lets the route
+// read it. The blocker was `sanity schema extract`, not a ruling.
 export const REVIEW_PAGE_QUERY = groq`{
   "page": *[_type == "reviewPage" && slug.current == $slug][0]{
     h1,
     title,
     "slug": slug.current,
+    metaDescription,
     noIndex,
     noFollow,
     "blurb": blurb ${BLOCK_CONTENT_FRAGMENT},

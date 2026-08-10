@@ -10,13 +10,14 @@ import {describe, it, expect, vi, beforeEach} from 'vitest'
  * DEFECT on this route rather than an exemption; and no `metaDescription` field
  * on the type at all, so TECH-5 is unreachable here rather than satisfied here.
  *
- * THREE OF THE FOUR LANDED. The fourth is a SCHEMA change, and `sanity schema
- * extract` cannot run against this repository's placeholder project id — it
- * fails CORS before writing, so `studio/schema.json` and the generated types
- * could not be regenerated, and CI fails a build whose committed copies are
- * stale. Adding the field without them would trade one silent gap for a red
- * gate. The case for it is written below and SKIPPED, red-proven, exactly as
- * TECH-3's canonical case was parked before its own build.
+ * ALL FOUR HAVE NOW LANDED. Three went on 2026-08-10; the fourth is a SCHEMA
+ * change and was parked skipped that day because `sanity schema extract` threw
+ * CorsOriginError against this repository's placeholder project id before
+ * writing anything, so `studio/schema.json` and the generated types could not be
+ * regenerated and CI fails a build whose committed copies are stale. Adding the
+ * field without them would have traded one silent gap for a red gate. That
+ * blocker is fixed (monorepo OUTSTANDING item 165 — extraction runs offline
+ * now), the field landed, and the parked case is live.
  *
  * THE CANONICAL IS THE ONE WORTH READING TWICE. `proxy.ts` rewrites `/review-*`
  * onto `/review/[slug]` and the browser URL never changes, so the internal path
@@ -83,32 +84,33 @@ describe('the dead projection is gone', () => {
     expect(REVIEW_PAGE_QUERY).not.toContain('seoTitle')
   })
 
-  it('and emits no description, because the type still has no field to read', async () => {
+  // TECH-5 proper now, rather than the type's gap. Until 2026-08-10 this case
+  // read "the type still has no field to read"; the field exists, and what it
+  // pins is the rule — a page with no meta description emits none. The `''`
+  // that `resolveTokenString` answers for an absent field must not become a
+  // blank tag, which is what `|| undefined` on the route is for.
+  it('and a page with no meta description still emits none', async () => {
     mockReview()
     expect((await meta()).description).toBeUndefined()
   })
 })
 
-// ─── TECH-5's half of queue line 11, parked until the schema can land ────────
+// ─── TECH-5's half of queue line 11, UNPARKED 2026-08-10 ─────────────────────
 //
-// WHY THIS IS SKIPPED AND NOT DELETED. TECH-5 makes the meta description
-// optional on EVERY page type, and `reviewPage` declares no such field, so the
-// rule is unreachable here rather than satisfied here — the rule's own hazard
-// line. The fix is one schema field and one projection, and it is blocked on
-// tooling rather than on a ruling: `sanity schema extract` fails CORS against
-// this repository's placeholder project id, so `studio/schema.json` and
-// `site/types/sanity.types.ts` cannot be regenerated here, and CI fails a build
-// whose committed copies are stale.
+// These two cases sat `.skip`ped because the fix is a SCHEMA change and
+// `sanity schema extract` could not run here: it threw CorsOriginError against
+// the placeholder project id before writing, so `studio/schema.json` and
+// `site/types/sanity.types.ts` could not be regenerated, and CI fails a build
+// whose committed copies are stale. Adding the field without them would have
+// traded one silent gap for a red gate.
 //
-// RED-PROVEN 2026-08-10 with the field and the projection in place locally,
-// running rather than reasoned, before both were reverted for the reason above:
-// the two cases below went GREEN with them and go red without them, which is
-// what says this is a parked case rather than a wish.
-//
-// When the field lands — declare `metaDescription` on `reviewPage` with
-// `metaDescriptionValidation`, project it, read it through `resolveTokenString`
-// and pass it to `buildSocialMeta` as the card's body — delete the `.skip`.
-describe.skip('TECH-5: the meta description reaches this type too', () => {
+// That blocker is gone (monorepo OUTSTANDING item 165): extraction now runs
+// offline against the local schema files. The field, the projection and the
+// route read all landed, both artifacts were regenerated, and the `.skip` came
+// off. Red-proven twice — once on 2026-08-10 with the field in place locally
+// before it was reverted, and again at this build against the route as it stood
+// without the projection.
+describe('TECH-5: the meta description reaches this type too', () => {
   it('emits the stored value, token-resolved, and feeds the card body', async () => {
     mockReview({metaDescription: 'Tell {{firmName}} how we did.'})
     const result = await meta()

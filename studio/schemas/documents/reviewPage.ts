@@ -1,6 +1,8 @@
 import {defineType} from 'sanity'
+import {TokenTextInput} from '../../components/TokenTextInput'
+import {metaDescriptionValidation} from '../metaDescription'
 
-// Existing Sanity fields: title, slug, h1, blurb, reviewLinks, feedbackForm, noIndex
+// Existing Sanity fields: title, slug, h1, metaDescription, blurb, reviewLinks, feedbackForm, noIndex
 // Auto-created by Site Prep Tool — one per active location in CS-CLIENT-CONFIG.json
 // Always noindex
 
@@ -32,6 +34,26 @@ export const reviewPage = defineType({
       description: 'Click Generate after setting Page Title',
       options: {source: 'title'},
       validation: (Rule) => Rule.required().error(),
+    },
+    // TECH-5 makes the meta description OPTIONAL on every page type, and this
+    // type declaring no such field is why the rule was unreachable here rather
+    // than satisfied here — the rule's own hazard, open since 2026-08-10 and
+    // blocked on `sanity schema extract`, not on a ruling (`BI/rules/technical-seo.md`
+    // build queue 11; monorepo OUTSTANDING items 139 and 165).
+    //
+    // Same declaration as every other SEO-carrying type: optional, token-bearing,
+    // and over-length still refuses to save. NO ogTitle / ogDescription rides
+    // this — TECH-4's hazard rules that this type carries no override fields and
+    // that omitting them is correct, so the card's body now has a fallback to
+    // read and gains nothing else.
+    {
+      name: 'metaDescription',
+      title: 'Meta Description',
+      type: 'text',
+      rows: 3,
+      fieldset: 'seo',
+      components: {input: TokenTextInput},
+      validation: metaDescriptionValidation,
     },
     {
       name: 'navLabel',
