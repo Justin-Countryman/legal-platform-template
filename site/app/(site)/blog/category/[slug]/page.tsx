@@ -102,8 +102,8 @@ export default async function BlogCategoryPage({params}: Props) {
           <Breadcrumbs
             items={[
               {label: 'Home', href: '/'},
-              {label: INDEX_PAGE_PRESETS.blogIndex, href: '/blog/'},
-              {label: resolvePageLabel(category) ?? '', href: `/${category.slug}/`},
+              {label: INDEX_PAGE_PRESETS.blogIndex, href: '/blog'},
+              {label: resolvePageLabel(category) ?? '', href: `/${category.slug}`},
             ]}
             domain={siteHost()}
           />

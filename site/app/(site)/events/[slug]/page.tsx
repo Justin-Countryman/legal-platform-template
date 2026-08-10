@@ -94,7 +94,7 @@ function buildEventSchema(event: unknown, tokens: NapTokens | null, domain: stri
     '@type': 'Event',
     name: e.title,
     startDate: e.eventDate,
-    url: `https://${domain}/${e.slug}/`,
+    url: `https://${domain}/${e.slug}`,
     // ENTITY-6: point at the firm, do not redeclare it.
     organizer: {'@id': `https://${domain}/#firm`},
   }
@@ -183,8 +183,8 @@ export default async function EventDetailPage({params}: Props) {
           <Breadcrumbs
             items={[
               {label: 'Home', href: '/'},
-              {label: INDEX_PAGE_PRESETS.eventIndex, href: '/events/'},
-              {label: resolvePageLabel(event) ?? '', href: `/${event.slug}/`},
+              {label: INDEX_PAGE_PRESETS.eventIndex, href: '/events'},
+              {label: resolvePageLabel(event) ?? '', href: `/${event.slug}`},
             ]}
             domain={siteHost()}
           />

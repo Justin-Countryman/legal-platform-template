@@ -73,23 +73,27 @@ export function buildBreadcrumbs(page: {
   // trail" where a one-item array says "its trail is just Home".
   if (page._type && NO_BREADCRUMB_TYPES.has(page._type)) return []
 
+  // TECH-1: every href here is the no-slash form, and `/` is the one exception
+  // because the root has no shorter shape. The `item` values in the schema below
+  // are these same strings joined to the host, so one change covers both halves
+  // of TECH-1's `JSON-LD self URLs and breadcrumb links` surface.
   const items: BreadcrumbItem[] = [{label: 'Home', href: '/'}]
 
   const grandparent = page.parentPage?.parentPage
   if (grandparent?.slug) {
     const label = resolvePageLabel(grandparent)
-    if (label) items.push({label, href: `/${grandparent.slug}/`})
+    if (label) items.push({label, href: `/${grandparent.slug}`})
   }
 
   const parent = page.parentPage
   if (parent?.slug) {
     const label = resolvePageLabel(parent)
-    if (label) items.push({label, href: `/${parent.slug}/`})
+    if (label) items.push({label, href: `/${parent.slug}`})
   }
 
   if (page.slug) {
     const label = resolvePageLabel(page)
-    if (label) items.push({label, href: `/${page.slug}/`})
+    if (label) items.push({label, href: `/${page.slug}`})
   }
 
   return items

@@ -159,7 +159,7 @@ export default async function StaffIndexPage() {
       {/* Breadcrumb */}
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/staff/'}]} domain={siteHost()} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/staff'}]} domain={siteHost()} />
         </div>
       </div>
 

@@ -41,7 +41,7 @@ export async function generateStaticParams() {
 type PageProps = {params: Promise<{slug: string}>}
 type ProfileCta = {label: string; href: string}
 
-const DEFAULT_CTA: ProfileCta = {label: 'Contact Us', href: '/contact/'}
+const DEFAULT_CTA: ProfileCta = {label: 'Contact Us', href: '/contact'}
 
 // ─── Schema ───────────────────────────────────────────────────────────────────
 
@@ -55,7 +55,7 @@ function buildPersonSchema(attorney: Attorney) {
   const sameAs = [attorney.linkedIn, attorney.avvo, attorney.superLawyers, attorney.findLaw, attorney.martindale, attorney.lawyersCom, attorney.justia]
     .filter((u): u is string => typeof u === 'string' && u.length > 0)
 
-  const url = `https://${siteHost()}/${attorney.slug}/`
+  const url = `https://${siteHost()}/${attorney.slug}`
   const photoUrl = hasImage(attorney.photo)
     ? urlForImage(attorney.photo).width(800).height(800).fit('crop').url()
     : undefined

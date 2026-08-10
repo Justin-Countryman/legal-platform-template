@@ -74,9 +74,9 @@ function buildOfficeLegalServiceSchema(
   return {
     '@context': 'https://schema.org',
     '@type': 'LegalService',
-    '@id': `https://${domain}/${page.slug}/#office`,
+    '@id': `https://${domain}/${page.slug}#office`,
     name: tokens?.firmName ?? '',
-    url: `https://${domain}/${page.slug}/`,
+    url: `https://${domain}/${page.slug}`,
     telephone: loc.officePhone ?? undefined,
     address,
     geo,

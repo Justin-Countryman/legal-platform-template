@@ -39,7 +39,7 @@ export async function generateStaticParams() {
 
 type PageProps = {params: Promise<{slug: string}>}
 
-const DEFAULT_CTA = {label: 'Contact Us', href: '/contact/'}
+const DEFAULT_CTA = {label: 'Contact Us', href: '/contact'}
 
 function resolveProfileCta(napTokens: NapTokens): {label: string; href: string} {
   return napTokens.profileCtaLabel && napTokens.profileCtaUrl

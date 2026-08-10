@@ -1103,8 +1103,8 @@ function AtomsPanel() {
               <Breadcrumbs
                 items={[
                   {label: 'Home',         href: '/'},
-                  {label: 'Family Law',   href: '/family-law/'},
-                  {label: 'Adoption',     href: '/family-law/adoption/'},
+                  {label: 'Family Law',   href: '/family-law'},
+                  {label: 'Adoption',     href: '/family-law/adoption'},
                 ]}
                 domain="example.com"
               />
@@ -1116,8 +1116,8 @@ function AtomsPanel() {
               <Breadcrumbs
                 items={[
                   {label: 'Home',         href: '/'},
-                  {label: 'Family Law',   href: '/family-law/'},
-                  {label: 'Adoption',     href: '/family-law/adoption/'},
+                  {label: 'Family Law',   href: '/family-law'},
+                  {label: 'Adoption',     href: '/family-law/adoption'},
                 ]}
                 domain="example.com"
               />

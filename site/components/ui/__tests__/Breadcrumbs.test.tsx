@@ -184,7 +184,7 @@ describe('buildBreadcrumbs — helper', () => {
 
   it('uses page.title when there is no nav label', () => {
     const items = buildBreadcrumbs({title: 'Family Law', slug: 'family-law'})
-    expect(items[items.length - 1]).toEqual({label: 'Family Law', href: '/family-law/'})
+    expect(items[items.length - 1]).toEqual({label: 'Family Law', href: '/family-law'})
   })
 
   it('cannot fall back to a heading, because it cannot see one', () => {
@@ -206,9 +206,13 @@ describe('buildBreadcrumbs — helper', () => {
     expect(items[items.length - 1].label).toBe('Divorce and Separation')
   })
 
-  it('formats href with leading and trailing slash from the slug', () => {
+  it('formats href with a leading slash and no trailing one', () => {
+    // Asserted `'/family-law/divorce/'` until 2026-08-10. TECH-1 rules the
+    // no-slash form for every URL the platform emits, and these hrefs are also
+    // the `BreadcrumbList.item` values, so the trailing slash left here would
+    // have survived in the markup.
     const items = buildBreadcrumbs({title: 'X', slug: 'family-law/divorce'})
-    expect(items[items.length - 1].href).toBe('/family-law/divorce/')
+    expect(items[items.length - 1].href).toBe('/family-law/divorce')
   })
 
   it('returns only Home when page has no slug', () => {
@@ -224,7 +228,7 @@ describe('buildBreadcrumbs — helper', () => {
       parentPage: {title: 'Family Law', slug: 'family-law'},
     })
     expect(items.map((i) => i.label)).toEqual(['Home', 'Family Law', 'Divorce'])
-    expect(items.map((i) => i.href)).toEqual(['/', '/family-law/', '/family-law/divorce/'])
+    expect(items.map((i) => i.href)).toEqual(['/', '/family-law', '/family-law/divorce'])
   })
 
   it('builds a 4-item chain when parentPage.parentPage is provided', () => {

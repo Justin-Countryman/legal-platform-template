@@ -61,7 +61,7 @@ function buildArticleSchema(post: unknown, tokens: NapTokens | null) {
     '@type': 'Article',
     headline: resolveTokenString(p.h1 as string | null | undefined, tokens),
     description: resolveTokenString(p.metaDescription as string | null | undefined, tokens),
-    url: `https://${siteHost()}/${p.slug}/`,
+    url: `https://${siteHost()}/${p.slug}`,
     datePublished: (p.publishedAt as string | undefined) ?? undefined,
     dateModified: (p.lastModified as string | undefined) ?? (p.publishedAt as string | undefined) ?? undefined,
     author: authorNames.length
@@ -214,9 +214,9 @@ export default async function BlogPostPage({params}: Props) {
   // `category.title`, so a category with a nav label is honoured too.
   const breadcrumbItems = [
     {label: 'Home', href: '/'},
-    {label: INDEX_PAGE_PRESETS.blogIndex, href: '/blog/'},
+    {label: INDEX_PAGE_PRESETS.blogIndex, href: '/blog'},
     ...(post.category
-      ? [{label: resolvePageLabel(post.category) ?? '', href: `/${post.category.slug}/`}]
+      ? [{label: resolvePageLabel(post.category) ?? '', href: `/${post.category.slug}`}]
       : []),
   ]
 

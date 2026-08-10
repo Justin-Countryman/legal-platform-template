@@ -115,7 +115,7 @@ export default async function VideoLibraryPage() {
 
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/videos/'}]} domain={siteHost()} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/videos'}]} domain={siteHost()} />
         </div>
       </div>
 

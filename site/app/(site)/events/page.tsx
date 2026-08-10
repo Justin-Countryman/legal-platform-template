@@ -230,7 +230,7 @@ export default async function EventsIndexPage() {
       {/* Breadcrumb band */}
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/events/'}]} domain={siteHost()} />
+          <Breadcrumbs items={[{label: 'Home', href: '/'}, {label: pageLabel, href: '/events'}]} domain={siteHost()} />
         </div>
       </div>
 
