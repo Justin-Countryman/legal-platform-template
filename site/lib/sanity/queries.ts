@@ -1011,9 +1011,29 @@ const AREAS_OF_LAW_FRAGMENT = groq`*[
   _type == "practiceArea" && !defined(parentPage) && defined(slug.current)
 ].title`
 
+// TECH-3 (`BI/rules/technical-seo.md`, ruled 2026-08-10): the homepage obeys
+// `metaDescription`, `noIndex`, `noFollow` and `canonicalUrl` like every other
+// page type, and emits its own social card. All four are declared on the
+// `homePage` schema and NONE of them was projected here until this build, so an
+// operator could fill any of them in, publish, and change nothing —
+// `OUTSTANDING.md` item 160, which is item 66's shape on a singleton.
+//
+// The document is projected ONCE and spread rather than repeating
+// `*[_type == "homePage"][0].<field>` nine times. A missing `homePage` spreads
+// to nothing, so every field reads `undefined` exactly as the per-field form
+// returned `null` — evaluated with groq-js against a dataset holding no
+// `homePage` before this shape was adopted, rather than assumed.
 export const HOME_METADATA_QUERY = groq`{
-  "seoTitle": *[_type == "homePage"][0].seoTitle,
-  "ogImage": *[_type == "homePage"][0].ogImageOverride ${IMAGE_FRAGMENT},
+  ...(*[_type == "homePage"][0]{
+    seoTitle,
+    metaDescription,
+    ogTitle,
+    ogDescription,
+    noIndex,
+    noFollow,
+    canonicalUrl,
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT}
+  }),
   "areasOfLaw": ${AREAS_OF_LAW_FRAGMENT}
 }`
 

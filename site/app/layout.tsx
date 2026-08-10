@@ -7,6 +7,7 @@ import {HtmlEmbed} from '@/components/ui/HtmlEmbed'
 import {WebVitals} from '@/components/analytics/WebVitals'
 import './globals.css'
 import {siteOrigin} from '@/lib/siteHost'
+import {SITEWIDE_OG_IMAGE_URL} from '@/lib/socialMeta'
 
 // Typography is fully driven at runtime by the active fontPairingPreset (or
 // custom font uploads) in Design Settings — see buildFontCSS in lib/designTokens.
@@ -182,11 +183,11 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: firmName,
       locale: 'en_US',
       type: 'website',
-      images: [{url: '/api/og', width: 1200, height: 630, alt: firmName}],
+      images: [{url: SITEWIDE_OG_IMAGE_URL, width: 1200, height: 630, alt: firmName}],
     },
     twitter: {
       card: 'summary_large_image',
-      images: ['/api/og'],
+      images: [SITEWIDE_OG_IMAGE_URL],
     },
     // Site-wide search visibility (ruled 2026-07-25). FAIL-CLOSED: an absent or
     // unset `hideFromSearch` means hidden, so a freshly built client — whose

@@ -42,6 +42,19 @@ import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 // asks for, so a correctly-sized upload is not resampled.
 
 /**
+ * The UNTITLED generated card the root layout emits sitewide, as a path.
+ *
+ * It lives here rather than as a literal in `app/layout.tsx` because a second
+ * caller now needs the same value: TECH-3 rules the homepage's card in and rules
+ * its no-upload IMAGE out of that change — with no `ogImageOverride` the
+ * homepage's image must stay byte-identical to this one. Next REPLACES
+ * `openGraph` across segments rather than merging it, so a route that emits a
+ * card at all must restate the image it wants to keep, and restating a literal
+ * in two files is how the two drift.
+ */
+export const SITEWIDE_OG_IMAGE_URL = '/api/og'
+
+/**
  * The per-page social overrides, as they come off the page document.
  *
  * `tokens` is here because these are token-bearing text fields like every other

@@ -15,9 +15,11 @@ import {HomepageCoda} from '@/components/layout/HomepageCoda'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
 import {HomepageHero} from '@/components/layout/homeHero'
 import {type HomeHeroData} from '@/components/layout/homeHero/types'
-import {expandNapTokens, type NapTokens} from '@/lib/tokens'
+import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {homepageTitle, resolveTitle} from '@/lib/seoTitle'
-import {hasImage, urlForImage, type SanityImage} from '@/lib/sanity/image'
+import {buildRobotsMeta} from '@/lib/robotsMeta'
+import {buildSocialMeta, SITEWIDE_OG_IMAGE_URL} from '@/lib/socialMeta'
+import {hasImage, type SanityImage} from '@/lib/sanity/image'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 //
@@ -29,10 +31,31 @@ import {hasImage, urlForImage, type SanityImage} from '@/lib/sanity/image'
 // template would render the firm name twice. (Ruled 2026-07-24; the homepage
 // was deliberately left off the shared titleFragment path in f2115ce, "blocked
 // on items 44 and 40", until this decision.)
+//
+// ─── TECH-3: the homepage is a page like the others ──────────────────────────
+//
+// Ruled by Justin 2026-08-10 (`BI/rules/technical-seo.md`), built here as that
+// file's queue line 1, closing `OUTSTANDING.md` item 160. `metaDescription`,
+// `noIndex`, `noFollow` and `canonicalUrl` are declared on the `homePage`
+// schema; until this build none of them was projected and the canonical was a
+// hardcoded `'/'` literal on BOTH return paths — so the canonical an operator
+// typed was not merely unread, it was contradicted. The social card is ruled in
+// by the same rule: this was the one route that called `buildSocialMeta` on
+// neither branch.
+//
+// THREE CARVE-OUTS ARE RULED TO STAND and are honoured below rather than swept:
+// the absolute title (above), the absent page-name rung (`resolveTitle`'s second
+// argument stays null), and the no-upload image path.
 export async function generateMetadata(): Promise<Metadata> {
   const [home, rawTokens] = await Promise.all([
     client.fetch<{
       seoTitle?: string | null
+      metaDescription?: string | null
+      ogTitle?: string | null
+      ogDescription?: string | null
+      noIndex?: boolean | null
+      noFollow?: boolean | null
+      canonicalUrl?: string | null
       ogImage?: SanityImage | null
       areasOfLaw?: string[] | null
     } | null>(HOME_METADATA_QUERY),
@@ -52,38 +75,72 @@ export async function generateMetadata(): Promise<Metadata> {
     homepageTitle(home?.areasOfLaw ?? [], tokens?.firmName, tokens?.['office.city']),
   )
 
-  // Per-page social image (ruled 2026-07-25). The homepage is the ONE route
-  // that does not call buildSocialMeta: with no upload it inherits the root
-  // layout's untitled `/api/og`, and that must not change. So this adds
-  // openGraph/twitter ONLY when the operator actually uploaded an image,
-  // leaving the no-upload path byte-identical to what it was before.
+  // TECH-5: no formula, no fallback rung. An absent field emits no tag.
+  const description = resolveTokenString(home?.metaDescription, tokens) || undefined
+
+  // TECH-2's override rung, which the homepage did not read. `'/'` stays the
+  // DEFAULT — the homepage's own address — and is now the fallback rather than
+  // a literal.
+  const canonical = home?.canonicalUrl ?? '/'
+
+  // SEARCH-1/SEARCH-8 through the shared helper, exactly as the other fifteen
+  // routes do it. It reads the site-wide switch itself, so a hidden site still
+  // wins over these two fields.
+  const robots = await buildRobotsMeta(home?.noIndex, home?.noFollow)
+
+  // TECH-3's social card, and TECH-4's ladder underneath it. `label` is the
+  // fallback title; on this route it equals the title tag's own string on both
+  // branches, which is what the ruling says the ladder produces.
+  //
+  // THE NO-UPLOAD IMAGE IS THE RULED CARVE-OUT, and the shared builder does not
+  // produce it: with no `ogImageOverride` it generates a TITLED
+  // `/api/og?title=…`, while TECH-3 rules the image byte-identical to the root
+  // layout's untitled card. Next REPLACES `openGraph` across segments rather
+  // than merging it, so emitting a card at all means restating the image to be
+  // kept — hence the swap below rather than an omission, which would drop the
+  // image entirely. The strings change; the picture does not.
   const ogImage = home?.ogImage
-  const ogOverride = hasImage(ogImage)
-    ? (() => {
-        const url = urlForImage(ogImage).width(1200).height(630).fit('crop').url()
-        return {
-          openGraph: {images: [{url, width: 1200, height: 630, alt: ogImage.alt || ''}]},
-          twitter: {card: 'summary_large_image' as const, images: [url]},
-        }
-      })()
-    : {}
+  const social = buildSocialMeta(label, description, ogImage, {
+    ogTitle: home?.ogTitle, ogDescription: home?.ogDescription, tokens,
+  })
+  const socialMeta = hasImage(ogImage)
+    ? social
+    : {
+        openGraph: {
+          ...social.openGraph,
+          images: [
+            {url: SITEWIDE_OG_IMAGE_URL, width: 1200, height: 630, alt: tokens?.firmName ?? ''},
+          ],
+        },
+        twitter: {...social.twitter, images: [SITEWIDE_OG_IMAGE_URL]},
+      }
 
   if (stored) {
     // PRESENT — carry through verbatim. This was the homepage's special case
     // until 2026-07-26; TITLE-1 generalised it to every page type, so it is no
     // longer special, just first.
-    return {title: stored, alternates: {canonical: '/'}, ...ogOverride}
+    return {
+      title: stored,
+      ...(description ? {description} : {}),
+      ...robots,
+      alternates: {canonical},
+      ...socialMeta,
+    }
   }
-  void label
 
   // NO TITLE AT ALL. Reached only when there is no cell AND TITLE-7's formula
   // could not build one — a firm with no city and no single phrased area of
   // law. Next then falls to the root layout's title, the bare firm name, which
   // is the right answer for a firm we know almost nothing about.
   //
-  // The social-image override rides both branches — it is independent of the
-  // title question, and an operator who uploads one must get it either way.
-  return {alternates: {canonical: '/'}, ...ogOverride}
+  // Everything else rides both branches — each is independent of the title
+  // question, and an operator who sets one must get it either way.
+  return {
+    ...(description ? {description} : {}),
+    ...robots,
+    alternates: {canonical},
+    ...socialMeta,
+  }
 }
 
 // Phase 2: the homepage hero is split — CONTENT on homePage.hero, DESIGN on
