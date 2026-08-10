@@ -1,7 +1,12 @@
 import type {NextConfig} from 'next'
-import {readFileSync, existsSync} from 'node:fs'
 import {resolve} from 'node:path'
 import {fetchSiteHiddenAtBuild} from './lib/searchVisibility'
+import {
+  fetchStudioRedirectsAtBuild,
+  formatRedirectReport,
+  loadRedirects,
+  resolveRedirects,
+} from './lib/redirects'
 
 // ─── Security headers ─────────────────────────────────────────────────────────
 // Platform-portable security headers. CSP intentionally deferred to a
@@ -21,73 +26,18 @@ const securityHeaders = [
 ]
 
 // ─── Legacy URL redirects ─────────────────────────────────────────────────────
-// Read once at build time from `CS/redirects.csv` (operator-curated,
-// tracked in git). The Site Prep Tool may regenerate `output/redirects.csv`
-// for comparison but never overwrites the CS-tracked copy.
+// TWO SOURCES, merged in `lib/redirects.ts` — see that file's header for the
+// precedence and the disagreement report. `CS/redirects.csv` is operator-curated
+// and tracked in git (the Site Prep Tool may regenerate `output/redirects.csv`
+// for comparison but never overwrites the CS-tracked copy); the Studio redirects
+// singleton is the screen an operator edits without a rebuild of the CSV.
 //
-// CSV shape: `old_path,new_path[,redirect_type]` with header row. The first two
-// columns are path-relative (leading `/`). The optional third column is the
-// HTTP status (`301` or `302`); when absent it defaults to `301` — the correct
-// default for a migration. Lines beginning with `#` are comments; empty lines
-// are skipped. Emitting an explicit `statusCode` (301/302) rather than
-// `permanent` preserves the literal type from CS-SITEMAP.csv.
-//
-// Trailing-slash normalization: the site runs with the default
-// `trailingSlash: false`, so Next 308-strips a trailing slash off the incoming
-// path BEFORE matching redirect rules. CSV paths are WordPress-style slashed
-// (`/about/attorney/`), so we strip both source and destination to the site's
-// canonical slashless form. Without this the rule (keyed on the slashed source)
-// never matches and the legacy URL 404s. Result: a slashless legacy URL is a
-// single 301; an originally-slashed one is a functional 308→301 chain (Next
-// normalizes the incoming slash first — unavoidable without disabling the
-// site-wide trailing-slash redirect). Normalizing the destination too avoids a
-// trailing 308 hop to the canonical target.
-function stripTrailingSlash(p: string): string {
-  return p === '/' ? '/' : p.replace(/\/+$/, '')
-}
-
-function loadRedirects(): {source: string; destination: string; statusCode: number}[] {
-  const csvPath = resolve(__dirname, '../CS/redirects.csv')
-  let raw: string
-  try {
-    raw = readFileSync(csvPath, 'utf8')
-  } catch {
-    // A missing redirects.csv is fine for a brand-new firm. But a MIGRATED client has a
-    // CS-Sitemap.csv full of legacy URLs and MUST ship redirects — a missing file there
-    // is a real defect that previously failed silently and 404'd every legacy URL.
-    // Warn loudly at build time so it can never ship empty unnoticed again.
-    try {
-      if (existsSync(resolve(__dirname, '../CS/CS-Sitemap.csv'))) {
-        console.warn(
-          '[redirects] WARNING: CS/redirects.csv not found but CS-Sitemap.csv exists — ' +
-            'this migrated client will ship ZERO redirects and legacy URLs will 404. ' +
-            'Seed CS/redirects.csv via Site-Prep generate_redirects.',
-        )
-      }
-    } catch {
-      /* ignore */
-    }
-    return []
-  }
-
-  const lines = raw.split('\n')
-  const out: {source: string; destination: string; statusCode: number}[] = []
-  for (let i = 0; i < lines.length; i++) {
-    const trimmed = lines[i].trim()
-    if (!trimmed || trimmed.startsWith('#')) continue
-    if (i === 0 && trimmed.toLowerCase().startsWith('old_path')) continue // header
-    const [rawSource, rawDestination, rawType] = trimmed.split(',').map((s) => s.trim())
-    if (!rawSource || !rawDestination) continue
-    const source = stripTrailingSlash(rawSource)
-    const destination = stripTrailingSlash(rawDestination)
-    // After normalization a `/foo/`→`/foo` row collapses to a self-redirect —
-    // skip it (Next rejects a rule whose source equals its destination).
-    if (source === destination) continue
-    const statusCode = rawType === '302' ? 302 : 301
-    out.push({source, destination, statusCode})
-  }
-  return out
-}
+// The parsing and merging logic lived inline here until 2026-08-10, where no
+// test could reach it — `OUTSTANDING.md` item 159. Only the path resolution
+// stays, because `__dirname` is a property of this file's location and not of
+// the rule.
+const CS_REDIRECTS_CSV = resolve(__dirname, '../CS/redirects.csv')
+const CS_SITEMAP_CSV = resolve(__dirname, '../CS/CS-Sitemap.csv')
 
 // NOTE: experimental.inlineCss was tested here (2026-06-23) to drop the one
 // render-blocking stylesheet. It cleared that diagnostic but REGRESSED prod LCP/score
@@ -129,7 +79,14 @@ const nextConfig: NextConfig = {
     ]
   },
   async redirects() {
-    return loadRedirects()
+    const csv = loadRedirects(CS_REDIRECTS_CSV, CS_SITEMAP_CSV)
+    const studio = await fetchStudioRedirectsAtBuild()
+    const {rules, report} = resolveRedirects(csv, studio)
+    // TECH-10's fourth half. The report is printed on EVERY build, not only when
+    // something is wrong: a guard that only speaks on failure is indistinguishable
+    // from a guard that is not running.
+    for (const line of formatRedirectReport(report)) console.log(line)
+    return rules
   },
 }
 

@@ -5941,6 +5941,19 @@
                 },
                 "optional": true
               },
+              "source": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "union",
+                  "of": [
+                    {
+                      "type": "string",
+                      "value": "migration"
+                    }
+                  ]
+                },
+                "optional": true
+              },
               "_type": {
                 "type": "objectAttribute",
                 "value": {

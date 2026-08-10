@@ -934,6 +934,7 @@ export type Redirects = {
     from?: string;
     to?: string;
     type?: "301" | "302";
+    source?: "migration";
     _type: "redirect";
     _key: string;
   }>;

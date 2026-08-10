@@ -354,3 +354,30 @@ jobs:
       - name: Run shared-component a11y tests
         working-directory: site
         run: npx vitest run components/sections/__tests__/a11y-shared-components.test.tsx
+
+  redirects-wiring:
+    name: "Redirects: the two sources cannot silently disagree"
+    runs-on: ubuntu-latest
+    # TECH-10's fourth half, made a gate rather than a habit. The site reads the
+    # Studio redirects singleton, the build writes migration redirects into it, a
+    # Studio entry wins a conflict, and a disagreement between the two sources is
+    # reported. The failure this replaced was silent by construction: the
+    # singleton's own header comment claimed the site read its array while no
+    # file under site/ referenced it, so an operator could add a redirect,
+    # publish, and change nothing.
+    #
+    # It runs in CI rather than under the manual verification gate because the
+    # thing being guarded IS a silence. A check that only a human remembers to
+    # run cannot be the mechanism that stops two sources drifting apart, and
+    # `OUTSTANDING.md` item 159's six loadRedirects behaviours ride the same file.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install site deps
+        working-directory: site
+        run: npm ci
+      - name: Run the redirect merge, precedence and disagreement tests
+        working-directory: site
+        run: npx vitest run lib/__tests__/redirects.test.ts
