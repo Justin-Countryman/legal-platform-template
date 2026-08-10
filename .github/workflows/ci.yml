@@ -199,6 +199,50 @@ jobs:
     # nobody re-runs `npm run typegen`, so site/types/sanity.types.ts silently
     # describes the old shape. This job regenerates from source and fails if the
     # committed schema.json or types differ.
+    #
+    # ─── REBUILT 2026-08-10. It could not fail on the schema half, and the way
+    # it failed was by REPORTING SUCCESS. ─────────────────────────────────────
+    #
+    # Monorepo BI/OUTSTANDING.md item 165, confirmed by observation. The old
+    # version substituted a format-valid placeholder projectId into
+    # sanity.config.ts, and `sanity schema extract` then threw CorsOriginError
+    # out of the auth store's getCurrentUser bootstrap BEFORE writing anything.
+    # `|| true` swallowed that. The guard-the-guard `jq -e . schema.json` read
+    # the STALE COMMITTED FILE, which is valid JSON and passes. And
+    # `git diff --exit-code studio/schema.json` then compared an untouched file
+    # against itself: green by construction, on every push, for months. It was
+    # hiding real drift while it did so — ogTitle and ogDescription had landed
+    # on 22 document types with neither artifact regenerated.
+    #
+    # THE OLD COMMENT HERE STATED THE MECHANISM THIS JOB DID NOT HAVE: it said
+    # `schema extract` "CORS-fails against the placeholder project, yet still
+    # writes the correct schema.json". That sentence is false and was the reason
+    # the jq assertion was thought sufficient. It is quoted rather than deleted
+    # because it is the evidence for why this rebuild was needed.
+    #
+    # What changed, in three parts:
+    #
+    #  1. NOTHING IS REACHED OVER THE NETWORK. studio/sanity.config.ts supplies
+    #     Sanity's own createMockAuthStore when SANITY_STUDIO_OFFLINE_SCHEMA_EXTRACT=1,
+    #     so the identity call never happens and extraction runs against the
+    #     local schema files with the shipped sentinel projectId in place. No
+    #     real, scratch or borrowed project id is involved — a throwaway project
+    #     has already been deleted out from under this platform once
+    #     (OUTSTANDING item 22), and a check that depends on one can regress the
+    #     same way. PROVEN: the schema this path extracts is byte-identical to
+    #     the committed schema.json the authenticated procedure produced.
+    #
+    #  2. NO EXIT CODE IS TOLERATED. Both commands exit 0 on this path, measured
+    #     rather than assumed, so a non-zero exit is now a real failure and says
+    #     so. The output assertions stay as belt: a zero exit that writes nothing
+    #     must not read as "no drift".
+    #
+    #  3. THE JOB PROVES IT CAN FAIL, on every run. A guard that only ever
+    #     reports zero is indistinguishable from a guard that does nothing, and
+    #     this one WAS doing nothing. check-typegen-detects-drift.mjs plants a
+    #     field into a document schema, regenerates, and requires the drift to
+    #     appear — then restores and requires the restore to be byte-exact. Same
+    #     shape as the falsifiability step in `unknown-utility-classes` below.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -209,44 +253,30 @@ jobs:
         run: npm ci
       - name: Regenerate schema + types from source
         working-directory: studio
+        env:
+          SANITY_STUDIO_OFFLINE_SCHEMA_EXTRACT: '1'
         run: |
-          set -u
-          # The template config ships a SCRUBBED sentinel projectId
-          # (TEMPLATE_SANITY_PROJECT_ID) that fails Sanity's projectId format
-          # validator (a-z, 0-9 and dashes only), which blocks `schema extract`
-          # before it can read the local schema files. Substitute a THROWAWAY
-          # format-valid placeholder for the CI run ONLY. This is not a real,
-          # scratch, or client project — it just satisfies the string validator
-          # so extraction runs offline against the local schema. It lives only
-          # in the ephemeral CI checkout and is never committed; the freshness
-          # diff below inspects schema.json + the generated types, not the
-          # config, so this substitution cannot affect the result.
-          sed -i "s/'TEMPLATE_SANITY_PROJECT_ID'/'ci0placeholder'/" sanity.config.ts
-
-          # Both commands exit non-zero for benign reasons unrelated to
-          # freshness, so the git diff — not the exit code — is authoritative:
-          #  - `schema extract` makes a background getCurrentUser call that
-          #    CORS-fails against the placeholder project, yet still writes the
-          #    correct schema.json (projectId is config, not part of the schema).
-          #  - `typegen generate` warns on the INTERNAL_HERO_OVERRIDE_FIELDS
-          #    partial-GROQ fragment (interpolated into real queries, parsed
-          #    standalone), yet still emits every real query type.
-          # Tolerate the exit codes but assert each step produced valid output,
-          # so a genuine crash that writes nothing can't masquerade as "no drift".
-          npm run schema:extract || true
+          set -euo pipefail
+          npm run schema:extract
           jq -e . schema.json >/dev/null \
-            || { echo "::error::schema extract did not produce valid schema.json"; exit 1; }
+            || { echo "::error::schema extract exited 0 without producing valid schema.json"; exit 1; }
 
-          npx sanity typegen generate 2>&1 | tee typegen.log || true
+          npx sanity typegen generate 2>&1 | tee typegen.log
           grep -q "Generated TypeScript types for" typegen.log \
-            || { echo "::error::typegen generate did not emit types"; exit 1; }
+            || { echo "::error::typegen generate exited 0 without emitting types"; exit 1; }
+          rm -f typegen.log
       - name: Fail if committed schema/types are stale
         run: |
           if ! git diff --exit-code studio/schema.json site/types/sanity.types.ts; then
-            echo "::error::Generated Sanity types are stale. Run 'npm run typegen' in studio/ and commit studio/schema.json + site/types/sanity.types.ts."
+            echo "::error::Generated Sanity types are stale. Run 'npm run typegen:offline' in studio/ and commit studio/schema.json + site/types/sanity.types.ts."
             exit 1
           fi
           echo "Sanity schema + generated types are up to date."
+      - name: Check the freshness guard still fails on planted drift
+        # This is the step whose absence made the four-month silence possible.
+        # It runs AFTER the diff above, so a genuine staleness is reported as
+        # staleness rather than as a dirty tree.
+        run: node scripts/check-typegen-detects-drift.mjs
 
   lint:
     name: Lint (eslint)

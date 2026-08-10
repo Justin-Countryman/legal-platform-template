@@ -113,10 +113,18 @@ const PLATFORM_HOSTS = new Map([
 const PROJECT_SENTINEL = 'TEMPLATE_SANITY_PROJECT_ID'
 
 // Values that are obviously not a real project: the sentinel, blanks, and the
-// throwaway the typegen CI job substitutes to satisfy Sanity's format validator.
+// id the offline schema-extraction client in sanity.config.ts carries.
+//
+// `ci0placeholder` used to sit here, for the value the typegen CI job substituted
+// into sanity.config.ts to satisfy Sanity's projectId format validator. That
+// substitution is gone — the job no longer edits the config, because extraction
+// no longer needs a project to be reachable (monorepo OUTSTANDING item 165) —
+// and the entry went with it rather than being left behind. An allowance that
+// outlives its reason is the exact shape this guard was rebuilt to stop, and
+// the next reader would have had no way to tell a live one from a dead one.
 const PROJECT_PLACEHOLDERS = new Set([
   PROJECT_SENTINEL.toLowerCase(),
-  'ci0placeholder',
+  'offline-schema-extract',
   'your-project-id',
   'project-id',
   'projectid',

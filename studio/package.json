@@ -9,10 +9,12 @@
     "deploy-graphql": "sanity graphql deploy",
     "schema:extract": "sanity schema extract",
     "typegen": "npm run schema:extract && sanity typegen generate",
+    "typegen:offline": "SANITY_STUDIO_OFFLINE_SCHEMA_EXTRACT=1 npm run typegen",
     "verify:seo-title": "node --experimental-strip-types scripts/verify-seo-title-validation.ts",
     "verify:meta-description": "node --experimental-strip-types scripts/verify-meta-description-validation.ts"
   },
   "dependencies": {
+    "@sanity/client": "7.20.0",
     "@sanity/vision": "^3.65.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
