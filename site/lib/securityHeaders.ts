@@ -26,15 +26,30 @@
  *                           `same-origin` or `noopener-allow-popups`. ADDED
  *                           HERE.
  *   csp-xss                 `Content-Security-Policy`. NOT ADDED — CSP is
- *                           deliberately deferred (locked decision D5), so this
- *                           audit stays red and that is a decision rather than
- *                           an omission.
+ *                           deliberately deferred, so this audit stays red and
+ *                           that is a decision rather than an omission.
  *   trusted-types-xss       CSP `require-trusted-types-for`. Deferred with CSP,
  *                           for the same reason.
  *
- * So "a clean Best Practices score" is not what this achieves and the ruling's
- * own D5 carve-out is why. What it achieves is every header-driven audit that
- * does not require CSP.
+ * So "a clean Best Practices score" is not what this achieves and the CSP
+ * carve-out is why. What it achieves is every header-driven audit that does not
+ * require CSP.
+ *
+ * ─── THE CSP DEFERRAL, AND WHERE IT IS RULED ────────────────────────────────
+ *
+ * `BI/rules/technical-seo.md` build queue line 6 is its live home and carries
+ * the reasoning: this site renders inline script and inline style from four
+ * surfaces — the inline JSON-LD blocks, `framer-motion`'s runtime style
+ * injection, the Sanity-driven `<style dangerouslySetInnerHTML>` font injection
+ * in `app/(site)/layout.tsx`, and the Vercel Analytics and Speed Insights
+ * scripts — and a policy written without auditing all four either breaks the
+ * site or sets `unsafe-inline` everywhere and buys nothing.
+ *
+ * This used to read "locked decision D5", pointing at a dated entry in the
+ * platform's completed-work backlog archive. That address moved with the
+ * archive, and the phrase implied a decision registry this platform does not
+ * have, so both are gone: a live claim does not cite a dated backlog entry as
+ * its authority.
  *
  * ─── WHY `same-origin-allow-popups` AND NOT `same-origin` ────────────────────
  *

@@ -48,11 +48,13 @@ describe('Lighthouse Best Practices: the audits a response header decides', () =
   })
 
   // A DELIBERATE ABSENCE, asserted so that adding CSP has to be a decision
-  // rather than a drive-by. Locked decision D5 defers it, which leaves the
-  // `csp-xss` and `trusted-types-xss` audits red on purpose. If this case ever
-  // goes red, CSP arrived — check that D5 was actually reversed, and delete
+  // rather than a drive-by. The deferral leaves the `csp-xss` and
+  // `trusted-types-xss` audits red on purpose; it is ruled at
+  // `BI/rules/technical-seo.md` build queue line 6, which carries the reasoning
+  // and is where a reversal would be recorded. If this case ever goes red, CSP
+  // arrived — check that the deferral was actually reversed there, and delete
   // this case with the reasoning rather than around it.
-  it('csp-xss and trusted-types-xss stay unmet, because D5 defers CSP', () => {
+  it('csp-xss and trusted-types-xss stay unmet, because CSP is deferred', () => {
     expect(value('Content-Security-Policy')).toBeUndefined()
   })
 })
