@@ -11,7 +11,8 @@
     "typegen": "npm run schema:extract && sanity typegen generate",
     "typegen:offline": "SANITY_STUDIO_OFFLINE_SCHEMA_EXTRACT=1 npm run typegen",
     "verify:seo-title": "node --experimental-strip-types scripts/verify-seo-title-validation.ts",
-    "verify:meta-description": "node --experimental-strip-types scripts/verify-meta-description-validation.ts"
+    "verify:meta-description": "node --experimental-strip-types scripts/verify-meta-description-validation.ts",
+    "verify:location-slug": "node --experimental-strip-types scripts/verify-location-page-slug-source.ts"
   },
   "dependencies": {
     "@sanity/client": "7.20.0",

@@ -3,6 +3,7 @@ import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
 import {seoTitleValidation} from '../seoTitle'
 import {metaDescriptionValidation} from '../metaDescription'
+import {locationPageSlugSource} from '../locationPageSlug'
 import {
   OG_DESCRIPTION_DESCRIPTION,
   OG_TITLE_DESCRIPTION,
@@ -11,8 +12,10 @@ import {
 } from '../socialOverrides'
 
 // Layout B — Content + Sidebar Shell
-// Slug: /city-name-law-office/ (applies to all location types)
-// Schema: LocalBusiness + BreadcrumbList
+// Slug: /{city}-law-firm/ — TITLE-11 and SLUG-1. The Name says "Law Office" and
+// the URL says "law firm"; that divergence is ruled and is not to be aligned.
+// Schema: LegalService (ENTITY-4 superseded LocalBusiness 2026-07-29) +
+// BreadcrumbList
 
 export const locationPage = defineType({
   name: 'locationPage',
@@ -64,8 +67,13 @@ export const locationPage = defineType({
       fieldset: 'pageSettings',
       title: 'Slug',
       type: 'slug',
-      description: 'Click Generate after setting Page Title',
-      options: {source: 'title'},
+      description: 'Click Generate after setting the Location Record',
+      // SLUG-1 and TITLE-11 rule `{city}-law-firm`, which is NOT what slugifying
+      // the Page Title produces. This field read `options: {source: 'title'}`
+      // until 2026-08-10 and Generate answered `{city}-law-office`. The function
+      // and the whole account live in `../locationPageSlug.ts`, in a module of
+      // its own so a check can reach it.
+      options: {source: locationPageSlugSource},
       validation: (Rule) => Rule.required().error(),
     },
     {
