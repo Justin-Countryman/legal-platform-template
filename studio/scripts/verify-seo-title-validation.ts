@@ -102,10 +102,20 @@ await expectLevels(
 
 await expectLevels('short title — no markers at all', 'Appeals', {errors: 0, warnings: 0})
 
-// `required` is deliberately NOT part of the length ruling and still errors.
-// Recorded so its survival is a decision rather than an oversight; see the
-// note in schemas/seoTitle.ts.
-await expectLevels('empty — required still errors, by design', undefined, {errors: 1, warnings: 0})
+// THE OPTIONAL-NESS PIN (item 128, ruled 2026-08-07, landed 2026-08-09).
+// This case asserted `{errors: 1}` until that day, and it is the assertion the
+// ruling left behind: `required()` was an error, so Studio refused to save a
+// blank SEO Title while TITLE-1 called a blank one the case where the composed
+// formula runs. The ruling was that STUDIO GIVES. Run against the edited schema
+// before this line changed, the old assertion went red here — which is what
+// proves the drop reached Sanity's real validator rather than only the source.
+//
+// TWO SHAPES, because they are different states and only the second fails if
+// `required()` ever comes back: a field absent from the document, and a field
+// explicitly saved as an empty string. An operator clearing the input in Studio
+// produces the second.
+await expectLevels('empty — optional, no error and no warning', undefined, {errors: 0, warnings: 0})
+await expectLevels('cleared to an empty string — same, still no error', '', {errors: 0, warnings: 0})
 
 console.log(failures === 0 ? '\nAll expectations met.' : `\n${failures} expectation(s) failed.`)
 process.exit(failures === 0 ? 0 : 1)

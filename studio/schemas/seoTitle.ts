@@ -2,9 +2,28 @@ import type {Rule} from 'sanity'
 
 /**
  * The SEO Title field's validation, in one place for all 22 document types
- * that have one. Doctrine: `BI-Content.md` § Title tags.
+ * that have one. Doctrine: `BI/rules/page-titles.md`, TITLE-1 to TITLE-12.
+ * (This line named `BI-Content.md` § Title tags until 2026-08-09; that file's
+ * live title claims moved to the rule file on 2026-08-01 and the pointer went
+ * stale behind them.)
  *
- * TWO RULINGS ARE ENCODED HERE.
+ * THREE RULINGS ARE ENCODED HERE.
+ *
+ * 0. THE FIELD IS OPTIONAL (operator, 2026-08-07, `OUTSTANDING.md` item 128,
+ *    landed 2026-08-09). `required()` was an `.error()` here until that day, so
+ *    Studio REFUSED TO SAVE a blank SEO Title while doctrine called a blank one
+ *    a legitimate fallback. TITLE-1 is the doctrine: a stored value is the
+ *    COMPLETE title, used verbatim, and a formula runs only when there is no
+ *    value. An error on `required()` therefore made the formula branch
+ *    unreachable from Studio — the operator could not choose the fallback the
+ *    whole ruleset is built around. Item 128 put the contradiction to Justin as
+ *    a ruling rather than a defect, because either side could have given; the
+ *    ruling is that STUDIO GIVES. The error drops, the field is optional, and
+ *    the length warning below is untouched.
+ *
+ *    This does NOT make a blank title harmless. It makes it the operator's
+ *    choice rather than Studio's refusal, and the composed fallback is what
+ *    renders. The tool-side rungs are unchanged.
  *
  * 1. LENGTH WARNS, NEVER BLOCKS (operator, 2026-07-26). Every one of those 22
  *    schemas carried `Rule.required().max(60).error()`, which refuses to save
@@ -44,14 +63,14 @@ export const RENDERED_TITLE_MAX = 60
 /**
  * `validation` for every `seoTitle` field.
  *
- * `required()` stays an ERROR and is deliberately untouched by the 2026-07-26
- * ruling, which was about length. Note the open tension for whoever revisits
- * it: doctrine says an empty SEO Title is a legitimate fallback to the page
- * name, "a fallback and not an error", while this still refuses to save one in
- * Studio. That is a separate decision and is not made here.
+ * ONE RULE, NOT TWO. There is no `required()` here, by the item 128 ruling
+ * recorded above: blank is a legitimate value and Studio must let it save.
+ * **Do not add one back.** The tension this array used to carry in a comment —
+ * doctrine calling blank a fallback while Studio refused it — was resolved on
+ * 2026-08-09 in doctrine's favour, and `scripts/verify-seo-title-validation.ts`
+ * runs Sanity's real validator against a blank field to keep it resolved.
  */
 export const seoTitleValidation = (rule: Rule) => [
-  rule.required().error(),
   rule
     .max(RENDERED_TITLE_MAX)
     .warning(
