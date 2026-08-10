@@ -320,7 +320,12 @@ export const REVIEW_SLUGS_QUERY = groq`
 // filter collapses two different states into one null: `/` and `/contact` are
 // served whether or not their document exists, so "no document" must still list
 // the URL while "noIndex" must not. The route makes that distinction, once.
-const SINGLETON_NOINDEX = groq`"noIndex": coalesce(noIndex, false)`
+//
+// UNTAGGED, like `NAV_LABEL_EXPR` above and unlike every whole query in this
+// file. A partial expression is not a query, and a `groq` tag makes typegen
+// parse it standalone and report a syntax error on every run — the noise the
+// CI step's own comment already tolerates for one other fragment.
+const SINGLETON_NOINDEX = `"noIndex": coalesce(noIndex, false)`
 
 export const SITEMAP_QUERY = groq`{
   "hideFromSearch": *[_type == "siteSettings"][0].hideFromSearch,
