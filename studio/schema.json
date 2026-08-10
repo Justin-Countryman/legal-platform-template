@@ -2260,6 +2260,20 @@
         },
         "optional": true
       },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "ogImageOverride": {
         "type": "objectAttribute",
         "value": {
@@ -5291,6 +5305,20 @@
         },
         "optional": true
       },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "ogImageOverride": {
         "type": "objectAttribute",
         "value": {
@@ -8203,6 +8231,20 @@
         },
         "optional": true
       },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "ogImageOverride": {
         "type": "objectAttribute",
         "value": {
@@ -8610,6 +8652,20 @@
         "optional": true
       },
       "metaDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -9248,6 +9304,20 @@
         },
         "optional": true
       },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "ogImageOverride": {
         "type": "objectAttribute",
         "value": {
@@ -9669,6 +9739,20 @@
         "optional": true
       },
       "metaDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -10106,6 +10190,20 @@
         },
         "optional": true
       },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "ogImageOverride": {
         "type": "objectAttribute",
         "value": {
@@ -10434,6 +10532,20 @@
         "optional": true
       },
       "metaDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -10895,6 +11007,20 @@
         "optional": true
       },
       "metaDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -11534,6 +11660,20 @@
         },
         "optional": true
       },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "ogImageOverride": {
         "type": "objectAttribute",
         "value": {
@@ -12144,6 +12284,20 @@
         "optional": true
       },
       "metaDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -12921,6 +13075,20 @@
         },
         "optional": true
       },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "ogImageOverride": {
         "type": "objectAttribute",
         "value": {
@@ -13128,6 +13296,20 @@
         "optional": true
       },
       "metaDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -13571,6 +13753,20 @@
         "optional": true
       },
       "metaDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -14178,6 +14374,20 @@
         },
         "optional": true
       },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "ogImageOverride": {
         "type": "objectAttribute",
         "value": {
@@ -14692,6 +14902,20 @@
         },
         "optional": true
       },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "ogImageOverride": {
         "type": "objectAttribute",
         "value": {
@@ -15150,6 +15374,20 @@
         "optional": true
       },
       "metaDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -15781,6 +16019,20 @@
         "optional": true
       },
       "metaDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -16449,6 +16701,20 @@
         },
         "optional": true
       },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "ogImageOverride": {
         "type": "objectAttribute",
         "value": {
@@ -16864,6 +17130,20 @@
         "optional": true
       },
       "metaDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -17453,6 +17733,20 @@
         },
         "optional": true
       },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "ogImageOverride": {
         "type": "objectAttribute",
         "value": {
@@ -18032,6 +18326,20 @@
         "optional": true
       },
       "metaDescription": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ogDescription": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
