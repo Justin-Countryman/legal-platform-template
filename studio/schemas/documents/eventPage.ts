@@ -2,6 +2,7 @@ import {defineType} from 'sanity'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
 import {seoTitleValidation} from '../seoTitle'
+import {metaDescriptionValidation} from '../metaDescription'
 
 // Layout — Event Detail
 // Route: /events/[slug]
@@ -86,7 +87,7 @@ export const eventPage = defineType({
       rows: 3,
       fieldset: 'seo',
       components: {input: TokenTextInput},
-      validation: (Rule) => Rule.required().max(160).error(),
+      validation: metaDescriptionValidation,
     },
     {
       name: 'ogImageOverride',

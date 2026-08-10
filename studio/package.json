@@ -9,7 +9,8 @@
     "deploy-graphql": "sanity graphql deploy",
     "schema:extract": "sanity schema extract",
     "typegen": "npm run schema:extract && sanity typegen generate",
-    "verify:seo-title": "node --experimental-strip-types scripts/verify-seo-title-validation.ts"
+    "verify:seo-title": "node --experimental-strip-types scripts/verify-seo-title-validation.ts",
+    "verify:meta-description": "node --experimental-strip-types scripts/verify-meta-description-validation.ts"
   },
   "dependencies": {
     "@sanity/vision": "^3.65.0",

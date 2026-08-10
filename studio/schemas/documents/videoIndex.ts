@@ -2,6 +2,7 @@ import {defineType} from 'sanity'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
 import {seoTitleValidation} from '../seoTitle'
+import {metaDescriptionValidation} from '../metaDescription'
 
 // Video Library singleton — mirrors blogIndex (SEO + internal hero + sections +
 // Global CTA controls) and adds a curated, ordered `videos[]` list plus an
@@ -75,7 +76,7 @@ export const videoIndex = defineType({
       rows: 3,
       fieldset: 'seo',
       components: {input: TokenTextInput},
-      validation: (Rule) => Rule.required().max(160).error(),
+      validation: metaDescriptionValidation,
     },
     {
       name: 'ogImageOverride',

@@ -3,6 +3,7 @@ import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
 import {PageLinkInput} from '../../components/PageLinkInput'
 import {seoTitleValidation} from '../seoTitle'
+import {metaDescriptionValidation} from '../metaDescription'
 
 export const attorneyPage = defineType({
   name: 'attorneyPage',
@@ -108,10 +109,13 @@ export const attorneyPage = defineType({
     }),
 
     // ─── SEO Settings (collapsed) ─────────────────────────────────────────────
-    // NOT wrapped in defineField, unlike its neighbours: the wrapper narrows
-    // the validation rule to `StringRule` while every other schema in the studio
-    // passes `Rule`, and one shared validator cannot be typed for both. The
-    // field definition is identical either way; the shared rule is what matters.
+    // NEITHER OF THE NEXT TWO IS WRAPPED IN defineField, unlike its neighbours:
+    // the wrapper narrows the validation rule to `StringRule` / `TextRule` while
+    // every other schema in the studio passes `Rule`, and one shared validator
+    // cannot be typed for both. The field definition is identical either way;
+    // the shared rule is what matters. `seoTitle` was unwrapped for this reason
+    // on 2026-07-26; `metaDescription` joined it on 2026-08-09, when its
+    // validation became a shared binding and hit the identical type narrowing.
     {
       name: 'seoTitle',
       title: 'Title Tag',
@@ -120,15 +124,15 @@ export const attorneyPage = defineType({
       components: {input: TokenStringInput},
       validation: seoTitleValidation,
     },
-    defineField({
+    {
       name: 'metaDescription',
       title: 'Meta Description',
       type: 'text',
       rows: 3,
       fieldset: 'seo',
       components: {input: TokenTextInput},
-      validation: (Rule) => Rule.required().max(160).error('Meta description is required (keep under 160 characters)'),
-    }),
+      validation: metaDescriptionValidation,
+    },
     defineField({
       name: 'ogImageOverride',
       title: 'OG Image (custom)',

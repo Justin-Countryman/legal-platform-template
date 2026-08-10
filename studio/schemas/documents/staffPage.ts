@@ -2,6 +2,7 @@ import {defineType} from 'sanity'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
 import {seoTitleValidation} from '../seoTitle'
+import {metaDescriptionValidation} from '../metaDescription'
 
 // Layout C — Unique Content Layout
 // Only created if Display Staff on Website = yes in Zite
@@ -75,7 +76,7 @@ export const staffPage = defineType({
       rows: 3,
       fieldset: 'seo',
       components: {input: TokenTextInput},
-      validation: (Rule) => Rule.required().max(160).error(),
+      validation: metaDescriptionValidation,
     },
     {
       name: 'ogImageOverride',

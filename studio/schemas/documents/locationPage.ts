@@ -2,6 +2,7 @@ import {defineType} from 'sanity'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
 import {seoTitleValidation} from '../seoTitle'
+import {metaDescriptionValidation} from '../metaDescription'
 
 // Layout B — Content + Sidebar Shell
 // Slug: /city-name-law-office/ (applies to all location types)
@@ -84,7 +85,7 @@ export const locationPage = defineType({
       rows: 3,
       fieldset: 'seo',
       components: {input: TokenTextInput},
-      validation: (Rule) => Rule.required().max(160).error(),
+      validation: metaDescriptionValidation,
     },
     {
       name: 'ogImageOverride',

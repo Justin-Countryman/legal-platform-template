@@ -2,6 +2,7 @@ import {defineType} from 'sanity'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
 import {seoTitleValidation} from '../seoTitle'
+import {metaDescriptionValidation} from '../metaDescription'
 
 // Auto-created by Site Build Tool on every site — always at /about/
 // Never in CS-SITEMAP.csv
@@ -75,7 +76,7 @@ export const aboutPage = defineType({
       rows: 3,
       fieldset: 'seo',
       components: {input: TokenTextInput},
-      validation: (Rule) => Rule.required().max(160).error(),
+      validation: metaDescriptionValidation,
     },
     {
       name: 'ogImageOverride',
