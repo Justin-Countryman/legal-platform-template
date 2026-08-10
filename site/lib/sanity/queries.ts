@@ -305,16 +305,34 @@ export const REVIEW_SLUGS_QUERY = groq`
 // timestamps. Excludes drafts and noIndex pages. Singleton index documents
 // (homePage, attorneyIndex, etc.) supply the lastModified for their
 // corresponding hard-coded route; collection documents supply slug + updatedAt.
+//
+// TECH-6 AT FULL SCOPE (`BI/rules/technical-seo.md`, ruled by Justin
+// 2026-08-10, `OUTSTANDING.md` item 161). Until that build the filter reached
+// every collection and the catch-all and exactly ONE singleton of eight, while
+// all eight schemas declared the field — so seven of them offered the operator a
+// switch this query did not read. `/contact` was worse: it was pushed with no
+// document fetched at all, so its `noIndex` could not be read even in principle.
+// `contactPage` now joins the query and is the ninth singleton.
+//
+// THE SINGLETONS PROJECT THE FLAG RATHER THAN FILTERING ON IT, which the
+// collections below do not and should not. For a collection the filter is also a
+// fetch-size decision. For a singleton there is nothing to save, and a query-side
+// filter collapses two different states into one null: `/` and `/contact` are
+// served whether or not their document exists, so "no document" must still list
+// the URL while "noIndex" must not. The route makes that distinction, once.
+const SINGLETON_NOINDEX = groq`"noIndex": coalesce(noIndex, false)`
+
 export const SITEMAP_QUERY = groq`{
   "hideFromSearch": *[_type == "siteSettings"][0].hideFromSearch,
-  "home":             *[_type == "homePage"][0]{_updatedAt},
-  "attorneyIndex":    *[_type == "attorneyIndex"][0]{_updatedAt},
-  "staffIndex":       *[_type == "staffIndex"][0]{_updatedAt},
-  "blogIndex":        *[_type == "blogIndex"][0]{_updatedAt},
-  "eventIndex":       *[_type == "eventIndex"][0]{_updatedAt},
-  "serviceAreaIndex": *[_type == "serviceAreaIndex"][0]{_updatedAt},
-  "videoIndex":       *[_type == "videoIndex" && coalesce(noIndex, false) == false][0]{_updatedAt},
-  "testimonials":     *[_type == "testimonialsPage"][0]{_updatedAt},
+  "home":             *[_type == "homePage"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
+  "attorneyIndex":    *[_type == "attorneyIndex"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
+  "staffIndex":       *[_type == "staffIndex"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
+  "blogIndex":        *[_type == "blogIndex"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
+  "eventIndex":       *[_type == "eventIndex"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
+  "serviceAreaIndex": *[_type == "serviceAreaIndex"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
+  "videoIndex":       *[_type == "videoIndex"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
+  "testimonials":     *[_type == "testimonialsPage"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
+  "contact":          *[_type == "contactPage"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
   "attorneys":        *[_type == "attorneyPage" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},
   "staff":            *[_type == "staffPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},
   "blogPosts":        *[_type == "blogPost"     && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},
