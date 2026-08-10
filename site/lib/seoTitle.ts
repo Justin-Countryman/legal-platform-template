@@ -72,6 +72,11 @@ export function composeTitle(pageName: string | null | undefined, firmName: stri
  * the caller needs both. Passing `title` to `buildSocialMeta` would change every
  * card on the site, which is not what this ruling asked for.
  *
+ * THE COMPLETE-TITLE PATH IS THE ONE EXCEPTION, and it changed on 2026-08-09.
+ * See the branch below: it used to return the page's own name as the label, so
+ * `/about` emitted a share title of the bare word "About". `OUTSTANDING.md`
+ * item 91 ruled that a fix rather than a divergence.
+ *
  * Both are `undefined` when there is nothing to say, never `''`, so Next falls
  * to the root `title.default` (the bare firm name) rather than rendering an
  * empty or separator-led title.
@@ -95,8 +100,23 @@ export function resolveTitle(
     // A formula whose shape is not `<page name> - <firm name>`. Today only the
     // about page: `About <firm> - <city> Law Firm` puts the firm in the middle
     // and closes on "Law Firm", so it cannot be composed and is supplied whole.
-    // The label stays the page's own name so the social card is unaffected.
-    return {title: {absolute: complete}, label: name || complete}
+    //
+    // THE LABEL IS THE FULL TITLE HERE, AND IT USED TO BE THE PAGE NAME.
+    // Ruled by Justin 2026-08-07, `OUTSTANDING.md` item 91. The old line was
+    // `label: name || complete`, on the reasoning that keeping the page's own
+    // name left every social card unaffected — which was true of the other two
+    // paths and wrong about this one, because the "page name" a complete-title
+    // page carries is the bare word `About`. So `/about` emitted an `og:title`
+    // of "About" against a title tag of "About Dudley & Smith, P.A. - Saint
+    // Paul Law Firm". NAME-1 says the share title IS the Search title, and on
+    // this path the Search title is `complete`.
+    //
+    // THIS IS NARROW BY CONSTRUCTION. The old reasoning's real concern — that
+    // passing the whole title everywhere would change every card on the site —
+    // still holds and is still honoured: the two ordinary paths below are
+    // untouched, and this branch fires only for a page whose formula is
+    // supplied whole, which today is `aboutPage` alone.
+    return {title: {absolute: complete}, label: complete}
   }
   if (!name) return {title: undefined, label: undefined}
   return {title: {absolute: composeTitle(name, firmName)}, label: name}

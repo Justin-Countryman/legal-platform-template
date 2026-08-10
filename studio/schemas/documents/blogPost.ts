@@ -3,6 +3,12 @@ import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
 import {seoTitleValidation} from '../seoTitle'
 import {metaDescriptionValidation} from '../metaDescription'
+import {
+  OG_DESCRIPTION_DESCRIPTION,
+  OG_TITLE_DESCRIPTION,
+  ogDescriptionValidation,
+  ogTitleValidation,
+} from '../socialOverrides'
 
 // Existing Sanity fields: body, h1, metaDescription, noIndex, redirectFrom, seoTitle, slug
 // Layout B — Content + Sidebar Shell
@@ -86,6 +92,25 @@ export const blogPost = defineType({
       fieldset: 'seo',
       components: {input: TokenTextInput},
       validation: metaDescriptionValidation,
+    },
+    {
+      name: 'ogTitle',
+      title: 'Social Share Title',
+      type: 'string',
+      description: OG_TITLE_DESCRIPTION,
+      fieldset: 'seo',
+      components: {input: TokenStringInput},
+      validation: ogTitleValidation,
+    },
+    {
+      name: 'ogDescription',
+      title: 'Social Share Description',
+      type: 'text',
+      rows: 3,
+      description: OG_DESCRIPTION_DESCRIPTION,
+      fieldset: 'seo',
+      components: {input: TokenTextInput},
+      validation: ogDescriptionValidation,
     },
     {
       name: 'ogImageOverride',

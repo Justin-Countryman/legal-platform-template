@@ -23,6 +23,10 @@ type VideoIndexData = {
   seoTitle?: string | null
   ogImage?: SanityImage | null
   metaDescription?: string | null
+  // Item 91's per-page social overrides. Hand-written here because this route
+  // types its own query result rather than reading a generated type.
+  ogTitle?: string | null
+  ogDescription?: string | null
   noIndex?: boolean | null
   noFollow?: boolean | null
   canonicalUrl?: string | null
@@ -51,7 +55,9 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     ...(await buildRobotsMeta(indexPage.noIndex, indexPage.noFollow)),
     alternates: {canonical: indexPage.canonicalUrl ?? '/videos'},
-    ...buildSocialMeta(label, description, indexPage?.ogImage),
+    ...buildSocialMeta(label, description, indexPage?.ogImage, {
+      ogTitle: indexPage?.ogTitle, ogDescription: indexPage?.ogDescription, tokens,
+    }),
   }
 }
 

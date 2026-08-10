@@ -81,9 +81,18 @@ describe('every formula still loses to a stored cell (TITLE-1)', () => {
     const {title} = resolveTitle(null, 'About', tokens, FIRM, aboutPageTitle(FIRM, 'Saint Paul'))
     expect(title).toEqual({absolute: 'About Dudley & Smith, P.A. - Saint Paul Law Firm'})
   })
-  it('the label stays the page name so the social card is unaffected', () => {
+  it('the label is the FULL title, not the bare page name', () => {
+    // THIS ASSERTION SAID `'About'` UNTIL 2026-08-09, and it is the defect
+    // `OUTSTANDING.md` item 91 recorded rather than a passing check: the
+    // complete-title path returned the page's own name as the social label, so
+    // `/about` emitted an og:title of the bare word "About" against a full
+    // title tag. It was green the whole time, which is `BI-SESSION-PROTOCOL`
+    // §4's "a ruling can leave assertions behind" — a passing test proves the
+    // code and the test agree, not that either is right. Justin ruled the
+    // divergence a fix on 2026-08-07; NAME-1 says the share title IS the
+    // Search title, and on this path the Search title is the complete one.
     const {label} = resolveTitle(null, 'About', tokens, FIRM, aboutPageTitle(FIRM, 'Saint Paul'))
-    expect(label).toBe('About')
+    expect(label).toBe('About Dudley & Smith, P.A. - Saint Paul Law Firm')
   })
 })
 
