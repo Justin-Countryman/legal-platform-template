@@ -33,6 +33,12 @@
 // and for the same reason: an invisible failure mode needs a check that runs
 // somewhere nobody has to remember it.
 //
+// It needs BOTH packages installed. The studio config reaches
+// site/lib/designTokens through ColorPreview, and Node resolves `culori` from
+// the file performing the import — monorepo OUTSTANDING item 22, failure 1,
+// which the CI job works around by installing site deps too. Run this from the
+// repository root with `npm ci` done in studio/ and site/.
+//
 // Detected by: itself. This file IS the detector for the vacuous-guard failure.
 
 import {execFileSync} from 'node:child_process'

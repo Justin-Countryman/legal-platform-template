@@ -251,6 +251,32 @@ jobs:
       - name: Install studio deps
         working-directory: studio
         run: npm ci
+      # AND THE SITE'S, which this job did not do and needed to.
+      #
+      # Monorepo OUTSTANDING item 22, failure 1, open since 2026-07-19 and still
+      # live: studio/schemas/documents/designSettings.ts imports ColorPreview,
+      # which imports ../../site/lib/designTokens, which imports `culori`. Node
+      # resolves from the file performing the import, so `culori` is looked for
+      # in site/node_modules no matter which package pulled the chain — and this
+      # job installed studio only. CI run 29705096717 confirmed the resulting
+      # `Cannot find module 'culori'` in 2026-07.
+      #
+      # It stayed invisible because the CorsOriginError arrived first and `||
+      # true` swallowed both. With the extraction fixed and the exit code no
+      # longer tolerated, this would have turned a silent green into a red main
+      # on the first push. REPRODUCED rather than reasoned: moving
+      # site/node_modules aside locally reproduces the exact module error above,
+      # and installing it is what makes extraction succeed.
+      #
+      # THIS IS A WORKAROUND AND NOT A FIX. Item 22's option (1) — extracting the
+      # colour-derivation core into a package both sides consume — is the fix,
+      # and it is unscheduled. What lands here is that item's option (2),
+      # install site deps in CI as well, which costs one install and leaves the
+      # cross-package import exactly where it is. A developer who installs studio
+      # deps alone still cannot run `npm run typegen`.
+      - name: Install site deps (the studio config imports site/lib)
+        working-directory: site
+        run: npm ci
       - name: Regenerate schema + types from source
         working-directory: studio
         env:
