@@ -73,3 +73,41 @@ describe('root layout generateMetadata — favicon / webclip → icons', () => {
     expect(meta.icons).toBeUndefined()
   })
 })
+
+// TECH-8's second surface (`BI/rules/technical-seo.md`, queue line 10). The
+// token is operator-supplied in Studio and emitted ONLY when it is present —
+// the same "an absent asset emits nothing rather than a placeholder" rule the
+// icons cases above pin, on the one site-metadata surface that had no case.
+// It is rendered server-side deliberately: Google's verification crawler does
+// not run JavaScript.
+describe('root layout generateMetadata — the search-console verification token', () => {
+  it('emits verification.google when the operator has set one', async () => {
+    vi.mocked(client.fetch).mockResolvedValue({
+      firmName: 'Example Law',
+      gscVerification: 'abc123-verification-token',
+    } as never)
+
+    const meta = await generateMetadata()
+
+    expect(meta.verification).toEqual({google: 'abc123-verification-token'})
+  })
+
+  it('emits NO verification key when the field is unset', async () => {
+    vi.mocked(client.fetch).mockResolvedValue({firmName: 'Example Law'} as never)
+
+    const meta = await generateMetadata()
+
+    expect(meta.verification).toBeUndefined()
+  })
+
+  it('treats a blank token as unset rather than emitting an empty tag', async () => {
+    vi.mocked(client.fetch).mockResolvedValue({
+      firmName: 'Example Law',
+      gscVerification: '',
+    } as never)
+
+    const meta = await generateMetadata()
+
+    expect(meta.verification).toBeUndefined()
+  })
+})
