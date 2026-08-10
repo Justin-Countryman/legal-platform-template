@@ -250,8 +250,14 @@ const RULED_THE_OTHER_WAY =
   '2026-08-07 against the Pass D.2 ruling and unaffected by it: that ruling ' +
   'reached index cards and link text, and a reviewPage is neither.'
 
+// The signature lost `seoTitle` on 2026-08-10 with `BI/rules/technical-seo.md`
+// queue line 11: `reviewPage` does not declare that field and the query
+// projected it anyway. The exemption is unchanged in substance and its reason
+// is untouched — this roster keys on the projected SET, so it moves whenever
+// the projection does, and the stale-exemption case going red on a projection
+// edit is that mechanism working rather than a second finding.
 const EXEMPT: Record<string, string> = {
-  '*[_type=="reviewPage"] {blurb,feedbackFormEmbed,h1,noFollow,noIndex,reviewLinks,seoTitle,slug,title}':
+  '*[_type=="reviewPage"] {blurb,feedbackFormEmbed,h1,noFollow,noIndex,reviewLinks,slug,title}':
     RULED_THE_OTHER_WAY,
 }
 

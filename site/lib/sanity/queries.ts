@@ -1773,11 +1773,22 @@ export const BLOG_CATEGORY_PAGE_QUERY = groq`
 // ─── Review Page ─────────────────────────────────────────────────────────────
 // Slug is whatever the user sets in Sanity (e.g. "review-us", "review-us-maple-grove").
 // $slug is the full Sanity slug.current value.
+//
+// A seoTitle was projected here until 2026-08-10 and reviewPage does not
+// declare one, so it resolved to null on every review page ever built. The
+// projection is gone rather than the field added: the route's own note records
+// that this type's Search title is the NAME-2 fallback and calls that the ruling
+// working. A dead projection is how the next reader concludes there is a cell to
+// fill. BI/rules/technical-seo.md build queue 11.
+//
+// NO metaDescription IS PROJECTED, and that is the TYPE's gap rather than this
+// query's: reviewPage declares no such field, so TECH-5 is unreachable on this
+// page type rather than satisfied on it. Declaring it is the rest of queue
+// line 11 and did NOT land with the three halves that did — see that line.
 export const REVIEW_PAGE_QUERY = groq`{
   "page": *[_type == "reviewPage" && slug.current == $slug][0]{
     h1,
     title,
-    seoTitle,
     "slug": slug.current,
     noIndex,
     noFollow,

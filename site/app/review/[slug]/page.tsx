@@ -7,6 +7,7 @@ import type {Metadata} from 'next'
 import {client} from '@/lib/sanity/client'
 import {REVIEW_PAGE_QUERY, REVIEW_SLUGS_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
 import {expandNapTokens} from '@/lib/tokens'
+import {buildSocialMeta} from '@/lib/socialMeta'
 import {ReviewPageContent} from '@/components/review/ReviewPageContent'
 
 type Props = {params: Promise<{slug: string}>}
@@ -47,9 +48,40 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   // ruled and it did not land then: the page now reads `Review Mendota Heights`
   // rather than the H1's `Review Our Mendota Heights Office`. That is the ruling
   // working, not a regression.
+  //
+  // ─── The three gaps queue line 11 closed, 2026-08-10 ─────────────────────
+  //
+  // `seoTitle` used to be read here and `reviewPage` does not declare it, so
+  // the first argument was always null. It is passed explicitly as null now,
+  // because the fallback IS the behaviour and reading a field that does not
+  // exist made it look accidental.
+  const {title, label} = resolveTitle(null, data.page.title, tokens, tokens?.firmName)
+
+  // TECH-2: every page that renders at a URL carries a self-referencing
+  // canonical, and this route emitting none was named a DEFECT rather than an
+  // exemption. A hidden page carries one too — `noIndex` and a canonical answer
+  // different questions.
+  //
+  // THE PUBLIC URL IS `/<slug>`, NOT `/review/<slug>`. `proxy.ts` rewrites
+  // `/review-*` onto this route and the browser URL never changes, so the
+  // internal path is the one address this page must not name.
+  const canonical = `/${data.page.slug}`
+
+  // TECH-4: every page emits a card, and this was the route emitting none —
+  // found during item 91's build and not acted on until now. No override
+  // arguments: `reviewPage` carries no `ogTitle`, `ogDescription` or
+  // `ogImageOverride`, and the builder's contract says omitting them is correct
+  // for a type that has none.
+  //
+  // THE DESCRIPTION ARGUMENT IS UNDEFINED AND IS NOT AN OVERSIGHT. This type
+  // declares no `metaDescription`, so TECH-5 is unreachable here rather than
+  // satisfied here, and the card carries a title and no body text until the
+  // field lands. That is the remaining half of queue line 11.
   return {
-    title: resolveTitle(data.page.seoTitle, data.page.title, tokens, tokens?.firmName).title,
+    title,
     ...(await buildRobotsMeta(data.page.noIndex, data.page.noFollow)),
+    alternates: {canonical},
+    ...buildSocialMeta(label, undefined),
   }
 }
 
