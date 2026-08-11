@@ -130,10 +130,16 @@ export function parseRedirectsCsv(raw: string): RedirectRule[] {
  * Read and parse the CSV, warning loudly when it is absent on a MIGRATED client.
  *
  * A missing `redirects.csv` is fine for a brand-new firm. But a migrated client
- * has a `CS-Sitemap.csv` full of legacy URLs and MUST ship redirects — a missing
+ * has a `CS-SITEMAP.csv` full of legacy URLs and MUST ship redirects — a missing
  * file there is a real defect that previously failed silently and 404'd every
  * legacy URL. The warning is conditional on the sitemap existing for exactly
  * that reason.
+ *
+ * The filename is `CS-SITEMAP.csv` in every case, here and in the caller's
+ * path. Both sites read `CS-Sitemap.csv` from this guard's first build on
+ * 2026-06-23 until 2026-08-11 — a spelling nothing in the pipeline writes,
+ * which cost the guard its whole purpose on a case-sensitive filesystem
+ * (`OUTSTANDING.md` item 203).
  *
  * `warn` is injectable so the warning itself is assertable.
  */
@@ -149,7 +155,7 @@ export function loadRedirects(
     try {
       if (existsSync(sitemapPath)) {
         warn(
-          '[redirects] WARNING: CS/redirects.csv not found but CS-Sitemap.csv exists — ' +
+          '[redirects] WARNING: CS/redirects.csv not found but CS-SITEMAP.csv exists — ' +
             'this migrated client will ship ZERO redirects and legacy URLs will 404. ' +
             'Seed CS/redirects.csv via Site-Prep generate_redirects.',
         )

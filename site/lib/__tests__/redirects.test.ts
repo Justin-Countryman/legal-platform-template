@@ -32,8 +32,9 @@
  */
 import {mkdtempSync, rmSync, writeFileSync} from 'node:fs'
 import {tmpdir} from 'node:os'
-import {join} from 'node:path'
+import {basename, dirname, join} from 'node:path'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
+import {CS_SITEMAP_CSV} from '@/next.config'
 import {
   fetchStudioRedirectsAtBuild,
   formatRedirectReport,
@@ -68,11 +69,11 @@ afterEach(() => {
 function withCsv(contents: string): {csv: string; sitemap: string} {
   const csv = join(dir, 'redirects.csv')
   writeFileSync(csv, contents, 'utf8')
-  return {csv, sitemap: join(dir, 'CS-Sitemap.csv')}
+  return {csv, sitemap: join(dir, 'CS-SITEMAP.csv')}
 }
 
 function withSitemap(): string {
-  const sitemap = join(dir, 'CS-Sitemap.csv')
+  const sitemap = join(dir, 'CS-SITEMAP.csv')
   writeFileSync(sitemap, 'Current Address,New Site Address\n', 'utf8')
   return sitemap
 }
@@ -208,7 +209,7 @@ describe('item 159 / the default-301 fall-through', () => {
 // ===========================================================================
 
 describe('item 159 / the missing-file warning', () => {
-  it('WARNS when redirects.csv is absent and CS-Sitemap.csv exists (a migrated client)', () => {
+  it('WARNS when redirects.csv is absent and CS-SITEMAP.csv exists (a migrated client)', () => {
     // The case that previously failed silently and 404'd every legacy URL.
     const sitemap = withSitemap()
     const warn = vi.fn()
@@ -650,6 +651,44 @@ describe('next.config.ts actually serves the merged set', () => {
 
     const printed = log.mock.calls.map((c) => String(c[0])).filter((l) => l.startsWith('[redirects]'))
     expect(printed.length).toBeGreaterThan(0)
+  })
+})
+
+// ===========================================================================
+// THE FILENAME. `OUTSTANDING.md` item 203.
+// ===========================================================================
+
+describe('item 203 / the sitemap filename the config hands loadRedirects', () => {
+  // The migrated-client warning is conditional on `existsSync(sitemapPath)`, so
+  // the NAME in that path is what decides whether the guard ever speaks. It
+  // shipped for seven weeks as `CS-Sitemap.csv` — a spelling no writer or
+  // reader in the pipeline uses. macOS is case-insensitive by default, so the
+  // warning fired on the machine the template is developed on; the Linux
+  // container a client actually builds in is not, so it did not fire where it
+  // mattered. The failure was the exact one the warning exists to prevent — a
+  // migrated client shipping zero redirects — and the guard against it was
+  // silent.
+  //
+  // ASSERTED AS A STRING, NEVER WITH `existsSync`. A filesystem probe passes on
+  // macOS under either spelling, which is precisely the instrument that hid
+  // this for a day; comparing the name is case-sensitive on every host, so this
+  // file reds identically in the container and on the laptop.
+  it('is the canonical CS-SITEMAP.csv, spelled exactly', () => {
+    expect(basename(CS_SITEMAP_CSV)).toBe('CS-SITEMAP.csv')
+  })
+
+  it('resolves inside the client tree CS/ directory', () => {
+    expect(basename(dirname(CS_SITEMAP_CSV))).toBe('CS')
+  })
+
+  it('names that same file in the warning an operator reads', () => {
+    // The path and the message are two places one filename is written, and the
+    // item found them wrong together. Deriving the expectation from the
+    // constant is what keeps them from drifting apart again.
+    const warn = vi.fn()
+    loadRedirects(join(dir, 'does-not-exist.csv'), withSitemap(), warn)
+    expect(warn).toHaveBeenCalledTimes(1)
+    expect(warn.mock.calls[0][0]).toContain(basename(CS_SITEMAP_CSV))
   })
 })
 

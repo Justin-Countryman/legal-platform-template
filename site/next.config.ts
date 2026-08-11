@@ -27,8 +27,16 @@ import {securityHeaders} from './lib/securityHeaders'
 // test could reach it — `OUTSTANDING.md` item 159. Only the path resolution
 // stays, because `__dirname` is a property of this file's location and not of
 // the rule.
+//
+// `CS_SITEMAP_CSV` is EXPORTED for the same reason `formatRedirectReport`
+// returns lines instead of printing them: it is the half of this pair that a
+// suite has to be able to read. Its FILENAME is what decides whether the
+// migrated-client warning below ever fires, and it shipped misspelled
+// (`CS-Sitemap.csv` against the pipeline's `CS-SITEMAP.csv`) from the guard's
+// own first build in `92fcd8b`, 2026-06-23, until this one — `OUTSTANDING.md`
+// item 203. Next reads the default export and ignores this one.
 const CS_REDIRECTS_CSV = resolve(__dirname, '../CS/redirects.csv')
-const CS_SITEMAP_CSV = resolve(__dirname, '../CS/CS-Sitemap.csv')
+export const CS_SITEMAP_CSV = resolve(__dirname, '../CS/CS-SITEMAP.csv')
 
 // NOTE: experimental.inlineCss was tested here (2026-06-23) to drop the one
 // render-blocking stylesheet. It cleared that diagnostic but REGRESSED prod LCP/score
