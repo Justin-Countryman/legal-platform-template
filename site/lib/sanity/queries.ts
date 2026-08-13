@@ -1571,7 +1571,7 @@ export const VIDEO_INDEX_PAGE_QUERY = groq`
 // ─── Blog Posts — Index Cards ─────────────────────────────────────────────────
 // All posts newest-first; read time derived from bodyText word count in JS
 export const BLOG_POSTS_QUERY = groq`
-  *[_type == "blogPost"] | order(publishedAt desc) {
+  *[_type == "blogPost"] | order(defined(publishedAt) desc, publishedAt desc) {
     "slug": slug.current,
     h1,
     metaDescription,
@@ -1599,14 +1599,14 @@ export const RELATED_POSTS_QUERY = groq`
       slug.current != $slug &&
       defined(category._ref) &&
       category._ref == *[_type == "blogPost" && slug.current == $slug][0].category._ref
-    ] | order(publishedAt desc) [0..3] {
+    ] | order(defined(publishedAt) desc, publishedAt desc) [0..3] {
       "slug": slug.current,
       h1,
       metaDescription,
       publishedAt,
       "category": category->{"title": ${NAV_LABEL_EXPR}, "slug": slug.current}
     },
-    "fallback": *[_type == "blogPost" && slug.current != $slug] | order(publishedAt desc) [0..3] {
+    "fallback": *[_type == "blogPost" && slug.current != $slug] | order(defined(publishedAt) desc, publishedAt desc) [0..3] {
       "slug": slug.current,
       h1,
       metaDescription,
@@ -1718,11 +1718,11 @@ export const BLOG_POST_PAGE_QUERY = groq`
           "title": ${NAV_LABEL_EXPR}
         },
         "posts": select(
-          mode == "recentPosts" => *[_type == "blogPost" && slug.current != $slug] | order(publishedAt desc)[0..20]{
+          mode == "recentPosts" => *[_type == "blogPost" && slug.current != $slug] | order(defined(publishedAt) desc, publishedAt desc)[0..20]{
             h1,
             "slug": slug.current
           },
-          mode == "faqPosts" => *[_type == "blogPostFaq"] | order(publishedAt desc)[0..20]{
+          mode == "faqPosts" => *[_type == "blogPostFaq"] | order(defined(publishedAt) desc, publishedAt desc)[0..20]{
             h1,
             "slug": slug.current
           }
@@ -1823,7 +1823,7 @@ export const REVIEW_PAGE_QUERY = groq`{
 
 // ─── Blog Category Posts ──────────────────────────────────────────────────────
 export const BLOG_CATEGORY_POSTS_QUERY = groq`
-  *[_type == "blogPost" && category->slug.current == $slug] | order(publishedAt desc) {
+  *[_type == "blogPost" && category->slug.current == $slug] | order(defined(publishedAt) desc, publishedAt desc) {
     "slug": slug.current,
     h1,
     metaDescription,
