@@ -26,6 +26,26 @@ type WebhookPayload = {
   path?: string
 }
 
+/**
+ * The path a document's slug maps to. **The homepage is the one document whose
+ * slug is not its path**, and getting that wrong is a FALSE SUCCESS rather than
+ * a failure: `revalidatePath('/home/')` returns 200 and `revalidated: true`
+ * while refreshing a route that does not exist.
+ *
+ * Found 2026-08-13 on a live client. `homePage.slug.current` is `home`, so an
+ * operator publishing a homepage change got a green webhook, a 200, and a stale
+ * homepage — and Sanity's delivery log recorded the success. It went unnoticed
+ * because every OTHER type is a straight mapping: `about` → `/about/`,
+ * `blog` → `/blog/`, `personal-injury` → `/personal-injury/`.
+ *
+ * Keyed on `_type`, not on the slug string, because a practice area legitimately
+ * slugged `home` would be a different page.
+ */
+export function slugToPath(payload: WebhookPayload): string | null {
+  if (payload._type === 'homePage') return '/'
+  return payload.slug ? `/${payload.slug}/` : null
+}
+
 export async function POST(request: Request) {
   const secret = request.headers.get('x-sanity-revalidate-secret')
   const expected = process.env.SANITY_REVALIDATE_SECRET
@@ -47,7 +67,7 @@ export async function POST(request: Request) {
     // Empty body / non-JSON is fine — fall through to broad revalidation.
   }
 
-  const targetPath = payload.path ?? (payload.slug ? `/${payload.slug}/` : null)
+  const targetPath = payload.path ?? slugToPath(payload)
 
   if (targetPath) {
     revalidatePath(targetPath)

@@ -1,3 +1,17 @@
+// THE BACKSTOP EVERY OTHER ROUTE ALREADY HAD, and this one did not.
+//
+// Added 2026-08-13. Every other page in this app carries `revalidate = 3600`;
+// the homepage carried nothing, so it was fully static and regenerated only on
+// deploy or an explicit `revalidatePath`. Combined with the webhook resolving
+// `homePage.slug` (`home`) to `/home/` — a route that does not exist — the
+// homepage was the ONE page with neither working webhook revalidation nor a
+// time-based fallback. A live client served a stale homepage for five hours
+// while every other page refreshed on the hour.
+//
+// The webhook is the fast path; this is the safety net. Keep both — that defect
+// stayed invisible precisely because the fast path reported success.
+export const revalidate = 3600
+
 import type {Metadata} from 'next'
 import { client } from '@/lib/sanity/client'
 import {
