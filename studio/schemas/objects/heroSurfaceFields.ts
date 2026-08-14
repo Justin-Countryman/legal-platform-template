@@ -15,7 +15,31 @@ export const heroAltField = (label: string): FieldDef =>
     name: 'alt',
     type: 'string',
     title: 'Alt Text',
-    validation: (Rule) => Rule.required().error(`Alt text is required for the ${label}`),
+    // REQUIRED ONLY WHEN THERE IS AN IMAGE. Ruled 2026-08-13.
+    //
+    // `Rule.required()` fired unconditionally here, and it blocked publish on a
+    // hero with NO image — which is every hero out of the box, because
+    // `heroFitField` below carries `initialValue: 'cover'` and Sanity materialises
+    // the image object the moment the document exists. The schema created an empty
+    // image object and then demanded alt text describing nothing. **Not touching
+    // the field was what created it.**
+    //
+    // The rule itself is right and its error severity is kept: alt text on a real
+    // image is an accessibility requirement worth blocking on. Only the trigger
+    // was wrong.
+    //
+    // The cost was not the block, it was what the block taught. The only way past
+    // was to type something, so an operator learns alt text is a box to fill
+    // rather than a description of an image — and the next alt text they write on
+    // a REAL image is likelier to be junk, and that one reaches screen readers.
+    validation: (Rule) =>
+      Rule.custom((alt: unknown, context) => {
+        const parent = context.parent as {asset?: unknown} | undefined
+        if (!parent?.asset) return true
+        return typeof alt === 'string' && alt.trim().length > 0
+          ? true
+          : `Alt text is required for the ${label}`
+      }),
   })
 
 // `hidden` here is a nested-field predicate: its callback gets the top-level
