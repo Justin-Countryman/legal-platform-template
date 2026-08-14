@@ -15,7 +15,7 @@
  * argument the test chooses, and the defect was in which argument the route
  * chooses. So this drives `generateMetadata` and reads the title off the result.
  *
- * THE FIXTURE IS THE REAL STORED SHAPE, read live from `5gmxring/production` on
+ * THE FIXTURE IS THE REAL STORED SHAPE, read live from a real client's production dataset on
  * 2026-07-31 rather than composed here: `title` is `Blaine Law Firm`, the slug
  * carries the ruled `-law-firm` suffix, and `seoTitle` is what varies between
  * the two cases below. A fixture invented to match the code would have encoded
