@@ -1031,3 +1031,63 @@ describe('Fail-to-client-branded-fallback (v0.22.0)', () => {
     expect(resultsDefault).toEqual(resultsExplicit)
   })
 })
+
+// ─── Neutral defaults stay neutral ────────────────────────────────────────────
+// Justin's ruling 2026-08-14: the platform's default palette is black, white and
+// greys. A client with no colors configured gets a clean neutral site, nowhere
+// pink.
+//
+// The defect this pins: every chroma floor in the derivation (tint 0.025, dark
+// 0.02, brightTagline 0.015, actionHover 0.02) used to apply unconditionally.
+// A neutral primary has chroma 0 and an undefined hue that parseOklch collapses
+// to 0 — and OKLCH hue 0 is red — so the floors manufactured pink out of grey:
+// bg-muted #ffeff4, brand-dark #0e0507, tagline/ring/star-outline-on-dark
+// #e1d4d7. The static fallbacks in globals.css were already neutral, so the
+// runtime disagreed with the stylesheet it was overriding.
+describe('neutral defaults — no configured color produces no color', () => {
+  const CHROMATIC = 0.002  // matches ACHROMATIC_CHROMA in designTokens.ts
+
+  it('buildColorCSS with no colors emits zero chromatic hex values', () => {
+    const css = buildColorCSS({} as never)
+    const offenders: string[] = []
+    for (const m of css.matchAll(/(--[a-z0-9-]+):\s*(#[0-9a-fA-F]{6})\s*[;}]/g)) {
+      if (oklchOf(m[2]).c > CHROMATIC) offenders.push(`${m[1]}: ${m[2]}`)
+    }
+    expect(offenders, `chromatic tokens emitted for a neutral default: ${offenders.join(', ')}`).toEqual([])
+  })
+
+  it.each(['#000000', '#1a1a1a', '#4a4a4a', '#666666', '#f5f5f5', '#ffffff'])(
+    'deriveVariants(%s) keeps tint and dark achromatic',
+    (hex) => {
+      const v = deriveVariants(hex)
+      expect(oklchOf(v.tint).c).toBeLessThanOrEqual(CHROMATIC)
+      expect(oklchOf(v.dark).c).toBeLessThanOrEqual(CHROMATIC)
+    },
+  )
+
+  it('the runtime default agrees with the static globals.css fallbacks', () => {
+    // buildColorCSS's own fallback is #1a1a1a; globals.css ships bg-muted
+    // #f5f5f5 and action #4a4a4a as its static neutral values. The runtime must
+    // land on the same greys rather than overriding them with a tinted variant.
+    const css = buildColorCSS({} as never)
+    expect(css).toContain('--color-muted:#f5f5f5')
+  })
+
+  it('a configured color still gets its chroma floor', () => {
+    // The floors exist to survive hex round-trip precision loss on real
+    // palettes. Neutralizing the default must not disarm them: the least
+    // saturated realistic brand color (slate #2c3e50, C 0.039) still floors.
+    //
+    // Thresholds are measured post-round-trip, not at the floor value: an
+    // 8-bit hex cannot hold C 0.025 at L 0.97, and the floored tint #e9f7ff
+    // reads back as 0.0183. Unfloored, the same tint would be #f0f6fc /
+    // C 0.0103 — so the assertion sits between the two, where only a live
+    // floor passes.
+    const v = deriveVariants('#2c3e50')
+    expect(oklchOf(v.tint).c).toBeGreaterThan(0.014)
+    expect(oklchOf(v.dark).c).toBeGreaterThanOrEqual(0.02)
+    // ...and the hue stays the client's blue, never hue 0
+    expect(oklchOf(v.tint).h).toBeGreaterThan(180)
+    expect(oklchOf(v.dark).h).toBeGreaterThan(180)
+  })
+})

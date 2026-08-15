@@ -38,6 +38,28 @@ function normHex(hex: string): string {
   return formatHex(parse(hex)) ?? hex
 }
 
+// ─── Chroma floors ────────────────────────────────────────────────────────────
+// Several derivations floor chroma so a branded palette survives hex round-trip
+// precision loss and keeps its identity in tints, shades and brightened taglines.
+// A floor must never manufacture a hue from nothing: a neutral primary has
+// chroma 0 and an undefined hue that parseOklch collapses to 0 — and OKLCH hue 0
+// is red. Applied unconditionally, every floor below turned the platform's
+// black/white/grey defaults pink (bg-muted #ffeff4, brand-dark #0e0507,
+// tagline-on-dark #e1d4d7).
+//
+// So the floor applies only to input that actually carries chroma. Achromatic
+// input stays achromatic, and the runtime converges on the same neutral values
+// globals.css already ships as static fallbacks.
+//
+// The threshold sits an order of magnitude above hex round-trip noise (#fafaf9
+// measures 0.0013) and two orders below the least saturated realistic brand
+// color (#2c3e50 slate measures 0.039), so no client palette can cross it.
+const ACHROMATIC_CHROMA = 0.002
+
+function chromaFloor(sourceChroma: number, scaledChroma: number, floor: number): number {
+  return sourceChroma <= ACHROMATIC_CHROMA ? 0 : Math.max(scaledChroma, floor)
+}
+
 // ─── Neutral derivation — branded neutrals from primary hue ──────────────────
 // Neutrals carry a very small amount of primary's chroma and hue so every
 // shade on the site is subtly integrated with the brand palette.
@@ -93,10 +115,10 @@ export function deriveVariants(hex: string): ColorVariants {
   const o = parseOklch(hex)
 
   // Tint: L pinned to 0.97, chroma scaled to 25% — floor at 0.025 to survive hex round-trip precision loss
-  const tint = toHex(0.97, Math.max(o.c * 0.25, 0.025), o.h)
+  const tint = toHex(0.97, chromaFloor(o.c, o.c * 0.25, 0.025), o.h)
 
   // Dark: L at 60% of input, chroma preserved — never below 0.02
-  const dark = toHex(o.l * 0.60, Math.max(o.c, 0.02), o.h)
+  const dark = toHex(o.l * 0.60, chromaFloor(o.c, o.c, 0.02), o.h)
 
   // Fg: white when it passes WCAG AA (4.5:1) against the base; otherwise a branded
   // near-black derived from this color's own hue (not pure #000000).
@@ -140,7 +162,7 @@ export type RoleMap = {
 // Boosts L to 0.88 and scales C to 70% to keep color identity while ensuring AA contrast.
 function brightTagline(taglineHex: string): string {
   const t = parseOklch(taglineHex)
-  return toHex(0.88, Math.max(t.c * 0.70, 0.015), t.h)
+  return toHex(0.88, chromaFloor(t.c, t.c * 0.70, 0.015), t.h)
 }
 
 // Action button hover shade — direction is automatic based on fg luminance.
@@ -151,7 +173,7 @@ function actionHover(actionHex: string, fgHex: string): string {
   const f = parseOklch(fgHex)
   if (f.l > 0.5) {
     // Light text on dark fill → darken
-    return toHex(a.l * 0.60, Math.max(a.c, 0.02), a.h)
+    return toHex(a.l * 0.60, chromaFloor(a.c, a.c, 0.02), a.h)
   } else {
     // Dark text on light fill → lighten
     return toHex(Math.min(a.l + 0.07, 0.97), a.c, a.h)
