@@ -22,7 +22,6 @@ import {
   NAP_TOKENS_QUERY,
   GLOBAL_CTA_QUERY,
 } from '@/lib/sanity/queries'
-import {Tagline} from '@/components/ui/Tagline'
 import {PageSections, type PageSectionData} from '@/components/sections/PageSections'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomepageCoda} from '@/components/layout/HomepageCoda'
@@ -186,7 +185,7 @@ export default async function HomePage() {
   const content = home?.hero
   // Render the hero only when content has a heading AND the design is
   // authored/migrated. An empty/unmigrated heroSettings.homepageHero falls through
-  // to the placeholder band — the hard-cut safety net, never a crash.
+  // to the minimal band below — the hard-cut safety net, never a crash.
   const hero: HomeHeroData | null = content?.heading && design ? {...design, ...content} : null
   const sections = home?.sections ?? []
 
@@ -196,13 +195,28 @@ export default async function HomePage() {
         <HomepageHero data={hero} napTokens={tokens} />
       ) : (
         // Fallback when the homepage hero hasn't been authored yet.
+        //
+        // IT TALKS TO THE READER, NOT TO WHOEVER BUILT THE SITE. This band used
+        // to render a vendor name as an eyebrow over the firm name and, under
+        // it, a line of setup instructions naming the CMS. That URL is the one
+        // handed to the client for review, so a firm reading its own new
+        // homepage was told to go configure a product it has never heard of
+        // (`OUTSTANDING.md` item 239). The band itself is right — it is the
+        // hard-cut safety net and never crashing is correct — and what was wrong
+        // was its audience. The exact retired strings are quoted once, in
+        // `app/__tests__/home-unauthored-hero-band.test.ts`, which is what keeps
+        // them out of this file.
+        //
+        // So: the firm's name, and nothing else. An unauthored homepage now
+        // reads as unfinished rather than broken. The operator's signal moved to
+        // where operators actually look — the build composes
+        // `heroSettings.homepageHero` since 2026-08-14, so reaching this branch
+        // at all now means a dataset that never had a build run against it.
         <section className="flex items-center justify-center px-[5%] py-24">
           <div className="space-y-4 text-center">
-            <Tagline as="p">Sanity connection</Tagline>
             <h1 className="marketing-h1 font-heading text-brand-dark">
-              {siteSettings?.firmName ?? 'Firm name not found'}
+              {siteSettings?.firmName ?? ''}
             </h1>
-            <p className="text-foreground-muted">Add a Homepage Hero in Sanity to replace this placeholder.</p>
           </div>
         </section>
       )}
