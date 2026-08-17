@@ -30,7 +30,6 @@ import {mainNavigation} from './documents/mainNavigation'
 import {footerSettings} from './documents/footerSettings'
 import {heroSettings} from './documents/heroSettings'
 import {siteForm} from './documents/siteForm'
-import {redirects} from './documents/redirects'
 import {testimonial} from './documents/testimonial'
 import {testimonialsPage} from './documents/testimonialsPage'
 import {faqItem} from './documents/faqItem'
@@ -107,7 +106,6 @@ export const schemaTypes = [
   footerSettings,
   heroSettings,
   siteForm,
-  redirects,
   testimonial,
   testimonialsPage,
   faqItem,

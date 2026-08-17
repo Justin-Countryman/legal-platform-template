@@ -276,18 +276,4 @@ export const structure = (S: StructureBuilder) =>
               S.documentTypeListItem('badge').title('Badges / Awards'),
             ])
         ),
-
-      S.divider(),
-
-      // ─── Redirects ────────────────────────────────────────────────────────
-      // Isolated from records group — Redirects is a singleton system doc,
-      // not a content record. Its own section keeps the Studio menu legible.
-      S.listItem()
-        .title('Redirects')
-        .id('redirects')
-        .child(
-          S.document()
-            .schemaType('redirects')
-            .documentId('redirects')
-        ),
     ])

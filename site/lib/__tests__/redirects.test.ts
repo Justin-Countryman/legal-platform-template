@@ -1,30 +1,35 @@
 /**
- * The redirect map: what the site serves, from which source, and what happens
- * when the two sources disagree.
+ * The redirect map: what the site serves, and what the build says about the
+ * rows it could not serve as written.
  *
- * `BI/rules/technical-seo.md` → TECH-9 (redirects are build-time and come from
- * `CS/redirects.csv`, defaulting to 301) and TECH-10 (the Studio screen is live:
- * the site reads it, the build writes into it, a Studio entry wins a conflict,
- * and a disagreement is reported).
+ * `BI/rules/technical-seo.md` → TECH-9. ONE SOURCE, ruled 2026-08-17:
+ * `CS/redirects.csv` is the only store of redirects, the app's Redirects screen
+ * is where an operator edits it, and the build resolves it. The Studio
+ * redirects singleton and everything that reconciled the site against it were
+ * deleted in the same change; TECH-10, which was the rule about that second
+ * store, is deleted with it.
  *
- * WHY THIS FILE EXISTS, two reasons that arrived from opposite directions.
+ * WHY THIS FILE EXISTS.
  *
- * ONE. `loadRedirects` had zero tests in either repository — `OUTSTANDING.md`
- * item 159, counted rather than estimated. Six ruled behaviours ran unasserted
- * in the one function that decides whether a migrated client's legacy URLs
+ * `loadRedirects` had zero tests in either repository — `OUTSTANDING.md` item
+ * 159, counted rather than estimated. Six ruled behaviours ran unasserted in
+ * the one function that decides whether a migrated client's legacy URLs
  * resolve: the header skip, the both-side trailing-slash normalization, the
  * self-redirect drop, the `302` branch, the default-301 fall-through, and the
- * missing-file warning. It was the largest untested surface the 2026-08-08
- * technical-SEO inventory found. Those six have a `describe` block each below,
- * named so the mapping is legible without this comment.
+ * missing-file warning. Those six have a `describe` block each below, named so
+ * the mapping is legible without this comment.
  *
- * TWO. The Studio redirects singleton was inert. `studio/schemas/documents/
- * redirects.ts` claimed in its own header comment that the site builder read
- * its array; no file under `site/` referenced it, grepped 2026-08-08 and again
- * at this build. An operator could add a redirect, publish, and change nothing.
+ * WHAT THE ONE-STORE RULING ADDED, and it is the second half of this file.
+ * Flattening, duplicate handling and loop handling used to be split: Site Prep
+ * flattened on the way to the CSV, and the build re-merged two stores without
+ * flattening anything. With one store the build is where a chain is resolved,
+ * so the three cases the ruling names are asserted here — a chain is flattened,
+ * a duplicate source keeps the first row, and a loop emits NO rule and is
+ * reported. A loop that emitted a rule would bounce a visitor between two
+ * pages; a loop that was dropped in silence would 404 a URL with nothing said.
  *
  * THE ONE THING THESE TESTS CANNOT DO, stated so the coverage is not read as
- * larger than it is: they exercise the merge, not the server. Next's own
+ * larger than it is: they exercise the resolution, not the server. Next's own
  * matching of a served rule against an incoming request is outside them, and so
  * is the 308-then-301 chain a slashed legacy URL actually receives. The
  * end-to-end half stays with `BI/runbooks/site-qa.md` §7 and its known limit —
@@ -36,16 +41,14 @@ import {basename, dirname, join} from 'node:path'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 import {CS_SITEMAP_CSV} from '@/next.config'
 import {
-  fetchStudioRedirectsAtBuild,
   formatRedirectReport,
   loadRedirects,
-  normalizeStudioRedirects,
+  MAX_REDIRECT_HOPS,
+  normalizeStatusCode,
   parseRedirectsCsv,
   resolveRedirects,
-  STUDIO_REDIRECTS_QUERY,
   stripTrailingSlash,
   type RedirectRule,
-  type StudioRedirectItem,
 } from '../redirects'
 
 // ---------------------------------------------------------------------------
@@ -84,67 +87,50 @@ const csvRule = (source: string, destination: string, statusCode = 301): Redirec
   statusCode,
 })
 
-const studioItem = (
-  from: string,
-  to: string,
-  extra: Partial<StudioRedirectItem> = {},
-): StudioRedirectItem => ({from, to, type: '301', ...extra})
-
-const migrationItem = (from: string, to: string, extra: Partial<StudioRedirectItem> = {}) =>
-  studioItem(from, to, {source: 'migration', ...extra})
-
-const reachable = (items: StudioRedirectItem[]) => ({items, reachable: true})
+/** Every served rule, keyed by source, for assertions that do not care about order. */
+const bySource = (rules: RedirectRule[]) => Object.fromEntries(rules.map((r) => [r.source, r]))
 
 // ===========================================================================
 // ITEM 159, BEHAVIOUR 1 OF 6 — the header skip
 // ===========================================================================
 
 describe('item 159 / the header skip', () => {
-  it('drops a first line beginning `old_path` rather than serving it as a rule', () => {
+  it('drops a leading `old_path` header row and keeps the rules under it', () => {
     const rules = parseRedirectsCsv('old_path,new_path,redirect_type\n/a/,/b/,301\n')
     expect(rules).toEqual([csvRule('/a', '/b')])
   })
 
-  it('is case-insensitive, because the header has been written both ways', () => {
-    expect(parseRedirectsCsv('OLD_PATH,NEW_PATH\n/a/,/b/\n')).toEqual([csvRule('/a', '/b')])
+  it('is case-insensitive about the header, as a hand-edited file may be', () => {
+    expect(parseRedirectsCsv('Old_Path,New_Path\n/a/,/b/\n')).toEqual([csvRule('/a', '/b')])
   })
 
-  it('only skips the header on line ONE — a later `old_path` row is data', () => {
-    // The guard is `i === 0`, so a legacy URL that genuinely starts with the
-    // string cannot be eaten by it further down the file.
-    const rules = parseRedirectsCsv('old_path,new_path\n/x/,/y/\nold_path-archive/,/z/\n')
-    expect(rules).toContainEqual(csvRule('old_path-archive', '/z'))
-  })
-
-  it('keeps the first row when the file has no header at all', () => {
-    expect(parseRedirectsCsv('/a/,/b/\n')).toEqual([csvRule('/a', '/b')])
+  it('only skips it on line one, so a later row starting `old_path` still parses', () => {
+    // A path may legitimately begin with the header word. Skipping by content
+    // anywhere in the file would delete a real rule.
+    const rules = parseRedirectsCsv('old_path,new_path\n/old_path-guide/,/guide/\n')
+    expect(rules).toEqual([csvRule('/old_path-guide', '/guide')])
   })
 })
 
 // ===========================================================================
-// ITEM 159, BEHAVIOUR 2 OF 6 — trailing-slash normalization, BOTH sides
+// ITEM 159, BEHAVIOUR 2 OF 6 — trailing-slash normalization, both sides
 // ===========================================================================
 
 describe('item 159 / trailing-slash normalization on both sides (TECH-1)', () => {
-  it('strips the slash off the SOURCE, which is what makes a WordPress URL match', () => {
-    // The whole reason the normalization exists: Next 308-strips the incoming
-    // path before matching, so a rule keyed on `/about/attorney/` never fires.
-    expect(parseRedirectsCsv('/about/attorney/,/attorneys/jane-doe\n')[0].source).toBe(
-      '/about/attorney',
-    )
+  it('strips the slash off the source, or the rule never matches', () => {
+    expect(stripTrailingSlash('/about/attorney/')).toBe('/about/attorney')
   })
 
-  it('strips the slash off the DESTINATION, avoiding a trailing 308 hop', () => {
-    expect(parseRedirectsCsv('/old,/new/\n')[0].destination).toBe('/new')
+  it('strips the slash off the destination, avoiding a second hop', () => {
+    expect(parseRedirectsCsv('old_path,new_path\n/a/,/b/\n')[0].destination).toBe('/b')
+  })
+
+  it('leaves the root alone', () => {
+    expect(stripTrailingSlash('/')).toBe('/')
   })
 
   it('collapses repeated trailing slashes', () => {
     expect(stripTrailingSlash('/a///')).toBe('/a')
-  })
-
-  it('leaves the root path alone — `/` is not a slash to strip', () => {
-    expect(stripTrailingSlash('/')).toBe('/')
-    expect(parseRedirectsCsv('/legacy-home/,/\n')[0].destination).toBe('/')
   })
 })
 
@@ -153,19 +139,14 @@ describe('item 159 / trailing-slash normalization on both sides (TECH-1)', () =>
 // ===========================================================================
 
 describe('item 159 / the self-redirect drop', () => {
-  it('drops a row that collapses to source === destination after normalization', () => {
-    // Next rejects a rule whose source equals its destination, so a `/foo/`→`/foo`
-    // row is not merely useless — it fails the build.
-    expect(parseRedirectsCsv('/foo/,/foo\n')).toEqual([])
+  it('drops a row that collapses to a self-redirect under normalization', () => {
+    // `/blog/,/blog` is one row in every migration CSV and Next rejects the
+    // rule outright, failing the whole build.
+    expect(parseRedirectsCsv('old_path,new_path\n/blog/,/blog\n')).toEqual([])
   })
 
-  it('drops it in the other direction too', () => {
-    expect(parseRedirectsCsv('/foo,/foo/\n')).toEqual([])
-  })
-
-  it('keeps the rows either side of a dropped one', () => {
-    const rules = parseRedirectsCsv('/a/,/b\n/foo/,/foo\n/c/,/d\n')
-    expect(rules.map((r) => r.source)).toEqual(['/a', '/c'])
+  it('drops a row that was a self-redirect as written', () => {
+    expect(parseRedirectsCsv('old_path,new_path\n/a,/a\n')).toEqual([])
   })
 })
 
@@ -174,12 +155,17 @@ describe('item 159 / the self-redirect drop', () => {
 // ===========================================================================
 
 describe('item 159 / the 302 branch', () => {
-  it('serves 302 when the third column says so', () => {
-    expect(parseRedirectsCsv('/a/,/b/,302\n')[0].statusCode).toBe(302)
+  it('honours an explicit 302', () => {
+    expect(parseRedirectsCsv('old_path,new_path,redirect_type\n/a/,/b/,302\n')[0].statusCode).toBe(
+      302,
+    )
   })
 
-  it('is exact — `302 ` with whitespace still reads as 302 because fields are trimmed', () => {
-    expect(parseRedirectsCsv('/a/, /b/ , 302 \n')[0].statusCode).toBe(302)
+  it('is the only value that is not a 301', () => {
+    expect(normalizeStatusCode('302')).toBe(302)
+    expect(normalizeStatusCode('301')).toBe(301)
+    expect(normalizeStatusCode('307')).toBe(301)
+    expect(normalizeStatusCode('temporary')).toBe(301)
   })
 })
 
@@ -188,20 +174,19 @@ describe('item 159 / the 302 branch', () => {
 // ===========================================================================
 
 describe('item 159 / the default-301 fall-through', () => {
-  it('defaults a blank type column to 301, the correct status for a migration', () => {
-    expect(parseRedirectsCsv('/a/,/b/,\n')[0].statusCode).toBe(301)
+  it('defaults a blank type to 301', () => {
+    expect(parseRedirectsCsv('old_path,new_path,redirect_type\n/a/,/b/,\n')[0].statusCode).toBe(301)
   })
 
-  it('defaults an ABSENT third column to 301', () => {
-    expect(parseRedirectsCsv('/a/,/b/\n')[0].statusCode).toBe(301)
+  it('defaults a missing third column to 301', () => {
+    expect(parseRedirectsCsv('old_path,new_path\n/a/,/b/\n')[0].statusCode).toBe(301)
   })
 
-  it.each(['301', '307', '308', 'permanent', 'NA', 'garbage'])(
-    'reads %s as 301, because 302 is the only accepted alternative',
-    (type) => {
-      expect(parseRedirectsCsv(`/a/,/b/,${type}\n`)[0].statusCode).toBe(301)
-    },
-  )
+  it('defaults an unrecognised type to 301 rather than passing it through', () => {
+    expect(parseRedirectsCsv('old_path,new_path,redirect_type\n/a/,/b/,gone\n')[0].statusCode).toBe(
+      301,
+    )
+  })
 })
 
 // ===========================================================================
@@ -209,34 +194,32 @@ describe('item 159 / the default-301 fall-through', () => {
 // ===========================================================================
 
 describe('item 159 / the missing-file warning', () => {
-  it('WARNS when redirects.csv is absent and CS-SITEMAP.csv exists (a migrated client)', () => {
-    // The case that previously failed silently and 404'd every legacy URL.
-    const sitemap = withSitemap()
+  it('warns when the CSV is absent and a sitemap says this client was migrated', () => {
     const warn = vi.fn()
-    const rules = loadRedirects(join(dir, 'does-not-exist.csv'), sitemap, warn)
+    const rules = loadRedirects(join(dir, 'nope.csv'), withSitemap(), warn)
     expect(rules).toEqual([])
     expect(warn).toHaveBeenCalledTimes(1)
     expect(warn.mock.calls[0][0]).toContain('ZERO redirects')
   })
 
-  it('stays SILENT when neither file exists — a brand-new firm has no legacy URLs', () => {
+  it('stays silent when the CSV is absent and no sitemap exists, which is a new firm', () => {
     const warn = vi.fn()
-    expect(loadRedirects(join(dir, 'nope.csv'), join(dir, 'also-nope.csv'), warn)).toEqual([])
+    expect(loadRedirects(join(dir, 'nope.csv'), join(dir, 'no-sitemap.csv'), warn)).toEqual([])
     expect(warn).not.toHaveBeenCalled()
   })
 
-  it('does not warn when the file is present, however empty its contents', () => {
-    withSitemap()
-    const {csv, sitemap} = withCsv('old_path,new_path\n')
+  it('stays silent when the CSV is present', () => {
     const warn = vi.fn()
-    expect(loadRedirects(csv, sitemap, warn)).toEqual([])
+    const {csv} = withCsv('old_path,new_path\n/a/,/b/\n')
+    withSitemap()
+    expect(loadRedirects(csv, join(dir, 'CS-SITEMAP.csv'), warn)).toEqual([csvRule('/a', '/b')])
     expect(warn).not.toHaveBeenCalled()
   })
 })
 
-// ---------------------------------------------------------------------------
-// The ordinary parsing the item deliberately did not count among the six
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// PARSING HYGIENE
+// ===========================================================================
 
 describe('parsing hygiene (comments, blanks, half-filled rows)', () => {
   it('skips `#` comments, blank lines and rows missing either side', () => {
@@ -253,403 +236,256 @@ describe('parsing hygiene (comments, blanks, half-filled rows)', () => {
 })
 
 // ===========================================================================
-// TECH-10 HALF 1 — THE SITE SERVES THE STUDIO SCREEN'S ENTRIES
+// TECH-9 / ONE STORE — the file is read and nothing else is
 // ===========================================================================
 
-describe('TECH-10 half 1 / the site serves Studio entries', () => {
-  it('serves a Studio-authored entry that appears in no CSV', () => {
-    // The failure this rule ends: before this build nothing under site/ read
-    // the singleton, so this entry changed nothing and the screen said otherwise.
-    const {rules} = resolveRedirects([], reachable([studioItem('/renamed/', '/new-home')]))
-    expect(rules).toEqual([csvRule('/renamed', '/new-home')])
-  })
-
-  it('serves Studio entries ALONGSIDE the CSV, not instead of it', () => {
-    const {rules} = resolveRedirects(
-      [csvRule('/legacy', '/current')],
-      reachable([studioItem('/renamed', '/new-home')]),
-    )
-    expect(rules).toHaveLength(2)
-    expect(rules.map((r) => r.source).sort()).toEqual(['/legacy', '/renamed'])
-  })
-
-  it('applies TECH-1 to a Studio entry too — the operator types the slashed form', () => {
-    // The schema's own placeholder says `e.g. /old-page/`, so slashed input is
-    // the expected case rather than an edge one.
-    const {rules} = resolveRedirects([], reachable([studioItem('/old-page/', '/new-page/')]))
-    expect(rules).toEqual([csvRule('/old-page', '/new-page')])
-  })
-
-  it('honours the 302 option on a Studio entry and defaults the rest to 301', () => {
-    const {rules} = resolveRedirects(
-      [],
-      reachable([studioItem('/a', '/b', {type: '302'}), studioItem('/c', '/d', {type: null})]),
-    )
-    expect(rules.find((r) => r.source === '/a')!.statusCode).toBe(302)
-    expect(rules.find((r) => r.source === '/c')!.statusCode).toBe(301)
-  })
-
-  it('drops a half-filled Studio row rather than serving it', () => {
-    // Both fields are `required()` at WARNING severity, so a row with one side
-    // blank can be published. It must not reach `redirects()`.
-    expect(
-      normalizeStudioRedirects([
-        {from: '/a', to: ''},
-        {from: '', to: '/b'},
-        {from: '/c', to: '/d'},
-      ]),
-    ).toEqual([{source: '/c', destination: '/d', statusCode: 301, origin: 'studio'}])
-  })
-
-  it('drops a Studio row that collapses to a self-redirect', () => {
-    expect(normalizeStudioRedirects([{from: '/foo/', to: '/foo'}])).toEqual([])
-  })
-
-  it('marks an entry carrying the build marker `migration`, and anything else `studio`', () => {
-    const normalized = normalizeStudioRedirects([
-      migrationItem('/m', '/1'),
-      studioItem('/s', '/2'),
-      studioItem('/u', '/3', {source: 'something-else'}),
-    ])
-    expect(normalized.map((r) => r.origin)).toEqual(['migration', 'studio', 'studio'])
-  })
-})
-
-describe('TECH-10 half 1 / the build-time read', () => {
-  it('reads the PUBLISHED document by id, never a draft', () => {
-    // `*[_type == "redirects"][0]` also matches `drafts.redirects`, and GROQ
-    // orders by `_id` — where the draft sorts FIRST. A build with a
-    // draft-capable read token would then serve an unpublished redirect map.
-    expect(STUDIO_REDIRECTS_QUERY).toContain('_id == "redirects"')
-    expect(STUDIO_REDIRECTS_QUERY).not.toContain('_type ==')
-  })
-
-  const env = () => {
-    vi.stubEnv('NEXT_PUBLIC_SANITY_PROJECT_ID', 'proj')
-    vi.stubEnv('NEXT_PUBLIC_SANITY_DATASET', 'production')
-  }
-
-  it('returns the singleton items and reports the document reachable', async () => {
-    env()
+describe('TECH-9 / CS/redirects.csv is the only source', () => {
+  // The second store is gone. This block is what would go red if a Sanity read
+  // were ever reintroduced into this module, because the module would then need
+  // a network stub to answer at all.
+  it('resolves with no network, no environment and no second argument', () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn(async () => ({ok: true, json: async () => ({result: [{from: '/a', to: '/b'}]})})),
-    )
-    await expect(fetchStudioRedirectsAtBuild()).resolves.toEqual({
-      items: [{from: '/a', to: '/b'}],
-      reachable: true,
-    })
-  })
-
-  it('treats a singleton that does not exist yet as reachable and empty', async () => {
-    // `null` is the honest answer for a dataset nobody has added a redirect to.
-    // Calling that unreachable would suppress the drift check on every clean site.
-    env()
-    vi.stubGlobal('fetch', vi.fn(async () => ({ok: true, json: async () => ({result: null})})))
-    await expect(fetchStudioRedirectsAtBuild()).resolves.toEqual({items: [], reachable: true})
-  })
-
-  it.each([
-    ['no project env', false, undefined],
-    ['a non-200', true, {ok: false, json: async () => ({})}],
-    ['a malformed body', true, {ok: true, json: async () => ({result: {not: 'an array'}})}],
-  ])('reports UNREACHABLE on %s', async (_label, hasEnv, response) => {
-    if (hasEnv) env()
-    vi.stubGlobal('fetch', vi.fn(async () => response))
-    await expect(fetchStudioRedirectsAtBuild()).resolves.toEqual({items: [], reachable: false})
-  })
-
-  it('reports unreachable rather than throwing when the network fails', async () => {
-    env()
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async () => {
-        throw new Error('ECONNREFUSED')
+      vi.fn(() => {
+        throw new Error('the build must not fetch anything to resolve redirects')
       }),
     )
-    await expect(fetchStudioRedirectsAtBuild()).resolves.toEqual({items: [], reachable: false})
+    const {rules} = resolveRedirects([csvRule('/a', '/b')])
+    expect(rules).toEqual([csvRule('/a', '/b')])
   })
 
-  it('FAILS OPEN: an unreadable Studio document never deletes the CSV redirects', async () => {
-    // The opposite polarity to searchVisibility's fail-closed default, and
-    // deliberately so — see the module header. Serving the migration set alone
-    // is the safe degradation.
-    const {rules} = resolveRedirects([csvRule('/legacy', '/current')], {
-      items: [],
-      reachable: false,
-    })
-    expect(rules).toEqual([csvRule('/legacy', '/current')])
-  })
-})
-
-// ===========================================================================
-// TECH-10 HALF 3 — PRECEDENCE
-// ===========================================================================
-
-describe('TECH-10 half 3 / a Studio entry beats a migration entry for the same source', () => {
-  it('serves the Studio destination, not the CSV one', () => {
-    const {rules} = resolveRedirects(
-      [csvRule('/moved', '/old-target')],
-      reachable([studioItem('/moved', '/new-target')]),
-    )
-    expect(rules).toEqual([csvRule('/moved', '/new-target')])
-  })
-
-  it('serves the Studio STATUS too, not only its destination', () => {
-    const {rules} = resolveRedirects(
-      [csvRule('/moved', '/target', 301)],
-      reachable([studioItem('/moved', '/target', {type: '302'})]),
-    )
-    expect(rules).toEqual([csvRule('/moved', '/target', 302)])
-  })
-
-  it('beats a migration entry inside the Studio document as well as a CSV row', () => {
-    const {rules} = resolveRedirects(
-      [csvRule('/moved', '/from-csv')],
-      reachable([migrationItem('/moved', '/from-csv'), studioItem('/moved', '/authored')]),
-    )
-    expect(rules).toEqual([csvRule('/moved', '/authored')])
-  })
-
-  it('matches on the NORMALIZED source, so a slashed Studio entry still wins', () => {
-    // Without normalization before the match, `/moved/` and `/moved` are two
-    // sources and both are served — Next then takes whichever it sees first,
-    // which is precedence by accident.
-    const {rules} = resolveRedirects(
-      [csvRule('/moved', '/old-target')],
-      reachable([studioItem('/moved/', '/new-target')]),
-    )
-    expect(rules).toEqual([csvRule('/moved', '/new-target')])
-  })
-
-  it('is decided by origin, not by array order', () => {
-    // Feeding the same inputs in the other order must not change the winner.
-    const studioFirst = resolveRedirects(
-      [csvRule('/p', '/csv')],
-      reachable([studioItem('/p', '/studio'), migrationItem('/p', '/mig')]),
-    )
-    const migrationFirst = resolveRedirects(
-      [csvRule('/p', '/csv')],
-      reachable([migrationItem('/p', '/mig'), studioItem('/p', '/studio')]),
-    )
-    expect(studioFirst.rules).toEqual([csvRule('/p', '/studio')])
-    expect(migrationFirst.rules).toEqual([csvRule('/p', '/studio')])
-  })
-
-  it('serves exactly one rule per source — Next must not receive two', () => {
-    const {rules} = resolveRedirects(
-      [csvRule('/p', '/csv')],
-      reachable([studioItem('/p', '/studio'), migrationItem('/p', '/mig')]),
-    )
-    expect(rules).toHaveLength(1)
-  })
-
-  it('a migration entry beats a CSV row when no Studio entry claims the source', () => {
-    const {rules} = resolveRedirects(
-      [csvRule('/p', '/stale')],
-      reachable([migrationItem('/p', '/fresh')]),
-    )
-    expect(rules).toEqual([csvRule('/p', '/fresh')])
-  })
-
-  it('leaves every unclaimed CSV row untouched', () => {
-    const {rules} = resolveRedirects(
-      [csvRule('/a', '/1'), csvRule('/b', '/2'), csvRule('/c', '/3')],
-      reachable([studioItem('/b', '/override')]),
-    )
-    expect(rules.sort((x, y) => x.source.localeCompare(y.source))).toEqual([
-      csvRule('/a', '/1'),
-      csvRule('/b', '/override'),
-      csvRule('/c', '/3'),
+  it('exports nothing that reads Sanity', async () => {
+    // Named rather than grepped, so a reintroduction under a new name still
+    // has to pass a human. `STUDIO_REDIRECTS_QUERY`, `fetchStudioRedirectsAtBuild`,
+    // `normalizeStudioRedirects` and `MIGRATION_SOURCE_MARKER` were the four.
+    const mod = await import('../redirects')
+    expect(Object.keys(mod).sort()).toEqual([
+      'MAX_REDIRECT_HOPS',
+      'formatRedirectReport',
+      'loadRedirects',
+      'normalizeStatusCode',
+      'parseRedirectsCsv',
+      'resolveRedirects',
+      'stripTrailingSlash',
     ])
   })
 })
 
 // ===========================================================================
-// TECH-10 HALF 4 — THE GUARD. THE TWO SOURCES CANNOT SILENTLY DISAGREE.
+// TECH-9 / CHAIN FLATTENING
 // ===========================================================================
 
-describe('TECH-10 half 4 / conflicts are reported, not resolved in silence', () => {
-  it('reports a Studio entry overriding a CSV row to a different destination', () => {
-    const {report} = resolveRedirects(
-      [csvRule('/moved', '/old-target')],
-      reachable([studioItem('/moved', '/new-target')]),
-    )
-    expect(report.conflicts).toEqual([
-      {
-        source: '/moved',
-        winner: {source: '/moved', destination: '/new-target', statusCode: 301, origin: 'studio'},
-        loser: {source: '/moved', destination: '/old-target', statusCode: 301, origin: 'csv'},
-      },
+describe('TECH-9 / a multi-hop chain is flattened at build', () => {
+  it('serves /a to /c when the file says /a to /b and /b to /c', () => {
+    const {rules} = resolveRedirects([csvRule('/a', '/b'), csvRule('/b', '/c')])
+    expect(bySource(rules)['/a'].destination).toBe('/c')
+  })
+
+  it('keeps the row that made the chain, resolved to the same end', () => {
+    // `/b` is a legacy URL in its own right. Flattening `/a` must not delete it.
+    const {rules} = resolveRedirects([csvRule('/a', '/b'), csvRule('/b', '/c')])
+    expect(bySource(rules)['/b'].destination).toBe('/c')
+  })
+
+  it('keeps the ORIGINATING hop status code, which is what the visitor gets', () => {
+    const {rules} = resolveRedirects([csvRule('/a', '/b', 302), csvRule('/b', '/c', 301)])
+    expect(bySource(rules)['/a'].statusCode).toBe(302)
+  })
+
+  it('walks a chain several hops deep', () => {
+    const {rules} = resolveRedirects([
+      csvRule('/a', '/b'),
+      csvRule('/b', '/c'),
+      csvRule('/c', '/d'),
+      csvRule('/d', '/e'),
     ])
-    expect(formatRedirectReport(report).join('\n')).toContain('CONFLICT /moved')
+    expect(bySource(rules)['/a'].destination).toBe('/e')
   })
 
-  it('reports a status-only disagreement, where both sides name the same target', () => {
-    // The quietest possible conflict: the URL lands in the right place and the
-    // permanence is wrong, which nothing downstream would ever notice.
-    const {report} = resolveRedirects(
-      [csvRule('/p', '/t', 301)],
-      reachable([studioItem('/p', '/t', {type: '302'})]),
-    )
-    expect(report.conflicts).toHaveLength(1)
+  it('reports every flattening, naming the row as written and the target served', () => {
+    const {report} = resolveRedirects([csvRule('/a', '/b'), csvRule('/b', '/c')])
+    expect(report.flattened).toEqual([{source: '/a', via: '/b', destination: '/c', hops: 2}])
   })
 
-  it('does NOT report a conflict when the two sources agree exactly', () => {
-    // Agreement is the normal case after a build writes the CSV into Studio.
-    // Reporting it would bury the real conflicts in noise.
-    const {report} = resolveRedirects(
-      [csvRule('/p', '/t')],
-      reachable([migrationItem('/p', '/t')]),
-    )
-    expect(report.conflicts).toEqual([])
-    expect(report.drift).toEqual([])
-    expect(formatRedirectReport(report).join('\n')).toContain('the two sources agree')
-  })
-
-  it('reports two entries of the SAME origin claiming one source as a duplicate', () => {
-    const {rules, report} = resolveRedirects(
-      [],
-      reachable([studioItem('/p', '/first'), studioItem('/p', '/second')]),
-    )
-    expect(rules).toEqual([csvRule('/p', '/first')])
-    expect(report.duplicates).toEqual([{source: '/p', origin: 'studio'}])
-    expect(formatRedirectReport(report).join('\n')).toContain('DUPLICATE /p')
+  it('reports nothing when no chain exists', () => {
+    const {report} = resolveRedirects([csvRule('/a', '/b'), csvRule('/c', '/d')])
+    expect(report.flattened).toEqual([])
   })
 })
 
-describe('TECH-10 half 4 / drift between the CSV and the Studio migration set', () => {
-  it('reports a CSV row the build never wrote into Studio', () => {
-    // The operator is looking at an incomplete redirect map and cannot tell.
-    const {report} = resolveRedirects([csvRule('/only-in-csv', '/t')], reachable([]))
-    expect(report.drift).toEqual([
-      {
-        source: '/only-in-csv',
-        kind: 'csv-row-missing-from-studio',
-        csv: csvRule('/only-in-csv', '/t'),
-      },
-    ])
-    expect(formatRedirectReport(report).join('\n')).toContain('DRIFT /only-in-csv')
+// ===========================================================================
+// TECH-9 / DUPLICATE SOURCES
+// ===========================================================================
+
+describe('TECH-9 / two rows claiming one source', () => {
+  it('serves the first row and drops the second', () => {
+    const {rules} = resolveRedirects([csvRule('/a', '/first'), csvRule('/a', '/second')])
+    expect(rules).toEqual([csvRule('/a', '/first')])
   })
 
-  it('reports a Studio migration entry with no row left in the CSV', () => {
-    const {report} = resolveRedirects([], reachable([migrationItem('/only-in-studio', '/t')]))
-    expect(report.drift.map((d) => d.kind)).toEqual(['studio-migration-row-missing-from-csv'])
-  })
-
-  it('reports a migration entry whose destination no longer matches its CSV row', () => {
-    const {report} = resolveRedirects(
-      [csvRule('/p', '/csv-target')],
-      reachable([migrationItem('/p', '/studio-target')]),
-    )
-    expect(report.drift).toEqual([
-      {
-        source: '/p',
-        kind: 'migration-row-disagrees-with-csv',
-        csv: csvRule('/p', '/csv-target'),
-        studio: {
-          source: '/p',
-          destination: '/studio-target',
-          statusCode: 301,
-          origin: 'migration',
-        },
-      },
+  it('reports the dropped row rather than dropping it in silence', () => {
+    const {report} = resolveRedirects([csvRule('/a', '/first'), csvRule('/a', '/second')])
+    expect(report.duplicates).toEqual([
+      {source: '/a', kept: csvRule('/a', '/first'), dropped: csvRule('/a', '/second')},
     ])
   })
 
-  it('does not count a Studio-AUTHORED entry as drift — that is the ruled workflow', () => {
-    // Half 3 exists precisely so an operator can override without editing the
-    // CSV. Reporting that as drift would make the guard fire on correct use.
-    const {report} = resolveRedirects(
-      [csvRule('/p', '/csv-target')],
-      reachable([migrationItem('/p', '/csv-target'), studioItem('/p', '/authored')]),
-    )
-    expect(report.drift).toEqual([])
-    expect(report.conflicts).toHaveLength(1)
+  it('reports a third row for the same source too', () => {
+    const {report} = resolveRedirects([
+      csvRule('/a', '/first'),
+      csvRule('/a', '/second'),
+      csvRule('/a', '/third'),
+    ])
+    expect(report.duplicates.map((d) => d.dropped.destination)).toEqual(['/second', '/third'])
   })
 
-  it('SUPPRESSES the drift check when Studio was unreadable, and says so out loud', () => {
-    // The failure mode this guards: an unreachable dataset yields an empty
-    // array, every CSV row then looks "missing from Studio", and the noise
-    // trains the reader to ignore the report. Reporting "no drift" off the same
-    // empty array is worse — that is silent agreement, which is the exact shape
-    // TECH-10 exists to end.
-    const {report} = resolveRedirects([csvRule('/a', '/b')], {items: [], reachable: false})
-    expect(report.drift).toEqual([])
-    const printed = formatRedirectReport(report).join('\n')
-    expect(printed).toContain('DID NOT RUN')
-    expect(printed).not.toContain('the two sources agree')
+  it('does not report two rows that merely share a destination', () => {
+    const {report} = resolveRedirects([csvRule('/a', '/z'), csvRule('/b', '/z')])
+    expect(report.duplicates).toEqual([])
   })
 })
 
-describe('TECH-10 half 4 / the report speaks on every build', () => {
-  it('prints the per-source counts even when nothing is wrong', () => {
+// ===========================================================================
+// TECH-9 / LOOPS
+// ===========================================================================
+
+describe('TECH-9 / a loop emits no rule and is reported', () => {
+  it('emits NO rule for either leg of /a to /b to /a', () => {
+    // The alternative is a visitor bouncing between two pages until the browser
+    // gives up, which is worse than the 404 this produces.
+    const {rules} = resolveRedirects([csvRule('/a', '/b'), csvRule('/b', '/a')])
+    expect(rules).toEqual([])
+  })
+
+  it('names the cycle it found, in order, closing on the repeat', () => {
+    const {report} = resolveRedirects([csvRule('/a', '/b'), csvRule('/b', '/a')])
+    expect(report.loops).toEqual([
+      {source: '/a', chain: ['/a', '/b', '/a'], reason: 'cycle'},
+      {source: '/b', chain: ['/b', '/a', '/b'], reason: 'cycle'},
+    ])
+  })
+
+  it('drops a row that merely FEEDS a loop, because it cannot resolve either', () => {
+    const {rules, report} = resolveRedirects([
+      csvRule('/x', '/a'),
+      csvRule('/a', '/b'),
+      csvRule('/b', '/a'),
+    ])
+    expect(rules).toEqual([])
+    expect(report.loops.map((l) => l.source).sort()).toEqual(['/a', '/b', '/x'])
+  })
+
+  it('leaves every rule outside the loop serving', () => {
+    const {rules} = resolveRedirects([
+      csvRule('/a', '/b'),
+      csvRule('/b', '/a'),
+      csvRule('/good', '/target'),
+    ])
+    expect(rules).toEqual([csvRule('/good', '/target')])
+  })
+
+  it('caps at ten hops and refuses a chain longer than that', () => {
+    // Without a cap a pathological file hangs the build rather than failing it.
+    const long = Array.from({length: MAX_REDIRECT_HOPS + 2}, (_, i) =>
+      csvRule(`/h${i}`, `/h${i + 1}`),
+    )
+    const {rules, report} = resolveRedirects(long)
+    expect(bySource(rules)['/h0']).toBeUndefined()
+    expect(report.loops.find((l) => l.source === '/h0')?.reason).toBe('hop-cap')
+  })
+
+  it('is ten, matching generate_redirects in the Site Prep Tool', () => {
+    expect(MAX_REDIRECT_HOPS).toBe(10)
+  })
+})
+
+// ===========================================================================
+// THE REPORT AN OPERATOR READS
+// ===========================================================================
+
+describe('the build log report', () => {
+  it('speaks on every build, including a clean one', () => {
     // A guard that only speaks on failure is indistinguishable from a guard
     // that is not running.
-    const {report} = resolveRedirects(
-      [csvRule('/a', '/1')],
-      reachable([migrationItem('/a', '/1'), studioItem('/b', '/2')]),
-    )
-    expect(report.counts).toEqual({csv: 1, migration: 1, studio: 1, served: 2})
-    expect(formatRedirectReport(report)[0]).toContain('2 served')
+    const {report} = resolveRedirects([csvRule('/a', '/b')])
+    const lines = formatRedirectReport(report)
+    expect(lines.length).toBeGreaterThan(0)
+    expect(lines.every((l) => l.startsWith('[redirects]'))).toBe(true)
   })
 
-  it('prefixes every line `[redirects]` so one grep finds the whole story', () => {
-    const {report} = resolveRedirects(
-      [csvRule('/a', '/1')],
-      reachable([studioItem('/a', '/2'), studioItem('/a', '/3')]),
-    )
-    const lines = formatRedirectReport(report)
-    expect(lines.length).toBeGreaterThan(1)
-    expect(lines.every((l) => l.startsWith('[redirects]'))).toBe(true)
+  it('counts the rows read and the rules served', () => {
+    const {report} = resolveRedirects([csvRule('/a', '/b'), csvRule('/a', '/c')])
+    expect(report.counts).toEqual({rows: 2, served: 1})
+  })
+
+  it('names CS/redirects.csv as the source, since it is now the only one', () => {
+    const {report} = resolveRedirects([csvRule('/a', '/b')])
+    expect(formatRedirectReport(report)[0]).toContain('CS/redirects.csv')
+  })
+
+  it('says so plainly when there is nothing to report', () => {
+    const {report} = resolveRedirects([csvRule('/a', '/b')])
+    expect(formatRedirectReport(report).join('\n')).toContain('no duplicate, no chain, no loop')
+  })
+
+  it('prints a LOOP line naming the path that now 404s', () => {
+    const {report} = resolveRedirects([csvRule('/a', '/b'), csvRule('/b', '/a')])
+    const loop = formatRedirectReport(report).find((l) => l.includes('LOOP'))
+    expect(loop).toContain('/a -> /b -> /a')
+    expect(loop).toContain('404')
+  })
+
+  it('prints a FLATTENED line naming both the written target and the served one', () => {
+    const {report} = resolveRedirects([csvRule('/a', '/b'), csvRule('/b', '/c')])
+    const line = formatRedirectReport(report).find((l) => l.includes('FLATTENED'))
+    expect(line).toContain('/b')
+    expect(line).toContain('/c')
+  })
+
+  it('prints a DUPLICATE line naming the row that was ignored', () => {
+    const {report} = resolveRedirects([csvRule('/a', '/first'), csvRule('/a', '/second')])
+    const line = formatRedirectReport(report).find((l) => l.includes('DUPLICATE'))
+    expect(line).toContain('/second')
   })
 })
 
 // ===========================================================================
-// THE WIRING. Everything above tests the merge; this tests that anything CALLS it.
+// next.config.ts ACTUALLY SERVES IT
 // ===========================================================================
 
-describe('next.config.ts actually serves the merged set', () => {
+describe('next.config.ts serves the resolved set', () => {
   // Without this block every test above stays green while `redirects()` returns
-  // the CSV alone, or returns nothing at all — which is precisely the state the
-  // Studio screen was in for months. `specification is not a mechanism`, and a
-  // tested pure function that no caller reaches is a specification.
-  it('returns Studio entries from the config Next actually loads', async () => {
-    vi.stubEnv('NEXT_PUBLIC_SANITY_PROJECT_ID', 'proj')
-    vi.stubEnv('NEXT_PUBLIC_SANITY_DATASET', 'production')
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async () => ({
-        ok: true,
-        json: async () => ({result: [{from: '/studio-only/', to: '/somewhere'}]}),
-      })),
-    )
-    vi.spyOn(console, 'log').mockImplementation(() => {})
-
+  // nothing at all — which is precisely the state the Studio screen was in for
+  // months. A specification is not a mechanism, and a tested pure function that
+  // no caller reaches is a specification.
+  it('returns the rules the CSV resolves to, from the config Next actually loads', async () => {
     const config = (await import('@/next.config')).default
     const rules = await config.redirects!()
-
-    // The template ships no `CS/redirects.csv`, so the Studio entry is the
-    // whole served set — and its presence is only possible if the config reads
-    // the singleton.
-    expect(rules).toEqual([{source: '/studio-only', destination: '/somewhere', statusCode: 301}])
+    // The template ships no `CS/redirects.csv`, so the served set is empty and
+    // the assertion that matters is that the call completes without a dataset.
+    expect(Array.isArray(rules)).toBe(true)
   })
 
-  it('prints the disagreement report into the build log', async () => {
-    // Half 4's delivery mechanism. The report existing as a return value proves
-    // nothing about anyone seeing it.
-    vi.stubEnv('NEXT_PUBLIC_SANITY_PROJECT_ID', 'proj')
-    vi.stubEnv('NEXT_PUBLIC_SANITY_DATASET', 'production')
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async () => ({ok: true, json: async () => ({result: []})})),
-    )
-    const log = vi.spyOn(console, 'log').mockImplementation(() => {})
+  it('resolves redirects without reading Sanity at all', async () => {
+    const fetchSpy = vi.fn(() => {
+      throw new Error('redirects() must not fetch')
+    })
+    vi.stubGlobal('fetch', fetchSpy)
+    vi.spyOn(console, 'log').mockImplementation(() => {})
 
     const config = (await import('@/next.config')).default
     await config.redirects!()
 
-    const printed = log.mock.calls.map((c) => String(c[0])).filter((l) => l.startsWith('[redirects]'))
+    expect(fetchSpy).not.toHaveBeenCalled()
+  })
+
+  it('prints the report into the build log', async () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {})
+    const config = (await import('@/next.config')).default
+    await config.redirects!()
+    const printed = log.mock.calls
+      .map((c) => String(c[0]))
+      .filter((l) => l.startsWith('[redirects]'))
     expect(printed.length).toBeGreaterThan(0)
   })
 })
@@ -696,52 +532,53 @@ describe('item 203 / the sitemap filename the config hands loadRedirects', () =>
 // End to end, on the shapes a real migrated client actually carries
 // ---------------------------------------------------------------------------
 
-describe('a migrated client, all three sources at once', () => {
-  it('serves the union, Studio wins its one override, and the drift is named', () => {
+describe('a migrated client, one file, every case at once', () => {
+  it('serves the clean rows, flattens the chain, keeps the first duplicate and drops the loop', () => {
     const {csv, sitemap} = withCsv(
       [
         'old_path,new_path,redirect_type',
-        '# seeded by Site-Prep generate_redirects',
+        '# seeded by Site-Prep generate_redirects, then edited in the app',
         '/about/our-firm/,/about/,301',
         '/attorney/jane-doe/,/attorneys/jane-doe/',
         '/promo/,/contact/,302',
         '/blog/,/blog',
+        '/old-team/,/about/our-firm/',
+        '/promo/,/contact/thanks',
+        '/ping/,/pong/',
+        '/pong/,/ping/',
         '',
       ].join('\n'),
     )
-    const csvRules = loadRedirects(csv, sitemap)
-    // `/blog/,/blog` collapsed to a self-redirect and never reaches the merge.
-    expect(csvRules.map((r) => r.source)).toEqual([
+    const rows = loadRedirects(csv, sitemap)
+    // `/blog/,/blog` collapsed to a self-redirect and never reaches resolution.
+    expect(rows.map((r) => r.source)).toEqual([
       '/about/our-firm',
       '/attorney/jane-doe',
       '/promo',
+      '/old-team',
+      '/promo',
+      '/ping',
+      '/pong',
     ])
 
-    const {rules, report} = resolveRedirects(
-      csvRules,
-      reachable([
-        migrationItem('/about/our-firm', '/about'),
-        migrationItem('/attorney/jane-doe', '/attorneys/jane-doe'),
-        // The operator retargeted the promo after the build wrote it.
-        studioItem('/promo/', '/contact/thanks'),
-        // And added one the CSV never knew about.
-        studioItem('/seasonal-offer', '/contact'),
-      ]),
-    )
+    const {rules, report} = resolveRedirects(rows)
+    const served = bySource(rules)
 
-    const bySource = Object.fromEntries(rules.map((r) => [r.source, r]))
-    expect(Object.keys(bySource).sort()).toEqual([
+    expect(Object.keys(served).sort()).toEqual([
       '/about/our-firm',
       '/attorney/jane-doe',
+      '/old-team',
       '/promo',
-      '/seasonal-offer',
     ])
-    expect(bySource['/promo'].destination).toBe('/contact/thanks')
-    expect(bySource['/attorney/jane-doe'].statusCode).toBe(301)
-
-    // The promo override is a conflict; the missing migration twin is drift.
-    expect(report.conflicts.map((c) => c.source)).toEqual(['/promo'])
-    expect(report.drift.map((d) => d.source)).toEqual(['/promo'])
-    expect(report.drift[0].kind).toBe('csv-row-missing-from-studio')
+    // The chain: the row says `/about/our-firm`, the visitor lands on `/about`.
+    expect(served['/old-team'].destination).toBe('/about')
+    // The first `/promo` row wins; the operator's later duplicate is reported.
+    expect(served['/promo'].destination).toBe('/contact')
+    expect(served['/promo'].statusCode).toBe(302)
+    expect(report.duplicates.map((d) => d.dropped.destination)).toEqual(['/contact/thanks'])
+    // The ping-pong pair serves nothing and is named twice, once per leg.
+    expect(report.loops.map((l) => l.source)).toEqual(['/ping', '/pong'])
+    expect(report.flattened.map((f) => f.source)).toEqual(['/old-team'])
+    expect(report.counts).toEqual({rows: 7, served: 4})
   })
 })

@@ -1,82 +1,47 @@
-// ─── Redirects: the two sources, merged ───────────────────────────────────────
-// Doctrine: `BI/rules/technical-seo.md` → TECH-9 (redirects are build-time and
-// come from `CS/redirects.csv`) and TECH-10 (the Studio redirects screen is
-// live: the site reads it, the build writes into it, a Studio entry wins a
-// conflict, and a disagreement is reported).
+// ─── Redirects: one source, resolved at build ─────────────────────────────────
+// Doctrine: `BI/rules/technical-seo.md` → TECH-9. Redirects are build-time and
+// come from `CS/redirects.csv` and nowhere else.
 //
-// WHY THIS MODULE EXISTS AT ALL, in two parts.
+// WHY THIS MODULE EXISTS AT ALL.
 //
-// (1) `loadRedirects` used to live inline in `next.config.ts`, where no test
-// could reach it. Six ruled behaviours ran unasserted in the one function that
-// decides whether a migrated client's legacy URLs resolve (`OUTSTANDING.md`
-// item 159). The parsing half is now a pure function over a string, and the
-// filesystem half takes its paths as arguments, so both are testable.
+// `loadRedirects` used to live inline in `next.config.ts`, where no test could
+// reach it. Six ruled behaviours ran unasserted in the one function that decides
+// whether a migrated client's legacy URLs resolve (`OUTSTANDING.md` item 159).
+// The parsing half is now a pure function over a string, and the filesystem half
+// takes its paths as arguments, so both are testable.
 //
-// (2) `studio/schemas/documents/redirects.ts` is a registered singleton whose
-// own header comment claimed the site builder read its array. Nothing under
-// `site/` referenced it — an operator could add a redirect in Studio, publish,
-// and change nothing, while the screen told them otherwise. That is the failure
-// TECH-10 was ruled to end.
+// WHAT WAS DELETED HERE ON 2026-08-17, AND WHY, because the shape of this file
+// is the record of it. There used to be a SECOND store: a `redirects` singleton
+// in Sanity that this module read at build and merged with the CSV under a
+// three-rank precedence, reporting every conflict and every drift between the
+// two. That machinery was correct and it is gone, because the thing it
+// reconciled should never have existed. Measured before the deletion: no
+// operator had ever authored a row in that screen on either real client, all
+// 148 rows across both were machine written, a row published there returned a
+// 200 and a `revalidated: true` and then never served, and the operator's own
+// `CS/redirects.csv` ranked LOWEST of the three, so curating it was overruled by
+// the build. The proposal that ruled this is
+// `BI/_scratch/PROPOSAL-REDIRECTS-2026-08-17.md`; the evidence is findings F21
+// and F21-V1 through F21-V18 in `BI/_workstreams/WS-Dogfood-2026-08-16-NOTES.md`.
 //
-// THE PRECEDENCE, stated once here and again in the schema description the
-// operator reads:
+// WHAT MOVED INTO THIS FILE AS A RESULT. With one store, the build is the only
+// place a chain can be resolved, so `resolveRedirects` now does the three things
+// the ruling names as having exactly one right answer: flatten a multi-hop
+// chain, keep the first of two rows claiming one source, and drop a self
+// redirect. A LOOP is the fourth case and it has no right answer, so it emits no
+// rule and is reported: a rule for a loop bounces a visitor between two pages
+// until the browser gives up, which is worse than the 404 that dropping it
+// produces.
 //
-//     Studio-authored entry  >  migration entry (build-written)  >  CSV row
-//
-// A Studio entry wins because it is the later and more deliberate edit. The
-// migration entries in the Studio document and the rows in `CS/redirects.csv`
-// are meant to be the same set — the build writes one from the other — so any
-// difference between them is drift, and drift is reported rather than resolved
-// in silence. That report is the fourth half of TECH-10 and is the reason the
-// other three are worth building: two sources of truth about a path that cannot
-// disagree out loud will disagree quietly instead.
+// WHERE THE OPERATOR EDITS. The app's Redirects screen for that client, which
+// writes `CS/redirects.csv` and deploys. A row is stored exactly as it was
+// typed; flattening happens here, when the build reads the file, so the file
+// keeps `/a -> /b` while the site serves `/a -> /c`.
 
 import {existsSync, readFileSync} from 'node:fs'
 
 /** A rule in the shape Next's `redirects()` returns. */
 export type RedirectRule = {source: string; destination: string; statusCode: number}
-
-/** Where a served rule came from. Ordered by precedence in `ORIGIN_RANK`. */
-export type RedirectOrigin = 'studio' | 'migration' | 'csv'
-
-export type OriginatedRedirect = RedirectRule & {origin: RedirectOrigin}
-
-/** One row of the Studio singleton's `items` array, as it arrives from GROQ. */
-export type StudioRedirectItem = {
-  from?: string | null
-  to?: string | null
-  type?: string | null
-  source?: string | null
-}
-
-/** A lower-precedence entry that lost to a higher one and did not agree with it. */
-export type RedirectConflict = {
-  source: string
-  winner: OriginatedRedirect
-  loser: OriginatedRedirect
-}
-
-export type RedirectDriftKind =
-  | 'csv-row-missing-from-studio'
-  | 'studio-migration-row-missing-from-csv'
-  | 'migration-row-disagrees-with-csv'
-
-/** The two sources disagreeing about the migration set. */
-export type RedirectDrift = {
-  source: string
-  kind: RedirectDriftKind
-  csv?: RedirectRule
-  studio?: OriginatedRedirect
-}
-
-export type RedirectReport = {
-  conflicts: RedirectConflict[]
-  drift: RedirectDrift[]
-  duplicates: {source: string; origin: RedirectOrigin}[]
-  /** False when the Studio document could not be read; drift is not computable then. */
-  studioReachable: boolean
-  counts: {csv: number; migration: number; studio: number; served: number}
-}
 
 /**
  * TECH-1 on this surface. The site runs with the default `trailingSlash: false`,
@@ -96,7 +61,7 @@ export function normalizeStatusCode(rawType: string | null | undefined): number 
   return rawType === '302' ? 302 : 301
 }
 
-// ─── Source 1: the migration CSV ──────────────────────────────────────────────
+// ─── Reading the file ─────────────────────────────────────────────────────────
 
 /**
  * Parse `CS/redirects.csv`. Shape: `old_path,new_path[,redirect_type]` with a
@@ -106,6 +71,11 @@ export function normalizeStatusCode(rawType: string | null | undefined): number 
  * the header skip, the both-side trailing-slash normalization, the
  * self-redirect drop (Next rejects a rule whose source equals its destination),
  * the `302` branch and the default-301 fall-through.
+ *
+ * DUPLICATE SOURCES ARE NOT RESOLVED HERE, deliberately. This function is a
+ * faithful read of the file and returns one rule per usable row, duplicates
+ * included; `resolveRedirects` is where the file becomes the served set and is
+ * the only place a row is dropped for a reason other than being unusable.
  */
 export function parseRedirectsCsv(raw: string): RedirectRule[] {
   const lines = raw.split('\n')
@@ -168,220 +138,116 @@ export function loadRedirects(
   return parseRedirectsCsv(raw)
 }
 
-// ─── Source 2: the Studio singleton ───────────────────────────────────────────
+// ─── Resolving the file into the served set ───────────────────────────────────
 
-/**
- * The one document this module reads. `_id` is fixed by `studio/structure.ts`,
- * and the filter is on `_id` rather than `_type` DELIBERATELY.
- *
- * `*[_type == "redirects"][0]` would also match `drafts.redirects`, and GROQ
- * orders an unordered filter by `_id`, where `drafts.redirects` sorts BEFORE
- * `redirects`. A build carrying a read token with draft access would then serve
- * an unpublished redirect map — silently, and only on the clients where someone
- * happened to leave a draft open. Filtering on the published `_id` cannot.
- * `BE/Site-Prep-Tool/site_prep_tool.py` reads the same document the same way.
- */
-export const STUDIO_REDIRECTS_QUERY =
-  `*[_id == "redirects"][0].items[]{from, to, type, source}`
+/** A second row claiming a source the file already claimed. The first is served. */
+export type RedirectDuplicate = {source: string; kept: RedirectRule; dropped: RedirectRule}
 
-/**
- * The value the build marks its own rows with. Anything else — including an
- * absent value, which is every row an operator adds in Studio — is authored.
- * Written by `generate_redirects` in `BE/Site-Prep-Tool/site_prep_tool.py`.
- */
-export const MIGRATION_SOURCE_MARKER = 'migration'
+/** A row whose written target is itself a redirect, so the visitor is sent past it. */
+export type RedirectFlattened = {
+  source: string
+  /** The destination the operator typed. */
+  via: string
+  /** The destination actually served. */
+  destination: string
+  /** How many hops the walk took to get there. */
+  hops: number
+}
 
-/** Distinguishes "the operator has no entries" from "the document was unreadable". */
-export type StudioRedirectFetch = {items: StudioRedirectItem[]; reachable: boolean}
+/** A row that never reaches a terminal target. No rule is emitted for it. */
+export type RedirectLoop = {
+  source: string
+  /** The walk, in order, closing on the path that repeated or on the last hop reached. */
+  chain: string[]
+  reason: 'cycle' | 'hop-cap'
+}
 
-/**
- * Build-time read for callers OUTSIDE the Next module graph — specifically
- * `next.config.ts`, which cannot import the Sanity client. Uses bare `fetch` so
- * it pulls in no dependencies, exactly as `fetchSiteHiddenAtBuild` does.
- *
- * FAIL-OPEN, and deliberately the opposite of `searchVisibility`'s fail-closed
- * default. There, an unreachable dataset must not un-hide a site. Here, an
- * unreachable dataset must not delete the CSV's redirects: serving the migration
- * set alone is the safe degradation, and `reachable: false` tells the caller the
- * disagreement guard could not run so it can say so rather than report "no
- * drift" off an empty array.
- */
-export async function fetchStudioRedirectsAtBuild(): Promise<StudioRedirectFetch> {
-  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
-  const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET
-  if (!projectId || !dataset) return {items: [], reachable: false}
-
-  try {
-    const url =
-      `https://${projectId}.api.sanity.io/v2024-01-01/data/query/${dataset}` +
-      `?query=${encodeURIComponent(STUDIO_REDIRECTS_QUERY)}`
-    const token = process.env.SANITY_API_READ_TOKEN
-    const res = await fetch(url, {
-      headers: token ? {Authorization: `Bearer ${token}`} : {},
-      cache: 'no-store',
-    })
-    if (!res.ok) return {items: [], reachable: false}
-    const body = (await res.json()) as {result?: unknown}
-    // A singleton that does not exist yet answers `null`, which is reachable
-    // and empty — not the same thing as a failed read.
-    if (body?.result == null) return {items: [], reachable: true}
-    if (!Array.isArray(body.result)) return {items: [], reachable: false}
-    return {items: body.result as StudioRedirectItem[], reachable: true}
-  } catch {
-    return {items: [], reachable: false}
-  }
+export type RedirectReport = {
+  duplicates: RedirectDuplicate[]
+  flattened: RedirectFlattened[]
+  loops: RedirectLoop[]
+  counts: {rows: number; served: number}
 }
 
 /**
- * Studio rows into served rules, under the same TECH-1 normalization and the
- * same self-redirect drop the CSV rows get. A row missing either side is
- * skipped: the schema marks both `required()` at warning severity, so a
- * half-filled row can be published and must not reach `redirects()`.
+ * The hop cap. Ten, matching `generate_redirects` in
+ * `BE/Site-Prep-Tool/site_prep_tool.py`, so the same file resolves the same way
+ * in both places.
+ *
+ * It is a SECOND guard, not the cycle detector: a revisited path is caught by
+ * the visited set below regardless of length. The cap is what bounds a
+ * pathological chain that is long without repeating, so a bad file fails the
+ * build rather than hanging it.
  */
-export function normalizeStudioRedirects(items: StudioRedirectItem[]): OriginatedRedirect[] {
-  const out: OriginatedRedirect[] = []
-  for (const item of items ?? []) {
-    const rawSource = (item?.from ?? '').trim()
-    const rawDestination = (item?.to ?? '').trim()
-    if (!rawSource || !rawDestination) continue
-    const source = stripTrailingSlash(rawSource)
-    const destination = stripTrailingSlash(rawDestination)
-    if (source === destination) continue
-    out.push({
-      source,
-      destination,
-      statusCode: normalizeStatusCode(item?.type),
-      origin: item?.source === MIGRATION_SOURCE_MARKER ? 'migration' : 'studio',
-    })
-  }
-  return out
-}
-
-// ─── The merge: precedence, then the disagreement report ──────────────────────
-
-/** Higher wins. The Studio entry is the later and more deliberate edit. */
-const ORIGIN_RANK: Record<RedirectOrigin, number> = {studio: 3, migration: 2, csv: 1}
-
-function agrees(a: RedirectRule, b: RedirectRule): boolean {
-  return a.destination === b.destination && a.statusCode === b.statusCode
-}
+export const MAX_REDIRECT_HOPS = 10
 
 /**
- * Merge the two sources into the array `redirects()` returns, and report every
- * way they disagreed on the way through.
+ * Turn the rows of `CS/redirects.csv` into the array `redirects()` returns, and
+ * report every row that could not be served as written.
  *
- * Precedence is by origin rank and nothing else, so it does not depend on array
- * order and is the same on every build. Two entries of the SAME origin claiming
- * one source are a duplicate: the first wins and the second is reported.
+ * THE FOUR CASES, and which of them has one right answer:
  *
- * `studioReachable: false` suppresses the drift half — with no Studio read there
- * is nothing to compare the CSV against, and reporting "no drift" off an empty
- * array is the silent-agreement failure this rule exists to prevent.
+ *  - DUPLICATE source: first row wins, later rows are dropped and reported.
+ *  - CHAIN `/a`→`/b`→`/c`: `/a` serves `/c` directly, reported. `/b` keeps its
+ *    own rule — it is a legacy URL in its own right and flattening `/a` must not
+ *    delete it.
+ *  - SELF redirect: already dropped by `parseRedirectsCsv`; Next rejects it.
+ *  - LOOP: NO right answer, so no rule and a report. Both legs of `/a`→`/b`→`/a`
+ *    are dropped, and so is anything that merely feeds the loop, because it
+ *    cannot resolve either.
+ *
+ * The status code served is the ORIGINATING hop's, because that is the status
+ * the visitor actually receives; the hops in between never happen.
  */
-export function resolveRedirects(
-  csvRules: RedirectRule[],
-  studio: StudioRedirectFetch,
-): {rules: RedirectRule[]; report: RedirectReport} {
-  const studioRules = normalizeStudioRedirects(studio.items)
-  const authored = studioRules.filter((r) => r.origin === 'studio')
-  const migration = studioRules.filter((r) => r.origin === 'migration')
-  const csv: OriginatedRedirect[] = csvRules.map((r) => ({...r, origin: 'csv' as const}))
-
-  // Group first, resolve second. Deciding as entries stream past makes the
-  // winner depend on arrival order and reports one override once per loser —
-  // a Studio entry beating a migration entry that agrees with its CSV row is
-  // ONE conflict, not two.
-  //
-  // The Studio rows go in AS THEY COME OFF THE DOCUMENT, deliberately not
-  // pre-partitioned into authored-then-migration. Pre-partitioning would make
-  // the rank sort below dead code that could be deleted with every test still
-  // green — which is what it was until a red-proof at this build caught it.
-  const bySource = new Map<string, OriginatedRedirect[]>()
-  for (const entry of [...studioRules, ...csv]) {
-    const held = bySource.get(entry.source)
-    if (held) held.push(entry)
-    else bySource.set(entry.source, [entry])
+export function resolveRedirects(rows: RedirectRule[]): {
+  rules: RedirectRule[]
+  report: RedirectReport
+} {
+  const duplicates: RedirectDuplicate[] = []
+  const byPath = new Map<string, RedirectRule>()
+  for (const row of rows) {
+    const held = byPath.get(row.source)
+    if (held) duplicates.push({source: row.source, kept: held, dropped: row})
+    else byPath.set(row.source, row)
   }
 
-  const conflicts: RedirectConflict[] = []
-  const duplicates: {source: string; origin: RedirectOrigin}[] = []
-  const winners = new Map<string, OriginatedRedirect>()
+  const flattened: RedirectFlattened[] = []
+  const loops: RedirectLoop[] = []
+  const rules: RedirectRule[] = []
 
-  for (const [source, candidates] of bySource) {
-    // Stable sort by rank, so precedence is a property of the origin and not of
-    // the order the two sources happened to be read in.
-    const ranked = [...candidates].sort((a, b) => ORIGIN_RANK[b.origin] - ORIGIN_RANK[a.origin])
-    const winner = ranked[0]
-    winners.set(source, winner)
+  for (const [source, row] of byPath) {
+    const chain = [source]
+    let current = row.destination
+    let hops = 1
+    let loop: RedirectLoop | null = null
 
-    const seenOrigins = new Set<RedirectOrigin>()
-    for (const entry of ranked) {
-      if (seenOrigins.has(entry.origin)) duplicates.push({source, origin: entry.origin})
-      seenOrigins.add(entry.origin)
+    while (byPath.has(current)) {
+      if (chain.includes(current)) {
+        loop = {source, chain: [...chain, current], reason: 'cycle'}
+        break
+      }
+      if (hops >= MAX_REDIRECT_HOPS) {
+        loop = {source, chain: [...chain, current], reason: 'hop-cap'}
+        break
+      }
+      chain.push(current)
+      current = byPath.get(current)!.destination
+      hops++
     }
 
-    // One conflict per source: the winner against the best-ranked entry that
-    // does not agree with it. Anything below that either agrees or is the same
-    // disagreement seen again.
-    const loser = ranked.slice(1).find((entry) => !agrees(winner, entry))
-    if (loser) conflicts.push({source, winner, loser})
+    if (loop) {
+      loops.push(loop)
+      continue
+    }
+    if (current !== row.destination) {
+      flattened.push({source, via: row.destination, destination: current, hops})
+    }
+    rules.push({source, destination: current, statusCode: row.statusCode})
   }
-
-  const drift: RedirectDrift[] = []
-  if (studio.reachable) {
-    const migrationBySource = new Map(migration.map((r) => [r.source, r]))
-    const csvBySource = new Map(csv.map((r) => [r.source, r]))
-    // Drop `origin` on the way in: a drift entry records the two RULES that
-    // disagree, and re-stating which side each came from is already the `kind`.
-    for (const entry of csv) {
-      const row: RedirectRule = {
-        source: entry.source,
-        destination: entry.destination,
-        statusCode: entry.statusCode,
-      }
-      const twin = migrationBySource.get(row.source)
-      if (!twin) {
-        drift.push({source: row.source, kind: 'csv-row-missing-from-studio', csv: row})
-      } else if (!agrees(row, twin)) {
-        drift.push({
-          source: row.source,
-          kind: 'migration-row-disagrees-with-csv',
-          csv: row,
-          studio: twin,
-        })
-      }
-    }
-    for (const row of migration) {
-      if (!csvBySource.has(row.source)) {
-        drift.push({
-          source: row.source,
-          kind: 'studio-migration-row-missing-from-csv',
-          studio: row,
-        })
-      }
-    }
-  }
-
-  const rules = [...winners.values()].map(({source, destination, statusCode}) => ({
-    source,
-    destination,
-    statusCode,
-  }))
 
   return {
     rules,
-    report: {
-      conflicts,
-      drift,
-      duplicates,
-      studioReachable: studio.reachable,
-      counts: {
-        csv: csv.length,
-        migration: migration.length,
-        studio: authored.length,
-        served: rules.length,
-      },
-    },
+    report: {duplicates, flattened, loops, counts: {rows: rows.length, served: rules.length}},
   }
 }
 
@@ -390,63 +256,45 @@ export function resolveRedirects(
  * assertable without capturing console output.
  *
  * Every line is prefixed `[redirects]` so a build log can be grepped for the
- * whole story with one string.
+ * whole story with one string. The summary line is printed on EVERY build, not
+ * only when something is wrong: a guard that only speaks on failure is
+ * indistinguishable from a guard that is not running.
  */
 export function formatRedirectReport(report: RedirectReport): string[] {
   const {counts} = report
   const lines: string[] = [
-    `[redirects] ${counts.served} served — ` +
-      `${counts.studio} Studio-authored, ${counts.migration} migration (Studio), ` +
-      `${counts.csv} from CS/redirects.csv`,
+    `[redirects] ${counts.served} served from CS/redirects.csv (${counts.rows} row(s) read)`,
   ]
 
-  if (!report.studioReachable) {
-    lines.push(
-      '[redirects] WARNING: the Studio redirects document could not be read. ' +
-        'Serving CS/redirects.csv alone, and the CSV-versus-Studio disagreement ' +
-        'check DID NOT RUN — this is not a clean result, it is an unchecked one.',
-    )
-    return lines
-  }
-
-  for (const c of report.conflicts) {
-    lines.push(
-      `[redirects] CONFLICT ${c.source}: ${c.winner.origin} entry ` +
-        `→ ${c.winner.destination} (${c.winner.statusCode}) WINS over ${c.loser.origin} ` +
-        `→ ${c.loser.destination} (${c.loser.statusCode})`,
-    )
-  }
   for (const d of report.duplicates) {
     lines.push(
-      `[redirects] DUPLICATE ${d.source}: two ${d.origin} entries claim this source; ` +
-        'the first is served and the second is ignored',
+      `[redirects] DUPLICATE ${d.source}: two rows claim this source. Serving ` +
+        `-> ${d.kept.destination} (${d.kept.statusCode}) and IGNORING ` +
+        `-> ${d.dropped.destination} (${d.dropped.statusCode}). Delete one of them ` +
+        `in the app's Redirects screen.`,
     )
   }
-  for (const d of report.drift) {
-    if (d.kind === 'csv-row-missing-from-studio') {
-      lines.push(
-        `[redirects] DRIFT ${d.source}: in CS/redirects.csv but not in the Studio ` +
-          'screen — the operator is looking at an incomplete redirect map. Re-run ' +
-          'Site-Prep generate_redirects.',
-      )
-    } else if (d.kind === 'studio-migration-row-missing-from-csv') {
-      lines.push(
-        `[redirects] DRIFT ${d.source}: a migration entry in Studio with no row in ` +
-          'CS/redirects.csv — the CSV was edited without re-running Site-Prep, or the ' +
-          'row was deleted.',
-      )
-    } else {
-      lines.push(
-        `[redirects] DRIFT ${d.source}: CS/redirects.csv says ` +
-          `→ ${d.csv?.destination} (${d.csv?.statusCode}) and the Studio migration entry ` +
-          `says → ${d.studio?.destination} (${d.studio?.statusCode}). The Studio entry is ` +
-          'served. Re-run Site-Prep generate_redirects to reconcile.',
-      )
-    }
+  for (const f of report.flattened) {
+    lines.push(
+      `[redirects] FLATTENED ${f.source}: the row says -> ${f.via}, which is itself ` +
+        `a redirect, so ${f.source} serves -> ${f.destination} directly (${f.hops} hops ` +
+        `collapsed). Your row is unchanged; this is what the visitor gets.`,
+    )
+  }
+  for (const l of report.loops) {
+    const why =
+      l.reason === 'cycle'
+        ? 'this chain returns to a path it already visited'
+        : `this chain did not resolve within ${MAX_REDIRECT_HOPS} hops`
+    lines.push(
+      `[redirects] LOOP ${l.source}: ${l.chain.join(' -> ')} — ${why}, so NO redirect ` +
+        `is emitted and ${l.source} returns 404. Fix the chain in the app's Redirects ` +
+        `screen; there is no correct target to pick automatically.`,
+    )
   }
 
-  if (!report.conflicts.length && !report.duplicates.length && !report.drift.length) {
-    lines.push('[redirects] the two sources agree — no conflict, no drift')
+  if (!report.duplicates.length && !report.flattened.length && !report.loops.length) {
+    lines.push('[redirects] no duplicate, no chain, no loop')
   }
   return lines
 }

@@ -45,7 +45,6 @@ const PROTECTED_TYPES = [
   'footerSettings',
   'heroSettings',
   'globalCta',
-  'redirects',
   'homePage',
   'blogIndex',
   'attorneyIndex',

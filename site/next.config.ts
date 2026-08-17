@@ -1,12 +1,7 @@
 import type {NextConfig} from 'next'
 import {resolve} from 'node:path'
 import {fetchSiteHiddenAtBuild} from './lib/searchVisibility'
-import {
-  fetchStudioRedirectsAtBuild,
-  formatRedirectReport,
-  loadRedirects,
-  resolveRedirects,
-} from './lib/redirects'
+import {formatRedirectReport, loadRedirects, resolveRedirects} from './lib/redirects'
 import {securityHeaders} from './lib/securityHeaders'
 
 // ─── Security headers ─────────────────────────────────────────────────────────
@@ -17,11 +12,13 @@ import {securityHeaders} from './lib/securityHeaders'
 // this config module is logic no suite can run.
 
 // ─── Legacy URL redirects ─────────────────────────────────────────────────────
-// TWO SOURCES, merged in `lib/redirects.ts` — see that file's header for the
-// precedence and the disagreement report. `CS/redirects.csv` is operator-curated
-// and tracked in git (the Site Prep Tool may regenerate `output/redirects.csv`
-// for comparison but never overwrites the CS-tracked copy); the Studio redirects
-// singleton is the screen an operator edits without a rebuild of the CSV.
+// ONE SOURCE, ruled 2026-08-17 (TECH-9). `CS/redirects.csv` is the only store of
+// redirects: it is git tracked, the app's Redirects screen for that client is
+// where an operator edits it, and `lib/redirects.ts` resolves it here at build.
+// `output/redirects.csv` is the Site Prep Tool's regenerate-for-comparison
+// artifact and serves nothing. The Studio redirects singleton was the second
+// store and is deleted; see `lib/redirects.ts` for what it was and what
+// measurement ended it.
 //
 // The parsing and merging logic lived inline here until 2026-08-10, where no
 // test could reach it — `OUTSTANDING.md` item 159. Only the path resolution
@@ -78,12 +75,11 @@ const nextConfig: NextConfig = {
     ]
   },
   async redirects() {
-    const csv = loadRedirects(CS_REDIRECTS_CSV, CS_SITEMAP_CSV)
-    const studio = await fetchStudioRedirectsAtBuild()
-    const {rules, report} = resolveRedirects(csv, studio)
-    // TECH-10's fourth half. The report is printed on EVERY build, not only when
-    // something is wrong: a guard that only speaks on failure is indistinguishable
-    // from a guard that is not running.
+    const {rules, report} = resolveRedirects(loadRedirects(CS_REDIRECTS_CSV, CS_SITEMAP_CSV))
+    // Printed on EVERY build, not only when something is wrong: a guard that only
+    // speaks on failure is indistinguishable from a guard that is not running.
+    // The lines name every row that could not be served as it was written — a
+    // duplicate source, a flattened chain, a loop that now 404s.
     for (const line of formatRedirectReport(report)) console.log(line)
     return rules
   },
