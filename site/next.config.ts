@@ -1,7 +1,12 @@
 import type {NextConfig} from 'next'
 import {resolve} from 'node:path'
 import {fetchSiteHiddenAtBuild} from './lib/searchVisibility'
-import {formatRedirectReport, loadRedirects, resolveRedirects} from './lib/redirects'
+import {
+  assertRedirectCapNotExceeded,
+  formatRedirectReport,
+  loadRedirects,
+  resolveRedirects,
+} from './lib/redirects'
 import {securityHeaders} from './lib/securityHeaders'
 
 // ─── Security headers ─────────────────────────────────────────────────────────
@@ -81,6 +86,10 @@ const nextConfig: NextConfig = {
     // The lines name every row that could not be served as it was written — a
     // duplicate source, a flattened chain, a loop that now 404s.
     for (const line of formatRedirectReport(report)) console.log(line)
+    // AFTER the report, so an over-cap build still prints which rows were
+    // duplicated, flattened or looped — that is what tells the operator which
+    // ones are safe to remove.
+    assertRedirectCapNotExceeded(rules.length)
     return rules
   },
 }

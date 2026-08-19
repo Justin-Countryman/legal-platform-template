@@ -41,8 +41,10 @@ import {basename, dirname, join} from 'node:path'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 import {CS_SITEMAP_CSV} from '@/next.config'
 import {
+  assertRedirectCapNotExceeded,
   formatRedirectReport,
   loadRedirects,
+  MAX_CONFIG_REDIRECTS,
   MAX_REDIRECT_HOPS,
   normalizeStatusCode,
   parseRedirectsCsv,
@@ -260,7 +262,9 @@ describe('TECH-9 / CS/redirects.csv is the only source', () => {
     // `normalizeStudioRedirects` and `MIGRATION_SOURCE_MARKER` were the four.
     const mod = await import('../redirects')
     expect(Object.keys(mod).sort()).toEqual([
+      'MAX_CONFIG_REDIRECTS',
       'MAX_REDIRECT_HOPS',
+      'assertRedirectCapNotExceeded',
       'formatRedirectReport',
       'loadRedirects',
       'normalizeStatusCode',
@@ -487,6 +491,78 @@ describe('next.config.ts serves the resolved set', () => {
       .map((c) => String(c[0]))
       .filter((l) => l.startsWith('[redirects]'))
     expect(printed.length).toBeGreaterThan(0)
+  })
+})
+
+// ===========================================================================
+// THE ROUTE CAP. Finding F29.
+// ===========================================================================
+
+describe('F29 / the cap is enforced where the build reads, not only where the operator types', () => {
+  // The app refuses to SAVE above 1,024 rows. Two paths reach
+  // `CS/redirects.csv` without passing that screen — Site Prep's
+  // `merge_cs_redirects`, and a hand edit or a `cp` — so the count has to be
+  // true here too, at the last point before the deploy.
+  const rule = (n: number): RedirectRule => ({
+    source: `/old-${n}`,
+    destination: `/new-${n}`,
+    statusCode: 301,
+  })
+
+  it('agrees with the number the app refuses above', () => {
+    expect(MAX_CONFIG_REDIRECTS).toBe(1024)
+  })
+
+  it('passes a set exactly at the cap', () => {
+    expect(() => assertRedirectCapNotExceeded(MAX_CONFIG_REDIRECTS)).not.toThrow()
+  })
+
+  it('throws one over, naming the file and how many to remove', () => {
+    let message = ''
+    try {
+      assertRedirectCapNotExceeded(MAX_CONFIG_REDIRECTS + 3)
+    } catch (e) {
+      message = (e as Error).message
+    }
+    expect(message).toContain('1027 redirects')
+    expect(message).toContain('CS/redirects.csv')
+    expect(message).toContain('Remove 3 redirect(s)')
+  })
+
+  it('counts SERVED rules, so a duplicate and a loop cost nothing', () => {
+    // Three rows, one served: the duplicate is dropped and the loop emits
+    // nothing. A row-count check would have seen three.
+    const {rules} = resolveRedirects([
+      {source: '/a', destination: '/b', statusCode: 301},
+      {source: '/a', destination: '/c', statusCode: 301},
+      {source: '/x', destination: '/y', statusCode: 301},
+      {source: '/y', destination: '/x', statusCode: 301},
+    ])
+    expect(rules.length).toBe(1)
+  })
+
+  it('THE CALL SITE: next.config redirects() throws when the resolved set is over', async () => {
+    // Driven through the real config export, with only the resolution stubbed,
+    // because a tested assertion no caller reaches is a specification rather
+    // than a mechanism — the same argument the block above this file's
+    // `next.config.ts serves the resolved set` describe makes.
+    vi.resetModules()
+    const actual = await vi.importActual<typeof import('../redirects')>('../redirects')
+    vi.doMock('../redirects', () => ({
+      ...actual,
+      resolveRedirects: () => ({
+        rules: Array.from({length: MAX_CONFIG_REDIRECTS + 1}, (_, i) => rule(i)),
+        // The report's own `served` count is deliberately WRONG here, so this
+        // test pins WHICH number the config enforces on: the rules it is about
+        // to hand Next, not a count the resolver reports about itself.
+        report: {duplicates: [], flattened: [], loops: [], counts: {rows: 1025, served: 4}},
+      }),
+    }))
+    vi.spyOn(console, 'log').mockImplementation(() => {})
+    const config = (await import('@/next.config')).default
+    await expect(config.redirects!()).rejects.toThrow(/above the 1024-rule limit/)
+    vi.doUnmock('../redirects')
+    vi.resetModules()
   })
 })
 

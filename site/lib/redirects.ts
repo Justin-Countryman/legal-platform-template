@@ -260,6 +260,58 @@ export function resolveRedirects(rows: RedirectRule[]): {
  * only when something is wrong: a guard that only speaks on failure is
  * indistinguishable from a guard that is not running.
  */
+/**
+ * The most config redirects this platform will let a build emit.
+ *
+ * WHY 1,024 AND NOT VERCEL'S PUBLISHED REDIRECT CAP. Vercel's redirects
+ * reference gives "Number of redirects in the array: 2,048". The stricter
+ * number is the ROUTES budget: a deployment has a documented maximum of 1,024
+ * routes, and every emitted redirect spends one of them alongside the
+ * framework's own rules, the headers and the rewrites. So 1,024 is the ceiling
+ * that binds first, and it is also the number
+ * `BE/Site-Builder-App/redirects_store.py` already refuses to save above. One
+ * number in both places is the point: the screen and the build must not
+ * disagree about what is publishable.
+ *
+ * WHAT HAPPENS ABOVE THE CAP ON VERCEL IS NOT ESTABLISHED HERE. The platform's
+ * own record has said the overflow is dropped silently; Vercel's community
+ * error string "Maximum number of routes exceeded. Max is 1024" says a build
+ * can fail on it instead. Nothing on this platform has ever deployed near the
+ * cap, so neither was measured. The throw below does not depend on which is
+ * true, and that is deliberate: both outcomes are worse than a local failure
+ * with a message naming the file.
+ */
+export const MAX_CONFIG_REDIRECTS = 1024
+
+/**
+ * Fail the build rather than deploy a redirect set that is over the cap.
+ *
+ * WHY THIS EXISTS AT ALL, given the app already refuses to save above the cap
+ * (finding F29, 2026-08-19). The app guards where the operator TYPES. Two paths
+ * reach `CS/redirects.csv` without passing that screen: Site Prep's
+ * `merge_cs_redirects` adds every new migration row with no count check, and a
+ * hand edit or a `cp` bypasses the app entirely. The build is where those paths
+ * converge and is the last place before the deploy, so it is where the count
+ * has to be true.
+ *
+ * It counts the SERVED rules rather than the file's rows, because served rules
+ * are what reach the manifest and spend the routes budget: a duplicate, a self
+ * redirect and a loop are all rows that cost nothing.
+ */
+export function assertRedirectCapNotExceeded(
+  served: number,
+  csvPath = 'CS/redirects.csv',
+): void {
+  if (served <= MAX_CONFIG_REDIRECTS) return
+  throw new Error(
+    `[redirects] ${served} redirects would be emitted from ${csvPath}, above the ` +
+      `${MAX_CONFIG_REDIRECTS}-rule limit a Vercel deployment can carry. The build ` +
+      `stops here rather than shipping a set the platform cannot serve in full. ` +
+      `Remove ${served - MAX_CONFIG_REDIRECTS} redirect(s) in the app's Redirects ` +
+      `screen for this client.`,
+  )
+}
+
 export function formatRedirectReport(report: RedirectReport): string[] {
   const {counts} = report
   const lines: string[] = [
