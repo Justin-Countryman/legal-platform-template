@@ -522,9 +522,45 @@ export function NavLinks({items, textClass, hoverTextClass, isMobile, className 
 
 type FlatItem = {label: string; href: string}
 
-function flattenChildren(navItem: NavItem): FlatItem[] {
-  const children = navItem.children ?? []
-  if (navItem.displayMode === 'hierarchy') {
+/**
+ * Which mode to render when `displayMode` is not set on the nav item.
+ *
+ * AN EXPLICIT VALUE ALWAYS WINS. This decides only the ABSENT case, and it
+ * decides it against the tree the page is about to render rather than against
+ * anything a tool guessed at build time.
+ *
+ * WHY THE ABSENT CASE EXISTS AT ALL, ruled 2026-08-26 as draft item B of the
+ * platform's dogfood #2. The build recipe used to hardcode `flat` into every
+ * new site. `flat` renders only top-level areas, so a firm whose practice areas
+ * all sit under one Area of Law shipped a primary-navigation dropdown holding
+ * ONE item out of nineteen, on a site handed to a client. The tool cannot know
+ * better than the page: the practice-area tree is assembled HERE, at render, by
+ * grouping a flat GROQ array on `parentRef`, so a build-time guess is frozen the
+ * moment an editor re-parents anything in Studio. The recipe now writes nothing
+ * and this decides.
+ *
+ * THE THRESHOLD IS ONE AND IT IS DELIBERATE. A dropdown holding a single entry
+ * is not a dropdown, on any firm, so no taste question arises. At two or more
+ * top-level areas this returns `flat` and says nothing, because how deep a
+ * multi-area firm's menu should go is a preference and is the operator's. The
+ * same threshold, on the same shape, is what
+ * `BE/Site-Build-Tool/modules/sitemap_types.py::degenerate_practice_area_nav`
+ * warns at.
+ */
+export function defaultDisplayMode(children: NavChildLike[]): 'flat' | 'hierarchy' {
+  const topLevel = children.length
+  const nested = children.reduce((n, c) => n + (c.children?.length ?? 0), 0)
+  return topLevel < 2 && nested > 0 ? 'hierarchy' : 'flat'
+}
+
+type NavChildLike = {label: string; href: string; children?: {label: string; href: string}[]}
+
+// Exported for the wiring test: a correct `defaultDisplayMode` proves nothing
+// unless this function is the one calling it.
+export function flattenChildren(navItem: NavItem): FlatItem[] {
+  const children = (navItem.children ?? []) as NavChildLike[]
+  const mode = navItem.displayMode ?? defaultDisplayMode(children)
+  if (mode === 'hierarchy') {
     return children.flatMap((parent) => [
       {label: parent.label, href: parent.href},
       ...(parent.children ?? []).map((child) => ({label: child.label, href: child.href})),
