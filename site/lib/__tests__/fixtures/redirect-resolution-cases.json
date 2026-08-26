@@ -1,0 +1,311 @@
+{
+  "purpose": "One rule, two languages. Every case is raw redirects.csv text and the rules that must serve.",
+  "authority": "site/lib/redirects.ts in the template repo, parseRedirectsCsv then resolveRedirects. It is what the Next build runs and what a visitor receives.",
+  "port": "BE/_shared/redirect_resolution.py, resolve_csv. Used by the Site Builder App's Redirects screen and by Site Prep Tool's migration set.",
+  "howToUse": "Both sides assert against THIS file. The template copy lives at site/lib/__tests__/fixtures/redirect-resolution-cases.json and must stay byte-identical; a test in each repo checks its own side.",
+  "cases": [
+    {
+      "name": "a plain row serves as written, with the slash stripped",
+      "csv": "old_path,new_path,redirect_type\n/old-page/,/new-page/,301\n",
+      "rules": [
+        [
+          "/old-page",
+          "/new-page",
+          301
+        ]
+      ],
+      "loops": [],
+      "duplicates": [],
+      "flattened": []
+    },
+    {
+      "name": "302 is the only accepted alternative status",
+      "csv": "old_path,new_path,redirect_type\n/a/,/b/,302\n/c/,/d/,307\n/e/,/f/,\n",
+      "rules": [
+        [
+          "/a",
+          "/b",
+          302
+        ],
+        [
+          "/c",
+          "/d",
+          301
+        ],
+        [
+          "/e",
+          "/f",
+          301
+        ]
+      ],
+      "loops": [],
+      "duplicates": [],
+      "flattened": []
+    },
+    {
+      "name": "a chain flattens and the originating hop's status survives",
+      "csv": "old_path,new_path,redirect_type\n/a/,/b/,302\n/b/,/c/,301\n",
+      "rules": [
+        [
+          "/a",
+          "/c",
+          302
+        ],
+        [
+          "/b",
+          "/c",
+          301
+        ]
+      ],
+      "loops": [],
+      "duplicates": [],
+      "flattened": [
+        [
+          "/a",
+          "/b",
+          "/c",
+          2
+        ]
+      ]
+    },
+    {
+      "name": "a two-cycle serves nothing",
+      "csv": "old_path,new_path,redirect_type\n/a/,/b/,301\n/b/,/a/,301\n",
+      "rules": [],
+      "loops": [
+        [
+          "/a",
+          "cycle"
+        ],
+        [
+          "/b",
+          "cycle"
+        ]
+      ],
+      "duplicates": [],
+      "flattened": []
+    },
+    {
+      "name": "a three-cycle serves nothing",
+      "csv": "old_path,new_path,redirect_type\n/a/,/b/,301\n/b/,/c/,301\n/c/,/a/,301\n",
+      "rules": [],
+      "loops": [
+        [
+          "/a",
+          "cycle"
+        ],
+        [
+          "/b",
+          "cycle"
+        ],
+        [
+          "/c",
+          "cycle"
+        ]
+      ],
+      "duplicates": [],
+      "flattened": []
+    },
+    {
+      "name": "a chain longer than the ten-hop cap serves nothing for the over-cap rows",
+      "csv": "old_path,new_path,redirect_type\n/p0/,/p1/,301\n/p1/,/p2/,301\n/p2/,/p3/,301\n/p3/,/p4/,301\n/p4/,/p5/,301\n/p5/,/p6/,301\n/p6/,/p7/,301\n/p7/,/p8/,301\n/p8/,/p9/,301\n/p9/,/p10/,301\n/p10/,/p11/,301\n/p11/,/p12/,301\n",
+      "rules": [
+        [
+          "/p2",
+          "/p12",
+          301
+        ],
+        [
+          "/p3",
+          "/p12",
+          301
+        ],
+        [
+          "/p4",
+          "/p12",
+          301
+        ],
+        [
+          "/p5",
+          "/p12",
+          301
+        ],
+        [
+          "/p6",
+          "/p12",
+          301
+        ],
+        [
+          "/p7",
+          "/p12",
+          301
+        ],
+        [
+          "/p8",
+          "/p12",
+          301
+        ],
+        [
+          "/p9",
+          "/p12",
+          301
+        ],
+        [
+          "/p10",
+          "/p12",
+          301
+        ],
+        [
+          "/p11",
+          "/p12",
+          301
+        ]
+      ],
+      "loops": [
+        [
+          "/p0",
+          "hop-cap"
+        ],
+        [
+          "/p1",
+          "hop-cap"
+        ]
+      ],
+      "duplicates": [],
+      "flattened": [
+        [
+          "/p2",
+          "/p3",
+          "/p12",
+          10
+        ],
+        [
+          "/p3",
+          "/p4",
+          "/p12",
+          9
+        ],
+        [
+          "/p4",
+          "/p5",
+          "/p12",
+          8
+        ],
+        [
+          "/p5",
+          "/p6",
+          "/p12",
+          7
+        ],
+        [
+          "/p6",
+          "/p7",
+          "/p12",
+          6
+        ],
+        [
+          "/p7",
+          "/p8",
+          "/p12",
+          5
+        ],
+        [
+          "/p8",
+          "/p9",
+          "/p12",
+          4
+        ],
+        [
+          "/p9",
+          "/p10",
+          "/p12",
+          3
+        ],
+        [
+          "/p10",
+          "/p11",
+          "/p12",
+          2
+        ]
+      ]
+    },
+    {
+      "name": "a duplicate source keeps the FIRST row",
+      "csv": "old_path,new_path,redirect_type\n/same/,/first/,301\n/same/,/second/,301\n",
+      "rules": [
+        [
+          "/same",
+          "/first",
+          301
+        ]
+      ],
+      "loops": [],
+      "duplicates": [
+        [
+          "/same",
+          "/first",
+          "/second"
+        ]
+      ],
+      "flattened": []
+    },
+    {
+      "name": "a row that collapses to a self-redirect is dropped",
+      "csv": "old_path,new_path,redirect_type\n/about/,/about,301\n/keep/,/kept/,301\n",
+      "rules": [
+        [
+          "/keep",
+          "/kept",
+          301
+        ]
+      ],
+      "loops": [],
+      "duplicates": [],
+      "flattened": []
+    },
+    {
+      "name": "the header row and hash comments are skipped",
+      "csv": "old_path,new_path,redirect_type\n# a comment\n\n/a/,/b/,301\n",
+      "rules": [
+        [
+          "/a",
+          "/b",
+          301
+        ]
+      ],
+      "loops": [],
+      "duplicates": [],
+      "flattened": []
+    },
+    {
+      "name": "a row missing either path is skipped",
+      "csv": "old_path,new_path,redirect_type\n/a/,,301\n,/b/,301\n/c/,/d/,301\n",
+      "rules": [
+        [
+          "/c",
+          "/d",
+          301
+        ]
+      ],
+      "loops": [],
+      "duplicates": [],
+      "flattened": []
+    },
+    {
+      "name": "the root path keeps its slash",
+      "csv": "old_path,new_path,redirect_type\n/home/,/,301\n",
+      "rules": [
+        [
+          "/home",
+          "/",
+          301
+        ]
+      ],
+      "loops": [],
+      "duplicates": [],
+      "flattened": []
+    }
+  ],
+  "provenance": "Every `rules` value was GENERATED by running the authority (parseRedirectsCsv then resolveRedirects) over the `csv` above it on 2026-08-26, not written by hand. The hand-written first draft got the hop-cap case wrong and both implementations agreed against it, which is the reason this line exists.",
+  "reportFields": "`rules` is what serves. `loops`, `duplicates` and `flattened` are the REPORT, and they are in the fixture because they are what the operator is TOLD: a cycle and an over-cap chain both serve nothing, so asserting only `rules` cannot tell the two apart. Removing cycle detection from one implementation left every `rules` value identical, which is how this half of the fixture came to exist."
+}
