@@ -260,6 +260,36 @@ const DAYS = [
   {key: 'sunday',    short: 'Sun'},
 ] as const
 
+// Office hours are STORED as zero-padded 24-hour (`08:00`, `17:00`) and that is
+// settled: Zite's client portal parses the stored string for its own location
+// view, and `openingHoursSpecification` in the page's JSON-LD requires 24-hour
+// ISO. Storing a display format instead was tried and reverted — `8:00 AM` did
+// not parse in the CRM and those days rendered blank. So the CRM and the
+// structured data want the same value, and ONLY the footer wants a different
+// one. This converts for RENDERING ONLY.
+//
+// `buildOpeningHours` in app/(site)/[...slug]/page.tsx must keep passing the
+// raw stored value into opens/closes. It does not import this module.
+//
+// Anything that is not HH:MM is returned untouched. Legacy records may hold
+// arbitrary text, and the design-studio fixture uses '8:30am'/'5:30pm' — a
+// value this cannot parse must render as it was written rather than as NaN or
+// an empty string, which is why the footer was originally written to print
+// whatever it was handed.
+//
+// Provenance: monorepo BI/OUTSTANDING.md item 254.
+export function formatHourForDisplay(value: string | null | undefined): string {
+  if (!value) return ''
+  const match = /^(\d{1,2}):([0-5]\d)$/.exec(value.trim())
+  if (!match) return value
+  const hour = Number(match[1])
+  if (hour > 23) return value
+  const meridiem = hour < 12 ? 'AM' : 'PM'
+  // 00:xx → 12 AM, 12:xx → 12 PM, 13:xx → 1 PM.
+  const display = hour % 12 === 0 ? 12 : hour % 12
+  return `${display}:${match[2]} ${meridiem}`
+}
+
 type DayEntry = {short: string; open: string | null; close: string | null; closed: boolean}
 type HoursRow = {label: string; time: string; closed: boolean}
 
@@ -275,11 +305,11 @@ function buildHoursRows(hours: OfficeHours): HoursRow[] {
   let i = 0
   while (i < entries.length) {
     const cur = entries[i]
-    const time = cur.closed ? 'Closed' : `${cur.open ?? ''} – ${cur.close ?? ''}`
+    const time = cur.closed ? 'Closed' : `${formatHourForDisplay(cur.open)} – ${formatHourForDisplay(cur.close)}`
     let j = i + 1
     while (j < entries.length) {
       const next = entries[j]
-      const nextTime = next.closed ? 'Closed' : `${next.open ?? ''} – ${next.close ?? ''}`
+      const nextTime = next.closed ? 'Closed' : `${formatHourForDisplay(next.open)} – ${formatHourForDisplay(next.close)}`
       if (nextTime !== time) break
       j++
     }
