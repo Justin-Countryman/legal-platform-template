@@ -438,3 +438,38 @@ jobs:
       - name: Run the redirect parse, resolution and report tests
         working-directory: site
         run: npx vitest run lib/__tests__/redirects.test.ts
+
+  office-hours-display:
+    name: "Office hours: 12-hour in the footer, 24-hour in the JSON-LD"
+    runs-on: ubuntu-latest
+    # ONE stored field, TWO consumers that want different things from it. Office
+    # hours are stored zero-padded 24-hour (`08:00`); Zite's client portal parses
+    # that string and `openingHoursSpecification` requires 24-hour ISO, so the
+    # storage format is correct and settled. Storing a display format instead was
+    # tried and REVERTED — `8:00 AM` did not parse in the CRM and those days
+    # rendered blank, and a row that lost its meridiem left `5:00`, which the CRM
+    # read as 5AM and published a card claiming the firm was open "8AM - 5AM".
+    #
+    # So only the footer was wrong, and it was wrong on every page of every client
+    # since before the scraper existed: contact details read "08:00 - 17:00".
+    # Fixed by a display formatter in buildHoursRows (monorepo item 254).
+    #
+    # This job exists because the OBVIOUS next edit is the wrong one. Someone
+    # reading `opens: d.open` beside a footer that now prints "8:00 AM" will make
+    # the structured data "match", and every client will emit invalid
+    # LocalBusiness hours with NOTHING visibly breaking — no error, no failed
+    # build, no changed pixel. The tests assert against page.tsx's shipped source
+    # because buildOpeningHours is private to a server component, and they pin the
+    # day-grouping collapse ("Mon-Fri"), which is driven by comparing the very
+    # strings the formatter changed.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install site deps
+        working-directory: site
+        run: npm ci
+      - name: Run the office-hours display and JSON-LD invariance tests
+        working-directory: site
+        run: npx vitest run components/layout/footers/__tests__/office-hours-display.test.tsx
