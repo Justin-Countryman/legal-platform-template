@@ -425,7 +425,7 @@ export const mainNavigation = defineType({
                 layout: 'radio',
               },
               initialValue: 'flat',
-              validation: (Rule) => Rule.required(),
+              validation: (Rule) => Rule.required().warning(),
             },
             {
               name: 'practiceAreaOrder',
