@@ -533,11 +533,22 @@ type FlatItem = {label: string; href: string}
  * platform's dogfood #2. The build recipe used to hardcode `flat` into every
  * new site. `flat` renders only top-level areas, so a firm whose practice areas
  * all sit under one Area of Law shipped a primary-navigation dropdown holding
- * ONE item out of nineteen, on a site handed to a client. The tool cannot know
- * better than the page: the practice-area tree is assembled HERE, at render, by
- * grouping a flat GROQ array on `parentRef`, so a build-time guess is frozen the
- * moment an editor re-parents anything in Studio. The recipe now writes nothing
- * and this decides.
+ * ONE item out of nineteen, on a site handed to a client.
+ *
+ * THE BUILD WRITES A MODE AGAIN SINCE 2026-09-09, and draft item B is reversed.
+ * The defect above was the CONSTANT, not the choosing: the build now DERIVES
+ * the mode per client at this same threshold
+ * (`BE/Site-Build-Tool/modules/sitemap_types.py::derived_practice_area_display_mode`),
+ * so a new site carries the value this function would have returned. The pair
+ * is pinned by `BE/Site-Build-Tool/__tests__/test_display_mode_matches_the_site.py`,
+ * which vendors this function verbatim — EDIT THIS BODY AND THAT TEST FAILS,
+ * by design.
+ *
+ * SO THIS IS NOW THE FALLBACK, NOT THE DECIDER, and it must stay: every client
+ * built between the two rulings carries no `displayMode`, and an operator may
+ * clear the field. What the build gives up by writing is that create-only
+ * freezes its answer where this one re-derives on every render — which bites
+ * only across the one-vs-many top-level boundary, and was the accepted cost.
  *
  * THE THRESHOLD IS ONE AND IT IS DELIBERATE. A dropdown holding a single entry
  * is not a dropdown, on any firm, so no taste question arises. At two or more
