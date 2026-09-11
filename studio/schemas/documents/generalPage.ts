@@ -176,6 +176,29 @@ export const generalPage = defineType({
       type: 'blockContent',
     },
     // ─── Page Sections ────────────────────────────────────────────────────────
+    // ─── Sidebar ── (added 2026-09-11: BI-Sidebar §9 gives generalPage a
+    // sidebarCtaBox, the builder has written it since WS-Sidebar, and the site
+    // renders it; the schema alone never declared it. Found by the Phase 1
+    // undeclared-field guard on its first sweep.)────────────────────────────────────────────────────────────
+    {
+      name: 'sidebar',
+      fieldset: 'layout',
+      title: 'Sidebar Components',
+      type: 'array',
+      of: [
+        {
+          type: 'reference',
+          title: 'Sidebar Component',
+          to: [
+            {type: 'sidebarNav'},
+            {type: 'sidebarAttorneyList'},
+            {type: 'sidebarCtaBox'},
+            {type: 'sidebarFormEmbed'},
+          ],
+        },
+        {type: 'sidebarTableOfContents'},
+      ],
+    },
     {
       name: 'sections',
       fieldset: 'layout',
