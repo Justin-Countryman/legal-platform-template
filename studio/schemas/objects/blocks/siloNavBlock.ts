@@ -119,7 +119,7 @@ export const siloNavBlock = defineType({
             return {message: 'Add at least one practice area', level: 'warning' as const}
           }
           return true
-        }),
+        }).warning(),
     }),
   ],
 

@@ -33,7 +33,7 @@ export const reviewPage = defineType({
       fieldset: 'seo',
       description: 'Click Generate after setting Page Title',
       options: {source: 'title'},
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     // TECH-5 makes the meta description OPTIONAL on every page type, and this
     // type declaring no such field is why the rule was unreachable here rather

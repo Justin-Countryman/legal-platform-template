@@ -88,7 +88,7 @@ export const attorneyHighlightBlock = defineType({
             return {message: 'Select at least one attorney, or switch to All', level: 'warning' as const}
           }
           return true
-        }),
+        }).warning(),
       of: [{type: 'reference', to: [{type: 'attorneyPage'}]}],
     },
   ],

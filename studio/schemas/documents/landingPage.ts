@@ -59,7 +59,7 @@ export const landingPage = defineType({
       type: 'slug',
       description: 'Click Generate after setting Page Title — prefix lp/ manually if needed',
       options: {source: 'title'},
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',

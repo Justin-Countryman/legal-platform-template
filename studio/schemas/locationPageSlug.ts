@@ -19,7 +19,8 @@
  * `location_page.py` takes a city rather than a slug. A caller that cannot reach
  * the record answers nothing rather than guessing — `BI-FOUNDATIONS.md`, "a tool
  * does not name what it cannot know" — and an empty answer here leaves the field
- * empty, which its own `required().error()` then blocks.
+ * empty, which its own `required().warning()` then flags (a warning, not a
+ * block, since `[R-162]` 2026-09-11).
  *
  * It lives beside `seoTitle.ts` and `metaDescription.ts` for the same reason
  * they do: the document schema imports a `.tsx` input component, so a node

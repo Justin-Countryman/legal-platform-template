@@ -47,7 +47,7 @@ export const sidebarAttorneyList = defineType({
             return {message: 'Select a practice area page', level: 'warning' as const}
           }
           return true
-        }),
+        }).warning(),
     },
     {
       name: 'layout',
@@ -76,7 +76,7 @@ export const sidebarAttorneyList = defineType({
             return {message: 'Select at least one attorney', level: 'warning' as const}
           }
           return true
-        }),
+        }).warning(),
     },
   ],
   preview: {

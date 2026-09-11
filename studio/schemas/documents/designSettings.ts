@@ -178,7 +178,7 @@ export const designSettings = defineType({
         layout: 'radio',
       },
       initialValue: 'analogous-accent',
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.required().warning(),
     }),
 
     // Primary color — always required
@@ -206,7 +206,7 @@ export const designSettings = defineType({
         }
         if (val && !/^#[0-9A-Fa-f]{6}$/.test(val)) return 'Enter a valid hex e.g. #CC9933'
         return true
-      }),
+      }).warning(),
     }),
 
     // Accent 1 — shown for Analogous + Accent approach (tagline color)
@@ -223,7 +223,7 @@ export const designSettings = defineType({
         }
         if (val && !/^#[0-9A-Fa-f]{6}$/.test(val)) return 'Enter a valid hex e.g. #CC9933'
         return true
-      }),
+      }).warning(),
     }),
 
     // Accent 2 — optional, shown for Analogous + Accent approach (button color)
@@ -237,7 +237,7 @@ export const designSettings = defineType({
       validation: (Rule) => Rule.custom((val) => {
         if (val && !/^#[0-9A-Fa-f]{6}$/.test(val)) return 'Enter a valid hex e.g. #99AA66'
         return true
-      }),
+      }).warning(),
     }),
 
     // Color preview panel — live swatch grid showing all derived tokens + WCAG results
@@ -291,7 +291,7 @@ export const designSettings = defineType({
             return 'Cannot use a preset and custom font uploads at the same time. Clear the heading and body font uploads if you want to use a preset.'
           }
           return true
-        }),
+        }).warning(),
     },
     {
       name: 'marketingScale',
@@ -560,7 +560,7 @@ export const designSettings = defineType({
       fieldset: 'internalHero',
       description: 'Darkening overlay strength over hero background images (0 = none, 100 = solid). Keeps heading text readable. A page can override this.',
       initialValue: 80,
-      validation: (Rule) => Rule.min(0).max(100),
+      validation: (Rule) => Rule.min(0).max(100).warning(),
     },
     {
       name: 'tertiaryStyle',

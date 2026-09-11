@@ -18,7 +18,7 @@ export const blogTag = defineType({
       type: 'slug',
       options: {source: 'title'},
       description: 'Used by the front end to filter posts — e.g. "faq", "infographic"',
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
   ],
 

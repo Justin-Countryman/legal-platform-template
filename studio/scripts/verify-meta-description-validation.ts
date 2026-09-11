@@ -10,7 +10,8 @@
  * save is allowed. Nothing about the rule is re-implemented here.
  *
  * Sibling of `verify-seo-title-validation.ts` and deliberately NOT a copy of it:
- * that field's length half warns (TITLE-3, 2026-07-26) and this one errors,
+ * that field's length half warns (TITLE-3, 2026-07-26) and this one warns too
+ * since `[R-162]` (2026-09-11; it was an error until then),
  * because no ruling has moved it. The cases below assert the difference rather
  * than assuming the two fields match.
  *
@@ -100,11 +101,12 @@ await expectLevels(
 
 // THE LENGTH HALF, PINNED AS AN ERROR ON PURPOSE. `seoTitle` warns here and this
 // field does not, and nothing in the 2026-08-09 ruling changed that. If this case
-// ever wants to be `{errors: 0, warnings: 1}`, that is a ruling and not a fix.
+// was `{errors: 1, warnings: 0}` until 2026-09-11; `[R-162]` ruled that no
+// rule blocks Publish, so the length half warns like the SEO Title's does.
 await expectLevels(
   `over ${META_DESCRIPTION_MAX} — still blocks the save, unlike the SEO Title`,
   'x'.repeat(META_DESCRIPTION_MAX + 1),
-  {errors: 1, warnings: 0},
+  {errors: 0, warnings: 1},
 )
 
 console.log(failures === 0 ? '\nAll expectations met.' : `\n${failures} expectation(s) failed.`)

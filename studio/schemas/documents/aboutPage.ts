@@ -57,7 +57,7 @@ export const aboutPage = defineType({
       description: 'About page slug — fixed, do not change',
       readOnly: true,
       initialValue: {current: 'about'},
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',

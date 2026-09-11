@@ -56,7 +56,7 @@ export const contactPage = defineType({
       type: 'slug',
       description: 'Click Generate after setting Page Name',
       options: {source: 'title'},
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',

@@ -56,7 +56,7 @@ export const attorneyIndex = defineType({
       description: 'Always attorneys/ — do not change',
       readOnly: true,
       initialValue: {current: 'attorneys'},
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',

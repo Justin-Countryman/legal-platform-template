@@ -57,7 +57,7 @@ export const staffPage = defineType({
           return `staff/${slug}`
         },
       },
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',

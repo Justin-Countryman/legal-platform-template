@@ -55,7 +55,7 @@ export const staffIndex = defineType({
       description: 'Always staff/ — do not change',
       readOnly: true,
       initialValue: {current: 'staff'},
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',

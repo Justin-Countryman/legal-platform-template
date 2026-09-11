@@ -53,7 +53,7 @@ export const testimonialsPage = defineType({
       type: 'slug',
       description: 'Click Generate after setting Page Title',
       options: {source: 'title'},
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',

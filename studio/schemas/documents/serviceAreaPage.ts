@@ -96,7 +96,7 @@ export const serviceAreaPage = defineType({
           return parentSlug ? `${parentSlug}/${slug}` : slug
         },
       },
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',

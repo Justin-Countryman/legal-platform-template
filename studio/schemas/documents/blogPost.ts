@@ -66,7 +66,7 @@ export const blogPost = defineType({
           return 'blog/' + h1.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
         },
       },
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',

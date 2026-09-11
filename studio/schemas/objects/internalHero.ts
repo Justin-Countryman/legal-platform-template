@@ -106,7 +106,7 @@ export const internalHero = defineType({
       title: 'Scrim Opacity Override',
       type: 'number',
       description: 'Optional. Override the site default scrim strength (0–100) over the background image for this page. Leave empty to inherit.',
-      validation: (Rule) => Rule.min(0).max(100),
+      validation: (Rule) => Rule.min(0).max(100).warning(),
     },
     // Gradient-only color + direction overrides for this page. Shown only when this
     // page's Scrim Style is set to Gradient. 'Inherit' falls back to the site default.

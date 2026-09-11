@@ -101,7 +101,7 @@ export const mainNavigation = defineType({
           return 'Hero Merge requires Sticky on Scroll to be enabled'
         }
         return true
-      }).error(),
+      }).warning(),
     },
     {
       name: 'sticky',
@@ -417,6 +417,8 @@ export const mainNavigation = defineType({
               name: 'displayMode',
               title: 'Navigation Style',
               type: 'string',
+              description:
+                'Leave empty and the site decides from the practice-area tree: parents only when no page has children, indented list otherwise. The build fills this in; clearing it never blocks Publish.',
               options: {
                 list: [
                   {title: 'Parent pages only', value: 'flat'},
@@ -425,7 +427,12 @@ export const mainNavigation = defineType({
                 layout: 'radio',
               },
               initialValue: 'flat',
-              validation: (Rule) => Rule.required(),
+              // Warning, not error. This was the file's only bare `Rule.required()`
+              // and it locked Publish on every Header Settings document the build
+              // created without the field (dogfood 2026-09-07, finding 16). The
+              // site already handles absence: `headers/shared.tsx`
+              // `navItem.displayMode ?? defaultDisplayMode(children)`.
+              validation: (Rule) => Rule.required().warning(),
             },
             {
               name: 'practiceAreaOrder',

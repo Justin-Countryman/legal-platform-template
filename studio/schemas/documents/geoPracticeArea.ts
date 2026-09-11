@@ -89,7 +89,7 @@ export const geoPracticeArea = defineType({
           return parentSlug ? `${parentSlug}/${slug}` : slug
         },
       },
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',

@@ -74,7 +74,7 @@ export const locationPage = defineType({
       // and the whole account live in `../locationPageSlug.ts`, in a module of
       // its own so a check can reach it.
       options: {source: locationPageSlugSource},
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',

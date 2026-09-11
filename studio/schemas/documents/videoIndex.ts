@@ -57,7 +57,7 @@ export const videoIndex = defineType({
       description: 'Always videos/ — do not change',
       readOnly: true,
       initialValue: {current: 'videos'},
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',

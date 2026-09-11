@@ -40,7 +40,7 @@ export const homeHeroDesign = defineType({
       description: 'Overlay = content over a backdrop. Split = text beside media.',
       options: radio([{title: 'Overlay (content over a backdrop)', value: 'overlay'}, {title: 'Split (text + media)', value: 'split'}]),
       initialValue: 'overlay',
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.required().warning(),
     }),
     defineField({name: 'heightMode', title: 'Height', type: 'string', fieldset: 'layout', options: radio([{title: 'Content height', value: 'content'}, {title: 'Full viewport', value: 'fullViewport'}]), initialValue: 'content'}),
     defineField({name: 'contentAlign', title: 'Content Alignment', type: 'string', fieldset: 'layout', options: radio([{title: 'Left', value: 'left'}, {title: 'Center', value: 'center'}]), initialValue: 'left'}),
@@ -101,7 +101,7 @@ export const homeHeroDesign = defineType({
       initialValue: 'flat',
       hidden: hide(show.scrim),
     }),
-    defineField({name: 'scrimOpacityOverride', title: 'Scrim Opacity (0–100)', type: 'number', fieldset: 'background', description: 'Overlay strength over the active background image (backdrop or Section Background), for text legibility. Leave empty to inherit.', validation: (Rule) => Rule.min(0).max(100), hidden: hide(show.scrim)}),
+    defineField({name: 'scrimOpacityOverride', title: 'Scrim Opacity (0–100)', type: 'number', fieldset: 'background', description: 'Overlay strength over the active background image (backdrop or Section Background), for text legibility. Leave empty to inherit.', validation: (Rule) => Rule.min(0).max(100).warning(), hidden: hide(show.scrim)}),
     // Gradient-only color + direction — shown when the scrim is active AND set to
     // Gradient. 'auto' keeps the derived look (color from scheme, direction from align).
     defineField({
@@ -148,7 +148,7 @@ export const homeHeroDesign = defineType({
       type: 'url',
       fieldset: 'media',
       description: 'YouTube or Vimeo URL for the lightbox. The Background / Feature Image is the poster.',
-      validation: (Rule) => Rule.uri({scheme: ['http', 'https']}).custom((url?: string) => (!url ? true : /youtube\.com|youtu\.be|vimeo\.com/.test(url) || 'Must be a YouTube or Vimeo URL')),
+      validation: (Rule) => Rule.uri({scheme: ['http', 'https']}).custom((url?: string) => (!url ? true : /youtube\.com|youtu\.be|vimeo\.com/.test(url) || 'Must be a YouTube or Vimeo URL')).warning(),
       hidden: hide(show.video),
     }),
 

@@ -85,7 +85,7 @@ export const sidebarNav = defineType({
             return {message: 'Select at least one link', level: 'warning' as const}
           }
           return true
-        }),
+        }).warning(),
       of: [
         {
           type: 'reference',
