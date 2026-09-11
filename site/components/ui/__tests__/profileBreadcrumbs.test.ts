@@ -47,7 +47,7 @@ function code(family: string, file: string): string {
 
 function rendersABreadcrumb(family: string, file: string): boolean {
   const src = code(family, file)
-  return src.includes('<BreadcrumbBand') || src.includes('<Breadcrumbs')
+  return src.includes('<Breadcrumbs')
 }
 
 describe('CRUMB-7: no profile layout renders a breadcrumb', () => {

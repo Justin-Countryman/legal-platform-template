@@ -1821,23 +1821,6 @@ export const REVIEW_PAGE_QUERY = groq`{
   }
 }`
 
-// ─── Blog Category Posts ──────────────────────────────────────────────────────
-export const BLOG_CATEGORY_POSTS_QUERY = groq`
-  *[_type == "blogPost" && category->slug.current == $slug] | order(defined(publishedAt) desc, publishedAt desc) {
-    "slug": slug.current,
-    h1,
-    metaDescription,
-    publishedAt,
-    // Same chip signature, same 2026-08-07 Pass D.2 ruling. The $slug filter
-    // above matches on the category's slug, not on this string.
-    "category": category->{
-      "title": ${NAV_LABEL_EXPR},
-      "slug": slug.current
-    },
-    "bodyText": pt::text(body)
-  }
-`
-
 // ─── Location Page ────────────────────────────────────────────────────────────
 export const LOCATION_PAGE_QUERY = groq`
   *[_type == "locationPage" && slug.current == $slug][0]{

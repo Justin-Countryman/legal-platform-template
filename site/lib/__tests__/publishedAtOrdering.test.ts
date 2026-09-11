@@ -80,6 +80,6 @@ describe('publishedAt ordering — undated never outranks dated', () => {
     // rails, and two sidebar modes. If one is deleted or a seventh is added,
     // this fails and someone reads the list again rather than assuming.
     const count = [...source.matchAll(ORDER_CLAUSES)].length
-    expect(count).toBe(6)
+    expect(count).toBe(5) // was 6 until BLOG_CATEGORY_POSTS_QUERY, which nothing consumed, was removed 2026-09-11
   })
 })

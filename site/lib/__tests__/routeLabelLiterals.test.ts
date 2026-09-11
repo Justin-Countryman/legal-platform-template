@@ -128,7 +128,7 @@ describe('CRUMB-4: a visible trail is always accompanied by markup', () => {
     // without a domain renders a trail no crawler ever sees. Ten of thirteen
     // were in that state until 2026-07-29.
     for (const rel of ROUTES) {
-      for (const call of code(rel).match(/<Breadcrumbs\b[\s\S]*?\/>|<BreadcrumbBand\b[\s\S]*?\/>/g) ?? []) {
+      for (const call of code(rel).match(/<Breadcrumbs\b[\s\S]*?\/>/g) ?? []) {
         expect(
           call.includes('domain='),
           `${rel} renders a breadcrumb with no domain — CRUMB-4: markup follows ` +

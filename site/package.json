@@ -20,7 +20,6 @@
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
-    "@sanity/icons": "^3.7.4",
     "@sanity/image-url": "^2.1.1",
     "@tailwindcss/typography": "^0.5.19",
     "@vercel/og": "^0.11.1",
