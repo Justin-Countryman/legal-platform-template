@@ -104,7 +104,7 @@ await expectLevels(
 // was `{errors: 1, warnings: 0}` until 2026-09-11; `[R-162]` ruled that no
 // rule blocks Publish, so the length half warns like the SEO Title's does.
 await expectLevels(
-  `over ${META_DESCRIPTION_MAX} — still blocks the save, unlike the SEO Title`,
+  `over ${META_DESCRIPTION_MAX} — warns and no longer blocks the save, like the SEO Title`,
   'x'.repeat(META_DESCRIPTION_MAX + 1),
   {errors: 0, warnings: 1},
 )
