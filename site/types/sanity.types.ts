@@ -2672,6 +2672,29 @@ export type GeneralPage = {
   canonicalUrl?: string;
   hero?: InternalHero;
   body?: BlockContent;
+  sidebar?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "sidebarNav";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "sidebarAttorneyList";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "sidebarCtaBox";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "sidebarFormEmbed";
+  } | {
+    _key: string;
+  } & SidebarTableOfContents>;
   sections?: Array<{
     _ref: string;
     _type: "reference";
@@ -14068,7 +14091,244 @@ export type CONTENT_PAGE_QUERYResult = {
     title: string | null;
   }> | null;
   faqItems: null;
-  sidebar: null;
+  sidebar: Array<{
+    _type: "reference";
+    _key: null;
+    _componentType: "sidebarAttorneyList";
+    name: string | null;
+    header: string | null;
+    description: null;
+    mode: "all" | "manual" | "practiceArea" | null;
+    layout: "avatar" | "list" | null;
+    postCount: null;
+    formEmbed: null;
+    tagline: null;
+    supportingText1: null;
+    supportingText2: null;
+    phoneNumber: null;
+    button: null;
+    orderedAolIds: Array<string> | null;
+    areasOfLaw: Array<{
+      _id: string;
+      slug: string | null;
+      title: string | null;
+      children: Array<{
+        _id: string;
+        slug: string | null;
+        title: string | null;
+        grandchildren: Array<{
+          slug: string | null;
+          title: string | null;
+        }>;
+      }>;
+    }>;
+    orderedAttorneyIds: Array<string> | null;
+    attorneys: Array<{
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      photo: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        _type: "image";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    }> | null;
+    links: null;
+  } | {
+    _type: "reference";
+    _key: null;
+    _componentType: "sidebarCtaBox";
+    name: string | null;
+    header: string | null;
+    description: null;
+    mode: null;
+    layout: "centered" | "left" | null;
+    postCount: null;
+    formEmbed: null;
+    tagline: null;
+    supportingText1: string | null;
+    supportingText2: string | null;
+    phoneNumber: string | null;
+    button: {
+      title: string | null;
+      url: string | null;
+      variant: "link" | "primary" | "secondary" | null;
+    } | null;
+    orderedAolIds: Array<string> | null;
+    areasOfLaw: Array<{
+      _id: string;
+      slug: string | null;
+      title: string | null;
+      children: Array<{
+        _id: string;
+        slug: string | null;
+        title: string | null;
+        grandchildren: Array<{
+          slug: string | null;
+          title: string | null;
+        }>;
+      }>;
+    }>;
+    orderedAttorneyIds: null;
+    attorneys: null;
+    links: null;
+  } | {
+    _type: "reference";
+    _key: null;
+    _componentType: "sidebarFormEmbed";
+    name: string | null;
+    header: string | null;
+    description: string | null;
+    mode: null;
+    layout: null;
+    postCount: null;
+    formEmbed: string | null;
+    tagline: null;
+    supportingText1: null;
+    supportingText2: null;
+    phoneNumber: null;
+    button: null;
+    orderedAolIds: Array<string> | null;
+    areasOfLaw: Array<{
+      _id: string;
+      slug: string | null;
+      title: string | null;
+      children: Array<{
+        _id: string;
+        slug: string | null;
+        title: string | null;
+        grandchildren: Array<{
+          slug: string | null;
+          title: string | null;
+        }>;
+      }>;
+    }>;
+    orderedAttorneyIds: null;
+    attorneys: null;
+    links: null;
+  } | {
+    _type: "reference";
+    _key: null;
+    _componentType: "sidebarNav";
+    name: string | null;
+    header: string | null;
+    description: string | null;
+    mode: "custom" | "faqPosts" | "geoPracticeArea" | "practiceArea" | "recentPosts" | null;
+    layout: null;
+    postCount: number | null;
+    formEmbed: null;
+    tagline: null;
+    supportingText1: null;
+    supportingText2: null;
+    phoneNumber: null;
+    button: null;
+    orderedAolIds: Array<string> | null;
+    areasOfLaw: Array<{
+      _id: string;
+      slug: string | null;
+      title: string | null;
+      children: Array<{
+        _id: string;
+        slug: string | null;
+        title: string | null;
+        grandchildren: Array<{
+          slug: string | null;
+          title: string | null;
+        }>;
+      }>;
+    }>;
+    orderedAttorneyIds: Array<string> | null;
+    attorneys: Array<{
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      photo: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        _type: "image";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    }> | null;
+    links: Array<{
+      _id: string;
+      _type: "aboutPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "blogPost";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "contactPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "faqPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "generalPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "geoPracticeArea";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "landingPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "locationPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "practiceArea";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "reviewPage";
+      slug: string | null;
+      title: string | null;
+    } | {
+      _id: string;
+      _type: "serviceAreaPage";
+      slug: string | null;
+      title: string | null;
+    }> | null;
+  } | {
+    _type: "sidebarTableOfContents";
+    _key: string;
+    _componentType: "sidebarTableOfContents";
+  }> | null;
   sections: Array<{
     _id: string;
     _type: "attorneySection";
