@@ -38,8 +38,8 @@ export const heroAltField = (label: string): FieldDef =>
         if (!parent?.asset) return true
         return typeof alt === 'string' && alt.trim().length > 0
           ? true
-          : `Alt text is required for the ${label}`
-      }),
+          : {message: `Alt text is required for the ${label}`, level: 'warning' as const}
+      }).warning(),
   })
 
 // `hidden` here is a nested-field predicate: its callback gets the top-level

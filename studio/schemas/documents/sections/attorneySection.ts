@@ -29,7 +29,7 @@ export const attorneySection = defineType({
             return {message: 'Select a practice area page', level: 'warning' as const}
           }
           return true
-        }),
+        }).warning(),
     },
     {
       name: 'mode',
@@ -59,7 +59,7 @@ export const attorneySection = defineType({
             return {message: 'Select at least one attorney', level: 'warning' as const}
           }
           return true
-        }),
+        }).warning(),
     },
     {
       name: 'tagline',

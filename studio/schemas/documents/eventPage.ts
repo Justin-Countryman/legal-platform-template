@@ -68,7 +68,7 @@ export const eventPage = defineType({
           return `events/${slug}`
         },
       },
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',
@@ -251,7 +251,7 @@ export const eventPage = defineType({
             return 'Registration Form is set — this URL will be ignored. Remove the form to use this link.'
           }
           return true
-        }),
+        }).warning(),
     },
     {
       name: 'registrationCta',

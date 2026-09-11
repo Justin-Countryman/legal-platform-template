@@ -32,7 +32,7 @@ export const ctaButton = defineType({
           )
             return true
           return {message: 'Must be a relative path (/contact/) or full URL (https://...)', level: 'warning' as const}
-        }),
+        }).warning(),
     },
     {
       name: 'variant',

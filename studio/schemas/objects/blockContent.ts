@@ -63,7 +63,7 @@ export const blockContent = defineType({
                   Rule.uri({
                     scheme: ['http', 'https', 'mailto', 'tel'],
                     allowRelative: true,
-                  }),
+                  }).warning(),
               },
               {
                 name: 'blank',

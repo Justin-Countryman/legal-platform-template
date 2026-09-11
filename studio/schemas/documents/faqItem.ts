@@ -33,7 +33,7 @@ export const faqItem = defineType({
       type: 'slug',
       description: 'Auto-generated from the question. Click Generate after authoring.',
       options: {source: 'question', maxLength: 96},
-      validation: (Rule) => Rule.required().error('Slug is required'),
+      validation: (Rule) => Rule.required().warning('Slug is required'),
     },
     {
       name: 'category',

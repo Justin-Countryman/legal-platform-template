@@ -182,7 +182,7 @@ export const practiceAreaNav = defineType({
             return {message: 'Add at least one practice area', level: 'warning' as const}
           }
           return true
-        }),
+        }).warning(),
     }),
     ...appearanceFields({defaultSurface: 'light'}),
   ],

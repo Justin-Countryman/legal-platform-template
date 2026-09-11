@@ -76,7 +76,7 @@ export const attorneyPage = defineType({
         source: (doc) =>
           `attorneys/${(((doc as {title?: string}).title) ?? '').toLowerCase().replace(/[^a-z0-9\s-]/gi, '').trim().replace(/\s+/g, '-')}`,
       },
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     }),
     defineField({
       name: 'navLabel',

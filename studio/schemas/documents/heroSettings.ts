@@ -115,7 +115,7 @@ export const heroSettings = defineType({
       description:
         'Darkening overlay strength over hero background images (0 = none, 100 = solid). Keeps heading text readable. A page can override this.',
       initialValue: 80,
-      validation: (Rule) => Rule.min(0).max(100),
+      validation: (Rule) => Rule.min(0).max(100).warning(),
     }),
     // Gradient-only controls — shown when Scrim Style = Gradient. 'auto' reproduces
     // the legacy behavior (color from the scheme, direction from content alignment).

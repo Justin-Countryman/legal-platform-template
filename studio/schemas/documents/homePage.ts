@@ -56,7 +56,7 @@ export const homePage = defineType({
       description: 'Homepage slug — always / — do not change',
       readOnly: true,
       initialValue: {current: 'home'},
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',

@@ -57,7 +57,7 @@ export const eventIndex = defineType({
       description: 'Always events — do not change',
       readOnly: true,
       initialValue: {current: 'events'},
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',

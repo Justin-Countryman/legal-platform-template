@@ -22,12 +22,12 @@ import type {Rule} from 'sanity'
  *    put up as separate rulings rather than treated as one call, and why this
  *    binding exists as its own file rather than sharing `seoTitle.ts`.
  *
- * 1. THE LENGTH HALF IS UNTOUCHED AND IS STILL AN `.error()`. Read that twice
- *    before assuming it matches `seoTitle.ts`, because it does not. TITLE-3
- *    turned the SEO Title's length cap into a `.warning()` on 2026-07-26; no
- *    equivalent ruling exists for this field, so a description over 160
- *    characters still refuses to save. **Whether it should warn instead is
- *    unruled**, and dropping `required()` did not decide it.
+ * 1. THE LENGTH HALF WARNS (operator, 2026-09-11, `[R-162]`: no validation
+ *    rule may block Publish on any page). It was an `.error()` until that day,
+ *    and `sanity documents validate` on the Yanowitz dataset showed why that
+ *    could not stand: the build writes the sitemap's Meta Description cell
+ *    verbatim, 19 documents were over 160 characters, and every one of them
+ *    was unpublishable from creation with nothing at the gate saying so.
  *
  * WHAT IT CANNOT CATCH, on the same terms as `seoTitle.ts`: anything written
  * through the API. Sanity validation runs in Studio only, so every document
@@ -46,4 +46,4 @@ export const META_DESCRIPTION_MAX = 160
  * against both blank shapes to keep it out.
  */
 export const metaDescriptionValidation = (rule: Rule) =>
-  rule.max(META_DESCRIPTION_MAX).error()
+  rule.max(META_DESCRIPTION_MAX).warning()

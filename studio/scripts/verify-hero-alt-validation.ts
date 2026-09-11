@@ -94,6 +94,7 @@ let failures = 0
  * un-assertable. The rule under test is the alt rule; the reference machinery
  * is not.
  */
+// Since `[R-162]` (2026-09-11) the marker is a WARNING: nothing blocks Publish.
 const ALT_MESSAGE = 'Alt text is required for the'
 
 async function expectErrors(
@@ -103,13 +104,13 @@ async function expectErrors(
 ) {
   const markers = await markersFor(image)
   const altErrors = markers.filter(
-    (m) => m.level === 'error' && (m.item?.message ?? '').includes(ALT_MESSAGE),
+    (m) => m.level === 'warning' && (m.item?.message ?? '').includes(ALT_MESSAGE),
   )
   const ok = altErrors.length === want
   if (!ok) failures++
   console.log(`${ok ? 'PASS' : 'FAIL'}  ${label}`)
-  console.log(`      alt errors=${altErrors.length} (want ${want})`)
-  for (const m of altErrors) console.log(`      error: ${m.item?.message ?? ''}`)
+  console.log(`      alt warnings=${altErrors.length} (want ${want})`)
+  for (const m of altErrors) console.log(`      warning: ${m.item?.message ?? ''}`)
 }
 
 const ASSET = {_type: 'reference', _ref: 'image-abc123-1200x800-jpg'}

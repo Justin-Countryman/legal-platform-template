@@ -56,7 +56,7 @@ export const blogIndex = defineType({
       description: 'Always blog/ — do not change',
       readOnly: true,
       initialValue: {current: 'blog'},
-      validation: (Rule) => Rule.required().error(),
+      validation: (Rule) => Rule.required().warning(),
     },
     {
       name: 'navLabel',

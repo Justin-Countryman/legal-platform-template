@@ -46,7 +46,7 @@ expect('a two-word city', await locationPageSlugSource(ref, stubbedCity('Mendota
 expect('a city with punctuation', await locationPageSlugSource(ref, stubbedCity("O'Fallon")), 'ofallon-law-firm')
 
 // The absent-value cases. An empty answer leaves the slug field empty, which its
-// own `required().error()` then blocks — the posture `BI-FOUNDATIONS.md` gives a
+// own `required().warning()` then flags (a warning since `[R-162]`) — the posture `BI-FOUNDATIONS.md` gives a
 // tool that cannot know: leave it absent rather than derive a placeholder that
 // create-only would make permanent.
 expect('no location record set', await locationPageSlugSource({}, stubbedCity('Woodbury')), '')
