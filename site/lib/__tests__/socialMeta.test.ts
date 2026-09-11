@@ -155,11 +155,12 @@ describe('every page query projects the override fields', () => {
    *
    * THE SIGNATURE IS `seoTitle,` FOLLOWED BY `metaDescription,`, not
    * `metaDescription,` alone, and getting that wrong is what the first draft
-   * did. Two queries — BLOG_POSTS_QUERY and BLOG_CATEGORY_POSTS_QUERY — project
-   * `metaDescription` as a CARD BLURB rather than as page metadata, and they
-   * must NOT gain the override fields: those cards are not share cards and have
-   * no `og:` anything. Only a query that also asks for `seoTitle` is producing
-   * a page's metadata.
+   * did. BLOG_POSTS_QUERY projects `metaDescription` as a CARD BLURB rather
+   * than as page metadata, and it must NOT gain the override fields: those
+   * cards are not share cards and have no `og:` anything. Only a query that
+   * also asks for `seoTitle` is producing a page's metadata. (A second
+   * card-blurb query, BLOG_CATEGORY_POSTS_QUERY, had no consumer and was
+   * removed 2026-09-11.)
    */
   const source = readFileSync(
     path.join(__dirname, '..', 'sanity', 'queries.ts'), 'utf8')
@@ -182,10 +183,10 @@ describe('every page query projects the override fields', () => {
     expect(pageMetadataProjections.length).toBeGreaterThanOrEqual(16)
   })
 
-  it('leaves the two card-blurb queries alone', () => {
+  it('leaves the card-blurb query alone', () => {
     // Named rather than merely excluded, so a future reader knows the omission
     // is a decision. A blog card is not a share card.
-    for (const query of ['BLOG_POSTS_QUERY', 'BLOG_CATEGORY_POSTS_QUERY']) {
+    for (const query of ['BLOG_POSTS_QUERY']) {
       const start = source.indexOf(`export const ${query} =`)
       expect(start).toBeGreaterThan(-1)
       const body = source.slice(start, source.indexOf('export const', start + 10))
