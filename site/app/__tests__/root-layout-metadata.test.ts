@@ -111,3 +111,13 @@ describe('root layout generateMetadata — the search-console verification token
     expect(meta.verification).toBeUndefined()
   })
 })
+
+describe('root layout organisation schema — a dataset with no siteSettings', () => {
+  it('renders soft on null instead of throwing, so an empty dataset still builds', async () => {
+    const {buildOrganizationSchema} = await import('@/app/layout')
+    const schema = buildOrganizationSchema(null)
+    expect(schema['@type']).toBe('Organization')
+    expect(schema.name).toBe('')
+    expect(schema.address).toBeUndefined()
+  })
+})
