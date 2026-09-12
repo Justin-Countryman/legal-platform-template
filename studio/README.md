@@ -6,12 +6,23 @@ This repo is the **template** that the Client Provisioning Tool clones from. The
 
 ## Stack
 
-- Sanity Studio `^3.65.0` (v3 framework — the consuming site uses the v5 client library)
-- React `^18.3.1`
-- TypeScript `^5.4.5`
+- Sanity Studio `6.13.2` (exact pin, with `@sanity/ui 4.2.1`, `@sanity/icons 5.2.2`, `@sanity/client 8.6.1`, `@sanity/vision 6.13.2`). Upgraded from `^3.65.0` on 2026-09-11 (monorepo `BI/_workstreams/WS-V1-PHASE5-DESIGN.md` §3 and §9). The pins are exact on purpose: between 6.0 and 6.13 the Studio swapped three dependency majors (`@sanity/ui` 3→4, `@sanity/icons` 3→5, `@sanity/client` 7→8), each of which broke `sanity build` on this tree, and a caret range would inherit the next such swap on any `npm update`. Bump them together, deliberately, and re-run the proof below.
+- React `^19.2.2` (Studio v5+ requires React 19.2)
+- TypeScript `^5.4.5`, `@types/node ^24` (declared because the v6 tree no longer carries it transitively)
+- Node `>=22.12` (`.nvmrc` says 24)
 - `@sanity/vision` for GROQ playground
 
-> The site (`../site/`) uses Sanity client `^5.20.0` + `next-sanity ^12.2.2`. This is the supported v3-Studio / v5-Client split.
+> The site (`../site/`) uses `next-sanity ^12.2.2` and its own `sanity` dependency. The Studio and the site are installed separately; the Studio's config still imports `../site/lib/designTokens` (monorepo OUTSTANDING item 22), so `site/` must be installed before the Studio can extract, build or deploy.
+
+### What changed on the v6 upgrade, and how it is proven
+
+- `sanity schema extract` refuses to overwrite `schema.json` without `--force`; the `schema:extract` script carries it.
+- The extract has 118 types (it hoists every `<type>.reference` into its own entry); the monorepo's reader parses both shapes.
+- Typegen output renamed every query result type from `X_QUERYResult` to `X_QUERY_RESULT` and is prettier-formatted; the site imports none of the renamed names.
+- Typegen configuration moved from `sanity-typegen.json` to the `typegen` key of `sanity.cli.ts`; `deployment.autoUpdates` is written `false` there so a deployed client Studio never swaps its bundle underneath the platform.
+- `@sanity/icons` 5 removed the root barrel (`import {TagIcon} from '@sanity/icons/Tag'`); `@sanity/ui` 4 moved the menu family to `@sanity/ui/menu`, `space` became `gap`, and `placement` moved into `popover`.
+- The v6 CLI (oclif) rejects unknown flags; the monorepo's provisioning tool no longer passes `--hide-major-message` to a v4+ CLI.
+- Proof, every push: `Studio: sanity build` (a required check) now also runs `tsc --noEmit` in `studio/`; `Sanity types freshness` regenerates the extract and the types offline and plants a field to prove it can fail.
 
 ## Local development
 

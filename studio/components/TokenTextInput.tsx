@@ -29,7 +29,7 @@ export function TokenTextInput(props: StringInputProps) {
   }
 
   return (
-    <Stack space={2}>
+    <Stack gap={2}>
       <Flex justify="flex-end">
         <TokenInsertButton onSelect={handleTokenSelect} disabled={readOnly} />
       </Flex>

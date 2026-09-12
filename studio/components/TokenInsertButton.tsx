@@ -1,6 +1,7 @@
 import React from 'react'
-import {Button, Menu, MenuButton, MenuDivider, MenuItem, Text, Box} from '@sanity/ui'
-import {TagIcon} from '@sanity/icons'
+import {Button, Text, Box} from '@sanity/ui'
+import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
+import {TagIcon} from '@sanity/icons/Tag'
 import {useTokenOptions} from './useTokenOptions'
 
 type Props = {
@@ -52,8 +53,7 @@ export function TokenInsertButton({onSelect, disabled}: Props) {
           ))}
         </Menu>
       }
-      placement="bottom-start"
-      popover={{portal: true}}
+      popover={{portal: true, placement: 'bottom-start'}}
     />
   )
 }

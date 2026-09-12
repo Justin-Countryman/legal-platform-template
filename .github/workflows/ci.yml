@@ -586,6 +586,13 @@ jobs:
       - name: Install site deps (the studio config imports site/lib)
         working-directory: site
         run: npm ci
+      # Studio `tsc` runs here since the Sanity v6 upgrade (2026-09-11): on v6 a
+      # type error in a custom input is invisible to CI unless it also breaks
+      # the bundle, and the upgrade branch had 71 of them before `@types/node`
+      # and `@sanity/client` were declared at the versions the tree resolves.
+      - name: Typecheck the Studio
+        working-directory: studio
+        run: npx tsc --noEmit -p .
       - name: Build the Studio
         working-directory: studio
         run: npx sanity build --no-minify

@@ -1,5 +1,5 @@
 import {defineType} from 'sanity'
-import {TagIcon} from '@sanity/icons'
+import {TagIcon} from '@sanity/icons/Tag'
 import {ContentTokenInput} from '../../components/ContentTokenInput'
 
 // Maps static token keys to display labels for the editor badge.

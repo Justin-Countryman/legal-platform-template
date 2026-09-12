@@ -1,5 +1,5 @@
 import {defineType} from 'sanity'
-import {ClockIcon} from '@sanity/icons'
+import {ClockIcon} from '@sanity/icons/Clock'
 
 // Office Hours block — a body-content insert (like an image) that renders the
 // weekly hours grid for the page's linked location at view time. Insert it from
