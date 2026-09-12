@@ -6,6 +6,7 @@ import {
   formatRedirectReport,
   loadRedirects,
   resolveRedirects,
+  withOptionalTrailingSlash,
 } from './lib/redirects'
 import {securityHeaders} from './lib/securityHeaders'
 
@@ -47,6 +48,13 @@ export const CS_SITEMAP_CSV = resolve(__dirname, '../CS/CS-SITEMAP.csv')
 // bigger response costs more than the saved request saves. Left as a separate
 // (Brotli-compressed, cacheable) stylesheet on purpose. Do not re-enable without measuring.
 const nextConfig: NextConfig = {
+  // ONE HOP FOR A LEGACY URL, ruled 2026-09-11 ([R-185], item 271). Next.js
+  // otherwise puts its own `/:path+/ → /:path+` 308 at the FRONT of the
+  // redirect list, so every slashed old URL took that hop before the map's
+  // 301. With it off, the map's rules match both spellings (`lib/redirects.ts`
+  // `withOptionalTrailingSlash`) and `proxy.ts` strips the slash once for
+  // every other URL. TECH-1's no-slash canonical is unchanged.
+  skipTrailingSlashRedirect: true,
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
@@ -90,7 +98,7 @@ const nextConfig: NextConfig = {
     // duplicated, flattened or looped — that is what tells the operator which
     // ones are safe to remove.
     assertRedirectCapNotExceeded(rules.length)
-    return rules
+    return withOptionalTrailingSlash(rules)
   },
 }
 

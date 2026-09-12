@@ -44,6 +44,8 @@ import {
   assertRedirectCapNotExceeded,
   formatRedirectReport,
   loadRedirects,
+  withOptionalTrailingSlash,
+  OPTIONAL_TRAILING_SLASH,
   MAX_CONFIG_REDIRECTS,
   MAX_REDIRECT_HOPS,
   normalizeStatusCode,
@@ -264,6 +266,7 @@ describe('TECH-9 / CS/redirects.csv is the only source', () => {
     expect(Object.keys(mod).sort()).toEqual([
       'MAX_CONFIG_REDIRECTS',
       'MAX_REDIRECT_HOPS',
+      'OPTIONAL_TRAILING_SLASH',
       'assertRedirectCapNotExceeded',
       'formatRedirectReport',
       'loadRedirects',
@@ -271,6 +274,7 @@ describe('TECH-9 / CS/redirects.csv is the only source', () => {
       'parseRedirectsCsv',
       'resolveRedirects',
       'stripTrailingSlash',
+      'withOptionalTrailingSlash', // [R-185], 2026-09-11: emission only, reads nothing
     ])
   })
 })
@@ -656,5 +660,34 @@ describe('a migrated client, one file, every case at once', () => {
     expect(report.loops.map((l) => l.source)).toEqual(['/ping', '/pong'])
     expect(report.flattened.map((f) => f.source)).toEqual(['/old-team'])
     expect(report.counts).toEqual({rows: 7, served: 4})
+  })
+})
+
+
+// ─── One hop for a legacy URL ([R-185], item 271, 2026-09-11) ─────────────────
+
+describe('withOptionalTrailingSlash: one rule matches both spellings of an old URL', () => {
+  it('suffixes every source except the root, and changes nothing else', () => {
+    const rules = [csvRule('/news', '/blog'), csvRule('/', '/home', 302), csvRule('/a/b', '/c')]
+    const out = withOptionalTrailingSlash(rules)
+    expect(out.map((r) => r.source)).toEqual(['/news{/}?', '/', '/a/b{/}?'])
+    expect(out.map((r) => r.destination)).toEqual(['/blog', '/home', '/c'])
+    expect(out.map((r) => r.statusCode)).toEqual([301, 302, 301])
+    expect(out).toHaveLength(rules.length) // one rule per row: the route cap is untouched
+    expect(OPTIONAL_TRAILING_SLASH).toBe('{/}?')
+  })
+
+  it('the suffixed source matches the slashed and the unslashed form in Next\'s own matcher', async () => {
+    // Next compiles redirect sources with its bundled path-to-regexp; this is
+    // the artifact, not a re-implementation of it.
+    // Next's bundled copy ships no types; the shape used here is the one function.
+    const {pathToRegexp} = (await import('next/dist/compiled/path-to-regexp' as string)) as {
+      pathToRegexp: (source: string) => RegExp
+    }
+    const re = pathToRegexp(withOptionalTrailingSlash([csvRule('/news', '/blog')])[0].source)
+    expect(re.test('/news/')).toBe(true)
+    expect(re.test('/news')).toBe(true)
+    expect(re.test('/newsx')).toBe(false)
+    expect(re.test('/news/x')).toBe(false)
   })
 })

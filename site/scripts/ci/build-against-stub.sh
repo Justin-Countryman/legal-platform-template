@@ -79,4 +79,14 @@ while IFS= read -r line; do
 done < "$FIXTURE"
 rm -f build-against-stub.log "$COUNT_FILE"
 [ "$MISSING" -eq 0 ] || exit 1
+
+# One hop for a legacy URL ([R-185], 2026-09-11): the built route table must
+# carry NO framework slash-stripping redirect ahead of the map. This is the
+# artifact Vercel consumes, so it is asserted here rather than in the source.
+if node -e "
+  const m = require('./.next/routes-manifest.json');
+  const internal = (m.redirects || []).filter((r) => r.internal);
+  if (internal.length) { console.error('internal redirect(s) present:', JSON.stringify(internal)); process.exit(1); }
+  console.log('routes-manifest carries no framework slash redirect (' + (m.redirects || []).length + ' redirect rule(s))');
+"; then :; else echo "the framework's trailing-slash redirect is back in the manifest" >&2; exit 1; fi
 echo "next build is green against the stub Content Lake: $QUERIES queries, every fixture template rendered."

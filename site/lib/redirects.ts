@@ -281,6 +281,30 @@ export function resolveRedirects(rows: RedirectRule[]): {
  * true, and that is deliberate: both outcomes are worse than a local failure
  * with a message naming the file.
  */
+/**
+ * One hop for a legacy URL, ruled 2026-09-11 ([R-185], OUTSTANDING item 271).
+ *
+ * WordPress-style old URLs arrive WITH a trailing slash, and until this change
+ * Next.js's own slash-stripping redirect ran ahead of the map (it is unshifted
+ * to the front of the redirect list with `priority: true`), so every legacy
+ * URL on every client took two hops: `/news/` → `/news` (308) → `/blog` (301).
+ * `next.config.ts` now sets `skipTrailingSlashRedirect: true`, which removes
+ * that rule, and this helper makes every served source match BOTH spellings
+ * with path-to-regexp's optional group: `/news{/}?` matches `/news/` and
+ * `/news`, not `/newsx`. One rule per row, so the 1,024-route cap's headroom
+ * is unchanged. Slashed URLs with no rule are stripped once by `proxy.ts`.
+ *
+ * Applied AFTER `resolveRedirects`, at emission, so the resolution itself and
+ * the fixture the Python side shares with it stay byte-identical.
+ */
+export const OPTIONAL_TRAILING_SLASH = '{/}?'
+
+export function withOptionalTrailingSlash(rules: RedirectRule[]): RedirectRule[] {
+  return rules.map((rule) =>
+    rule.source === '/' ? rule : {...rule, source: rule.source + OPTIONAL_TRAILING_SLASH},
+  )
+}
+
 export const MAX_CONFIG_REDIRECTS = 1024
 
 /**
