@@ -301,7 +301,11 @@ jobs:
             || { echo "::error::schema extract exited 0 without producing valid schema.json"; exit 1; }
 
           npx sanity typegen generate 2>&1 | tee typegen.log
-          grep -q "Generated TypeScript types for" typegen.log \
+          # The success line changed wording with the Sanity v6 CLI
+          # ("Successfully generated types to ..."; v3 said "Generated
+          # TypeScript types for ..."). Either satisfies the belt; the exit
+          # code is the primary signal since 2026-08-10.
+          grep -Eq "Generated TypeScript types for|Successfully generated types to" typegen.log \
             || { echo "::error::typegen generate exited 0 without emitting types"; exit 1; }
           rm -f typegen.log
       - name: Fail if committed schema/types are stale
