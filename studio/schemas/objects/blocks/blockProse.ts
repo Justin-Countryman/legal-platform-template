@@ -1,5 +1,5 @@
 import {defineArrayMember, defineType} from 'sanity'
-import {TagIcon} from '@sanity/icons'
+import {TagIcon} from '@sanity/icons/Tag'
 import {ContentTokenInput} from '../../../components/ContentTokenInput'
 
 // ─── blockProse ───────────────────────────────────────────────────────────────

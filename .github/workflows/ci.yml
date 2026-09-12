@@ -301,7 +301,11 @@ jobs:
             || { echo "::error::schema extract exited 0 without producing valid schema.json"; exit 1; }
 
           npx sanity typegen generate 2>&1 | tee typegen.log
-          grep -q "Generated TypeScript types for" typegen.log \
+          # The success line changed wording with the Sanity v6 CLI
+          # ("Successfully generated types to ..."; v3 said "Generated
+          # TypeScript types for ..."). Either satisfies the belt; the exit
+          # code is the primary signal since 2026-08-10.
+          grep -Eq "Generated TypeScript types for|Successfully generated types to" typegen.log \
             || { echo "::error::typegen generate exited 0 without emitting types"; exit 1; }
           rm -f typegen.log
       - name: Fail if committed schema/types are stale
@@ -586,6 +590,13 @@ jobs:
       - name: Install site deps (the studio config imports site/lib)
         working-directory: site
         run: npm ci
+      # Studio `tsc` runs here since the Sanity v6 upgrade (2026-09-11): on v6 a
+      # type error in a custom input is invisible to CI unless it also breaks
+      # the bundle, and the upgrade branch had 71 of them before `@types/node`
+      # and `@sanity/client` were declared at the versions the tree resolves.
+      - name: Typecheck the Studio
+        working-directory: studio
+        run: npx tsc --noEmit -p .
       - name: Build the Studio
         working-directory: studio
         run: npx sanity build --no-minify

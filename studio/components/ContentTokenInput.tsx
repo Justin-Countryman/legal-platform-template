@@ -11,7 +11,7 @@ export function ContentTokenInput(props: StringInputProps) {
   const groups = Array.from(new Set(options.map((t) => t.group)))
 
   return (
-    <Stack space={2}>
+    <Stack gap={2}>
       <Text size={1} muted>
         {loading ? 'Loading shortcodes…' : 'Select a shortcode'}
       </Text>

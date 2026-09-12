@@ -7,26 +7,29 @@
     "build": "sanity build",
     "deploy": "sanity deploy",
     "deploy-graphql": "sanity graphql deploy",
-    "schema:extract": "sanity schema extract",
+    "schema:extract": "sanity schema extract --force",
     "typegen": "npm run schema:extract && sanity typegen generate",
     "typegen:offline": "SANITY_STUDIO_OFFLINE_SCHEMA_EXTRACT=1 npm run typegen",
     "verify:seo-title": "node --experimental-strip-types scripts/verify-seo-title-validation.ts",
     "verify:meta-description": "node --experimental-strip-types scripts/verify-meta-description-validation.ts",
     "verify:location-slug": "node --experimental-strip-types scripts/verify-location-page-slug-source.ts",
-    "verify:hero-alt": "node --experimental-strip-types scripts/verify-hero-alt-validation.ts"
+    "verify:hero-alt": "node --experimental-strip-types scripts/verify-hero-alt-validation.ts",
+    "typecheck": "tsc --noEmit -p ."
   },
   "dependencies": {
-    "@sanity/client": "7.20.0",
-    "@sanity/vision": "^3.65.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "sanity": "^3.65.0",
+    "@sanity/client": "8.6.1",
+    "@sanity/icons": "5.2.2",
+    "@sanity/ui": "4.2.1",
+    "@sanity/vision": "6.13.2",
+    "react": "^19.2.2",
+    "react-dom": "^19.2.2",
+    "sanity": "6.13.2",
     "styled-components": "^6.3.12"
   },
   "devDependencies": {
-    "@sanity/eslint-config-studio": "^4.0.0",
-    "@types/react": "^18.3.3",
-    "eslint": "^8.57.0",
+    "@types/node": "^24",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
     "typescript": "^5.4.5"
   }
 }
