@@ -11,7 +11,9 @@ import {
 } from '../socialOverrides'
 
 // Existing Sanity fields: metaDescription, noIndex, seoTitle, slug
-// Additional fields added per BI-UX.md homePage spec
+// Additional fields added per the homePage spec that lived in BI-UX.md, which the
+// platform repo archived to `_archive/superseded-bi/BI-UX.md` (monorepo
+// OUTSTANDING item 114); the live homepage doctrine is `BI/BI-Homepage.md`.
 
 export const homePage = defineType({
   name: 'homePage',

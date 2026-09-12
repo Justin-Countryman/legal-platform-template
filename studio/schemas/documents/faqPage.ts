@@ -182,7 +182,7 @@ export const faqPage = defineType({
       title: 'FAQ Items',
       type: 'array',
       description:
-        'References to FAQ documents. FAQs here automatically generate FAQ structured data for search engines. If a parent practice area is set, legal service markup is included as well. FAQs live as standalone documents (Individual Items → FAQs) and are referenced here so the same Q+A can appear on multiple pages.',
+        'References to FAQ documents. FAQs here generate FAQPage structured data for search engines; nothing about the firm as a legal service is added by this page (that markup belongs to location pages). FAQs live as standalone documents (Individual Items → FAQs) and are referenced here so the same Q+A can appear on multiple pages.',
       of: [{type: 'reference', to: [{type: 'faqItem'}]}],
       validation: (Rule) =>
         Rule.required().min(1).warning('FAQ page must have at least one question'),

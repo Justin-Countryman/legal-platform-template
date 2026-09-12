@@ -50,6 +50,10 @@ import {fileURLToPath} from 'node:url'
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const STUDIO = path.join(ROOT, 'studio')
 const SCHEMA_JSON = path.join(STUDIO, 'schema.json')
+// The per-field map (studio/scripts/extract-field-map.ts) is generated from the
+// same source and freshness-checked by the same job since 2026-09-11; the probe
+// must land there too, or a walk that stopped reading the schema would pass.
+const FIELD_MAP_JSON = path.join(STUDIO, 'field-map.json')
 
 // The file the probe is planted into. Any document schema would do; naming one
 // keeps the check readable. If it is ever renamed this fails loudly, which is
@@ -84,6 +88,11 @@ function extract() {
     stdio: 'pipe',
     env: {...process.env, SANITY_STUDIO_OFFLINE_SCHEMA_EXTRACT: '1'},
   })
+  execFileSync('npm', ['run', 'field-map'], {
+    cwd: STUDIO,
+    stdio: 'pipe',
+    env: {...process.env, SANITY_STUDIO_OFFLINE_SCHEMA_EXTRACT: '1'},
+  })
 }
 
 function main() {
@@ -92,7 +101,8 @@ function main() {
   }
 
   const baseline = fs.readFileSync(SCHEMA_JSON, 'utf8')
-  if (baseline.includes(PROBE)) {
+  const mapBaseline = fs.readFileSync(FIELD_MAP_JSON, 'utf8')
+  if (baseline.includes(PROBE) || mapBaseline.includes(PROBE)) {
     fail(`The committed schema already contains "${PROBE}". The probe proves nothing while that is true — rename PROBE.`)
   }
 
@@ -118,6 +128,13 @@ function main() {
           'monorepo OUTSTANDING item 165 regressed. Do not tolerate a green diff.',
       )
     }
+    if (!fs.readFileSync(FIELD_MAP_JSON, 'utf8').includes(PROBE)) {
+      fail(
+        'THE FIELD-MAP GUARD IS VACUOUS. The planted field reached schema.json and ' +
+          'not field-map.json, so studio/scripts/extract-field-map.ts is not reading ' +
+          'the schema source it claims to walk.',
+      )
+    }
   } finally {
     if (planted) fs.writeFileSync(TARGET, original)
   }
@@ -126,6 +143,9 @@ function main() {
   // after a `git diff --exit-code` over the very file it rewrote.
   extract()
   const restored = fs.readFileSync(SCHEMA_JSON, 'utf8')
+  if (fs.readFileSync(FIELD_MAP_JSON, 'utf8') !== mapBaseline) {
+    fail('The drift probe was planted and field-map.json did not come back byte-identical after the restore.')
+  }
   if (restored !== baseline) {
     fail(
       'The drift probe was planted and the regenerated schema did not come back ' +
@@ -134,7 +154,7 @@ function main() {
     )
   }
 
-  console.log(`Freshness guard proven able to fail: planting "${PROBE}" in ${path.relative(ROOT, TARGET)} shows up in schema.json, and the restore is byte-exact.`)
+  console.log(`Freshness guard proven able to fail: planting "${PROBE}" in ${path.relative(ROOT, TARGET)} shows up in schema.json and field-map.json, and the restore is byte-exact.`)
 }
 
 try {

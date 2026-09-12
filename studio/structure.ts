@@ -1,4 +1,16 @@
 import {StructureBuilder} from 'sanity/structure'
+import {INDEX_SINGLETON_IDS} from './singletons'
+
+// Every index page is ONE document under the id Site Build writes
+// (`<type>-<slug>`, `singletons.ts`). A pinned pane opens that document and
+// creates it under that id on first publish; a type list would offer a
+// "Create new" whose second document the site could read instead
+// (`*[_type == "X"][0]`). 2026-09-11, monorepo WS-V1-PHASE5-DESIGN §4.
+const indexPane = (S: StructureBuilder, type: keyof typeof INDEX_SINGLETON_IDS, title: string) =>
+  S.listItem()
+    .title(title)
+    .id(type)
+    .child(S.document().schemaType(type).documentId(INDEX_SINGLETON_IDS[type]).title(title))
 
 export const structure = (S: StructureBuilder) =>
   S.list()
@@ -77,7 +89,7 @@ export const structure = (S: StructureBuilder) =>
                     // operator's blank page could have taken over the site.
                     // Found 2026-07-20 when the composed canvas rendered on the
                     // site and appeared empty in Studio.
-                    .documentId('homePage-home')
+                    .documentId(INDEX_SINGLETON_IDS.homePage)
                     .title('Homepage')
                 ),
               S.listItem()
@@ -127,9 +139,9 @@ export const structure = (S: StructureBuilder) =>
           S.list()
             .title('People')
             .items([
-              S.documentTypeListItem('attorneyIndex').title('Attorney Index'),
+              indexPane(S, 'attorneyIndex', 'Attorney Index'),
               S.documentTypeListItem('attorneyPage').title('Attorneys'),
-              S.documentTypeListItem('staffIndex').title('Staff Index'),
+              indexPane(S, 'staffIndex', 'Staff Index'),
               S.documentTypeListItem('staffPage').title('Staff'),
             ])
         ),
@@ -140,7 +152,7 @@ export const structure = (S: StructureBuilder) =>
           S.list()
             .title('Blog')
             .items([
-              S.documentTypeListItem('blogIndex').title('Blog Index'),
+              indexPane(S, 'blogIndex', 'Blog Index'),
               S.documentTypeListItem('blogPost').title('Blog Posts'),
               S.documentTypeListItem('blogCategory').title('Blog Categories'),
               S.documentTypeListItem('blogTag').title('Blog Tags'),
@@ -160,15 +172,7 @@ export const structure = (S: StructureBuilder) =>
                   S.list()
                     .title('Events')
                     .items([
-                      S.listItem()
-                        .title('Events Index')
-                        .id('eventIndex')
-                        .child(
-                          S.document()
-                            .schemaType('eventIndex')
-                            .documentId('eventIndex')
-                            .title('Events Index')
-                        ),
+                      indexPane(S, 'eventIndex', 'Events Index'),
                       S.documentTypeListItem('eventPage').title('Events'),
                     ])
                 ),
@@ -198,15 +202,7 @@ export const structure = (S: StructureBuilder) =>
                     ])
                 ),
               S.documentTypeListItem('testimonialsPage').title('Testimonials Page'),
-              S.listItem()
-                .title('Video Library Page')
-                .id('videoIndex')
-                .child(
-                  S.document()
-                    .schemaType('videoIndex')
-                    .documentId('videoIndex')
-                    .title('Video Library Page')
-                ),
+              indexPane(S, 'videoIndex', 'Video Library Page'),
             ])
         ),
 

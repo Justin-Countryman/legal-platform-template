@@ -8,13 +8,16 @@
     "deploy": "sanity deploy",
     "deploy-graphql": "sanity graphql deploy",
     "schema:extract": "sanity schema extract --force",
-    "typegen": "npm run schema:extract && sanity typegen generate",
+    "typegen": "npm run schema:extract && sanity typegen generate && npm run field-map",
     "typegen:offline": "SANITY_STUDIO_OFFLINE_SCHEMA_EXTRACT=1 npm run typegen",
     "verify:seo-title": "node --experimental-strip-types scripts/verify-seo-title-validation.ts",
     "verify:meta-description": "node --experimental-strip-types scripts/verify-meta-description-validation.ts",
     "verify:location-slug": "node --experimental-strip-types scripts/verify-location-page-slug-source.ts",
     "verify:hero-alt": "node --experimental-strip-types scripts/verify-hero-alt-validation.ts",
-    "typecheck": "tsc --noEmit -p ."
+    "typecheck": "tsc --noEmit -p .",
+    "field-map": "sanity exec scripts/extract-field-map.ts",
+    "verify:field-map": "sanity exec scripts/verify-field-map.ts",
+    "verify:page-link-types": "sanity exec scripts/verify-page-link-types.ts"
   },
   "dependencies": {
     "@sanity/client": "8.6.1",
