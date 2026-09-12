@@ -50,7 +50,10 @@ type OrganizationData = {
   } | null
 }
 
-function buildOrganizationSchema(data: OrganizationData) {
+export function buildOrganizationSchema(input: OrganizationData | null) {
+  // A dataset with no siteSettings yet (a fresh project, or CI's empty stub
+  // Content Lake) answers null; the schema renders soft rather than throwing.
+  const data: OrganizationData = input ?? {}
   const firmName = data.firmName ?? ''
   const url = `${siteOrigin()}/`
 

@@ -10,6 +10,15 @@ export const client = createClient({
   // published value — settings changes (e.g. mobileLayout) appeared one edit
   // behind. Next's Data Cache + per-route ISR remain the caching layer.
   useCdn: false,
+  // CI only. `scripts/ci/content-lake-stub.mjs` stands in for the Content Lake
+  // so `next build` can run with no project (monorepo OUTSTANDING item 255).
+  // Non-public on purpose: it is read on the server at build time, never
+  // inlined into a browser bundle, and no Vercel build sets it. With
+  // `useProjectHostname: false` the project id travels as a header, so the
+  // shipped sentinel id needs no placeholder.
+  ...(process.env.SANITY_API_HOST_OVERRIDE
+    ? {apiHost: process.env.SANITY_API_HOST_OVERRIDE, useProjectHostname: false}
+    : {}),
   ...(process.env.NODE_ENV !== 'production' && process.env.SANITY_API_READ_TOKEN
     ? {
         token: process.env.SANITY_API_READ_TOKEN,

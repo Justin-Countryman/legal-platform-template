@@ -137,3 +137,31 @@ describe('the unreachable row — the last line of the same table', () => {
     expect(await fetchSiteHiddenAtBuild()).toBe(true)
   })
 })
+
+describe('SANITY_API_HOST_OVERRIDE — CI points the build-time read at the stub Content Lake', () => {
+  afterEach(() => {
+    delete process.env.SANITY_API_HOST_OVERRIDE
+    vi.unstubAllGlobals()
+  })
+
+  it('queries the override origin instead of <projectId>.api.sanity.io, and reads the verdict from it', async () => {
+    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID = 'TEMPLATE_SANITY_PROJECT_ID'
+    process.env.NEXT_PUBLIC_SANITY_DATASET = 'production'
+    process.env.SANITY_API_HOST_OVERRIDE = 'http://127.0.0.1:4010/'
+    const fetchMock = vi.fn().mockResolvedValue({ok: true, json: async () => ({result: false})})
+    vi.stubGlobal('fetch', fetchMock)
+    expect(await fetchSiteHiddenAtBuild()).toBe(false)
+    const url = String(fetchMock.mock.calls[0][0])
+    expect(url.startsWith('http://127.0.0.1:4010/v2024-01-01/data/query/production?query=')).toBe(true)
+    expect(url).not.toContain('api.sanity.io')
+  })
+
+  it('without the override the real API host is used', async () => {
+    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID = 'TEMPLATE_SANITY_PROJECT_ID'
+    process.env.NEXT_PUBLIC_SANITY_DATASET = 'production'
+    const fetchMock = vi.fn().mockResolvedValue({ok: true, json: async () => ({result: false})})
+    vi.stubGlobal('fetch', fetchMock)
+    await fetchSiteHiddenAtBuild()
+    expect(String(fetchMock.mock.calls[0][0]).startsWith('https://TEMPLATE_SANITY_PROJECT_ID.api.sanity.io/')).toBe(true)
+  })
+})

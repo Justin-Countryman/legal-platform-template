@@ -9,6 +9,15 @@ name: CI
 # STUDIO BUILD and a full `next build` (page-data collection instantiates the
 # Sanity client and fails on the sentinel projectId) — those remain unwired.
 #
+# PHASE 3 OF THE V1 PLAN, 2026-09-11: the paragraph above is history. The site
+# now BUILDS here (`site-build`, against a local stub Content Lake that answers
+# real GROQ over a six-document fixture), the Studio builds (`studio-build`,
+# the shipped sentinel id is a string a build never validates), and the whole
+# vitest suite runs (`site-vitest`) instead of four named files. Node comes
+# from `.nvmrc` (24, the operator's version; Node 20 reached end of life
+# 2026-04-30) and `npm ci` is cached per lockfile. Design and its adversarial
+# review: monorepo `BI/_workstreams/WS-V1-PHASE3-DESIGN.md`.
+#
 # NOTE ON SCOPE: this file is the TEMPLATE's CI, and nothing else runs it. A
 # client repo does not inherit it and receives NO workflow at all. Changes here
 # affect the template only.
@@ -61,7 +70,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
       - name: Verify the template carries no firm identity
         run: node scripts/check-template-is-blank.mjs
 
@@ -247,7 +256,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            site/package-lock.json
+            studio/package-lock.json
       - name: Install studio deps
         working-directory: studio
         run: npm ci
@@ -320,7 +333,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
       - name: Install site deps
         working-directory: site
         run: npm ci
@@ -342,7 +357,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
       - name: Install site deps
         working-directory: site
         run: npm ci
@@ -373,7 +390,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
       - name: Install site deps
         working-directory: site
         run: npm ci
@@ -403,7 +422,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
       - name: Install site deps
         working-directory: site
         run: npm ci
@@ -431,7 +452,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
       - name: Install site deps
         working-directory: site
         run: npm ci
@@ -466,10 +489,103 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
       - name: Install site deps
         working-directory: site
         run: npm ci
       - name: Run the office-hours display and JSON-LD invariance tests
         working-directory: site
         run: npx vitest run components/layout/footers/__tests__/office-hours-display.test.tsx
+
+  site-vitest:
+    name: "Site: full vitest suite"
+    runs-on: ubuntu-latest
+    # Until 2026-09-11 CI ran four of the suite's 115 files, each by name in a
+    # job of its own, because vitest was never wired as a whole. A test file
+    # that nobody added to a job was a test that could not fail here. The four
+    # named jobs stay (five doctrine documents cite them by job name as the
+    # detector for the rule they guard); this job is the floor under them.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - name: Install site deps
+        working-directory: site
+        run: npm ci
+      - name: Run the whole suite
+        working-directory: site
+        run: npx vitest run
+
+  site-build:
+    name: "Site: next build against a stub Content Lake"
+    runs-on: ubuntu-latest
+    # THE GATE THE PLATFORM WAS MISSING — monorepo OUTSTANDING item 255. Nothing
+    # compiled the site end to end: `tsc --noEmit` does not run the bundler,
+    # does not execute module top-level code and does not collect page data,
+    # which is exactly where a build-time failure lives, so the first thing that
+    # compiled a template change was a client's Vercel deploy.
+    #
+    # The build could not run here because it makes LIVE calls: seven
+    # `generateStaticParams`, both layouts, `sitemap.ts` and `robots.ts` all
+    # call `client.fetch`, and the template ships a sentinel project id. A mock
+    # id alone still fails (measured: a Sanity 404 during page-data collection).
+    # What fixes it is answering the calls locally: `scripts/ci/content-lake-stub.mjs`
+    # evaluates each query with `groq-js`, Sanity's own evaluator, over a
+    # six-document slug-only fixture, and the site reaches it through
+    # `SANITY_API_HOST_OVERRIDE`, a non-public env var no Vercel build sets.
+    #
+    # WHAT THIS PROVES AND WHAT IT DOES NOT. It proves the site compiles,
+    # collects page data, and prerenders every index route plus one page per
+    # generateStaticParams template on null content (22 pages, measured
+    # 2026-09-11). It does not render `[...slug]` pages — practice areas,
+    # locations, content — because that route enumerates nothing at build; only
+    # a served site with data reaches them (the v1 plan's Phase 4 Verify stage).
+    # The script asserts the stub answered at least 30 queries and that every
+    # fixture slug is in the route table, so a green here cannot be a build
+    # that never touched the data path.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - name: Install site deps
+        working-directory: site
+        run: npm ci
+      - name: Build against the stub Content Lake
+        working-directory: site
+        run: bash scripts/ci/build-against-stub.sh
+
+  studio-build:
+    name: "Studio: sanity build"
+    runs-on: ubuntu-latest
+    # `sanity build` bundles the Studio with Vite. The sentinel project id in
+    # sanity.config.ts is a string the bundle carries and never validates, so the
+    # build runs offline with no env at all (measured 2026-09-11: exit 0 in 9 s).
+    # It is `sanity schema extract` that needs the mock auth store, not this.
+    # Site deps are installed too because the studio config imports site/lib
+    # (see the typegen job above; monorepo OUTSTANDING item 22).
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            site/package-lock.json
+            studio/package-lock.json
+      - name: Install studio deps
+        working-directory: studio
+        run: npm ci
+      - name: Install site deps (the studio config imports site/lib)
+        working-directory: site
+        run: npm ci
+      - name: Build the Studio
+        working-directory: studio
+        run: npx sanity build --no-minify

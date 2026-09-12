@@ -50,8 +50,13 @@ export async function fetchSiteHiddenAtBuild(): Promise<boolean> {
   if (!projectId || !dataset) return true
 
   try {
+    // CI points this at the stub Content Lake through the same override the
+    // client honours (`lib/sanity/client.ts`), so a CI build makes no call out.
+    const origin = process.env.SANITY_API_HOST_OVERRIDE
+      ? process.env.SANITY_API_HOST_OVERRIDE.replace(/\/$/, '')
+      : `https://${projectId}.api.sanity.io`
     const url =
-      `https://${projectId}.api.sanity.io/v2024-01-01/data/query/${dataset}` +
+      `${origin}/v2024-01-01/data/query/${dataset}` +
       `?query=${encodeURIComponent(SITE_HIDDEN_QUERY)}`
     const token = process.env.SANITY_API_READ_TOKEN
     const res = await fetch(url, {
