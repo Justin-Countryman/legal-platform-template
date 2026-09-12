@@ -47,6 +47,20 @@ export const CS_SITEMAP_CSV = resolve(__dirname, '../CS/CS-SITEMAP.csv')
 // bigger response costs more than the saved request saves. Left as a separate
 // (Brotli-compressed, cacheable) stylesheet on purpose. Do not re-enable without measuring.
 const nextConfig: NextConfig = {
+  // ONE HOP FOR A LEGACY URL, ruled 2026-09-11 ([R-185], item 271). Next.js
+  // otherwise puts its own `/:path+/ → /:path+` 308 at the FRONT of the
+  // redirect list, so every slashed old URL took that hop before the map's
+  // 301. With it off, the map's rules already match both spellings (Next makes
+  // every custom redirect slash-tolerant at build: `lib/redirects.ts` header)
+  // and `proxy.ts` strips the slash once for every other URL. TECH-1's
+  // no-slash canonical is unchanged.
+  //
+  // NEVER ADD A CONFIG-LEVEL `/:path+/ → /:path+` 308 HERE instead of the
+  // proxy: Vercel's builder recognises that exact shape as "the trailing-slash
+  // redirect" and hoists it above the map (`@vercel/next` index.ts:1214-1235,
+  // server-build.ts:2061-2064), which silently restores the two-hop chain on
+  // Vercel while `next start` and every test stay green (ADV-P4-D).
+  skipTrailingSlashRedirect: true,
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [

@@ -658,3 +658,38 @@ describe('a migrated client, one file, every case at once', () => {
     expect(report.counts).toEqual({rows: 7, served: 4})
   })
 })
+
+
+// ─── One hop for a legacy URL ([R-185], item 271, 2026-09-11) ─────────────────
+//
+// The property the design leans on, pinned against Next's OWN route compiler
+// rather than re-implemented: a custom redirect source matches the slashed
+// spelling too, so with the framework's front-of-list slash redirect turned off
+// (`skipTrailingSlashRedirect`) a legacy URL takes one hop. If Next ever stops
+// doing this, the chain comes back and this test says so first.
+
+describe('a custom redirect source already matches both spellings of an old URL', () => {
+  it('Next compiles /news to a regex that matches /news and /news/, not /newsx', async () => {
+    const {buildCustomRoute} = (await import('next/dist/lib/build-custom-route' as string)) as {
+      buildCustomRoute: (
+        type: 'redirect',
+        route: {source: string; destination: string; statusCode: number},
+        restrictedPaths: string[],
+      ) => {regex: string}
+    }
+    const built = buildCustomRoute('redirect', csvRule('/news', '/blog'), ['/_next'])
+    const re = new RegExp(built.regex)
+    expect(re.test('/news')).toBe(true)
+    expect(re.test('/news/')).toBe(true)
+    expect(re.test('/newsx')).toBe(false)
+    expect(re.test('/news/x')).toBe(false)
+  })
+
+  it('vercel.json sets neither trailingSlash nor cleanUrls (either is a platform 308 ahead of the map)', async () => {
+    const {readFileSync} = await import('node:fs')
+    const {join} = await import('node:path')
+    const json = JSON.parse(readFileSync(join(process.cwd(), 'vercel.json'), 'utf8'))
+    expect(json.trailingSlash).toBeUndefined()
+    expect(json.cleanUrls).toBeUndefined()
+  })
+})
