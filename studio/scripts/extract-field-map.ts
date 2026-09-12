@@ -85,7 +85,7 @@ type Row = {
 
 const schema = createSchema({name: 'template', types: schemaTypes as never})
 
-const fakeClient = {fetch: async () => null, withConfig: () => fakeClient, config: () => ({projectId: 'field-map', dataset: 'production'})} as never
+const fakeClient = {fetch: async () => null, withConfig: () => fakeClient, config: () => ({projectId: 'offline-schema-extract', dataset: 'production'})} as never
 const getClient = () => fakeClient
 
 let problems = 0
@@ -180,7 +180,7 @@ function markerPath(m: Marker): string {
 async function initialDocument(typeName: string): Promise<Record<string, unknown>> {
   const s = schema.get(typeName)
   const template = (sanity as any).defaultTemplateForType(s)
-  const context = {projectId: 'field-map', dataset: 'production', schema, currentUser: null, getClient}
+  const context = {projectId: 'offline-schema-extract', dataset: 'production', schema, currentUser: null, getClient}
   return (sanity as any).resolveInitialValue(schema, template, {}, context)
 }
 
