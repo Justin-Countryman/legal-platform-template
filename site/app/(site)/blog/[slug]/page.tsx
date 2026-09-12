@@ -340,7 +340,10 @@ export default async function BlogPostPage({params}: Props) {
           the branches have already closed, so a single call serves both. */}
       <div className="bg-muted border-b border-border px-[5%] py-3">
         <div className="container">
-          <Breadcrumbs items={breadcrumbItems} domain={siteHost()} />
+          {/* CRUMB-2's headline exception: the trail ends at the category or the
+              index, neither of which is this page, so no rung is the current
+              page and the last one stays a link (item 105). */}
+          <Breadcrumbs items={breadcrumbItems} domain={siteHost()} endsOnCurrentPage={false} />
         </div>
       </div>
 

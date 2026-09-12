@@ -258,3 +258,73 @@ describe('buildBreadcrumbs — helper', () => {
     expect(items.map((i) => i.label)).toEqual(['Home', 'Divorce'])
   })
 })
+
+// ─── OUTSTANDING item 105 (2026-09-11) ────────────────────────────────────────
+// `aria-current="page"` marks the page being viewed and nothing else. A blog
+// post's trail ends at its parent (CRUMB-2's headline exception), so its last
+// rung is the Blog index: a link, not the current page.
+
+describe('item 105: a trail that ends at the parent marks nothing as current', () => {
+  it('renders the last rung as a link with no aria-current when endsOnCurrentPage is false', () => {
+    const {container} = render(<Breadcrumbs items={ITEMS_3} endsOnCurrentPage={false} />)
+    expect(container.querySelector('[aria-current="page"]')).toBeNull()
+    const links = Array.from(container.querySelectorAll('nav a')).map((a) => a.getAttribute('href'))
+    expect(links).toEqual(['/', '/family-law/', '/family-law/divorce/'])
+  })
+
+  it('keeps the default: the last rung is the current page, a span with aria-current', () => {
+    const {container} = render(<Breadcrumbs items={ITEMS_3} />)
+    const current = container.querySelector('[aria-current="page"]') as HTMLElement
+    expect(current.tagName).toBe('SPAN')
+    expect(current.textContent).toBe('Divorce')
+  })
+
+  it('emits the same BreadcrumbList either way (the markup mirrors the visible trail)', () => {
+    const {container} = render(
+      <Breadcrumbs items={ITEMS_3} domain="example.test" endsOnCurrentPage={false} />,
+    )
+    const json = JSON.parse(container.querySelector('script')!.textContent!)
+    expect(json.itemListElement.map((e: {name: string}) => e.name)).toEqual([
+      'Home', 'Family Law', 'Divorce',
+    ])
+  })
+})
+
+// ─── OUTSTANDING item 96 (2026-09-11) ─────────────────────────────────────────
+// `buildBreadcrumbs` used to read exactly two ancestors, so a page four levels
+// deep lost its top rung. It now walks whatever chain the query projected.
+
+describe('item 96: the builder walks the whole ancestor chain', () => {
+  it('builds a 5-item chain from three ancestors, top rung first', () => {
+    const items = buildBreadcrumbs({
+      _type: 'practiceArea',
+      title: 'Grandchild Topic',
+      slug: 'estate-planning/trusts/special-needs/abc',
+      parentPage: {
+        title: 'Special Needs',
+        slug: 'estate-planning/trusts/special-needs',
+        parentPage: {
+          title: 'Trusts',
+          slug: 'estate-planning/trusts',
+          parentPage: {title: 'Estate Planning', slug: 'estate-planning'},
+        },
+      },
+    })
+    expect(items.map((i) => i.href)).toEqual([
+      '/',
+      '/estate-planning',
+      '/estate-planning/trusts',
+      '/estate-planning/trusts/special-needs',
+      '/estate-planning/trusts/special-needs/abc',
+    ])
+  })
+
+  it('still skips an ancestor with no slug without dropping the ones above it', () => {
+    const items = buildBreadcrumbs({
+      title: 'Leaf',
+      slug: 'a/b/c',
+      parentPage: {title: 'Broken', slug: null, parentPage: {title: 'Top', slug: 'a'}},
+    })
+    expect(items.map((i) => i.href)).toEqual(['/', '/a', '/a/b/c'])
+  })
+})

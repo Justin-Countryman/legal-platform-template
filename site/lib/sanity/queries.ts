@@ -1372,6 +1372,27 @@ export const ATTORNEY_PAGE_QUERY = groq`
   }
 `
 
+// ─── Parent chain ─────────────────────────────────────────────────────────────
+// The ancestor rungs a breadcrumb can show, projected FOUR levels up. It was two
+// (`parentPage` and `parentPage.parentPage`), so a page nested four levels deep
+// silently dropped its top rung; `buildBreadcrumbs` walks whatever depth this
+// projects (OUTSTANDING item 96, 2026-09-11). GROQ has no recursion, so the
+// depth is spelled out; a fifth level would be a change here and nowhere else.
+export const PARENT_CHAIN_DEPTH = 4
+const PARENT_RUNG = `title, navLabel, "slug": slug.current`
+export const PARENT_CHAIN_FRAGMENT = `{
+      ${PARENT_RUNG},
+      "parentPage": parentPage->{
+        ${PARENT_RUNG},
+        "parentPage": parentPage->{
+          ${PARENT_RUNG},
+          "parentPage": parentPage->{
+            ${PARENT_RUNG}
+          }
+        }
+      }
+    }`
+
 // ─── Practice Area ────────────────────────────────────────────────────────────
 export const PRACTICE_AREA_QUERY = groq`
   *[_type in ["practiceArea", "geoPracticeArea", "serviceAreaPage"] && slug.current == $slug][0]{
@@ -1388,16 +1409,7 @@ export const PRACTICE_AREA_QUERY = groq`
     noIndex,
     noFollow,
     canonicalUrl,
-    "parentPage": parentPage->{
-      title,
-      navLabel,
-      "slug": slug.current,
-      "parentPage": parentPage->{
-        title,
-        navLabel,
-        "slug": slug.current
-      }
-    },
+    "parentPage": parentPage->${PARENT_CHAIN_FRAGMENT},
     "hero": hero {
       "heading": coalesce(heading, ^.title),
       ${INTERNAL_HERO_OVERRIDE_FIELDS}
@@ -1865,12 +1877,19 @@ export const LOCATION_PAGE_QUERY = groq`
 `
 
 // ─── General Content Pages ─────────────────────────────────────────────────────
-// Handles: aboutPage, contactPage, faqPage, generalPage, landingPage
+// Handles: aboutPage, faqPage, generalPage, landingPage
 // All share the same hero/body/sidebar/sections structure as practiceArea.
+//
+// `contactPage` is NOT here since 2026-09-11 (OUTSTANDING item 95). It has its
+// own route, `app/(site)/contact/page.tsx`, and was also in this list, so two
+// renderers could serve it and nothing ruled which one did: Next's static
+// segment won for `/contact`, and a contactPage on any other slug would have
+// rendered here through a layout that is not the contact page's. One type, one
+// renderer; `lib/sanity/__tests__/queries.test.ts` pins it.
 export const CONTENT_PAGE_QUERY = groq`
   *[
     slug.current == $slug &&
-    _type in ["aboutPage", "contactPage", "faqPage", "generalPage", "landingPage"]
+    _type in ["aboutPage", "faqPage", "generalPage", "landingPage"]
   ][0]{
     "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     _type,
@@ -1884,16 +1903,7 @@ export const CONTENT_PAGE_QUERY = groq`
     noIndex,
     noFollow,
     canonicalUrl,
-    "parentPage": parentPage->{
-      title,
-      navLabel,
-      "slug": slug.current,
-      "parentPage": parentPage->{
-        title,
-        navLabel,
-        "slug": slug.current
-      }
-    },
+    "parentPage": parentPage->${PARENT_CHAIN_FRAGMENT},
     "hero": hero {
       "heading": coalesce(heading, ^.title),
       ${INTERNAL_HERO_OVERRIDE_FIELDS}

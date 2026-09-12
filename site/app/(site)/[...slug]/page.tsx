@@ -19,6 +19,7 @@ import {ContentSidebarLayout} from '@/components/layout/ContentSidebarLayout'
 import {InternalHero} from '@/components/layout/InternalHero'
 import {InternalPageHeader} from '@/components/layout/InternalPageHeader'
 import {Breadcrumbs, buildBreadcrumbs} from '@/components/ui/Breadcrumbs'
+import {buildFaqPageSchema} from '@/lib/faqPageSchema'
 import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {FaqAccordion} from '@/components/ui/FaqAccordion'
 import {Sidebar} from '@/components/layout/Sidebar'
@@ -145,39 +146,6 @@ function buildOpeningHours(hours: LocationHours | null | undefined) {
       closes: d.close,
     }))
   return specs.length > 0 ? specs : undefined
-}
-
-// Post-WS-FAQ-Migration (2026-05-14): faqItems is now a dereferenced array of
-// faqItem documents (GROQ resolves the references via `[defined(@->_id)]->`).
-// The dangling-ref filter at query time guarantees the array is null-free
-// here. Only question + answer are needed for FAQPage structured-data
-// emission; additional fields (category, slug, tags) are ignored.
-function buildFaqPageSchema(
-  faqItems: Array<{question: string; answer: unknown[]}>,
-  tokens: NapTokens | null,
-) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqItems.map((item) => ({
-      '@type': 'Question',
-      name: resolveTokenString(item.question, tokens),
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: (item.answer ?? [])
-          .flatMap((block: unknown) => {
-            const b = block as {_type?: string; children?: unknown[]}
-            return b._type === 'block'
-              ? (b.children ?? []).map((span: unknown) => {
-                  const s = span as {text?: string}
-                  return s.text ?? ''
-                })
-              : []
-          })
-          .join(' '),
-      },
-    })),
-  }
 }
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
