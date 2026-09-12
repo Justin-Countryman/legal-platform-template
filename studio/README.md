@@ -14,6 +14,10 @@ This repo is the **template** that the Client Provisioning Tool clones from. The
 
 > The site (`../site/`) uses `next-sanity ^12.2.2` and its own `sanity` dependency. The Studio and the site are installed separately; the Studio's config still imports `../site/lib/designTokens` (monorepo OUTSTANDING item 22), so `site/` must be installed before the Studio can extract, build or deploy.
 
+### The field map: `field-map.json`
+
+`npm run field-map` (inside `npm run typegen`) walks the compiled schema and writes `studio/field-map.json`: per document type, the document Studio itself would create (`initialDocument`, from Sanity's own initial-value resolver) and one row per field path with title, description, `initialValue`, option list, required marker, `hidden`/`readOnly`, and the `buildTime` prop from `schemas/buildTime.ts`. The extract (`schema.json`) carries none of that, and the platform's build creates documents through the mutation API, which never evaluates `initialValue`; the build reads this map for its defaults (monorepo `BE/_shared/schema_defaults.py`, `OUTSTANDING.md` item 195). Committed beside `schema.json`; the `Sanity types freshness` job regenerates and diffs it and plants a field to prove the diff can fail; `npm run verify:field-map` requires the rows, folded by the platform's rules, to equal `initialDocument`. Singleton ids live in `singletons.ts` and are written into the map so the platform can assert the build writes the ids the desk opens.
+
 ### What changed on the v6 upgrade, and how it is proven
 
 - `sanity schema extract` refuses to overwrite `schema.json` without `--force`; the `schema:extract` script carries it.

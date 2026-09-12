@@ -4,6 +4,7 @@ import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemas'
 import {structure} from './structure'
+import {SINGLETON_TYPES} from './singletons'
 
 // ─── The offline schema-extraction switch ───────────────────────────────────
 //
@@ -37,21 +38,10 @@ import {structure} from './structure'
 // extracts with HTTP_PROXY pointed at a closed port.
 const OFFLINE_SCHEMA_EXTRACT = process.env.SANITY_STUDIO_OFFLINE_SCHEMA_EXTRACT === '1'
 
-// Singletons that should never be deleted
-const PROTECTED_TYPES = [
-  'siteSettings',
-  'designSettings',
-  'mainNavigation',
-  'footerSettings',
-  'heroSettings',
-  'globalCta',
-  'homePage',
-  'blogIndex',
-  'attorneyIndex',
-  'staffIndex',
-  'eventIndex',
-  'videoIndex',
-]
+// Singletons that should never be deleted, and never created twice. One list
+// (`singletons.ts`) feeds the desk's pinned panes, this Delete filter and the
+// "Create new" filter below.
+const PROTECTED_TYPES: readonly string[] = SINGLETON_TYPES
 
 export default defineConfig({
   name: 'TEMPLATE_CLIENT_SLUG',
@@ -93,6 +83,13 @@ export default defineConfig({
   },
 
   document: {
+    // "Create new" (the global button and any document-type list) never
+    // offers a singleton type: the desk opens each one under its fixed id
+    // and a second document of the type is what the site's
+    // `*[_type == "X"][0]` reads could pick up instead. Default template ids
+    // equal the schema type names. 2026-09-11, monorepo
+    // WS-V1-PHASE5-DESIGN §4 and §9 item 30.
+    newDocumentOptions: (prev) => prev.filter((item) => !PROTECTED_TYPES.includes(item.templateId)),
     actions: (prev, {schemaType}) => {
       if (PROTECTED_TYPES.includes(schemaType)) {
         // Remove delete from protected singletons

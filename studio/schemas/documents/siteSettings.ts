@@ -1,4 +1,5 @@
 import {defineType} from 'sanity'
+import {buildTime} from '../buildTime'
 import {PageLinkInput} from '../../components/PageLinkInput'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
@@ -138,8 +139,11 @@ export const siteSettings = defineType({
       title: 'Hide this site from search engines',
       type: 'boolean',
       initialValue: true,
-      description:
+      // `buildTime`: three of the four crawler surfaces are fixed when the site
+      // is built (item 240, the Studio half). See schemas/buildTime.ts.
+      ...buildTime(
         'ON while a site is being built, and ON is what an unset value means — a site is hidden unless this is explicitly switched off. Turn it OFF at launch, when the live domain is attached. While ON: every page carries a noindex tag, every response carries a noindex header (so the sitemap, images and the social-share image are covered, not just pages), robots.txt disallows everything, and the sitemap is emitted empty.',
+      ),
     },
 
     // ─── Scripts ──────────────────────────────────────────────────────────────

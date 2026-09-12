@@ -308,13 +308,23 @@ jobs:
           grep -Eq "Generated TypeScript types for|Successfully generated types to" typegen.log \
             || { echo "::error::typegen generate exited 0 without emitting types"; exit 1; }
           rm -f typegen.log
-      - name: Fail if committed schema/types are stale
+
+          # The per-field map (title, description, initialValue, option list,
+          # required marker, buildTime) that the platform's build reads for
+          # schema defaults: studio/scripts/extract-field-map.ts, since
+          # 2026-09-11 (monorepo WS-V1-PHASE5-DESIGN §2). Generated from the
+          # same schema, diffed below with the other two artifacts.
+          npm run field-map 2>&1 | tee field-map.log
+          grep -q "field-map.json:" field-map.log \
+            || { echo "::error::field-map generation exited 0 without writing the map"; exit 1; }
+          rm -f field-map.log
+      - name: Fail if committed schema/types/field map are stale
         run: |
-          if ! git diff --exit-code studio/schema.json site/types/sanity.types.ts; then
-            echo "::error::Generated Sanity types are stale. Run 'npm run typegen:offline' in studio/ and commit studio/schema.json + site/types/sanity.types.ts."
+          if ! git diff --exit-code studio/schema.json studio/field-map.json site/types/sanity.types.ts; then
+            echo "::error::Generated Sanity artifacts are stale. Run 'npm run typegen:offline' in studio/ and commit studio/schema.json + studio/field-map.json + site/types/sanity.types.ts."
             exit 1
           fi
-          echo "Sanity schema + generated types are up to date."
+          echo "Sanity schema, field map and generated types are up to date."
       - name: Check the freshness guard still fails on planted drift
         # This is the step whose absence made the four-month silence possible.
         # It runs AFTER the diff above, so a genuine staleness is reported as
@@ -600,3 +610,14 @@ jobs:
       - name: Build the Studio
         working-directory: studio
         run: npx sanity build --no-minify
+      # The field map's rows, folded by the platform's rules, equal Studio's own
+      # initial document per type; the page-link picker offers exactly the
+      # routed, slugged types. Both are outcome checks over the Studio's own
+      # code paths (2026-09-11, monorepo WS-V1-PHASE5-DESIGN §2 and §4).
+      - name: Verify the field map and the page-link picker
+        working-directory: studio
+        env:
+          SANITY_STUDIO_OFFLINE_SCHEMA_EXTRACT: '1'
+        run: |
+          npm run verify:field-map
+          npm run verify:page-link-types

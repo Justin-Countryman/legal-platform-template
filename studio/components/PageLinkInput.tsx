@@ -31,8 +31,29 @@ const GROUP_LABELS: Record<string, string> = {
   attorneyPage: 'Attorneys',
   attorneyIndex: 'Attorneys Index',
   staffIndex: 'Staff Index',
+  staffPage: 'Staff',
+  blogPost: 'Blog Posts',
+  blogCategory: 'Blog Categories',
   reviewPage: 'Review Pages',
 }
+
+// The types the picker offers. Exported so `scripts/verify-page-link-types.ts`
+// can assert each one has a `slug` in the extract and a route in the site.
+// Every slug is a whole path (`staff/jane-doe`, `blog/foo`,
+// `blog/category/bar`), so the href below needs no prefixing. `blogTag` and
+// `eventCategory` carry a slug and have no route; `pressItem`, `caseResult`
+// and `eventCategory` have no slug; none of them belongs here. Staff, posts
+// and categories joined 2026-09-11 (monorepo WS-V1-PHASE5-DESIGN §4, §9 item
+// 29: "the picker cannot pick staff, blog posts or categories").
+export const PAGE_LINK_TYPES = [
+  'practiceArea', 'geoPracticeArea', 'locationPage',
+  'serviceAreaIndex', 'serviceAreaPage',
+  'aboutPage', 'contactPage', 'faqPage',
+  'generalPage', 'landingPage', 'blogIndex', 'blogPost', 'blogCategory',
+  'eventIndex', 'eventPage',
+  'attorneyPage', 'attorneyIndex', 'staffIndex', 'staffPage',
+  'reviewPage',
+] as const
 
 // ─── Hierarchy Builder ────────────────────────────────────────────────────────
 
@@ -72,21 +93,13 @@ export function PageLinkInput(props: StringInputProps) {
         `*[
           defined(slug.current) &&
           !(_id in path("drafts.**")) &&
-          _type in [
-            "practiceArea", "geoPracticeArea", "locationPage",
-            "serviceAreaIndex", "serviceAreaPage",
-            "aboutPage", "contactPage", "faqPage",
-            "generalPage", "landingPage", "blogIndex",
-            "eventIndex", "eventPage",
-            "attorneyPage", "attorneyIndex", "staffIndex",
-            "reviewPage"
-          ]
+          _type in $types
         ]{
           _type,
           "slug": slug.current,
           "parentSlug": parentPage->slug.current,
           "label": select(
-            _type == "attorneyPage" => coalesce(firstName, "") + " " + coalesce(lastName, ""),
+            _type in ["attorneyPage", "staffPage"] => coalesce(firstName, "") + " " + coalesce(lastName, ""),
             _type == "eventPage" => coalesce(title, "Untitled Event"),
             coalesce(
               title,
@@ -103,6 +116,7 @@ export function PageLinkInput(props: StringInputProps) {
             )
           )
         } | order(_type asc, lastName asc, firstName asc)`,
+        {types: PAGE_LINK_TYPES as unknown as string[]},
       )
       .then(setOptions)
       .catch(() => {})
