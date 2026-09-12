@@ -6,7 +6,7 @@
  */
 import {describe, expect, it} from 'vitest'
 import {NextRequest} from 'next/server'
-import {proxy, config, stripTrailingSlashUrl} from '../../proxy'
+import {proxy, config, stripTrailingSlashUrl, TRAILING_SLASH_HEADER} from '../../proxy'
 
 const ORIGIN = 'https://example-firm.test'
 
@@ -29,6 +29,8 @@ describe('proxy', () => {
     const res = proxy(new NextRequest(ORIGIN + '/wills-trusts/?a=1'))
     expect(res.status).toBe(308)
     expect(res.headers.get('location')).toBe(ORIGIN + '/wills-trusts?a=1')
+    // The marker Verify reads to tell this strip from the framework's.
+    expect(res.headers.get(TRAILING_SLASH_HEADER)).toBe('stripped')
   })
 
   it('still rewrites /review-* to the internal route, unslashed', () => {

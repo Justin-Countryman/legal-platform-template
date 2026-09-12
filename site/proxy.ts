@@ -11,12 +11,16 @@ import type {NextRequest} from 'next/server'
 //    longer redirects `/x/` to `/x` ahead of the redirect map (which cost every
 //    legacy URL a second hop). The map's rules match both spellings and run
 //    BEFORE this proxy (Next evaluates headers, then redirects, then the proxy),
-//    so a legacy URL never reaches here; every OTHER slashed URL is sent to its
-//    no-slash form here with one 308, which is what the framework used to do.
+//    so a legacy URL never reaches here (the map's rules match both spellings:
+//    Next compiles every custom redirect slash-tolerant, see lib/redirects.ts);
+//    every OTHER slashed URL is sent to its no-slash form here with one 308,
+//    which is what the framework used to do.
 //    TECH-1's canonical shape is unchanged: the no-slash form serves.
 // 2. Transparently rewrite /review-* URLs to the internal /review/[slug] route.
 //    The browser URL never changes; review page slugs are always prefixed with
 //    "review-" by convention (e.g. /review-us, /review-us-maple-grove).
+
+export const TRAILING_SLASH_HEADER = 'x-trailing-slash'
 
 export function stripTrailingSlashUrl(url: URL): URL | null {
   const {pathname} = url
@@ -30,7 +34,12 @@ export function stripTrailingSlashUrl(url: URL): URL | null {
 
 export function proxy(request: NextRequest) {
   const stripped = stripTrailingSlashUrl(request.nextUrl)
-  if (stripped) return NextResponse.redirect(stripped, 308)
+  if (stripped) {
+    // The marker is how the Verify stage tells THIS strip (one hop, by design)
+    // from the framework's on a client that predates the change: an unmarked
+    // 308 to the same path without its slash is the old template's.
+    return NextResponse.redirect(stripped, {status: 308, headers: {[TRAILING_SLASH_HEADER]: 'stripped'}})
+  }
 
   const slug = request.nextUrl.pathname.slice(1) // strip leading "/" → "review-us"
   const url = request.nextUrl.clone()

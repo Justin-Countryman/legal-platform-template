@@ -44,8 +44,6 @@ import {
   assertRedirectCapNotExceeded,
   formatRedirectReport,
   loadRedirects,
-  withOptionalTrailingSlash,
-  OPTIONAL_TRAILING_SLASH,
   MAX_CONFIG_REDIRECTS,
   MAX_REDIRECT_HOPS,
   normalizeStatusCode,
@@ -266,7 +264,6 @@ describe('TECH-9 / CS/redirects.csv is the only source', () => {
     expect(Object.keys(mod).sort()).toEqual([
       'MAX_CONFIG_REDIRECTS',
       'MAX_REDIRECT_HOPS',
-      'OPTIONAL_TRAILING_SLASH',
       'assertRedirectCapNotExceeded',
       'formatRedirectReport',
       'loadRedirects',
@@ -274,7 +271,6 @@ describe('TECH-9 / CS/redirects.csv is the only source', () => {
       'parseRedirectsCsv',
       'resolveRedirects',
       'stripTrailingSlash',
-      'withOptionalTrailingSlash', // [R-185], 2026-09-11: emission only, reads nothing
     ])
   })
 })
@@ -665,29 +661,35 @@ describe('a migrated client, one file, every case at once', () => {
 
 
 // ─── One hop for a legacy URL ([R-185], item 271, 2026-09-11) ─────────────────
+//
+// The property the design leans on, pinned against Next's OWN route compiler
+// rather than re-implemented: a custom redirect source matches the slashed
+// spelling too, so with the framework's front-of-list slash redirect turned off
+// (`skipTrailingSlashRedirect`) a legacy URL takes one hop. If Next ever stops
+// doing this, the chain comes back and this test says so first.
 
-describe('withOptionalTrailingSlash: one rule matches both spellings of an old URL', () => {
-  it('suffixes every source except the root, and changes nothing else', () => {
-    const rules = [csvRule('/news', '/blog'), csvRule('/', '/home', 302), csvRule('/a/b', '/c')]
-    const out = withOptionalTrailingSlash(rules)
-    expect(out.map((r) => r.source)).toEqual(['/news{/}?', '/', '/a/b{/}?'])
-    expect(out.map((r) => r.destination)).toEqual(['/blog', '/home', '/c'])
-    expect(out.map((r) => r.statusCode)).toEqual([301, 302, 301])
-    expect(out).toHaveLength(rules.length) // one rule per row: the route cap is untouched
-    expect(OPTIONAL_TRAILING_SLASH).toBe('{/}?')
-  })
-
-  it('the suffixed source matches the slashed and the unslashed form in Next\'s own matcher', async () => {
-    // Next compiles redirect sources with its bundled path-to-regexp; this is
-    // the artifact, not a re-implementation of it.
-    // Next's bundled copy ships no types; the shape used here is the one function.
-    const {pathToRegexp} = (await import('next/dist/compiled/path-to-regexp' as string)) as {
-      pathToRegexp: (source: string) => RegExp
+describe('a custom redirect source already matches both spellings of an old URL', () => {
+  it('Next compiles /news to a regex that matches /news and /news/, not /newsx', async () => {
+    const {buildCustomRoute} = (await import('next/dist/lib/build-custom-route' as string)) as {
+      buildCustomRoute: (
+        type: 'redirect',
+        route: {source: string; destination: string; statusCode: number},
+        restrictedPaths: string[],
+      ) => {regex: string}
     }
-    const re = pathToRegexp(withOptionalTrailingSlash([csvRule('/news', '/blog')])[0].source)
-    expect(re.test('/news/')).toBe(true)
+    const built = buildCustomRoute('redirect', csvRule('/news', '/blog'), ['/_next'])
+    const re = new RegExp(built.regex)
     expect(re.test('/news')).toBe(true)
+    expect(re.test('/news/')).toBe(true)
     expect(re.test('/newsx')).toBe(false)
     expect(re.test('/news/x')).toBe(false)
+  })
+
+  it('vercel.json sets neither trailingSlash nor cleanUrls (either is a platform 308 ahead of the map)', async () => {
+    const {readFileSync} = await import('node:fs')
+    const {join} = await import('node:path')
+    const json = JSON.parse(readFileSync(join(process.cwd(), 'vercel.json'), 'utf8'))
+    expect(json.trailingSlash).toBeUndefined()
+    expect(json.cleanUrls).toBeUndefined()
   })
 })

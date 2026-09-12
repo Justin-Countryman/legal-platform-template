@@ -265,10 +265,11 @@ export function resolveRedirects(rows: RedirectRule[]): {
  *
  * WHY 1,024 AND NOT VERCEL'S PUBLISHED REDIRECT CAP. Vercel's redirects
  * reference gives "Number of redirects in the array: 2,048". The stricter
- * number is the ROUTES budget: a deployment has a documented maximum of 1,024
- * routes, and every emitted redirect spends one of them alongside the
- * framework's own rules, the headers and the rewrites. So 1,024 is the ceiling
- * that binds first, and it is also the number
+ * number was the ROUTES budget, once documented at 1,024; **Vercel's limits
+ * page reads 2,048 routes per deployment as of 2026-09-11 (ADV-P4-D)**, so
+ * 1,024 is now THIS PLATFORM'S OWN cap, kept conservative on purpose: every
+ * emitted redirect spends a route alongside the framework's own rules, the
+ * headers, the rewrites and the proxy's matchers. It is also the number
  * `BE/Site-Builder-App/redirects_store.py` already refuses to save above. One
  * number in both places is the point: the screen and the build must not
  * disagree about what is publishable.
@@ -284,26 +285,18 @@ export function resolveRedirects(rows: RedirectRule[]): {
 /**
  * One hop for a legacy URL, ruled 2026-09-11 ([R-185], OUTSTANDING item 271).
  *
- * WordPress-style old URLs arrive WITH a trailing slash, and until this change
- * Next.js's own slash-stripping redirect ran ahead of the map (it is unshifted
- * to the front of the redirect list with `priority: true`), so every legacy
- * URL on every client took two hops: `/news/` → `/news` (308) → `/blog` (301).
- * `next.config.ts` now sets `skipTrailingSlashRedirect: true`, which removes
- * that rule, and this helper makes every served source match BOTH spellings
- * with path-to-regexp's optional group: `/news{/}?` matches `/news/` and
- * `/news`, not `/newsx`. One rule per row, so the 1,024-route cap's headroom
- * is unchanged. Slashed URLs with no rule are stripped once by `proxy.ts`.
- *
- * Applied AFTER `resolveRedirects`, at emission, so the resolution itself and
- * the fixture the Python side shares with it stay byte-identical.
+ * NOTHING IN THIS FILE CHANGES FOR IT, and that is the finding of the review
+ * (ADV-P4-D): Next already makes every custom redirect slash-tolerant. At build
+ * `modifyRouteRegex` (`next/dist/lib/redirect-status.js`) rewrites a source's
+ * regex to end `(?:/)?$`, so the manifest regex for `/news` is
+ * `^(?!/_next)/news(?:/)?$` and matches `/news/` as well; Vercel serves that
+ * manifest regex (`@vercel/next` `updateRouteSrc`). The two-hop chain existed
+ * only because the framework put its own `/:path+/ -> /:path+` 308 at the
+ * FRONT of the list. `next.config.ts` turns that rule off
+ * (`skipTrailingSlashRedirect`) and `proxy.ts` strips a slash once for the
+ * URLs the map does not catch. `lib/__tests__/redirects.test.ts` pins the
+ * slash-tolerance property against Next's own `buildCustomRoute`.
  */
-export const OPTIONAL_TRAILING_SLASH = '{/}?'
-
-export function withOptionalTrailingSlash(rules: RedirectRule[]): RedirectRule[] {
-  return rules.map((rule) =>
-    rule.source === '/' ? rule : {...rule, source: rule.source + OPTIONAL_TRAILING_SLASH},
-  )
-}
 
 export const MAX_CONFIG_REDIRECTS = 1024
 

@@ -6,7 +6,6 @@ import {
   formatRedirectReport,
   loadRedirects,
   resolveRedirects,
-  withOptionalTrailingSlash,
 } from './lib/redirects'
 import {securityHeaders} from './lib/securityHeaders'
 
@@ -51,9 +50,16 @@ const nextConfig: NextConfig = {
   // ONE HOP FOR A LEGACY URL, ruled 2026-09-11 ([R-185], item 271). Next.js
   // otherwise puts its own `/:path+/ → /:path+` 308 at the FRONT of the
   // redirect list, so every slashed old URL took that hop before the map's
-  // 301. With it off, the map's rules match both spellings (`lib/redirects.ts`
-  // `withOptionalTrailingSlash`) and `proxy.ts` strips the slash once for
-  // every other URL. TECH-1's no-slash canonical is unchanged.
+  // 301. With it off, the map's rules already match both spellings (Next makes
+  // every custom redirect slash-tolerant at build: `lib/redirects.ts` header)
+  // and `proxy.ts` strips the slash once for every other URL. TECH-1's
+  // no-slash canonical is unchanged.
+  //
+  // NEVER ADD A CONFIG-LEVEL `/:path+/ → /:path+` 308 HERE instead of the
+  // proxy: Vercel's builder recognises that exact shape as "the trailing-slash
+  // redirect" and hoists it above the map (`@vercel/next` index.ts:1214-1235,
+  // server-build.ts:2061-2064), which silently restores the two-hop chain on
+  // Vercel while `next start` and every test stay green (ADV-P4-D).
   skipTrailingSlashRedirect: true,
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -98,7 +104,7 @@ const nextConfig: NextConfig = {
     // duplicated, flattened or looped — that is what tells the operator which
     // ones are safe to remove.
     assertRedirectCapNotExceeded(rules.length)
-    return withOptionalTrailingSlash(rules)
+    return rules
   },
 }
 
