@@ -1402,6 +1402,7 @@ export type LandingPage = {
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "siteForm";
   };
+  hero?: InternalHero;
   sections?: Array<{
     _ref: string;
     _type: "reference";
@@ -6396,7 +6397,7 @@ export type ATTORNEY_PAGE_QUERYResult = {
   } | null;
 } | null;
 // Variable: PRACTICE_AREA_QUERY
-// Query: *[_type in ["practiceArea", "geoPracticeArea", "serviceAreaPage"] && slug.current == $slug][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    _type,    title,    navLabel,    "areasOfLaw": *[  _type == "practiceArea" && !defined(parentPage) && defined(slug.current)].title,    "slug": slug.current,    seoTitle,    metaDescription,    ogTitle,    ogDescription,    noIndex,    noFollow,    canonicalUrl,    "parentPage": parentPage->{      title,      navLabel,      "slug": slug.current,      "parentPage": parentPage->{        title,        navLabel,        "slug": slug.current      }    },    "hero": hero {      "heading": coalesce(heading, ^.title),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "faqItems": faqItems[defined(@->_id)]->{      question,      "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},      category,      "slug": slug.current,      tags    },    sidebar[]{  _type,  _key,  _type == "sidebarTableOfContents" => {    "_componentType": "sidebarTableOfContents"  },  _type == "reference" => @->{    "_componentType": _type,    name,    header,    description,    mode,    layout,    postCount,    "formEmbed": form->formEmbed,    tagline,    supportingText1,    supportingText2,    phoneNumber,    "button": button{title, url, variant},    "orderedAolIds": *[_type == "mainNavigation"][0]      .items[_type == "navItemPracticeAreas"][0]      .practiceAreaOrder[]._ref,    // The title key here holds the RENDERED nav label, not the stored Name. The    // key keeps its name so no consumer changes, and the value obeys NAME-1 and    // NAME-2. The order(title asc) clauses below sort the PROJECTED key, so the    // tree sorts by the same string it displays.    "areasOfLaw": *[      _type == "practiceArea" && !defined(parentPage) && defined(slug.current)    ]{      _id,      "slug": slug.current,      "title": coalesce(select(navLabel != "" => navLabel), title),      "children": *[        _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)      ]{        _id,        "slug": slug.current,        "title": coalesce(select(navLabel != "" => navLabel), title),        "grandchildren": *[          _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)        ]{          "slug": slug.current,          "title": coalesce(select(navLabel != "" => navLabel), title),        } | order(title asc),      } | order(title asc),    },    "orderedAttorneyIds": select(      mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,      null    ),    // Ruled 2026-08-07, Pass D.2. The attorney widget and the related-links    // widget are sidebar surfaces the 2026-08-07 nav ruling did not name; both    // now resolve the label in the projection, like the tree above. The title    // keys hold the RENDERED label and the consumer keys are unchanged.    "attorneys": select(      mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      attorneys[defined(@->_id)]->{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}}    ),    "links": links[defined(@->_id)]->{      _id,      _type,      "slug": slug.current,      "title": coalesce(select(navLabel != "" => navLabel), title)    }  }},    "sections": sections [defined(@->_id)]->{  _id,  _type,  name,  tagline,  heading,  description,  layout,  sectionLayout,  gridMode,  mobileDisplay,  cardStyle,  hoverEffects,  showArrow,  iconPosition,  mode,  reviewsEmbed,  footerHeading,  footerDescription,  "appearance": {    "surface": surface,    "spacing": spacing,    "backgroundImage": sectionBackgroundImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}  },  // practiceAreaNav (silo nav): resolve each item's page reference to an href +  // auto-pulled title/description, with per-item overrides; or auto-list all  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").  "items": select(    _type == "practiceAreaNav" && mode == "allTopLevel" =>      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{        "_key": _id,        "label": coalesce(select(navLabel != "" => navLabel), title),        "href": "/" + slug.current + "/",        "description": metaDescription,        "icon": null,        "image": null,        "featured": false      } | order(coalesce(select(navLabel != "" => navLabel), title) asc),    _type == "practiceAreaNav" =>      items[defined(page->slug.current)]{        _key,        "label": coalesce(label, coalesce(select(page->navLabel != "" => page->navLabel), page->title)),        "href": "/" + page->slug.current + "/",        "description": coalesce(description, page->metaDescription),        "icon": icon {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "featured": featured      }  ),  "buttons": buttons[]{title, url, variant},  "footerButton": footerButton{title, url, variant},  "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  "testimonials": testimonials[defined(@->_id)]->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "testimonial": testimonial->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "questions": questions[defined(@->_id)]->{    question,    "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    category,    "slug": slug.current,    tags  },  "badges": badges[defined(@->_id)]->{    "src": image.asset->url,    "alt": image.alt,    "width": image.asset->metadata.dimensions.width,    "height": image.asset->metadata.dimensions.height  },  "orderedAttorneyIds": select(    mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,    null  ),  // The title key holds the RENDERED nav label, not the stored Name — same  // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,  // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the  // Nav Label. Three branches because the block has three modes.  "attorneys": select(    mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'manual' => attorneys[defined(@->_id)]->{      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    []  ),  "videos": videos[defined(@->_id)]->{    _id, title, youTubeUrl, description, videoType  }},    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
+// Query: *[_type in ["practiceArea", "geoPracticeArea", "serviceAreaPage"] && slug.current == $slug][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    _type,    title,    navLabel,    "areasOfLaw": *[  _type == "practiceArea" && !defined(parentPage) && defined(slug.current)].title,    "slug": slug.current,    seoTitle,    metaDescription,    ogTitle,    ogDescription,    noIndex,    noFollow,    canonicalUrl,    "parentPage": parentPage->{      title, navLabel, "slug": slug.current,      "parentPage": parentPage->{        title, navLabel, "slug": slug.current,        "parentPage": parentPage->{          title, navLabel, "slug": slug.current,          "parentPage": parentPage->{            title, navLabel, "slug": slug.current          }        }      }    },    "hero": hero {      "heading": coalesce(heading, ^.title),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "faqItems": faqItems[defined(@->_id)]->{      question,      "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},      category,      "slug": slug.current,      tags    },    sidebar[]{  _type,  _key,  _type == "sidebarTableOfContents" => {    "_componentType": "sidebarTableOfContents"  },  _type == "reference" => @->{    "_componentType": _type,    name,    header,    description,    mode,    layout,    postCount,    "formEmbed": form->formEmbed,    tagline,    supportingText1,    supportingText2,    phoneNumber,    "button": button{title, url, variant},    "orderedAolIds": *[_type == "mainNavigation"][0]      .items[_type == "navItemPracticeAreas"][0]      .practiceAreaOrder[]._ref,    // The title key here holds the RENDERED nav label, not the stored Name. The    // key keeps its name so no consumer changes, and the value obeys NAME-1 and    // NAME-2. The order(title asc) clauses below sort the PROJECTED key, so the    // tree sorts by the same string it displays.    "areasOfLaw": *[      _type == "practiceArea" && !defined(parentPage) && defined(slug.current)    ]{      _id,      "slug": slug.current,      "title": coalesce(select(navLabel != "" => navLabel), title),      "children": *[        _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)      ]{        _id,        "slug": slug.current,        "title": coalesce(select(navLabel != "" => navLabel), title),        "grandchildren": *[          _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)        ]{          "slug": slug.current,          "title": coalesce(select(navLabel != "" => navLabel), title),        } | order(title asc),      } | order(title asc),    },    "orderedAttorneyIds": select(      mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,      null    ),    // Ruled 2026-08-07, Pass D.2. The attorney widget and the related-links    // widget are sidebar surfaces the 2026-08-07 nav ruling did not name; both    // now resolve the label in the projection, like the tree above. The title    // keys hold the RENDERED label and the consumer keys are unchanged.    "attorneys": select(      mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      attorneys[defined(@->_id)]->{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}}    ),    "links": links[defined(@->_id)]->{      _id,      _type,      "slug": slug.current,      "title": coalesce(select(navLabel != "" => navLabel), title)    }  }},    "sections": sections [defined(@->_id)]->{  _id,  _type,  name,  tagline,  heading,  description,  layout,  sectionLayout,  gridMode,  mobileDisplay,  cardStyle,  hoverEffects,  showArrow,  iconPosition,  mode,  reviewsEmbed,  footerHeading,  footerDescription,  "appearance": {    "surface": surface,    "spacing": spacing,    "backgroundImage": sectionBackgroundImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}  },  // practiceAreaNav (silo nav): resolve each item's page reference to an href +  // auto-pulled title/description, with per-item overrides; or auto-list all  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").  "items": select(    _type == "practiceAreaNav" && mode == "allTopLevel" =>      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{        "_key": _id,        "label": coalesce(select(navLabel != "" => navLabel), title),        "href": "/" + slug.current + "/",        "description": metaDescription,        "icon": null,        "image": null,        "featured": false      } | order(coalesce(select(navLabel != "" => navLabel), title) asc),    _type == "practiceAreaNav" =>      items[defined(page->slug.current)]{        _key,        "label": coalesce(label, coalesce(select(page->navLabel != "" => page->navLabel), page->title)),        "href": "/" + page->slug.current + "/",        "description": coalesce(description, page->metaDescription),        "icon": icon {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "featured": featured      }  ),  "buttons": buttons[]{title, url, variant},  "footerButton": footerButton{title, url, variant},  "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  "testimonials": testimonials[defined(@->_id)]->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "testimonial": testimonial->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "questions": questions[defined(@->_id)]->{    question,    "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    category,    "slug": slug.current,    tags  },  "badges": badges[defined(@->_id)]->{    "src": image.asset->url,    "alt": image.alt,    "width": image.asset->metadata.dimensions.width,    "height": image.asset->metadata.dimensions.height  },  "orderedAttorneyIds": select(    mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,    null  ),  // The title key holds the RENDERED nav label, not the stored Name — same  // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,  // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the  // Nav Label. Three branches because the block has three modes.  "attorneys": select(    mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'manual' => attorneys[defined(@->_id)]->{      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    []  ),  "videos": videos[defined(@->_id)]->{    _id, title, youTubeUrl, description, videoType  }},    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
 export type PRACTICE_AREA_QUERYResult = {
   ogImage: {
     asset?: {
@@ -6433,6 +6434,16 @@ export type PRACTICE_AREA_QUERYResult = {
       title: string | null;
       navLabel: string | null;
       slug: string | null;
+      parentPage: {
+        title: string | null;
+        navLabel: string | null;
+        slug: string | null;
+        parentPage: {
+          title: string | null;
+          navLabel: string | null;
+          slug: string | null;
+        } | null;
+      } | null;
     } | null;
   } | null;
   hero: {
@@ -7355,6 +7366,16 @@ export type PRACTICE_AREA_QUERYResult = {
       title: string | null;
       navLabel: string | null;
       slug: string | null;
+      parentPage: {
+        title: string | null;
+        navLabel: string | null;
+        slug: string | null;
+        parentPage: {
+          title: string | null;
+          navLabel: string | null;
+          slug: string | null;
+        } | null;
+      } | null;
     } | null;
   } | null;
   hero: {
@@ -8277,6 +8298,16 @@ export type PRACTICE_AREA_QUERYResult = {
       title: string | null;
       navLabel: string | null;
       slug: string | null;
+      parentPage: {
+        title: string | null;
+        navLabel: string | null;
+        slug: string | null;
+        parentPage: {
+          title: string | null;
+          navLabel: string | null;
+          slug: string | null;
+        } | null;
+      } | null;
     } | null;
   } | null;
   hero: {
@@ -11539,7 +11570,7 @@ export type LOCATION_PAGE_QUERYResult = {
   } | null;
 } | null;
 // Variable: CONTENT_PAGE_QUERY
-// Query: *[    slug.current == $slug &&    _type in ["aboutPage", "contactPage", "faqPage", "generalPage", "landingPage"]  ][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    _type,    "title": coalesce(title, ""),    navLabel,    "slug": slug.current,    seoTitle,    metaDescription,    ogTitle,    ogDescription,    noIndex,    noFollow,    canonicalUrl,    "parentPage": parentPage->{      title,      navLabel,      "slug": slug.current,      "parentPage": parentPage->{        title,        navLabel,        "slug": slug.current      }    },    "hero": hero {      "heading": coalesce(heading, ^.title),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "faqItems": faqItems[defined(@->_id)]->{      question,      "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},      category,      "slug": slug.current,      tags    },    sidebar[]{  _type,  _key,  _type == "sidebarTableOfContents" => {    "_componentType": "sidebarTableOfContents"  },  _type == "reference" => @->{    "_componentType": _type,    name,    header,    description,    mode,    layout,    postCount,    "formEmbed": form->formEmbed,    tagline,    supportingText1,    supportingText2,    phoneNumber,    "button": button{title, url, variant},    "orderedAolIds": *[_type == "mainNavigation"][0]      .items[_type == "navItemPracticeAreas"][0]      .practiceAreaOrder[]._ref,    // The title key here holds the RENDERED nav label, not the stored Name. The    // key keeps its name so no consumer changes, and the value obeys NAME-1 and    // NAME-2. The order(title asc) clauses below sort the PROJECTED key, so the    // tree sorts by the same string it displays.    "areasOfLaw": *[      _type == "practiceArea" && !defined(parentPage) && defined(slug.current)    ]{      _id,      "slug": slug.current,      "title": coalesce(select(navLabel != "" => navLabel), title),      "children": *[        _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)      ]{        _id,        "slug": slug.current,        "title": coalesce(select(navLabel != "" => navLabel), title),        "grandchildren": *[          _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)        ]{          "slug": slug.current,          "title": coalesce(select(navLabel != "" => navLabel), title),        } | order(title asc),      } | order(title asc),    },    "orderedAttorneyIds": select(      mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,      null    ),    // Ruled 2026-08-07, Pass D.2. The attorney widget and the related-links    // widget are sidebar surfaces the 2026-08-07 nav ruling did not name; both    // now resolve the label in the projection, like the tree above. The title    // keys hold the RENDERED label and the consumer keys are unchanged.    "attorneys": select(      mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      attorneys[defined(@->_id)]->{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}}    ),    "links": links[defined(@->_id)]->{      _id,      _type,      "slug": slug.current,      "title": coalesce(select(navLabel != "" => navLabel), title)    }  }},    "sections": sections [defined(@->_id)]->{  _id,  _type,  name,  tagline,  heading,  description,  layout,  sectionLayout,  gridMode,  mobileDisplay,  cardStyle,  hoverEffects,  showArrow,  iconPosition,  mode,  reviewsEmbed,  footerHeading,  footerDescription,  "appearance": {    "surface": surface,    "spacing": spacing,    "backgroundImage": sectionBackgroundImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}  },  // practiceAreaNav (silo nav): resolve each item's page reference to an href +  // auto-pulled title/description, with per-item overrides; or auto-list all  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").  "items": select(    _type == "practiceAreaNav" && mode == "allTopLevel" =>      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{        "_key": _id,        "label": coalesce(select(navLabel != "" => navLabel), title),        "href": "/" + slug.current + "/",        "description": metaDescription,        "icon": null,        "image": null,        "featured": false      } | order(coalesce(select(navLabel != "" => navLabel), title) asc),    _type == "practiceAreaNav" =>      items[defined(page->slug.current)]{        _key,        "label": coalesce(label, coalesce(select(page->navLabel != "" => page->navLabel), page->title)),        "href": "/" + page->slug.current + "/",        "description": coalesce(description, page->metaDescription),        "icon": icon {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "featured": featured      }  ),  "buttons": buttons[]{title, url, variant},  "footerButton": footerButton{title, url, variant},  "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  "testimonials": testimonials[defined(@->_id)]->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "testimonial": testimonial->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "questions": questions[defined(@->_id)]->{    question,    "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    category,    "slug": slug.current,    tags  },  "badges": badges[defined(@->_id)]->{    "src": image.asset->url,    "alt": image.alt,    "width": image.asset->metadata.dimensions.width,    "height": image.asset->metadata.dimensions.height  },  "orderedAttorneyIds": select(    mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,    null  ),  // The title key holds the RENDERED nav label, not the stored Name — same  // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,  // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the  // Nav Label. Three branches because the block has three modes.  "attorneys": select(    mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'manual' => attorneys[defined(@->_id)]->{      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    []  ),  "videos": videos[defined(@->_id)]->{    _id, title, youTubeUrl, description, videoType  }},    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
+// Query: *[    slug.current == $slug &&    _type in ["aboutPage", "faqPage", "generalPage", "landingPage"]  ][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    _type,    "title": coalesce(title, ""),    navLabel,    "slug": slug.current,    seoTitle,    metaDescription,    ogTitle,    ogDescription,    noIndex,    noFollow,    canonicalUrl,    "parentPage": parentPage->{      title, navLabel, "slug": slug.current,      "parentPage": parentPage->{        title, navLabel, "slug": slug.current,        "parentPage": parentPage->{          title, navLabel, "slug": slug.current,          "parentPage": parentPage->{            title, navLabel, "slug": slug.current          }        }      }    },    "hero": hero {      "heading": coalesce(heading, ^.title),        description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }    },    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "faqItems": faqItems[defined(@->_id)]->{      question,      "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},      category,      "slug": slug.current,      tags    },    sidebar[]{  _type,  _key,  _type == "sidebarTableOfContents" => {    "_componentType": "sidebarTableOfContents"  },  _type == "reference" => @->{    "_componentType": _type,    name,    header,    description,    mode,    layout,    postCount,    "formEmbed": form->formEmbed,    tagline,    supportingText1,    supportingText2,    phoneNumber,    "button": button{title, url, variant},    "orderedAolIds": *[_type == "mainNavigation"][0]      .items[_type == "navItemPracticeAreas"][0]      .practiceAreaOrder[]._ref,    // The title key here holds the RENDERED nav label, not the stored Name. The    // key keeps its name so no consumer changes, and the value obeys NAME-1 and    // NAME-2. The order(title asc) clauses below sort the PROJECTED key, so the    // tree sorts by the same string it displays.    "areasOfLaw": *[      _type == "practiceArea" && !defined(parentPage) && defined(slug.current)    ]{      _id,      "slug": slug.current,      "title": coalesce(select(navLabel != "" => navLabel), title),      "children": *[        _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)      ]{        _id,        "slug": slug.current,        "title": coalesce(select(navLabel != "" => navLabel), title),        "grandchildren": *[          _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)        ]{          "slug": slug.current,          "title": coalesce(select(navLabel != "" => navLabel), title),        } | order(title asc),      } | order(title asc),    },    "orderedAttorneyIds": select(      mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,      null    ),    // Ruled 2026-08-07, Pass D.2. The attorney widget and the related-links    // widget are sidebar surfaces the 2026-08-07 nav ruling did not name; both    // now resolve the label in the projection, like the tree above. The title    // keys hold the RENDERED label and the consumer keys are unchanged.    "attorneys": select(      mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},      attorneys[defined(@->_id)]->{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}}    ),    "links": links[defined(@->_id)]->{      _id,      _type,      "slug": slug.current,      "title": coalesce(select(navLabel != "" => navLabel), title)    }  }},    "sections": sections [defined(@->_id)]->{  _id,  _type,  name,  tagline,  heading,  description,  layout,  sectionLayout,  gridMode,  mobileDisplay,  cardStyle,  hoverEffects,  showArrow,  iconPosition,  mode,  reviewsEmbed,  footerHeading,  footerDescription,  "appearance": {    "surface": surface,    "spacing": spacing,    "backgroundImage": sectionBackgroundImage {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}  },  // practiceAreaNav (silo nav): resolve each item's page reference to an href +  // auto-pulled title/description, with per-item overrides; or auto-list all  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").  "items": select(    _type == "practiceAreaNav" && mode == "allTopLevel" =>      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{        "_key": _id,        "label": coalesce(select(navLabel != "" => navLabel), title),        "href": "/" + slug.current + "/",        "description": metaDescription,        "icon": null,        "image": null,        "featured": false      } | order(coalesce(select(navLabel != "" => navLabel), title) asc),    _type == "practiceAreaNav" =>      items[defined(page->slug.current)]{        _key,        "label": coalesce(label, coalesce(select(page->navLabel != "" => page->navLabel), page->title)),        "href": "/" + page->slug.current + "/",        "description": coalesce(description, page->metaDescription),        "icon": icon {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},        "featured": featured      }  ),  "buttons": buttons[]{title, url, variant},  "footerButton": footerButton{title, url, variant},  "image": image {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  "testimonials": testimonials[defined(@->_id)]->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "testimonial": testimonial->{  _id, quote, name, caseType, numberOfStars,  "avatar": avatar {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}},  "questions": questions[defined(@->_id)]->{    question,    "answer": answer []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    category,    "slug": slug.current,    tags  },  "badges": badges[defined(@->_id)]->{    "src": image.asset->url,    "alt": image.alt,    "width": image.asset->metadata.dimensions.width,    "height": image.asset->metadata.dimensions.height  },  "orderedAttorneyIds": select(    mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,    null  ),  // The title key holds the RENDERED nav label, not the stored Name — same  // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,  // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the  // Nav Label. Three branches because the block has three modes.  "attorneys": select(    mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    mode == 'manual' => attorneys[defined(@->_id)]->{      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,      "photo": photo {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions}    },    []  ),  "videos": videos[defined(@->_id)]->{    _id, title, youTubeUrl, description, videoType  }},    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }
 export type CONTENT_PAGE_QUERYResult = {
   ogImage: {
     asset?: {
@@ -12501,558 +12532,6 @@ export type CONTENT_PAGE_QUERYResult = {
     lqip: string | null;
     dimensions: SanityImageDimensions | null;
   } | null;
-  _type: "contactPage";
-  title: string | "";
-  navLabel: string | null;
-  slug: string | null;
-  seoTitle: string | null;
-  metaDescription: string | null;
-  ogTitle: string | null;
-  ogDescription: string | null;
-  noIndex: boolean | null;
-  noFollow: boolean | null;
-  canonicalUrl: string | null;
-  parentPage: null;
-  hero: {
-    heading: string | null;
-    description: string | null;
-    buttons: Array<{
-      title: string | null;
-      url: string | null;
-      variant: "link" | "primary" | "secondary" | null;
-    }> | null;
-    buttonsNone: boolean | null;
-    schemeOverride: "dark" | "inherit" | "light" | null;
-    backgroundNone: boolean | null;
-    foregroundNone: boolean | null;
-    scrimOpacityOverride: number | null;
-    backgroundImage: {
-      src: string | null;
-      alt: string | null;
-      fit: "cover" | "tile" | null;
-      hotspot: {
-        x: number | null;
-        y: number | null;
-      } | null;
-      width: number | null;
-      height: number | null;
-    } | null;
-    foregroundImage: {
-      src: string | null;
-      alt: string | null;
-      hotspot: {
-        x: number | null;
-        y: number | null;
-      } | null;
-      width: number | null;
-      height: number | null;
-    } | null;
-  } | null;
-  body: null;
-  faqItems: null;
-  sidebar: null;
-  sections: Array<{
-    _id: string;
-    _type: "attorneySection";
-    name: string | null;
-    tagline: string | null;
-    heading: string | null;
-    description: string | null;
-    layout: "grid" | "slider" | null;
-    sectionLayout: null;
-    gridMode: null;
-    mobileDisplay: null;
-    cardStyle: "avatar" | "classic" | "minimal" | "portrait" | "spotlight" | null;
-    hoverEffects: null;
-    showArrow: null;
-    iconPosition: null;
-    mode: "all" | "manual" | "practiceArea" | null;
-    reviewsEmbed: null;
-    footerHeading: null;
-    footerDescription: null;
-    appearance: {
-      surface: "accent" | "dark" | "image" | "light" | "tint" | null;
-      spacing: "compact" | "normal" | "spacious" | null;
-      backgroundImage: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-        alt: "";
-        lqip: string | null;
-        dimensions: SanityImageDimensions | null;
-      } | null;
-    };
-    items: null;
-    buttons: null;
-    footerButton: null;
-    image: null;
-    testimonials: null;
-    testimonial: null;
-    questions: null;
-    badges: null;
-    orderedAttorneyIds: Array<string> | null;
-    attorneys: Array<{
-      _id: string;
-      title: string | null;
-      slug: string | null;
-      h1: string | null;
-      jobTitle: string | null;
-      bio: string | null;
-      photo: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt: string | "";
-        _type: "image";
-        lqip: string | null;
-        dimensions: SanityImageDimensions | null;
-      } | null;
-    }> | Array<never> | null;
-    videos: null;
-  } | {
-    _id: string;
-    _type: "badgesSection";
-    name: string | null;
-    tagline: string | null;
-    heading: string | null;
-    description: string | null;
-    layout: "centeredGrid" | "inline" | "scrolling" | "split" | null;
-    sectionLayout: null;
-    gridMode: null;
-    mobileDisplay: null;
-    cardStyle: null;
-    hoverEffects: null;
-    showArrow: null;
-    iconPosition: null;
-    mode: null;
-    reviewsEmbed: null;
-    footerHeading: null;
-    footerDescription: null;
-    appearance: {
-      surface: null;
-      spacing: null;
-      backgroundImage: null;
-    };
-    items: null;
-    buttons: Array<{
-      title: string | null;
-      url: string | null;
-      variant: "link" | "primary" | "secondary" | null;
-    }> | null;
-    footerButton: null;
-    image: null;
-    testimonials: null;
-    testimonial: null;
-    questions: null;
-    badges: Array<{
-      src: string | null;
-      alt: string | null;
-      width: number | null;
-      height: number | null;
-    }> | null;
-    orderedAttorneyIds: null;
-    attorneys: Array<never>;
-    videos: null;
-  } | {
-    _id: string;
-    _type: "ctaSection";
-    name: string | null;
-    tagline: string | null;
-    heading: string | null;
-    description: string | null;
-    layout: "background" | "centered" | "split" | "textOnly" | null;
-    sectionLayout: null;
-    gridMode: null;
-    mobileDisplay: null;
-    cardStyle: null;
-    hoverEffects: null;
-    showArrow: null;
-    iconPosition: null;
-    mode: null;
-    reviewsEmbed: null;
-    footerHeading: null;
-    footerDescription: null;
-    appearance: {
-      surface: null;
-      spacing: null;
-      backgroundImage: null;
-    };
-    items: null;
-    buttons: Array<{
-      title: string | null;
-      url: string | null;
-      variant: "link" | "primary" | "secondary" | null;
-    }> | null;
-    footerButton: null;
-    image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt: string | "";
-      _type: "image";
-      lqip: string | null;
-      dimensions: SanityImageDimensions | null;
-    } | null;
-    testimonials: null;
-    testimonial: null;
-    questions: null;
-    badges: null;
-    orderedAttorneyIds: null;
-    attorneys: Array<never>;
-    videos: null;
-  } | {
-    _id: string;
-    _type: "faqSection";
-    name: string | null;
-    tagline: null;
-    heading: string | null;
-    description: string | null;
-    layout: null;
-    sectionLayout: null;
-    gridMode: null;
-    mobileDisplay: null;
-    cardStyle: null;
-    hoverEffects: null;
-    showArrow: null;
-    iconPosition: null;
-    mode: null;
-    reviewsEmbed: null;
-    footerHeading: string | null;
-    footerDescription: string | null;
-    appearance: {
-      surface: null;
-      spacing: null;
-      backgroundImage: null;
-    };
-    items: null;
-    buttons: null;
-    footerButton: {
-      title: string | null;
-      url: string | null;
-      variant: "link" | "primary" | "secondary" | null;
-    } | null;
-    image: null;
-    testimonials: null;
-    testimonial: null;
-    questions: Array<{
-      question: string | null;
-      answer: Array<{
-        _type: "block";
-        _key: string;
-        style: "blockquote" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal" | null;
-        markDefs: Array<{
-          tokenKey?: string;
-          _type: "contentToken";
-          _key: string;
-        } | {
-          href?: string;
-          blank?: boolean;
-          _type: "link";
-          _key: string;
-        }> | null;
-        children: Array<{
-          _key: string;
-        } & ContentToken | {
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }> | null;
-        listItem: "bullet" | "number" | null;
-        level: number | null;
-      } | {
-        _type: "image";
-        _key: string;
-        style: null;
-        markDefs: null;
-        children: null;
-        listItem: null;
-        level: null;
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt: string | "";
-        caption: string | null;
-        lqip: string | null;
-        dimensions: SanityImageDimensions | null;
-      } | {
-        _type: "officeHours";
-        _key: string;
-        style: null;
-        markDefs: null;
-        children: null;
-        listItem: null;
-        level: null;
-        title: string | null;
-      }> | null;
-      category: "business-law" | "construction-law" | "employment-law" | "estate-planning" | "family-law" | "general" | "litigation" | "personal-injury" | "probate" | "real-estate-law" | "workers-compensation" | null;
-      slug: string | null;
-      tags: Array<string> | null;
-    }> | null;
-    badges: null;
-    orderedAttorneyIds: null;
-    attorneys: Array<never>;
-    videos: null;
-  } | {
-    _id: string;
-    _type: "featuredTestimonial";
-    name: string | null;
-    tagline: string | null;
-    heading: string | null;
-    description: null;
-    layout: null;
-    sectionLayout: null;
-    gridMode: null;
-    mobileDisplay: null;
-    cardStyle: null;
-    hoverEffects: null;
-    showArrow: null;
-    iconPosition: null;
-    mode: null;
-    reviewsEmbed: null;
-    footerHeading: null;
-    footerDescription: null;
-    appearance: {
-      surface: "accent" | "dark" | "image" | "light" | "tint" | null;
-      spacing: "compact" | "normal" | "spacious" | null;
-      backgroundImage: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-        alt: "";
-        lqip: string | null;
-        dimensions: SanityImageDimensions | null;
-      } | null;
-    };
-    items: null;
-    buttons: null;
-    footerButton: null;
-    image: null;
-    testimonials: null;
-    testimonial: {
-      _id: string;
-      quote: string | null;
-      name: string | null;
-      caseType: string | null;
-      numberOfStars: 1 | 2 | 3 | 4 | 5 | null;
-      avatar: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt: string | "";
-        _type: "image";
-        lqip: string | null;
-        dimensions: SanityImageDimensions | null;
-      } | null;
-    } | null;
-    questions: null;
-    badges: null;
-    orderedAttorneyIds: null;
-    attorneys: Array<never>;
-    videos: null;
-  } | {
-    _id: string;
-    _type: "reviewsSection";
-    name: string | null;
-    tagline: string | null;
-    heading: string | null;
-    description: string | null;
-    layout: null;
-    sectionLayout: null;
-    gridMode: null;
-    mobileDisplay: null;
-    cardStyle: null;
-    hoverEffects: null;
-    showArrow: null;
-    iconPosition: null;
-    mode: null;
-    reviewsEmbed: string | null;
-    footerHeading: null;
-    footerDescription: null;
-    appearance: {
-      surface: null;
-      spacing: null;
-      backgroundImage: null;
-    };
-    items: null;
-    buttons: null;
-    footerButton: null;
-    image: null;
-    testimonials: null;
-    testimonial: null;
-    questions: null;
-    badges: null;
-    orderedAttorneyIds: null;
-    attorneys: Array<never>;
-    videos: null;
-  } | {
-    _id: string;
-    _type: "testimonialsGrid";
-    name: string | null;
-    tagline: string | null;
-    heading: string | null;
-    description: string | null;
-    layout: null;
-    sectionLayout: null;
-    gridMode: null;
-    mobileDisplay: null;
-    cardStyle: null;
-    hoverEffects: null;
-    showArrow: null;
-    iconPosition: null;
-    mode: null;
-    reviewsEmbed: null;
-    footerHeading: null;
-    footerDescription: null;
-    appearance: {
-      surface: "accent" | "dark" | "image" | "light" | "tint" | null;
-      spacing: "compact" | "normal" | "spacious" | null;
-      backgroundImage: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-        alt: "";
-        lqip: string | null;
-        dimensions: SanityImageDimensions | null;
-      } | null;
-    };
-    items: null;
-    buttons: null;
-    footerButton: null;
-    image: null;
-    testimonials: Array<{
-      _id: string;
-      quote: string | null;
-      name: string | null;
-      caseType: string | null;
-      numberOfStars: 1 | 2 | 3 | 4 | 5 | null;
-      avatar: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt: string | "";
-        _type: "image";
-        lqip: string | null;
-        dimensions: SanityImageDimensions | null;
-      } | null;
-    }> | null;
-    testimonial: null;
-    questions: null;
-    badges: null;
-    orderedAttorneyIds: null;
-    attorneys: Array<never>;
-    videos: null;
-  } | {
-    _id: string;
-    _type: "videoSection";
-    name: string | null;
-    tagline: string | null;
-    heading: string | null;
-    description: string | null;
-    layout: "centered" | "split" | null;
-    sectionLayout: null;
-    gridMode: null;
-    mobileDisplay: null;
-    cardStyle: null;
-    hoverEffects: null;
-    showArrow: null;
-    iconPosition: null;
-    mode: null;
-    reviewsEmbed: null;
-    footerHeading: null;
-    footerDescription: null;
-    appearance: {
-      surface: null;
-      spacing: null;
-      backgroundImage: null;
-    };
-    items: null;
-    buttons: null;
-    footerButton: null;
-    image: null;
-    testimonials: null;
-    testimonial: null;
-    questions: null;
-    badges: null;
-    orderedAttorneyIds: null;
-    attorneys: Array<never>;
-    videos: Array<{
-      _id: string;
-      title: string | null;
-      youTubeUrl: string | null;
-      description: string | null;
-      videoType: "Attorney Bio" | "Firm Overview" | "Other" | "Practice Area" | "Testimonial" | null;
-    }> | null;
-  }> | null;
-  hideCtaForm: null;
-  ctaOverride: null;
-} | {
-  ogImage: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt: string | "";
-    _type: "image";
-    lqip: string | null;
-    dimensions: SanityImageDimensions | null;
-  } | null;
   _type: "faqPage";
   title: string | "";
   navLabel: string | null;
@@ -13072,6 +12551,16 @@ export type CONTENT_PAGE_QUERYResult = {
       title: string | null;
       navLabel: string | null;
       slug: string | null;
+      parentPage: {
+        title: string | null;
+        navLabel: string | null;
+        slug: string | null;
+        parentPage: {
+          title: string | null;
+          navLabel: string | null;
+          slug: string | null;
+        } | null;
+      } | null;
     } | null;
   } | null;
   hero: {
@@ -13998,6 +13487,26 @@ export type CONTENT_PAGE_QUERYResult = {
       title: string | null;
       navLabel: string | null;
       slug: string | null;
+      parentPage: null;
+    } | {
+      title: string | null;
+      navLabel: string | null;
+      slug: string | null;
+      parentPage: {
+        title: string | null;
+        navLabel: string | null;
+        slug: string | null;
+        parentPage: null;
+      } | {
+        title: string | null;
+        navLabel: string | null;
+        slug: string | null;
+        parentPage: {
+          title: string | null;
+          navLabel: string | null;
+          slug: string | null;
+        } | null;
+      } | null;
     } | null;
   } | null;
   hero: {
@@ -14852,7 +14361,41 @@ export type CONTENT_PAGE_QUERYResult = {
   noFollow: boolean | null;
   canonicalUrl: string | null;
   parentPage: null;
-  hero: null;
+  hero: {
+    heading: string | null;
+    description: string | null;
+    buttons: Array<{
+      title: string | null;
+      url: string | null;
+      variant: "link" | "primary" | "secondary" | null;
+    }> | null;
+    buttonsNone: boolean | null;
+    schemeOverride: "dark" | "inherit" | "light" | null;
+    backgroundNone: boolean | null;
+    foregroundNone: boolean | null;
+    scrimOpacityOverride: number | null;
+    backgroundImage: {
+      src: string | null;
+      alt: string | null;
+      fit: "cover" | "tile" | null;
+      hotspot: {
+        x: number | null;
+        y: number | null;
+      } | null;
+      width: number | null;
+      height: number | null;
+    } | null;
+    foregroundImage: {
+      src: string | null;
+      alt: string | null;
+      hotspot: {
+        x: number | null;
+        y: number | null;
+      } | null;
+      width: number | null;
+      height: number | null;
+    } | null;
+  } | null;
   body: null;
   faqItems: null;
   sidebar: null;
@@ -15389,7 +14932,7 @@ declare module "@sanity/client" {
     "\n  *[_type == \"serviceAreaIndex\"][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"hero\": hero{\n      \"heading\": coalesce(heading, ^.title),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    title,\n    navLabel,\n    tagline,\n    heading,\n    description,\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": SERVICE_AREA_INDEX_QUERYResult;
     "\n  *[_type == \"serviceAreaPage\"] | order(title asc) {\n    \"slug\": slug.current,\n    title,\n    navLabel,\n  }\n": SERVICE_AREA_PAGES_QUERYResult;
     "\n  *[_type == \"attorneyPage\" && slug.current == $slug][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    firstName,\n    middleName,\n    lastName,\n    suffix,\n    h1,\n    jobTitle,\n    \"ctaOverride\": ctaOverride{label, url},\n    \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    email,\n    showEmail,\n    showLocations,\n    linkedIn,\n    avvo,\n    superLawyers,\n    findLaw,\n    martindale,\n    lawyersCom,\n    justia,\n    \"fullBiography\": fullBiography []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"practiceAreas\": practiceAreas[]{\n      label,\n      \"slug\": page->slug.current\n    },\n    \"location\": location->{\n      address1,\n      city,\n      state,\n      zip,\n      officePhone,\n      tollFreePhone\n    },\n    yearAdmittedToBar,\n    \"barAdmissions\": barAdmissions []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"stateBarAdmissions\": stateBarAdmissions []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"educationDegrees\": educationDegrees []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"certifiedLegalSpecialties\": certifiedLegalSpecialties []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"honors\": honors []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"professionalAssociations\": professionalAssociations []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"proBonoActivities\": proBonoActivities []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"publications\": publications []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"presentationsSeminars\": presentationsSeminars []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"representativeCases\": representativeCases []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"pastPositions\": pastPositions []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"videos\": videos[defined(@->_id)]->{\n      _id, title, youTubeUrl, description, videoType\n    },\n    hideCtaForm,\n    \"ctaFormOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": ATTORNEY_PAGE_QUERYResult;
-    "\n  *[_type in [\"practiceArea\", \"geoPracticeArea\", \"serviceAreaPage\"] && slug.current == $slug][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    _type,\n    title,\n    navLabel,\n    \"areasOfLaw\": *[\n  _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n].title,\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"parentPage\": parentPage->{\n      title,\n      navLabel,\n      \"slug\": slug.current,\n      \"parentPage\": parentPage->{\n        title,\n        navLabel,\n        \"slug\": slug.current\n      }\n    },\n    \"hero\": hero {\n      \"heading\": coalesce(heading, ^.title),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"faqItems\": faqItems[defined(@->_id)]->{\n      question,\n      \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n      category,\n      \"slug\": slug.current,\n      tags\n    },\n    sidebar[]{\n  _type,\n  _key,\n  _type == \"sidebarTableOfContents\" => {\n    \"_componentType\": \"sidebarTableOfContents\"\n  },\n  _type == \"reference\" => @->{\n    \"_componentType\": _type,\n    name,\n    header,\n    description,\n    mode,\n    layout,\n    postCount,\n    \"formEmbed\": form->formEmbed,\n    tagline,\n    supportingText1,\n    supportingText2,\n    phoneNumber,\n    \"button\": button{title, url, variant},\n    \"orderedAolIds\": *[_type == \"mainNavigation\"][0]\n      .items[_type == \"navItemPracticeAreas\"][0]\n      .practiceAreaOrder[]._ref,\n    // The title key here holds the RENDERED nav label, not the stored Name. The\n    // key keeps its name so no consumer changes, and the value obeys NAME-1 and\n    // NAME-2. The order(title asc) clauses below sort the PROJECTED key, so the\n    // tree sorts by the same string it displays.\n    \"areasOfLaw\": *[\n      _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n    ]{\n      _id,\n      \"slug\": slug.current,\n      \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n      \"children\": *[\n        _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n      ]{\n        _id,\n        \"slug\": slug.current,\n        \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n        \"grandchildren\": *[\n          _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n        ]{\n          \"slug\": slug.current,\n          \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n        } | order(title asc),\n      } | order(title asc),\n    },\n    \"orderedAttorneyIds\": select(\n      mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n      null\n    ),\n    // Ruled 2026-08-07, Pass D.2. The attorney widget and the related-links\n    // widget are sidebar surfaces the 2026-08-07 nav ruling did not name; both\n    // now resolve the label in the projection, like the tree above. The title\n    // keys hold the RENDERED label and the consumer keys are unchanged.\n    \"attorneys\": select(\n      mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{_id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{_id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      attorneys[defined(@->_id)]->{_id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}}\n    ),\n    \"links\": links[defined(@->_id)]->{\n      _id,\n      _type,\n      \"slug\": slug.current,\n      \"title\": coalesce(select(navLabel != \"\" => navLabel), title)\n    }\n  }\n},\n    \"sections\": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": coalesce(select(navLabel != \"\" => navLabel), title),\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(coalesce(select(navLabel != \"\" => navLabel), title) asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, coalesce(select(page->navLabel != \"\" => page->navLabel), page->title)),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  // The title key holds the RENDERED nav label, not the stored Name \u2014 same\n  // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,\n  // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the\n  // Nav Label. Three branches because the block has three modes.\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": PRACTICE_AREA_QUERYResult;
+    "\n  *[_type in [\"practiceArea\", \"geoPracticeArea\", \"serviceAreaPage\"] && slug.current == $slug][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    _type,\n    title,\n    navLabel,\n    \"areasOfLaw\": *[\n  _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n].title,\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"parentPage\": parentPage->{\n      title, navLabel, \"slug\": slug.current,\n      \"parentPage\": parentPage->{\n        title, navLabel, \"slug\": slug.current,\n        \"parentPage\": parentPage->{\n          title, navLabel, \"slug\": slug.current,\n          \"parentPage\": parentPage->{\n            title, navLabel, \"slug\": slug.current\n          }\n        }\n      }\n    },\n    \"hero\": hero {\n      \"heading\": coalesce(heading, ^.title),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"faqItems\": faqItems[defined(@->_id)]->{\n      question,\n      \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n      category,\n      \"slug\": slug.current,\n      tags\n    },\n    sidebar[]{\n  _type,\n  _key,\n  _type == \"sidebarTableOfContents\" => {\n    \"_componentType\": \"sidebarTableOfContents\"\n  },\n  _type == \"reference\" => @->{\n    \"_componentType\": _type,\n    name,\n    header,\n    description,\n    mode,\n    layout,\n    postCount,\n    \"formEmbed\": form->formEmbed,\n    tagline,\n    supportingText1,\n    supportingText2,\n    phoneNumber,\n    \"button\": button{title, url, variant},\n    \"orderedAolIds\": *[_type == \"mainNavigation\"][0]\n      .items[_type == \"navItemPracticeAreas\"][0]\n      .practiceAreaOrder[]._ref,\n    // The title key here holds the RENDERED nav label, not the stored Name. The\n    // key keeps its name so no consumer changes, and the value obeys NAME-1 and\n    // NAME-2. The order(title asc) clauses below sort the PROJECTED key, so the\n    // tree sorts by the same string it displays.\n    \"areasOfLaw\": *[\n      _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n    ]{\n      _id,\n      \"slug\": slug.current,\n      \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n      \"children\": *[\n        _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n      ]{\n        _id,\n        \"slug\": slug.current,\n        \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n        \"grandchildren\": *[\n          _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n        ]{\n          \"slug\": slug.current,\n          \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n        } | order(title asc),\n      } | order(title asc),\n    },\n    \"orderedAttorneyIds\": select(\n      mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n      null\n    ),\n    // Ruled 2026-08-07, Pass D.2. The attorney widget and the related-links\n    // widget are sidebar surfaces the 2026-08-07 nav ruling did not name; both\n    // now resolve the label in the projection, like the tree above. The title\n    // keys hold the RENDERED label and the consumer keys are unchanged.\n    \"attorneys\": select(\n      mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{_id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{_id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      attorneys[defined(@->_id)]->{_id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}}\n    ),\n    \"links\": links[defined(@->_id)]->{\n      _id,\n      _type,\n      \"slug\": slug.current,\n      \"title\": coalesce(select(navLabel != \"\" => navLabel), title)\n    }\n  }\n},\n    \"sections\": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": coalesce(select(navLabel != \"\" => navLabel), title),\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(coalesce(select(navLabel != \"\" => navLabel), title) asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, coalesce(select(page->navLabel != \"\" => page->navLabel), page->title)),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  // The title key holds the RENDERED nav label, not the stored Name \u2014 same\n  // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,\n  // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the\n  // Nav Label. Three branches because the block has three modes.\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": PRACTICE_AREA_QUERYResult;
     "\n  *[_type == \"eventIndex\"][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    \"slug\": slug.current,\n    title,\n    navLabel,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"hero\": hero {\n  heading,\n  \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n,\n  scrimStyleOverride,\n  scrimColorOverride,\n  scrimDirectionOverride,\n  sectionBackgroundNone,\n  \"sectionBackgroundImage\": sectionBackgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n},\n    \"sections\": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": coalesce(select(navLabel != \"\" => navLabel), title),\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(coalesce(select(navLabel != \"\" => navLabel), title) asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, coalesce(select(page->navLabel != \"\" => page->navLabel), page->title)),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  // The title key holds the RENDERED nav label, not the stored Name \u2014 same\n  // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,\n  // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the\n  // Nav Label. Three branches because the block has three modes.\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": EVENT_INDEX_PAGE_QUERYResult;
     "\n  *[_type == \"eventPage\"] | order(eventDate asc) {\n    // Ruled 2026-08-07, Pass D.2: the event index card and the attorneys it\n    // lists are index-card and link-text surfaces, which NAME-1 gives the Nav\n    // Label. Both title keys hold the RENDERED label. The category key below\n    // is a bare string with no link target beside it, so it is outside this\n    // rule and outside the guard's derivation; the index route projects it and\n    // reads it nowhere today.\n    \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n    \"slug\": slug.current,\n    eventDate,\n    eventEndDate,\n    eventType,\n    \"category\": category->title,\n    locationType,\n    locationAddress,\n    registrationUrl,\n    registrationCta,\n    \"formEmbed\": registrationForm->formEmbed,\n    \"attorneys\": attorneys[defined(@->_id)]->{\n      _id,\n      \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n      \"slug\": slug.current\n    }\n  }\n": EVENT_INDEX_QUERYResult;
     "\n  *[_type == \"eventPage\" && slug.current == $slug][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    title,\n    navLabel,\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    eventDate,\n    eventEndDate,\n    eventType,\n    \"category\": category->title,\n    locationType,\n    locationAddress,\n    virtualLink,\n    registrationUrl,\n    registrationCta,\n    \"formEmbed\": registrationForm->formEmbed,\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    // The same attorney list as EVENT_INDEX_QUERY, and the same 2026-08-07\n    // Pass D.2 ruling. One signature, two addresses; the guard counts a\n    // signature satisfied only when every occurrence resolves, so both move.\n    \"attorneys\": attorneys[defined(@->_id)]->{\n      _id,\n      \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n      \"slug\": slug.current\n    },\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": EVENT_PAGE_QUERYResult;
@@ -15403,6 +14946,6 @@ declare module "@sanity/client" {
     "\n  *[_type == \"blogCategory\" && slug.current == $slug][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    title,\n    navLabel,\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    h1,\n    tagline,\n    heading,\n    description,\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": BLOG_CATEGORY_PAGE_QUERYResult;
     "{\n  \"page\": *[_type == \"reviewPage\" && slug.current == $slug][0]{\n    h1,\n    title,\n    \"slug\": slug.current,\n    metaDescription,\n    noIndex,\n    noFollow,\n    \"blurb\": blurb []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"reviewLinks\": reviewLinks[]{\n      platform,\n      url,\n      label\n    },\n    \"feedbackFormEmbed\": feedbackForm->formEmbed\n  },\n  \"logo\": *[_type == \"designSettings\"][0]{\n    logoOnLight{\n      \"src\": asset->url,\n      \"alt\": alt,\n      \"width\": asset->metadata.dimensions.width,\n      \"height\": asset->metadata.dimensions.height\n    }\n  }.logoOnLight,\n  \"firmInfo\": *[_type == \"siteSettings\"][0]{\n    firmName,\n    \"address\": primaryLocation->{\n      \n  \"address1\": select(locationType in [\"Physical\", \"Shared\"] => address1, null),\n  \"address2\": select(locationType in [\"Physical\", \"Shared\"] => address2, null),\n  \"address3\": select(locationType in [\"Physical\", \"Shared\"] => address3, null),\n  \"zip\":      select(locationType in [\"Physical\", \"Shared\"] => zip, null),\n\n      city,\n      state,\n      officePhone\n    }\n  }\n}": REVIEW_PAGE_QUERYResult;
     "\n  *[_type == \"locationPage\" && slug.current == $slug][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    _type,\n    \"title\": coalesce(title, \"\"),\n    navLabel,\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"hero\": hero {\n      \"heading\": coalesce(heading, ^.title),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    mapEmbed,\n    \"locationData\": locationRef->{\n      \"_id\": _id,\n      city,\n      state,\n      \n  \"address1\": select(locationType in [\"Physical\", \"Shared\"] => address1, null),\n  \"address2\": select(locationType in [\"Physical\", \"Shared\"] => address2, null),\n  \"address3\": select(locationType in [\"Physical\", \"Shared\"] => address3, null),\n  \"zip\":      select(locationType in [\"Physical\", \"Shared\"] => zip, null),\n\n      \"geo\": select(locationType in [\"Physical\", \"Shared\"] => geo{lat, lng}, null),\n      officePhone,\n      officeFax,\n      tollFreePhone,\n      hours,\n      emergency24_7,\n      emergencyPhone,\n      appointmentRequired,\n      gbpCidUrl\n    },\n    sidebar[]{\n  _type,\n  _key,\n  _type == \"sidebarTableOfContents\" => {\n    \"_componentType\": \"sidebarTableOfContents\"\n  },\n  _type == \"reference\" => @->{\n    \"_componentType\": _type,\n    name,\n    header,\n    description,\n    mode,\n    layout,\n    postCount,\n    \"formEmbed\": form->formEmbed,\n    tagline,\n    supportingText1,\n    supportingText2,\n    phoneNumber,\n    \"button\": button{title, url, variant},\n    \"orderedAolIds\": *[_type == \"mainNavigation\"][0]\n      .items[_type == \"navItemPracticeAreas\"][0]\n      .practiceAreaOrder[]._ref,\n    // The title key here holds the RENDERED nav label, not the stored Name. The\n    // key keeps its name so no consumer changes, and the value obeys NAME-1 and\n    // NAME-2. The order(title asc) clauses below sort the PROJECTED key, so the\n    // tree sorts by the same string it displays.\n    \"areasOfLaw\": *[\n      _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n    ]{\n      _id,\n      \"slug\": slug.current,\n      \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n      \"children\": *[\n        _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n      ]{\n        _id,\n        \"slug\": slug.current,\n        \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n        \"grandchildren\": *[\n          _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n        ]{\n          \"slug\": slug.current,\n          \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n        } | order(title asc),\n      } | order(title asc),\n    },\n    \"orderedAttorneyIds\": select(\n      mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n      null\n    ),\n    // Ruled 2026-08-07, Pass D.2. The attorney widget and the related-links\n    // widget are sidebar surfaces the 2026-08-07 nav ruling did not name; both\n    // now resolve the label in the projection, like the tree above. The title\n    // keys hold the RENDERED label and the consumer keys are unchanged.\n    \"attorneys\": select(\n      mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{_id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{_id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      attorneys[defined(@->_id)]->{_id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}}\n    ),\n    \"links\": links[defined(@->_id)]->{\n      _id,\n      _type,\n      \"slug\": slug.current,\n      \"title\": coalesce(select(navLabel != \"\" => navLabel), title)\n    }\n  }\n},\n    \"sections\": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": coalesce(select(navLabel != \"\" => navLabel), title),\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(coalesce(select(navLabel != \"\" => navLabel), title) asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, coalesce(select(page->navLabel != \"\" => page->navLabel), page->title)),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  // The title key holds the RENDERED nav label, not the stored Name \u2014 same\n  // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,\n  // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the\n  // Nav Label. Three branches because the block has three modes.\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": LOCATION_PAGE_QUERYResult;
-    "\n  *[\n    slug.current == $slug &&\n    _type in [\"aboutPage\", \"contactPage\", \"faqPage\", \"generalPage\", \"landingPage\"]\n  ][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    _type,\n    \"title\": coalesce(title, \"\"),\n    navLabel,\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"parentPage\": parentPage->{\n      title,\n      navLabel,\n      \"slug\": slug.current,\n      \"parentPage\": parentPage->{\n        title,\n        navLabel,\n        \"slug\": slug.current\n      }\n    },\n    \"hero\": hero {\n      \"heading\": coalesce(heading, ^.title),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"faqItems\": faqItems[defined(@->_id)]->{\n      question,\n      \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n      category,\n      \"slug\": slug.current,\n      tags\n    },\n    sidebar[]{\n  _type,\n  _key,\n  _type == \"sidebarTableOfContents\" => {\n    \"_componentType\": \"sidebarTableOfContents\"\n  },\n  _type == \"reference\" => @->{\n    \"_componentType\": _type,\n    name,\n    header,\n    description,\n    mode,\n    layout,\n    postCount,\n    \"formEmbed\": form->formEmbed,\n    tagline,\n    supportingText1,\n    supportingText2,\n    phoneNumber,\n    \"button\": button{title, url, variant},\n    \"orderedAolIds\": *[_type == \"mainNavigation\"][0]\n      .items[_type == \"navItemPracticeAreas\"][0]\n      .practiceAreaOrder[]._ref,\n    // The title key here holds the RENDERED nav label, not the stored Name. The\n    // key keeps its name so no consumer changes, and the value obeys NAME-1 and\n    // NAME-2. The order(title asc) clauses below sort the PROJECTED key, so the\n    // tree sorts by the same string it displays.\n    \"areasOfLaw\": *[\n      _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n    ]{\n      _id,\n      \"slug\": slug.current,\n      \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n      \"children\": *[\n        _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n      ]{\n        _id,\n        \"slug\": slug.current,\n        \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n        \"grandchildren\": *[\n          _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n        ]{\n          \"slug\": slug.current,\n          \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n        } | order(title asc),\n      } | order(title asc),\n    },\n    \"orderedAttorneyIds\": select(\n      mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n      null\n    ),\n    // Ruled 2026-08-07, Pass D.2. The attorney widget and the related-links\n    // widget are sidebar surfaces the 2026-08-07 nav ruling did not name; both\n    // now resolve the label in the projection, like the tree above. The title\n    // keys hold the RENDERED label and the consumer keys are unchanged.\n    \"attorneys\": select(\n      mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{_id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{_id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      attorneys[defined(@->_id)]->{_id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}}\n    ),\n    \"links\": links[defined(@->_id)]->{\n      _id,\n      _type,\n      \"slug\": slug.current,\n      \"title\": coalesce(select(navLabel != \"\" => navLabel), title)\n    }\n  }\n},\n    \"sections\": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": coalesce(select(navLabel != \"\" => navLabel), title),\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(coalesce(select(navLabel != \"\" => navLabel), title) asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, coalesce(select(page->navLabel != \"\" => page->navLabel), page->title)),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  // The title key holds the RENDERED nav label, not the stored Name \u2014 same\n  // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,\n  // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the\n  // Nav Label. Three branches because the block has three modes.\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": CONTENT_PAGE_QUERYResult;
+    "\n  *[\n    slug.current == $slug &&\n    _type in [\"aboutPage\", \"faqPage\", \"generalPage\", \"landingPage\"]\n  ][0]{\n    \"ogImage\": ogImageOverride {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n    _type,\n    \"title\": coalesce(title, \"\"),\n    navLabel,\n    \"slug\": slug.current,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    \"parentPage\": parentPage->{\n      title, navLabel, \"slug\": slug.current,\n      \"parentPage\": parentPage->{\n        title, navLabel, \"slug\": slug.current,\n        \"parentPage\": parentPage->{\n          title, navLabel, \"slug\": slug.current,\n          \"parentPage\": parentPage->{\n            title, navLabel, \"slug\": slug.current\n          }\n        }\n      }\n    },\n    \"hero\": hero {\n      \"heading\": coalesce(heading, ^.title),\n      \n  description,\n  \"buttons\": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  \"backgroundImage\": backgroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"fit\": fit,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  },\n  \"foregroundImage\": foregroundImage{\n    \"src\": asset->url,\n    \"alt\": alt,\n    \"hotspot\": hotspot{x, y},\n    \"width\": asset->metadata.dimensions.width,\n    \"height\": asset->metadata.dimensions.height\n  }\n\n    },\n    \"body\": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    \"faqItems\": faqItems[defined(@->_id)]->{\n      question,\n      \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n      category,\n      \"slug\": slug.current,\n      tags\n    },\n    sidebar[]{\n  _type,\n  _key,\n  _type == \"sidebarTableOfContents\" => {\n    \"_componentType\": \"sidebarTableOfContents\"\n  },\n  _type == \"reference\" => @->{\n    \"_componentType\": _type,\n    name,\n    header,\n    description,\n    mode,\n    layout,\n    postCount,\n    \"formEmbed\": form->formEmbed,\n    tagline,\n    supportingText1,\n    supportingText2,\n    phoneNumber,\n    \"button\": button{title, url, variant},\n    \"orderedAolIds\": *[_type == \"mainNavigation\"][0]\n      .items[_type == \"navItemPracticeAreas\"][0]\n      .practiceAreaOrder[]._ref,\n    // The title key here holds the RENDERED nav label, not the stored Name. The\n    // key keeps its name so no consumer changes, and the value obeys NAME-1 and\n    // NAME-2. The order(title asc) clauses below sort the PROJECTED key, so the\n    // tree sorts by the same string it displays.\n    \"areasOfLaw\": *[\n      _type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)\n    ]{\n      _id,\n      \"slug\": slug.current,\n      \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n      \"children\": *[\n        _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n      ]{\n        _id,\n        \"slug\": slug.current,\n        \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n        \"grandchildren\": *[\n          _type == \"practiceArea\" && parentPage._ref == ^._id && defined(slug.current)\n        ]{\n          \"slug\": slug.current,\n          \"title\": coalesce(select(navLabel != \"\" => navLabel), title),\n        } | order(title asc),\n      } | order(title asc),\n    },\n    \"orderedAttorneyIds\": select(\n      mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n      null\n    ),\n    // Ruled 2026-08-07, Pass D.2. The attorney widget and the related-links\n    // widget are sidebar surfaces the 2026-08-07 nav ruling did not name; both\n    // now resolve the label in the projection, like the tree above. The title\n    // keys hold the RENDERED label and the consumer keys are unchanged.\n    \"attorneys\": select(\n      mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{_id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{_id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}},\n      attorneys[defined(@->_id)]->{_id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}}\n    ),\n    \"links\": links[defined(@->_id)]->{\n      _id,\n      _type,\n      \"slug\": slug.current,\n      \"title\": coalesce(select(navLabel != \"\" => navLabel), title)\n    }\n  }\n},\n    \"sections\": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  name,\n  tagline,\n  heading,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  \"appearance\": {\n    \"surface\": surface,\n    \"spacing\": spacing,\n    \"backgroundImage\": sectionBackgroundImage {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item's page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas (\"/\" + slug + \"/\").\n  \"items\": select(\n    _type == \"practiceAreaNav\" && mode == \"allTopLevel\" =>\n      *[_type == \"practiceArea\" && !defined(parentPage) && defined(slug.current)]{\n        \"_key\": _id,\n        \"label\": coalesce(select(navLabel != \"\" => navLabel), title),\n        \"href\": \"/\" + slug.current + \"/\",\n        \"description\": metaDescription,\n        \"icon\": null,\n        \"image\": null,\n        \"featured\": false\n      } | order(coalesce(select(navLabel != \"\" => navLabel), title) asc),\n    _type == \"practiceAreaNav\" =>\n      items[defined(page->slug.current)]{\n        _key,\n        \"label\": coalesce(label, coalesce(select(page->navLabel != \"\" => page->navLabel), page->title)),\n        \"href\": \"/\" + page->slug.current + \"/\",\n        \"description\": coalesce(description, page->metaDescription),\n        \"icon\": icon {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n        \"featured\": featured\n      }\n  ),\n  \"buttons\": buttons[]{title, url, variant},\n  \"footerButton\": footerButton{title, url, variant},\n  \"image\": image {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n},\n  \"testimonials\": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"testimonial\": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  \"avatar\": avatar {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n},\n  \"questions\": questions[defined(@->_id)]->{\n    question,\n    \"answer\": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == \"image\" => {\n    ...,\n    \"alt\": coalesce(alt, \"\"),\n    caption,\n    \"lqip\": asset->metadata.lqip,\n    \"dimensions\": asset->metadata.dimensions\n  },\n  _type == \"officeHours\" => {\n    title\n  }\n},\n    category,\n    \"slug\": slug.current,\n    tags\n  },\n  \"badges\": badges[defined(@->_id)]->{\n    \"src\": image.asset->url,\n    \"alt\": image.alt,\n    \"width\": image.asset->metadata.dimensions.width,\n    \"height\": image.asset->metadata.dimensions.height\n  },\n  \"orderedAttorneyIds\": select(\n    mode == 'practiceArea' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  // The title key holds the RENDERED nav label, not the stored Name \u2014 same\n  // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,\n  // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the\n  // Nav Label. Three branches because the block has three modes.\n  \"attorneys\": select(\n    mode == 'all' => *[_type == \"attorneyIndex\"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'practiceArea' => *[_type == \"attorneyPage\" && references(^.practiceAreaPage._ref)]{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    mode == 'manual' => attorneys[defined(@->_id)]->{\n      _id, \"title\": coalesce(select(navLabel != \"\" => navLabel), title), \"slug\": slug.current, h1, jobTitle, \"bio\": metaDescription,\n      \"photo\": photo {\n  ...,\n  \"alt\": coalesce(alt, \"\"),\n  \"lqip\": asset->metadata.lqip,\n  \"dimensions\": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  \"videos\": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n},\n    hideCtaForm,\n    \"ctaOverride\": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  \"buttons\": buttons[]{title, url, variant}\n}\n  }\n": CONTENT_PAGE_QUERYResult;
   }
 }
