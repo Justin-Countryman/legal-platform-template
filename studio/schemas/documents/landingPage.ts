@@ -163,6 +163,18 @@ export const landingPage = defineType({
       to: [{type: 'siteForm'}],
       description: 'Select a campaign-specific form — overrides the Simple Form from Site Settings on this page only',
     },
+    // ─── Content ──────────────────────────────────────────────────────────────
+    // Added 2026-09-11 (OUTSTANDING item 268, ruled by Justin): this type
+    // declared neither `hero` nor `h1`, so the H1 ladder's first rung had
+    // nowhere to land and an authored `H1` cell for a landing page was dropped
+    // at build. Same object as the other catch-all types; the catch-all route
+    // already projects and renders `hero` for a landingPage.
+    {
+      name: 'hero',
+      title: 'Internal Hero',
+      type: 'internalHero',
+      description: 'The heading inside the hero is the H1 for this page',
+    },
     // ─── Page Sections ────────────────────────────────────────────────────────
     {
       name: 'sections',

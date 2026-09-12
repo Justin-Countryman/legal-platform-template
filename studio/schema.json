@@ -9361,6 +9361,14 @@
         },
         "optional": true
       },
+      "hero": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "internalHero"
+        },
+        "optional": true
+      },
       "sections": {
         "type": "objectAttribute",
         "value": {

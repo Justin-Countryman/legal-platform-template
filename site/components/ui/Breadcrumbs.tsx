@@ -12,6 +12,22 @@ type BreadcrumbItem = {
 type Props = {
   items: BreadcrumbItem[]
   domain?: string
+  /**
+   * Whether the last item IS the page being viewed. Default true. A blog post's
+   * trail ends at its parent under CRUMB-2's headline exception, so the last
+   * rung there is the Blog index, which is a link and not the current page:
+   * passing `false` renders it as a link and sets `aria-current` on nothing
+   * (OUTSTANDING item 105, 2026-09-11).
+   */
+  endsOnCurrentPage?: boolean
+}
+
+/** A page with an ancestor chain of any depth (item 96). */
+type BreadcrumbPage = {
+  navLabel?: string | null
+  title?: string | null
+  slug?: string | null
+  parentPage?: BreadcrumbPage | null
 }
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
@@ -52,22 +68,7 @@ export const NO_BREADCRUMB_TYPES = new Set([
   'staffPage',
 ])
 
-export function buildBreadcrumbs(page: {
-  _type?: string | null
-  navLabel?: string | null
-  title?: string | null
-  slug?: string | null
-  parentPage?: {
-    navLabel?: string | null
-    title?: string | null
-    slug?: string | null
-    parentPage?: {
-      navLabel?: string | null
-      title?: string | null
-      slug?: string | null
-    } | null
-  } | null
-}): BreadcrumbItem[] {
+export function buildBreadcrumbs(page: BreadcrumbPage & {_type?: string | null}): BreadcrumbItem[] {
   // CRUMB-6 / CRUMB-7. Empty rather than a Home-only trail: the component
   // renders nothing below two items, but an empty array says "this page has no
   // trail" where a one-item array says "its trail is just Home".
@@ -79,16 +80,17 @@ export function buildBreadcrumbs(page: {
   // of TECH-1's `JSON-LD self URLs and breadcrumb links` surface.
   const items: BreadcrumbItem[] = [{label: 'Home', href: '/'}]
 
-  const grandparent = page.parentPage?.parentPage
-  if (grandparent?.slug) {
-    const label = resolvePageLabel(grandparent)
-    if (label) items.push({label, href: `/${grandparent.slug}`})
-  }
-
-  const parent = page.parentPage
-  if (parent?.slug) {
-    const label = resolvePageLabel(parent)
-    if (label) items.push({label, href: `/${parent.slug}`})
+  // Every ancestor the query projected, top rung first. This used to read
+  // exactly `parentPage` and `parentPage.parentPage`, so a page nested four
+  // levels deep silently lost its top rung (OUTSTANDING item 96, 2026-09-11).
+  // The depth is now the QUERY's to decide (`PARENT_CHAIN_FRAGMENT`); the
+  // builder walks whatever it was given.
+  const ancestors: BreadcrumbPage[] = []
+  for (let p = page.parentPage; p; p = p.parentPage) ancestors.unshift(p)
+  for (const ancestor of ancestors) {
+    if (!ancestor.slug) continue
+    const label = resolvePageLabel(ancestor)
+    if (label) items.push({label, href: `/${ancestor.slug}`})
   }
 
   if (page.slug) {
@@ -116,7 +118,7 @@ function buildBreadcrumbListSchema(items: BreadcrumbItem[], domain: string) {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function Breadcrumbs({items, domain}: Props) {
+export function Breadcrumbs({items, domain, endsOnCurrentPage = true}: Props) {
   // A rung with no label is not a rung. Dropped BEFORE the length gate and
   // before the schema is built, so the visible trail and the markup are the same
   // array — CRUMB-4 says they never differ, and the way to guarantee that is one
@@ -160,10 +162,14 @@ export function Breadcrumbs({items, domain}: Props) {
         <ol className="flex flex-wrap items-center gap-1 text-sm text-foreground-muted">
           {resolved.map((item, i) => {
             const isLast = i === resolved.length - 1
+            // `aria-current="page"` marks the page being viewed, and only that.
+            // On a trail that ends at the parent (a blog post) the last rung is
+            // a real destination and stays a link. Item 105.
+            const isCurrent = isLast && endsOnCurrentPage
             return (
               <li key={item.href} className="flex min-w-0 items-center gap-1">
                 {i > 0 && <span aria-hidden="true">/</span>}
-                {isLast ? (
+                {isCurrent ? (
                   <span
                     className="max-w-[18rem] truncate font-medium text-foreground sm:max-w-[28rem] lg:max-w-[40rem]"
                     aria-current="page"

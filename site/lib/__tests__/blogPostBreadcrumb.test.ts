@@ -105,3 +105,19 @@ describe('CRUMB-1: the breadcrumb sits in its own strip below the hero', () => {
     expect(calls.length).toBe(1)
   })
 })
+
+// ─── OUTSTANDING item 105 (2026-09-11) ────────────────────────────────────────
+// The trail ends at the parent, so no rung is the current page: the route tells
+// the component so, and the component renders the last rung as a link with no
+// `aria-current`. The component half is `Breadcrumbs.test.tsx`; this pins the
+// route's half in the same source-shape frame the rest of this file uses.
+
+describe('item 105: the route says the trail does not end on this page', () => {
+  it('passes endsOnCurrentPage={false} to <Breadcrumbs>', () => {
+    const src = source()
+    const at = src.indexOf('<Breadcrumbs items={breadcrumbItems}')
+    expect(at, '<Breadcrumbs items={breadcrumbItems} not found').toBeGreaterThan(-1)
+    const tag = src.slice(at, src.indexOf('/>', at))
+    expect(tag).toContain('endsOnCurrentPage={false}')
+  })
+})

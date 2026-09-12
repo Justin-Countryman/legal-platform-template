@@ -463,3 +463,65 @@ describe('Consumer-side null-filter typed-predicate semantics', () => {
     expect(result).toEqual(input)
   })
 })
+
+// ─── OUTSTANDING items 95 and 96 (2026-09-11) ─────────────────────────────────
+
+import {CONTENT_PAGE_QUERY, PARENT_CHAIN_DEPTH, PRACTICE_AREA_QUERY} from '../queries'
+
+async function run(query: string, dataset: unknown[], params: Record<string, unknown>) {
+  const tree = parse(query)
+  const value = await evaluate(tree, {dataset, params})
+  return value.get()
+}
+
+function chainDocs(type: string) {
+  // e → d → c → b → a: four ancestors above the leaf.
+  const slugs = ['a', 'a/b', 'a/b/c', 'a/b/c/d', 'a/b/c/d/e']
+  return slugs.map((slug, i) => ({
+    _id: `pg-${i}`,
+    _type: type,
+    _rev: '1',
+    title: slug.split('/').pop()!.toUpperCase(),
+    slug: {current: slug},
+    ...(i > 0 ? {parentPage: {_ref: `pg-${i - 1}`}} : {}),
+  }))
+}
+
+describe('item 96: both page queries project the parent chain PARENT_CHAIN_DEPTH levels up', () => {
+  it('CONTENT_PAGE_QUERY reaches the top rung of a page four levels deep', async () => {
+    const page = await run(CONTENT_PAGE_QUERY, chainDocs('generalPage'), {slug: 'a/b/c/d/e'})
+    expect(page.slug).toBe('a/b/c/d/e')
+    const chain: string[] = []
+    for (let p = page.parentPage; p; p = p.parentPage) chain.push(p.slug)
+    expect(chain).toEqual(['a/b/c/d', 'a/b/c', 'a/b', 'a'])
+    expect(chain.length).toBe(PARENT_CHAIN_DEPTH)
+  })
+
+  it('PRACTICE_AREA_QUERY projects the same chain', async () => {
+    const page = await run(PRACTICE_AREA_QUERY, chainDocs('practiceArea'), {slug: 'a/b/c/d/e'})
+    const chain: string[] = []
+    for (let p = page.parentPage; p; p = p.parentPage) chain.push(p.slug)
+    expect(chain).toEqual(['a/b/c/d', 'a/b/c', 'a/b', 'a'])
+  })
+})
+
+describe('item 95: contactPage has ONE renderer, its own route', () => {
+  it('CONTENT_PAGE_QUERY never returns a contactPage, whatever its slug', async () => {
+    const dataset = [
+      {_id: 'contact', _type: 'contactPage', _rev: '1', title: 'Contact', slug: {current: 'contact'}},
+      {_id: 'contact-us', _type: 'contactPage', _rev: '1', title: 'Contact Us', slug: {current: 'contact-us'}},
+      {_id: 'about', _type: 'aboutPage', _rev: '1', title: 'About', slug: {current: 'about'}},
+    ]
+    expect(await run(CONTENT_PAGE_QUERY, dataset, {slug: 'contact'})).toBeNull()
+    expect(await run(CONTENT_PAGE_QUERY, dataset, {slug: 'contact-us'})).toBeNull()
+    expect((await run(CONTENT_PAGE_QUERY, dataset, {slug: 'about'})).title).toBe('About')
+  })
+
+  it('the sitemap lists /contact from the singleton, not from the catch-all', () => {
+    // The catch-all list in SITEMAP_QUERY names the types the catch-all route
+    // serves; contactPage is emitted from its own key.
+    const catchAll = QUERIES_SRC.slice(QUERIES_SRC.indexOf('"catchAll":'), QUERIES_SRC.indexOf(']', QUERIES_SRC.indexOf('"catchAll":')))
+    expect(catchAll).not.toContain('contactPage')
+    expect(QUERIES_SRC).toContain('"contact":          *[_type == "contactPage"][0]')
+  })
+})
