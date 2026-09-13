@@ -58,6 +58,17 @@ if [ "$BUILD_STATUS" -ne 0 ]; then
   exit "$BUILD_STATUS"
 fi
 
+# The X-Robots-Tag read (`lib/searchVisibility.ts`, `fetchSiteHiddenAtBuild`)
+# is fail-closed: a read it cannot make ships noindex on every response. Since
+# 2026-09-13 it says so on stderr with this prefix; a green build that carries
+# the line hid the site by accident, not by the operator's hand, and CI must not
+# call that green. The stub answers the field as null, which is the designed
+# fresh-client state and logs nothing.
+if grep -qF '[searchVisibility]' build-against-stub.log; then
+  echo "::error::The build could not read siteSettings.hideFromSearch and shipped noindex fail-closed. The line above names why; this is not a green build."
+  exit 1
+fi
+
 QUERIES=$(cat "$COUNT_FILE" 2>/dev/null || echo 0)
 echo "content-lake-stub answered $QUERIES queries during the build."
 if [ "$QUERIES" -lt "$MIN_QUERIES" ]; then
