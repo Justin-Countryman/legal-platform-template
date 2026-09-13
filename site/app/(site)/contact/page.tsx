@@ -2,8 +2,8 @@ export const revalidate = 3600
 
 import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
-import {client} from '@/lib/sanity/client'
-import {CONTACT_PAGE_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
+import {CONTACT_PAGE_QUERY} from '@/lib/sanity/queries'
+import {chromeNap, fetchCached} from '@/lib/sanity/fetchers'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -18,8 +18,8 @@ import {FormEmbed} from '@/components/layout/footers/FormEmbed'
 
 export async function generateMetadata(): Promise<Metadata> {
   const [page, rawTokens] = await Promise.all([
-    client.fetch(CONTACT_PAGE_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(CONTACT_PAGE_QUERY),
+    chromeNap(),
   ])
   if (!page) return {title: INDEX_PAGE_PRESETS.contactPage}
   const tokens = expandNapTokens(rawTokens)
@@ -41,8 +41,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ContactPage() {
   const [page, rawTokens] = await Promise.all([
-    client.fetch(CONTACT_PAGE_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(CONTACT_PAGE_QUERY),
+    chromeNap(),
   ])
   const tokens = expandNapTokens(rawTokens)
 

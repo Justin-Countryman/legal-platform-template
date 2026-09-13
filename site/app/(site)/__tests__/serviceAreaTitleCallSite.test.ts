@@ -29,12 +29,7 @@ vi.mock('@/lib/sanity/client', () => ({
 }))
 
 import {client} from '@/lib/sanity/client'
-import {
-  PRACTICE_AREA_QUERY,
-  LOCATION_PAGE_QUERY,
-  CONTENT_PAGE_QUERY,
-  NAP_TOKENS_QUERY,
-} from '@/lib/sanity/queries'
+import {CATCH_ALL_PAGE_QUERY, SITE_CHROME_QUERY} from '@/lib/sanity/queries'
 import {generateMetadata} from '@/app/(site)/[...slug]/page'
 
 const FIRM = 'Dudley & Smith, P.A.'
@@ -55,10 +50,11 @@ const BLAINE = {
 
 function driveFetch(page: Record<string, unknown>) {
   vi.mocked(client.fetch).mockImplementation((async (query: string) => {
-    if (query === PRACTICE_AREA_QUERY) return page
-    if (query === LOCATION_PAGE_QUERY) return null
-    if (query === CONTENT_PAGE_QUERY) return null
-    if (query === NAP_TOKENS_QUERY) return {firmName: FIRM, locations: []}
+    // Since 2026-09-13 the route reads one page query and the NAP tokens off
+    // the site chrome (lib/sanity/fetchers.ts); both arrive here as the text of
+    // the query the fetcher sends.
+    if (query === CATCH_ALL_PAGE_QUERY) return page
+    if (query === SITE_CHROME_QUERY) return {nap: {firmName: FIRM, locations: []}}
     return null
   }) as never)
 }

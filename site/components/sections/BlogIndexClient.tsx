@@ -23,7 +23,12 @@ export type BlogPostCard = {
   slug: string
   h1: string
   metaDescription: string | null
-  publishedAt: string
+  // Nullable because the index query returns null for an undated post and
+  // `RelatedPosts` already types it so; this card typed it `string` from
+  // 2026-05 to 2026-09-13 (monorepo OUTSTANDING item 234), a claim the data
+  // did not honour. The card renders the tag and the read time, never the
+  // date, so nothing read the lie; the type now tells the next author.
+  publishedAt: string | null
   category: BlogCategory | null
   bodyText: string | null
 }

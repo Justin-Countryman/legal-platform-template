@@ -2,8 +2,7 @@
 // instant revalidation lands in Batch 6 alongside the Sanity webhook).
 // Layout itself has no revalidate export — Next inherits the route's.
 
-import {client} from '@/lib/sanity/client'
-import {HEADER_QUERY, FOOTER_QUERY, DESIGN_TOKENS_QUERY, HERO_SETTINGS_QUERY} from '@/lib/sanity/queries'
+import {getSiteChrome} from '@/lib/sanity/fetchers'
 import {resolveTokenString, formatPhone} from '@/lib/tokens'
 import {buildDesignTokenCSS, buildColorCSS, buildFontCSS, resolveSidebarDesignSettings} from '@/lib/designTokens'
 import {HeroSchemeProvider} from '@/lib/heroSchemeContext'
@@ -64,12 +63,11 @@ function buildNavItems(rawItems: unknown[]): NavItem[] {
 // ──────────────────────────────────────────────────────────────────────────────
 
 export default async function SiteLayout({children}: {children: React.ReactNode}) {
-  const [headerData, footerData, designTokens, heroSettings] = await Promise.all([
-    client.fetch(HEADER_QUERY),
-    client.fetch(FOOTER_QUERY),
-    client.fetch(DESIGN_TOKENS_QUERY),
-    client.fetch(HERO_SETTINGS_QUERY),
-  ])
+  // The chrome is one request per render, shared with the root layout, the
+  // robots decision and the page (lib/sanity/fetchers.ts); these four were
+  // four requests until 2026-09-13.
+  const chrome = (await getSiteChrome()) ?? {}
+  const {header: headerData, footer: footerData, designTokens, heroSettings} = chrome
 
   // Site-level internal-hero defaults now come from Hero Settings, with a
   // transitional fallback to the legacy designSettings fields (removed once the

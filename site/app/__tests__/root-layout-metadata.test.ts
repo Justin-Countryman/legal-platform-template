@@ -18,18 +18,20 @@ import {generateMetadata} from '@/app/layout'
 const FAVICON_URL = 'https://cdn.sanity.io/images/proj/production/abc-32x32.png'
 const WEBCLIP_URL = 'https://cdn.sanity.io/images/proj/production/def-256x256.png'
 
+// The root layout reads siteSettings off the site chrome since 2026-09-13
+// (lib/sanity/fetchers.ts), so every stub below answers `{metadata: ...}`.
 beforeEach(() => {
   vi.mocked(client.fetch).mockReset()
 })
 
 describe('root layout generateMetadata — favicon / webclip → icons', () => {
   it('emits icons.icon (with mime type) and icons.apple when both assets resolve', async () => {
-    vi.mocked(client.fetch).mockResolvedValue({
+    vi.mocked(client.fetch).mockResolvedValue({metadata: {
       firmName: 'Example Law',
       faviconUrl: FAVICON_URL,
       faviconMime: 'image/png',
       webclipUrl: WEBCLIP_URL,
-    } as never)
+    }} as never)
 
     const meta = await generateMetadata()
 
@@ -40,12 +42,12 @@ describe('root layout generateMetadata — favicon / webclip → icons', () => {
   })
 
   it('emits icons.icon without a type when the favicon mime is missing', async () => {
-    vi.mocked(client.fetch).mockResolvedValue({
+    vi.mocked(client.fetch).mockResolvedValue({metadata: {
       firmName: 'Example Law',
       faviconUrl: FAVICON_URL,
       faviconMime: null,
       webclipUrl: null,
-    } as never)
+    }} as never)
 
     const meta = await generateMetadata()
 
@@ -53,12 +55,12 @@ describe('root layout generateMetadata — favicon / webclip → icons', () => {
   })
 
   it('emits no icons key when neither favicon nor webclip is set', async () => {
-    vi.mocked(client.fetch).mockResolvedValue({
+    vi.mocked(client.fetch).mockResolvedValue({metadata: {
       firmName: 'Example Law',
       faviconUrl: null,
       faviconMime: null,
       webclipUrl: null,
-    } as never)
+    }} as never)
 
     const meta = await generateMetadata()
 
@@ -66,7 +68,7 @@ describe('root layout generateMetadata — favicon / webclip → icons', () => {
   })
 
   it('emits no icons key when siteSettings is absent (fetch returns null)', async () => {
-    vi.mocked(client.fetch).mockResolvedValue(null as never)
+    vi.mocked(client.fetch).mockResolvedValue({metadata: null} as never)
 
     const meta = await generateMetadata()
 
@@ -82,10 +84,10 @@ describe('root layout generateMetadata — favicon / webclip → icons', () => {
 // not run JavaScript.
 describe('root layout generateMetadata — the search-console verification token', () => {
   it('emits verification.google when the operator has set one', async () => {
-    vi.mocked(client.fetch).mockResolvedValue({
+    vi.mocked(client.fetch).mockResolvedValue({metadata: {
       firmName: 'Example Law',
       gscVerification: 'abc123-verification-token',
-    } as never)
+    }} as never)
 
     const meta = await generateMetadata()
 
@@ -93,7 +95,7 @@ describe('root layout generateMetadata — the search-console verification token
   })
 
   it('emits NO verification key when the field is unset', async () => {
-    vi.mocked(client.fetch).mockResolvedValue({firmName: 'Example Law'} as never)
+    vi.mocked(client.fetch).mockResolvedValue({metadata: {firmName: 'Example Law'}} as never)
 
     const meta = await generateMetadata()
 
@@ -101,10 +103,10 @@ describe('root layout generateMetadata — the search-console verification token
   })
 
   it('treats a blank token as unset rather than emitting an empty tag', async () => {
-    vi.mocked(client.fetch).mockResolvedValue({
+    vi.mocked(client.fetch).mockResolvedValue({metadata: {
       firmName: 'Example Law',
       gscVerification: '',
-    } as never)
+    }} as never)
 
     const meta = await generateMetadata()
 

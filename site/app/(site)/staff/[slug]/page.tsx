@@ -3,14 +3,8 @@ export const revalidate = 3600
 import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {notFound} from 'next/navigation'
-import {client} from '@/lib/sanity/client'
-import {
-  STAFF_PAGE_QUERY,
-  STAFF_SLUGS_QUERY,
-  DESIGN_TOKENS_QUERY,
-  GLOBAL_CTA_QUERY,
-  NAP_TOKENS_QUERY,
-} from '@/lib/sanity/queries'
+import {STAFF_PAGE_QUERY, STAFF_SLUGS_QUERY} from '@/lib/sanity/queries'
+import {chromeDesignTokens, chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -29,7 +23,7 @@ import type {NapTokens} from '@/lib/tokens'
 // attorneys/[slug] and blog/[slug].
 
 export async function generateStaticParams() {
-  const slugs = await client.fetch<string[]>(STAFF_SLUGS_QUERY)
+  const slugs = await fetchCached<string[]>(STAFF_SLUGS_QUERY)
   return slugs
     .filter((s) => s.startsWith('staff/'))
     .map((s) => ({slug: s.slice('staff/'.length)}))
@@ -70,8 +64,8 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
   const {slug: slugParam} = await params
   const slug = `staff/${slugParam}`
   const [member, rawTokens] = await Promise.all([
-    client.fetch(STAFF_PAGE_QUERY, {slug}),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(STAFF_PAGE_QUERY, slug),
+    chromeNap(),
   ])
   if (!member) return {title: 'Staff Profile'}
 
@@ -101,10 +95,10 @@ export default async function StaffProfilePage({params}: PageProps) {
   const slug = `staff/${slugParam}`
 
   const [member, globalCtaData, rawTokens, designTokens] = await Promise.all([
-    client.fetch(STAFF_PAGE_QUERY, {slug}),
-    client.fetch(GLOBAL_CTA_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
-    client.fetch(DESIGN_TOKENS_QUERY),
+    fetchCached(STAFF_PAGE_QUERY, slug),
+    chromeGlobalCta(),
+    chromeNap(),
+    chromeDesignTokens(),
   ])
 
   if (!member) notFound()

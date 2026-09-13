@@ -2,13 +2,8 @@ export const revalidate = 3600
 
 import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
-import {client} from '@/lib/sanity/client'
-import {
-  SERVICE_AREA_INDEX_QUERY,
-  SERVICE_AREA_PAGES_QUERY,
-  GLOBAL_CTA_QUERY,
-  NAP_TOKENS_QUERY,
-} from '@/lib/sanity/queries'
+import {SERVICE_AREA_INDEX_QUERY, SERVICE_AREA_PAGES_QUERY} from '@/lib/sanity/queries'
+import {chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {cityFromServiceAreaSlug} from '@/lib/serviceAreaCity'
 import {resolveTitle, SERVICE_AREA_INDEX_PAGE_NAME} from '@/lib/seoTitle'
@@ -26,8 +21,8 @@ import {ServiceAreaIndexClient} from '@/components/sections/ServiceAreaIndexClie
 
 export async function generateMetadata(): Promise<Metadata> {
   const [indexPage, rawTokens] = await Promise.all([
-    client.fetch(SERVICE_AREA_INDEX_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(SERVICE_AREA_INDEX_QUERY),
+    chromeNap(),
   ])
   const tokens = expandNapTokens(rawTokens)
   if (!indexPage) return {title: INDEX_PAGE_PRESETS.serviceAreaIndex}
@@ -57,10 +52,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ServiceAreaIndexPage() {
   const [indexPage, pages, globalCtaData, rawTokens] = await Promise.all([
-    client.fetch(SERVICE_AREA_INDEX_QUERY),
-    client.fetch(SERVICE_AREA_PAGES_QUERY),
-    client.fetch(GLOBAL_CTA_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(SERVICE_AREA_INDEX_QUERY),
+    fetchCached(SERVICE_AREA_PAGES_QUERY),
+    chromeGlobalCta(),
+    chromeNap(),
   ])
   const tokens = expandNapTokens(rawTokens)
   // NAME-3: one resolver, and this route names nothing itself.

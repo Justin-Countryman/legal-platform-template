@@ -3,8 +3,8 @@ export const revalidate = 3600
 import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import Link from 'next/link'
-import {client} from '@/lib/sanity/client'
-import {EVENT_INDEX_PAGE_QUERY, EVENT_INDEX_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
+import {EVENT_INDEX_PAGE_QUERY, EVENT_INDEX_QUERY} from '@/lib/sanity/queries'
+import {chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -85,8 +85,8 @@ function isPast(dateStr: string): boolean {
 
 export async function generateMetadata(): Promise<Metadata> {
   const [indexPage, rawTokens] = await Promise.all([
-    client.fetch(EVENT_INDEX_PAGE_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(EVENT_INDEX_PAGE_QUERY),
+    chromeNap(),
   ])
   const tokens = expandNapTokens(rawTokens)
   if (!indexPage) return {title: INDEX_PAGE_PRESETS.eventIndex}
@@ -202,10 +202,10 @@ function EventGrid({events, tokens}: {events: EventCard[]; tokens: NapTokens}) {
 
 export default async function EventsIndexPage() {
   const [indexPage, allEvents, rawTokens, globalCtaData] = await Promise.all([
-    client.fetch(EVENT_INDEX_PAGE_QUERY),
-    client.fetch(EVENT_INDEX_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
-    client.fetch(GLOBAL_CTA_QUERY),
+    fetchCached(EVENT_INDEX_PAGE_QUERY),
+    fetchCached(EVENT_INDEX_QUERY),
+    chromeNap(),
+    chromeGlobalCta(),
   ])
   const tokens = expandNapTokens(rawTokens)
   // NAME-3: one resolver, and this route names nothing itself.

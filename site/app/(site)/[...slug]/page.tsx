@@ -1,16 +1,33 @@
 // Catch-all route per locked decision D3b: opt into on-demand SSG via
 // `dynamicParams: true` (the default — declared explicitly to document
-// the intent) with no `generateStaticParams` enumeration. Any slug not
-// yet rendered gets generated and cached on first request, then revalidated
-// every 3600s (or sooner via the Sanity webhook landing in Batch 6).
+// the intent) with no build-time enumeration. Any slug not yet rendered
+// gets generated and cached on first request, then revalidated every 3600s
+// (or sooner: the Sanity webhook invalidates the whole layout).
+//
+// THE EMPTY `generateStaticParams` IS WHAT MAKES THAT SENTENCE TRUE. A dynamic
+// segment with NO `generateStaticParams` at all is a fully dynamic route: Next
+// rendered every practice-area, location, about, FAQ, general and landing page
+// on every request (`Cache-Control: private, no-cache, no-store`, sixteen
+// Sanity calls per view on the live fixture, `x-vercel-cache: MISS`), which is
+// most of every client's pages, from this file's first commit until
+// 2026-09-13. Next's own docs: "You must return an empty array from
+// generateStaticParams in order to revalidate (ISR) paths at runtime."
+// Measured after: the second request is `x-nextjs-cache: HIT` with zero Sanity
+// calls (monorepo WS-V1-PHASE8-DESIGN §0). `build-against-stub.sh` asserts the
+// route is in the prerender manifest. Two consequences to know: an unknown
+// slug's 404 is cached for the hour too (the webhook's layout-wide
+// invalidation clears it when the page is published), and enabling Next's
+// `cacheComponents` turns an empty return into a build error.
 export const revalidate = 3600
 export const dynamicParams = true
+export async function generateStaticParams() {
+  return []
+}
 
 import {notFound} from 'next/navigation'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import type {Metadata} from 'next'
-import {client} from '@/lib/sanity/client'
-import {PRACTICE_AREA_QUERY, LOCATION_PAGE_QUERY, CONTENT_PAGE_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
+import {chromeGlobalCta, chromeNap, getCatchAllPage} from '@/lib/sanity/fetchers'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {aboutPageTitle, areaOfLawPageName, geoHubPageName, geoSpokePageName, locationPageName, resolveTitle, serviceAreaPageName} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -154,13 +171,11 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {slug} = await params
   const slugStr = slug.join('/')
 
-  const [practiceArea, locationPage, contentPage, rawTokens] = await Promise.all([
-    client.fetch(PRACTICE_AREA_QUERY, {slug: slugStr}),
-    client.fetch(LOCATION_PAGE_QUERY, {slug: slugStr}),
-    client.fetch(CONTENT_PAGE_QUERY, {slug: slugStr}),
-    client.fetch(NAP_TOKENS_QUERY),
-  ])
-  const page = practiceArea ?? locationPage ?? contentPage
+  // ONE query for the eight types this route serves, shared with the page
+  // below through React cache() (lib/sanity/fetchers.ts). Until 2026-09-13 this
+  // was three typed queries sent here and again in the page: six POSTs per
+  // render, four of them for the wrong type.
+  const [page, rawTokens] = await Promise.all([getCatchAllPage(slugStr), chromeNap()])
 
   if (!page) return {}
 
@@ -241,14 +256,11 @@ export default async function CatchAllPage({params}: Props) {
   const {slug} = await params
   const slugStr = slug.join('/')
 
-  const [practiceArea, locationPage, contentPage, rawTokens, globalCtaData] = await Promise.all([
-    client.fetch(PRACTICE_AREA_QUERY, {slug: slugStr}),
-    client.fetch(LOCATION_PAGE_QUERY, {slug: slugStr}),
-    client.fetch(CONTENT_PAGE_QUERY, {slug: slugStr}),
-    client.fetch(NAP_TOKENS_QUERY),
-    client.fetch(GLOBAL_CTA_QUERY),
+  const [page, rawTokens, globalCtaData] = await Promise.all([
+    getCatchAllPage(slugStr),
+    chromeNap(),
+    chromeGlobalCta(),
   ])
-  const page = practiceArea ?? locationPage ?? contentPage
 
   if (!page) notFound()
 

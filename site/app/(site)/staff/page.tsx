@@ -5,13 +5,8 @@ import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import Link from 'next/link'
-import {client} from '@/lib/sanity/client'
-import {
-  STAFF_INDEX_QUERY,
-  STAFF_PAGES_QUERY,
-  GLOBAL_CTA_QUERY,
-  NAP_TOKENS_QUERY,
-} from '@/lib/sanity/queries'
+import {STAFF_INDEX_QUERY, STAFF_PAGES_QUERY} from '@/lib/sanity/queries'
+import {chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -43,8 +38,8 @@ function fullName(s: StaffCard): string {
 
 export async function generateMetadata(): Promise<Metadata> {
   const [indexPage, rawTokens] = await Promise.all([
-    client.fetch(STAFF_INDEX_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(STAFF_INDEX_QUERY),
+    chromeNap(),
   ])
   const tokens = expandNapTokens(rawTokens)
   if (!indexPage) return {title: INDEX_PAGE_PRESETS.staffIndex}
@@ -123,10 +118,10 @@ function StaffCard({member, priority = false}: {member: StaffCard; priority?: bo
 
 export default async function StaffIndexPage() {
   const [indexPage, allStaff, globalCtaData, rawTokens] = await Promise.all([
-    client.fetch(STAFF_INDEX_QUERY),
-    client.fetch(STAFF_PAGES_QUERY),
-    client.fetch(GLOBAL_CTA_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(STAFF_INDEX_QUERY),
+    fetchCached(STAFF_PAGES_QUERY),
+    chromeGlobalCta(),
+    chromeNap(),
   ])
   const tokens = expandNapTokens(rawTokens)
   // NAME-3: one resolver, and this route names nothing itself.

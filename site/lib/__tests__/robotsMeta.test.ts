@@ -23,7 +23,8 @@ const {buildRobotsMeta} = await import('../robotsMeta')
 
 function siteHidden(hidden: boolean) {
   // resolveHidden is fail-closed: only an explicit `false` means visible.
-  fetchMock.mockResolvedValue(hidden ? true : false)
+  // The switch rides the site chrome since 2026-09-13 (lib/sanity/fetchers.ts).
+  fetchMock.mockResolvedValue({hidden: hidden ? true : false})
 }
 
 beforeEach(() => fetchMock.mockReset())

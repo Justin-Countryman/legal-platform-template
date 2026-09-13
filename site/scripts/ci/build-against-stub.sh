@@ -10,7 +10,17 @@
 #      has not touched `generateStaticParams`, the layouts, the sitemap or
 #      robots, and would be green for the wrong reason);
 #   2. the six per-slug templates rendered — every fixture slug appears in
-#      Next's route table.
+#      Next's route table;
+#   3. (2026-09-13, Phase 8) the build asked at most MAX_QUERIES queries — a
+#      regression to per-call fetching (the chrome fetched from ten places, the
+#      page query sent twice) shows up as a count above the ceiling the same
+#      way a build that fetches nothing shows up under the floor. 43 measured
+#      on 2026-09-13 before the fetchers landed and 33 after; the ceiling is
+#      set with headroom for one more prerendered route, not for a regression;
+#   4. (2026-09-13) `/[...slug]` is in the prerender manifest's dynamicRoutes —
+#      a dynamic segment with no generateStaticParams is a fully dynamic route,
+#      rendered on every request and never cached, which is what every
+#      practice-area, location and content page was until Phase 8.
 #
 # The sentinel id is used as-is: with `useProjectHostname: false` the client
 # sends it as a header and never validates its format, so no placeholder id has
@@ -24,7 +34,8 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 PORT="${STUB_PORT:-4010}"
-MIN_QUERIES="${MIN_QUERIES:-30}"
+MIN_QUERIES="${MIN_QUERIES:-20}"
+MAX_QUERIES="${MAX_QUERIES:-40}"
 COUNT_FILE="$(mktemp)"
 FIXTURE="scripts/ci/fixture.ndjson"
 
@@ -73,6 +84,15 @@ QUERIES=$(cat "$COUNT_FILE" 2>/dev/null || echo 0)
 echo "content-lake-stub answered $QUERIES queries during the build."
 if [ "$QUERIES" -lt "$MIN_QUERIES" ]; then
   echo "::error::The build asked the stub only $QUERIES queries (floor $MIN_QUERIES). The data path was not exercised; this green is not evidence."
+  exit 1
+fi
+if [ "$QUERIES" -gt "$MAX_QUERIES" ]; then
+  echo "::error::The build asked the stub $QUERIES queries (ceiling $MAX_QUERIES). A render is fetching more than the chrome and its page: see lib/sanity/fetchers.ts and WS-V1-PHASE8-DESIGN §2.1 in the monorepo."
+  exit 1
+fi
+
+if ! node -e 'const m=require("./.next/prerender-manifest.json"); process.exit(m.dynamicRoutes && m.dynamicRoutes["/[...slug]"] ? 0 : 1)'; then
+  echo "::error::/[...slug] is not in the prerender manifest: the catch-all route is fully dynamic and never cached. It needs an (empty) generateStaticParams; see app/(site)/[...slug]/page.tsx."
   exit 1
 fi
 

@@ -13,15 +13,7 @@
 export const revalidate = 3600
 
 import type {Metadata} from 'next'
-import { client } from '@/lib/sanity/client'
-import {
-  HEADER_QUERY,
-  HOME_QUERY,
-  HOME_METADATA_QUERY,
-  HOME_HERO_DESIGN_QUERY,
-  NAP_TOKENS_QUERY,
-  GLOBAL_CTA_QUERY,
-} from '@/lib/sanity/queries'
+import {chromeGlobalCta, chromeHeader, chromeNap, getHomePage} from '@/lib/sanity/fetchers'
 import {PageSections, type PageSectionData} from '@/components/sections/PageSections'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomepageCoda} from '@/components/layout/HomepageCoda'
@@ -60,20 +52,21 @@ import {hasImage, type SanityImage} from '@/lib/sanity/image'
 // the absolute title (above), the absent page-name rung (`resolveTitle`'s second
 // argument stays null), and the no-upload image path.
 export async function generateMetadata(): Promise<Metadata> {
-  const [home, rawTokens] = await Promise.all([
-    client.fetch<{
-      seoTitle?: string | null
-      metaDescription?: string | null
-      ogTitle?: string | null
-      ogDescription?: string | null
-      noIndex?: boolean | null
-      noFollow?: boolean | null
-      canonicalUrl?: string | null
-      ogImage?: SanityImage | null
-      areasOfLaw?: string[] | null
-    } | null>(HOME_METADATA_QUERY),
-    client.fetch<NapTokens>(NAP_TOKENS_QUERY),
-  ])
+  // One request for the whole homepage (content, metadata, hero design),
+  // shared with the page below through React cache(); the NAP tokens come
+  // from the chrome the layouts already fetched (lib/sanity/fetchers.ts).
+  const [all, rawTokens] = await Promise.all([getHomePage(), chromeNap()])
+  const home = (all?.metadata ?? null) as {
+    seoTitle?: string | null
+    metaDescription?: string | null
+    ogTitle?: string | null
+    ogDescription?: string | null
+    noIndex?: boolean | null
+    noFollow?: boolean | null
+    canonicalUrl?: string | null
+    ogImage?: SanityImage | null
+    areasOfLaw?: string[] | null
+  } | null
   const tokens = expandNapTokens(rawTokens)
   // Same shared resolver as every other route. The homepage has no page-name
   // rung — a page name is not a thing it has — so the second argument is null
@@ -174,13 +167,14 @@ type HomeData = {
 }
 
 export default async function HomePage() {
-  const [header, home, design, tokens, globalCtaData] = await Promise.all([
-    client.fetch(HEADER_QUERY),
-    client.fetch<HomeData>(HOME_QUERY),
-    client.fetch<HomeHeroDesign | null>(HOME_HERO_DESIGN_QUERY),
-    client.fetch<NapTokens>(NAP_TOKENS_QUERY),
-    client.fetch<HomepageCtaData | null>(GLOBAL_CTA_QUERY),
+  const [header, all, tokens, globalCtaData] = await Promise.all([
+    chromeHeader(),
+    getHomePage(),
+    chromeNap() as Promise<NapTokens>,
+    chromeGlobalCta() as Promise<HomepageCtaData | null>,
   ])
+  const home = (all?.page ?? null) as HomeData | null
+  const design = (all?.heroDesign ?? null) as HomeHeroDesign | null
   const siteSettings = header?.siteSettings
   const content = home?.hero
   // Render the hero only when content has a heading AND the design is

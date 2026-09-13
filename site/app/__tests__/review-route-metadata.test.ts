@@ -31,8 +31,7 @@ import {describe, it, expect, vi, beforeEach} from 'vitest'
 vi.mock('@/lib/sanity/client', () => ({client: {fetch: vi.fn()}}))
 
 import {client} from '@/lib/sanity/client'
-import {REVIEW_PAGE_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
-import {SITE_HIDDEN_QUERY} from '@/lib/searchVisibility'
+import {REVIEW_PAGE_QUERY, SITE_CHROME_QUERY} from '@/lib/sanity/queries'
 import {generateMetadata} from '@/app/review/[slug]/page'
 
 const SLUG = 'review-us-maple-grove'
@@ -53,8 +52,8 @@ function mockReview({
       return Promise.resolve({
         page: {h1: 'Review Our Maple Grove Office', title, slug: SLUG, metaDescription, noIndex, noFollow: false},
       } as never)
-    if (q === NAP_TOKENS_QUERY) return Promise.resolve({firmName: 'Dudley & Smith, P.A.'} as never)
-    if (q === SITE_HIDDEN_QUERY) return Promise.resolve(siteHidden as never)
+    // NAP tokens and the site-wide switch ride the site chrome since 2026-09-13.
+    if (q === SITE_CHROME_QUERY) return Promise.resolve({nap: {firmName: 'Dudley & Smith, P.A.'}, hidden: siteHidden} as never)
     return Promise.resolve(null as never)
   })
 }

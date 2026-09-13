@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
-import {client} from '@/lib/sanity/client'
-import {SITE_HIDDEN_QUERY, resolveHidden} from '@/lib/searchVisibility'
+import {getSiteChrome} from '@/lib/sanity/fetchers'
+import {resolveHidden} from '@/lib/searchVisibility'
 
 // ─── Per-page robots directives ───────────────────────────────────────────────
 // Doctrine: `BI-URL-Architecture.md` → Search visibility, rules SEARCH-1
@@ -43,7 +43,8 @@ import {SITE_HIDDEN_QUERY, resolveHidden} from '@/lib/searchVisibility'
 // each route to remember: 15 call sites each having to fetch and apply the same
 // value is exactly the "decided in three places at once" shape that
 // `BE/_shared/search_visibility.py` exists to prevent on the tool side. The
-// query is a single field and Next dedupes it across a render pass.
+// field rides the site chrome, which is one request per render (fetchers.ts),
+// so this costs nothing; it used to be its own query on every page.
 
 /**
  * Robots metadata for one page.
@@ -61,7 +62,7 @@ export async function buildRobotsMeta(
   noIndex?: boolean | null,
   noFollow?: boolean | null,
 ): Promise<Pick<Metadata, 'robots'> | Record<string, never>> {
-  const siteHidden = resolveHidden(await client.fetch<unknown>(SITE_HIDDEN_QUERY))
+  const siteHidden = resolveHidden((await getSiteChrome())?.hidden)
   if (siteHidden) {
     // SEARCH-1: the site-wide setting wins over any page setting. Matches the
     // root layout's hidden value exactly, so nothing about an ordinary page on

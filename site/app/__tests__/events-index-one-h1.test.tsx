@@ -14,7 +14,7 @@ vi.mock('@/lib/sanity/client', () => ({
 }))
 
 import {client} from '@/lib/sanity/client'
-import {EVENT_INDEX_PAGE_QUERY, EVENT_INDEX_QUERY, NAP_TOKENS_QUERY, GLOBAL_CTA_QUERY} from '@/lib/sanity/queries'
+import {EVENT_INDEX_PAGE_QUERY, EVENT_INDEX_QUERY, SITE_CHROME_QUERY} from '@/lib/sanity/queries'
 import EventsIndexPage from '@/app/(site)/events/page'
 
 const inAYear = new Date(Date.now() + 365 * 24 * 3600 * 1000).toISOString()
@@ -32,8 +32,8 @@ beforeEach(() => {
         {slug: 'events/probate-basics', title: 'Probate Basics', eventDate: aYearAgo},
       ] as never
     }
-    if (query === NAP_TOKENS_QUERY) return {firmName: 'Example Firm'} as never
-    if (query === GLOBAL_CTA_QUERY) return null as never
+    // NAP tokens and the global CTA ride the site chrome since 2026-09-13.
+    if (query === SITE_CHROME_QUERY) return {nap: {firmName: 'Example Firm'}, globalCta: null} as never
     return null as never
   })
 })

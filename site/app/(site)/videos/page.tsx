@@ -2,8 +2,8 @@ export const revalidate = 3600
 
 import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
-import {client} from '@/lib/sanity/client'
-import {VIDEO_INDEX_PAGE_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
+import {VIDEO_INDEX_PAGE_QUERY} from '@/lib/sanity/queries'
+import {chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -43,8 +43,8 @@ type VideoIndexData = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const [indexPage, rawTokens] = await Promise.all([
-    client.fetch<VideoIndexData | null>(VIDEO_INDEX_PAGE_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached<VideoIndexData | null>(VIDEO_INDEX_PAGE_QUERY),
+    chromeNap(),
   ])
   if (!indexPage) return {title: INDEX_PAGE_PRESETS.videoIndex}
   const tokens = expandNapTokens(rawTokens)
@@ -87,9 +87,9 @@ function videoJsonLd(videos: VideoCardData[]) {
 
 export default async function VideoLibraryPage() {
   const [indexPage, globalCtaData, rawTokens] = await Promise.all([
-    client.fetch<VideoIndexData | null>(VIDEO_INDEX_PAGE_QUERY),
-    client.fetch(GLOBAL_CTA_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached<VideoIndexData | null>(VIDEO_INDEX_PAGE_QUERY),
+    chromeGlobalCta(),
+    chromeNap(),
   ])
   const tokens = expandNapTokens(rawTokens)
   // NAME-3: one resolver, and this route names nothing itself.

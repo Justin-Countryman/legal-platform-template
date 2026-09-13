@@ -45,6 +45,9 @@ const dataset = datasetPath
       .map((line) => JSON.parse(line))
   : []
 const countFile = process.env.STUB_COUNT_FILE
+// STUB_LOG_FILE, when set, receives one line per query: the method, the
+// first 160 characters of the GROQ, and the params. Measurement only.
+const logFile = process.env.STUB_LOG_FILE
 let count = 0
 
 export async function answer(query, params) {
@@ -73,6 +76,7 @@ const server = http.createServer((req, res) => {
     }
     count += 1
     if (countFile) fs.writeFileSync(countFile, String(count))
+    if (logFile) fs.appendFileSync(logFile, `${req.method} ${query.replace(/\s+/g, ' ').slice(0, 160)} ${JSON.stringify(params)}\n`)
     res.setHeader('content-type', 'application/json')
     if (!query) {
       res.statusCode = 400
