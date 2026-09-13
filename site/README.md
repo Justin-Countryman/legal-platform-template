@@ -26,7 +26,7 @@ Copy `.env.example` to `.env.local` and fill in real values. In production, set 
 | `NEXT_PUBLIC_SITE_DOMAIN` | Build (metadataBase) | Production hostname, no protocol, no trailing slash (e.g. `www.example.com`) |
 | `SANITY_API_READ_TOKEN` | Server-only (drafts, preview) | Server-side only; do NOT prefix with `NEXT_PUBLIC_`. Read-scoped token. |
 | `NEXT_PUBLIC_GSC_VERIFICATION` | Production only | Google Search Console site-verification token. Leave blank in dev / preview. |
-| `SANITY_REVALIDATE_SECRET` | Production webhook | Shared secret for `POST /api/revalidate`. Must match the `x-sanity-revalidate-secret` header configured on the Sanity dashboard webhook. |
+| `SANITY_REVALIDATE_SECRET` | Production webhook | Shared secret for `POST /api/revalidate`. Must match BOTH the `x-sanity-revalidate-secret` header and the HMAC `Secret` configured on the Sanity dashboard webhook (the handler verifies `sanity-webhook-signature` with it). Every event invalidates the root layout. |
 
 `.env.local` is gitignored via the root `.gitignore` and `site/.gitignore`.
 

@@ -1,49 +1,41 @@
-import {revalidatePath, revalidateTag} from 'next/cache'
+import {revalidatePath} from 'next/cache'
+import type {NextRequest} from 'next/server'
+import {parseBody} from 'next-sanity/webhook'
 
 // Sanity webhook handler. Configure in Sanity dashboard (`API → Webhooks`):
 //   - URL: https://${domain}/api/revalidate
 //   - Method: POST
 //   - HTTP Headers: `x-sanity-revalidate-secret: <SANITY_REVALIDATE_SECRET>`
-//   - Projection (optional, for granular invalidation):
-//       {"_type": _type, "slug": slug.current}
-//   - Trigger: Create / Update / Delete on all routable document types
+//   - Secret: <SANITY_REVALIDATE_SECRET> (the hook's HMAC secret; the same
+//     value as the header, or every delivery answers 401 `Bad signature`)
+//   - Projection (optional): {"_type": _type}
+//   - Trigger: Create / Update / Delete on every document type
 //
-// Behavior:
-//   - Default: revalidates the root layout (broad invalidation; the 1h
-//     time-based revalidate is the backstop). Every page below `/` is
-//     re-fetched on next request.
-//   - When the webhook payload includes `slug` or `path`, revalidates that
-//     path directly + the `sanity` tag (for future tag-keyed fetches).
+// Scope: the ROOT LAYOUT, on every authenticated event. Every document renders
+// somewhere shared: the header nav lists attorneys and practice areas, the
+// footer lists practice areas and locations, sidebars list the practice-area
+// tree and recent posts, homepage blocks list attorneys. No document's change is
+// contained to its own URL, so a type-to-paths map would read "everything" for
+// most rows and be wrong for the rest. `revalidatePath('/', 'layout')` is one
+// tag write at event time; every route regenerates on its next visit (blocking,
+// not stale-while-revalidate). The 1h time-based revalidate stays the backstop.
 //
-// Security: shared-secret header check. The secret must match
-// `SANITY_REVALIDATE_SECRET` (server-only env var; never NEXT_PUBLIC_).
+// This is also why there is no per-path branch. The 2026-08-13 defect (the
+// homepage's slug is `home`, the handler called `revalidatePath('/home/')`, a
+// route that does not exist, and returned 200 `revalidated: true` while the
+// homepage stayed stale) cannot recur: there is no path to get wrong.
+//
+// Security: two checks, both against `SANITY_REVALIDATE_SECRET` (server-only;
+// never NEXT_PUBLIC_). The shared-secret header is checked first; then the
+// body's HMAC (`sanity-webhook-signature`, verified by `next-sanity/webhook`).
+// One POST now purges every route, so a static header over TLS is no longer
+// enough on its own. The Studio-side hook must carry the same value as its HMAC
+// `secret` (the monorepo's Deploy-Setup-Tool writes it) or deliveries 401.
 
 export const dynamic = 'force-dynamic' // never cache the webhook itself
 
 type WebhookPayload = {
   _type?: string
-  slug?: string
-  path?: string
-}
-
-/**
- * The path a document's slug maps to. **The homepage is the one document whose
- * slug is not its path**, and getting that wrong is a FALSE SUCCESS rather than
- * a failure: `revalidatePath('/home/')` returns 200 and `revalidated: true`
- * while refreshing a route that does not exist.
- *
- * Found 2026-08-13 on a live client. `homePage.slug.current` is `home`, so an
- * operator publishing a homepage change got a green webhook, a 200, and a stale
- * homepage — and Sanity's delivery log recorded the success. It went unnoticed
- * because every OTHER type is a straight mapping: `about` → `/about/`,
- * `blog` → `/blog/`, `personal-injury` → `/personal-injury/`.
- *
- * Keyed on `_type`, not on the slug string, because a practice area legitimately
- * slugged `home` would be a different page.
- */
-export function slugToPath(payload: WebhookPayload): string | null {
-  if (payload._type === 'homePage') return '/'
-  return payload.slug ? `/${payload.slug}/` : null
 }
 
 export async function POST(request: Request) {
@@ -60,22 +52,24 @@ export async function POST(request: Request) {
     return Response.json({revalidated: false, reason: 'Unauthorized'}, {status: 401})
   }
 
-  let payload: WebhookPayload = {}
-  try {
-    payload = (await request.json()) as WebhookPayload
-  } catch {
-    // Empty body / non-JSON is fine — fall through to broad revalidation.
-  }
-
-  const targetPath = payload.path ?? slugToPath(payload)
-
-  if (targetPath) {
-    revalidatePath(targetPath)
-    revalidateTag('sanity', 'default')
-    return Response.json({revalidated: true, path: targetPath, now: Date.now()})
+  // `parseBody` is typed against NextRequest but reads only `headers.get` and
+  // `text()`, both on the standard Request. The third argument disables the
+  // library's 3s "wait for Content Lake eventual consistency" sleep: the
+  // handler fetches nothing, so there is nothing to wait for.
+  const {isValidSignature, body} = await parseBody<WebhookPayload>(
+    request as NextRequest,
+    expected,
+    false,
+  )
+  if (isValidSignature !== true) {
+    return Response.json({revalidated: false, reason: 'Bad signature'}, {status: 401})
   }
 
   revalidatePath('/', 'layout')
-  revalidateTag('sanity', 'default')
-  return Response.json({revalidated: true, scope: 'layout', now: Date.now()})
+  return Response.json({
+    revalidated: true,
+    scope: 'layout',
+    _type: body?._type ?? null,
+    now: Date.now(),
+  })
 }
