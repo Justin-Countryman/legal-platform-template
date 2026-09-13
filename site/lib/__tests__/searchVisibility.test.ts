@@ -26,7 +26,7 @@
  * nothing in the platform would notice. It stays open and is recorded on SEARCH-4.
  */
 import {afterEach, describe, expect, it, vi} from 'vitest'
-import {fetchSiteHiddenAtBuild, resolveHidden} from '../searchVisibility'
+import {UNREACHABLE_LOG_PREFIX, fetchSiteHiddenAtBuild, resolveHidden} from '../searchVisibility'
 
 // ---------------------------------------------------------------------------
 // THE TRUTH TABLE. Stated literally, and stated again in the monorepo at
@@ -61,6 +61,7 @@ const ENV = {...process.env}
 afterEach(() => {
   process.env = {...ENV}
   vi.unstubAllGlobals()
+  vi.restoreAllMocks()
 })
 
 describe('resolveHidden — the fail-closed truth table', () => {
@@ -99,31 +100,68 @@ describe('the unreachable row — the last line of the same table', () => {
     process.env.NEXT_PUBLIC_SANITY_DATASET = 'production'
   }
 
-  it('a dataset that cannot be reached at all resolves to hidden', async () => {
+  // THE VERDICT AND THE LOG ARE ASSERTED TOGETHER. Until 2026-09-13 every branch
+  // below returned hidden in silence, so a build that could not read the field
+  // shipped noindex with a green log (WS-V1-PLAN Phase 8). The verdict does not
+  // change; the log line is what tells a hidden-on-purpose site from a
+  // hidden-by-accident one. `build-against-stub.sh` fails a CI build whose log
+  // carries the prefix, so the line is an artifact, not a courtesy.
+  function spyError() {
+    return vi.spyOn(console, 'error').mockImplementation(() => {})
+  }
+
+  function expectLogged(spy: ReturnType<typeof spyError>, reason: RegExp) {
+    expect(spy).toHaveBeenCalledTimes(1)
+    const line = String(spy.mock.calls[0][0])
+    expect(line.startsWith(UNREACHABLE_LOG_PREFIX)).toBe(true)
+    expect(line).toMatch(reason)
+    expect(line).toMatch(/noindex, nofollow/)
+  }
+
+  it('a dataset that cannot be reached at all resolves to hidden, and says so', async () => {
     stubEnv()
+    const spy = spyError()
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network down')))
     expect(await fetchSiteHiddenAtBuild()).toBe(true)
+    expectLogged(spy, /network down/)
   })
 
-  it('a non-200 response resolves to hidden', async () => {
+  it('a non-200 response resolves to hidden, and names the status', async () => {
     stubEnv()
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ok: false}))
+    const spy = spyError()
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ok: false, status: 401}))
     expect(await fetchSiteHiddenAtBuild()).toBe(true)
+    expectLogged(spy, /HTTP 401/)
   })
 
-  it('a missing project or dataset resolves to hidden before any request', async () => {
+  it('a body that is not JSON resolves to hidden, and says so', async () => {
+    stubEnv()
+    const spy = spyError()
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({ok: true, status: 200, json: async () => { throw new SyntaxError('Unexpected token <') }}),
+    )
+    expect(await fetchSiteHiddenAtBuild()).toBe(true)
+    expectLogged(spy, /Unexpected token/)
+  })
+
+  it('a missing project or dataset resolves to hidden before any request, and says so', async () => {
     delete process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
     delete process.env.NEXT_PUBLIC_SANITY_DATASET
+    const spy = spyError()
     const fetchMock = vi.fn()
     vi.stubGlobal('fetch', fetchMock)
     expect(await fetchSiteHiddenAtBuild()).toBe(true)
     expect(fetchMock).not.toHaveBeenCalled()
+    expectLogged(spy, /NEXT_PUBLIC_SANITY_PROJECT_ID/)
   })
 
-  it('a reachable dataset still routes its answer through the table', async () => {
+  it('a reachable dataset still routes its answer through the table, and logs nothing', async () => {
     // The transport must not have its own opinion — it resolves through
-    // resolveHidden or the two copies of the rule become three.
+    // resolveHidden or the two copies of the rule become three. And a FIELD
+    // that is absent is the fresh-client state, not a failure: no log.
     stubEnv()
+    const spy = spyError()
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({ok: true, json: async () => ({result: false})}),
@@ -135,6 +173,13 @@ describe('the unreachable row — the last line of the same table', () => {
       vi.fn().mockResolvedValue({ok: true, json: async () => ({})}),
     )
     expect(await fetchSiteHiddenAtBuild()).toBe(true)
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({ok: true, json: async () => ({result: null})}),
+    )
+    expect(await fetchSiteHiddenAtBuild()).toBe(true)
+    expect(spy).not.toHaveBeenCalled()
   })
 })
 
