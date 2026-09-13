@@ -221,7 +221,9 @@ describe('GROQ canonical filter-before-dereference pattern', () => {
     // its own reference array. A block contributes one pattern per reference
     // ARRAY it projects, not one per block.
     const matches = QUERIES_SRC.match(/\[defined\(@->_id\)\]->/g) ?? []
-    expect(matches.length).toBe(29)
+    // 29 -> 30 on 2026-09-12 ([R-201]): the practice-area order's two ordered
+    // halves (top level, all levels) each dereference the nav's reference array.
+    expect(matches.length).toBe(30)
   })
 
   it('source-text meta: queries.ts contains zero broken-pattern occurrences', () => {

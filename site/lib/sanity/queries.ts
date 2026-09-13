@@ -100,6 +100,76 @@ const NAV_LABEL_EXPR = `coalesce(select(navLabel != "" => navLabel), title)`
 // the page's Name.
 const NAV_LABEL_VIA_PAGE_EXPR = `coalesce(select(page->navLabel != "" => page->navLabel), page->title)`
 
+// ─── The practice-area order ([R-201], 2026-09-12) ───────────────────────────
+//
+// The order of the areas of law on the homepage and in the header follows the
+// Zite ranking. The build writes that ranking, as references, onto
+// `mainNavigation.items[<navItemPracticeAreas>].practiceAreaOrder` (Site-Build's
+// `nav_footer_composition`), the array the operator can also drag in Studio.
+// Every list surface reads it through THIS helper: the pages the order lists,
+// in that order, THEN every practice area it does not list, alphabetically by
+// the rendered label. So "never curate or hide" (BI-Homepage Beat 4) holds on
+// every surface: a page added later, or a nav that carries no order at all,
+// renders in the alphabetical tail and nothing is ever hidden. Until this the
+// header rendered ONLY the listed pages when an order existed.
+//
+// Two things ADV-P6b-B measured, recorded so nobody re-derives them:
+//   - the top-level predicate MUST sit inside the reference-array filter as
+//     `@->parentPage`; chaining `->[!defined(parentPage)]` after the
+//     dereference returns nulls under groq-js (the v0.20.0 class this file's
+//     tests lock down).
+//   - `| order(label asc)` sorts the PROJECTED key. The four sorts this helper
+//     replaced wrote `order(${NAV_LABEL_EXPR} asc)` after a projection that
+//     carries neither `navLabel` nor `title`, so the key was null and the pipe a
+//     no-op on both engines: the live site looked alphabetical only because
+//     the Lake returns `_id` order and ids are `practiceArea-<slug>`.
+// Splat of null is `[]` on both engines, so no nav, no item and no order all
+// collapse into the alphabetical tail.
+const PRACTICE_AREA_ORDER_REFS = `*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder`
+
+// STRING CONSTANTS, NOT A FUNCTION: `sanity typegen` follows template-literal
+// constants into a query and refuses a call expression ("Unsupported
+// expression type: BlockStatement"), which silently drops the result types of
+// every query that used the helper (measured 2026-09-12: 88 -> 74). Each site
+// spells the two halves out with these four pieces.
+//
+//   [ ...(ORDERED_TOP_LEVEL${item}), ...(REST_TOP_LEVEL${item} | order(label asc)) ]
+//
+// The filter-before-dereference literal appears twice below (top level and
+// all levels), which the pattern catalog in queries.test.ts counts.
+const PRACTICE_AREAS_ORDERED_TOP_LEVEL = `${PRACTICE_AREA_ORDER_REFS}[defined(@->slug.current) && !defined(@->parentPage)][defined(@->_id)]->`
+const PRACTICE_AREAS_ORDERED_ALL = `${PRACTICE_AREA_ORDER_REFS}[defined(@->slug.current)][defined(@->_id)]->`
+const PRACTICE_AREAS_REST_TOP_LEVEL = `*[_type == "practiceArea" && defined(slug.current) && !defined(parentPage) && !(_id in coalesce(${PRACTICE_AREA_ORDER_REFS}[]._ref, []))]`
+const PRACTICE_AREAS_REST_ALL = `*[_type == "practiceArea" && defined(slug.current) && !(_id in coalesce(${PRACTICE_AREA_ORDER_REFS}[]._ref, []))]`
+
+const PRACTICE_AREA_TILE_ITEM = `{
+  "_key": _id,
+  "label": ${NAV_LABEL_EXPR},
+  "href": "/" + slug.current + "/",
+  "description": metaDescription,
+  "icon": null,
+  "image": null
+}`
+const PRACTICE_AREA_SECTION_ITEM = `{
+  "_key": _id,
+  "label": ${NAV_LABEL_EXPR},
+  "href": "/" + slug.current + "/",
+  "description": metaDescription,
+  "icon": null,
+  "image": null,
+  "featured": false
+}`
+const PRACTICE_AREA_LINK_ITEM = `{
+  "label": ${NAV_LABEL_EXPR},
+  "href": "/" + slug.current + "/"
+}`
+const PRACTICE_AREA_NAV_ITEM = `{
+  "_id": _id,
+  "label": ${NAV_LABEL_EXPR},
+  "href": "/" + slug.current + "/",
+  "parentRef": parentPage._ref
+}`
+
 // Gated street address (D9 location-type privacy). Physical/Shared locations
 // expose their street address + zip publicly; Virtual and Home locations — and
 // any location that has not set a type — null them, so no consumer renders or
@@ -144,16 +214,10 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
   // auto-pulled title/description, with per-item overrides; or auto-list all
   // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").
   "items": select(
-    _type == "practiceAreaNav" && mode == "allTopLevel" =>
-      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{
-        "_key": _id,
-        "label": ${NAV_LABEL_EXPR},
-        "href": "/" + slug.current + "/",
-        "description": metaDescription,
-        "icon": null,
-        "image": null,
-        "featured": false
-      } | order(${NAV_LABEL_EXPR} asc),
+    _type == "practiceAreaNav" && mode == "allTopLevel" => [
+      ...(${PRACTICE_AREAS_ORDERED_TOP_LEVEL}${PRACTICE_AREA_SECTION_ITEM}),
+      ...(${PRACTICE_AREAS_REST_TOP_LEVEL}${PRACTICE_AREA_SECTION_ITEM} | order(label asc))
+    ],
     _type == "practiceAreaNav" =>
       items[defined(page->slug.current)]{
         _key,
@@ -425,20 +489,14 @@ export const HEADER_QUERY = groq`{
             "href": "/" + slug.current + "/"
           } | order(lastName asc, firstName asc)
         ),
-        _type == "navItemPracticeAreas" => select(
-          count(practiceAreaOrder) > 0 => practiceAreaOrder[defined(@->_id)]->{
-            "_id": _id,
-            "label": ${NAV_LABEL_EXPR},
-            "href": "/" + slug.current + "/",
-            "parentRef": parentPage._ref
-          },
-          *[_type == "practiceArea"]{
-            "_id": _id,
-            "label": ${NAV_LABEL_EXPR},
-            "href": "/" + slug.current + "/",
-            "parentRef": parentPage._ref
-          } | order(${NAV_LABEL_EXPR} asc)
-        )
+        // The Zite-ranked order first, then every practice area it does not
+        // list, by label; children ride flat with parentRef and the header
+        // groups them. Until [R-201] an order hid every page it did not list.
+        // No backticks in this comment: it sits inside a groq template literal.
+        _type == "navItemPracticeAreas" => [
+          ...(${PRACTICE_AREAS_ORDERED_ALL}${PRACTICE_AREA_NAV_ITEM}),
+          ...(${PRACTICE_AREAS_REST_ALL}${PRACTICE_AREA_NAV_ITEM} | order(label asc))
+        ]
       )
     }
   }
@@ -491,10 +549,10 @@ export const FOOTER_QUERY = groq`{
     // practiceArea docs — label = the nav-label expression, href = slug — so it
     // stays in sync with the header nav and sidebar nav (single source of truth
     // = the practiceArea document). The stored column1 field is ignored.
-    "column1": *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{
-      "label": ${NAV_LABEL_EXPR},
-      "href": "/" + slug.current + "/"
-    } | order(${NAV_LABEL_EXPR} asc),
+    "column1": [
+      ...(${PRACTICE_AREAS_ORDERED_TOP_LEVEL}${PRACTICE_AREA_LINK_ITEM}),
+      ...(${PRACTICE_AREAS_REST_TOP_LEVEL}${PRACTICE_AREA_LINK_ITEM} | order(label asc))
+    ],
     "column2": column2[]{label, href},
     facebookUrl,
     instagramUrl,
@@ -1010,14 +1068,10 @@ const CANVAS_FRAGMENT = groq`[]{
           "icon": icon ${IMAGE_FRAGMENT},
           "image": image ${IMAGE_FRAGMENT}
         },
-      *[_type == "practiceArea" && !defined(parentPage) && defined(slug.current)]{
-        "_key": _id,
-        "label": ${NAV_LABEL_EXPR},
-        "href": "/" + slug.current + "/",
-        "description": metaDescription,
-        "icon": null,
-        "image": null
-      } | order(${NAV_LABEL_EXPR} asc)
+      [
+        ...(${PRACTICE_AREAS_ORDERED_TOP_LEVEL}${PRACTICE_AREA_TILE_ITEM}),
+        ...(${PRACTICE_AREAS_REST_TOP_LEVEL}${PRACTICE_AREA_TILE_ITEM} | order(label asc))
+      ]
     )
   }
 }`
