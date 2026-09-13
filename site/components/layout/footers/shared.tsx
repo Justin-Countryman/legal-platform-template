@@ -2,11 +2,13 @@
 // `footerSettings.column1` and `footerSettings.column2` are the two operator-
 // configurable footer nav arrays. Their semantic roles:
 //
-//   column1 — practice areas list. Populated per-client by SBT Phase 10
-//             (compose_footer_column1_links) from each practiceArea doc's
-//             `title` + slug. Labels can drift from page titles if titles
-//             change after SBT runs — re-run SBT Phase 10 to re-sync, or
-//             edit footerSettings in Studio.
+//   column1 — practice areas list. NOT read from the stored field: the
+//             footer query auto-lists the top-level practiceArea docs live
+//             (`queries.ts`, FOOTER_QUERY), in the same order the header and
+//             the homepage use — the Zite-ranked `practiceAreaOrder` on the
+//             nav first, then the rest alphabetically ([R-201], 2026-09-12).
+//             The stored column1 field is ignored (comment corrected 2026-09-12;
+//             it had described a Site-Build snapshot retired in the Dudley dogfood).
 //
 //   column2 — standard core nav: About / Our Attorneys / Locations / Blog /
 //             Contact. Populated once by SBT Phase 3 (site_setup) from
