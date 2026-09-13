@@ -240,7 +240,10 @@ export default async function EventsIndexPage() {
 
           {/* Upcoming */}
           <section className="mb-16">
-            <h1 className="mb-8 text-2xl font-bold text-foreground md:text-3xl">Upcoming Events</h1>
+            {/* The page's one H1 is the hero heading (HEAD-2, `H1 count` holds in Verify,
+                [R-182]); this is the list section's heading. It was an <h1> until
+                2026-09-12 and the events index served two (monorepo item 280). */}
+            <h2 className="mb-8 text-2xl font-bold text-foreground md:text-3xl">Upcoming Events</h2>
             <EventGrid events={upcoming} tokens={tokens} />
           </section>
 
