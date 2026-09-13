@@ -3,10 +3,12 @@
 // because the FlatCompat shim path produced a circular-structure JSON error
 // when validating eslint-plugin-react's plugin export under ESLint 9.
 //
-// WS8 platform rules (13 custom + 5 config-rule-families = 18 total active
+// WS8 platform rules (9 custom + 5 config-rule-families = 14 total active
 // platform-shipped rules) are documented in
 // `BI/skills/skill-eslint-platform-rules/SKILL.md`. Each rule below cites
 // the BI / skill / OUTSTANDING source that locks the posture it enforces.
+// Eight design-token rules were cut 2026-09-13 (monorepo WS-V1-PLAN Phase 8,
+// WS-V1-PHASE8-DESIGN §2.4 and §7.10); the skills carry those postures.
 //
 // Both `eslint-config-next/core-web-vitals` and `eslint-config-next/typescript`
 // export ready-to-spread flat-config arrays.
@@ -53,26 +55,6 @@ const eslintConfig = [
       // tagline, sr-only. Skips opaque tokenizations per false-negatives-
       // over-false-positives. The WS8 anchor rule.
       "platform/heading-cascade-discipline": "error",
-      // T7 — `BI-FOUNDATIONS.md → "Token-first, not value-first"` +
-      // `skill-color-system → Anti-patterns`. Companion to T1
-      // (no-arbitrary-color), which reads className ONLY. T7 catches raw
-      // color values everywhere else: inline `style`, TS constants,
-      // template CSS. OUTSTANDING item 46 named the gap, and it matters
-      // more now that homepage block components exist: a block that
-      // hardcodes a color renders correctly on the client it was written
-      // for and silently opts out of per-client theming and WCAG
-      // validation on every other one. Token-system boundary files are
-      // scoped out structurally rather than carrying inline disables —
-      // see eslint-rules/lib/token-boundary.js for each file and reason.
-      "platform/no-raw-color-value": "error",
-      // T8 — `BI-PRINCIPLES.md → Performance / Fonts` +
-      // `skill-typography → CSS chain`. The existing font restrictions
-      // block font FETCHING (Google CDN hosts, next/font/google); neither
-      // catches a font VALUE typed into a component, which is the other
-      // half of item 46. A hardcoded family keeps rendering after an
-      // operator changes `fontPairingPreset`, so the design setting
-      // appears to work and does nothing. Same boundary carve-out.
-      "platform/no-hardcoded-font-family": "error",
       // A3 — `BI-PRINCIPLES.md → Landmarks` ("Every <footer> carries
       // aria-labelledby='footer-heading' and contains <h2 id='footer-
       // heading' className='sr-only'>...</h2> as its first child").
@@ -112,12 +94,6 @@ const eslintConfig = [
       // values in className utilities — `bg-[#hex]`, `text-[rgb(...)]`,
       // etc. — use design tokens instead.
       "platform/no-arbitrary-color": "error",
-      // T2 — `skill-color-system → Anti-patterns` ("Manually overriding
-      // cascade-aware tokens per component for dark surfaces") +
-      // `BI-FOUNDATIONS.md → "Surface-aware cascade: 8 tokens swap
-      // together, don't override per-component"`. Flags 8 forbidden
-      // *-on-dark utility tokens.
-      "platform/no-manual-cascade-override": "error",
       // T5a — `skill-color-system → "Surface-aware tokens (cascade-driven)"`
       // + Foundation Colors tab → "Forbidden / warning combinations"
       // (DesignStudioClient.tsx FoundationPanel). Raw `text-action` is
@@ -141,34 +117,8 @@ const eslintConfig = [
       // text-accent resolves to tagline color, AA-passing) or use
       // text-foreground-muted on bg-muted.
       "platform/no-text-accent-on-bg-muted": "error",
-      // B1 — `BI-OVERVIEW.md → "2026-04-28 — Header hover migration +
-      // color system canonicalization"` (transition-all retired across
-      // the platform during Phase 2A; WS7 Commit 4 verified zero
-      // production sites). Use explicit transition property lists
-      // (transition-[a,b,c]) so layout-affecting properties don't animate.
-      "platform/no-transition-all": "error",
-      // B2 — `skill-color-system → Anti-patterns` ("Raw text-white /
-      // bg-white instead of role tokens"). The `ring-white` /
-      // `ring-offset-brand-dark` Button-focus exception is a different
-      // Tailwind prefix and passes through naturally.
-      "platform/no-raw-white-black": "error",
 
       // ─── Component patterns / cascade ──────────────────────────────────
-      // C1 — `skill-component-patterns → Tagline anti-patterns` +
-      // `OUTSTANDING.md → "Workstream 7.7 → Commit 5"`. Spacing on
-      // <Tagline> belongs to the typed `mb` prop ('mb-0' | 'mb-2' |
-      // 'mb-3' | 'mb-4'), never className.
-      "platform/no-tagline-classname-mb": "error",
-      // C2 — `BI-PRINCIPLES.md → "Heading hierarchy"` +
-      // `skill-component-patterns → Tagline / Anti-patterns`. Footer
-      // column titles must be plain h3 with role-token styling, never
-      // the `tagline` decorative utility. Rule scope: <h3
-      // className="tagline ..."> inside JSX <footer> ancestor (via
-      // findAncestorJSXElement). The two attorney-layout
-      // <h3 className="tagline"> sites are NOT inside <footer> JSX
-      // and pass through naturally — those are tracked separately in
-      // OUTSTANDING.md → "WS7 lower-priority Biography heading semantics".
-      "platform/no-footer-h3-tagline": "error",
       // C4 — `skill-sanity-schema → "Reading design settings in async
       // server components"` + WS7.7 Commit 2 lock. Async server
       // components have no React render scope; calling useHeroScheme()
@@ -283,27 +233,6 @@ const eslintConfig = [
           ],
         },
       ],
-    },
-  },
-
-  // ───────────────────────────────────────────────────────────────────────
-  // T4 — File-scoped: hero band components must use bg-background for the
-  // light fallback, never bg-muted.
-  // ───────────────────────────────────────────────────────────────────────
-  // `BI-FOUNDATIONS.md → "Light fallback band uses bg-background, NOT
-  // bg-muted"` locks the posture for hero band components. The two
-  // canonical hero band files in the platform today: InternalHero.tsx
-  // (the editor-data-driven hero) and InternalPageHeader.tsx (the
-  // h1 fallback band when InternalHero data is unset).
-  // Lock provenance: WS7.7 Commit 1 + Commit 2 + WS8 Commit 1.
-  {
-    files: [
-      "components/layout/InternalHero.tsx",
-      "components/layout/InternalPageHeader.tsx",
-    ],
-    plugins: {platform},
-    rules: {
-      "platform/no-bg-muted": "error",
     },
   },
 

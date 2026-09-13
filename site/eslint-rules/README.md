@@ -19,9 +19,10 @@ eslint-rules/
 │   └── ast-utils.js               Shared AST traversal helpers — find a JSX
 │                                  className attribute, dispatch on element name,
 │                                  walk ancestors, find first substantive child.
-├── rules/                         One file per rule. Empty until rules ship
-│                                  in subsequent WS8 commits.
+├── rules/                         One file per rule (nine; see roster below).
 ├── __tests__/
+│   ├── <rule-name>.test.ts        One per rule.
+│   ├── rule-roster.test.ts        Pins the exported rule set to the nine.
 │   ├── className-tokenizer.test.ts
 │   ├── ast-utils.test.ts
 │   └── parse-jsx.ts               Test helper — parse a JSX snippet to AST and
@@ -55,26 +56,31 @@ const eslintConfig = [
 export default eslintConfig;
 ```
 
-Naming convention: kebab-case rule keys under the `platform/` namespace. Examples (planned per WS8 Phase 2):
+Naming convention: kebab-case rule keys under the `platform/` namespace. The
+shipped roster is nine rules (rule IDs are the WS8 audit's and are not
+renumbered):
 
-- `platform/no-bare-heading-token` (A2)
-- `platform/no-arbitrary-color` (T1)
-- `platform/no-manual-cascade-override` (T2)
-- `platform/no-img-tag` *(handled via `@next/next/no-img-element`; not custom)*
+- `platform/heading-cascade-discipline` (A2)
 - `platform/footer-landmark-naming` (A3)
-- `platform/no-unknown-internal-hero-bg-muted` (T4)
-- `platform/no-grouped-array-input` (C5)
-- `platform/no-tagline-className-mb` (C1)
-- `platform/no-footer-h3-tagline` (C2)
-- `platform/no-set-state-in-effect` *(handled via `react-hooks/set-state-in-effect`; not custom)*
-- `platform/no-use-hero-scheme-in-server` (C4)
-- `platform/h1-mobile-cap` (A8)
-- `platform/svg-needs-aria-decision` (A6)
 - `platform/collection-grid-list-semantics` (A4)
-- `platform/no-retired-tokens` (T3)
-- `platform/no-google-fonts` (T6)
-- `platform/no-transition-all` (B1, audit Section C)
-- `platform/no-raw-white-black` (B2, audit Section C)
+- `platform/no-svg-without-aria-decision` (A6)
+- `platform/h1-mobile-cap` (A8)
+- `platform/no-arbitrary-color` (T1)
+- `platform/no-text-action-raw` (T5a)
+- `platform/no-text-accent-on-bg-muted` (T5b)
+- `platform/no-use-hero-scheme-in-server` (C4)
+
+Config-only families in `eslint.config.mjs` (not custom rules): retired
+identifiers and the Google Fonts CDN via `no-restricted-syntax` (T3, T6, C5),
+`next/font/google` via `no-restricted-imports` (T6), `@next/next/no-img-element`
+(A1) and `jsx-a11y/control-has-associated-label` (A7).
+
+Eight design-token rules were cut 2026-09-13 (monorepo WS-V1-PLAN Phase 8,
+WS-V1-PHASE8-DESIGN §2.4 and §7.10): `no-raw-color-value`,
+`no-hardcoded-font-family`, `no-manual-cascade-override`, `no-transition-all`,
+`no-raw-white-black`, `no-tagline-classname-mb`, `no-footer-h3-tagline`,
+`no-bg-muted`, and `lib/token-boundary.js` with the first two. The skills carry
+those postures. `__tests__/rule-roster.test.ts` pins the roster.
 
 ## How to add a new rule
 
