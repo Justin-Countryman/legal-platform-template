@@ -10,7 +10,13 @@ This template is versioned with semver tags. Each tag marks a released, end-to-e
 - `MINOR` — additive schema fields, new components, new optional env vars. Safe for new clients pinned to the same minor on re-provision.
 - `PATCH` — bug fixes, dependency bumps, documentation updates. Always safe.
 
-## How clients pin — they do not (corrected 2026-07-25)
+## How clients pin (corrected 2026-09-13; the 2026-07-25 text below it is history)
+
+**A fresh client is provisioned AT a template commit.** The monorepo's Client Provisioning Tool takes `--template-ref <full sha>`, defaulting to the commit its `BE/TEMPLATE_REF` names (the one the monorepo's own suite agrees with). GitHub's generate-from-template endpoint still accepts no `ref` and copies `main`'s tip into the new repo's root commit; the tool then replaces `site/` and `studio/` with the pinned commit's tree (pruned to what the deploy press ships, sanitized with the client's identity) before anything is copied up or pushed. `template-provenance.json` (schema 2, shipped to the client repo's root) records `generated_from_commit` (the tip generate copied) apart from `template_commit` (what the tree holds). A live client is moved to a newer commit by the monorepo's Template Propagation Tool: a three-way merge from the client's own history, conflicts reported and never resolved. Monorepo `OUTSTANDING.md` item 71 is closed; the monorepo's `BI/_workstreams/WS-V1-PHASE7-DESIGN.md` is the record.
+
+Tags and Releases remain labels: `nearest_release_tag` in the provenance says which release the held commit is near, and nothing else.
+
+### Until 2026-09-13: they did not (the 2026-07-25 correction, kept as history)
 
 **This section previously said the Provisioning Tool passes `template_version` as the `ref` to GitHub's generate API. It does not, and cannot.** GitHub's generate-from-template endpoint accepts no `ref`; the tool's request body carries only `owner`, `name`, `private`, `include_all_branches` and a description. Verified by reading `BE/Client-Provisioning-Tool/client_provisioning_tool.py` in the monorepo: `resolve_template_version()`'s result reaches only a log line, the new repo's description string, and `template-provenance.json`. It never selects code.
 
