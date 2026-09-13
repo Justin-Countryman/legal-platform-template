@@ -4,8 +4,8 @@ import {notFound} from 'next/navigation'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {resolveTitle} from '@/lib/seoTitle'
 import type {Metadata} from 'next'
-import {client} from '@/lib/sanity/client'
-import {REVIEW_PAGE_QUERY, REVIEW_SLUGS_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
+import {REVIEW_PAGE_QUERY, REVIEW_SLUGS_QUERY} from '@/lib/sanity/queries'
+import {chromeNap, fetchCached} from '@/lib/sanity/fetchers'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {ReviewPageContent} from '@/components/review/ReviewPageContent'
@@ -17,7 +17,7 @@ type Props = {params: Promise<{slug: string}>}
 // as part of the slug itself, e.g. `review-us-maple-grove`).
 
 export async function generateStaticParams() {
-  const slugs = await client.fetch<string[]>(REVIEW_SLUGS_QUERY)
+  const slugs = await fetchCached<string[]>(REVIEW_SLUGS_QUERY)
   return slugs.map((slug) => ({slug}))
 }
 
@@ -26,8 +26,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {slug} = await params
   const [data, rawTokens] = await Promise.all([
-    client.fetch(REVIEW_PAGE_QUERY, {slug}),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(REVIEW_PAGE_QUERY, slug),
+    chromeNap(),
   ])
   if (!data?.page) return {}
   // This route is outside the (site) group and did not previously read NAP
@@ -98,8 +98,8 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 export default async function ReviewPage({params}: Props) {
   const {slug} = await params
   const [data, rawTokens] = await Promise.all([
-    client.fetch(REVIEW_PAGE_QUERY, {slug}),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(REVIEW_PAGE_QUERY, slug),
+    chromeNap(),
   ])
 
   if (!data?.page) notFound()

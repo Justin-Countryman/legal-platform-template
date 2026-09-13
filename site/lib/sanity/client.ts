@@ -10,6 +10,16 @@ export const client = createClient({
   // published value — settings changes (e.g. mobileLayout) appeared one edit
   // behind. Next's Data Cache + per-route ISR remain the caching layer.
   useCdn: false,
+  // THE PERSPECTIVE IS STATED, never defaulted (monorepo OUTSTANDING item 285).
+  // On API versions before 2025-02-19 the client's default is `raw`, under
+  // which a draft sorts before its published document and `[0]` on a
+  // singleton can be the draft. In production this client carries no token, so
+  // drafts are invisible at any perspective; the pin is so that adding a token
+  // (or bumping the API version) cannot change what a page reads. `published`
+  // on 2024-01-01 excludes drafts and can never see versions, which is what
+  // `published` means on the newer versions too. The dev branch below keeps
+  // `previewDrafts` on purpose.
+  perspective: 'published' as const,
   // CI only. `scripts/ci/content-lake-stub.mjs` stands in for the Content Lake
   // so `next build` can run with no project (monorepo OUTSTANDING item 255).
   // Non-public on purpose: it is read on the server at build time, never

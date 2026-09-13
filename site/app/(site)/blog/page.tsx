@@ -3,14 +3,8 @@ export const revalidate = 3600
 import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {Suspense} from 'react'
-import {client} from '@/lib/sanity/client'
-import {
-  BLOG_INDEX_PAGE_QUERY,
-  BLOG_POSTS_QUERY,
-  BLOG_CATEGORIES_QUERY,
-  GLOBAL_CTA_QUERY,
-  NAP_TOKENS_QUERY,
-} from '@/lib/sanity/queries'
+import {BLOG_INDEX_PAGE_QUERY, BLOG_POSTS_QUERY, BLOG_CATEGORIES_QUERY} from '@/lib/sanity/queries'
+import {chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -27,8 +21,8 @@ import {BlogIndexFallback} from '@/components/sections/BlogIndexFallback'
 
 export async function generateMetadata(): Promise<Metadata> {
   const [indexPage, rawTokens] = await Promise.all([
-    client.fetch(BLOG_INDEX_PAGE_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(BLOG_INDEX_PAGE_QUERY),
+    chromeNap(),
   ])
   if (!indexPage) return {title: INDEX_PAGE_PRESETS.blogIndex}
 
@@ -50,11 +44,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function BlogIndexPage() {
   const [indexPage, posts, categories, globalCtaData, rawTokens] = await Promise.all([
-    client.fetch(BLOG_INDEX_PAGE_QUERY),
-    client.fetch(BLOG_POSTS_QUERY),
-    client.fetch(BLOG_CATEGORIES_QUERY),
-    client.fetch(GLOBAL_CTA_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(BLOG_INDEX_PAGE_QUERY),
+    fetchCached(BLOG_POSTS_QUERY),
+    fetchCached(BLOG_CATEGORIES_QUERY),
+    chromeGlobalCta(),
+    chromeNap(),
   ])
   const tokens = expandNapTokens(rawTokens)
   // NAME-3: one resolver, and this route names nothing itself.

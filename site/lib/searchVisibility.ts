@@ -79,9 +79,13 @@ export async function fetchSiteHiddenAtBuild(): Promise<boolean> {
     const origin = process.env.SANITY_API_HOST_OVERRIDE
       ? process.env.SANITY_API_HOST_OVERRIDE.replace(/\/$/, '')
       : `https://${projectId}.api.sanity.io`
+    // `perspective=published`: this is the ONE read on the site that can carry a
+    // token (below), and on API 2024-01-01 the default perspective is `raw`,
+    // under which `[0]` can be an unpublished draft of siteSettings (monorepo
+    // OUTSTANDING item 285). The header must follow what is published.
     const url =
       `${origin}/v2024-01-01/data/query/${dataset}` +
-      `?query=${encodeURIComponent(SITE_HIDDEN_QUERY)}`
+      `?query=${encodeURIComponent(SITE_HIDDEN_QUERY)}&perspective=published`
     const token = process.env.SANITY_API_READ_TOKEN
     const res = await fetch(url, {
       headers: token ? {Authorization: `Bearer ${token}`} : {},

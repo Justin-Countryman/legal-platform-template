@@ -6,15 +6,8 @@ import {notFound} from 'next/navigation'
 import type {Metadata} from 'next'
 import {SanityImage} from '@/components/ui/SanityImage'
 import Link from 'next/link'
-import {client} from '@/lib/sanity/client'
-import {
-  BLOG_POST_PAGE_QUERY,
-  BLOG_POST_SLUGS_QUERY,
-  DESIGN_TOKENS_QUERY,
-  GLOBAL_CTA_QUERY,
-  NAP_TOKENS_QUERY,
-  RELATED_POSTS_QUERY,
-} from '@/lib/sanity/queries'
+import {BLOG_POST_PAGE_QUERY, BLOG_POST_SLUGS_QUERY, RELATED_POSTS_QUERY} from '@/lib/sanity/queries'
+import {chromeDesignTokens, chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -33,7 +26,7 @@ import {siteHost} from '@/lib/siteHost'
 // `{name}`. Strip the prefix so Next gets the route-shaped param.
 
 export async function generateStaticParams() {
-  const slugs = await client.fetch<string[]>(BLOG_POST_SLUGS_QUERY)
+  const slugs = await fetchCached<string[]>(BLOG_POST_SLUGS_QUERY)
   return slugs
     .filter((s) => s.startsWith('blog/'))
     .map((s) => ({slug: s.slice('blog/'.length)}))
@@ -80,8 +73,8 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const fullSlug = `blog/${slug}`
 
   const [post, rawTokens] = await Promise.all([
-    client.fetch(BLOG_POST_PAGE_QUERY, {slug: fullSlug}),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(BLOG_POST_PAGE_QUERY, fullSlug),
+    chromeNap(),
   ])
   const tokens = expandNapTokens(rawTokens)
   if (!post) return {title: 'Blog Post'}
@@ -167,11 +160,11 @@ export default async function BlogPostPage({params}: Props) {
   const fullSlug = `blog/${slug}`
 
   const [post, globalCtaData, rawTokens, designTokens, relatedPosts] = await Promise.all([
-    client.fetch(BLOG_POST_PAGE_QUERY, {slug: fullSlug}),
-    client.fetch(GLOBAL_CTA_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
-    client.fetch(DESIGN_TOKENS_QUERY),
-    client.fetch<RelatedPostsData>(RELATED_POSTS_QUERY, {slug: fullSlug}),
+    fetchCached(BLOG_POST_PAGE_QUERY, fullSlug),
+    chromeGlobalCta(),
+    chromeNap(),
+    chromeDesignTokens(),
+    fetchCached<RelatedPostsData>(RELATED_POSTS_QUERY, fullSlug),
   ])
   const tokens = expandNapTokens(rawTokens)
 

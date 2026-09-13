@@ -2,8 +2,8 @@ export const revalidate = 3600
 
 import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
-import {client} from '@/lib/sanity/client'
-import {TESTIMONIALS_PAGE_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
+import {TESTIMONIALS_PAGE_QUERY} from '@/lib/sanity/queries'
+import {chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -19,8 +19,8 @@ import {TestimonialCard, type TestimonialData} from '@/components/ui/Testimonial
 
 export async function generateMetadata(): Promise<Metadata> {
   const [page, rawTokens] = await Promise.all([
-    client.fetch(TESTIMONIALS_PAGE_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(TESTIMONIALS_PAGE_QUERY),
+    chromeNap(),
   ])
   if (!page) return {title: INDEX_PAGE_PRESETS.testimonialsPage}
   const tokens = expandNapTokens(rawTokens)
@@ -42,9 +42,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function TestimonialsPage() {
   const [page, globalCtaData, rawTokens] = await Promise.all([
-    client.fetch(TESTIMONIALS_PAGE_QUERY),
-    client.fetch(GLOBAL_CTA_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(TESTIMONIALS_PAGE_QUERY),
+    chromeGlobalCta(),
+    chromeNap(),
   ])
   const tokens = expandNapTokens(rawTokens)
   // NAME-3: one resolver, and this route names nothing itself.

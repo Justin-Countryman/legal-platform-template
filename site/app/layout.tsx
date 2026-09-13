@@ -1,8 +1,7 @@
 import type {Metadata} from 'next'
 import {resolveHidden} from '@/lib/searchVisibility'
 import {titleTemplate} from '@/lib/seoTitle'
-import {client} from '@/lib/sanity/client'
-import {ORGANIZATION_SCHEMA_QUERY, SITE_METADATA_QUERY, SITE_SCRIPTS_QUERY} from '@/lib/sanity/queries'
+import {getSiteChrome} from '@/lib/sanity/fetchers'
 import {HtmlEmbed} from '@/components/ui/HtmlEmbed'
 import {WebVitals} from '@/components/analytics/WebVitals'
 import './globals.css'
@@ -124,14 +123,15 @@ export function buildOrganizationSchema(input: OrganizationData | null) {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await client.fetch<{
+  // One request's chrome, shared with both layouts and the page (fetchers.ts).
+  const data = ((await getSiteChrome())?.metadata ?? null) as {
     firmName?: string
     gscVerification?: string | null
-  hideFromSearch?: unknown
+    hideFromSearch?: unknown
     faviconUrl?: string | null
     faviconMime?: string | null
     webclipUrl?: string | null
-  } | null>(SITE_METADATA_QUERY)
+  } | null
   const firmName = data?.firmName ?? 'Site'
 
   // GSC verification token is entered in Sanity (Site Settings) and rendered
@@ -212,10 +212,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const [orgData, consentScripts] = await Promise.all([
-    client.fetch<OrganizationData>(ORGANIZATION_SCHEMA_QUERY),
-    client.fetch<string | null>(SITE_SCRIPTS_QUERY),
-  ])
+  const chrome = await getSiteChrome()
+  const orgData = (chrome?.organization ?? null) as OrganizationData | null
+  const consentScripts = (chrome?.scripts ?? null) as string | null
   const organizationSchema = buildOrganizationSchema(orgData)
 
   return (

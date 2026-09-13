@@ -3,15 +3,8 @@ export const revalidate = 3600
 import {notFound} from 'next/navigation'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import type {Metadata} from 'next'
-import {client} from '@/lib/sanity/client'
-import {
-  BLOG_CATEGORY_PAGE_QUERY,
-  BLOG_CATEGORY_SLUGS_QUERY,
-  BLOG_POSTS_QUERY,
-  BLOG_CATEGORIES_QUERY,
-  GLOBAL_CTA_QUERY,
-  NAP_TOKENS_QUERY,
-} from '@/lib/sanity/queries'
+import {BLOG_CATEGORY_PAGE_QUERY, BLOG_CATEGORY_SLUGS_QUERY, BLOG_POSTS_QUERY, BLOG_CATEGORIES_QUERY} from '@/lib/sanity/queries'
+import {chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -29,7 +22,7 @@ import {BlogIndexFallback} from '@/components/sections/BlogIndexFallback'
 // is the bare `{name}`. Strip the prefix so Next gets the route-shaped param.
 
 export async function generateStaticParams() {
-  const slugs = await client.fetch<string[]>(BLOG_CATEGORY_SLUGS_QUERY)
+  const slugs = await fetchCached<string[]>(BLOG_CATEGORY_SLUGS_QUERY)
   return slugs
     .filter((s) => s.startsWith('blog/category/'))
     .map((s) => ({slug: s.slice('blog/category/'.length)}))
@@ -46,8 +39,8 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const fullSlug = `blog/category/${slug}`
 
   const [category, rawTokens] = await Promise.all([
-    client.fetch(BLOG_CATEGORY_PAGE_QUERY, {slug: fullSlug}),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(BLOG_CATEGORY_PAGE_QUERY, fullSlug),
+    chromeNap(),
   ])
   const tokens = expandNapTokens(rawTokens)
   if (!category) return {title: 'Blog Category'}
@@ -72,11 +65,11 @@ export default async function BlogCategoryPage({params}: Props) {
   const fullSlug = `blog/category/${slug}`
 
   const [category, posts, categories, globalCtaData, rawTokens] = await Promise.all([
-    client.fetch(BLOG_CATEGORY_PAGE_QUERY, {slug: fullSlug}),
-    client.fetch(BLOG_POSTS_QUERY),
-    client.fetch(BLOG_CATEGORIES_QUERY),
-    client.fetch(GLOBAL_CTA_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(BLOG_CATEGORY_PAGE_QUERY, fullSlug),
+    fetchCached(BLOG_POSTS_QUERY),
+    fetchCached(BLOG_CATEGORIES_QUERY),
+    chromeGlobalCta(),
+    chromeNap(),
   ])
   const tokens = expandNapTokens(rawTokens)
 

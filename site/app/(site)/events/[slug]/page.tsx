@@ -4,8 +4,8 @@ import {notFound} from 'next/navigation'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import type {Metadata} from 'next'
 import Link from 'next/link'
-import {client} from '@/lib/sanity/client'
-import {EVENT_PAGE_QUERY, EVENT_SLUGS_QUERY, GLOBAL_CTA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
+import {EVENT_PAGE_QUERY, EVENT_SLUGS_QUERY} from '@/lib/sanity/queries'
+import {chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -26,7 +26,7 @@ import {siteHost} from '@/lib/siteHost'
 // attorneys/[slug] and blog/[slug].
 
 export async function generateStaticParams() {
-  const slugs = await client.fetch<string[]>(EVENT_SLUGS_QUERY)
+  const slugs = await fetchCached<string[]>(EVENT_SLUGS_QUERY)
   return slugs
     .filter((s) => s.startsWith('events/'))
     .map((s) => ({slug: s.slice('events/'.length)}))
@@ -121,8 +121,8 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {slug: slugParam} = await params
   const slug = `events/${slugParam}`
   const [event, rawTokens] = await Promise.all([
-    client.fetch(EVENT_PAGE_QUERY, {slug}),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(EVENT_PAGE_QUERY, slug),
+    chromeNap(),
   ])
   const tokens = expandNapTokens(rawTokens)
   if (!event) return {}
@@ -146,9 +146,9 @@ export default async function EventDetailPage({params}: Props) {
   const {slug: slugParam} = await params
   const slug = `events/${slugParam}`
   const [event, rawTokens, globalCtaData] = await Promise.all([
-    client.fetch(EVENT_PAGE_QUERY, {slug}),
-    client.fetch(NAP_TOKENS_QUERY),
-    client.fetch(GLOBAL_CTA_QUERY),
+    fetchCached(EVENT_PAGE_QUERY, slug),
+    chromeNap(),
+    chromeGlobalCta(),
   ])
   const tokens = expandNapTokens(rawTokens)
 

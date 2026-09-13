@@ -12,8 +12,7 @@ vi.mock('@/lib/sanity/client', () => ({
 }))
 
 import {client} from '@/lib/sanity/client'
-import {HOME_METADATA_QUERY, NAP_TOKENS_QUERY} from '@/lib/sanity/queries'
-import {SITE_HIDDEN_QUERY} from '@/lib/searchVisibility'
+import {HOME_METADATA_QUERY, HOME_PAGE_QUERY, SITE_CHROME_QUERY} from '@/lib/sanity/queries'
 import {SITEWIDE_OG_IMAGE_URL} from '@/lib/socialMeta'
 import {generateMetadata} from '@/app/(site)/page'
 
@@ -49,19 +48,25 @@ function mockQueries({
   siteHidden?: boolean
 }) {
   vi.mocked(client.fetch).mockImplementation((q: string) => {
-    if (q === HOME_METADATA_QUERY)
+    // Since 2026-09-13 the route reads the homepage in one composite query and
+    // the NAP tokens and the site-wide switch off the site chrome.
+    if (q === HOME_PAGE_QUERY)
       return Promise.resolve({
-        seoTitle,
-        canonicalUrl,
-        metaDescription,
-        noIndex,
-        noFollow,
-        ogTitle,
-        ogDescription,
-        ogImage,
+        page: null,
+        heroDesign: null,
+        metadata: {
+          seoTitle,
+          canonicalUrl,
+          metaDescription,
+          noIndex,
+          noFollow,
+          ogTitle,
+          ogDescription,
+          ogImage,
+        },
       } as never)
-    if (q === NAP_TOKENS_QUERY) return Promise.resolve((tokens ?? {firmName: 'Dudley & Smith, P.A.'}) as never)
-    if (q === SITE_HIDDEN_QUERY) return Promise.resolve(siteHidden as never)
+    if (q === SITE_CHROME_QUERY)
+      return Promise.resolve({nap: tokens ?? {firmName: 'Dudley & Smith, P.A.'}, hidden: siteHidden} as never)
     return Promise.resolve(null as never)
   })
 }

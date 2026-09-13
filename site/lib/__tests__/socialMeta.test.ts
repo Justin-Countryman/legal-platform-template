@@ -180,7 +180,9 @@ describe('every page query projects the override fields', () => {
 
   it('is actually looking at something', () => {
     // Guard the guard: a scan that matches nothing reports success.
-    expect(pageMetadataProjections.length).toBeGreaterThanOrEqual(16)
+    // 16 until 2026-09-13; the catch-all's three queries became one (Phase 8),
+    // so the census is 15. The claim above is unchanged and still checked.
+    expect(pageMetadataProjections.length).toBeGreaterThanOrEqual(15)
   })
 
   it('leaves the card-blurb query alone', () => {

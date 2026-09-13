@@ -1447,42 +1447,6 @@ export const PARENT_CHAIN_FRAGMENT = `{
       }
     }`
 
-// ─── Practice Area ────────────────────────────────────────────────────────────
-export const PRACTICE_AREA_QUERY = groq`
-  *[_type in ["practiceArea", "geoPracticeArea", "serviceAreaPage"] && slug.current == $slug][0]{
-    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
-    _type,
-    title,
-    navLabel,
-    "areasOfLaw": ${AREAS_OF_LAW_FRAGMENT},
-    "slug": slug.current,
-    seoTitle,
-    metaDescription,
-    ogTitle,
-    ogDescription,
-    noIndex,
-    noFollow,
-    canonicalUrl,
-    "parentPage": parentPage->${PARENT_CHAIN_FRAGMENT},
-    "hero": hero {
-      "heading": coalesce(heading, ^.title),
-      ${INTERNAL_HERO_OVERRIDE_FIELDS}
-    },
-    "body": body ${BLOCK_CONTENT_FRAGMENT},
-    "faqItems": faqItems[defined(@->_id)]->{
-      question,
-      "answer": answer ${BLOCK_CONTENT_FRAGMENT},
-      category,
-      "slug": slug.current,
-      tags
-    },
-    ${SIDEBAR_FRAGMENT},
-    "sections": sections ${SECTIONS_FRAGMENT},
-    hideCtaForm,
-    "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT}
-  }
-`
-
 // ─── Event Index Page ─────────────────────────────────────────────────────────
 export const EVENT_INDEX_PAGE_QUERY = groq`
   *[_type == "eventIndex"][0]{
@@ -1888,67 +1852,59 @@ export const REVIEW_PAGE_QUERY = groq`{
 }`
 
 // ─── Location Page ────────────────────────────────────────────────────────────
-export const LOCATION_PAGE_QUERY = groq`
-  *[_type == "locationPage" && slug.current == $slug][0]{
-    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
-    _type,
-    "title": coalesce(title, ""),
-    navLabel,
-    "slug": slug.current,
-    seoTitle,
-    metaDescription,
-    ogTitle,
-    ogDescription,
-    noIndex,
-    noFollow,
-    canonicalUrl,
-    "hero": hero {
-      "heading": coalesce(heading, ^.title),
-      ${INTERNAL_HERO_OVERRIDE_FIELDS}
-    },
-    "body": body ${BLOCK_CONTENT_FRAGMENT},
-    mapEmbed,
-    "locationData": locationRef->{
-      "_id": _id,
-      city,
-      state,
-      ${GATED_STREET_FRAGMENT}
-      "geo": select(locationType in ["Physical", "Shared"] => geo{lat, lng}, null),
-      officePhone,
-      officeFax,
-      tollFreePhone,
-      hours,
-      emergency24_7,
-      emergencyPhone,
-      appointmentRequired,
-      gbpCidUrl
-    },
-    ${SIDEBAR_FRAGMENT},
-    "sections": sections ${SECTIONS_FRAGMENT},
-    hideCtaForm,
-    "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT}
-  }
-`
 
-// ─── General Content Pages ─────────────────────────────────────────────────────
-// Handles: aboutPage, faqPage, generalPage, landingPage
-// All share the same hero/body/sidebar/sections structure as practiceArea.
+// ─── The catch-all page ───────────────────────────────────────────────────────
+// ONE query for the eight types `app/(site)/[...slug]/page.tsx` serves:
+// practiceArea, geoPracticeArea, serviceAreaPage, locationPage, aboutPage,
+// faqPage, generalPage, landingPage. Until 2026-09-13 these were three queries
+// (PRACTICE_AREA_QUERY, LOCATION_PAGE_QUERY, CONTENT_PAGE_QUERY), each over
+// 17 KB encoded and so sent as POST, which Next never memoizes, and each sent
+// twice per render (generateMetadata and the page): six requests for one
+// document, four of them for the wrong type (monorepo WS-V1-PHASE8-DESIGN §0).
+//
+// THE SHAPE IS DELIBERATE, and the review that produced it is §7.1 of that
+// design. The shared block is projected UNCONDITIONALLY (GROQ answers null for
+// an attribute a type does not carry) because a `_type in [...] => {...}`
+// conditional is not resolved by `sanity typegen`: it emits two members per
+// type, one with the keys and one without, and a consumer narrowed on `_type`
+// still meets the member without them. `_type == "x" => {...}` IS resolved, so
+// the one per-type block is the location page's. `areasOfLaw` is a `select`
+// for the same reason. The hero keeps `coalesce(heading, ^.title)` (the H1
+// fallback), `faqItems` keeps the filter-before-deref shape the test file pins,
+// and `locationData` keeps the D9 gating (street and coordinates only for a
+// Physical or Shared office). `lib/sanity/__tests__/queries.test.ts` asserts
+// the typegen shape: eight object members, one per `_type`.
 //
 // `contactPage` is NOT here since 2026-09-11 (OUTSTANDING item 95). It has its
-// own route, `app/(site)/contact/page.tsx`, and was also in this list, so two
-// renderers could serve it and nothing ruled which one did: Next's static
-// segment won for `/contact`, and a contactPage on any other slug would have
-// rendered here through a layout that is not the contact page's. One type, one
-// renderer; `lib/sanity/__tests__/queries.test.ts` pins it.
-export const CONTENT_PAGE_QUERY = groq`
+// own route, `app/(site)/contact/page.tsx`, and was also in the old content
+// list, so two renderers could serve it and nothing ruled which one did: Next's
+// static segment won for `/contact`, and a contactPage on any other slug would
+// have rendered here through a layout that is not the contact page's. One type,
+// one renderer; `lib/sanity/__tests__/queries.test.ts` pins it.
+export const CATCH_ALL_PAGE_TYPES = [
+  'practiceArea',
+  'geoPracticeArea',
+  'serviceAreaPage',
+  'locationPage',
+  'aboutPage',
+  'faqPage',
+  'generalPage',
+  'landingPage',
+] as const
+
+export const CATCH_ALL_PAGE_QUERY = groq`
   *[
     slug.current == $slug &&
-    _type in ["aboutPage", "faqPage", "generalPage", "landingPage"]
+    _type in ["practiceArea", "geoPracticeArea", "serviceAreaPage", "locationPage", "aboutPage", "faqPage", "generalPage", "landingPage"]
   ][0]{
     "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
     _type,
     "title": coalesce(title, ""),
     navLabel,
+    "areasOfLaw": select(
+      _type in ["practiceArea", "geoPracticeArea", "serviceAreaPage"] => ${AREAS_OF_LAW_FRAGMENT},
+      null
+    ),
     "slug": slug.current,
     seoTitle,
     metaDescription,
@@ -1973,6 +1929,60 @@ export const CONTENT_PAGE_QUERY = groq`
     ${SIDEBAR_FRAGMENT},
     "sections": sections ${SECTIONS_FRAGMENT},
     hideCtaForm,
-    "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT}
+    "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT},
+    _type == "locationPage" => {
+      mapEmbed,
+      "locationData": locationRef->{
+        "_id": _id,
+        city,
+        state,
+        ${GATED_STREET_FRAGMENT}
+        "geo": select(locationType in ["Physical", "Shared"] => geo{lat, lng}, null),
+        officePhone,
+        officeFax,
+        tollFreePhone,
+        hours,
+        emergency24_7,
+        emergencyPhone,
+        appointmentRequired,
+        gbpCidUrl
+      }
+    }
   }
 `
+
+// ─── The site chrome ──────────────────────────────────────────────────────────
+// Everything the two layouts, the per-page robots decision and every route's
+// NAP tokens and global CTA read, in ONE query, fetched ONCE per request through
+// `lib/sanity/fetchers.ts` (React `cache()`). Until 2026-09-13 these were ten
+// separate fetches spread over `app/layout.tsx`, `app/(site)/layout.tsx`,
+// `lib/robotsMeta.ts` and every page: a cold homepage render made 13 Sanity
+// calls and a practice-area page 16 (monorepo WS-V1-PHASE8-DESIGN §0). The keys
+// are the existing projections, unchanged, so the consumers destructure what
+// they read before. `hidden` is `lib/searchVisibility.ts`'s SITE_HIDDEN_QUERY
+// inlined (that module cannot import this one: `next.config.ts` loads it).
+//
+// NOT for route handlers. `robots.ts`, `sitemap.ts` and the OG route keep their
+// single-purpose queries: React `cache()` does not span a route handler, so the
+// chrome there would be eleven projections fetched for one field.
+export const SITE_CHROME_QUERY = groq`{
+  "metadata": ${SITE_METADATA_QUERY},
+  "organization": ${ORGANIZATION_SCHEMA_QUERY},
+  "scripts": ${SITE_SCRIPTS_QUERY},
+  "header": ${HEADER_QUERY},
+  "footer": ${FOOTER_QUERY},
+  "designTokens": ${DESIGN_TOKENS_QUERY},
+  "heroSettings": ${HERO_SETTINGS_QUERY},
+  "nap": ${NAP_TOKENS_QUERY},
+  "globalCta": ${GLOBAL_CTA_QUERY},
+  "hidden": *[_type == "siteSettings"][0].hideFromSearch
+}`
+
+// ─── The homepage, whole ──────────────────────────────────────────────────────
+// The page content, its metadata and the hero's design half in one request,
+// shared by `generateMetadata` and the page through `getHomePage()`.
+export const HOME_PAGE_QUERY = groq`{
+  "page": ${HOME_QUERY},
+  "metadata": ${HOME_METADATA_QUERY},
+  "heroDesign": ${HOME_HERO_DESIGN_QUERY}
+}`

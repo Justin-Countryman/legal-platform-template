@@ -3,14 +3,8 @@ export const revalidate = 3600
 import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {notFound} from 'next/navigation'
-import {client} from '@/lib/sanity/client'
-import {
-  ATTORNEY_PAGE_QUERY,
-  ATTORNEY_SLUGS_QUERY,
-  DESIGN_TOKENS_QUERY,
-  GLOBAL_CTA_QUERY,
-  NAP_TOKENS_QUERY,
-} from '@/lib/sanity/queries'
+import {ATTORNEY_PAGE_QUERY, ATTORNEY_SLUGS_QUERY} from '@/lib/sanity/queries'
+import {chromeDesignTokens, chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {urlForImage, hasImage} from '@/lib/sanity/image'
@@ -30,7 +24,7 @@ import {siteHost} from '@/lib/siteHost'
 // bare `{name}`. Strip the prefix so Next gets the route-shaped param.
 
 export async function generateStaticParams() {
-  const slugs = await client.fetch<string[]>(ATTORNEY_SLUGS_QUERY)
+  const slugs = await fetchCached<string[]>(ATTORNEY_SLUGS_QUERY)
   return slugs
     .filter((s) => s.startsWith('attorneys/'))
     .map((s) => ({slug: s.slice('attorneys/'.length)}))
@@ -119,8 +113,8 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
   const {slug: slugParam} = await params
   const slug = `attorneys/${slugParam}`
   const [attorney, rawTokens] = await Promise.all([
-    client.fetch(ATTORNEY_PAGE_QUERY, {slug}),
-    client.fetch(NAP_TOKENS_QUERY),
+    fetchCached(ATTORNEY_PAGE_QUERY, slug),
+    chromeNap(),
   ])
   if (!attorney) return {title: 'Attorney Profile'}
 
@@ -145,10 +139,10 @@ export default async function AttorneyProfilePage({params}: PageProps) {
   const slug = `attorneys/${slugParam}`
 
   const [attorney, globalCtaData, rawTokens, designTokens] = await Promise.all([
-    client.fetch(ATTORNEY_PAGE_QUERY, {slug}),
-    client.fetch(GLOBAL_CTA_QUERY),
-    client.fetch(NAP_TOKENS_QUERY),
-    client.fetch(DESIGN_TOKENS_QUERY),
+    fetchCached(ATTORNEY_PAGE_QUERY, slug),
+    chromeGlobalCta(),
+    chromeNap(),
+    chromeDesignTokens(),
   ])
 
   if (!attorney) notFound()

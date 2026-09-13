@@ -223,7 +223,9 @@ describe('GROQ canonical filter-before-dereference pattern', () => {
     const matches = QUERIES_SRC.match(/\[defined\(@->_id\)\]->/g) ?? []
     // 29 -> 30 on 2026-09-12 ([R-201]): the practice-area order's two ordered
     // halves (top level, all levels) each dereference the nav's reference array.
-    expect(matches.length).toBe(30)
+    // Fell 30 → 29 on 2026-09-13 (Phase 8): the catch-all's three page queries
+    // became one, so `faqItems[defined(@->_id)]->` appears once, not twice.
+    expect(matches.length).toBe(29)
   })
 
   it('source-text meta: queries.ts contains zero broken-pattern occurrences', () => {
@@ -468,7 +470,7 @@ describe('Consumer-side null-filter typed-predicate semantics', () => {
 
 // ─── OUTSTANDING items 95 and 96 (2026-09-11) ─────────────────────────────────
 
-import {CONTENT_PAGE_QUERY, PARENT_CHAIN_DEPTH, PRACTICE_AREA_QUERY} from '../queries'
+import {CATCH_ALL_PAGE_QUERY, PARENT_CHAIN_DEPTH} from '../queries'
 
 async function run(query: string, dataset: unknown[], params: Record<string, unknown>) {
   const tree = parse(query)
@@ -489,9 +491,11 @@ function chainDocs(type: string) {
   }))
 }
 
-describe('item 96: both page queries project the parent chain PARENT_CHAIN_DEPTH levels up', () => {
-  it('CONTENT_PAGE_QUERY reaches the top rung of a page four levels deep', async () => {
-    const page = await run(CONTENT_PAGE_QUERY, chainDocs('generalPage'), {slug: 'a/b/c/d/e'})
+describe('item 96: the catch-all query projects the parent chain PARENT_CHAIN_DEPTH levels up for every type that has one', () => {
+  // One query since 2026-09-13 (Phase 8); it used to be two, and both are
+  // still asserted through the types they served.
+  it('a general page four levels deep reaches the top rung', async () => {
+    const page = await run(CATCH_ALL_PAGE_QUERY, chainDocs('generalPage'), {slug: 'a/b/c/d/e'})
     expect(page.slug).toBe('a/b/c/d/e')
     const chain: string[] = []
     for (let p = page.parentPage; p; p = p.parentPage) chain.push(p.slug)
@@ -499,8 +503,8 @@ describe('item 96: both page queries project the parent chain PARENT_CHAIN_DEPTH
     expect(chain.length).toBe(PARENT_CHAIN_DEPTH)
   })
 
-  it('PRACTICE_AREA_QUERY projects the same chain', async () => {
-    const page = await run(PRACTICE_AREA_QUERY, chainDocs('practiceArea'), {slug: 'a/b/c/d/e'})
+  it('a practice area projects the same chain', async () => {
+    const page = await run(CATCH_ALL_PAGE_QUERY, chainDocs('practiceArea'), {slug: 'a/b/c/d/e'})
     const chain: string[] = []
     for (let p = page.parentPage; p; p = p.parentPage) chain.push(p.slug)
     expect(chain).toEqual(['a/b/c/d', 'a/b/c', 'a/b', 'a'])
@@ -508,15 +512,15 @@ describe('item 96: both page queries project the parent chain PARENT_CHAIN_DEPTH
 })
 
 describe('item 95: contactPage has ONE renderer, its own route', () => {
-  it('CONTENT_PAGE_QUERY never returns a contactPage, whatever its slug', async () => {
+  it('the catch-all query never returns a contactPage, whatever its slug', async () => {
     const dataset = [
       {_id: 'contact', _type: 'contactPage', _rev: '1', title: 'Contact', slug: {current: 'contact'}},
       {_id: 'contact-us', _type: 'contactPage', _rev: '1', title: 'Contact Us', slug: {current: 'contact-us'}},
       {_id: 'about', _type: 'aboutPage', _rev: '1', title: 'About', slug: {current: 'about'}},
     ]
-    expect(await run(CONTENT_PAGE_QUERY, dataset, {slug: 'contact'})).toBeNull()
-    expect(await run(CONTENT_PAGE_QUERY, dataset, {slug: 'contact-us'})).toBeNull()
-    expect((await run(CONTENT_PAGE_QUERY, dataset, {slug: 'about'})).title).toBe('About')
+    expect(await run(CATCH_ALL_PAGE_QUERY, dataset, {slug: 'contact'})).toBeNull()
+    expect(await run(CATCH_ALL_PAGE_QUERY, dataset, {slug: 'contact-us'})).toBeNull()
+    expect((await run(CATCH_ALL_PAGE_QUERY, dataset, {slug: 'about'})).title).toBe('About')
   })
 
   it('the sitemap lists /contact from the singleton, not from the catch-all', () => {
@@ -525,5 +529,81 @@ describe('item 95: contactPage has ONE renderer, its own route', () => {
     const catchAll = QUERIES_SRC.slice(QUERIES_SRC.indexOf('"catchAll":'), QUERIES_SRC.indexOf(']', QUERIES_SRC.indexOf('"catchAll":')))
     expect(catchAll).not.toContain('contactPage')
     expect(QUERIES_SRC).toContain('"contact":          *[_type == "contactPage"][0]')
+  })
+})
+
+// ─── Phase 8 (2026-09-13): the one catch-all query and the site chrome ────────
+// monorepo WS-V1-PHASE8-DESIGN §2.1 and §7.1. Evaluated, never read as text.
+
+import {typeEvaluate} from 'groq-js'
+import {CATCH_ALL_PAGE_TYPES, SITE_CHROME_QUERY} from '../queries'
+
+const CATCH_ALL_DATASET = [
+  {_id: 'loc-1', _type: 'location', _rev: '1', city: 'Blaine', state: 'MN', locationType: 'Virtual', address1: '1 Secret St', zip: '55449', geo: {lat: 45.1, lng: -93.2}},
+  ...CATCH_ALL_PAGE_TYPES.map((type) => ({
+    _id: `pg-${type}`, _type: type, _rev: '1', title: `A ${type}`, slug: {current: `x/${type}`},
+    hero: {}, mapEmbed: '<iframe></iframe>', locationRef: {_ref: 'loc-1'},
+  })),
+  {_id: 'pg-contact', _type: 'contactPage', _rev: '1', title: 'Contact', slug: {current: 'x/contactPage'}},
+  {_id: 'aol', _type: 'practiceArea', _rev: '1', title: 'Family Law', slug: {current: 'family-law'}},
+]
+
+describe('CATCH_ALL_PAGE_QUERY serves the eight types and only them', () => {
+  it.each([...CATCH_ALL_PAGE_TYPES])('answers a %s by slug with its own _type', async (type) => {
+    const page = await run(CATCH_ALL_PAGE_QUERY, CATCH_ALL_DATASET, {slug: `x/${type}`})
+    expect(page._type).toBe(type)
+    expect(page.title).toBe(`A ${type}`)
+    // The H1 fallback: a hero with no heading takes the page title.
+    expect(page.hero.heading).toBe(`A ${type}`)
+  })
+
+  it('answers null for a type it does not serve, at the same slug shape', async () => {
+    expect(await run(CATCH_ALL_PAGE_QUERY, CATCH_ALL_DATASET, {slug: 'x/contactPage'})).toBeNull()
+  })
+
+  it('projects areasOfLaw for the three practice types and null for the rest', async () => {
+    for (const type of CATCH_ALL_PAGE_TYPES) {
+      const page = await run(CATCH_ALL_PAGE_QUERY, CATCH_ALL_DATASET, {slug: `x/${type}`})
+      if (['practiceArea', 'geoPracticeArea', 'serviceAreaPage'].includes(type)) {
+        expect([...page.areasOfLaw].sort(), type).toEqual(['A practiceArea', 'Family Law'])
+      } else {
+        expect(page.areasOfLaw, type).toBeNull()
+      }
+    }
+  })
+
+  it('projects the location block for a locationPage only, with the D9 gate intact', async () => {
+    const loc = await run(CATCH_ALL_PAGE_QUERY, CATCH_ALL_DATASET, {slug: 'x/locationPage'})
+    expect(loc.mapEmbed).toBe('<iframe></iframe>')
+    expect(loc.locationData._id).toBe('loc-1')
+    // A Virtual office: the street and the coordinates are gated to null.
+    expect(loc.locationData.address1).toBeNull()
+    expect(loc.locationData.geo).toBeNull()
+    expect(loc.locationData.city).toBe('Blaine')
+    const about = await run(CATCH_ALL_PAGE_QUERY, CATCH_ALL_DATASET, {slug: 'x/aboutPage'})
+    expect('locationData' in about).toBe(false)
+    expect('mapEmbed' in about).toBe(false)
+  })
+
+  it('typegen sees exactly eight object members, one per _type (no phantom members)', () => {
+    // §7.1: a `_type in [...] => {...}` conditional emits two members per type
+    // and a consumer narrowed on `_type` still meets the one without the keys.
+    // Equality conditionals and `select` are resolved statically; this pins it.
+    const schema = JSON.parse(readFileSync(path.resolve(__dirname, '..', '..', '..', '..', 'studio', 'schema.json'), 'utf8'))
+    const node = typeEvaluate(parse(CATCH_ALL_PAGE_QUERY), schema) as {type: string; of?: Array<{type: string; attributes?: Record<string, {value: {type: string; value?: unknown}}>}>}
+    expect(node.type).toBe('union')
+    const objects = (node.of ?? []).filter((m) => m.type === 'object')
+    const types = objects.map((m) => m.attributes?._type?.value?.value).sort()
+    expect(types).toEqual([...CATCH_ALL_PAGE_TYPES].sort())
+  })
+})
+
+describe('SITE_CHROME_QUERY carries every key the layouts read', () => {
+  it('answers the ten keys from an empty dataset, the switch reading hidden', async () => {
+    const chrome = await run(SITE_CHROME_QUERY, [], {})
+    expect(Object.keys(chrome).sort()).toEqual(
+      ['designTokens', 'footer', 'globalCta', 'header', 'heroSettings', 'hidden', 'metadata', 'nap', 'organization', 'scripts'].sort(),
+    )
+    expect(chrome.hidden).toBeNull()
   })
 })
