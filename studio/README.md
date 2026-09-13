@@ -67,10 +67,11 @@ schemas/
   objects/              Reusable object types
   index.ts              Schema registry
 components/             Custom input components (PageLinkInput, TokenStringInput, etc.)
-migrations/             Historical migration scripts (one-shot, completed)
 seedData/               Sample Firm NDJSON + regeneration docs
 skip-to-main.js         A11y skip-link injected into the Studio shell
 ```
+
+One-shot data migrations were deleted 2026-09-13 (Phase 8); the scripts that ran are in git history at `b6be9ba` under `studio/migrations/`.
 
 ## Schema editing
 
