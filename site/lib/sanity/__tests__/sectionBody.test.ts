@@ -67,6 +67,11 @@ const PAIRS: Array<[doc: string, inline: string, fields: Record<string, unknown>
   ['contentSection', 'contentSectionInline', {layout: 'ribbon', heading: 'Serving the county since 1990', marquee: true}],
   ['contentSection', 'contentSectionInline', {layout: 'statRow', items: [{_key: 's1', _type: 'contentSectionItem', title: '500+', body: 'families'}]}],
   ['contentSection', 'contentSectionInline', {layout: 'split', heading: 'Watch', media: {kind: 'video', video: {_type: 'reference', _ref: 'video-1'}}}],
+  // The reviews section's homepage copy (2026-09-14).
+  ['reviewsSection', 'reviewsSectionInline', {
+    layout: 'split', tagline: 'Clients', heading: 'What clients say', description: 'Read them.', reviewsEmbed: '<div>widget</div>',
+    buttons: [{_key: 'b1', title: 'Read all reviews', url: '/reviews/', variant: 'secondary'}],
+  }],
 ]
 
 const OLD_MEMBERS = [

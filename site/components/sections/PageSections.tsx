@@ -26,7 +26,7 @@ export type PageSectionData =
   | FaqSectionBlockData
   | ({_type: 'badgesSection'} & BadgesSectionBlockData)
   | ({_type: 'attorneySection'} & AttorneySectionBlockData)
-  | ReviewsSectionBlockData
+  | ({_type: 'reviewsSection'} & ReviewsSectionBlockData)
   | ({_type: 'videoSection'} & VideoSectionBlockData)
   | ({_type: 'practiceAreaNav'} & PracticeAreaNavBlockData)
   | ({_type: 'contentSection'} & ContentSectionData)

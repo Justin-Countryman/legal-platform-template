@@ -62,6 +62,7 @@ const PAIRS: Array<[doc: string, inline: string]> = [
   ['videoSection', 'videoSectionInline'],
   ['caseResultsSection', 'caseResultsSectionInline'],
   ['contentSection', 'contentSectionInline'],
+  ['reviewsSection', 'reviewsSectionInline'],
 ]
 const INLINE_ONLY: string[] = []
 const RETIRED = ['narrativeBlock', 'differentiatorBlock', 'caseResultsBlock', 'attorneyHighlightBlock', 'badgesBlock', 'siloNavBlock']
@@ -269,6 +270,17 @@ for (const t of schemaTypes as Array<{name: string}>) {
 }
 if (listsChecked < 17) fail(`only ${listsChecked} interior sections lists offer ctaSection; expected 17`)
 else ok(`${listsChecked} interior sections lists offer caseResultsSection and contentSection`)
+
+// The homepage's own reviews embed never rendered: retired, and hidden while empty.
+{
+  const reviewsEmbed = (schema.get('homePage') as ObjectSchemaType).fields.find((f) => f.name === 'reviewsEmbed')
+  const deprecation = (reviewsEmbed?.type as {deprecated?: {reason?: string}} | undefined)?.deprecated
+  const hidden = reviewsEmbed?.type.hidden as HiddenFn | undefined
+  if (!deprecation?.reason?.includes('Phase 15')) fail('homePage.reviewsEmbed is not deprecated with a reason naming Phase 15')
+  else if (!hidden) fail('homePage.reviewsEmbed has no hidden callback')
+  else if (hidden({document: {}, parent: {}, value: undefined, currentUser: null}) !== true || hidden({document: {}, parent: {}, value: '<div>x</div>', currentUser: null}) !== false) fail('homePage.reviewsEmbed is not hidden exactly while empty')
+  else ok('homePage.reviewsEmbed is retired and hidden while empty')
+}
 
 // ─── 6. `featured` is reachable where a practice-area list lives ──────────────
 const featured = hiddenOf('practiceAreaNavItem', 'featured')

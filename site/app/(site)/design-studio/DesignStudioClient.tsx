@@ -1913,7 +1913,6 @@ const SAMPLE_TESTIMONIALS_GRID: TestimonialsGridSectionData = {
 }
 
 const SAMPLE_REVIEWS_SECTION: ReviewsSectionBlockData = {
-  _type: 'reviewsSection',
   tagline: 'Reviews',
   heading: 'What clients say across the platforms they use',
   description: 'Aggregated from Google, Avvo, and Yelp.',

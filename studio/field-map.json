@@ -9204,10 +9204,11 @@
           "type": "string"
         },
         {
-          "description": "Homepage-specific reviews embed (optional — used as an alternative to the Reviews Section component)",
+          "description": "Retired: this field was never shown on the site. Add a Reviews section to the Homepage Canvas instead.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "path": "reviewsEmbed",
-          "title": "Reviews Embed Code",
+          "title": "Reviews Embed Code (retired)",
           "type": "text"
         },
         {
@@ -9222,6 +9223,7 @@
             "featuredTestimonialInline",
             "videoSectionInline",
             "contentSectionInline",
+            "reviewsSectionInline",
             "narrativeBlock",
             "differentiatorBlock",
             "caseResultsBlock",
@@ -10321,6 +10323,83 @@
           "path": "canvas[]<contentSectionInline>.spacing",
           "title": "Vertical Spacing",
           "type": "string"
+        },
+        {
+          "description": "Stacked (the default): the heading, description and buttons centred above the reviews. Split: they sit to the left of the reviews from tablet width up; on mobile they stack above.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "stacked",
+              "split"
+            ]
+          },
+          "path": "canvas[]<reviewsSectionInline>.layout",
+          "title": "Layout",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<reviewsSectionInline>.tagline",
+          "title": "Tagline",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<reviewsSectionInline>.heading",
+          "title": "Heading",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<reviewsSectionInline>.description",
+          "title": "Description",
+          "type": "text"
+        },
+        {
+          "description": "Up to two, e.g. \"Read all reviews\" or \"Leave a review\".",
+          "jsonType": "array",
+          "of": [
+            "ctaButton"
+          ],
+          "path": "canvas[]<reviewsSectionInline>.buttons",
+          "title": "Buttons",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<reviewsSectionInline>.buttons[]<ctaButton>.title",
+          "title": "Button Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /contact/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "canvas[]<reviewsSectionInline>.buttons[]<ctaButton>.url",
+          "title": "URL",
+          "type": "string"
+        },
+        {
+          "initialValue": "primary",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "primary",
+              "secondary",
+              "link"
+            ]
+          },
+          "path": "canvas[]<reviewsSectionInline>.buttons[]<ctaButton>.variant",
+          "title": "Variant",
+          "type": "string"
+        },
+        {
+          "description": "Paste the embed code from your reviews provider, for example an Elfsight Google Reviews widget. The section does not appear without it.",
+          "jsonType": "string",
+          "path": "canvas[]<reviewsSectionInline>.reviewsEmbed",
+          "title": "Reviews Embed Code",
+          "type": "text"
         },
         {
           "jsonType": "string",
@@ -13573,12 +13652,26 @@
     "reviewsSection": {
       "fields": [
         {
-          "description": "Internal label — e.g. \"Google Reviews\"",
+          "description": "Internal label, e.g. \"Google Reviews\"",
           "jsonType": "string",
           "path": "name",
           "required": "warning",
           "requiredMessage": "validation:generic.required",
           "title": "Section Name",
+          "type": "string"
+        },
+        {
+          "description": "Stacked (the default): the heading, description and buttons centred above the reviews. Split: they sit to the left of the reviews from tablet width up; on mobile they stack above.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "stacked",
+              "split"
+            ]
+          },
+          "path": "layout",
+          "title": "Layout",
           "type": "string"
         },
         {
@@ -13600,7 +13693,45 @@
           "type": "text"
         },
         {
-          "description": "Elfsight Google Reviews widget embed code",
+          "description": "Up to two, e.g. \"Read all reviews\" or \"Leave a review\".",
+          "jsonType": "array",
+          "of": [
+            "ctaButton"
+          ],
+          "path": "buttons",
+          "title": "Buttons",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "buttons[]<ctaButton>.title",
+          "title": "Button Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /contact/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "buttons[]<ctaButton>.url",
+          "title": "URL",
+          "type": "string"
+        },
+        {
+          "initialValue": "primary",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "primary",
+              "secondary",
+              "link"
+            ]
+          },
+          "path": "buttons[]<ctaButton>.variant",
+          "title": "Variant",
+          "type": "string"
+        },
+        {
+          "description": "Paste the embed code from your reviews provider, for example an Elfsight Google Reviews widget. The section does not appear without it.",
           "jsonType": "string",
           "path": "reviewsEmbed",
           "required": "warning",
