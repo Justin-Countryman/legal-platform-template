@@ -8,8 +8,8 @@ import {type CaseResultsSectionProps} from './sectionProps'
 //
 // Promoted from `components/homepage/CaseResultsBlock.tsx` (Phase 10,
 // 2026-09-14): the shared section the homepage list renders for
-// `caseResultsSectionInline`, and the one an interior page will render once the
-// `caseResultsSection` document is wired. Like every shared section it renders
+// `caseResultsSectionInline`, and the one an interior page's `sections` list
+// renders for the `caseResultsSection` document (Phase 11). Like every shared section it renders
 // through `SectionShell`, so the Appearance fieldset its schema declares does
 // something; the old block keeps its own markup for one pin and is deleted in
 // Phase 15.

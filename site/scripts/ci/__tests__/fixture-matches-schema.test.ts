@@ -1,8 +1,10 @@
 // The CI fixture is six slug-only documents, one per `generateStaticParams`
 // template, so the build renders each of those templates once on null content
 // (monorepo OUTSTANDING item 255), plus (2026-09-14, Phase 10) a homepage whose
-// canvas holds ONE inline section member and the practice area it lists, so
-// the build renders the homepage list's new path at least once. It cannot be
+// canvas holds inline section members and the practice area the first lists, so
+// the build renders the homepage list's new path at least once: a practice-area
+// nav (Phase 10) and two content sections (Phase 11), a stat row for the results
+// disclaimer and a marquee ribbon for the client boundary. It cannot be
 // allowed to rot: a `_type` the schema no longer has, or a field a type does
 // not declare, would make the build render a document the Studio could never
 // produce. Checked against `studio/schema.json`, the extracted schema the
@@ -36,15 +38,16 @@ describe('scripts/ci/fixture.ndjson agrees with studio/schema.json', () => {
     expect(docs.map((d) => d._type).sort()).toEqual([...TEMPLATES, ...HOMEPAGE_LIST].sort())
   })
 
-  it('the homepage fixture holds exactly one canvas member and it is an inline section type', () => {
+  it('the homepage fixture holds the inline section members the stub build asserts, each a type the canvas allows', () => {
     const home = docs.find((d) => d._type === 'homePage') as {canvas?: Array<{_type: string}>} | undefined
     // The extract's shape for an array of object members: value.of is a union
     // whose members carry the member type under `rest.name`.
     const canvas = byName.get('homePage')?.attributes?.canvas as {value?: {of?: {of?: Array<{rest?: {name?: string}}>}}} | undefined
     const allowed = new Set((canvas?.value?.of?.of ?? []).map((m) => m.rest?.name).filter(Boolean))
-    expect(home?.canvas).toHaveLength(1)
-    expect(home?.canvas?.[0]._type.endsWith('Inline')).toBe(true)
-    expect(allowed.has(home?.canvas?.[0]._type)).toBe(true)
+    // build-against-stub.sh asserts each of these rendered into the prerendered
+    // homepage; a member added or removed here moves that script too.
+    expect(home?.canvas?.map((m) => m._type)).toEqual(['practiceAreaNavInline', 'contentSectionInline', 'contentSectionInline'])
+    for (const member of home?.canvas ?? []) expect(allowed.has(member._type), member._type).toBe(true)
   })
 
   it('every _type is a document type the schema declares', () => {

@@ -11,7 +11,9 @@
 #      robots, and would be green for the wrong reason);
 #   2. the six per-slug templates rendered — every fixture slug appears in
 #      Next's route table — and (2026-09-14, Phase 10) the homepage list's
-#      inline section member rendered into the prerendered homepage;
+#      inline section member rendered into the prerendered homepage, and
+#      (Phase 11) the content section did too: its heading emphasis, its stat
+#      row's results disclaimer and the marquee ribbon's pause toggle;
 #   3. (2026-09-13, Phase 8) the build asked at most MAX_QUERIES queries — a
 #      regression to per-call fetching (the chrome fetched from ten places, the
 #      page query sent twice) shows up as a count above the ceiling the same
@@ -112,6 +114,16 @@ while IFS= read -r line; do
         echo "::error::The homepage fixture's inline section member did not render into .next/server/app/index.html; the homepage list's new path is not exercised."
         MISSING=1
       fi
+      # Phase 11: the content section members render through HeadingUnit (the
+      # emphasis span), the stat row carries the results disclaimer, and the
+      # marquee ribbon crosses the client boundary with its pause toggle.
+      # Matched as HTML, which the flight payload never spells.
+      for needle in '<em class="heading-emphasis">numbers</em>' 'data-testid="results-disclaimer"' '>Pause</button>'; do
+        if ! grep -qF "$needle" .next/server/app/index.html; then
+          echo "::error::The homepage fixture's content section did not render $needle into .next/server/app/index.html."
+          MISSING=1
+        fi
+      done
       continue ;;
     # Listed by the homepage member above; served by the catch-all at request
     # time (no generateStaticParams), so it has no prerendered route to assert.

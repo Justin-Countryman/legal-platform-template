@@ -216,6 +216,22 @@ export const SECTION_BODY = `
   reviewsEmbed,
   footerHeading,
   footerDescription,
+  // contentSection (Phase 11): its eyebrow is the shared tagline key above;
+  // the rest are its own. Flat, like every other key here: a nested select
+  // would type-check against the flat props while every key read undefined.
+  headingEmphasis,
+  mediaSide,
+  showPhone,
+  marquee,
+  imageTreatment,
+  "body": body ${BLOCK_CONTENT_FRAGMENT},
+  "pullQuote": pullQuote{text, attribution},
+  "proof": proof{number, caption},
+  "media": media{
+    kind,
+    "image": image ${IMAGE_FRAGMENT},
+    "video": video->{_id, title, youTubeUrl, description, videoType}
+  },
   "appearance": {
     "surface": surface,
     "spacing": spacing,
@@ -238,7 +254,10 @@ export const SECTION_BODY = `
         "icon": icon ${IMAGE_FRAGMENT},
         "image": image ${IMAGE_FRAGMENT},
         "featured": featured
-      }
+      },
+    // contentSection's items: a title and a body (on a stat row, the number
+    // and its caption). Without this branch the select yields null.
+    _type in ["contentSection", "contentSectionInline"] => items[]{_key, title, body}
   ),
   "buttons": buttons[]{title, url, variant},
   "footerButton": footerButton{title, url, variant},
@@ -990,7 +1009,7 @@ export const CANVAS_FRAGMENT = groq`[]{
   _type in [
     "practiceAreaNavInline", "attorneySectionInline", "caseResultsSectionInline",
     "badgesSectionInline", "testimonialsGridInline", "featuredTestimonialInline",
-    "videoSectionInline"
+    "videoSectionInline", "contentSectionInline"
   ] => {
     ${SECTION_BODY}
   },
@@ -1500,6 +1519,7 @@ export const EVENT_INDEX_PAGE_QUERY = groq`
     noFollow,
     canonicalUrl,
     "hero": hero ${INTERNAL_HERO_FRAGMENT},
+    "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer,
     "sections": sections ${SECTIONS_FRAGMENT},
     hideCtaForm,
     "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT}
@@ -1965,6 +1985,7 @@ export const CATCH_ALL_PAGE_QUERY = groq`
       tags
     },
     ${SIDEBAR_FRAGMENT},
+    "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer,
     "sections": sections ${SECTIONS_FRAGMENT},
     hideCtaForm,
     "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT},

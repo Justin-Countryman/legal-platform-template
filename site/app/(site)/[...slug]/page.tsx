@@ -360,7 +360,7 @@ export default async function CatchAllPage({params}: Props) {
 
       {/* Full Width Sections */}
       {page.sections && page.sections.length > 0 && (
-        <PageSections sections={page.sections} napTokens={tokens} />
+        <PageSections sections={page.sections} napTokens={tokens} resultsDisclaimer={page.resultsDisclaimer} />
       )}
 
       {!page.hideCtaForm && globalCtaData && (

@@ -230,6 +230,8 @@ export const structure = (S: StructureBuilder) =>
               S.documentTypeListItem('attorneySection').title('Attorney Sections'),
               S.documentTypeListItem('badgesSection').title('Badges Sections'),
               S.documentTypeListItem('ctaSection').title('Banner CTA Sections'),
+              S.documentTypeListItem('caseResultsSection').title('Case Results Sections'),
+              S.documentTypeListItem('contentSection').title('Content Sections'),
               S.documentTypeListItem('faqSection').title('FAQ Sections'),
               S.documentTypeListItem('practiceAreaNav').title('Practice Area Nav Sections'),
               S.documentTypeListItem('reviewsSection').title('Reviews Sections'),

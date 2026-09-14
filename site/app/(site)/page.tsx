@@ -221,7 +221,7 @@ export default async function HomePage() {
         resultsDisclaimer={home?.resultsDisclaimer}
       />
 
-      {sections.length > 0 && <PageSections sections={sections} napTokens={tokens} />}
+      {sections.length > 0 && <PageSections sections={sections} napTokens={tokens} resultsDisclaimer={home?.resultsDisclaimer} />}
 
       {/* Beat 9. Bookend, after the canvas and before the footer. `hideCtaForm`
           is now live; it gated nothing before this. */}

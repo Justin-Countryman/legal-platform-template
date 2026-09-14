@@ -70,11 +70,13 @@ import {attorneySection} from './documents/sections/attorneySection'
 import {reviewsSection} from './documents/sections/reviewsSection'
 import {videoSection} from './documents/sections/videoSection'
 import {practiceAreaNav} from './documents/sections/practiceAreaNav'
+import {caseResultsSection} from './documents/sections/caseResultsSection'
+import {contentSection} from './documents/sections/contentSection'
 // Homepage list, inline section objects (Phase 10, 2026-09-14): one field list
 // per section, two names. The document keeps its bare name above; the inline
-// copy is `<name>Inline` and lives in the same file. `caseResultsSection`'s
-// document is exported but NOT registered until an interior list references
-// it (see that file).
+// copy is `<name>Inline` and lives in the same file. `caseResultsSection` and
+// `contentSection` register both names (Phase 11): every interior `sections`
+// list that offers `ctaSection` offers them, and PageSections renders them.
 import {practiceAreaNavInline} from './documents/sections/practiceAreaNav'
 import {attorneySectionInline} from './documents/sections/attorneySection'
 import {caseResultsSectionInline} from './documents/sections/caseResultsSection'
@@ -82,6 +84,7 @@ import {badgesSectionInline} from './documents/sections/badgesSection'
 import {testimonialsGridInline} from './documents/sections/testimonialsGrid'
 import {featuredTestimonialInline} from './documents/sections/featuredTestimonial'
 import {videoSectionInline} from './documents/sections/videoSection'
+import {contentSectionInline} from './documents/sections/contentSection'
 import {video} from './documents/video'
 import {videoIndex} from './documents/videoIndex'
 
@@ -135,6 +138,8 @@ export const schemaTypes = [
   reviewsSection,
   videoSection,
   practiceAreaNav,
+  caseResultsSection,
+  contentSection,
 
   // Videos
   video,
@@ -166,6 +171,7 @@ export const schemaTypes = [
   testimonialsGridInline,
   featuredTestimonialInline,
   videoSectionInline,
+  contentSectionInline,
 
   // Homepage canvas blocks (inline objects, not documents; retired 2026-09-14,
   // deleted in Phase 15)

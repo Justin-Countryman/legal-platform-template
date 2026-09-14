@@ -194,7 +194,7 @@ export const homePage = defineType({
     // schema is asserted by scripts/verify-inline-sections.ts.
     //
     // `sections` BELOW stays for one more pin, deprecated, for the same reason.
-    // The thirteen `of` entries are flat literals on purpose: a monorepo test
+    // The fourteen `of` entries are flat literals on purpose: a monorepo test
     // parses this list with a regex (test_required_beats_are_realizable.py).
     {
       name: 'canvas',
@@ -218,6 +218,7 @@ export const homePage = defineType({
                 'testimonialsGridInline',
                 'featuredTestimonialInline',
                 'videoSectionInline',
+                'contentSectionInline',
               ],
             },
             {
@@ -243,6 +244,7 @@ export const homePage = defineType({
         {type: 'testimonialsGridInline'},
         {type: 'featuredTestimonialInline'},
         {type: 'videoSectionInline'},
+        {type: 'contentSectionInline'},
         {type: 'narrativeBlock', title: 'Narrative (retired block)', deprecated: RETIRED_BLOCK},
         {type: 'differentiatorBlock', title: 'Differentiators (retired block)', deprecated: RETIRED_BLOCK},
         {type: 'caseResultsBlock', title: 'Case Results (retired block; use Case Results)', deprecated: RETIRED_BLOCK},
