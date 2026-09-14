@@ -1,5 +1,6 @@
 import {defineType} from 'sanity'
 import {TokenStringInput} from '../../components/TokenStringInput'
+import {CanvasArrayInput} from '../../components/CanvasArrayInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
 import {seoTitleValidation} from '../seoTitle'
 import {metaDescriptionValidation} from '../metaDescription'
@@ -208,6 +209,9 @@ export const homePage = defineType({
       fieldset: 'layout',
       title: 'Homepage Canvas',
       type: 'array',
+      // Hides Areas of Law (`siloNavBlock`) from Add item; it stays in `of` below
+      // so stored members render until Phase 12 migrates them (2026-09-14).
+      components: {input: CanvasArrayInput},
       description:
         'The composed mid-page, in order. Every member belongs to this homepage only. Add sections from the Sections group; the Legacy blocks group is the old block shape, kept so existing homepages keep rendering until they are migrated, and deleted in Phase 15.',
       options: {
@@ -238,7 +242,6 @@ export const homePage = defineType({
                 'caseResultsBlock',
                 'attorneyHighlightBlock',
                 'badgesBlock',
-                'siloNavBlock',
               ],
             },
           ],
