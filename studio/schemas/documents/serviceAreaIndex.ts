@@ -182,6 +182,8 @@ export const serviceAreaIndex = defineType({
             {type: 'testimonialsGrid'},
             {type: 'featuredTestimonial'},
             {type: 'ctaSection'},
+            {type: 'contentSection'},
+            {type: 'caseResultsSection'},
             {type: 'faqSection'},
             {type: 'badgesSection'},
             {type: 'attorneySection'},

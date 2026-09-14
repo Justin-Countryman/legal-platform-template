@@ -11,13 +11,12 @@ import {appearanceFieldset, appearanceFields} from '../../objects/appearanceFiel
 // Appearance fieldset. One field list, two registrations, as in
 // practiceAreaNav.ts.
 //
-// ONLY THE INLINE OBJECT IS REGISTERED IN THIS RELEASE. `caseResultsSection`,
-// the document, is exported here and compiled by `scripts/verify-inline-
-// sections.ts`, but it is not in `schemas/index.ts`: no interior page's
-// `sections` list references it yet and `PageSections` has no case for it, so
-// a registered document would appear under "Create new" and render nowhere,
-// the "control that appears to work" failure this codebase names. It registers
-// with the first interior list that references it (monorepo backlog item 305).
+// BOTH NAMES ARE REGISTERED (Phase 11, 2026-09-14; monorepo backlog item 305).
+// Phase 10 registered only the inline object, because a document no interior
+// page can reference appears under "Create new" and renders nowhere. Phase 11
+// offers `caseResultsSection` in every interior `sections` list beside
+// `ctaSection`, and `PageSections` renders it with the disclaimer resolved from
+// the page query; `scripts/verify-inline-sections.ts` holds the lists to it.
 //
 // ─── NO DISCLAIMER FIELD, AND THAT IS THE POINT ───────────────────────────────
 //

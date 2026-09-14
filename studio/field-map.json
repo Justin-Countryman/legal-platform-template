@@ -4010,6 +4010,132 @@
       "singletonId": null,
       "title": "Case Result"
     },
+    "caseResultsSection": {
+      "fields": [
+        {
+          "description": "Internal label — e.g. \"Personal Injury Results\"",
+          "jsonType": "string",
+          "path": "name",
+          "required": "warning",
+          "requiredMessage": "validation:generic.required",
+          "title": "Section Name",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "heading",
+          "required": "warning",
+          "requiredMessage": "validation:generic.required",
+          "title": "Heading",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "intro",
+          "title": "Intro",
+          "type": "text"
+        },
+        {
+          "description": "Select from the case results you have built under Individual Items. Build each result once and reuse it. The results disclaimer renders automatically below them and is not editable here.",
+          "jsonType": "array",
+          "of": [
+            "reference"
+          ],
+          "path": "caseResults",
+          "title": "Case Results",
+          "type": "array"
+        },
+        {
+          "description": "Optional. Usually a link to a fuller results page.",
+          "jsonType": "object",
+          "path": "ctaButton",
+          "title": "CTA Button",
+          "type": "ctaButton"
+        },
+        {
+          "jsonType": "string",
+          "path": "ctaButton.title",
+          "title": "Button Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /contact/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "ctaButton.url",
+          "title": "URL",
+          "type": "string"
+        },
+        {
+          "initialValue": "primary",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "primary",
+              "secondary",
+              "link"
+            ]
+          },
+          "path": "ctaButton.variant",
+          "title": "Variant",
+          "type": "string"
+        },
+        {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "initialValue": "light",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image"
+            ]
+          },
+          "path": "surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "initialValue": "normal",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "spacing",
+          "title": "Vertical Spacing",
+          "type": "string"
+        }
+      ],
+      "initialDocument": {
+        "_type": "caseResultsSection",
+        "ctaButton": {
+          "_type": "ctaButton",
+          "variant": "primary"
+        },
+        "spacing": "normal",
+        "surface": "light"
+      },
+      "kind": "document",
+      "singletonId": null,
+      "title": "Case Results Section"
+    },
     "contactPage": {
       "fields": [
         {
@@ -4357,6 +4483,404 @@
       "kind": "document",
       "singletonId": null,
       "title": "Contact Page"
+    },
+    "contentSection": {
+      "fields": [
+        {
+          "description": "Internal label, e.g. \"About the firm, with the guarantee\"",
+          "jsonType": "string",
+          "path": "name",
+          "required": "warning",
+          "requiredMessage": "validation:generic.required",
+          "title": "Section Name",
+          "type": "string"
+        },
+        {
+          "initialValue": "split",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "split",
+              "twoColumnText",
+              "statement",
+              "ribbon",
+              "statRow"
+            ]
+          },
+          "path": "layout",
+          "required": "warning",
+          "requiredMessage": "validation:generic.required",
+          "title": "Layout",
+          "type": "string"
+        },
+        {
+          "description": "Which side the media sits on from tablet width up. On mobile it always stacks above the text. Default: right.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "left",
+              "right"
+            ]
+          },
+          "path": "mediaSide",
+          "title": "Media Side",
+          "type": "string"
+        },
+        {
+          "description": "The short label above the heading.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "path": "tagline",
+          "title": "Tagline",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "heading",
+          "required": "warning",
+          "requiredMessage": "validation:generic.required",
+          "title": "Heading",
+          "type": "string"
+        },
+        {
+          "description": "A word or phrase from the heading to set in the accent style. Write it exactly as it appears in the heading, tokens included; it is case-sensitive. Only its first occurrence is emphasised.",
+          "jsonType": "string",
+          "path": "headingEmphasis",
+          "title": "Heading Emphasis",
+          "type": "string"
+        },
+        {
+          "hidden": "<predicate>",
+          "jsonType": "array",
+          "of": [
+            "block"
+          ],
+          "path": "body",
+          "title": "Body",
+          "type": "blockProse"
+        },
+        {
+          "jsonType": "array",
+          "of": [
+            "span"
+          ],
+          "path": "body[]<block>.children",
+          "title": "Content",
+          "type": "array"
+        },
+        {
+          "jsonType": "array",
+          "of": [
+            "string"
+          ],
+          "path": "body[]<block>.children[]<span>.marks",
+          "title": "Marks",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "body[]<block>.children[]<span>.text",
+          "title": "Text",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "options": {
+            "list": [
+              "normal"
+            ]
+          },
+          "path": "body[]<block>.style",
+          "title": "Style",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "options": {
+            "list": [
+              "bullet",
+              "number"
+            ]
+          },
+          "path": "body[]<block>.listItem",
+          "title": "List type",
+          "type": "string"
+        },
+        {
+          "jsonType": "array",
+          "of": [
+            "contentToken",
+            "link"
+          ],
+          "path": "body[]<block>.markDefs",
+          "title": "Mark definitions",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "body[]<block>.markDefs[]<contentToken>.tokenKey",
+          "title": "Token",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "body[]<block>.markDefs[]<link>.href",
+          "title": "URL",
+          "type": "url"
+        },
+        {
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "body[]<block>.markDefs[]<link>.blank",
+          "title": "Open in new tab",
+          "type": "boolean"
+        },
+        {
+          "jsonType": "number",
+          "path": "body[]<block>.level",
+          "title": "Indentation",
+          "type": "number"
+        },
+        {
+          "description": "Short points under the body, laid out in a grid by count. On a stat row each item is a tile: the title is the number (e.g. \"$40M\") and the body its caption; tiles sit four across on desktop, two on tablets and one on phones.",
+          "hidden": "<predicate>",
+          "jsonType": "array",
+          "of": [
+            "contentSectionItem"
+          ],
+          "path": "items",
+          "title": "Items",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "items[]<contentSectionItem>.title",
+          "title": "Title",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "items[]<contentSectionItem>.body",
+          "title": "Body",
+          "type": "text"
+        },
+        {
+          "description": "A short pledge or quotation set apart from the body.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "pullQuote",
+          "title": "Pull Quote",
+          "type": "object"
+        },
+        {
+          "jsonType": "string",
+          "path": "pullQuote.text",
+          "title": "Text",
+          "type": "text"
+        },
+        {
+          "jsonType": "string",
+          "path": "pullQuote.attribution",
+          "title": "Attribution",
+          "type": "string"
+        },
+        {
+          "description": "One number and its caption (e.g. \"$40M\" and \"recovered for clients\"), or badges below. If both are set, only the number renders. A proof number always renders with the results disclaimer.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "proof",
+          "title": "Proof Number",
+          "type": "object"
+        },
+        {
+          "jsonType": "string",
+          "path": "proof.number",
+          "title": "Number",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "proof.caption",
+          "title": "Caption",
+          "type": "string"
+        },
+        {
+          "description": "Awards shown as a row, from the badges built under Individual Items. Ignored when a proof number is set.",
+          "hidden": "<predicate>",
+          "jsonType": "array",
+          "of": [
+            "reference"
+          ],
+          "path": "badges",
+          "title": "Badges",
+          "type": "array"
+        },
+        {
+          "description": "Up to two.",
+          "hidden": "<predicate>",
+          "jsonType": "array",
+          "of": [
+            "ctaButton"
+          ],
+          "path": "buttons",
+          "title": "Buttons",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "buttons[]<ctaButton>.title",
+          "title": "Button Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /contact/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "buttons[]<ctaButton>.url",
+          "title": "URL",
+          "type": "string"
+        },
+        {
+          "initialValue": "primary",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "primary",
+              "secondary",
+              "link"
+            ]
+          },
+          "path": "buttons[]<ctaButton>.variant",
+          "title": "Variant",
+          "type": "string"
+        },
+        {
+          "description": "Adds the firm's primary phone number beside the buttons, as a tap-to-call link.",
+          "hidden": "<predicate>",
+          "jsonType": "boolean",
+          "path": "showPhone",
+          "title": "Show Phone",
+          "type": "boolean"
+        },
+        {
+          "description": "A photo, a cutout figure (a transparent PNG, shown whole rather than cropped) or a video. On mobile the media stacks above the text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "media",
+          "title": "Media",
+          "type": "object"
+        },
+        {
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "photo",
+              "cutout",
+              "video"
+            ]
+          },
+          "path": "media.kind",
+          "title": "Kind",
+          "type": "string"
+        },
+        {
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "media.image",
+          "title": "Image",
+          "type": "image"
+        },
+        {
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "media.video",
+          "title": "Video",
+          "type": "reference"
+        },
+        {
+          "description": "How the image is framed. A cutout figure takes only Slab; any other choice shows it plain.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "inherit",
+              "plain",
+              "framed",
+              "slab",
+              "rounded",
+              "scrim",
+              "tint"
+            ]
+          },
+          "path": "imageTreatment",
+          "title": "Image Treatment",
+          "type": "string"
+        },
+        {
+          "description": "Scrolls the ribbon text across the band. Visitors get a pause button, it pauses on hover and keyboard focus, and it stays still for anyone who prefers reduced motion.",
+          "hidden": "<predicate>",
+          "jsonType": "boolean",
+          "path": "marquee",
+          "title": "Scroll the Ribbon",
+          "type": "boolean"
+        },
+        {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "initialValue": "light",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image"
+            ]
+          },
+          "path": "surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "initialValue": "normal",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "spacing",
+          "title": "Vertical Spacing",
+          "type": "string"
+        }
+      ],
+      "initialDocument": {
+        "_type": "contentSection",
+        "layout": "split",
+        "spacing": "normal",
+        "surface": "light"
+      },
+      "kind": "document",
+      "singletonId": null,
+      "title": "Content Section"
     },
     "ctaSection": {
       "fields": [
@@ -8698,6 +9222,7 @@
             "testimonialsGridInline",
             "featuredTestimonialInline",
             "videoSectionInline",
+            "contentSectionInline",
             "narrativeBlock",
             "differentiatorBlock",
             "caseResultsBlock",
@@ -9424,6 +9949,378 @@
           "path": "canvas[]<videoSectionInline>.videos",
           "title": "Videos",
           "type": "array"
+        },
+        {
+          "initialValue": "split",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "split",
+              "twoColumnText",
+              "statement",
+              "ribbon",
+              "statRow"
+            ]
+          },
+          "path": "canvas[]<contentSectionInline>.layout",
+          "title": "Layout",
+          "type": "string"
+        },
+        {
+          "description": "Which side the media sits on from tablet width up. On mobile it always stacks above the text. Default: right.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "left",
+              "right"
+            ]
+          },
+          "path": "canvas[]<contentSectionInline>.mediaSide",
+          "title": "Media Side",
+          "type": "string"
+        },
+        {
+          "description": "The short label above the heading.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "path": "canvas[]<contentSectionInline>.tagline",
+          "title": "Tagline",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<contentSectionInline>.heading",
+          "title": "Heading",
+          "type": "string"
+        },
+        {
+          "description": "A word or phrase from the heading to set in the accent style. Write it exactly as it appears in the heading, tokens included; it is case-sensitive. Only its first occurrence is emphasised.",
+          "jsonType": "string",
+          "path": "canvas[]<contentSectionInline>.headingEmphasis",
+          "title": "Heading Emphasis",
+          "type": "string"
+        },
+        {
+          "hidden": "<predicate>",
+          "jsonType": "array",
+          "of": [
+            "block"
+          ],
+          "path": "canvas[]<contentSectionInline>.body",
+          "title": "Body",
+          "type": "blockProse"
+        },
+        {
+          "jsonType": "array",
+          "of": [
+            "span"
+          ],
+          "path": "canvas[]<contentSectionInline>.body[]<block>.children",
+          "title": "Content",
+          "type": "array"
+        },
+        {
+          "jsonType": "array",
+          "of": [
+            "string"
+          ],
+          "path": "canvas[]<contentSectionInline>.body[]<block>.children[]<span>.marks",
+          "title": "Marks",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<contentSectionInline>.body[]<block>.children[]<span>.text",
+          "title": "Text",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "options": {
+            "list": [
+              "normal"
+            ]
+          },
+          "path": "canvas[]<contentSectionInline>.body[]<block>.style",
+          "title": "Style",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "options": {
+            "list": [
+              "bullet",
+              "number"
+            ]
+          },
+          "path": "canvas[]<contentSectionInline>.body[]<block>.listItem",
+          "title": "List type",
+          "type": "string"
+        },
+        {
+          "jsonType": "array",
+          "of": [
+            "contentToken",
+            "link"
+          ],
+          "path": "canvas[]<contentSectionInline>.body[]<block>.markDefs",
+          "title": "Mark definitions",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<contentSectionInline>.body[]<block>.markDefs[]<contentToken>.tokenKey",
+          "title": "Token",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<contentSectionInline>.body[]<block>.markDefs[]<link>.href",
+          "title": "URL",
+          "type": "url"
+        },
+        {
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "canvas[]<contentSectionInline>.body[]<block>.markDefs[]<link>.blank",
+          "title": "Open in new tab",
+          "type": "boolean"
+        },
+        {
+          "jsonType": "number",
+          "path": "canvas[]<contentSectionInline>.body[]<block>.level",
+          "title": "Indentation",
+          "type": "number"
+        },
+        {
+          "description": "Short points under the body, laid out in a grid by count. On a stat row each item is a tile: the title is the number (e.g. \"$40M\") and the body its caption; tiles sit four across on desktop, two on tablets and one on phones.",
+          "hidden": "<predicate>",
+          "jsonType": "array",
+          "of": [
+            "contentSectionItem"
+          ],
+          "path": "canvas[]<contentSectionInline>.items",
+          "title": "Items",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<contentSectionInline>.items[]<contentSectionItem>.title",
+          "title": "Title",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<contentSectionInline>.items[]<contentSectionItem>.body",
+          "title": "Body",
+          "type": "text"
+        },
+        {
+          "description": "A short pledge or quotation set apart from the body.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "canvas[]<contentSectionInline>.pullQuote",
+          "title": "Pull Quote",
+          "type": "object"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<contentSectionInline>.pullQuote.text",
+          "title": "Text",
+          "type": "text"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<contentSectionInline>.pullQuote.attribution",
+          "title": "Attribution",
+          "type": "string"
+        },
+        {
+          "description": "One number and its caption (e.g. \"$40M\" and \"recovered for clients\"), or badges below. If both are set, only the number renders. A proof number always renders with the results disclaimer.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "canvas[]<contentSectionInline>.proof",
+          "title": "Proof Number",
+          "type": "object"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<contentSectionInline>.proof.number",
+          "title": "Number",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<contentSectionInline>.proof.caption",
+          "title": "Caption",
+          "type": "string"
+        },
+        {
+          "description": "Awards shown as a row, from the badges built under Individual Items. Ignored when a proof number is set.",
+          "hidden": "<predicate>",
+          "jsonType": "array",
+          "of": [
+            "reference"
+          ],
+          "path": "canvas[]<contentSectionInline>.badges",
+          "title": "Badges",
+          "type": "array"
+        },
+        {
+          "description": "Up to two.",
+          "hidden": "<predicate>",
+          "jsonType": "array",
+          "of": [
+            "ctaButton"
+          ],
+          "path": "canvas[]<contentSectionInline>.buttons",
+          "title": "Buttons",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<contentSectionInline>.buttons[]<ctaButton>.title",
+          "title": "Button Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /contact/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "canvas[]<contentSectionInline>.buttons[]<ctaButton>.url",
+          "title": "URL",
+          "type": "string"
+        },
+        {
+          "initialValue": "primary",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "primary",
+              "secondary",
+              "link"
+            ]
+          },
+          "path": "canvas[]<contentSectionInline>.buttons[]<ctaButton>.variant",
+          "title": "Variant",
+          "type": "string"
+        },
+        {
+          "description": "Adds the firm's primary phone number beside the buttons, as a tap-to-call link.",
+          "hidden": "<predicate>",
+          "jsonType": "boolean",
+          "path": "canvas[]<contentSectionInline>.showPhone",
+          "title": "Show Phone",
+          "type": "boolean"
+        },
+        {
+          "description": "A photo, a cutout figure (a transparent PNG, shown whole rather than cropped) or a video. On mobile the media stacks above the text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "canvas[]<contentSectionInline>.media",
+          "title": "Media",
+          "type": "object"
+        },
+        {
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "photo",
+              "cutout",
+              "video"
+            ]
+          },
+          "path": "canvas[]<contentSectionInline>.media.kind",
+          "title": "Kind",
+          "type": "string"
+        },
+        {
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "canvas[]<contentSectionInline>.media.image",
+          "title": "Image",
+          "type": "image"
+        },
+        {
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "canvas[]<contentSectionInline>.media.video",
+          "title": "Video",
+          "type": "reference"
+        },
+        {
+          "description": "How the image is framed. A cutout figure takes only Slab; any other choice shows it plain.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "inherit",
+              "plain",
+              "framed",
+              "slab",
+              "rounded",
+              "scrim",
+              "tint"
+            ]
+          },
+          "path": "canvas[]<contentSectionInline>.imageTreatment",
+          "title": "Image Treatment",
+          "type": "string"
+        },
+        {
+          "description": "Scrolls the ribbon text across the band. Visitors get a pause button, it pauses on hover and keyboard focus, and it stays still for anyone who prefers reduced motion.",
+          "hidden": "<predicate>",
+          "jsonType": "boolean",
+          "path": "canvas[]<contentSectionInline>.marquee",
+          "title": "Scroll the Ribbon",
+          "type": "boolean"
+        },
+        {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "initialValue": "light",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image"
+            ]
+          },
+          "path": "canvas[]<contentSectionInline>.surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "canvas[]<contentSectionInline>.sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "initialValue": "normal",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "canvas[]<contentSectionInline>.spacing",
+          "title": "Vertical Spacing",
+          "type": "string"
         },
         {
           "jsonType": "string",

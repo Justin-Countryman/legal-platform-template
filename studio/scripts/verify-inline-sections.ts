@@ -11,7 +11,7 @@
  *      object under `<name>Inline`, both compiled, no duplicate type name, one
  *      field list (`fields({inline})`) so the two cannot drift except where the
  *      inline copy deliberately narrows (`name` and the practice-area mode).
- *   2. `homePage.canvas.of` lists the seven inline objects and the six retired
+ *   2. `homePage.canvas.of` lists the eight inline objects and the six retired
  *      block types, the six carrying `deprecated`. The Studio renders that
  *      badge; the extract, typegen and the field map all drop it, so the
  *      compiled schema is the only artifact that can be asserted.
@@ -22,10 +22,15 @@
  *      callback hides and warns wrongly there; this is the failure ADV-H found.
  *   4. `attorneySectionInline.mode` offers `all` and `manual` only, defaulting
  *      to `all`; `practiceAreaNavInline.mode` defaults to `allTopLevel`.
- *   5. `caseResultsSection`, the document that is exported but not registered
- *      in this release, still compiles when added, so the pair is real.
+ *   5. The two documents Phase 11 registered, `caseResultsSection` and
+ *      `contentSection`, are offered by every interior `sections` list that
+ *      offers `ctaSection`, so neither is a type that renders nowhere.
  *   6. `practiceAreaNavItem.featured` is reachable on the homepage (the inline
  *      practice-area section lives there) and on the section document.
+ *   7. The content section (Phase 11): its layout-scoped `hidden` callbacks and
+ *      its emphasis, proof and button warnings follow the member under a decoy
+ *      root, and `imageTreatment` carries no `initialValue` (a theme axis:
+ *      absent means inherit, and a seed would be folded into composed members).
  *
  * Exits non-zero on any failure. Detected by: itself (CI studio-build job).
  */
@@ -37,7 +42,6 @@
 
 import {createSchema, validateDocument, type ArraySchemaType, type ObjectSchemaType, type SanityDocument} from 'sanity'
 import {schemaTypes} from '../schemas/index.ts'
-import {caseResultsSection} from '../schemas/documents/sections/caseResultsSection.ts'
 
 let failures = 0
 function fail(msg: string): void {
@@ -55,8 +59,10 @@ const PAIRS: Array<[doc: string, inline: string]> = [
   ['testimonialsGrid', 'testimonialsGridInline'],
   ['featuredTestimonial', 'featuredTestimonialInline'],
   ['videoSection', 'videoSectionInline'],
+  ['caseResultsSection', 'caseResultsSectionInline'],
+  ['contentSection', 'contentSectionInline'],
 ]
-const INLINE_ONLY = ['caseResultsSectionInline']
+const INLINE_ONLY: string[] = []
 const RETIRED = ['narrativeBlock', 'differentiatorBlock', 'caseResultsBlock', 'attorneyHighlightBlock', 'badgesBlock', 'siloNavBlock']
 
 // ─── 1. The schema compiles with two names per section and no duplicates ──────
@@ -93,9 +99,9 @@ for (const inline of INLINE_ONLY) {
   if (!i || i.jsonType !== 'object') fail(`${inline} is not a compiled object type`)
   else if (i.fields.some((f) => f.name === 'name')) fail(`${inline} carries \`name\``)
 }
-ok('six pairs and caseResultsSectionInline compile with the expected field sets')
+ok(`${PAIRS.length} pairs compile with the expected field sets`)
 
-// ─── 2. homePage.canvas.of: seven inline objects, six retired blocks with `deprecated`
+// ─── 2. homePage.canvas.of: eight inline objects, six retired blocks with `deprecated`
 const homePage = schema.get('homePage') as ObjectSchemaType
 const canvas = homePage.fields.find((f) => f.name === 'canvas')?.type as ArraySchemaType | undefined
 if (!canvas) fail('homePage.canvas missing')
@@ -104,7 +110,7 @@ else {
   const expected = [...PAIRS.map(([, i]) => i), ...INLINE_ONLY, ...RETIRED].sort()
   const actual = members.map((m) => m.name).sort()
   if (JSON.stringify(actual) !== JSON.stringify(expected)) fail(`canvas.of is ${actual.join(', ')}`)
-  else ok(`canvas.of holds the thirteen members`)
+  else ok(`canvas.of holds the ${expected.length} members`)
   for (const m of members) {
     const retired = RETIRED.includes(m.name)
     if (retired && !m.deprecated?.reason?.includes('Phase 15')) fail(`${m.name} is not deprecated with a reason naming Phase 15`)
@@ -139,6 +145,17 @@ const cases: Array<[type: string, field: string, parent: Record<string, unknown>
   ['testimonialsGridInline', 'sectionBackgroundImage', {surface: 'image'}, false],
   ['featuredTestimonialInline', 'sectionBackgroundImage', {surface: 'image'}, false],
   ['caseResultsSectionInline', 'sectionBackgroundImage', {surface: 'image'}, false],
+  ['contentSectionInline', 'sectionBackgroundImage', {surface: 'image'}, false],
+  ['contentSectionInline', 'mediaSide', {layout: 'split'}, false],
+  ['contentSectionInline', 'mediaSide', {layout: 'ribbon'}, true],
+  ['contentSection', 'mediaSide', {layout: 'ribbon'}, true],
+  ['contentSectionInline', 'marquee', {layout: 'ribbon'}, false],
+  ['contentSectionInline', 'marquee', {layout: 'split'}, true],
+  ['contentSectionInline', 'body', {layout: 'ribbon'}, true],
+  ['contentSectionInline', 'items', {layout: 'statRow'}, false],
+  ['contentSectionInline', 'proof', {layout: 'statRow'}, true],
+  ['contentSectionInline', 'media', {layout: 'split'}, false],
+  ['contentSectionInline', 'imageTreatment', {layout: 'statement'}, true],
 ]
 for (const [type, field, parent, expectHidden] of cases) {
   const fn = hiddenOf(type, field)
@@ -149,6 +166,17 @@ for (const [type, field, parent, expectHidden] of cases) {
   if (got !== expectHidden) fail(`${type}.${field}.hidden read the document: parent ${JSON.stringify(parent)} gave ${got}`)
 }
 ok(`${cases.length} hidden callbacks follow parent under a decoy document`)
+
+// The media slot's own fields follow the media object, not the root.
+const mediaField = (schema.get('contentSectionInline') as ObjectSchemaType).fields.find((f) => f.name === 'media')
+const mediaFields = (mediaField?.type as ObjectSchemaType | undefined)?.fields ?? []
+for (const [field, kind, expectHidden] of [['image', 'video', true], ['image', 'photo', false], ['video', 'video', false], ['video', 'photo', true]] as const) {
+  const fn = mediaFields.find((f) => f.name === field)?.type.hidden as HiddenFn | undefined
+  if (!fn) { fail(`contentSectionInline.media.${field} has no hidden callback`); continue }
+  const got = fn({document: {...DECOY, kind: kind === 'video' ? 'photo' : 'video'}, parent: {kind}, value: undefined, currentUser: null})
+  if (got !== expectHidden) fail(`contentSectionInline.media.${field}.hidden read the document: kind ${kind} gave ${got}`)
+}
+ok('the content section media fields follow the media object')
 
 // Validation: a manual-mode inline member with no items warns; an allTopLevel
 // one does not, whatever the root document says.
@@ -179,6 +207,19 @@ async function validationCases(): Promise<void> {
   if (!warnsOn(c, 'attorneys')) fail('attorneySectionInline in manual mode with no attorneys did not warn')
   const d = await run({_type: 'attorneySectionInline', mode: 'all'})
   if (warnsOn(d, 'attorneys')) fail('attorneySectionInline in all mode warned on attorneys (read the document?)')
+  // The content section: the emphasis must occur in the MEMBER's heading, and
+  // the proof warning reads the member's badges, whatever the root carries.
+  const badge = {_key: 'b', _type: 'reference'}
+  const decoyRoot = {heading: 'Acme Acme', headingEmphasis: 'Acme', badges: [badge]}
+  const runWithRoot = (member: Record<string, unknown>) =>
+    validateDocument({document: {...doc(member), ...decoyRoot} as unknown as SanityDocument, workspace, getClient} as never) as Promise<Array<{path?: unknown[]; message?: string}>>
+  const content = {_type: 'contentSectionInline', layout: 'statement'}
+  if (warnsOn(await runWithRoot({...content, heading: 'Why Acme', headingEmphasis: 'Acme'}), 'headingEmphasis')) fail('contentSectionInline warned on an emphasis its own heading contains (read the document?)')
+  if (!warnsOn(await runWithRoot({...content, heading: 'Why us', headingEmphasis: 'Acme'}), 'headingEmphasis')) fail('contentSectionInline did not warn on an emphasis its heading lacks')
+  if (warnsOn(await runWithRoot({...content, heading: 'x', proof: {number: '$1M'}}), 'proof')) fail('contentSectionInline warned on a proof number with no badges of its own (read the document?)')
+  if (!warnsOn(await runWithRoot({...content, heading: 'x', proof: {number: '$1M'}, badges: [badge]}), 'proof')) fail('contentSectionInline did not warn on a proof number beside its own badges')
+  const three = [1, 2, 3].map((n) => ({_key: `k${n}`, _type: 'ctaButton', title: 't', url: '/'}))
+  if (!warnsOn(await runWithRoot({...content, heading: 'x', buttons: three}), 'buttons')) fail('contentSectionInline did not warn on three buttons')
   ok('validation callbacks follow the member, not the root document')
 }
 
@@ -199,14 +240,27 @@ if (initial('attorneySectionInline', 'mode') !== 'all') fail(`attorneySectionInl
 if (initial('attorneySection', 'mode') !== 'practiceArea') fail('attorneySection.mode initial moved')
 if (initial('practiceAreaNavInline', 'mode') !== 'allTopLevel') fail('practiceAreaNavInline.mode initial is not allTopLevel')
 if (initial('practiceAreaNav', 'mode') !== 'manual') fail('practiceAreaNav.mode initial moved')
+if (initial('contentSectionInline', 'imageTreatment') !== undefined || initial('contentSection', 'imageTreatment') !== undefined) fail('imageTreatment carries an initialValue; it is a theme axis and must not be seeded')
+if (initial('contentSectionInline', 'layout') !== 'split' || initial('contentSection', 'layout') !== 'split') fail('contentSection layout initial is not split')
 ok('inline mode defaults and option lists are as specified; the documents are unchanged')
 
-// ─── 5. The unregistered caseResultsSection document compiles ─────────────────
-const withDoc = createSchema({name: 'verify-doc', types: [...schemaTypes, caseResultsSection] as never})
-const docProblems = withDoc._validation?.filter((g) => g.problems.some((p) => p.severity === 'error')) ?? []
-if (docProblems.length) fail(`caseResultsSection document does not compile: ${docProblems.map((g) => g.problems.map((p) => p.message).join('; ')).join(' | ')}`)
-else if (!(withDoc.get('caseResultsSection') as ObjectSchemaType).fields.some((f) => f.name === 'name')) fail('caseResultsSection document lacks `name`')
-else ok('caseResultsSection (document, unregistered this release) compiles with `name`')
+// ─── 5. The registered documents render somewhere ─────────────────────────────
+// A document no page can reference appears under "Create new" and renders
+// nowhere. Every interior `sections` list that offers ctaSection must offer the
+// two documents Phase 11 registered (homePage.sections is deprecated and left).
+let listsChecked = 0
+for (const t of schemaTypes as Array<{name: string}>) {
+  if (t.name === 'homePage') continue
+  const sectionsField = (schema.get(t.name) as ObjectSchemaType | undefined)?.fields?.find((f) => f.name === 'sections')
+  const refs = ((sectionsField?.type as ArraySchemaType | undefined)?.of ?? []).flatMap((m) => ((m as {to?: Array<{name: string}>}).to ?? []).map((x) => x.name))
+  if (!refs.includes('ctaSection')) continue
+  listsChecked++
+  for (const wanted of ['caseResultsSection', 'contentSection']) {
+    if (!refs.includes(wanted)) fail(`${t.name}.sections offers ctaSection but not ${wanted}`)
+  }
+}
+if (listsChecked < 17) fail(`only ${listsChecked} interior sections lists offer ctaSection; expected 17`)
+else ok(`${listsChecked} interior sections lists offer caseResultsSection and contentSection`)
 
 // ─── 6. `featured` is reachable where a practice-area list lives ──────────────
 const featured = hiddenOf('practiceAreaNavItem', 'featured')
