@@ -271,15 +271,16 @@ for (const t of schemaTypes as Array<{name: string}>) {
 if (listsChecked < 17) fail(`only ${listsChecked} interior sections lists offer ctaSection; expected 17`)
 else ok(`${listsChecked} interior sections lists offer caseResultsSection and contentSection`)
 
-// The homepage's own reviews embed never rendered: retired, and hidden while empty.
-{
-  const reviewsEmbed = (schema.get('homePage') as ObjectSchemaType).fields.find((f) => f.name === 'reviewsEmbed')
-  const deprecation = (reviewsEmbed?.type as {deprecated?: {reason?: string}} | undefined)?.deprecated
-  const hidden = reviewsEmbed?.type.hidden as HiddenFn | undefined
-  if (!deprecation?.reason?.includes('Phase 15')) fail('homePage.reviewsEmbed is not deprecated with a reason naming Phase 15')
-  else if (!hidden) fail('homePage.reviewsEmbed has no hidden callback')
-  else if (hidden({document: {}, parent: {}, value: undefined, currentUser: null}) !== true || hidden({document: {}, parent: {}, value: '<div>x</div>', currentUser: null}) !== false) fail('homePage.reviewsEmbed is not hidden exactly while empty')
-  else ok('homePage.reviewsEmbed is retired and hidden while empty')
+// Retired homepage fields: the reviews embed (never rendered) and the coda line
+// (removed 2026-09-14). Each is deprecated naming Phase 15 and hidden while empty.
+for (const fieldName of ['reviewsEmbed', 'codaLine']) {
+  const field = (schema.get('homePage') as ObjectSchemaType).fields.find((f) => f.name === fieldName)
+  const deprecation = (field?.type as {deprecated?: {reason?: string}} | undefined)?.deprecated
+  const hidden = field?.type.hidden as HiddenFn | undefined
+  if (!deprecation?.reason?.includes('Phase 15')) fail(`homePage.${fieldName} is not deprecated with a reason naming Phase 15`)
+  else if (!hidden) fail(`homePage.${fieldName} has no hidden callback`)
+  else if (hidden({document: {}, parent: {}, value: undefined, currentUser: null}) !== true || hidden({document: {}, parent: {}, value: 'x', currentUser: null}) !== false) fail(`homePage.${fieldName} is not hidden exactly while empty`)
+  else ok(`homePage.${fieldName} is retired and hidden while empty`)
 }
 
 // ─── 6. `featured` is reachable where a practice-area list lives ──────────────

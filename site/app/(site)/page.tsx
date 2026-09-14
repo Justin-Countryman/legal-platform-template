@@ -16,7 +16,6 @@ import type {Metadata} from 'next'
 import {chromeGlobalCta, chromeHeader, chromeNap, getHomePage} from '@/lib/sanity/fetchers'
 import {PageSections, type PageSectionData} from '@/components/sections/PageSections'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
-import {HomepageCoda} from '@/components/layout/HomepageCoda'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
 import {HomepageHero} from '@/components/layout/homeHero'
 import {type HomeHeroData} from '@/components/layout/homeHero/types'
@@ -162,7 +161,6 @@ type HomeData = {
   resultsDisclaimer?: string | null
   hideCtaForm?: boolean | null
   ctaOverride?: Partial<HomepageCtaData> | null
-  codaLine?: string | null
   sections?: PageSectionData[] | null
 }
 
@@ -228,9 +226,6 @@ export default async function HomePage() {
       {!home?.hideCtaForm && (
         <HomepageCta data={globalCtaData} override={home?.ctaOverride} />
       )}
-
-      {/* The coda closes the arc after the CTA. Last thing before the footer. */}
-      <HomepageCoda text={home?.codaLine} />
     </>
   )
 }

@@ -10804,10 +10804,11 @@
           "type": "image"
         },
         {
-          "description": "One sentence, centered on a quiet band after the final CTA. Closes the page rather than asking for anything. Deliberately a single line: a paragraph here reads as a second CTA.",
+          "description": "Retired: this line no longer shows on the site. Add a content section (statement or ribbon) to the Homepage Canvas for a closing statement.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "path": "codaLine",
-          "title": "Coda Line",
+          "title": "Coda Line (retired)",
           "type": "string"
         },
         {
