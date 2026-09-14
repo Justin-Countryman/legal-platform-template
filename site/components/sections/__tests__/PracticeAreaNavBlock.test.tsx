@@ -22,7 +22,6 @@ const ITEMS = [
 
 function data(over: Partial<PracticeAreaNavBlockData> = {}): PracticeAreaNavBlockData {
   return {
-    _type: 'practiceAreaNav',
     tagline: 'Practice areas',
     heading: 'How we can help',
     description: 'Counsel across the matters that matter most.',

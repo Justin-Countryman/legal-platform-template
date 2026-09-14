@@ -10,17 +10,22 @@ import {VideoSectionBlock, type VideoSectionBlockData} from './VideoSectionBlock
 import {PracticeAreaNavBlock, type PracticeAreaNavBlockData} from './PracticeAreaNavBlock'
 
 // ─── Union type ───────────────────────────────────────────────────────────────
+// The discriminant lives HERE, not on the section data types: the same
+// component renders the referenced document (this list) and the page-owned
+// inline copy (`HomepageCanvas`, under `<name>Inline`), so the data type
+// carries no `_type` and each dispatcher names the types it serves
+// (Phase 10, 2026-09-14; sectionProps.ts).
 
 export type PageSectionData =
-  | TestimonialsGridSectionData
-  | FeaturedTestimonialSectionData
+  | ({_type: 'testimonialsGrid'} & TestimonialsGridSectionData)
+  | ({_type: 'featuredTestimonial'} & FeaturedTestimonialSectionData)
   | CtaSectionBlockData
   | FaqSectionBlockData
-  | BadgesSectionBlockData
-  | AttorneySectionBlockData
+  | ({_type: 'badgesSection'} & BadgesSectionBlockData)
+  | ({_type: 'attorneySection'} & AttorneySectionBlockData)
   | ReviewsSectionBlockData
-  | VideoSectionBlockData
-  | PracticeAreaNavBlockData
+  | ({_type: 'videoSection'} & VideoSectionBlockData)
+  | ({_type: 'practiceAreaNav'} & PracticeAreaNavBlockData)
 
 // ─── Component ────────────────────────────────────────────────────────────────
 

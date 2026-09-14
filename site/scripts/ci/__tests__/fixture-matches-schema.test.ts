@@ -1,9 +1,12 @@
 // The CI fixture is six slug-only documents, one per `generateStaticParams`
 // template, so the build renders each of those templates once on null content
-// (monorepo OUTSTANDING item 255). It cannot be allowed to rot: a `_type` the
-// schema no longer has, or a field a type does not declare, would make the
-// build render a document the Studio could never produce. Checked against
-// `studio/schema.json`, the extracted schema the typegen job keeps fresh.
+// (monorepo OUTSTANDING item 255), plus (2026-09-14, Phase 10) a homepage whose
+// canvas holds ONE inline section member and the practice area it lists, so
+// the build renders the homepage list's new path at least once. It cannot be
+// allowed to rot: a `_type` the schema no longer has, or a field a type does
+// not declare, would make the build render a document the Studio could never
+// produce. Checked against `studio/schema.json`, the extracted schema the
+// typegen job keeps fresh.
 import fs from 'node:fs'
 import path from 'node:path'
 import {describe, expect, it} from 'vitest'
@@ -24,10 +27,24 @@ const docs = fs
 // The templates the fixture exists to render. `[...slug]` has no
 // generateStaticParams and is deliberately not here.
 const TEMPLATES = ['attorneyPage', 'staffPage', 'blogPost', 'blogCategory', 'eventPage', 'reviewPage']
+// The homepage list's render fixture: the homepage and the one practice area
+// its `practiceAreaNavInline` member lists in `allTopLevel` mode.
+const HOMEPAGE_LIST = ['homePage', 'practiceArea']
 
 describe('scripts/ci/fixture.ndjson agrees with studio/schema.json', () => {
-  it('carries exactly one document per generateStaticParams template', () => {
-    expect(docs.map((d) => d._type).sort()).toEqual([...TEMPLATES].sort())
+  it('carries exactly one document per generateStaticParams template, plus the homepage list fixture', () => {
+    expect(docs.map((d) => d._type).sort()).toEqual([...TEMPLATES, ...HOMEPAGE_LIST].sort())
+  })
+
+  it('the homepage fixture holds exactly one canvas member and it is an inline section type', () => {
+    const home = docs.find((d) => d._type === 'homePage') as {canvas?: Array<{_type: string}>} | undefined
+    // The extract's shape for an array of object members: value.of is a union
+    // whose members carry the member type under `rest.name`.
+    const canvas = byName.get('homePage')?.attributes?.canvas as {value?: {of?: {of?: Array<{rest?: {name?: string}}>}}} | undefined
+    const allowed = new Set((canvas?.value?.of?.of ?? []).map((m) => m.rest?.name).filter(Boolean))
+    expect(home?.canvas).toHaveLength(1)
+    expect(home?.canvas?.[0]._type.endsWith('Inline')).toBe(true)
+    expect(allowed.has(home?.canvas?.[0]._type)).toBe(true)
   })
 
   it('every _type is a document type the schema declares', () => {

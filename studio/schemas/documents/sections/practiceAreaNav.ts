@@ -9,32 +9,47 @@ import {appearanceFieldset, appearanceFields} from '../../objects/appearanceFiel
 // the href, title, description, and image auto-resolve; per-item overrides let an
 // operator tune the label/description/icon/image. `layout` selects the visual
 // treatment (the cardStyle → dispatcher pattern); more variants land after review.
+//
+// ─── One field list, two registrations (Phase 10, 2026-09-14) ─────────────────
+//
+// `fields({inline})` is the single source of this section's fields. The DOCUMENT
+// (`practiceAreaNav`) is the shared, referenced section interior pages use. The
+// INLINE OBJECT (`practiceAreaNavInline`) is the page-owned copy the homepage
+// list (`homePage.canvas`) holds, so editing it changes one page and no other
+// (`[R-434]`; monorepo WS-V1-PHASE10-DESIGN). Two names because Sanity's type
+// registry is one namespace. Every callback below reads `parent`, never
+// `document`: inside an array member `document` is the root `homePage`, so a
+// `document`-scoped callback hides and warns wrongly there. For a top-level
+// document field `parent` IS the document value, so the document is unchanged.
+//
+// What differs inline: no `name` (a block is found by opening its page, not in
+// a list), `mode` defaults to every top-level area (Beat 4: never curate or
+// hide areas on the homepage), and the preview reads `heading`, never `name`.
 
-export const practiceAreaNav = defineType({
-  name: 'practiceAreaNav',
-  title: 'Practice Area Navigation',
-  type: 'document',
-  fieldsets: [
-    {
-      name: 'navigation',
-      title: 'Navigation Settings',
-      description: 'How the navigation looks and behaves — button layout, grid, header placement, icons, and hover.',
-      options: {collapsible: true, collapsed: false},
-    },
-    appearanceFieldset,
-  ],
-  fields: [
-    {
-      name: 'name',
-      title: 'Section Name',
-      type: 'string',
-      description: 'Internal label — e.g. "Home Practice Areas"',
-      validation: (Rule) => Rule.required().warning(),
-    },
-    {name: 'tagline', title: 'Tagline', type: 'string', components: {input: TokenStringInput}},
-    {name: 'heading', title: 'Heading', type: 'string', components: {input: TokenStringInput}},
-    {name: 'description', title: 'Description', type: 'text', rows: 2, components: {input: TokenTextInput}},
-    {
+const navigationFieldset = {
+  name: 'navigation',
+  title: 'Navigation Settings',
+  description: 'How the navigation looks and behaves — button layout, grid, header placement, icons, and hover.',
+  options: {collapsible: true, collapsed: false},
+}
+
+export function fields({inline}: {inline: boolean}) {
+  return [
+    ...(inline
+      ? []
+      : [
+          defineField({
+            name: 'name',
+            title: 'Section Name',
+            type: 'string',
+            description: 'Internal label — e.g. "Home Practice Areas"',
+            validation: (Rule) => Rule.required().warning(),
+          }),
+        ]),
+    defineField({name: 'tagline', title: 'Tagline', type: 'string', components: {input: TokenStringInput}}),
+    defineField({name: 'heading', title: 'Heading', type: 'string', components: {input: TokenStringInput}}),
+    defineField({name: 'description', title: 'Description', type: 'text', rows: 2, components: {input: TokenTextInput}}),
+    defineField({
       name: 'layout',
       title: 'Button Layout',
       type: 'string',
@@ -52,8 +67,8 @@ export const practiceAreaNav = defineType({
       },
       initialValue: 'spotlight',
       validation: (Rule) => Rule.required().warning(),
-    },
-    {
+    }),
+    defineField({
       name: 'gridMode',
       title: 'Grid Mode',
       type: 'string',
@@ -70,8 +85,8 @@ export const practiceAreaNav = defineType({
         layout: 'radio',
       },
       initialValue: 'equal',
-    },
-    {
+    }),
+    defineField({
       name: 'sectionLayout',
       title: 'Section Layout',
       type: 'string',
@@ -87,8 +102,8 @@ export const practiceAreaNav = defineType({
         layout: 'radio',
       },
       initialValue: 'centered',
-    },
-    {
+    }),
+    defineField({
       name: 'mobileDisplay',
       title: 'Mobile Display',
       type: 'string',
@@ -104,8 +119,8 @@ export const practiceAreaNav = defineType({
         layout: 'radio',
       },
       initialValue: 'carousel',
-    },
-    {
+    }),
+    defineField({
       name: 'iconPosition',
       title: 'Icon Position',
       type: 'string',
@@ -123,16 +138,16 @@ export const practiceAreaNav = defineType({
         layout: 'radio',
       },
       initialValue: 'auto',
-    },
-    {
+    }),
+    defineField({
       name: 'showArrow',
       title: 'Show Arrow',
       type: 'boolean',
       fieldset: 'navigation',
       description: 'Show the “→” affordance on each button (layouts that have one).',
       initialValue: true,
-    },
-    {
+    }),
+    defineField({
       name: 'hoverEffects',
       title: 'Hover Effects',
       type: 'array',
@@ -152,44 +167,78 @@ export const practiceAreaNav = defineType({
           {title: 'None — fully static (focus ring only)', value: 'none'},
         ],
       },
-    },
-    {
+    }),
+    defineField({
       name: 'mode',
       title: 'Practice Area Source',
       type: 'string',
+      description: inline
+        ? 'Every area of law is the homepage default — Beat 4 says never curate or hide areas. Choose Curated only when the firm has a specific reason to.'
+        : undefined,
       options: {
-        list: [
-          {title: 'Curated — hand-pick and order', value: 'manual'},
-          {title: 'All top-level practice areas', value: 'allTopLevel'},
-        ],
+        list: inline
+          ? [
+              {title: 'All top-level practice areas', value: 'allTopLevel'},
+              {title: 'Curated — hand-pick and order', value: 'manual'},
+            ]
+          : [
+              {title: 'Curated — hand-pick and order', value: 'manual'},
+              {title: 'All top-level practice areas', value: 'allTopLevel'},
+            ],
         layout: 'radio',
       },
-      initialValue: 'manual',
+      initialValue: inline ? 'allTopLevel' : 'manual',
       validation: (Rule) => Rule.required().warning(),
-    },
+    }),
     defineField({
       name: 'items',
       title: 'Practice Areas',
       type: 'array',
-      fieldset: undefined,
-      hidden: ({document}) => document?.mode === 'allTopLevel',
+      hidden: ({parent}) => (parent as {mode?: string} | undefined)?.mode === 'allTopLevel',
       description:
         'Pick the practice-area pages to feature, in order of importance. Title, description, and image auto-fill from each page — override per item if needed.',
       of: [{type: 'practiceAreaNavItem'}],
       validation: (Rule) =>
         Rule.custom((items: unknown[] | undefined, context) => {
-          if (context.document?.mode !== 'allTopLevel' && (!items || items.length === 0)) {
+          const parent = context.parent as {mode?: string} | undefined
+          if (parent?.mode !== 'allTopLevel' && (!items || items.length === 0)) {
             return {message: 'Add at least one practice area', level: 'warning' as const}
           }
           return true
         }).warning(),
     }),
     ...appearanceFields({defaultSurface: 'light'}),
-  ],
+  ]
+}
+
+export const practiceAreaNav = defineType({
+  name: 'practiceAreaNav',
+  title: 'Practice Area Navigation',
+  type: 'document',
+  fieldsets: [navigationFieldset, appearanceFieldset],
+  fields: fields({inline: false}),
   preview: {
     select: {title: 'name', subtitle: 'heading'},
     prepare({title, subtitle}: {title?: string; subtitle?: string}) {
       return {title: title ?? 'Practice Area Navigation', subtitle}
+    },
+  },
+})
+
+export const practiceAreaNavInline = defineType({
+  name: 'practiceAreaNavInline',
+  title: 'Practice Area Navigation',
+  type: 'object',
+  fieldsets: [navigationFieldset, appearanceFieldset],
+  fields: fields({inline: true}),
+  preview: {
+    select: {heading: 'heading', layout: 'layout', mode: 'mode'},
+    prepare({heading, layout, mode}: {heading?: string; layout?: string; mode?: string}) {
+      const source = mode === 'manual' ? 'curated' : 'every top-level practice area'
+      return {
+        title: heading || 'Practice Area Navigation',
+        subtitle: `Practice Area Navigation · ${layout ?? 'spotlight'} · ${source}`,
+      }
     },
   },
 })

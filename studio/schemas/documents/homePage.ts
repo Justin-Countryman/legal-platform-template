@@ -10,6 +10,19 @@ import {
   ogTitleValidation,
 } from '../socialOverrides'
 
+// The six block types and the `sections` list are retired in release one of
+// expand-then-contract (Phase 10, 2026-09-14) and deleted in Phase 15 once
+// every stored member is migrated (Phase 12). The reason renders as the
+// Studio's deprecation badge.
+const RETIRED_BLOCK = {
+  reason:
+    'Retired 2026-09-14 (Phase 10): the homepage list now holds inline copies of the full sections. This block keeps rendering until Phase 12 migrates it; Phase 15 deletes the type.',
+}
+const RETIRED_SECTIONS = {
+  reason:
+    'Retired 2026-09-14 (Phase 10): the homepage composes from the Homepage Canvas. Phase 12 folds any member here into the canvas; Phase 15 removes this field.',
+}
+
 // Existing Sanity fields: metaDescription, noIndex, seoTitle, slug
 // Additional fields added per the homePage spec that lived in BI-UX.md, which the
 // platform repo archived to `_archive/superseded-bi/BI-UX.md` (monorepo
@@ -163,40 +176,79 @@ export const homePage = defineType({
     },
     // ─── Homepage Canvas ──────────────────────────────────────────────────────
     // The composed mid-page: everything between the hero and the footer, as an
-    // ordered list of BLOCKS that belong to this homepage alone.
+    // ordered list of page-owned members that belong to this homepage alone.
     //
-    // DELIBERATELY SEPARATE FROM `sections` BELOW, which is the interior-page
-    // system. `sections` holds REFERENCES to standalone documents shared across
-    // pages, so editing one changes every page that uses it. A block is an
-    // INLINE object owned by this document. Two entries that look identical in
-    // one list but behave differently, where one silently edits other pages, is
-    // the failure this separation exists to prevent (ruled 2026-07-20).
+    // RELEASE ONE OF EXPAND-THEN-CONTRACT (Phase 10, 2026-09-14; monorepo
+    // WS-V1-PHASE10-DESIGN, [R-434]). The list now accepts the seven INLINE
+    // SECTION OBJECTS (`<name>Inline`, one field list shared with the section
+    // document each mirrors, see documents/sections/*.ts) beside the six old
+    // block types, which are deprecated and render exactly as before until
+    // Phase 12 migrates every stored member and Phase 15 deletes them. Nothing
+    // in this list is a reference to a shared section document (ruled
+    // 2026-08-08): a member here edits this page and no other.
     //
-    // FOLLOW-UP, not done here: `sections` should eventually come off homePage
-    // entirely, since the homepage is not meant to use the interior section
-    // system at all. That removal has a wider blast radius than one block and is
-    // its own decision. Until then both lists render, and an operator can still
-    // add an interior section to the wrong one.
+    // `deprecated` on a member is a badge the Studio shows once the member is
+    // opened; the insert menu does not read it, so the retired members carry a
+    // title override and sit in their own insert-menu group. Nothing downstream
+    // (the extract, typegen, the field map) sees `deprecated`; the compiled
+    // schema is asserted by scripts/verify-inline-sections.ts.
+    //
+    // `sections` BELOW stays for one more pin, deprecated, for the same reason.
+    // The thirteen `of` entries are flat literals on purpose: a monorepo test
+    // parses this list with a regex (test_required_beats_are_realizable.py).
     {
       name: 'canvas',
       fieldset: 'layout',
-      title: 'Homepage Canvas (Blocks)',
+      title: 'Homepage Canvas',
       type: 'array',
       description:
-        'The composed mid-page, in order. These blocks belong to this homepage only. To reuse content across pages, reference an item (badges, case results, testimonials) rather than retyping it here.',
+        'The composed mid-page, in order. Every member belongs to this homepage only. Add sections from the Sections group; the Legacy blocks group is the old block shape, kept so existing homepages keep rendering until they are migrated, and deleted in Phase 15.',
+      options: {
+        insertMenu: {
+          views: [{name: 'list'}],
+          groups: [
+            {
+              name: 'sections',
+              title: 'Sections',
+              of: [
+                'practiceAreaNavInline',
+                'attorneySectionInline',
+                'caseResultsSectionInline',
+                'badgesSectionInline',
+                'testimonialsGridInline',
+                'featuredTestimonialInline',
+                'videoSectionInline',
+              ],
+            },
+            {
+              name: 'legacy',
+              title: 'Legacy blocks (retired; deleted in Phase 15)',
+              of: [
+                'narrativeBlock',
+                'differentiatorBlock',
+                'caseResultsBlock',
+                'attorneyHighlightBlock',
+                'badgesBlock',
+                'siloNavBlock',
+              ],
+            },
+          ],
+        },
+      },
       of: [
-        {type: 'narrativeBlock'},
-        {type: 'differentiatorBlock'},
-        {type: 'caseResultsBlock'},
-        {type: 'attorneyHighlightBlock'},
-        {type: 'badgesBlock'},
-        // Beat 4, Areas of Law. A canvas member rather than an interior section
-        // reference, so a Required beat can be ordered to the position the story
-        // framework specifies — a section always renders after every block, so
-        // as a section it could not reach position four by any field value
-        // (ruled 2026-08-08, item 59). `practiceAreaNav` is unchanged and still
-        // serves interior pages.
-        {type: 'siloNavBlock'},
+        {type: 'practiceAreaNavInline'},
+        {type: 'attorneySectionInline'},
+        {type: 'caseResultsSectionInline'},
+        {type: 'badgesSectionInline'},
+        {type: 'testimonialsGridInline'},
+        {type: 'featuredTestimonialInline'},
+        {type: 'videoSectionInline'},
+        {type: 'narrativeBlock', title: 'Narrative (retired block)', deprecated: RETIRED_BLOCK},
+        {type: 'differentiatorBlock', title: 'Differentiators (retired block)', deprecated: RETIRED_BLOCK},
+        {type: 'caseResultsBlock', title: 'Case Results (retired block; use Case Results)', deprecated: RETIRED_BLOCK},
+        {type: 'attorneyHighlightBlock', title: 'Attorney Highlight (retired block; use Attorney Section)', deprecated: RETIRED_BLOCK},
+        {type: 'badgesBlock', title: 'Badges / Awards (retired block; use Badges Section)', deprecated: RETIRED_BLOCK},
+        {type: 'siloNavBlock', title: 'Areas of Law (retired block; use Practice Area Navigation)', deprecated: RETIRED_BLOCK},
       ],
     },
     // ─── Coda ─────────────────────────────────────────────────────────────────
@@ -229,12 +281,17 @@ export const homePage = defineType({
       components: {input: TokenStringInput},
     },
     // ─── Page Sections ────────────────────────────────────────────────────────
+    // DEPRECATED (Phase 10, 2026-09-14): the interior-page reference list on the
+    // homepage. It still renders after the canvas until Phase 12 folds any
+    // stored members into the canvas, and Phase 15 removes it. On the fixture
+    // client it is empty. Do not add to it; use the canvas.
     {
       name: 'sections',
       fieldset: 'layout',
-      title: 'Full Width Sections',
+      title: 'Full Width Sections (retired)',
       type: 'array',
-      description: 'Reusable full-width sections below main content',
+      deprecated: RETIRED_SECTIONS,
+      description: 'Retired. Shared interior-page sections referenced from the homepage; still rendered after the canvas until Phase 12 migrates them and Phase 15 removes this field. Use the Homepage Canvas instead.',
       of: [
         {
           type: 'reference',

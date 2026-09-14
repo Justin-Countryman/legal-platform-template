@@ -3,6 +3,7 @@ import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {ButtonGroup, toCtaItems} from '@/components/ui/ButtonGroup'
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {Tagline} from '@/components/ui/Tagline'
+import {type BadgesSectionProps} from './sectionProps'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -23,15 +24,9 @@ type CtaButton = {
 // per-item Sanity `variant` field; that behavior is preserved by the consumers
 // passing `respectVariantField={false}` to <ButtonGroup>.
 
-export type BadgesSectionBlockData = {
-  _type: 'badgesSection'
-  tagline?: string | null
-  heading?: string | null
-  description?: string | null
-  layout?: 'inline' | 'centeredGrid' | 'split' | 'scrolling' | null
-  buttons?: CtaButton[] | null
-  badges?: BadgeImage[] | null
-}
+// One props type for both renderings; no `_type`, the dispatchers own it. See
+// sectionProps.ts.
+export type BadgesSectionBlockData = BadgesSectionProps
 
 // ─── Badge list ───────────────────────────────────────────────────────────────
 

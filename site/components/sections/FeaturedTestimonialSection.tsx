@@ -2,19 +2,15 @@ import {StarRating} from '@/components/ui/StarRating'
 import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage} from '@/lib/sanity/image'
 import {Tagline} from '@/components/ui/Tagline'
-import {type TestimonialData} from '@/components/ui/TestimonialCard'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
-import {SectionShell, type SectionAppearance} from './SectionShell'
+import {SectionShell} from './SectionShell'
+import {type FeaturedTestimonialProps} from './sectionProps'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type FeaturedTestimonialSectionData = {
-  _type: 'featuredTestimonial'
-  tagline?: string | null
-  heading?: string | null
-  testimonial?: TestimonialData | null
-  appearance?: SectionAppearance | null
-}
+// One props type for both renderings; no `_type`, the dispatchers own it. See
+// sectionProps.ts.
+export type FeaturedTestimonialSectionData = FeaturedTestimonialProps
 
 // ─── Component ────────────────────────────────────────────────────────────────
 

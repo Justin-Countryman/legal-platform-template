@@ -186,12 +186,23 @@ const GATED_STREET_FRAGMENT = `
   "zip":      select(locationType in ["Physical", "Shared"] => zip, null),
 `
 
-export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
-  _id,
-  _type,
+// ─── The shared section projection ────────────────────────────────────────────
+// One projection body for a shared section, used twice (Phase 10, 2026-09-14;
+// monorepo WS-V1-PHASE10-DESIGN §2 requirement 7): SECTIONS_FRAGMENT
+// dereferences a `sections` list of references and applies it; CANVAS_FRAGMENT
+// applies it inline to the page-owned `<name>Inline` members of
+// `homePage.canvas`. The same component renders both, so the two projections
+// must agree key for key; `lib/sanity/__tests__/sectionBody.test.ts` evaluates
+// both under groq-js on a fixture and asserts it. A plain string, not
+// groq-tagged, so typegen does not read a bare body as a query; it inlines into
+// the tagged fragments that interpolate it. The practice-area selects name
+// both type names; `select()` in attribute position is the shape typegen
+// resolves without doubling the member (traps.md).
+export const SECTION_BODY = `
   name,
   tagline,
   heading,
+  intro,
   description,
   layout,
   sectionLayout,
@@ -214,11 +225,11 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
   // auto-pulled title/description, with per-item overrides; or auto-list all
   // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").
   "items": select(
-    _type == "practiceAreaNav" && mode == "allTopLevel" => [
+    _type in ["practiceAreaNav", "practiceAreaNavInline"] && mode == "allTopLevel" => [
       ...(${PRACTICE_AREAS_ORDERED_TOP_LEVEL}${PRACTICE_AREA_SECTION_ITEM}),
       ...(${PRACTICE_AREAS_REST_TOP_LEVEL}${PRACTICE_AREA_SECTION_ITEM} | order(label asc))
     ],
-    _type == "practiceAreaNav" =>
+    _type in ["practiceAreaNav", "practiceAreaNavInline"] =>
       items[defined(page->slug.current)]{
         _key,
         "label": coalesce(label, ${NAV_LABEL_VIA_PAGE_EXPR}),
@@ -231,6 +242,7 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
   ),
   "buttons": buttons[]{title, url, variant},
   "footerButton": footerButton{title, url, variant},
+  "ctaButton": ctaButton{title, url, variant},
   "image": image ${IMAGE_FRAGMENT},
   "testimonials": testimonials[defined(@->_id)]->${TESTIMONIAL_FIELDS_FRAGMENT},
   "testimonial": testimonial->${TESTIMONIAL_FIELDS_FRAGMENT},
@@ -240,6 +252,9 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
     category,
     "slug": slug.current,
     tags
+  },
+  "caseResults": caseResults[defined(@->_id)]->{
+    _id, amount, caseType, caption, year
   },
   "badges": badges[defined(@->_id)]->{
     "src": image.asset->url,
@@ -273,6 +288,12 @@ export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
   "videos": videos[defined(@->_id)]->{
     _id, title, youTubeUrl, description, videoType
   }
+`
+
+export const SECTIONS_FRAGMENT = groq`[defined(@->_id)]->{
+  _id,
+  _type,
+  ${SECTION_BODY}
 }`
 
 // ─── Root Site Metadata ───────────────────────────────────────────────────────
@@ -947,17 +968,34 @@ export const NAP_TOKENS_QUERY = groq`
 // The homepage's full-width sections (silo nav, CTA, testimonials, …). The unique
 // homepage hero is a separate build; this projects the stacked sections so they
 // render below it.
-// The composed mid-page canvas. Blocks are INLINE objects on homePage, so
+// The composed mid-page canvas. Members are INLINE objects on homePage, so
 // unlike SECTIONS_FRAGMENT this projects the array directly: there is no
-// document behind a block to dereference. `_type` and `_key` are projected
+// document behind a member to dereference. `_type` and `_key` are projected
 // because the renderer dispatches on the first and keys on the second.
 //
 // Reference arrays INSIDE a block still take the canonical filter-before-
 // dereference shape. A badge deleted out from under a homepage has to drop out
 // of the list rather than render as a null hole.
-const CANVAS_FRAGMENT = groq`[]{
+export const CANVAS_FRAGMENT = groq`[]{
   _type,
   _key,
+  // The seven inline section objects (Phase 10): the shared section body, so
+  // a page-owned copy projects exactly what its referenced document would.
+  // One conditional with a type list rather than seven copies of the body
+  // (a quarter of the encoded size, byte-identical results under groq-js);
+  // its price is that typegen emits two members per inline type, one with the
+  // keys and one without (traps.md), which nothing reads: the page casts the
+  // result to HomepageBlock and the props types derive from the schema types.
+  // No backticks in these comments: they sit inside a groq template literal.
+  _type in [
+    "practiceAreaNavInline", "attorneySectionInline", "caseResultsSectionInline",
+    "badgesSectionInline", "testimonialsGridInline", "featuredTestimonialInline",
+    "videoSectionInline"
+  ] => {
+    ${SECTION_BODY}
+  },
+  // The six old block types, retired (Phase 10) and deleted in Phase 15. Their
+  // branches stay byte-for-byte so an unmigrated dataset renders as before.
   _type == "attorneyHighlightBlock" => {
     tagline,
     heading,

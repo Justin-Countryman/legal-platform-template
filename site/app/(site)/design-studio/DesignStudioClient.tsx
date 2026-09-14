@@ -1902,12 +1902,10 @@ const SAMPLE_TESTIMONIALS: TestimonialData[] = [
 ]
 
 const SAMPLE_FEATURED_TESTIMONIAL: FeaturedTestimonialSectionData = {
-  _type: 'featuredTestimonial',
   testimonial: SAMPLE_TESTIMONIALS[0] ?? null,
 }
 
 const SAMPLE_TESTIMONIALS_GRID: TestimonialsGridSectionData = {
-  _type: 'testimonialsGrid',
   tagline: 'Client experience',
   heading: 'Stories from those we have represented',
   description: 'Anonymized testimonials shared with permission.',
@@ -1923,7 +1921,6 @@ const SAMPLE_REVIEWS_SECTION: ReviewsSectionBlockData = {
 }
 
 const SAMPLE_VIDEO_SECTION: VideoSectionBlockData = {
-  _type: 'videoSection',
   tagline: 'Watch',
   heading: 'What to expect in your first meeting',
   description: 'A short introduction to our consultation process and how we structure the first conversation.',
@@ -1980,7 +1977,6 @@ const SAMPLE_FAQ_SECTION: FaqSectionBlockData = {
 }
 
 const SAMPLE_BADGES_SECTION: BadgesSectionBlockData = {
-  _type: 'badgesSection',
   layout: 'centeredGrid',
   tagline: 'Recognition',
   heading: 'Trusted by the institutions that matter',
@@ -1994,7 +1990,6 @@ const SAMPLE_BADGES_SECTION: BadgesSectionBlockData = {
 }
 
 const SAMPLE_ATTORNEY_SECTION: AttorneySectionBlockData = {
-  _type: 'attorneySection',
   layout: 'grid',
   mode: 'manual',
   tagline: 'Our team',
