@@ -1,0 +1,153 @@
+[
+  {
+    "_key": "hp-differentiatorBlock",
+    "_type": "differentiatorBlock",
+    "differentiators": [
+      {
+        "_key": "hp-diff-1",
+        "body": "day and evening availability, plus appointments over Zoom and the phone.",
+        "title": "Flexible appointments and evening hours"
+      },
+      {
+        "_key": "hp-diff-2",
+        "body": "in person or curbside at the firm, or the firm comes to the client to sign at home, work, or the hospital.",
+        "title": "Sign with convenience"
+      },
+      {
+        "_key": "hp-diff-3",
+        "body": "transferring accounts to the trust and updating beneficiaries so the family can collect assets with ease.",
+        "title": "Help avoiding probate"
+      },
+      {
+        "_key": "hp-diff-4",
+        "body": "a no-cost one-hour meeting for returning clients every three years, or a flat $99 for a one-hour appointment if more frequent.",
+        "title": "Meet with us in the future at no cost"
+      }
+    ],
+    "heading": "The Yanowitz Guarantee",
+    "intro": null
+  },
+  {
+    "_key": "hp-siloNavBlock",
+    "_type": "siloNavBlock",
+    "description": null,
+    "heading": "Areas of Law",
+    "items": [
+      {
+        "_key": "practiceArea-estate-planning",
+        "description": "Yanowitz Law Firm helps Rochester, MN families protect what they have built with wills, trusts, and disability planning. Talk with an estate planning attorney.",
+        "href": "/estate-planning/",
+        "icon": null,
+        "image": null,
+        "label": "Estate Planning"
+      },
+      {
+        "_key": "practiceArea-wills-trusts",
+        "description": "Our Minnesota law firm can assist you with drafting wills and trust agreements that protect your money, your family and your time.",
+        "href": "/wills-trusts/",
+        "icon": null,
+        "image": null,
+        "label": "Wills Trusts"
+      },
+      {
+        "_key": "practiceArea-probate",
+        "description": "Probate can feel overwhelming, especially during a time of loss. You do not have to handle it alone. Schedule a free, no pressure consultation to discuss your situation and learn how our probate team can support you every step of the way.",
+        "href": "/probate/",
+        "icon": null,
+        "image": null,
+        "label": "Probate"
+      },
+      {
+        "_key": "practiceArea-probate-estate-administration",
+        "description": "Attorneys at Yanowitz Law Firm have been helping families facing probate and estate administration challenges throughout Minnesota for 30 years.",
+        "href": "/probate-estate-administration/",
+        "icon": null,
+        "image": null,
+        "label": "Probate Estate Administration"
+      },
+      {
+        "_key": "practiceArea-special-needs",
+        "description": "Yanowitz Law Firm helps Minnesota families plan for a loved one with special needs while protecting eligibility for government benefits.",
+        "href": "/special-needs/",
+        "icon": null,
+        "image": null,
+        "label": "Special Needs"
+      },
+      {
+        "_key": "practiceArea-real-estate",
+        "description": "Our Real Estate attorneys in Rochester, MN, guide clients through property sales, contracts, and disputes.",
+        "href": "/real-estate/",
+        "icon": null,
+        "image": null,
+        "label": "Real Estate"
+      },
+      {
+        "_key": "practiceArea-business-law",
+        "description": "Business Law: starting or running a business involves important legal decisions, and having the right guidance can make all the difference. We help Minnesota business owners form businesses, dissolve businesses, and prepare clear, enforceable leases that support growth while reducing risk.",
+        "href": "/business-law/",
+        "icon": null,
+        "image": null,
+        "label": "Business Law"
+      }
+    ],
+    "mode": "allTopLevel",
+    "tagline": null
+  },
+  {
+    "_key": "hp-attorneyHighlightBlock",
+    "_type": "attorneyHighlightBlock",
+    "attorneys": [
+      {
+        "_id": "attorneyPage-attorneys-claire-langton-yanowitz",
+        "href": "/attorneys/claire-langton-yanowitz",
+        "jobTitle": "Attorney",
+        "name": "Claire Langton-Yanowitz",
+        "photo": {
+          "alt": null,
+          "height": null,
+          "src": null,
+          "width": null
+        }
+      },
+      {
+        "_id": "attorneyPage-attorneys-alec-osland",
+        "href": "/attorneys/alec-osland",
+        "jobTitle": "Attorney",
+        "name": "Alec Osland",
+        "photo": {
+          "alt": null,
+          "height": null,
+          "src": null,
+          "width": null
+        }
+      },
+      {
+        "_id": "attorneyPage-attorneys-adam-nelson",
+        "href": "/attorneys/adam-nelson",
+        "jobTitle": "Attorney",
+        "name": "Adam Nelson",
+        "photo": {
+          "alt": null,
+          "height": null,
+          "src": null,
+          "width": null
+        }
+      },
+      {
+        "_id": "attorneyPage-attorneys-alan-yanowitz",
+        "href": "/attorneys/alan-yanowitz",
+        "jobTitle": "",
+        "name": "Alan Yanowitz",
+        "photo": {
+          "alt": null,
+          "height": null,
+          "src": null,
+          "width": null
+        }
+      }
+    ],
+    "heading": "Our Attorneys",
+    "mode": "all",
+    "tagline": null
+  }
+]
