@@ -682,3 +682,14 @@ h1, h2, h3, h4, h5, h6 {
   --color-hover-wash:        rgb(var(--shadow-rgb) / 0.06);
   --color-star-outline:      #1a1a1a;
 }
+
+/* ─── Heading unit ──────────────────────────────────────────────────────────── */
+/* The emphasis span inside a heading (Phase 11; components/ui/HeadingUnit.tsx).
+   <em> is italic in every UA stylesheet, so font-style is explicit until Phase
+   16's --heading-emphasis-style exists. The colour reads the cascade-aware accent
+   AT THE SPAN, so the dark swap reaches it; Phase 14 moves it to
+   --color-accent-text. No literal fallback: provisioning rewrites literals. */
+@utility heading-emphasis {
+  font-style: normal;
+  color: var(--color-accent);
+}

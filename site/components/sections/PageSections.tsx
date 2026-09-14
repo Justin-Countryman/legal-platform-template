@@ -1,4 +1,7 @@
 import {type NapTokens} from '@/lib/tokens'
+import {resolveResultsDisclaimer} from '@/lib/legal'
+import {CaseResultsSection, type CaseResultsSectionData} from './CaseResultsSection'
+import {ContentSectionBlock, isContentSectionEmpty, type ContentSectionData} from './ContentSectionBlock'
 import {TestimonialsGridSection, type TestimonialsGridSectionData} from './TestimonialsGridSection'
 import {FeaturedTestimonialSection, type FeaturedTestimonialSectionData} from './FeaturedTestimonialSection'
 import {CtaSectionBlock, type CtaSectionBlockData} from './CtaSectionBlock'
@@ -26,15 +29,21 @@ export type PageSectionData =
   | ReviewsSectionBlockData
   | ({_type: 'videoSection'} & VideoSectionBlockData)
   | ({_type: 'practiceAreaNav'} & PracticeAreaNavBlockData)
+  | ({_type: 'contentSection'} & ContentSectionData)
+  | ({_type: 'caseResultsSection'} & CaseResultsSectionData)
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function PageSections({
   sections,
   napTokens,
+  resultsDisclaimer,
 }: {
   sections: PageSectionData[]
   napTokens?: NapTokens | null
+  /** Raw siteSettings.resultsDisclaimer, projected by the page query. Nullable
+   *  by design: the resolver supplies the code constant when it is absent. */
+  resultsDisclaimer?: string | null
 }) {
   if (!sections || sections.length === 0) return null
 
@@ -60,6 +69,14 @@ export function PageSections({
             return <VideoSectionBlock key={i} data={section} napTokens={napTokens} />
           case 'practiceAreaNav':
             return <PracticeAreaNavBlock key={i} data={section} napTokens={napTokens} />
+          // Phase 11: the two documents an interior list can now reference. Both
+          // take the results disclaimer, resolved here, never by the component.
+          case 'contentSection':
+            return isContentSectionEmpty(section) ? null : (
+              <ContentSectionBlock key={i} data={section} disclaimer={resolveResultsDisclaimer(resultsDisclaimer)} napTokens={napTokens} scale="interior" />
+            )
+          case 'caseResultsSection':
+            return <CaseResultsSection key={i} data={section} disclaimer={resolveResultsDisclaimer(resultsDisclaimer)} napTokens={napTokens} />
           default:
             return null
         }

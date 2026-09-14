@@ -21,6 +21,7 @@ import {TestimonialsGridSection, type TestimonialsGridSectionData} from '@/compo
 import {FeaturedTestimonialSection, type FeaturedTestimonialSectionData} from '@/components/sections/FeaturedTestimonialSection'
 import {VideoSectionBlock, type VideoSectionBlockData} from '@/components/sections/VideoSectionBlock'
 import {CaseResultsSection, type CaseResultsSectionData} from '@/components/sections/CaseResultsSection'
+import {ContentSectionBlock, isContentSectionEmpty, type ContentSectionData} from '@/components/sections/ContentSectionBlock'
 import {resolveResultsDisclaimer} from '@/lib/legal'
 import {type NapTokens} from '@/lib/tokens'
 
@@ -39,8 +40,8 @@ import {type NapTokens} from '@/lib/tokens'
 // THE LIST IT RENDERS (Phase 10, 2026-09-14; monorepo WS-V1-PHASE10-DESIGN).
 // `homePage.canvas` holds two kinds of member for one pin:
 //
-//   - the seven INLINE SECTION OBJECTS (`<name>Inline`), page-owned copies of
-//     the shared sections, rendered by the same section components interior
+//   - the eight INLINE SECTION OBJECTS (`<name>Inline`), page-owned copies of
+//     the shared sections and the content section (Phase 11), rendered by the same section components interior
 //     pages use (`components/sections/`), which take their data as props and
 //     carry no `_type`: this switch owns the discriminant;
 //   - the six OLD BLOCK TYPES, retired (deprecated in the schema) and rendered
@@ -90,6 +91,7 @@ export type HomepageBlock =
   | InlineMember<'featuredTestimonialInline', FeaturedTestimonialSectionData>
   | InlineMember<'videoSectionInline', VideoSectionBlockData>
   | InlineMember<'caseResultsSectionInline', CaseResultsSectionData>
+  | InlineMember<'contentSectionInline', ContentSectionData>
 
 // The disclaimer is resolved HERE, not in the block, and passed as a required
 // prop. Bar advertising rules require past results to be paired with a
@@ -137,6 +139,18 @@ function renderBlock(
           data={block}
           disclaimer={resolveResultsDisclaimer(resultsDisclaimer)}
           napTokens={napTokens}
+        />
+      )
+    // Emptiness is decided HERE, so an empty member returns null to the map
+    // below and gets no ScrollReveal wrapper. The disclaimer is resolved here
+    // for the same reason as case results': the component cannot skip it.
+    case 'contentSectionInline':
+      return isContentSectionEmpty(block) ? null : (
+        <ContentSectionBlock
+          data={block}
+          disclaimer={resolveResultsDisclaimer(resultsDisclaimer)}
+          napTokens={napTokens}
+          scale="marketing"
         />
       )
     // No default case that renders something generic. An unknown block type

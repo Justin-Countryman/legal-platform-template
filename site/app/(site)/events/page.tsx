@@ -260,7 +260,7 @@ export default async function EventsIndexPage() {
 
       {/* Full-width sections */}
       {indexPage?.sections && indexPage.sections.length > 0 && (
-        <PageSections sections={indexPage.sections} napTokens={tokens} />
+        <PageSections sections={indexPage.sections} napTokens={tokens} resultsDisclaimer={indexPage.resultsDisclaimer} />
       )}
 
       {/* Global CTA */}

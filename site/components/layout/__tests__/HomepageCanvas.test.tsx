@@ -201,3 +201,42 @@ describe('HomepageCanvas — the inline section objects dispatch to the shared s
     expect(queryAllByTestId('scroll-reveal')).toHaveLength(1)
   })
 })
+
+describe('HomepageCanvas — contentSectionInline (Phase 11)', () => {
+  // The content section dispatches beside the thirteen existing cases, at the
+  // marketing tier, with the results disclaimer resolved here, and an EMPTY
+  // member is dropped by the dispatcher so it leaves no ScrollReveal wrapper.
+  const statement = (key: string, extra: Record<string, unknown> = {}): HomepageBlock =>
+    ({_type: 'contentSectionInline', _key: key, layout: 'statement', heading: 'Why {{firmName}} wins', headingEmphasis: '{{firmName}}', ...extra}) as HomepageBlock
+
+  it('dispatches to the content section at the marketing tier, with the emphasis resolved', () => {
+    const {container} = render(<HomepageCanvas blocks={[statement('a')]} napTokens={{firmName: 'Acme Law'}} />)
+    const h2 = container.querySelector('h2')!
+    expect(h2.innerHTML).toBe('Why <em class="heading-emphasis">Acme Law</em> wins')
+    expect(h2.className).toContain('marketing-h2')
+    expect(container.querySelector('[data-testid="results-disclaimer"]')).toBeNull()
+  })
+
+  it('an empty content section after the first band leaves no wrapper', () => {
+    const empty = statement('b', {heading: ''})
+    const {queryAllByTestId, container} = render(<HomepageCanvas blocks={[statement('a'), empty]} />)
+    expect(queryAllByTestId('scroll-reveal')).toHaveLength(0)
+    expect(container.querySelectorAll('section')).toHaveLength(1)
+  })
+
+  it.each([
+    ['absent', undefined],
+    ['whitespace', '   '],
+  ])('a proof number renders the default disclaimer when the override is %s', (_label, value) => {
+    const {getByTestId} = render(
+      <HomepageCanvas blocks={[statement('a', {proof: {number: '$40M', caption: 'recovered'}})]} resultsDisclaimer={value} />,
+    )
+    expect(getByTestId('results-disclaimer').textContent).toBe(RESULTS_DISCLAIMER_DEFAULT)
+  })
+
+  it('a stat row renders the operator wording when it is set', () => {
+    const row = {_type: 'contentSectionInline', _key: 's', layout: 'statRow', items: [{_key: 'i', title: '500+', body: 'families'}]} as HomepageBlock
+    const {getByTestId} = render(<HomepageCanvas blocks={[row]} resultsDisclaimer="Jurisdiction wording." />)
+    expect(getByTestId('results-disclaimer').textContent).toBe('Jurisdiction wording.')
+  })
+})

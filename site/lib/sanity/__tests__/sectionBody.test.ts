@@ -49,6 +49,24 @@ const PAIRS: Array<[doc: string, inline: string, fields: Record<string, unknown>
     heading: 'Results', intro: 'Some of them.', ctaButton: {title: 'More', url: '/results/', variant: 'secondary'},
     caseResults: [{_key: 'c1', _type: 'reference', _ref: 'result-1'}, {_key: 'c2', _type: 'reference', _ref: 'result-missing'}],
   }],
+  // The content section (Phase 11), once per layout and once with video media.
+  ['contentSection', 'contentSectionInline', {
+    layout: 'split', mediaSide: 'left', tagline: 'About', heading: 'Why {{firmName}}', headingEmphasis: '{{firmName}}',
+    body: [{_type: 'block', _key: 'b', style: 'normal', markDefs: [], children: [{_type: 'span', _key: 's', text: 'We help.', marks: []}]}],
+    items: [{_key: 'i1', _type: 'contentSectionItem', title: 'Local', body: 'Here since 1990.'}],
+    pullQuote: {text: 'We answer every call.', attribution: 'The partners'}, proof: {number: '$40M', caption: 'recovered'},
+    badges: [{_key: 'g1', _type: 'reference', _ref: 'badge-1'}, {_key: 'g2', _type: 'reference', _ref: 'badge-missing'}],
+    buttons: [{_key: 'b1', title: 'Call us', url: '/contact/', variant: 'primary'}], showPhone: true,
+    media: {kind: 'photo', image: {_type: 'image', alt: 'The office', asset: {_ref: 'image-1'}}}, imageTreatment: 'framed', surface: 'dark',
+  }],
+  ['contentSection', 'contentSectionInline', {
+    layout: 'twoColumnText', heading: 'Two columns',
+    items: [{_key: 'i1', _type: 'contentSectionItem', title: 'One'}, {_key: 'i2', _type: 'contentSectionItem', title: 'Two'}],
+  }],
+  ['contentSection', 'contentSectionInline', {layout: 'statement', heading: 'A statement', buttons: [{_key: 'b1', title: 'A', url: '/a/'}, {_key: 'b2', title: 'B', url: '/b/'}]}],
+  ['contentSection', 'contentSectionInline', {layout: 'ribbon', heading: 'Serving the county since 1990', marquee: true}],
+  ['contentSection', 'contentSectionInline', {layout: 'statRow', items: [{_key: 's1', _type: 'contentSectionItem', title: '500+', body: 'families'}]}],
+  ['contentSection', 'contentSectionInline', {layout: 'split', heading: 'Watch', media: {kind: 'video', video: {_type: 'reference', _ref: 'video-1'}}}],
 ]
 
 const OLD_MEMBERS = [
@@ -95,6 +113,29 @@ function strip(member: Record<string, unknown>): Record<string, unknown> {
 }
 
 describe('SECTION_BODY: the inline member and the referenced document project the same keys and values', () => {
+  it('projects the content section keys on the inline member: items, the image with its own alt, the dereferenced video, proof, pull quote, body and badges', async () => {
+    const canvas = (await run(`*[_id == "homePage-home"][0].canvas ${CANVAS_FRAGMENT}`)) as Array<Record<string, unknown>>
+    const first = PAIRS.findIndex(([doc]) => doc === 'contentSection')
+    const split = canvas[first] as {
+      tagline: string; headingEmphasis: string; items: Array<{title: string}>; media: {kind: string; image: {alt: string}}
+      proof: {number: string}; pullQuote: {text: string}; body: unknown[]; badges: unknown[]; imageTreatment: string
+    }
+    expect(split.tagline).toBe('About')
+    expect(split.headingEmphasis).toBe('{{firmName}}')
+    expect(split.items.map((i) => i.title)).toEqual(['Local'])
+    expect(split.media.kind).toBe('photo')
+    expect(split.media.image.alt).toBe('The office')
+    expect(split.proof.number).toBe('$40M')
+    expect(split.pullQuote.text).toBe('We answer every call.')
+    expect(split.body).toHaveLength(1)
+    expect(split.badges).toHaveLength(1) // the dangling badge dropped
+    expect(split.imageTreatment).toBe('framed')
+    const video = canvas[first + 5] as {media: {video: {title: string; youTubeUrl: string}}}
+    expect(video.media.video).toEqual(expect.objectContaining({title: 'Intro', youTubeUrl: 'https://www.youtube.com/watch?v=abc123xyz00'}))
+    // Another section's items still resolve through its own branch, not the content section's.
+    expect((canvas[0] as {items: Array<{href: string}>}).items[0].href).toBe('/family-law/')
+  })
+
   it('for every shared section, both modes where a mode exists', async () => {
     const sections = (await run(`*[_id == "host"][0].sections ${SECTIONS_FRAGMENT}`)) as Array<Record<string, unknown>>
     const canvas = (await run(`*[_id == "homePage-home"][0].canvas ${CANVAS_FRAGMENT}`)) as Array<Record<string, unknown>>

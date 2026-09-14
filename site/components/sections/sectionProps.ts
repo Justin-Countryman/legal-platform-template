@@ -3,7 +3,10 @@ import type {
   AttorneySectionInline,
   BadgesSection,
   BadgesSectionInline,
+  CaseResultsSection,
   CaseResultsSectionInline,
+  ContentSection,
+  ContentSectionInline,
   FeaturedTestimonial,
   FeaturedTestimonialInline,
   PracticeAreaNav,
@@ -18,6 +21,7 @@ import type {SiloNavItem} from './silo/types'
 import type {AttorneyCard} from './AttorneyCardParts'
 import type {TestimonialData} from '@/components/ui/TestimonialCard'
 import type {VideoItem} from '@/components/media/VideoEmbed'
+import type {SanityImage as SanityImageData} from '@/lib/sanity/image'
 
 // ─── One props type per shared section ────────────────────────────────────────
 //
@@ -88,12 +92,35 @@ export type FeaturedTestimonialProps = SectionProps<
   {testimonial?: TestimonialData | null; appearance?: SectionAppearance | null}
 >
 export type VideoSectionProps = SectionProps<VideoSection, 'videos', {videos?: VideoItem[] | null}>
-// The case-results DOCUMENT is not registered in this release (see the schema
-// file), so the inline object is the generated type this one derives from.
 export type CaseResultsSectionProps = SectionProps<
-  CaseResultsSectionInline,
+  CaseResultsSection,
   'caseResults' | 'ctaButton' | AppearanceKeys,
   {caseResults?: CaseResultItem[] | null; ctaButton?: CtaButtonData | null; appearance?: SectionAppearance | null}
+>
+
+// The content section (Phase 11). Its nested objects are substituted by hand as
+// well as its resolved keys: `Nullable` reaches one level down, and GROQ returns
+// null inside `pullQuote`, `proof` and `media` where the schema type says
+// undefined.
+export type ContentSectionItem = {_key?: string; title?: string | null; body?: string | null}
+export type ContentSectionMedia = {
+  kind?: string | null
+  image?: (SanityImageData & {alt?: string | null}) | null
+  video?: VideoItem | null
+}
+export type ContentSectionProps = SectionProps<
+  ContentSection,
+  'body' | 'items' | 'pullQuote' | 'proof' | 'badges' | 'buttons' | 'media' | AppearanceKeys,
+  {
+    body?: unknown[] | null
+    items?: ContentSectionItem[] | null
+    pullQuote?: {text?: string | null; attribution?: string | null} | null
+    proof?: {number?: string | null; caption?: string | null} | null
+    badges?: BadgeImage[] | null
+    buttons?: CtaButtonData[] | null
+    media?: ContentSectionMedia | null
+    appearance?: SectionAppearance | null
+  }
 >
 
 // ─── The inline object is a subset of its document ────────────────────────────
@@ -110,3 +137,7 @@ void _badgesSection
 void _testimonialsGrid
 void _featuredTestimonial
 void _videoSection
+const _caseResultsSection: Subset<CaseResultsSectionInline, CaseResultsSection> = true
+const _contentSection: Subset<ContentSectionInline, ContentSection> = true
+void _caseResultsSection
+void _contentSection
