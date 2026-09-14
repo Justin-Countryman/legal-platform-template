@@ -291,6 +291,10 @@ export const homePage = defineType({
       name: 'sections',
       fieldset: 'layout',
       title: 'Full Width Sections (retired)',
+      // Hidden while empty (Justin, 2026-09-14): an empty retired list is only clutter.
+      // A homepage that still holds members keeps the field visible until Phase 12
+      // folds them into the canvas and Phase 15 removes it.
+      hidden: ({value}) => !Array.isArray(value) || value.length === 0,
       type: 'array',
       deprecated: RETIRED_SECTIONS,
       description: 'Retired. Shared interior-page sections referenced from the homepage; still rendered after the canvas until Phase 12 migrates them and Phase 15 removes this field. Use the Homepage Canvas instead.',

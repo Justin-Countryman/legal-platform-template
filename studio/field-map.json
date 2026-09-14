@@ -10733,6 +10733,7 @@
         },
         {
           "description": "Retired. Shared interior-page sections referenced from the homepage; still rendered after the canvas until Phase 12 migrates them and Phase 15 removes this field. Use the Homepage Canvas instead.",
+          "hidden": "<predicate>",
           "jsonType": "array",
           "of": [
             "reference"
