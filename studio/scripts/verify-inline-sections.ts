@@ -27,7 +27,8 @@
  *      offers `ctaSection`, so neither is a type that renders nowhere.
  *   6. `practiceAreaNavItem.featured` is reachable on the homepage (the inline
  *      practice-area section lives there) and on the section document.
- *   7. The content section (Phase 11): its layout-scoped `hidden` callbacks and
+ *   7. The content section (Phase 11): its layout-scoped `hidden` callbacks,
+ *      its heading warning (statement, ribbon and two-column text only) and
  *      its emphasis, proof and button warnings follow the member under a decoy
  *      root, and `imageTreatment` carries no `initialValue` (a theme axis:
  *      absent means inherit, and a seed would be folded into composed members).
@@ -220,6 +221,13 @@ async function validationCases(): Promise<void> {
   if (!warnsOn(await runWithRoot({...content, heading: 'x', proof: {number: '$1M'}, badges: [badge]}), 'proof')) fail('contentSectionInline did not warn on a proof number beside its own badges')
   const three = [1, 2, 3].map((n) => ({_key: `k${n}`, _type: 'ctaButton', title: 't', url: '/'}))
   if (!warnsOn(await runWithRoot({...content, heading: 'x', buttons: three}), 'buttons')) fail('contentSectionInline did not warn on three buttons')
+  // The heading is needed only where the layout needs it. The root claims the
+  // opposite layout each time, so a document-scoped rule would answer wrongly.
+  for (const [layout, expectWarn] of [['statement', true], ['ribbon', true], ['twoColumnText', true], ['split', false], ['statRow', false]] as const) {
+    const root = {...decoyRoot, layout: expectWarn ? 'split' : 'statement'}
+    const markers = (await validateDocument({document: {...doc({_type: 'contentSectionInline', layout}), ...root} as unknown as SanityDocument, workspace, getClient} as never)) as Array<{path?: unknown[]; message?: string}>
+    if (warnsOn(markers, 'heading') !== expectWarn) fail(`contentSectionInline ${layout} with no heading ${expectWarn ? 'did not warn' : 'warned'} on heading`)
+  }
   ok('validation callbacks follow the member, not the root document')
 }
 
