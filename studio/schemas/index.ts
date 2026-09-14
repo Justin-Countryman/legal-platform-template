@@ -85,6 +85,7 @@ import {testimonialsGridInline} from './documents/sections/testimonialsGrid'
 import {featuredTestimonialInline} from './documents/sections/featuredTestimonial'
 import {videoSectionInline} from './documents/sections/videoSection'
 import {contentSectionInline} from './documents/sections/contentSection'
+import {reviewsSectionInline} from './documents/sections/reviewsSection'
 import {video} from './documents/video'
 import {videoIndex} from './documents/videoIndex'
 
@@ -172,6 +173,7 @@ export const schemaTypes = [
   featuredTestimonialInline,
   videoSectionInline,
   contentSectionInline,
+  reviewsSectionInline,
 
   // Homepage canvas blocks (inline objects, not documents; retired 2026-09-14,
   // deleted in Phase 15)

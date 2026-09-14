@@ -1009,7 +1009,7 @@ export const CANVAS_FRAGMENT = groq`[]{
   _type in [
     "practiceAreaNavInline", "attorneySectionInline", "caseResultsSectionInline",
     "badgesSectionInline", "testimonialsGridInline", "featuredTestimonialInline",
-    "videoSectionInline", "contentSectionInline"
+    "videoSectionInline", "contentSectionInline", "reviewsSectionInline"
   ] => {
     ${SECTION_BODY}
   },

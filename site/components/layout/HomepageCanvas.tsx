@@ -22,6 +22,7 @@ import {FeaturedTestimonialSection, type FeaturedTestimonialSectionData} from '@
 import {VideoSectionBlock, type VideoSectionBlockData} from '@/components/sections/VideoSectionBlock'
 import {CaseResultsSection, type CaseResultsSectionData} from '@/components/sections/CaseResultsSection'
 import {ContentSectionBlock, isContentSectionEmpty, type ContentSectionData} from '@/components/sections/ContentSectionBlock'
+import {ReviewsSectionBlock, type ReviewsSectionBlockData} from '@/components/sections/ReviewsSectionBlock'
 import {resolveResultsDisclaimer} from '@/lib/legal'
 import {type NapTokens} from '@/lib/tokens'
 
@@ -92,6 +93,7 @@ export type HomepageBlock =
   | InlineMember<'videoSectionInline', VideoSectionBlockData>
   | InlineMember<'caseResultsSectionInline', CaseResultsSectionData>
   | InlineMember<'contentSectionInline', ContentSectionData>
+  | InlineMember<'reviewsSectionInline', ReviewsSectionBlockData>
 
 // The disclaimer is resolved HERE, not in the block, and passed as a required
 // prop. Bar advertising rules require past results to be paired with a
@@ -153,6 +155,9 @@ function renderBlock(
           scale="marketing"
         />
       )
+    // A reviews band is its embed: none, no band, and no ScrollReveal wrapper.
+    case 'reviewsSectionInline':
+      return block.reviewsEmbed ? <ReviewsSectionBlock data={block} napTokens={napTokens} /> : null
     // No default case that renders something generic. An unknown block type
     // renders nothing rather than a placeholder: a block added to the schema
     // and not to this switch should be invisible, not half-drawn.

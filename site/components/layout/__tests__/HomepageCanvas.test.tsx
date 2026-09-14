@@ -240,3 +240,21 @@ describe('HomepageCanvas — contentSectionInline (Phase 11)', () => {
     expect(getByTestId('results-disclaimer').textContent).toBe('Jurisdiction wording.')
   })
 })
+
+describe('HomepageCanvas — reviewsSectionInline', () => {
+  // The homepage copy of the reviews section (2026-09-14). A member with no
+  // embed renders nothing and leaves no ScrollReveal wrapper.
+  const member = (key: string, extra: Record<string, unknown> = {}): HomepageBlock =>
+    ({_type: 'reviewsSectionInline', _key: key, heading: 'What clients say', reviewsEmbed: '<div>widget</div>', ...extra}) as HomepageBlock
+
+  it('dispatches to the reviews section', () => {
+    const {getByRole} = render(<HomepageCanvas blocks={[member('r')]} />)
+    expect(getByRole('heading', {level: 2}).textContent).toBe('What clients say')
+  })
+
+  it('a member with no embed after the first band leaves no wrapper', () => {
+    const {queryAllByTestId, container} = render(<HomepageCanvas blocks={[member('a'), member('b', {reviewsEmbed: ''})]} />)
+    expect(queryAllByTestId('scroll-reveal')).toHaveLength(0)
+    expect(container.querySelectorAll('section')).toHaveLength(1)
+  })
+})

@@ -169,10 +169,17 @@ export const homePage = defineType({
     // ─── Content ──────────────────────────────────────────────────────────────
     {
       name: 'reviewsEmbed',
-      title: 'Reviews Embed Code',
+      title: 'Reviews Embed Code (retired)',
       type: 'text',
       rows: 5,
-      description: 'Homepage-specific reviews embed (optional — used as an alternative to the Reviews Section component)',
+      // Retired 2026-09-14 (Justin): no query or component ever read this field,
+      // so an embed pasted here showed nowhere. The homepage list's Reviews
+      // section (`reviewsSectionInline`) replaces it. Hidden while empty; a
+      // homepage that holds a value keeps it visible for Phase 12 to move into a
+      // Reviews section, and Phase 15 removes the field.
+      deprecated: {reason: 'Retired 2026-09-14: this field never rendered. Add a Reviews section to the Homepage Canvas instead; Phase 12 moves any value here into one and Phase 15 removes this field.'},
+      hidden: ({value}) => typeof value !== 'string' || value.trim() === '',
+      description: 'Retired: this field was never shown on the site. Add a Reviews section to the Homepage Canvas instead.',
     },
     // ─── Homepage Canvas ──────────────────────────────────────────────────────
     // The composed mid-page: everything between the hero and the footer, as an
@@ -194,7 +201,7 @@ export const homePage = defineType({
     // schema is asserted by scripts/verify-inline-sections.ts.
     //
     // `sections` BELOW stays for one more pin, deprecated, for the same reason.
-    // The fourteen `of` entries are flat literals on purpose: a monorepo test
+    // The fifteen `of` entries are flat literals on purpose: a monorepo test
     // parses this list with a regex (test_required_beats_are_realizable.py).
     {
       name: 'canvas',
@@ -219,6 +226,7 @@ export const homePage = defineType({
                 'featuredTestimonialInline',
                 'videoSectionInline',
                 'contentSectionInline',
+                'reviewsSectionInline',
               ],
             },
             {
@@ -245,6 +253,7 @@ export const homePage = defineType({
         {type: 'featuredTestimonialInline'},
         {type: 'videoSectionInline'},
         {type: 'contentSectionInline'},
+        {type: 'reviewsSectionInline'},
         {type: 'narrativeBlock', title: 'Narrative (retired block)', deprecated: RETIRED_BLOCK},
         {type: 'differentiatorBlock', title: 'Differentiators (retired block)', deprecated: RETIRED_BLOCK},
         {type: 'caseResultsBlock', title: 'Case Results (retired block; use Case Results)', deprecated: RETIRED_BLOCK},

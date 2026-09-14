@@ -11,6 +11,8 @@ import type {
   FeaturedTestimonialInline,
   PracticeAreaNav,
   PracticeAreaNavInline,
+  ReviewsSection,
+  ReviewsSectionInline,
   TestimonialsGrid,
   TestimonialsGridInline,
   VideoSection,
@@ -98,6 +100,9 @@ export type CaseResultsSectionProps = SectionProps<
   {caseResults?: CaseResultItem[] | null; ctaButton?: CtaButtonData | null; appearance?: SectionAppearance | null}
 >
 
+// The reviews section (2026-09-14): only its buttons resolve.
+export type ReviewsSectionProps = SectionProps<ReviewsSection, 'buttons', {buttons?: CtaButtonData[] | null}>
+
 // The content section (Phase 11). Its nested objects are substituted by hand as
 // well as its resolved keys: `Nullable` reaches one level down, and GROQ returns
 // null inside `pullQuote`, `proof` and `media` where the schema type says
@@ -141,3 +146,5 @@ const _caseResultsSection: Subset<CaseResultsSectionInline, CaseResultsSection> 
 const _contentSection: Subset<ContentSectionInline, ContentSection> = true
 void _caseResultsSection
 void _contentSection
+const _reviewsSection: Subset<ReviewsSectionInline, ReviewsSection> = true
+void _reviewsSection
