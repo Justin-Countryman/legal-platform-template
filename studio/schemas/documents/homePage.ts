@@ -262,33 +262,20 @@ export const homePage = defineType({
         {type: 'siloNavBlock', title: 'Areas of Law (retired block; use Practice Area Navigation)', deprecated: RETIRED_BLOCK},
       ],
     },
-    // ─── Coda ─────────────────────────────────────────────────────────────────
-    // The closing line: one centered statement on a quiet band after the final
-    // CTA and before the footer, closing the page's emotional arc. A BOOKEND,
-    // not a canvas unit: fixed position, fixed shape, not composed and not
-    // editable per block.
-    //
-    // WHY IT LIVES ON homePage AND NOT SOMEWHERE SHARED. Both obvious homes are
-    // wrong. `globalCta` is a shared singleton AND an ask, where a coda closes
-    // one page's arc and is a statement rather than a call to action; putting it
-    // there would give every page one page's closing line. `siteSettings` is
-    // site-wide for the same mismatch. The coda is written to follow THIS page's
-    // narrative, so it belongs beside `hero` and `canvas`.
-    //
-    // KNOWN AND DELIBERATE: this does not generalize. BI-Library calls the coda
-    // a platform default and it appears on most premium reference sites, so a
-    // landing page may want one later. A `homePage`-only field will not serve
-    // that, and that is the platform's standing one-consumer posture rather than
-    // an oversight (BI-Library cites it at OUTSTANDING items 14 and 15). Adding
-    // the same field to `landingPage` when a second consumer exists is additive
-    // and invalidates nothing authored here. The trigger is a real landing page
-    // that wants a coda.
+    // ─── Coda (removed) ───────────────────────────────────────────────────────
+    // REMOVED 2026-09-14 (Justin, monorepo [R-446]): the one-line closing
+    // statement after the final CTA no longer renders; nothing sits below the
+    // CTA, and a closing statement, when wanted, is a content-section band in
+    // the canvas above it. The field stays, retired and hidden while empty, so a
+    // stored value is not lost before Phase 15 deletes it with the other retired
+    // homepage fields.
     {
       name: 'codaLine',
-      title: 'Coda Line',
+      title: 'Coda Line (retired)',
       type: 'string',
-      description:
-        'One sentence, centered on a quiet band after the final CTA. Closes the page rather than asking for anything. Deliberately a single line: a paragraph here reads as a second CTA.',
+      deprecated: {reason: 'Removed 2026-09-14: the closing line after the final CTA no longer renders. Use a content section in the Homepage Canvas for a closing statement; Phase 15 removes this field.'},
+      hidden: ({value}) => typeof value !== 'string' || value.trim() === '',
+      description: 'Retired: this line no longer shows on the site. Add a content section (statement or ribbon) to the Homepage Canvas for a closing statement.',
       components: {input: TokenStringInput},
     },
     // ─── Page Sections ────────────────────────────────────────────────────────
