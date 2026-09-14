@@ -111,8 +111,27 @@ export function fields({inline}: {inline: boolean}) {
       name: 'heading',
       title: 'Heading',
       type: 'string',
+      description: 'Needed on a statement, a ribbon and two-column text. Optional on a split and a stat row.',
       components: {input: TokenStringInput},
-      validation: (Rule) => Rule.required().warning(),
+      // Warn only where the layout needs a heading, and say why: a statement
+      // and a ribbon render nothing without one (ContentSectionBlock's
+      // isContentSectionEmpty), and two-column text puts it in the left
+      // column. A split and a stat row stand without a heading, so they never
+      // warn (a blanket required() warned on every headless split).
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          if (typeof value === 'string' && value.trim()) return true
+          switch (layoutOf(context.parent)) {
+            case 'statement':
+              return 'A statement shows only with a heading; without one this section does not appear on the page.'
+            case 'ribbon':
+              return 'A ribbon is its heading; without one this section does not appear on the page.'
+            case 'twoColumnText':
+              return 'Two-column text puts the heading in the left column; without one that column is empty.'
+            default:
+              return true
+          }
+        }).warning(),
     }),
     defineField({
       name: 'headingEmphasis',

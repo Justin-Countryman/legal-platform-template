@@ -4538,10 +4538,9 @@
           "type": "string"
         },
         {
+          "description": "Needed on a statement, a ribbon and two-column text. Optional on a split and a stat row.",
           "jsonType": "string",
           "path": "heading",
-          "required": "warning",
-          "requiredMessage": "validation:generic.required",
           "title": "Heading",
           "type": "string"
         },
@@ -9991,6 +9990,7 @@
           "type": "string"
         },
         {
+          "description": "Needed on a statement, a ribbon and two-column text. Optional on a split and a stat row.",
           "jsonType": "string",
           "path": "canvas[]<contentSectionInline>.heading",
           "title": "Heading",
