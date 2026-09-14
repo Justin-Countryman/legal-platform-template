@@ -10,7 +10,8 @@
 #      has not touched `generateStaticParams`, the layouts, the sitemap or
 #      robots, and would be green for the wrong reason);
 #   2. the six per-slug templates rendered — every fixture slug appears in
-#      Next's route table;
+#      Next's route table — and (2026-09-14, Phase 10) the homepage list's
+#      inline section member rendered into the prerendered homepage;
 #   3. (2026-09-13, Phase 8) the build asked at most MAX_QUERIES queries — a
 #      regression to per-call fetching (the chrome fetched from ten places, the
 #      page query sent twice) shows up as a count above the ceiling the same
@@ -98,7 +99,24 @@ fi
 
 MISSING=0
 while IFS= read -r line; do
-  slug=$(printf '%s' "$line" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const d=JSON.parse(s);process.stdout.write(d.slug.current)})')
+  typed=$(printf '%s' "$line" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const d=JSON.parse(s);process.stdout.write(d._type+" "+d.slug.current)})')
+  type=${typed%% *}
+  slug=${typed#* }
+  case "$type" in
+    # The homepage-list fixture (2026-09-14, Phase 10): the homepage prerenders
+    # at `/` whatever the fixture holds, so the route is no evidence; what is
+    # evidence is the inline section member's heading in the prerendered page,
+    # which only renders through the new dispatch path and SECTION_BODY.
+    homePage)
+      if ! grep -qF 'Fixture areas' .next/server/app/index.html; then
+        echo "::error::The homepage fixture's inline section member did not render into .next/server/app/index.html; the homepage list's new path is not exercised."
+        MISSING=1
+      fi
+      continue ;;
+    # Listed by the homepage member above; served by the catch-all at request
+    # time (no generateStaticParams), so it has no prerendered route to assert.
+    practiceArea) continue ;;
+  esac
   case "$slug" in
     attorneys/*|staff/*|blog/*|events/*) route="/$slug" ;;
     *) route="/review/$slug" ;;

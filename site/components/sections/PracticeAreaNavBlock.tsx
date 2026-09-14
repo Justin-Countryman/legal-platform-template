@@ -1,7 +1,8 @@
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {resolveHovers, type SiloHoverEffect} from '@/lib/siloHover'
-import {SectionShell, type SectionAppearance} from './SectionShell'
+import {SectionShell} from './SectionShell'
+import {type PracticeAreaNavProps} from './sectionProps'
 import {
   SiloSpotlight, SiloFeature, SiloTileLayout, SiloInline, SiloSplit,
 } from './silo/SiloLayouts'
@@ -13,22 +14,10 @@ import type {SiloNavItem, SiloLayout, SiloIconPosition, SiloSectionLayout, SiloG
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type PracticeAreaNavBlockData = {
-  _type: 'practiceAreaNav'
-  tagline?: string | null
-  heading?: string | null
-  description?: string | null
-  layout?: SiloLayout | null
-  sectionLayout?: SiloSectionLayout | null
-  gridMode?: SiloGridMode | null
-  mobileDisplay?: SiloMobileDisplay | null
-  hoverEffects?: string[] | null
-  showArrow?: boolean | null
-  iconPosition?: SiloIconPosition | null
-  mode?: 'manual' | 'allTopLevel' | null
-  items?: SiloNavItem[] | null
-  appearance?: SectionAppearance | null
-}
+// One props type for both renderings (the referenced document on interior pages,
+// the inline copy on the homepage list); no `_type`, the dispatchers own it.
+// See sectionProps.ts.
+export type PracticeAreaNavBlockData = PracticeAreaNavProps
 
 // Dispatch the chosen layout (the cardStyle → dispatcher pattern). Every layout
 // inherits the resolved hover preset + the section-level Show Arrow / Icon Position

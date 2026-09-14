@@ -1,24 +1,15 @@
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
-import {AttorneyCard, type AttorneyCardStyle} from './AttorneyCard'
-import {type AttorneyCard as AttorneyCardData} from './AttorneyCardParts'
+import {AttorneyCard} from './AttorneyCard'
 import {AttorneySlider} from './AttorneySlider'
-import {SectionShell, type SectionAppearance} from './SectionShell'
+import {SectionShell} from './SectionShell'
+import {type AttorneySectionProps} from './sectionProps'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type AttorneySectionBlockData = {
-  _type: 'attorneySection'
-  tagline?: string | null
-  heading?: string | null
-  description?: string | null
-  mode?: 'practiceArea' | 'manual' | 'all' | null
-  layout?: 'grid' | 'slider' | null
-  cardStyle?: AttorneyCardStyle | null
-  attorneys?: AttorneyCardData[] | null
-  orderedAttorneyIds?: string[] | null
-  appearance?: SectionAppearance | null
-}
+// One props type for both renderings; no `_type`, the dispatchers own it. See
+// sectionProps.ts.
+export type AttorneySectionBlockData = AttorneySectionProps
 
 // ─── Component ────────────────────────────────────────────────────────────────
 

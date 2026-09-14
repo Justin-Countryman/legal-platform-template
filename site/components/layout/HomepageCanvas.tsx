@@ -14,6 +14,13 @@ import {
   type AttorneyHighlightBlockData,
 } from '@/components/homepage/AttorneyHighlightBlock'
 import {SiloNavBlock, type SiloNavBlockData} from '@/components/homepage/SiloNavBlock'
+import {PracticeAreaNavBlock, type PracticeAreaNavBlockData} from '@/components/sections/PracticeAreaNavBlock'
+import {AttorneySectionBlock, type AttorneySectionBlockData} from '@/components/sections/AttorneySectionBlock'
+import {BadgesSectionBlock, type BadgesSectionBlockData} from '@/components/sections/BadgesSectionBlock'
+import {TestimonialsGridSection, type TestimonialsGridSectionData} from '@/components/sections/TestimonialsGridSection'
+import {FeaturedTestimonialSection, type FeaturedTestimonialSectionData} from '@/components/sections/FeaturedTestimonialSection'
+import {VideoSectionBlock, type VideoSectionBlockData} from '@/components/sections/VideoSectionBlock'
+import {CaseResultsSection, type CaseResultsSectionData} from '@/components/sections/CaseResultsSection'
 import {resolveResultsDisclaimer} from '@/lib/legal'
 import {type NapTokens} from '@/lib/tokens'
 
@@ -29,13 +36,26 @@ import {type NapTokens} from '@/lib/tokens'
 // homeHero, InternalHero) because it is one: the structural container for the
 // homepage mid-page.
 //
-// THE CONTRACT WITH THE CLIENT-OWNED SIDE. `components/homepage/` holds block
-// components only, never plumbing. Each block ships at a fixed path and export
-// name (`components/homepage/<Name>Block.tsx` exporting `<Name>Block`), so the
-// imports below are stable on every client. A client rewrites the MARKUP inside
-// a block file; it never renames the file or its export, and it never edits
-// this dispatcher. That is what keeps the treatment bespoke and the wiring
-// identical everywhere.
+// THE LIST IT RENDERS (Phase 10, 2026-09-14; monorepo WS-V1-PHASE10-DESIGN).
+// `homePage.canvas` holds two kinds of member for one pin:
+//
+//   - the seven INLINE SECTION OBJECTS (`<name>Inline`), page-owned copies of
+//     the shared sections, rendered by the same section components interior
+//     pages use (`components/sections/`), which take their data as props and
+//     carry no `_type`: this switch owns the discriminant;
+//   - the six OLD BLOCK TYPES, retired (deprecated in the schema) and rendered
+//     through `components/homepage/*Block.tsx` exactly as before, so a dataset
+//     nobody has migrated yet renders unchanged. Phase 12 migrates the stored
+//     members to the inline types; Phase 15 deletes the six cases, the block
+//     components and the schema types. There is no render-time upgrade: an old
+//     member is an old member until the migration rewrites it, and the golden
+//     in __tests__/HomepageCanvas.parity.test.tsx pins that nothing here moved.
+//
+// THE CONTRACT WITH THE CLIENT-OWNED SIDE, for the old blocks while they last.
+// `components/homepage/` holds block components only, never plumbing. Each
+// block ships at a fixed path and export name, so the imports below are stable
+// on every client. A client rewrites the MARKUP inside a block file; it never
+// renames the file or its export, and it never edits this dispatcher.
 //
 // THIS IS NOT PageSections. PageSections renders the interior-page section
 // system, which produces fixed stacked bands and forbids crossing between them.
@@ -54,6 +74,8 @@ import {type NapTokens} from '@/lib/tokens'
 // The rule is therefore applied HERE, by index, which is the only place that
 // knows a block's position. A block cannot know whether it is first, which is
 // also why blocks do not wrap themselves.
+type InlineMember<T extends string, D> = {_type: T; _key: string} & D
+
 export type HomepageBlock =
   | BadgesBlockData
   | DifferentiatorBlockData
@@ -61,6 +83,13 @@ export type HomepageBlock =
   | CaseResultsBlockData
   | AttorneyHighlightBlockData
   | SiloNavBlockData
+  | InlineMember<'practiceAreaNavInline', PracticeAreaNavBlockData>
+  | InlineMember<'attorneySectionInline', AttorneySectionBlockData>
+  | InlineMember<'badgesSectionInline', BadgesSectionBlockData>
+  | InlineMember<'testimonialsGridInline', TestimonialsGridSectionData>
+  | InlineMember<'featuredTestimonialInline', FeaturedTestimonialSectionData>
+  | InlineMember<'videoSectionInline', VideoSectionBlockData>
+  | InlineMember<'caseResultsSectionInline', CaseResultsSectionData>
 
 // The disclaimer is resolved HERE, not in the block, and passed as a required
 // prop. Bar advertising rules require past results to be paired with a
@@ -88,6 +117,28 @@ function renderBlock(
       return <BadgesBlock data={block} />
     case 'siloNavBlock':
       return <SiloNavBlock data={block} napTokens={napTokens} />
+    // The inline section objects: the shared section components, the same ones
+    // PageSections renders for the referenced documents.
+    case 'practiceAreaNavInline':
+      return <PracticeAreaNavBlock data={block} napTokens={napTokens} />
+    case 'attorneySectionInline':
+      return <AttorneySectionBlock data={block} napTokens={napTokens} />
+    case 'badgesSectionInline':
+      return <BadgesSectionBlock data={block} napTokens={napTokens} />
+    case 'testimonialsGridInline':
+      return <TestimonialsGridSection data={block} napTokens={napTokens} />
+    case 'featuredTestimonialInline':
+      return <FeaturedTestimonialSection data={block} napTokens={napTokens} />
+    case 'videoSectionInline':
+      return <VideoSectionBlock data={block} napTokens={napTokens} />
+    case 'caseResultsSectionInline':
+      return (
+        <CaseResultsSection
+          data={block}
+          disclaimer={resolveResultsDisclaimer(resultsDisclaimer)}
+          napTokens={napTokens}
+        />
+      )
     // No default case that renders something generic. An unknown block type
     // renders nothing rather than a placeholder: a block added to the schema
     // and not to this switch should be invisible, not half-drawn.

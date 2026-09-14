@@ -127,3 +127,77 @@ describe('HomepageCanvas — the results disclaimer cannot be switched off', () 
     expect(container.textContent).toBe('')
   })
 })
+
+describe('HomepageCanvas — the inline section objects dispatch to the shared section components', () => {
+  // Phase 10 (2026-09-14): `homePage.canvas` accepts the seven `<name>Inline`
+  // objects beside the six old block types. The inline members render through
+  // the SAME components PageSections uses for the referenced documents; the old
+  // members keep their old components (no render-time upgrade; the parity
+  // golden pins that). This suite is the dispatch table, one case per type.
+  const items = [{_key: 'i1', label: 'Family Law', href: '/family-law/'}]
+
+  it('practiceAreaNavInline renders through PracticeAreaNavBlock (nav landmark, one grid when stacked)', () => {
+    const {container, getByRole} = render(
+      <HomepageCanvas
+        blocks={[{_type: 'practiceAreaNavInline', _key: 'p', heading: 'How we can help', layout: 'tile', mobileDisplay: 'stacked', items}]}
+      />,
+    )
+    expect(getByRole('heading', {level: 2}).textContent).toBe('How we can help')
+    expect(container.querySelectorAll('nav')).toHaveLength(1)
+    // The section component, not the old block: SectionHeader's scale, not marketing-h2.
+    expect(container.querySelector('h2')?.className).not.toContain('marketing-h2')
+  })
+
+  it('attorneySectionInline renders through AttorneySectionBlock', () => {
+    const {getByRole} = render(
+      <HomepageCanvas
+        blocks={[{_type: 'attorneySectionInline', _key: 'a', heading: 'Our people', layout: 'grid', cardStyle: 'portrait', attorneys: [{_id: 'x', title: 'Jane Roe', slug: 'attorneys/jane'}]}]}
+      />,
+    )
+    expect(getByRole('link', {name: /Jane Roe/}).getAttribute('href')).toBe('/attorneys/jane')
+  })
+
+  it('badgesSectionInline renders through BadgesSectionBlock', () => {
+    const {queryAllByTestId} = render(
+      <HomepageCanvas blocks={[{_type: 'badgesSectionInline', _key: 'b', heading: 'Recognised', layout: 'centeredGrid', badges: [badge(1)]}]} />,
+    )
+    expect(queryAllByTestId('badge-img')).toHaveLength(1)
+  })
+
+  it('caseResultsSectionInline renders the promoted CaseResultsSection with the disclaimer, which cannot be switched off', () => {
+    const block = {_type: 'caseResultsSectionInline', _key: 'c', heading: 'Results', caseResults: [{_id: 'r', amount: '$1M'}]} as HomepageBlock
+    const disclaimerOf = (override?: string) =>
+      render(<HomepageCanvas blocks={[block]} resultsDisclaimer={override} />).container.querySelector('[data-testid="results-disclaimer"]')?.textContent
+    expect(disclaimerOf(undefined)).toBe(RESULTS_DISCLAIMER_DEFAULT)
+    expect(disclaimerOf('   ')).toBe(RESULTS_DISCLAIMER_DEFAULT)
+    expect(disclaimerOf('Jurisdiction wording.')).toBe('Jurisdiction wording.')
+    // No results, no disclaimer, nothing published.
+    const empty = {_type: 'caseResultsSectionInline', _key: 'c', heading: 'Results', caseResults: []} as HomepageBlock
+    expect(render(<HomepageCanvas blocks={[empty]} />).container.querySelector('section')).toBeNull()
+  })
+
+  it('testimonialsGridInline and featuredTestimonialInline render the quote', () => {
+    const t = {_id: 't', quote: 'Superb counsel.', name: 'A client'}
+    expect(render(<HomepageCanvas blocks={[{_type: 'testimonialsGridInline', _key: 'g', heading: 'Clients', testimonials: [t]}]} />).container.textContent).toContain('Superb counsel.')
+    expect(render(<HomepageCanvas blocks={[{_type: 'featuredTestimonialInline', _key: 'f', testimonial: t}]} />).container.textContent).toContain('Superb counsel.')
+  })
+
+  it('videoSectionInline renders through VideoSectionBlock', () => {
+    const {getByRole} = render(
+      <HomepageCanvas blocks={[{_type: 'videoSectionInline', _key: 'v', heading: 'Watch', videos: [{_id: 'v1', title: 'Intro', youTubeUrl: 'https://www.youtube.com/watch?v=abc123xyz00'}]}]} />,
+    )
+    expect(getByRole('heading', {level: 2}).textContent).toBe('Watch')
+  })
+
+  it('an old member still renders through its old component: there is no render-time upgrade', () => {
+    const {container} = render(<HomepageCanvas blocks={[{_type: 'siloNavBlock', _key: 's', heading: 'Areas', items}]} />)
+    expect(container.querySelector('h2')?.className).toContain('marketing-h2')
+  })
+
+  it('the first-band rule holds across old and inline members', () => {
+    const {queryAllByTestId} = render(
+      <HomepageCanvas blocks={[{_type: 'siloNavBlock', _key: 's', heading: 'Areas', items}, {_type: 'practiceAreaNavInline', _key: 'p', heading: 'H', items}]} />,
+    )
+    expect(queryAllByTestId('scroll-reveal')).toHaveLength(1)
+  })
+})

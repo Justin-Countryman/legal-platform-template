@@ -1,18 +1,14 @@
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {getEmbedUrl} from '@/lib/videoEmbed'
-import {VideoEmbed, type VideoItem} from '@/components/media/VideoEmbed'
+import {VideoEmbed} from '@/components/media/VideoEmbed'
+import {type VideoSectionProps} from './sectionProps'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type VideoSectionBlockData = {
-  _type: 'videoSection'
-  tagline?: string | null
-  heading?: string | null
-  description?: string | null
-  layout?: 'centered' | 'split' | null
-  videos?: VideoItem[] | null
-}
+// One props type for both renderings; no `_type`, the dispatchers own it. See
+// sectionProps.ts.
+export type VideoSectionBlockData = VideoSectionProps
 
 // ─── Component ────────────────────────────────────────────────────────────────
 

@@ -1,18 +1,14 @@
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {TestimonialCard, type TestimonialData} from '@/components/ui/TestimonialCard'
-import {SectionShell, type SectionAppearance} from './SectionShell'
+import {SectionShell} from './SectionShell'
+import {type TestimonialsGridProps} from './sectionProps'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type TestimonialsGridSectionData = {
-  _type: 'testimonialsGrid'
-  tagline?: string | null
-  heading?: string | null
-  description?: string | null
-  testimonials?: TestimonialData[] | null
-  appearance?: SectionAppearance | null
-}
+// One props type for both renderings; no `_type`, the dispatchers own it. See
+// sectionProps.ts.
+export type TestimonialsGridSectionData = TestimonialsGridProps
 
 // ─── Component ────────────────────────────────────────────────────────────────
 

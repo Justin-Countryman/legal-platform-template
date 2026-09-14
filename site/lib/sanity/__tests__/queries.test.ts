@@ -225,7 +225,12 @@ describe('GROQ canonical filter-before-dereference pattern', () => {
     // halves (top level, all levels) each dereference the nav's reference array.
     // Fell 30 → 29 on 2026-09-13 (Phase 8): the catch-all's three page queries
     // became one, so `faqItems[defined(@->_id)]->` appears once, not twice.
-    expect(matches.length).toBe(29)
+    // 29 → 30 on 2026-09-14 (Phase 10): the shared section body gained
+    // `caseResults[defined(@->_id)]->` for the case-results section. The body
+    // is ONE constant (SECTION_BODY) interpolated into SECTIONS_FRAGMENT and
+    // CANVAS_FRAGMENT, so its seven patterns count once in this source scan
+    // however many fragments apply it; the six old block branches keep theirs.
+    expect(matches.length).toBe(30)
   })
 
   it('source-text meta: queries.ts contains zero broken-pattern occurrences', () => {

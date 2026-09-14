@@ -18,7 +18,9 @@
 //
 // WHAT IT IS NOT. Not a dataset. `MOCK_DATASET_NDJSON` is `fixture.ndjson` in
 // CI: six slug-only documents so every `generateStaticParams` template renders
-// once on null content. Nothing here is ever imported into a client's dataset.
+// once on null content, plus (2026-09-14, Phase 10) a homepage whose canvas
+// holds one inline section member and the practice area it lists, so the
+// build renders the homepage list's new path at least once. Nothing here is ever imported into a client's dataset.
 //
 // The site reaches it through `SANITY_API_HOST_OVERRIDE` (see
 // `lib/sanity/client.ts` and `lib/searchVisibility.ts`), a non-public env var

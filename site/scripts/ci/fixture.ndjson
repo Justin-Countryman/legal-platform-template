@@ -1,6 +1,8 @@
-{"_id":"fx-attorney","_type":"attorneyPage","slug":{"current":"attorneys/fixture-attorney"}}
-{"_id":"fx-staff","_type":"staffPage","slug":{"current":"staff/fixture-staff"}}
-{"_id":"fx-post","_type":"blogPost","slug":{"current":"blog/fixture-post"}}
-{"_id":"fx-cat","_type":"blogCategory","slug":{"current":"blog/category/fixture-cat"}}
-{"_id":"fx-event","_type":"eventPage","slug":{"current":"events/fixture-event"}}
-{"_id":"fx-review","_type":"reviewPage","slug":{"current":"fixture-review"}}
+{"_id": "fx-attorney", "_type": "attorneyPage", "slug": {"current": "attorneys/fixture-attorney"}}
+{"_id": "fx-staff", "_type": "staffPage", "slug": {"current": "staff/fixture-staff"}}
+{"_id": "fx-post", "_type": "blogPost", "slug": {"current": "blog/fixture-post"}}
+{"_id": "fx-cat", "_type": "blogCategory", "slug": {"current": "blog/category/fixture-cat"}}
+{"_id": "fx-event", "_type": "eventPage", "slug": {"current": "events/fixture-event"}}
+{"_id": "fx-review", "_type": "reviewPage", "slug": {"current": "fixture-review"}}
+{"_id": "fx-practice-area", "_type": "practiceArea", "title": "Fixture Practice Area", "slug": {"current": "fixture-practice-area"}, "metaDescription": "A fixture practice area."}
+{"_id": "fx-home", "_type": "homePage", "canvas": [{"_key": "fx-inline", "_type": "practiceAreaNavInline", "heading": "Fixture areas", "mode": "allTopLevel", "layout": "tile", "mobileDisplay": "stacked"}], "slug": {"current": "home"}, "title": "Home"}
