@@ -43,6 +43,7 @@
 
 import {createSchema, validateDocument, type ArraySchemaType, type ObjectSchemaType, type SanityDocument} from 'sanity'
 import {schemaTypes} from '../schemas/index.ts'
+import {insertableTypes} from '../components/CanvasArrayInput.tsx'
 
 let failures = 0
 function fail(msg: string): void {
@@ -119,6 +120,16 @@ else {
     if (!retired && m.deprecated) fail(`${m.name} is deprecated and must not be`)
   }
   ok('the six retired blocks carry `deprecated` naming Phase 15; the inline objects do not')
+  // Areas of Law is no longer offered in Add item (2026-09-14): still a member,
+  // named in no insert-menu group, dropped by the canvas input's filter alone.
+  const groups = (canvas.options as {insertMenu?: {groups?: Array<{of?: string[]}>}} | undefined)?.insertMenu?.groups ?? []
+  const offered = insertableTypes(canvas.of as Array<{name: string}>).map((t) => t.name)
+  const input = (homePage.fields.find((f) => f.name === 'canvas')?.type as {components?: {input?: unknown}} | undefined)?.components?.input
+  if (!members.some((m) => m.name === 'siloNavBlock')) fail('siloNavBlock left canvas.of; stored members and the build still need it until Phase 12')
+  else if (groups.some((g) => (g.of ?? []).includes('siloNavBlock'))) fail('siloNavBlock is still named in an insert-menu group')
+  else if (!input) fail('homePage.canvas does not use the canvas input that filters the Add item menu')
+  else if (offered.includes('siloNavBlock') || offered.length !== members.length - 1) fail(`the canvas insert filter offers ${offered.length} of ${members.length} members`)
+  else ok('Areas of Law stays a canvas member but is not offered in the Add item menu')
   const sections = homePage.fields.find((f) => f.name === 'sections')?.type as {deprecated?: {reason: string}} | undefined
   if (!sections?.deprecated?.reason?.includes('Phase 15')) fail('homePage.sections is not deprecated with a reason naming Phase 15')
   else ok('homePage.sections is deprecated')
