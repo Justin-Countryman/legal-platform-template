@@ -17,7 +17,8 @@
     "typecheck": "tsc --noEmit -p .",
     "field-map": "sanity exec scripts/extract-field-map.ts",
     "verify:field-map": "sanity exec scripts/verify-field-map.ts",
-    "verify:page-link-types": "sanity exec scripts/verify-page-link-types.ts"
+    "verify:page-link-types": "sanity exec scripts/verify-page-link-types.ts",
+    "verify:inline-sections": "sanity exec scripts/verify-inline-sections.ts"
   },
   "dependencies": {
     "@sanity/client": "8.6.1",

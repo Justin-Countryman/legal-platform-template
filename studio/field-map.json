@@ -8688,9 +8688,16 @@
           "type": "text"
         },
         {
-          "description": "The composed mid-page, in order. These blocks belong to this homepage only. To reuse content across pages, reference an item (badges, case results, testimonials) rather than retyping it here.",
+          "description": "The composed mid-page, in order. Every member belongs to this homepage only. Add sections from the Sections group; the Legacy blocks group is the old block shape, kept so existing homepages keep rendering until they are migrated, and deleted in Phase 15.",
           "jsonType": "array",
           "of": [
+            "practiceAreaNavInline",
+            "attorneySectionInline",
+            "caseResultsSectionInline",
+            "badgesSectionInline",
+            "testimonialsGridInline",
+            "featuredTestimonialInline",
+            "videoSectionInline",
             "narrativeBlock",
             "differentiatorBlock",
             "caseResultsBlock",
@@ -8699,7 +8706,723 @@
             "siloNavBlock"
           ],
           "path": "canvas",
-          "title": "Homepage Canvas (Blocks)",
+          "title": "Homepage Canvas",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<practiceAreaNavInline>.tagline",
+          "title": "Tagline",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<practiceAreaNavInline>.heading",
+          "title": "Heading",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<practiceAreaNavInline>.description",
+          "title": "Description",
+          "type": "text"
+        },
+        {
+          "description": "How each practice-area button is composed. Photo-capable: Spotlight, Feature, Tile, and the panel of Split.",
+          "initialValue": "spotlight",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "spotlight",
+              "feature",
+              "tile",
+              "inline",
+              "split"
+            ]
+          },
+          "path": "canvas[]<practiceAreaNavInline>.layout",
+          "title": "Button Layout",
+          "type": "string"
+        },
+        {
+          "description": "Equal renders your chosen Button Layout in an even grid. Bento renders a unified photo mosaic with the Primary practice area as a large hero tile (mark one below).",
+          "initialValue": "equal",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "equal",
+              "bentoLeft",
+              "bentoMosaic",
+              "bentoList"
+            ]
+          },
+          "path": "canvas[]<practiceAreaNavInline>.gridMode",
+          "title": "Grid Mode",
+          "type": "string"
+        },
+        {
+          "description": "Where the heading/tagline/description sit relative to the buttons (independent of the button layout).",
+          "initialValue": "centered",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "centered",
+              "left",
+              "aside",
+              "banner"
+            ]
+          },
+          "path": "canvas[]<practiceAreaNavInline>.sectionLayout",
+          "title": "Section Layout",
+          "type": "string"
+        },
+        {
+          "description": "How this section presents on phones (under ~768px). Desktop always uses the Button Layout above. Carousel = swipe through cards with a peek + dots. Stacked = full cards in a vertical list (all visible). Compact list = icon + label rows, no photos (fastest, most scannable).",
+          "initialValue": "carousel",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "carousel",
+              "stacked",
+              "list"
+            ]
+          },
+          "path": "canvas[]<practiceAreaNavInline>.mobileDisplay",
+          "title": "Mobile Display",
+          "type": "string"
+        },
+        {
+          "description": "Where the icon sits relative to the label. Auto = each layout’s natural spot. None hides icons. Each layout uses the positions that fit its shape.",
+          "initialValue": "auto",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "auto",
+              "top",
+              "left",
+              "right",
+              "none"
+            ]
+          },
+          "path": "canvas[]<practiceAreaNavInline>.iconPosition",
+          "title": "Icon Position",
+          "type": "string"
+        },
+        {
+          "description": "Show the “→” affordance on each button (layouts that have one).",
+          "initialValue": true,
+          "jsonType": "boolean",
+          "path": "canvas[]<practiceAreaNavInline>.showArrow",
+          "title": "Show Arrow",
+          "type": "boolean"
+        },
+        {
+          "description": "Pick one or more — every selected effect applies together on hover. Leave empty for the layout’s recommended default; choose None for a fully static hover (None overrides the others).",
+          "jsonType": "array",
+          "of": [
+            "string"
+          ],
+          "options": {
+            "list": [
+              "imageZoom",
+              "grayscale",
+              "lift",
+              "glow",
+              "accentBorder",
+              "accentUnderline",
+              "iconPop",
+              "none"
+            ]
+          },
+          "path": "canvas[]<practiceAreaNavInline>.hoverEffects",
+          "title": "Hover Effects",
+          "type": "array"
+        },
+        {
+          "description": "Every area of law is the homepage default — Beat 4 says never curate or hide areas. Choose Curated only when the firm has a specific reason to.",
+          "initialValue": "allTopLevel",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "allTopLevel",
+              "manual"
+            ]
+          },
+          "path": "canvas[]<practiceAreaNavInline>.mode",
+          "title": "Practice Area Source",
+          "type": "string"
+        },
+        {
+          "description": "Pick the practice-area pages to feature, in order of importance. Title, description, and image auto-fill from each page — override per item if needed.",
+          "hidden": "<predicate>",
+          "jsonType": "array",
+          "of": [
+            "practiceAreaNavItem"
+          ],
+          "path": "canvas[]<practiceAreaNavInline>.items",
+          "title": "Practice Areas",
+          "type": "array"
+        },
+        {
+          "jsonType": "object",
+          "path": "canvas[]<practiceAreaNavInline>.items[]<practiceAreaNavItem>.page",
+          "title": "Practice Area Page",
+          "type": "reference"
+        },
+        {
+          "description": "Mark the firm’s priority practice area — it becomes the large hero tile in Bento grid mode.",
+          "hidden": "<predicate>",
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "canvas[]<practiceAreaNavInline>.items[]<practiceAreaNavItem>.featured",
+          "title": "Primary",
+          "type": "boolean"
+        },
+        {
+          "description": "Defaults to the page title",
+          "jsonType": "string",
+          "path": "canvas[]<practiceAreaNavInline>.items[]<practiceAreaNavItem>.label",
+          "title": "Label (override)",
+          "type": "string"
+        },
+        {
+          "description": "Defaults to the page meta description",
+          "jsonType": "string",
+          "path": "canvas[]<practiceAreaNavInline>.items[]<practiceAreaNavItem>.description",
+          "title": "Description (override)",
+          "type": "text"
+        },
+        {
+          "description": "Optional line/glyph icon for icon-based layouts",
+          "jsonType": "object",
+          "path": "canvas[]<practiceAreaNavInline>.items[]<practiceAreaNavItem>.icon",
+          "title": "Icon",
+          "type": "image"
+        },
+        {
+          "description": "Defaults to the page hero image — used by image-based layouts",
+          "jsonType": "object",
+          "path": "canvas[]<practiceAreaNavInline>.items[]<practiceAreaNavItem>.image",
+          "title": "Image (override)",
+          "type": "image"
+        },
+        {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "initialValue": "light",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image"
+            ]
+          },
+          "path": "canvas[]<practiceAreaNavInline>.surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "canvas[]<practiceAreaNavInline>.sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "initialValue": "normal",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "canvas[]<practiceAreaNavInline>.spacing",
+          "title": "Vertical Spacing",
+          "type": "string"
+        },
+        {
+          "initialValue": "all",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "all",
+              "manual"
+            ]
+          },
+          "path": "canvas[]<attorneySectionInline>.mode",
+          "title": "Attorney List Mode",
+          "type": "string"
+        },
+        {
+          "description": "Select the specific attorneys to display in this section",
+          "hidden": "<predicate>",
+          "jsonType": "array",
+          "of": [
+            "reference"
+          ],
+          "path": "canvas[]<attorneySectionInline>.attorneys",
+          "title": "Attorneys",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<attorneySectionInline>.tagline",
+          "title": "Tagline",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<attorneySectionInline>.heading",
+          "title": "Heading",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<attorneySectionInline>.description",
+          "title": "Description",
+          "type": "text"
+        },
+        {
+          "description": "How the cards are arranged. Grid stacks them; Slider puts them in a swipeable carousel.",
+          "initialValue": "grid",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "grid",
+              "slider"
+            ]
+          },
+          "path": "canvas[]<attorneySectionInline>.layout",
+          "title": "Layout",
+          "type": "string"
+        },
+        {
+          "description": "The look of each attorney card. Portrait, Avatar, Minimal, and Spotlight feature a larger photo — upload headshots for best results (a placeholder monogram shows when no photo is set; Avatar shows a clean initials circle).",
+          "initialValue": "classic",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "classic",
+              "portrait",
+              "avatar",
+              "minimal",
+              "spotlight"
+            ]
+          },
+          "path": "canvas[]<attorneySectionInline>.cardStyle",
+          "title": "Card Style",
+          "type": "string"
+        },
+        {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "initialValue": "light",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image"
+            ]
+          },
+          "path": "canvas[]<attorneySectionInline>.surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "canvas[]<attorneySectionInline>.sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "initialValue": "normal",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "canvas[]<attorneySectionInline>.spacing",
+          "title": "Vertical Spacing",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<caseResultsSectionInline>.heading",
+          "title": "Heading",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<caseResultsSectionInline>.intro",
+          "title": "Intro",
+          "type": "text"
+        },
+        {
+          "description": "Select from the case results you have built under Individual Items. Build each result once and reuse it. The results disclaimer renders automatically below them and is not editable here.",
+          "jsonType": "array",
+          "of": [
+            "reference"
+          ],
+          "path": "canvas[]<caseResultsSectionInline>.caseResults",
+          "title": "Case Results",
+          "type": "array"
+        },
+        {
+          "description": "Optional. Usually a link to a fuller results page.",
+          "jsonType": "object",
+          "path": "canvas[]<caseResultsSectionInline>.ctaButton",
+          "title": "CTA Button",
+          "type": "ctaButton"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<caseResultsSectionInline>.ctaButton.title",
+          "title": "Button Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /contact/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "canvas[]<caseResultsSectionInline>.ctaButton.url",
+          "title": "URL",
+          "type": "string"
+        },
+        {
+          "initialValue": "primary",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "primary",
+              "secondary",
+              "link"
+            ]
+          },
+          "path": "canvas[]<caseResultsSectionInline>.ctaButton.variant",
+          "title": "Variant",
+          "type": "string"
+        },
+        {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "initialValue": "light",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image"
+            ]
+          },
+          "path": "canvas[]<caseResultsSectionInline>.surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "canvas[]<caseResultsSectionInline>.sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "initialValue": "normal",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "canvas[]<caseResultsSectionInline>.spacing",
+          "title": "Vertical Spacing",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<badgesSectionInline>.tagline",
+          "title": "Tagline",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<badgesSectionInline>.heading",
+          "title": "Heading",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<badgesSectionInline>.description",
+          "title": "Description",
+          "type": "text"
+        },
+        {
+          "jsonType": "array",
+          "of": [
+            "ctaButton"
+          ],
+          "path": "canvas[]<badgesSectionInline>.buttons",
+          "title": "Buttons",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<badgesSectionInline>.buttons[]<ctaButton>.title",
+          "title": "Button Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /contact/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "canvas[]<badgesSectionInline>.buttons[]<ctaButton>.url",
+          "title": "URL",
+          "type": "string"
+        },
+        {
+          "initialValue": "primary",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "primary",
+              "secondary",
+              "link"
+            ]
+          },
+          "path": "canvas[]<badgesSectionInline>.buttons[]<ctaButton>.variant",
+          "title": "Variant",
+          "type": "string"
+        },
+        {
+          "description": "Select from the badges you have built under Individual Items. Build each badge once and reuse it across sections — there is no inline badge here by design.",
+          "jsonType": "array",
+          "of": [
+            "reference"
+          ],
+          "path": "canvas[]<badgesSectionInline>.badges",
+          "title": "Badges",
+          "type": "array"
+        },
+        {
+          "initialValue": "centeredGrid",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "inline",
+              "centeredGrid",
+              "split",
+              "scrolling"
+            ]
+          },
+          "path": "canvas[]<badgesSectionInline>.layout",
+          "title": "Layout",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<testimonialsGridInline>.tagline",
+          "title": "Tagline",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<testimonialsGridInline>.heading",
+          "title": "Heading",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<testimonialsGridInline>.description",
+          "title": "Description",
+          "type": "text"
+        },
+        {
+          "jsonType": "array",
+          "of": [
+            "reference"
+          ],
+          "path": "canvas[]<testimonialsGridInline>.testimonials",
+          "title": "Testimonials",
+          "type": "array"
+        },
+        {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "initialValue": "tint",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image"
+            ]
+          },
+          "path": "canvas[]<testimonialsGridInline>.surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "canvas[]<testimonialsGridInline>.sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "initialValue": "normal",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "canvas[]<testimonialsGridInline>.spacing",
+          "title": "Vertical Spacing",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<featuredTestimonialInline>.tagline",
+          "title": "Tagline",
+          "type": "string"
+        },
+        {
+          "description": "The section heading shown above the testimonial.",
+          "initialValue": "Client Testimonial",
+          "jsonType": "string",
+          "path": "canvas[]<featuredTestimonialInline>.heading",
+          "title": "H2 Heading",
+          "type": "string"
+        },
+        {
+          "jsonType": "object",
+          "path": "canvas[]<featuredTestimonialInline>.testimonial",
+          "title": "Testimonial",
+          "type": "reference"
+        },
+        {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "initialValue": "tint",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image"
+            ]
+          },
+          "path": "canvas[]<featuredTestimonialInline>.surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "canvas[]<featuredTestimonialInline>.sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "initialValue": "normal",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "canvas[]<featuredTestimonialInline>.spacing",
+          "title": "Vertical Spacing",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<videoSectionInline>.tagline",
+          "title": "Tagline",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<videoSectionInline>.heading",
+          "title": "Heading",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<videoSectionInline>.description",
+          "title": "Description",
+          "type": "text"
+        },
+        {
+          "description": "Centered places the heading above the video (like other sections). Split puts the heading text in a left column with the video beside it on the right (best for a single video).",
+          "initialValue": "centered",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "centered",
+              "split"
+            ]
+          },
+          "path": "canvas[]<videoSectionInline>.layout",
+          "title": "Layout",
+          "type": "string"
+        },
+        {
+          "jsonType": "array",
+          "of": [
+            "reference"
+          ],
+          "path": "canvas[]<videoSectionInline>.videos",
+          "title": "Videos",
           "type": "array"
         },
         {
@@ -9112,13 +9835,13 @@
           "type": "string"
         },
         {
-          "description": "Reusable full-width sections below main content",
+          "description": "Retired. Shared interior-page sections referenced from the homepage; still rendered after the canvas until Phase 12 migrates them and Phase 15 removes this field. Use the Homepage Canvas instead.",
           "jsonType": "array",
           "of": [
             "reference"
           ],
           "path": "sections",
-          "title": "Full Width Sections",
+          "title": "Full Width Sections (retired)",
           "type": "array"
         },
         {

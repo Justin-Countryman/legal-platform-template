@@ -70,6 +70,18 @@ import {attorneySection} from './documents/sections/attorneySection'
 import {reviewsSection} from './documents/sections/reviewsSection'
 import {videoSection} from './documents/sections/videoSection'
 import {practiceAreaNav} from './documents/sections/practiceAreaNav'
+// Homepage list, inline section objects (Phase 10, 2026-09-14): one field list
+// per section, two names. The document keeps its bare name above; the inline
+// copy is `<name>Inline` and lives in the same file. `caseResultsSection`'s
+// document is exported but NOT registered until an interior list references
+// it (see that file).
+import {practiceAreaNavInline} from './documents/sections/practiceAreaNav'
+import {attorneySectionInline} from './documents/sections/attorneySection'
+import {caseResultsSectionInline} from './documents/sections/caseResultsSection'
+import {badgesSectionInline} from './documents/sections/badgesSection'
+import {testimonialsGridInline} from './documents/sections/testimonialsGrid'
+import {featuredTestimonialInline} from './documents/sections/featuredTestimonial'
+import {videoSectionInline} from './documents/sections/videoSection'
 import {video} from './documents/video'
 import {videoIndex} from './documents/videoIndex'
 
@@ -146,7 +158,17 @@ export const schemaTypes = [
   ctaFormSection,
   sidebarTableOfContents,
 
-  // Homepage canvas blocks (inline objects, not documents)
+  // Homepage list, inline section objects (Phase 10)
+  practiceAreaNavInline,
+  attorneySectionInline,
+  caseResultsSectionInline,
+  badgesSectionInline,
+  testimonialsGridInline,
+  featuredTestimonialInline,
+  videoSectionInline,
+
+  // Homepage canvas blocks (inline objects, not documents; retired 2026-09-14,
+  // deleted in Phase 15)
   badgesBlock,
   differentiatorBlock,
   narrativeBlock,

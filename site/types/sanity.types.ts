@@ -164,6 +164,162 @@ export type BadgesBlock = {
   >;
 };
 
+export type VideoReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "video";
+};
+
+export type VideoSectionInline = {
+  _type: "videoSectionInline";
+  tagline?: string;
+  heading?: string;
+  description?: string;
+  layout?: "centered" | "split";
+  videos?: Array<
+    {
+      _key: string;
+    } & VideoReference
+  >;
+};
+
+export type TestimonialReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "testimonial";
+};
+
+export type FeaturedTestimonialInline = {
+  _type: "featuredTestimonialInline";
+  tagline?: string;
+  heading?: string;
+  testimonial?: TestimonialReference;
+  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  sectionBackgroundImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  spacing?: "compact" | "normal" | "spacious";
+};
+
+export type TestimonialsGridInline = {
+  _type: "testimonialsGridInline";
+  tagline?: string;
+  heading?: string;
+  description?: string;
+  testimonials?: Array<
+    {
+      _key: string;
+    } & TestimonialReference
+  >;
+  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  sectionBackgroundImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  spacing?: "compact" | "normal" | "spacious";
+};
+
+export type BadgesSectionInline = {
+  _type: "badgesSectionInline";
+  tagline?: string;
+  heading?: string;
+  description?: string;
+  buttons?: Array<
+    {
+      _key: string;
+    } & CtaButton
+  >;
+  badges?: Array<
+    {
+      _key: string;
+    } & BadgeReference
+  >;
+  layout?: "inline" | "centeredGrid" | "split" | "scrolling";
+};
+
+export type CaseResultsSectionInline = {
+  _type: "caseResultsSectionInline";
+  heading?: string;
+  intro?: string;
+  caseResults?: Array<
+    {
+      _key: string;
+    } & CaseResultReference
+  >;
+  ctaButton?: CtaButton;
+  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  sectionBackgroundImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  spacing?: "compact" | "normal" | "spacious";
+};
+
+export type AttorneySectionInline = {
+  _type: "attorneySectionInline";
+  mode?: "all" | "manual";
+  attorneys?: Array<
+    {
+      _key: string;
+    } & AttorneyPageReference
+  >;
+  tagline?: string;
+  heading?: string;
+  description?: string;
+  layout?: "grid" | "slider";
+  cardStyle?: "classic" | "portrait" | "avatar" | "minimal" | "spotlight";
+  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  sectionBackgroundImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  spacing?: "compact" | "normal" | "spacious";
+};
+
+export type PracticeAreaNavInline = {
+  _type: "practiceAreaNavInline";
+  tagline?: string;
+  heading?: string;
+  description?: string;
+  layout?: "spotlight" | "feature" | "tile" | "inline" | "split";
+  gridMode?: "equal" | "bentoLeft" | "bentoMosaic" | "bentoList";
+  sectionLayout?: "centered" | "left" | "aside" | "banner";
+  mobileDisplay?: "carousel" | "stacked" | "list";
+  iconPosition?: "auto" | "top" | "left" | "right" | "none";
+  showArrow?: boolean;
+  hoverEffects?: Array<string>;
+  mode?: "allTopLevel" | "manual";
+  items?: Array<
+    {
+      _key: string;
+    } & PracticeAreaNavItem
+  >;
+  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  sectionBackgroundImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  spacing?: "compact" | "normal" | "spacious";
+};
+
 export type SidebarTableOfContents = {
   _type: "sidebarTableOfContents";
   enabled?: boolean;
@@ -557,13 +713,6 @@ export type SidebarNav = {
   >;
 };
 
-export type VideoReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "video";
-};
-
 export type TestimonialsGridReference = {
   _ref: string;
   _type: "reference";
@@ -884,13 +1033,6 @@ export type CtaSection = {
     _type: "image";
   };
   layout?: "centered" | "split" | "background" | "textOnly";
-};
-
-export type TestimonialReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "testimonial";
 };
 
 export type FeaturedTestimonial = {
@@ -2305,6 +2447,27 @@ export type HomePage = {
   canvas?: Array<
     | ({
         _key: string;
+      } & PracticeAreaNavInline)
+    | ({
+        _key: string;
+      } & AttorneySectionInline)
+    | ({
+        _key: string;
+      } & CaseResultsSectionInline)
+    | ({
+        _key: string;
+      } & BadgesSectionInline)
+    | ({
+        _key: string;
+      } & TestimonialsGridInline)
+    | ({
+        _key: string;
+      } & FeaturedTestimonialInline)
+    | ({
+        _key: string;
+      } & VideoSectionInline)
+    | ({
+        _key: string;
       } & NarrativeBlock)
     | ({
         _key: string;
@@ -2790,6 +2953,15 @@ export type AllSanitySchemaTypes =
   | DifferentiatorBlock
   | BadgeReference
   | BadgesBlock
+  | VideoReference
+  | VideoSectionInline
+  | TestimonialReference
+  | FeaturedTestimonialInline
+  | TestimonialsGridInline
+  | BadgesSectionInline
+  | CaseResultsSectionInline
+  | AttorneySectionInline
+  | PracticeAreaNavInline
   | SidebarTableOfContents
   | CtaFormSection
   | GeoPracticeAreaReference
@@ -2815,7 +2987,6 @@ export type AllSanitySchemaTypes =
   | ReviewPageReference
   | BlogPostReference
   | SidebarNav
-  | VideoReference
   | TestimonialsGridReference
   | FeaturedTestimonialReference
   | CtaSectionReference
@@ -2837,7 +3008,6 @@ export type AllSanitySchemaTypes =
   | FaqItemReference
   | FaqSection
   | CtaSection
-  | TestimonialReference
   | FeaturedTestimonial
   | TestimonialsGrid
   | Badge
@@ -3933,6 +4103,10 @@ export type HOME_QUERY_RESULT = {
         }> | null;
       }
     | {
+        _type: "attorneySectionInline";
+        _key: string;
+      }
+    | {
         _type: "badgesBlock";
         _key: string;
         heading: string | null;
@@ -3943,6 +4117,10 @@ export type HOME_QUERY_RESULT = {
           width: number | null;
           height: number | null;
         }> | null;
+      }
+    | {
+        _type: "badgesSectionInline";
+        _key: string;
       }
     | {
         _type: "caseResultsBlock";
@@ -3963,6 +4141,10 @@ export type HOME_QUERY_RESULT = {
         } | null;
       }
     | {
+        _type: "caseResultsSectionInline";
+        _key: string;
+      }
+    | {
         _type: "differentiatorBlock";
         _key: string;
         heading: string | null;
@@ -3972,6 +4154,10 @@ export type HOME_QUERY_RESULT = {
           title: string | null;
           body: string | null;
         }> | null;
+      }
+    | {
+        _type: "featuredTestimonialInline";
+        _key: string;
       }
     | {
         _type: "narrativeBlock";
@@ -4021,6 +4207,10 @@ export type HOME_QUERY_RESULT = {
         }> | null;
       }
     | {
+        _type: "practiceAreaNavInline";
+        _key: string;
+      }
+    | {
         _type: "siloNavBlock";
         _key: string;
         tagline: string | null;
@@ -4063,6 +4253,14 @@ export type HOME_QUERY_RESULT = {
               image: null;
             }>
           | null;
+      }
+    | {
+        _type: "testimonialsGridInline";
+        _key: string;
+      }
+    | {
+        _type: "videoSectionInline";
+        _key: string;
       }
   > | null;
   resultsDisclaimer: string | null;
@@ -15782,6 +15980,10 @@ export type HOME_PAGE_QUERY_RESULT = {
           }> | null;
         }
       | {
+          _type: "attorneySectionInline";
+          _key: string;
+        }
+      | {
           _type: "badgesBlock";
           _key: string;
           heading: string | null;
@@ -15792,6 +15994,10 @@ export type HOME_PAGE_QUERY_RESULT = {
             width: number | null;
             height: number | null;
           }> | null;
+        }
+      | {
+          _type: "badgesSectionInline";
+          _key: string;
         }
       | {
           _type: "caseResultsBlock";
@@ -15812,6 +16018,10 @@ export type HOME_PAGE_QUERY_RESULT = {
           } | null;
         }
       | {
+          _type: "caseResultsSectionInline";
+          _key: string;
+        }
+      | {
           _type: "differentiatorBlock";
           _key: string;
           heading: string | null;
@@ -15821,6 +16031,10 @@ export type HOME_PAGE_QUERY_RESULT = {
             title: string | null;
             body: string | null;
           }> | null;
+        }
+      | {
+          _type: "featuredTestimonialInline";
+          _key: string;
         }
       | {
           _type: "narrativeBlock";
@@ -15870,6 +16084,10 @@ export type HOME_PAGE_QUERY_RESULT = {
           }> | null;
         }
       | {
+          _type: "practiceAreaNavInline";
+          _key: string;
+        }
+      | {
           _type: "siloNavBlock";
           _key: string;
           tagline: string | null;
@@ -15912,6 +16130,14 @@ export type HOME_PAGE_QUERY_RESULT = {
                 image: null;
               }>
             | null;
+        }
+      | {
+          _type: "testimonialsGridInline";
+          _key: string;
+        }
+      | {
+          _type: "videoSectionInline";
+          _key: string;
         }
     > | null;
     resultsDisclaimer: string | null;

@@ -27,10 +27,13 @@ export const practiceAreaNavItem = defineType({
       type: 'boolean',
       description: 'Mark the firm’s priority practice area — it becomes the large hero tile in Bento grid mode.',
       initialValue: false,
-      // Bento is a Practice Area Navigation section mode only — no other surface
-      // using this item type has a Bento layout, so Primary does nothing there.
-      // Hide it outside the section document to keep those surfaces clean.
-      hidden: ({document}: {document?: {_type?: string}}) => document?._type !== 'practiceAreaNav',
+      // Bento is a Practice Area Navigation mode only. The item cannot see its
+      // grandparent, so this reads the host DOCUMENT: the section document, or
+      // the homepage, whose canvas holds `practiceAreaNavInline` (Phase 10,
+      // 2026-09-14). On the homepage the retired `siloNavBlock` shows it inert
+      // for one pin; that block is deleted in Phase 15.
+      hidden: ({document}: {document?: {_type?: string}}) =>
+        document?._type !== 'practiceAreaNav' && document?._type !== 'homePage',
     },
     {name: 'label', title: 'Label (override)', type: 'string', description: 'Defaults to the page title'},
     {

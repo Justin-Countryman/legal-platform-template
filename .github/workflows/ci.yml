@@ -613,11 +613,16 @@ jobs:
       # The field map's rows, folded by the platform's rules, equal Studio's own
       # initial document per type; the page-link picker offers exactly the
       # routed, slugged types. Both are outcome checks over the Studio's own
-      # code paths (2026-09-11, monorepo WS-V1-PHASE5-DESIGN §2 and §4).
-      - name: Verify the field map and the page-link picker
+      # code paths (2026-09-11, monorepo WS-V1-PHASE5-DESIGN §2 and §4). The
+      # homepage list's inline section objects (two names per section, parent-
+      # scoped callbacks, the retired blocks' `deprecated`) are asserted on the
+      # compiled schema, the one artifact that carries them (2026-09-14,
+      # monorepo WS-V1-PHASE10-DESIGN §4).
+      - name: Verify the field map, the page-link picker and the inline sections
         working-directory: studio
         env:
           SANITY_STUDIO_OFFLINE_SCHEMA_EXTRACT: '1'
         run: |
           npm run verify:field-map
           npm run verify:page-link-types
+          npm run verify:inline-sections

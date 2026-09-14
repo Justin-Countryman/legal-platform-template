@@ -1,5 +1,5 @@
 // ─── Shared section Appearance fieldset ─────────────────────────────────────────
-// Spread into every full-width section document so the operator can place it on a
+// Spread into every full-width section (document and its inline copy) so the operator can place it on a
 // surface (light / tint / dark / accent / image) with a spacing rhythm — the
 // cohesion layer that lets a stacked page read as one design. Each section sets a
 // sensible default via appearanceFields({defaultSurface}), so an untouched page is
@@ -57,7 +57,11 @@ export function appearanceFields(opts?: {
       type: 'image',
       fieldset: 'appearance',
       description: 'Shown only when Surface is "Image". A dark overlay is applied for legible text.',
-      hidden: ({document}) => document?.surface !== 'image',
+      // `parent`, never `document`: inside an inline section on the homepage
+      // list `document` is the root homePage and this would hide the image on
+      // every inline section. For a top-level document field `parent` IS the
+      // document value (Phase 10, 2026-09-14).
+      hidden: ({parent}) => (parent as {surface?: string} | undefined)?.surface !== 'image',
     }),
     defineField({
       name: 'spacing',
