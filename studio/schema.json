@@ -1087,10 +1087,6 @@
               },
               {
                 "type": "string",
-                "value": "accent"
-              },
-              {
-                "type": "string",
                 "value": "image"
               },
               {
@@ -1487,10 +1483,6 @@
               },
               {
                 "type": "string",
-                "value": "accent"
-              },
-              {
-                "type": "string",
                 "value": "image"
               },
               {
@@ -1709,10 +1701,6 @@
               },
               {
                 "type": "string",
-                "value": "accent"
-              },
-              {
-                "type": "string",
                 "value": "image"
               },
               {
@@ -1923,10 +1911,6 @@
               },
               {
                 "type": "string",
-                "value": "accent"
-              },
-              {
-                "type": "string",
                 "value": "image"
               },
               {
@@ -2125,10 +2109,6 @@
               {
                 "type": "string",
                 "value": "dark"
-              },
-              {
-                "type": "string",
-                "value": "accent"
               },
               {
                 "type": "string",
@@ -2380,10 +2360,6 @@
               },
               {
                 "type": "string",
-                "value": "accent"
-              },
-              {
-                "type": "string",
                 "value": "image"
               },
               {
@@ -2583,10 +2559,6 @@
               {
                 "type": "string",
                 "value": "dark"
-              },
-              {
-                "type": "string",
-                "value": "accent"
               },
               {
                 "type": "string",
@@ -2851,10 +2823,6 @@
               {
                 "type": "string",
                 "value": "dark"
-              },
-              {
-                "type": "string",
-                "value": "accent"
               },
               {
                 "type": "string",
@@ -3219,10 +3187,6 @@
               {
                 "type": "string",
                 "value": "dark"
-              },
-              {
-                "type": "string",
-                "value": "accent"
               },
               {
                 "type": "string",
@@ -6966,10 +6930,6 @@
             },
             {
               "type": "string",
-              "value": "accent"
-            },
-            {
-              "type": "string",
               "value": "image"
             },
             {
@@ -7197,10 +7157,6 @@
             {
               "type": "string",
               "value": "dark"
-            },
-            {
-              "type": "string",
-              "value": "accent"
             },
             {
               "type": "string",
@@ -7596,10 +7552,6 @@
             },
             {
               "type": "string",
-              "value": "accent"
-            },
-            {
-              "type": "string",
               "value": "image"
             },
             {
@@ -7843,10 +7795,6 @@
             {
               "type": "string",
               "value": "dark"
-            },
-            {
-              "type": "string",
-              "value": "accent"
             },
             {
               "type": "string",
@@ -8100,10 +8048,6 @@
             {
               "type": "string",
               "value": "dark"
-            },
-            {
-              "type": "string",
-              "value": "accent"
             },
             {
               "type": "string",
@@ -8411,10 +8355,6 @@
             },
             {
               "type": "string",
-              "value": "accent"
-            },
-            {
-              "type": "string",
               "value": "image"
             },
             {
@@ -8691,10 +8631,6 @@
             },
             {
               "type": "string",
-              "value": "accent"
-            },
-            {
-              "type": "string",
               "value": "image"
             },
             {
@@ -8966,10 +8902,6 @@
             {
               "type": "string",
               "value": "dark"
-            },
-            {
-              "type": "string",
-              "value": "accent"
             },
             {
               "type": "string",
@@ -9281,10 +9213,6 @@
             },
             {
               "type": "string",
-              "value": "accent"
-            },
-            {
-              "type": "string",
               "value": "image"
             },
             {
@@ -9490,10 +9418,6 @@
             {
               "type": "string",
               "value": "dark"
-            },
-            {
-              "type": "string",
-              "value": "accent"
             },
             {
               "type": "string",
@@ -9723,10 +9647,6 @@
             {
               "type": "string",
               "value": "dark"
-            },
-            {
-              "type": "string",
-              "value": "accent"
             },
             {
               "type": "string",

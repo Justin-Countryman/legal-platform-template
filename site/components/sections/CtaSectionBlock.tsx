@@ -51,8 +51,8 @@ function layoutOf(data: CtaSectionBlockData): Layout {
 // Phase 16's `surfaceRhythm` replaces.
 const DEFAULT_SURFACE: Record<Layout, SectionSurface> = {
   // `bg-muted` is the `accent` surface.
-  centered: 'accent',
-  textOnly: 'accent',
+  centered: 'muted',
+  textOnly: 'muted',
   // Transparent today, and LEFT transparent, which is what `pattern` means: the
   // band paints no background of its own. `light` would emit `bg-background` and
   // change a live band, and it would also pre-empt the question Justin deferred

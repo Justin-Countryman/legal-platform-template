@@ -110,6 +110,7 @@ describe('sectionSurface', () => {
     expect(sectionSurface('image')).toEqual({surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: true})
     expect(sectionSurface('tint')).toEqual({surfaceClass: 'bg-hero-tint', ringContext: undefined, buttonContext: 'light', isImage: false})
     expect(sectionSurface('accent')).toEqual({surfaceClass: 'bg-muted', ringContext: undefined, buttonContext: 'light', isImage: false})
+    expect(sectionSurface('muted')).toEqual(sectionSurface('accent'))
     expect(sectionSurface('light')).toEqual({surfaceClass: 'bg-background', ringContext: undefined, buttonContext: 'light', isImage: false})
   })
 
@@ -123,7 +124,10 @@ describe('visibleGround', () => {
     ['dark', 'dark'],
     ['image', 'image'],
     ['tint', 'tint'],
-    ['accent', 'tint'],
+    // A stored `accent` renders bg-muted and is its own ground, as `muted` is
+    // (Phase 14; Phase 13 mapped it to tint, which seamed two different colours).
+    ['muted', 'muted'],
+    ['accent', 'muted'],
     ['pattern', 'page'],
     ['light', 'light'],
   ])('%s sees %s', (surface, ground) => {

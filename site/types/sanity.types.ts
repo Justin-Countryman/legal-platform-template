@@ -208,7 +208,7 @@ export type ReviewsSectionInline = {
     } & CtaButton
   >;
   reviewsEmbed?: string;
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -253,7 +253,7 @@ export type ContentSectionInline = {
   imageTreatment?:
     "inherit" | "plain" | "framed" | "slab" | "rounded" | "scrim" | "tint";
   marquee?: boolean;
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -278,7 +278,7 @@ export type VideoSectionInline = {
       _key: string;
     } & VideoReference
   >;
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -304,7 +304,7 @@ export type FeaturedTestimonialInline = {
   tagline?: string;
   heading?: string;
   testimonial?: TestimonialReference;
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -328,7 +328,7 @@ export type TestimonialsGridInline = {
       _key: string;
     } & TestimonialReference
   >;
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -358,7 +358,7 @@ export type BadgesSectionInline = {
     } & BadgeReference
   >;
   layout?: "inline" | "centeredGrid" | "split" | "scrolling";
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -382,7 +382,7 @@ export type CaseResultsSectionInline = {
     } & CaseResultReference
   >;
   ctaButton?: CtaButton;
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -409,7 +409,7 @@ export type AttorneySectionInline = {
   description?: string;
   layout?: "grid" | "slider";
   cardStyle?: "classic" | "portrait" | "avatar" | "minimal" | "spotlight";
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -441,7 +441,7 @@ export type PracticeAreaNavInline = {
       _key: string;
     } & PracticeAreaNavItem
   >;
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1043,7 +1043,7 @@ export type ContentSection = {
   imageTreatment?:
     "inherit" | "plain" | "framed" | "slab" | "rounded" | "scrim" | "tint";
   marquee?: boolean;
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1072,7 +1072,7 @@ export type CaseResultsSection = {
     } & CaseResultReference
   >;
   ctaButton?: CtaButton;
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1109,7 +1109,7 @@ export type PracticeAreaNav = {
       _key: string;
     } & PracticeAreaNavItem
   >;
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1139,7 +1139,7 @@ export type VideoSection = {
       _key: string;
     } & VideoReference
   >;
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1170,7 +1170,7 @@ export type ReviewsSection = {
     } & CtaButton
   >;
   reviewsEmbed?: string;
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1203,7 +1203,7 @@ export type AttorneySection = {
   description?: string;
   layout?: "grid" | "slider";
   cardStyle?: "classic" | "portrait" | "avatar" | "minimal" | "spotlight";
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1238,7 +1238,7 @@ export type BadgesSection = {
     } & BadgeReference
   >;
   layout?: "inline" | "centeredGrid" | "split" | "scrolling";
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1276,7 +1276,7 @@ export type FaqSection = {
   footerHeading?: string;
   footerDescription?: string;
   footerButton?: CtaButton;
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1314,7 +1314,7 @@ export type CtaSection = {
     _type: "image";
   };
   layout?: "centered" | "split" | "background" | "textOnly";
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1338,7 +1338,7 @@ export type FeaturedTestimonial = {
   tagline?: string;
   heading?: string;
   testimonial?: TestimonialReference;
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1367,7 +1367,7 @@ export type TestimonialsGrid = {
       _key: string;
     } & TestimonialReference
   >;
-  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -4533,8 +4533,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -4630,8 +4629,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -4722,8 +4720,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -4862,8 +4859,7 @@ export type HOME_QUERY_RESULT = {
           } | null;
         } | null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -4951,8 +4947,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -5079,8 +5074,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -5181,8 +5175,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -5294,8 +5287,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -5375,8 +5367,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -5467,8 +5458,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -5548,8 +5538,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -5618,8 +5607,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -5692,8 +5680,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -5842,8 +5829,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -5919,8 +5905,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -6017,8 +6002,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -6082,8 +6066,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -6159,8 +6142,7 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -7793,8 +7775,7 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -7874,8 +7855,7 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -7944,8 +7924,7 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -8080,8 +8059,7 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
           } | null;
         } | null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -8154,8 +8132,7 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -8228,8 +8205,7 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -8378,8 +8354,7 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -8455,8 +8430,7 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -8520,8 +8494,7 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -8597,8 +8570,7 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface:
-            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -10055,14 +10027,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -10142,14 +10107,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -10218,14 +10176,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -10365,14 +10316,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -10445,14 +10389,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -10525,14 +10462,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -10681,14 +10611,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -10766,14 +10689,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -10870,14 +10786,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -10941,14 +10850,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -11024,14 +10926,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -11601,14 +11496,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -11688,14 +11576,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -11764,14 +11645,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -11911,14 +11785,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -11991,14 +11858,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -12071,14 +11931,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -12227,14 +12080,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -12310,14 +12156,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -12381,14 +12220,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -12464,14 +12296,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -12980,14 +12805,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -13067,14 +12885,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -13143,14 +12954,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -13290,14 +13094,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -13370,14 +13167,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -13450,14 +13240,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -13606,14 +13389,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -13689,14 +13465,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -13760,14 +13529,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -13843,14 +13605,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -14420,14 +14175,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -14507,14 +14255,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -14583,14 +14324,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -14730,14 +14464,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -14810,14 +14537,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -14890,14 +14610,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -15046,14 +14759,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -15129,14 +14835,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -15200,14 +14899,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -15283,14 +14975,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -15445,14 +15130,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -15532,14 +15210,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -15608,14 +15279,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -15755,14 +15419,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -15835,14 +15492,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -15915,14 +15565,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -16071,14 +15714,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -16154,14 +15790,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -16225,14 +15854,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -16308,14 +15930,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -16772,14 +16387,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -16859,14 +16467,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -16935,14 +16536,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -17082,14 +16676,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -17162,14 +16749,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -17242,14 +16822,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -17398,14 +16971,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -17481,14 +17047,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -17552,14 +17111,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -17635,14 +17187,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -18307,14 +17852,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -18394,14 +17932,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -18470,14 +18001,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -18617,14 +18141,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -18697,14 +18214,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -18777,14 +18287,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -18933,14 +18436,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -19016,14 +18512,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -19087,14 +18576,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -19170,14 +18652,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -19747,14 +19222,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -19834,14 +19302,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -19910,14 +19371,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -20057,14 +19511,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -20137,14 +19584,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -20217,14 +19657,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -20373,14 +19806,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -20456,14 +19882,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -20527,14 +19946,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -20610,14 +20022,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface:
-                | "accent"
-                | "dark"
-                | "image"
-                | "light"
-                | "pattern"
-                | "tint"
-                | null;
+              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -21406,8 +20811,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -21503,8 +20907,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -21595,8 +20998,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -21740,8 +21142,7 @@ export type HOME_PAGE_QUERY_RESULT = {
             } | null;
           } | null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -21829,8 +21230,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -21957,8 +21357,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -22059,8 +21458,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -22172,8 +21570,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -22253,8 +21650,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -22345,8 +21741,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -22426,8 +21821,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -22496,8 +21890,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -22570,8 +21963,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -22720,8 +22112,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -22797,8 +22188,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -22895,8 +22285,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -22960,8 +22349,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
@@ -23037,8 +22425,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface:
-              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;
