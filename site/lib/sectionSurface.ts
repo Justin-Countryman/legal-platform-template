@@ -219,7 +219,19 @@ const EDGE_FROM_CLASS: Record<VisibleGround, string> = {
   page:  '',
 }
 
-// The wedge itself, on the NEXT band, reaching up over the previous one.
+// The wedge itself: a triangle at the TOP of the next band, painted in the previous
+// band's ground, so the previous band's bottom edge reads as a diagonal cut into this
+// one.
+//
+// Phase 14 fix. Phase 13 shipped the wedge at `bottom: 100%`, which laid it over
+// the PREVIOUS band, painted in that band's own colour: dark on dark, tint on tint.
+// It rendered nothing whenever it worked as designed (pixel-sampled in the Phase 14
+// challenge; the only visible wedge was the accent/tint mismatch, itself a bug), and
+// the Phase 13 samples that called it visible read the previous band. At `top: 0`
+// the pseudo-element still lives in the next band, so it still paints in every
+// ScrollReveal phase, and it covers only this band's own top padding, which is the
+// bound [R-452] states. The band's content sits in a later `relative` container and
+// paints above it.
 //
 // `md:` and up: mobile renders flat. At 390px a diagonal across a full-width band
 // is either invisible or eats a heading, and the study captured desktop only.
@@ -236,8 +248,8 @@ const EDGE_FROM_CLASS: Record<VisibleGround, string> = {
 // 1.4.12 (text spacing) both bind here, and an edge taller than the padding it
 // covers can hide a focused control.
 const EDGE_ANGLED =
-  'md:before:pointer-events-none md:before:absolute md:before:inset-x-0 md:before:bottom-full md:before:h-16 ' +
-  'md:before:[clip-path:polygon(0_0,100%_100%,0_100%)] md:supports-[not_(clip-path:polygon(0_0))]:before:hidden'
+  'md:before:pointer-events-none md:before:absolute md:before:inset-x-0 md:before:top-0 md:before:h-16 ' +
+  'md:before:[clip-path:polygon(0_0,100%_0,0_100%)] md:supports-[not_(clip-path:polygon(0_0))]:before:hidden'
 
 /** The classes a band needs to draw the edge of the band ABOVE it.
  *

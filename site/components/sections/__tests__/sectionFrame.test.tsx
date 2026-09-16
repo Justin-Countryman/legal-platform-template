@@ -174,7 +174,7 @@ describe('the angled edge', () => {
     expect(first.className).not.toContain('before:bg-')
     // The band below paints it, in the band above's colour.
     expect(second.className).toContain('before:bg-brand-dark')
-    expect(second.className).toContain('md:before:bottom-full')
+    expect(second.className).toContain('md:before:top-0')
   })
 
   it('cancels the seam it would otherwise have, because the wedge fills the join', () => {

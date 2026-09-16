@@ -176,7 +176,12 @@ describe('sectionEdgeClasses', () => {
     }
     expect(classes).toContain('md:before:pointer-events-none')
     expect(classes).toContain('md:supports-[not_(clip-path:polygon(0_0))]:before:hidden')
-    expect(classes).toContain('md:before:bottom-full')
+    // At the TOP of the band that paints it, never above it: at bottom-full the
+    // wedge lay over the previous band in that band's own colour and rendered
+    // nothing (pixel-sampled, Phase 14). The clip keeps the top-left triangle.
+    expect(classes).toContain('md:before:top-0')
+    expect(classes).not.toContain('bottom-full')
+    expect(classes).toContain('md:before:[clip-path:polygon(0_0,100%_0,0_100%)]')
   })
 
   it('is capped at the compact preset’s own md top padding, so it cannot reach a heading', () => {
