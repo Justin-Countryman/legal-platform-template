@@ -1,5 +1,6 @@
 import {TertiaryArrow} from '@/components/ui/TertiaryArrow'
 import {SanityImage} from '@/components/ui/SanityImage'
+import {resolveTreatment, treatmentClasses, type ImageTreatment} from '@/lib/imageTreatment'
 import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 
 // ─── Shared card data + primitives ─────────────────────────────────────────────
@@ -63,6 +64,7 @@ export function CardImage({
   sizes,
   imgClassName,
   className,
+  treatment,
 }: {
   attorney: AttorneyCard
   ratio?: string
@@ -70,11 +72,26 @@ export function CardImage({
   sizes?: string
   imgClassName?: string
   className?: string
+  /** Phase 13, requirement 6. `plain` or `framed`; `inherit` and anything else
+   *  resolve to `plain`, which is exactly today's markup.
+   *
+   *  `rounded` is NOT offered here, and that is a finding rather than an
+   *  omission: the photo box sits flush inside a `rounded-ui overflow-hidden`
+   *  card, so rounding all four of its own corners leaves two notches of card
+   *  background at the bottom. It needs `rounded-t-ui`, a PLACEMENT argument
+   *  `resolveTreatment(value, siteDefault, context)` has nowhere to put, so it
+   *  is deferred to Phase 16 with that argument rather than shipped broken. */
+  treatment?: ImageTreatment | null
 }) {
   const name = attorneyName(attorney)
+  // `attorneyCard` allows plain | framed | rounded; this placement narrows it to
+  // the two that are correct here, and `framed` is a wrapper ::after border so it
+  // adds no element and cannot move the photo.
+  const resolved = resolveTreatment(treatment === 'rounded' ? 'plain' : treatment, 'plain', 'attorneyCard')
+  const frame = resolved === 'framed' ? treatmentClasses('framed').wrapper.replace(/^relative\s*/, '') : ''
   const wrapper = fill
-    ? ['absolute inset-0 overflow-hidden', className]
-    : ['relative overflow-hidden', ratio, className]
+    ? ['absolute inset-0 overflow-hidden', frame, className]
+    : ['relative overflow-hidden', ratio, frame, className]
   return (
     <div className={wrapper.filter(Boolean).join(' ')}>
       {hasImage(attorney.photo) ? (
