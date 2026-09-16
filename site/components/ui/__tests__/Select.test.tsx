@@ -143,7 +143,8 @@ describe('Select — cascade-aware contract', () => {
     const {container} = render(<Select><option>x</option></Select>)
     const select = container.querySelector('select') as HTMLSelectElement
     // Cascade-aware tokens.
-    expect(select.className).toContain('border-border')
+    // The field's only edge is its border, so it takes the 3:1 control boundary (Phase 14).
+    expect(select.className.split(' ')).toContain('border-border-control')
     expect(select.className).toContain('bg-background')
     expect(select.className).toContain('text-foreground')
     expect(select.className).toContain('hover:border-foreground-muted')

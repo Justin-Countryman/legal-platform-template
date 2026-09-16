@@ -123,7 +123,7 @@ export function SiloCarousel({
               <span
                 className={[
                   'block h-2 rounded-full transition-[width,background-color] duration-ui-base',
-                  i === active ? 'w-5 bg-action' : 'w-2 bg-border group-hover:bg-foreground-subtle',
+                  i === active ? 'w-5 bg-action' : 'w-2 bg-border-control group-hover:bg-foreground-subtle',
                 ].join(' ')}
               />
             </button>

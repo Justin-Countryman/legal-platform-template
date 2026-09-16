@@ -7,7 +7,7 @@ type Props = SelectHTMLAttributes<HTMLSelectElement>
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const BASE = [
-  'block w-full appearance-none rounded-ui border border-border',
+  'block w-full appearance-none rounded-ui border border-border-control',
   'bg-background text-base text-foreground',
   'min-h-11 py-2 pl-4 pr-10',
   'transition-colors duration-ui-fast',

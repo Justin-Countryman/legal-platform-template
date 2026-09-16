@@ -157,7 +157,8 @@ describe('Input — cascade-aware contract', () => {
     const {container} = render(<Input />)
     const input = container.querySelector('input') as HTMLInputElement
     // Cascade-aware: resolve correctly on dark surfaces via globals.css cascade rule.
-    expect(input.className).toContain('border-border')
+    // The field's only edge is its border, so it takes the 3:1 control boundary (Phase 14).
+    expect(input.className.split(' ')).toContain('border-border-control')
     expect(input.className).toContain('bg-background')
     expect(input.className).toContain('text-foreground')
     expect(input.className).toContain('placeholder:text-foreground-subtle')
