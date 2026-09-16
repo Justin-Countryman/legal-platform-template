@@ -2,6 +2,9 @@ import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {ButtonGroup, toCtaItems} from '@/components/ui/ButtonGroup'
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {FormEmbed} from '@/components/layout/footers/FormEmbed'
+import {SectionShell} from './SectionShell'
+import {type SectionSurface} from '@/lib/sectionSurface'
+import {type SeamProps, NO_SEAM} from './sectionFrame'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -53,14 +56,14 @@ function CtaText({
 
 // ─── Centered layout ──────────────────────────────────────────────────────────
 
-function CenteredCta({data}: {data: GlobalCtaData}) {
+function CenteredCta({data, surface, seam}: {data: GlobalCtaData; surface: SectionSurface; seam: SeamProps}) {
   const {tagline, heading, description, buttons, formEmbed} = data
   if (!heading) return null
 
   const items = toCtaItems(buttons)
 
   return (
-    <section className="bg-muted text-foreground px-[5%] py-16 md:py-24 lg:py-28">
+    <SectionShell appearance={{surface}} contained={false} className="text-foreground" seamTop={seam.seamTop} previousGround={seam.previousGround} previousEdge={seam.previousEdge}>
       <div className="mx-auto w-full max-w-lg text-center">
         <CtaText tagline={tagline} heading={heading} description={description} centered />
 
@@ -74,19 +77,18 @@ function CenteredCta({data}: {data: GlobalCtaData}) {
           </div>
         )}
       </div>
-    </section>
+    </SectionShell>
   )
 }
 
 // ─── Split layout ─────────────────────────────────────────────────────────────
 
-function SplitCta({data}: {data: GlobalCtaData}) {
+function SplitCta({data, surface, seam}: {data: GlobalCtaData; surface: SectionSurface; seam: SeamProps}) {
   const {tagline, heading, description, formEmbed} = data
   if (!heading) return null
 
   return (
-    <section className="bg-muted text-foreground px-[5%] py-16 md:py-24 lg:py-28">
-      <div className="container grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-x-12 lg:gap-x-20 md:items-start">
+    <SectionShell appearance={{surface}} className="text-foreground" innerClassName="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-x-12 lg:gap-x-20 md:items-start" seamTop={seam.seamTop} previousGround={seam.previousGround} previousEdge={seam.previousEdge}>
 
         {/* Left: text */}
         <div>
@@ -100,14 +102,40 @@ function SplitCta({data}: {data: GlobalCtaData}) {
           </div>
         )}
 
-      </div>
-    </section>
+    </SectionShell>
   )
 }
 
 // ─── Export ───────────────────────────────────────────────────────────────────
 
-export function GlobalCta({data, napTokens}: {data: GlobalCtaData; napTokens?: NapTokens | null}) {
+// ─── The frame (Phase 13) ─────────────────────────────────────────────────────
+//
+// Both layouts shipped on `bg-muted`, which is the `accent` surface, so that is
+// the default. It is a PROP with a code default, not a schema field: `globalCta`
+// has no appearance fieldset and adding one would fold a `schema-default` into
+// every Site-Build write (item 308, [R-450]). This is what design §7 amendment
+// 15 means by "HomepageCta takes a surface prop".
+//
+// The band also carries `text-foreground` in its own class list, which the shell
+// cannot express as a surface, so it rides through `className`.
+export const GLOBAL_CTA_DEFAULT_SURFACE: SectionSurface = 'accent'
+
+/** A CTA with no heading was never authored; both layouts already bailed on it. */
+export function isEmpty(data: GlobalCtaData): boolean {
+  return !data.heading
+}
+
+export function GlobalCta({
+  data,
+  napTokens,
+  surface = GLOBAL_CTA_DEFAULT_SURFACE,
+  seam = NO_SEAM,
+}: {
+  data: GlobalCtaData
+  napTokens?: NapTokens | null
+  surface?: SectionSurface
+  seam?: SeamProps
+}) {
   const resolved: GlobalCtaData = napTokens
     ? {
         ...data,
@@ -120,6 +148,6 @@ export function GlobalCta({data, napTokens}: {data: GlobalCtaData; napTokens?: N
         })),
       }
     : data
-  if (resolved.layout === 'split') return <SplitCta data={resolved} />
-  return <CenteredCta data={resolved} />
+  if (resolved.layout === 'split') return <SplitCta data={resolved} surface={surface} seam={seam} />
+  return <CenteredCta data={resolved} surface={surface} seam={seam} />
 }

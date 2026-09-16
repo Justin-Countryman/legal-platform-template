@@ -850,6 +850,21 @@ export const DESIGN_TOKENS_QUERY = groq`
     "accent2Color":  accent2Color,
     internalHeroBackground,
     heroScrimOpacity,
+    // The page background layer (Phase 13). Absent on every existing dataset,
+    // and PageBackgroundLayer renders nothing for an absent or "none" kind, so
+    // this changes no served page until an operator or a Phase 16 theme sets it.
+    // No backticks in this comment: it is inside a groq template literal.
+    "pageBackground": pageBackground{
+      kind,
+      texture,
+      opacity,
+      "image": image{
+        "src": asset->url,
+        "alt": alt,
+        "width": asset->metadata.dimensions.width,
+        "height": asset->metadata.dimensions.height
+      }
+    },
     "siteHeroBackgroundImage": siteHeroBackgroundImage{
       "src": asset->url,
       "alt": alt,

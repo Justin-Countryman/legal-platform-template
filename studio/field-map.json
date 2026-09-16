@@ -2759,7 +2759,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -2769,7 +2769,8 @@
               "tint",
               "dark",
               "accent",
-              "image"
+              "image",
+              "pattern"
             ]
           },
           "path": "surface",
@@ -2783,6 +2784,42 @@
           "path": "sectionBackgroundImage",
           "title": "Background Image",
           "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
@@ -2961,6 +2998,83 @@
           "required": "warning",
           "requiredMessage": "validation:generic.required",
           "title": "Layout",
+          "type": "string"
+        },
+        {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image",
+              "pattern"
+            ]
+          },
+          "path": "surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "spacing",
+          "title": "Vertical Spacing",
           "type": "string"
         }
       ],
@@ -4081,7 +4195,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -4091,7 +4205,8 @@
               "tint",
               "dark",
               "accent",
-              "image"
+              "image",
+              "pattern"
             ]
           },
           "path": "surface",
@@ -4105,6 +4220,42 @@
           "path": "sectionBackgroundImage",
           "title": "Background Image",
           "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
@@ -4829,7 +4980,7 @@
           "type": "boolean"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -4839,7 +4990,8 @@
               "tint",
               "dark",
               "accent",
-              "image"
+              "image",
+              "pattern"
             ]
           },
           "path": "surface",
@@ -4853,6 +5005,42 @@
           "path": "sectionBackgroundImage",
           "title": "Background Image",
           "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
@@ -4973,6 +5161,83 @@
           "requiredMessage": "validation:generic.required",
           "title": "Layout",
           "type": "string"
+        },
+        {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image",
+              "pattern"
+            ]
+          },
+          "path": "surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "spacing",
+          "title": "Vertical Spacing",
+          "type": "string"
         }
       ],
       "initialDocument": {
@@ -4985,6 +5250,61 @@
     },
     "designSettings": {
       "fields": [
+        {
+          "description": "A subtle ground behind the whole site. Sections set to the Pattern surface, and the margins around an Inset Panel, show it; every other surface covers it.",
+          "jsonType": "object",
+          "path": "pageBackground",
+          "title": "Page Background",
+          "type": "object"
+        },
+        {
+          "description": "Leave as None for a plain white page, which is how every site ships.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "texture",
+              "photo",
+              "gradient"
+            ]
+          },
+          "path": "pageBackground.kind",
+          "title": "Kind",
+          "type": "string"
+        },
+        {
+          "description": "Drawn in the brand colour at the opacity below, so it follows the palette.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "pinstripe",
+              "diagonalHatch",
+              "diamondLattice",
+              "scallop"
+            ]
+          },
+          "path": "pageBackground.texture",
+          "title": "Texture",
+          "type": "string"
+        },
+        {
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "pageBackground.image",
+          "title": "Photo",
+          "type": "image"
+        },
+        {
+          "description": "How strongly the background shows, from 0 to 0.25. Text sits on top of it, so keep it low: the readable contrast of body text is measured against the ground actually rendered.",
+          "hidden": "<predicate>",
+          "jsonType": "number",
+          "path": "pageBackground.opacity",
+          "title": "Strength",
+          "type": "number"
+        },
         {
           "description": "Used in headers, footers, and sections with a light background. Typically your full-color or dark logo.",
           "jsonType": "object",
@@ -7089,6 +7409,83 @@
           "path": "footerButton.variant",
           "title": "Variant",
           "type": "string"
+        },
+        {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image",
+              "pattern"
+            ]
+          },
+          "path": "surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "spacing",
+          "title": "Vertical Spacing",
+          "type": "string"
         }
       ],
       "initialDocument": {
@@ -7138,7 +7535,7 @@
           "type": "reference"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
           "initialValue": "tint",
           "jsonType": "string",
           "options": {
@@ -7148,7 +7545,8 @@
               "tint",
               "dark",
               "accent",
-              "image"
+              "image",
+              "pattern"
             ]
           },
           "path": "surface",
@@ -7162,6 +7560,42 @@
           "path": "sectionBackgroundImage",
           "title": "Background Image",
           "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
@@ -9439,7 +9873,7 @@
           "type": "image"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -9449,7 +9883,8 @@
               "tint",
               "dark",
               "accent",
-              "image"
+              "image",
+              "pattern"
             ]
           },
           "path": "canvas[]<practiceAreaNavInline>.surface",
@@ -9463,6 +9898,42 @@
           "path": "canvas[]<practiceAreaNavInline>.sectionBackgroundImage",
           "title": "Background Image",
           "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "canvas[]<practiceAreaNavInline>.inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "canvas[]<practiceAreaNavInline>.edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "canvas[]<practiceAreaNavInline>.overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
@@ -9557,7 +10028,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -9567,7 +10038,8 @@
               "tint",
               "dark",
               "accent",
-              "image"
+              "image",
+              "pattern"
             ]
           },
           "path": "canvas[]<attorneySectionInline>.surface",
@@ -9581,6 +10053,42 @@
           "path": "canvas[]<attorneySectionInline>.sectionBackgroundImage",
           "title": "Background Image",
           "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "canvas[]<attorneySectionInline>.inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "canvas[]<attorneySectionInline>.edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "canvas[]<attorneySectionInline>.overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
@@ -9656,7 +10164,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -9666,7 +10174,8 @@
               "tint",
               "dark",
               "accent",
-              "image"
+              "image",
+              "pattern"
             ]
           },
           "path": "canvas[]<caseResultsSectionInline>.surface",
@@ -9680,6 +10189,42 @@
           "path": "canvas[]<caseResultsSectionInline>.sectionBackgroundImage",
           "title": "Background Image",
           "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "canvas[]<caseResultsSectionInline>.inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "canvas[]<caseResultsSectionInline>.edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "canvas[]<caseResultsSectionInline>.overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
@@ -9779,6 +10324,83 @@
           "type": "string"
         },
         {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image",
+              "pattern"
+            ]
+          },
+          "path": "canvas[]<badgesSectionInline>.surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "canvas[]<badgesSectionInline>.sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "canvas[]<badgesSectionInline>.inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "canvas[]<badgesSectionInline>.edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "canvas[]<badgesSectionInline>.overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "canvas[]<badgesSectionInline>.spacing",
+          "title": "Vertical Spacing",
+          "type": "string"
+        },
+        {
           "jsonType": "string",
           "path": "canvas[]<testimonialsGridInline>.tagline",
           "title": "Tagline",
@@ -9806,7 +10428,7 @@
           "type": "array"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
           "initialValue": "tint",
           "jsonType": "string",
           "options": {
@@ -9816,7 +10438,8 @@
               "tint",
               "dark",
               "accent",
-              "image"
+              "image",
+              "pattern"
             ]
           },
           "path": "canvas[]<testimonialsGridInline>.surface",
@@ -9830,6 +10453,42 @@
           "path": "canvas[]<testimonialsGridInline>.sectionBackgroundImage",
           "title": "Background Image",
           "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "canvas[]<testimonialsGridInline>.inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "canvas[]<testimonialsGridInline>.edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "canvas[]<testimonialsGridInline>.overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
@@ -9868,7 +10527,7 @@
           "type": "reference"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
           "initialValue": "tint",
           "jsonType": "string",
           "options": {
@@ -9878,7 +10537,8 @@
               "tint",
               "dark",
               "accent",
-              "image"
+              "image",
+              "pattern"
             ]
           },
           "path": "canvas[]<featuredTestimonialInline>.surface",
@@ -9892,6 +10552,42 @@
           "path": "canvas[]<featuredTestimonialInline>.sectionBackgroundImage",
           "title": "Background Image",
           "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "canvas[]<featuredTestimonialInline>.inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "canvas[]<featuredTestimonialInline>.edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "canvas[]<featuredTestimonialInline>.overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
@@ -9950,6 +10646,83 @@
           "path": "canvas[]<videoSectionInline>.videos",
           "title": "Videos",
           "type": "array"
+        },
+        {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image",
+              "pattern"
+            ]
+          },
+          "path": "canvas[]<videoSectionInline>.surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "canvas[]<videoSectionInline>.sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "canvas[]<videoSectionInline>.inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "canvas[]<videoSectionInline>.edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "canvas[]<videoSectionInline>.overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "canvas[]<videoSectionInline>.spacing",
+          "title": "Vertical Spacing",
+          "type": "string"
         },
         {
           "initialValue": "split",
@@ -10283,7 +11056,7 @@
           "type": "boolean"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -10293,7 +11066,8 @@
               "tint",
               "dark",
               "accent",
-              "image"
+              "image",
+              "pattern"
             ]
           },
           "path": "canvas[]<contentSectionInline>.surface",
@@ -10307,6 +11081,42 @@
           "path": "canvas[]<contentSectionInline>.sectionBackgroundImage",
           "title": "Background Image",
           "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "canvas[]<contentSectionInline>.inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "canvas[]<contentSectionInline>.edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "canvas[]<contentSectionInline>.overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
@@ -10400,6 +11210,83 @@
           "path": "canvas[]<reviewsSectionInline>.reviewsEmbed",
           "title": "Reviews Embed Code",
           "type": "text"
+        },
+        {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image",
+              "pattern"
+            ]
+          },
+          "path": "canvas[]<reviewsSectionInline>.surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "canvas[]<reviewsSectionInline>.sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "canvas[]<reviewsSectionInline>.inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "canvas[]<reviewsSectionInline>.edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "canvas[]<reviewsSectionInline>.overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "canvas[]<reviewsSectionInline>.spacing",
+          "title": "Vertical Spacing",
+          "type": "string"
         },
         {
           "jsonType": "string",
@@ -13313,7 +14200,7 @@
           "type": "image"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -13323,7 +14210,8 @@
               "tint",
               "dark",
               "accent",
-              "image"
+              "image",
+              "pattern"
             ]
           },
           "path": "surface",
@@ -13337,6 +14225,42 @@
           "path": "sectionBackgroundImage",
           "title": "Background Image",
           "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
@@ -13739,6 +14663,83 @@
           "requiredMessage": "Reviews embed code is required",
           "title": "Reviews Embed Code",
           "type": "text"
+        },
+        {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image",
+              "pattern"
+            ]
+          },
+          "path": "surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "spacing",
+          "title": "Vertical Spacing",
+          "type": "string"
         }
       ],
       "initialDocument": {
@@ -15975,7 +16976,7 @@
           "type": "array"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
           "initialValue": "tint",
           "jsonType": "string",
           "options": {
@@ -15985,7 +16986,8 @@
               "tint",
               "dark",
               "accent",
-              "image"
+              "image",
+              "pattern"
             ]
           },
           "path": "surface",
@@ -15999,6 +17001,42 @@
           "path": "sectionBackgroundImage",
           "title": "Background Image",
           "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
@@ -16971,6 +18009,83 @@
           "requiredMessage": "At least one video is required",
           "title": "Videos",
           "type": "array"
+        },
+        {
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "tint",
+              "dark",
+              "accent",
+              "image",
+              "pattern"
+            ]
+          },
+          "path": "surface",
+          "title": "Surface",
+          "type": "string"
+        },
+        {
+          "description": "Shown only when Surface is \"Image\". A dark overlay is applied for legible text.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "sectionBackgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "Render this section as a panel inside the page margin, with the page background showing around it, instead of edge to edge. The panel keeps the Surface you chose and takes the site’s corner radius.",
+          "jsonType": "boolean",
+          "path": "inset",
+          "title": "Inset Panel",
+          "type": "boolean"
+        },
+        {
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "flat",
+              "angled"
+            ]
+          },
+          "path": "edgeBottom",
+          "title": "Bottom Edge",
+          "type": "string"
+        },
+        {
+          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "small",
+              "large"
+            ]
+          },
+          "path": "overlapPrevious",
+          "title": "Overlap the Section Above",
+          "type": "string"
+        },
+        {
+          "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "compact",
+              "normal",
+              "spacious"
+            ]
+          },
+          "path": "spacing",
+          "title": "Vertical Spacing",
+          "type": "string"
         }
       ],
       "initialDocument": {

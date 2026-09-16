@@ -1,5 +1,8 @@
 import {ButtonGroup, toCtaItems} from '@/components/ui/ButtonGroup'
 import {FormEmbed} from '@/components/layout/footers/FormEmbed'
+import {SectionShell} from '@/components/sections/SectionShell'
+import {type SectionSurface} from '@/lib/sectionSurface'
+import {type SeamProps, NO_SEAM} from '@/components/sections/sectionFrame'
 import {Tagline} from '@/components/ui/Tagline'
 
 // ─── Homepage final CTA ───────────────────────────────────────────────────────
@@ -38,11 +41,23 @@ export type HomepageCtaData = {
   formEmbed?: string | null
 }
 
+// ─── The frame (Phase 13) ─────────────────────────────────────────────────────
+// `bg-muted` is the `accent` surface, and it stays the default. A PROP with a
+// code default, not a schema field: the homepage CTA is the `globalCta`
+// singleton, which has no appearance fieldset, and adding one would fold a
+// `schema-default` into every Site-Build write (item 308, [R-450]). Design §7
+// amendment 15's "HomepageCta takes a surface prop", exactly.
+export const HOMEPAGE_CTA_DEFAULT_SURFACE: SectionSurface = 'accent'
+
 export function HomepageCta({
   data,
   override,
+  surface = HOMEPAGE_CTA_DEFAULT_SURFACE,
+  seam = NO_SEAM,
 }: {
   data?: HomepageCtaData | null
+  surface?: SectionSurface
+  seam?: SeamProps
   /** The page's ctaFormOverride. Shallow-merged over the singleton, matching
    *  the interior-page precedent: an override field that is present wins, and
    *  an absent one leaves the global value in place. */
@@ -58,7 +73,7 @@ export function HomepageCta({
   const items = toCtaItems(merged.buttons)
 
   return (
-    <section className="bg-muted px-[5%] py-16 text-foreground md:py-24 lg:py-28">
+    <SectionShell appearance={{surface}} contained={false} className="text-foreground" seamTop={seam.seamTop} previousGround={seam.previousGround} previousEdge={seam.previousEdge}>
       <div className="mx-auto w-full max-w-3xl text-center">
         {merged.tagline ? <Tagline as="p">{merged.tagline}</Tagline> : null}
 
@@ -77,6 +92,6 @@ export function HomepageCta({
           </div>
         ) : null}
       </div>
-    </section>
+    </SectionShell>
   )
 }

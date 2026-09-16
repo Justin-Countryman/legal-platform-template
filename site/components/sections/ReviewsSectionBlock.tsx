@@ -1,5 +1,7 @@
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {SectionHeader} from '@/components/ui/SectionHeader'
+import {SectionShell, type SectionAppearance} from './SectionShell'
+import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {HtmlEmbed} from '@/components/ui/HtmlEmbed'
 import {ButtonGroup, toCtaItems} from '@/components/ui/ButtonGroup'
 import {type ReviewsSectionProps} from './sectionProps'
@@ -21,14 +23,35 @@ export type ReviewsSectionBlockData = ReviewsSectionProps
 // puts the heading, description and buttons in a left column and the widget on
 // the right from tablet width up.
 
+// ─── The frame (Phase 13) ─────────────────────────────────────────────────────
+// All three shapes were transparent, so `pattern` is the default: the band paints
+// no background of its own, which is today's rendering exactly. A code default,
+// never an `initialValue`, because the composer folds a seed into every band it
+// writes (item 308, [R-450]).
+
+/** The appearance this section will actually render with, for the seam walk. */
+export function resolveAppearance(data: ReviewsSectionBlockData): SectionAppearance {
+  return {...data.appearance, surface: data.appearance?.surface ?? 'pattern'}
+}
+
+/** A reviews band IS its embed. */
+export function isEmpty(data: ReviewsSectionBlockData): boolean {
+  return !data.reviewsEmbed
+}
+
 export function ReviewsSectionBlock({
   data,
   napTokens,
+  seam = NO_SEAM,
 }: {
   data: ReviewsSectionBlockData
   napTokens?: NapTokens | null
+  seam?: SeamProps
 }) {
-  if (!data.reviewsEmbed) return null
+  // Narrowed locally as well as guarded by `isEmpty`, which the seam walk calls
+  // but TypeScript cannot see through.
+  const embed = data.reviewsEmbed
+  if (!embed) return null
 
   const tagline = resolveTokenString(data.tagline, napTokens)
   const heading = resolveTokenString(data.heading, napTokens)
@@ -37,56 +60,45 @@ export function ReviewsSectionBlock({
     .slice(0, 2)
     .map((item) => ({...item, label: resolveTokenString(item.label, napTokens)}))
 
-  if (data.layout === 'split') {
-    return (
-      <section className="px-[5%] py-16 md:py-24 lg:py-28">
-        <div className="container">
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-16">
-            <div className="md:col-span-5">
-              {heading && (
-                <SectionHeader tagline={tagline} heading={heading} description={description} alignment="left" className="mb-6" />
-              )}
-              {buttons.length > 0 && <ButtonGroup items={buttons} />}
-            </div>
-            <div className="md:col-span-7">
-              <HtmlEmbed html={data.reviewsEmbed} aria-label={heading || 'Reviews'} />
-            </div>
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  if (buttons.length > 0) {
-    return (
-      <section className="px-[5%] py-16 md:py-24 lg:py-28">
-        <div className="container">
+  const body =
+    data.layout === 'split' ? (
+      <>
+        <div className="md:col-span-5">
           {heading && (
-            <SectionHeader tagline={tagline} heading={heading} description={description} className="mx-auto mb-6 max-w-2xl" />
+            <SectionHeader tagline={tagline} heading={heading} description={description} alignment="left" className="mb-6" />
           )}
-          <ButtonGroup items={buttons} align="center" className="mb-12" />
-          <HtmlEmbed html={data.reviewsEmbed} />
+          {buttons.length > 0 && <ButtonGroup items={buttons} />}
         </div>
-      </section>
+        <div className="md:col-span-7">
+          <HtmlEmbed html={embed} aria-label={heading || 'Reviews'} />
+        </div>
+      </>
+    ) : buttons.length > 0 ? (
+      <>
+        {heading && (
+          <SectionHeader tagline={tagline} heading={heading} description={description} className="mx-auto mb-6 max-w-2xl" />
+        )}
+        <ButtonGroup items={buttons} align="center" className="mb-12" />
+        <HtmlEmbed html={embed} />
+      </>
+    ) : (
+      <>
+        {heading && (
+          <SectionHeader tagline={tagline} heading={heading} description={description} className="mx-auto mb-12 max-w-2xl" />
+        )}
+        <HtmlEmbed html={embed} />
+      </>
     )
-  }
 
   return (
-    <section className="px-[5%] py-16 md:py-24 lg:py-28">
-      <div className="container">
-
-        {heading && (
-          <SectionHeader
-            tagline={tagline}
-            heading={heading}
-            description={description}
-            className="mx-auto mb-12 max-w-2xl"
-          />
-        )}
-
-        <HtmlEmbed html={data.reviewsEmbed} />
-
-      </div>
-    </section>
+    <SectionShell
+      appearance={resolveAppearance(data)}
+      innerClassName={data.layout === 'split' ? 'grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-16' : undefined}
+      seamTop={seam.seamTop}
+      previousGround={seam.previousGround}
+      previousEdge={seam.previousEdge}
+    >
+      {body}
+    </SectionShell>
   )
 }

@@ -30,6 +30,13 @@ import {render} from '@testing-library/react'
 // breakpoint, because the composer writes no `spacing` at all (item 308) and
 // "absent" must keep rendering as it did.
 //
+// MOVED A SECOND TIME in the same phase, when the five off-shell sections joined
+// `SectionShell` (§7 amendment 5). `FaqSectionBlock`, `ReviewsSectionBlock` and
+// `VideoLibraryClient`'s band each gained `relative` on the `<section>` and on
+// the `.container`, and the padding split above. No nesting was added: each
+// layout's own wrapper classes ride on the shell's container through
+// `innerClassName`, so the element count is unchanged.
+//
 // SectionHeader itself was NOT touched: Phase 11 amendment 2 keeps it out until
 // Phase 16, and this diff carries no change to its own markup.
 
