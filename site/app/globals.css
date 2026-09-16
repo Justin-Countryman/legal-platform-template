@@ -605,6 +605,12 @@
   --color-accent-on-light:          #666666;
   --color-accent-text-on-light:     #666666;
   --color-action-text-on-light:     #666666;
+  --color-action-text-hover:        #2f2f2f;
+  --color-action-state-cue:         transparent;
+  --color-action-state-cue-on-light: transparent;
+  --color-action-state-cue-on-dark: transparent;
+  --color-action-text-hover-on-light: #2f2f2f;
+  --color-action-text-hover-on-dark: #eeeeee;
   --color-foreground-muted-on-light: #555555;
   --color-foreground-subtle-on-light: #707070;
   --color-border-on-light:          #e4e4e4;
@@ -679,6 +685,8 @@ h1, h2, h3, h4, h5, h6 {
      renders the LIGHT text form (measured #846700 on navy at 2.98:1). */
   --color-accent-text:       var(--color-accent-on-dark);
   --color-action-text:       var(--color-action-text-on-dark);
+  --color-action-text-hover: var(--color-action-text-hover-on-dark);
+  --color-action-state-cue:  var(--color-action-state-cue-on-dark);
   --color-foreground:        var(--color-foreground-on-dark);
   --color-foreground-muted:  var(--color-foreground-muted-on-dark);
   --color-foreground-subtle: var(--color-foreground-subtle-on-dark);
@@ -699,6 +707,8 @@ h1, h2, h3, h4, h5, h6 {
   --color-accent:            var(--color-accent-on-light);
   --color-accent-text:       var(--color-accent-text-on-light);
   --color-action-text:       var(--color-action-text-on-light);
+  --color-action-text-hover: var(--color-action-text-hover-on-light);
+  --color-action-state-cue:  var(--color-action-state-cue-on-light);
   --color-foreground:        var(--color-foreground-on-light);
   --color-foreground-muted:  var(--color-foreground-muted-on-light);
   --color-foreground-subtle: var(--color-foreground-subtle-on-light);
@@ -714,6 +724,7 @@ h1, h2, h3, h4, h5, h6 {
 [data-scrim="true"],
 [data-hero-image="true"] {
   --color-action-text:       var(--color-foreground-on-dark);
+  --color-action-text-hover: var(--color-foreground-on-dark);
   --color-ring-focus:        var(--color-foreground-on-dark);
 }
 

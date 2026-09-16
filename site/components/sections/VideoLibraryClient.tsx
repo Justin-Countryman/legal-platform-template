@@ -163,7 +163,7 @@ function FilterChip({active, onClick, children}: {active: boolean; onClick: () =
         'transition-colors duration-ui-fast',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2',
         active
-          ? 'border-action bg-action text-action-fg'
+          ? 'border-action bg-action text-action-fg ring-1 ring-action-state-cue'
           : 'border-border bg-transparent text-foreground-muted hover:bg-hover-wash hover:text-foreground',
       ].join(' ')}
     >

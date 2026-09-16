@@ -115,10 +115,10 @@ export const designSettings = defineType({
           title: 'Strength',
           type: 'number',
           description:
-            'How strongly the background shows, from 0 to 0.25. Text sits on top of it, so keep it low: the readable contrast of body text is measured against the ground actually rendered.',
+            'How strongly the background shows. A texture or photo renders at 0.04 at most, the strength at which every text colour on it stays readable (WCAG AA); a gradient may go to 0.25.',
           hidden: ({parent}) => ((parent as {kind?: string} | undefined)?.kind ?? 'none') === 'none',
           // Warning, never error: no validation rule blocks Publish ([R-162]).
-          validation: (Rule) => Rule.min(0).max(0.25).warning('Keep the page background under 0.25 so text stays readable on it.'),
+          validation: (Rule) => Rule.min(0).max(0.25).warning('Keep the page background at 0.25 or under. A texture or photo renders at 0.04 at most.'),
         }),
       ],
     }),

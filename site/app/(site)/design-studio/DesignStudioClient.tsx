@@ -474,17 +474,17 @@ function TypographyPanel() {
                   <p className="mb-1 text-xs text-foreground-muted">Links — internal · external · tertiary</p>
                   <ul className="list-none space-y-2 font-body text-base">
                     <li>
-                      <Link href="/about/" className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-hover">
+                      <Link href="/about/" className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-text-hover">
                         Internal link to the about page
                       </Link>
                     </li>
                     <li>
-                      <a href="https://example.com/" target="_blank" rel="noopener noreferrer" className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-hover">
+                      <a href="https://example.com/" target="_blank" rel="noopener noreferrer" className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-text-hover">
                         External link (opens in new tab)
                       </a>
                     </li>
                     <li>
-                      <Link href="/contact/" className="text-action-text font-medium transition-colors duration-ui-fast hover:text-action-hover">
+                      <Link href="/contact/" className="text-action-text font-medium transition-colors duration-ui-fast hover:text-action-text-hover">
                         Tertiary CTA link with action-text accent →
                       </Link>
                     </li>
@@ -597,17 +597,17 @@ function TypographyPanel() {
                   <p className="mb-1 text-xs text-foreground-muted">Links — internal · external · tertiary</p>
                   <ul className="list-none space-y-2 font-body text-base">
                     <li>
-                      <Link href="/about/" className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-hover">
+                      <Link href="/about/" className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-text-hover">
                         Internal link to the about page
                       </Link>
                     </li>
                     <li>
-                      <a href="https://example.com/" target="_blank" rel="noopener noreferrer" className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-hover">
+                      <a href="https://example.com/" target="_blank" rel="noopener noreferrer" className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-text-hover">
                         External link (opens in new tab)
                       </a>
                     </li>
                     <li>
-                      <Link href="/contact/" className="text-action-text font-medium transition-colors duration-ui-fast hover:text-action-hover">
+                      <Link href="/contact/" className="text-action-text font-medium transition-colors duration-ui-fast hover:text-action-text-hover">
                         Tertiary CTA link with action-text accent →
                       </Link>
                     </li>
@@ -3729,7 +3729,7 @@ function FoundationPanel() {
                 </div>
                 <a
                   href="#focus-demo-anchor"
-                  className="self-start text-sm text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-hover"
+                  className="self-start text-sm text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-text-hover"
                 >
                   Plain link — uses default :focus-visible outline (no Tailwind ring)
                 </a>
@@ -3751,7 +3751,7 @@ function FoundationPanel() {
                 </div>
                 <a
                   href="#focus-demo-anchor"
-                  className="self-start text-sm text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-hover"
+                  className="self-start text-sm text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-text-hover"
                 >
                   Plain link — default outline auto-swaps via cascade
                 </a>

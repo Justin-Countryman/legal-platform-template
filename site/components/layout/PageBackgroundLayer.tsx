@@ -80,6 +80,14 @@ const TEXTURE_CLASS: Record<PageTexture, string> = {
  *  under body text on a `pattern` band. Phase 16's themes set it per theme. */
 export const DEFAULT_PAGE_BACKGROUND_OPACITY = 0.04
 
+/** The strongest a texture or photo layer ever renders. Body, supporting and label
+ *  text on a `pattern` band sit on blend(ground, ink, opacity), and WCAG 1.4.3
+ *  measures the darkest pixel under them: every light text tier holds up to 0.04 on
+ *  every accepted light ground and fails above it (at 0.25, label text measured
+ *  1.85:1; Phase 14). A stored value above it renders at it; the stored value is
+ *  untouched. The gradient wash is lighter than `muted` and needs no cap. */
+export const MAX_TEXT_SAFE_LAYER_OPACITY = 0.04
+
 const LAYER = 'pointer-events-none absolute inset-0 -z-10'
 
 export function PageBackgroundLayer({data}: {data?: PageBackgroundData | null}) {
@@ -90,7 +98,8 @@ export function PageBackgroundLayer({data}: {data?: PageBackgroundData | null}) 
   // changes on any page until an operator or a Phase 16 theme chooses a kind.
   if (kind === 'none') return null
 
-  const opacity = typeof data?.opacity === 'number' ? data.opacity : DEFAULT_PAGE_BACKGROUND_OPACITY
+  const stored = typeof data?.opacity === 'number' ? data.opacity : DEFAULT_PAGE_BACKGROUND_OPACITY
+  const opacity = kind === 'gradient' ? stored : Math.min(stored, MAX_TEXT_SAFE_LAYER_OPACITY)
 
   if (kind === 'texture') {
     const texture = data?.texture

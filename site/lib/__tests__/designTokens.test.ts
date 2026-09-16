@@ -133,6 +133,24 @@ describe('the derivation, row by row', () => {
     expect(p['--color-border']).toBe('#e4e4e4')
   })
 
+  it('a text link’s hover keeps the button hover where it reads, and is the on-dark body text on dark', () => {
+    const p = resolvePalette({}).tokens
+    expect(p['--color-action-text-hover']).toBe(p['--color-action-hover'])
+    expect(p['--color-action-text-hover-on-dark']).toBe(p['--color-foreground-on-dark'])
+    // A gold action lightens on hover and would fail as text on white.
+    const gold = resolvePalette({accent: '#c9a227'}).tokens
+    expect(gold['--color-action-text-hover']).toBe(gold['--color-action-text'])
+  })
+
+  it('a selected pill gains a ring only where the action cannot mark the state at 3:1', () => {
+    const grey = resolvePalette({}).tokens
+    expect(grey['--color-action-state-cue']).toBe('transparent')
+    expect(grey['--color-action-state-cue-on-dark']).toBe('transparent')
+    const gold = resolvePalette({accent: '#c9a227'}).tokens
+    expect(gold['--color-action-state-cue']).toBe(gold['--color-action-text'])
+    expect(ratio(gold['--color-action-state-cue'], gold['--color-background'])).toBeGreaterThanOrEqual(3)
+  })
+
   it('the scrim is brand-dark capped at L 0.20', () => {
     expect(resolvePalette({}).tokens['--color-scrim']).toBe('#141414')
     const light = resolvePalette({darkGround: '#36454f'}).tokens

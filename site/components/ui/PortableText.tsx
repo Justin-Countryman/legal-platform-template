@@ -72,7 +72,7 @@ function makeComponents(napTokens: NapTokens | null | undefined): PortableTextCo
           return (
             <a
               href={href}
-              className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-hover"
+              className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-text-hover"
               {...(href.startsWith('http') ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
             >
               {children}
@@ -80,7 +80,7 @@ function makeComponents(napTokens: NapTokens | null | undefined): PortableTextCo
           )
         }
         return (
-          <Link href={href} className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-hover">
+          <Link href={href} className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-text-hover">
             {children}
           </Link>
         )

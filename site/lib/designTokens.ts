@@ -343,6 +343,22 @@ export function resolvePalette(raw: ColourInputs = {}): ResolvedPalette {
     ? action
     : stepLightness(parseOklch(action), 1, (h) => contrast(h, brandDark) >= 4.5) ?? '#ffffff'
 
+  // A text link's hover colour (prose links). It was the button hover fill used as
+  // text, which is not cascade-aware: inside a dark band it measured 1.38:1, and a
+  // gold palette's lighter hover fails on white. On light grounds it keeps the
+  // button hover where that passes 4.5:1 (every built client: #2f2f2f), else the
+  // resting link colour; on dark grounds it is the on-dark body text.
+  const actionTextHover = passesOn(actionHover, lightGrounds, 4.5) ? actionHover : actionText
+  const actionTextHoverOnDark = inverse['color-foreground-on-dark']
+
+  // A selected pill or tab is shown by an action-coloured fill, and WCAG 1.4.11
+  // asks 3:1 between that state indicator and the ground beside it. Where the
+  // action already clears 3:1 the cue is transparent, so nothing is drawn and no
+  // built client changes; where it does not (a gold action on white measures about
+  // 2.3:1) the selected control gains a 1px ring in the action text colour.
+  const actionStateCue = passesOn(action, lightGrounds, 3) ? 'transparent' : actionText
+  const actionStateCueOnDark = contrast(action, brandDark) >= 3 ? 'transparent' : actionTextOnDark
+
   // Focus rings, WCAG 1.4.11 3:1: the action where it clears every light ground
   // and the white ring offset, else brand-dark; on dark, the action where it
   // clears brand-dark, else the brightened accent.
@@ -422,6 +438,12 @@ export function resolvePalette(raw: ColourInputs = {}): ResolvedPalette {
     '--color-action-text':              actionText,
     '--color-action-text-on-light':     actionText,
     '--color-action-text-on-dark':      actionTextOnDark,
+    '--color-action-state-cue':         actionStateCue,
+    '--color-action-state-cue-on-light': actionStateCue,
+    '--color-action-state-cue-on-dark': actionStateCueOnDark,
+    '--color-action-text-hover':        actionTextHover,
+    '--color-action-text-hover-on-light': actionTextHover,
+    '--color-action-text-hover-on-dark': actionTextHoverOnDark,
     // Hover washes are CSS expressions that retune through --shadow-rgb.
     '--color-hover-wash':               'rgb(var(--shadow-rgb) / 0.06)',
     '--color-hover-wash-on-dark':       'color-mix(in oklch, var(--color-foreground-on-dark) 8%, transparent)',
@@ -475,6 +497,7 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
     check(`foreground-subtle on ${name}`, t['--color-foreground-subtle'], ground, 4.5)
     check(`accent-text on ${name}`,       t['--color-accent-text'],       ground, 4.5)
     check(`action-text on ${name}`,       t['--color-action-text'],       ground, 4.5)
+    check(`action-text-hover on ${name}`, t['--color-action-text-hover'], ground, 4.5)
     check(`ring-focus on ${name}`,        t['--color-ring-focus'],        ground, 3)
     check(`star-outline on ${name}`,      t['--color-star-outline'],      ground, 3)
     check(`border-control on ${name}`,    t['--color-border-control'],    ground, 3)
@@ -486,6 +509,7 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
   check('foreground-subtle-on-dark on brand-dark', t['--color-foreground-subtle-on-dark'], dark, 4.5)
   check('accent-on-dark on brand-dark',           t['--color-accent-on-dark'],         dark, 4.5)
   check('action-text-on-dark on brand-dark',      t['--color-action-text-on-dark'],    dark, 4.5)
+  check('action-text-hover-on-dark on brand-dark', t['--color-action-text-hover-on-dark'], dark, 4.5)
   check('ring-focus-on-dark on brand-dark',       t['--color-ring-focus-on-dark'],     dark, 3)
   check('star-outline-on-dark on brand-dark',     t['--color-star-outline-on-dark'],   dark, 3)
   check('border-control-on-dark on brand-dark',   t['--color-border-control-on-dark'], dark, 3)

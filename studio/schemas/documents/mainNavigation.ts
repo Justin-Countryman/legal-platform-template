@@ -218,8 +218,8 @@ export const mainNavigation = defineType({
       description: 'Background color for the top bar strip',
       options: {
         list: [
-          {title: 'Brand Primary', value: 'primary'},
-          {title: 'Brand Secondary', value: 'secondary'},
+          {title: 'Dark ground', value: 'primary'},
+          {title: 'Accent strip', value: 'secondary'},
           {title: 'Dark', value: 'dark'},
         ],
         layout: 'radio',

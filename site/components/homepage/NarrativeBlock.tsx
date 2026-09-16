@@ -95,7 +95,7 @@ export function NarrativeBlock({
                 <li key={l._key ?? i}>
                   <Link
                     href={l.href as string}
-                    className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-hover"
+                    className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-text-hover"
                   >
                     {l.anchorText}
                   </Link>

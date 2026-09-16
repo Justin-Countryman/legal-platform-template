@@ -51,7 +51,7 @@ const components = (napTokens?: NapTokens | null): PortableTextComponents => ({
         return (
           <a
             href={href}
-            className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-hover"
+            className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-text-hover"
             {...(value?.blank ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
           >
             {children}
@@ -59,7 +59,7 @@ const components = (napTokens?: NapTokens | null): PortableTextComponents => ({
         )
       }
       return (
-        <Link href={href} className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-hover">
+        <Link href={href} className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-text-hover">
           {children}
         </Link>
       )

@@ -374,9 +374,13 @@ export function HeaderLogo({data, scheme, useMark = false, className = 'h-10 lg:
 
 // ─── Top bar ──────────────────────────────────────────────────────────────────
 
+// The accent strip reads the STATIC light accent, not the cascade-aware one: the top
+// bar renders inside the header, and inside a dark header bg-accent resolved to the
+// brightened accent while text-accent-fg did not cascade (white on #d7d7d7, 1.44:1,
+// Phase 14). accent-fg is paired with the accent itself.
 const TOP_BAR_BG: Record<string, string> = {
   primary:   'bg-brand-dark',
-  secondary: 'bg-accent',
+  secondary: 'bg-accent-on-light',
   dark:      'bg-brand-dark',
 }
 
