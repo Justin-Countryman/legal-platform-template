@@ -2,6 +2,7 @@ import {SectionHeader} from '@/components/ui/SectionHeader'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {resolveHovers, type SiloHoverEffect} from '@/lib/siloHover'
 import {SectionShell} from './SectionShell'
+import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type PracticeAreaNavProps} from './sectionProps'
 import {
   SiloSpotlight, SiloFeature, SiloTileLayout, SiloInline, SiloSplit,
@@ -54,12 +55,30 @@ function SiloVariant({
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
+// ─── The frame (Phase 13) ───────────────────────────────────────────────────
+// Exported for the seam walk in `sectionFrame.ts`: the dispatchers need to
+// know, before rendering anything, what ground this band will sit on and
+// whether it will render at all.
+
+/** The appearance this section will actually render with. */
+export function resolveAppearance(data: PracticeAreaNavBlockData) {
+  return data.appearance
+}
+
+/** True when this section renders nothing, so the walk skips it and it never
+ *  becomes the "previous band" for the one after it (item 312). */
+export function isEmpty(data: PracticeAreaNavBlockData): boolean {
+  return (data.items ?? []).filter((i) => i !== null).length === 0
+}
+
 export function PracticeAreaNavBlock({
   data,
   napTokens,
+  seam = NO_SEAM,
 }: {
   data: PracticeAreaNavBlockData
   napTokens?: NapTokens | null
+  seam?: SeamProps
 }) {
   const items = (data.items ?? []).filter((i): i is SiloNavItem => !!i?.href)
   if (items.length === 0) return null
@@ -109,7 +128,12 @@ export function PracticeAreaNavBlock({
   )
 
   return (
-    <SectionShell appearance={data.appearance}>
+    <SectionShell
+      appearance={resolveAppearance(data)}
+      seamTop={seam.seamTop}
+      previousGround={seam.previousGround}
+      previousEdge={seam.previousEdge}
+    >
       <SiloSectionFrame
         layout={sectionLayout}
         hasHeader={hasHeader}

@@ -3,6 +3,7 @@ import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {AttorneyCard} from './AttorneyCard'
 import {AttorneySlider} from './AttorneySlider'
 import {SectionShell} from './SectionShell'
+import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type AttorneySectionProps} from './sectionProps'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -13,12 +14,30 @@ export type AttorneySectionBlockData = AttorneySectionProps
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
+// ─── The frame (Phase 13) ───────────────────────────────────────────────────
+// Exported for the seam walk in `sectionFrame.ts`: the dispatchers need to
+// know, before rendering anything, what ground this band will sit on and
+// whether it will render at all.
+
+/** The appearance this section will actually render with. */
+export function resolveAppearance(data: AttorneySectionBlockData) {
+  return data.appearance
+}
+
+/** True when this section renders nothing, so the walk skips it and it never
+ *  becomes the "previous band" for the one after it (item 312). */
+export function isEmpty(data: AttorneySectionBlockData): boolean {
+  return (data.attorneys ?? []).filter((a) => a !== null).length === 0
+}
+
 export function AttorneySectionBlock({
   data,
   napTokens,
+  seam = NO_SEAM,
 }: {
   data: AttorneySectionBlockData
   napTokens?: NapTokens | null
+  seam?: SeamProps
 }) {
   let attorneys = (data.attorneys ?? []).filter(Boolean)
   if (data.mode === 'practiceArea' && data.orderedAttorneyIds?.length) {
@@ -34,7 +53,12 @@ export function AttorneySectionBlock({
   const isSlider = data.layout === 'slider'
 
   return (
-    <SectionShell appearance={data.appearance}>
+    <SectionShell
+      appearance={resolveAppearance(data)}
+      seamTop={seam.seamTop}
+      previousGround={seam.previousGround}
+      previousEdge={seam.previousEdge}
+    >
 
       {heading && (
         <SectionHeader

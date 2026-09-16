@@ -4,6 +4,7 @@ import {hasImage} from '@/lib/sanity/image'
 import {Tagline} from '@/components/ui/Tagline'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {SectionShell} from './SectionShell'
+import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type FeaturedTestimonialProps} from './sectionProps'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -14,12 +15,30 @@ export type FeaturedTestimonialSectionData = FeaturedTestimonialProps
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
+// ─── The frame (Phase 13) ───────────────────────────────────────────────────
+// Exported for the seam walk in `sectionFrame.ts`: the dispatchers need to
+// know, before rendering anything, what ground this band will sit on and
+// whether it will render at all.
+
+/** The appearance this section will actually render with. */
+export function resolveAppearance(data: FeaturedTestimonialSectionData) {
+  return data.appearance
+}
+
+/** True when this section renders nothing, so the walk skips it and it never
+ *  becomes the "previous band" for the one after it (item 312). */
+export function isEmpty(data: FeaturedTestimonialSectionData): boolean {
+  return !data.testimonial?.quote
+}
+
 export function FeaturedTestimonialSection({
   data,
   napTokens,
+  seam = NO_SEAM,
 }: {
   data: FeaturedTestimonialSectionData
   napTokens?: NapTokens | null
+  seam?: SeamProps
 }) {
   const t = data.testimonial
   if (!t?.quote) return null
@@ -30,7 +49,12 @@ export function FeaturedTestimonialSection({
   const heading = resolveTokenString(data.heading, napTokens) || 'Client Testimonial'
 
   return (
-    <SectionShell appearance={data.appearance}>
+    <SectionShell
+      appearance={resolveAppearance(data)}
+      seamTop={seam.seamTop}
+      previousGround={seam.previousGround}
+      previousEdge={seam.previousEdge}
+    >
       <div className="mx-auto max-w-4xl">
 
         {/* Section heading */}

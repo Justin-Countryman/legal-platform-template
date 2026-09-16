@@ -2,6 +2,7 @@ import {Button} from '@/components/ui/Button'
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {SectionShell} from './SectionShell'
+import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type CaseResultsSectionProps} from './sectionProps'
 
 // ─── Case Results section ─────────────────────────────────────────────────────
@@ -33,15 +34,33 @@ import {type CaseResultsSectionProps} from './sectionProps'
 
 export type CaseResultsSectionData = CaseResultsSectionProps
 
+// ─── The frame (Phase 13) ───────────────────────────────────────────────────
+// Exported for the seam walk in `sectionFrame.ts`: the dispatchers need to
+// know, before rendering anything, what ground this band will sit on and
+// whether it will render at all.
+
+/** The appearance this section will actually render with. */
+export function resolveAppearance(data: CaseResultsSectionData) {
+  return data.appearance
+}
+
+/** True when this section renders nothing, so the walk skips it and it never
+ *  becomes the "previous band" for the one after it (item 312). */
+export function isEmpty(data: CaseResultsSectionData): boolean {
+  return (data.caseResults ?? []).filter((r) => r !== null).length === 0
+}
+
 export function CaseResultsSection({
   data,
   disclaimer,
   napTokens,
+  seam = NO_SEAM,
 }: {
   data: CaseResultsSectionData
   /** Resolved by the dispatcher via resolveResultsDisclaimer(); never empty. Required. */
   disclaimer: string
   napTokens?: NapTokens | null
+  seam?: SeamProps
 }) {
   // A result with no amount and no caption has nothing to show.
   const results = (data.caseResults ?? []).filter((r) => r.amount || r.caption)
@@ -57,7 +76,12 @@ export function CaseResultsSection({
   const cta = data.ctaButton?.title && data.ctaButton?.url ? data.ctaButton : null
 
   return (
-    <SectionShell appearance={data.appearance}>
+    <SectionShell
+      appearance={resolveAppearance(data)}
+      seamTop={seam.seamTop}
+      previousGround={seam.previousGround}
+      previousEdge={seam.previousEdge}
+    >
       {heading && (
         <SectionHeader heading={heading} description={intro} className="mx-auto mb-12 max-w-2xl" />
       )}

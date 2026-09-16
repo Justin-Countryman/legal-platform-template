@@ -25,6 +25,17 @@ import {ContentSectionBlock, isContentSectionEmpty, type ContentSectionData} fro
 import {ReviewsSectionBlock, type ReviewsSectionBlockData} from '@/components/sections/ReviewsSectionBlock'
 import {resolveResultsDisclaimer} from '@/lib/legal'
 import {type NapTokens} from '@/lib/tokens'
+import {type SectionAppearance} from '@/components/sections/SectionShell'
+import {walkFrame, type SeamProps, NO_SEAM} from '@/components/sections/sectionFrame'
+import * as AttorneyFrame from '@/components/sections/AttorneySectionBlock'
+import * as BadgesFrame from '@/components/sections/BadgesSectionBlock'
+import * as CaseResultsFrame from '@/components/sections/CaseResultsSection'
+import * as ContentFrame from '@/components/sections/ContentSectionBlock'
+import * as FeaturedFrame from '@/components/sections/FeaturedTestimonialSection'
+import * as PracticeAreaFrame from '@/components/sections/PracticeAreaNavBlock'
+import * as ReviewsFrame from '@/components/sections/ReviewsSectionBlock'
+import * as TestimonialsFrame from '@/components/sections/TestimonialsGridSection'
+import * as VideoFrame from '@/components/sections/VideoSectionBlock'
 
 // ─── Homepage canvas ──────────────────────────────────────────────────────────
 //
@@ -105,6 +116,7 @@ function renderBlock(
   block: HomepageBlock,
   napTokens?: NapTokens | null,
   resultsDisclaimer?: string | null,
+  seam: SeamProps = NO_SEAM,
 ) {
   switch (block._type) {
     case 'caseResultsBlock':
@@ -124,45 +136,82 @@ function renderBlock(
     // The inline section objects: the shared section components, the same ones
     // PageSections renders for the referenced documents.
     case 'practiceAreaNavInline':
-      return <PracticeAreaNavBlock data={block} napTokens={napTokens} />
+      return <PracticeAreaNavBlock data={block} napTokens={napTokens} seam={seam} />
     case 'attorneySectionInline':
-      return <AttorneySectionBlock data={block} napTokens={napTokens} />
+      return <AttorneySectionBlock data={block} napTokens={napTokens} seam={seam} />
     case 'badgesSectionInline':
-      return <BadgesSectionBlock data={block} napTokens={napTokens} />
+      return <BadgesSectionBlock data={block} napTokens={napTokens} seam={seam} />
     case 'testimonialsGridInline':
-      return <TestimonialsGridSection data={block} napTokens={napTokens} />
+      return <TestimonialsGridSection data={block} napTokens={napTokens} seam={seam} />
     case 'featuredTestimonialInline':
-      return <FeaturedTestimonialSection data={block} napTokens={napTokens} />
+      return <FeaturedTestimonialSection data={block} napTokens={napTokens} seam={seam} />
     case 'videoSectionInline':
-      return <VideoSectionBlock data={block} napTokens={napTokens} />
+      return <VideoSectionBlock data={block} napTokens={napTokens} seam={seam} />
     case 'caseResultsSectionInline':
       return (
         <CaseResultsSection
           data={block}
           disclaimer={resolveResultsDisclaimer(resultsDisclaimer)}
           napTokens={napTokens}
+          seam={seam}
         />
       )
     // Emptiness is decided HERE, so an empty member returns null to the map
     // below and gets no ScrollReveal wrapper. The disclaimer is resolved here
     // for the same reason as case results': the component cannot skip it.
     case 'contentSectionInline':
-      return isContentSectionEmpty(block) ? null : (
+      return (
         <ContentSectionBlock
           data={block}
           disclaimer={resolveResultsDisclaimer(resultsDisclaimer)}
           napTokens={napTokens}
           scale="marketing"
+          seam={seam}
         />
       )
     // A reviews band is its embed: none, no band, and no ScrollReveal wrapper.
     case 'reviewsSectionInline':
-      return block.reviewsEmbed ? <ReviewsSectionBlock data={block} napTokens={napTokens} /> : null
+      return <ReviewsSectionBlock data={block} napTokens={napTokens} seam={seam} />
     // No default case that renders something generic. An unknown block type
     // renders nothing rather than a placeholder: a block added to the schema
     // and not to this switch should be invisible, not half-drawn.
     default:
       return null
+  }
+}
+
+// ─── The frame, per member type ───────────────────────────────────────────────
+//
+// What the walk needs from each member before anything renders: the appearance
+// it WILL use, and whether it will render at all. Both come from the component
+// that owns the answer, never from the stored value (see sectionFrame.ts).
+//
+// The six RETIRED block types answer `{appearance: undefined, empty: false}`:
+// they carry no appearance field and render their own hardcoded bands, so they
+// are opaque light grounds that take no seam and give none. Phase 15 deletes
+// them with these rows.
+function frameOf(block: HomepageBlock): {appearance: SectionAppearance | null | undefined; empty: boolean} {
+  switch (block._type) {
+    case 'practiceAreaNavInline':
+      return {appearance: PracticeAreaFrame.resolveAppearance(block), empty: PracticeAreaFrame.isEmpty(block)}
+    case 'attorneySectionInline':
+      return {appearance: AttorneyFrame.resolveAppearance(block), empty: AttorneyFrame.isEmpty(block)}
+    case 'badgesSectionInline':
+      return {appearance: BadgesFrame.resolveAppearance(block), empty: BadgesFrame.isEmpty(block)}
+    case 'testimonialsGridInline':
+      return {appearance: TestimonialsFrame.resolveAppearance(block), empty: TestimonialsFrame.isEmpty(block)}
+    case 'featuredTestimonialInline':
+      return {appearance: FeaturedFrame.resolveAppearance(block), empty: FeaturedFrame.isEmpty(block)}
+    case 'videoSectionInline':
+      return {appearance: VideoFrame.resolveAppearance(block), empty: VideoFrame.isEmpty(block)}
+    case 'caseResultsSectionInline':
+      return {appearance: CaseResultsFrame.resolveAppearance(block), empty: CaseResultsFrame.isEmpty(block)}
+    case 'contentSectionInline':
+      return {appearance: ContentFrame.resolveAppearance(block), empty: isContentSectionEmpty(block)}
+    case 'reviewsSectionInline':
+      return {appearance: ReviewsFrame.resolveAppearance(block), empty: ReviewsFrame.isEmpty(block)}
+    default:
+      return {appearance: undefined, empty: false}
   }
 }
 
@@ -181,14 +230,19 @@ export function HomepageCanvas({
 
   return (
     <>
-      {blocks.map((block, i) => {
-        const rendered = renderBlock(block, napTokens, resultsDisclaimer)
+      {walkFrame(blocks, frameOf).map(({member, seam}, surviving) => {
+        const rendered = renderBlock(member, napTokens, resultsDisclaimer, seam)
         if (!rendered) return null
-        // Index 0 is the first block after the hero: no motion, ever.
-        return i === 0 ? (
-          <div key={block._key}>{rendered}</div>
+        // THE FIRST SURVIVING BAND, not the member at index 0. `i === 0` on the
+        // stored index was a live bug: an empty section at index 0 was nulled
+        // AFTER this test, so the first band a visitor actually sees was handed a
+        // ScrollReveal wrapper, against the rule the header above calls
+        // load-bearing. The walk has already dropped the empties, so
+        // `surviving === 0` is the first visible band by construction.
+        return surviving === 0 ? (
+          <div key={member._key}>{rendered}</div>
         ) : (
-          <ScrollReveal key={block._key}>{rendered}</ScrollReveal>
+          <ScrollReveal key={member._key}>{rendered}</ScrollReveal>
         )
       })}
     </>

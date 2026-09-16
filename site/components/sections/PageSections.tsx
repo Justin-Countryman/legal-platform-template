@@ -11,6 +11,53 @@ import {AttorneySectionBlock, type AttorneySectionBlockData} from './AttorneySec
 import {ReviewsSectionBlock, type ReviewsSectionBlockData} from './ReviewsSectionBlock'
 import {VideoSectionBlock, type VideoSectionBlockData} from './VideoSectionBlock'
 import {PracticeAreaNavBlock, type PracticeAreaNavBlockData} from './PracticeAreaNavBlock'
+import {walkFrame} from './sectionFrame'
+import {type SectionAppearance} from './SectionShell'
+import * as AttorneyFrame from './AttorneySectionBlock'
+import * as BadgesFrame from './BadgesSectionBlock'
+import * as CaseResultsFrame from './CaseResultsSection'
+import * as ContentFrame from './ContentSectionBlock'
+import * as CtaFrame from './CtaSectionBlock'
+import * as FaqFrame from './FaqSectionBlock'
+import * as FeaturedFrame from './FeaturedTestimonialSection'
+import * as PracticeAreaFrame from './PracticeAreaNavBlock'
+import * as ReviewsFrame from './ReviewsSectionBlock'
+import * as TestimonialsFrame from './TestimonialsGridSection'
+import * as VideoFrame from './VideoSectionBlock'
+
+// ─── The frame, per section type ──────────────────────────────────────────────
+// The same contract `HomepageCanvas` uses. `PageSections` wraps nothing in
+// `ScrollReveal`, so an empty section here left no stray div — but it did still
+// become the "previous band" for the one after it, which is the half of item 312
+// that applies to interior pages.
+function frameOf(section: PageSectionData): {appearance: SectionAppearance | null | undefined; empty: boolean} {
+  switch (section._type) {
+    case 'practiceAreaNav':
+      return {appearance: PracticeAreaFrame.resolveAppearance(section), empty: PracticeAreaFrame.isEmpty(section)}
+    case 'attorneySection':
+      return {appearance: AttorneyFrame.resolveAppearance(section), empty: AttorneyFrame.isEmpty(section)}
+    case 'badgesSection':
+      return {appearance: BadgesFrame.resolveAppearance(section), empty: BadgesFrame.isEmpty(section)}
+    case 'testimonialsGrid':
+      return {appearance: TestimonialsFrame.resolveAppearance(section), empty: TestimonialsFrame.isEmpty(section)}
+    case 'featuredTestimonial':
+      return {appearance: FeaturedFrame.resolveAppearance(section), empty: FeaturedFrame.isEmpty(section)}
+    case 'videoSection':
+      return {appearance: VideoFrame.resolveAppearance(section), empty: VideoFrame.isEmpty(section)}
+    case 'caseResultsSection':
+      return {appearance: CaseResultsFrame.resolveAppearance(section), empty: CaseResultsFrame.isEmpty(section)}
+    case 'contentSection':
+      return {appearance: ContentFrame.resolveAppearance(section), empty: isContentSectionEmpty(section)}
+    case 'reviewsSection':
+      return {appearance: ReviewsFrame.resolveAppearance(section), empty: ReviewsFrame.isEmpty(section)}
+    case 'ctaSection':
+      return {appearance: CtaFrame.resolveAppearance(section), empty: CtaFrame.isEmpty(section)}
+    case 'faqSection':
+      return {appearance: FaqFrame.resolveAppearance(section), empty: FaqFrame.isEmpty(section)}
+    default:
+      return {appearance: undefined, empty: false}
+  }
+}
 
 // ─── Union type ───────────────────────────────────────────────────────────────
 // The discriminant lives HERE, not on the section data types: the same
@@ -49,34 +96,34 @@ export function PageSections({
 
   return (
     <>
-      {sections.map((section, i) => {
+      {walkFrame(sections, frameOf).map(({member: section, index: i, seam}) => {
         switch (section._type) {
           case 'testimonialsGrid':
-            return <TestimonialsGridSection key={i} data={section} napTokens={napTokens} />
+            return <TestimonialsGridSection key={i} data={section} napTokens={napTokens} seam={seam} />
           case 'featuredTestimonial':
-            return <FeaturedTestimonialSection key={i} data={section} napTokens={napTokens} />
+            return <FeaturedTestimonialSection key={i} data={section} napTokens={napTokens} seam={seam} />
           case 'ctaSection':
-            return <CtaSectionBlock key={i} data={section} napTokens={napTokens} />
+            return <CtaSectionBlock key={i} data={section} napTokens={napTokens} seam={seam} />
           case 'faqSection':
-            return <FaqSectionBlock key={i} data={section} napTokens={napTokens} />
+            return <FaqSectionBlock key={i} data={section} napTokens={napTokens} seam={seam} />
           case 'badgesSection':
-            return <BadgesSectionBlock key={i} data={section} napTokens={napTokens} />
+            return <BadgesSectionBlock key={i} data={section} napTokens={napTokens} seam={seam} />
           case 'attorneySection':
-            return <AttorneySectionBlock key={i} data={section} napTokens={napTokens} />
+            return <AttorneySectionBlock key={i} data={section} napTokens={napTokens} seam={seam} />
           case 'reviewsSection':
-            return <ReviewsSectionBlock key={i} data={section} napTokens={napTokens} />
+            return <ReviewsSectionBlock key={i} data={section} napTokens={napTokens} seam={seam} />
           case 'videoSection':
-            return <VideoSectionBlock key={i} data={section} napTokens={napTokens} />
+            return <VideoSectionBlock key={i} data={section} napTokens={napTokens} seam={seam} />
           case 'practiceAreaNav':
-            return <PracticeAreaNavBlock key={i} data={section} napTokens={napTokens} />
+            return <PracticeAreaNavBlock key={i} data={section} napTokens={napTokens} seam={seam} />
           // Phase 11: the two documents an interior list can now reference. Both
           // take the results disclaimer, resolved here, never by the component.
           case 'contentSection':
-            return isContentSectionEmpty(section) ? null : (
-              <ContentSectionBlock key={i} data={section} disclaimer={resolveResultsDisclaimer(resultsDisclaimer)} napTokens={napTokens} scale="interior" />
+            return (
+              <ContentSectionBlock key={i} data={section} disclaimer={resolveResultsDisclaimer(resultsDisclaimer)} napTokens={napTokens} scale="interior" seam={seam} />
             )
           case 'caseResultsSection':
-            return <CaseResultsSection key={i} data={section} disclaimer={resolveResultsDisclaimer(resultsDisclaimer)} napTokens={napTokens} />
+            return <CaseResultsSection key={i} data={section} disclaimer={resolveResultsDisclaimer(resultsDisclaimer)} napTokens={napTokens} seam={seam} />
           default:
             return null
         }

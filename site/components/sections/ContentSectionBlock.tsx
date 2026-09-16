@@ -9,7 +9,8 @@ import {resolveTreatment, treatmentClasses} from '@/lib/imageTreatment'
 import {hasImage} from '@/lib/sanity/image'
 import {formatPhone, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {MarqueeRibbon} from './MarqueeRibbon'
-import {SectionShell} from './SectionShell'
+import {SectionShell, type SectionAppearance} from './SectionShell'
+import {type SeamProps, NO_SEAM} from './sectionFrame'
 import type {ContentSectionProps} from './sectionProps'
 
 // ─── Content section ──────────────────────────────────────────────────────────
@@ -109,17 +110,35 @@ function statGridClass(count: number): string {
   return 'grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4'
 }
 
+// ─── The frame (Phase 13) ───────────────────────────────────────────────────
+//
+// THIS RESOLVER IS WHY THE SEAM IS A WALK AND NOT A COMPARISON. A ribbon with no
+// stored spacing renders `compact`, decided HERE from the layout, and the
+// composer stores no spacing at all (item 308, [R-450]). The record's predicate
+// `curr.spacing !== 'compact'` reads the stored `undefined`, so it would have put
+// a seam on an already-compact band — on exactly the band the build writes. The
+// walk asks the component instead.
+
+/** The appearance this section will actually render with, ribbon default and all. */
+export function resolveAppearance(data: ContentSectionData): SectionAppearance | null | undefined {
+  return layoutOf(data) === 'ribbon'
+    ? {...data.appearance, spacing: data.appearance?.spacing ?? 'compact'}
+    : data.appearance
+}
+
 export function ContentSectionBlock({
   data,
   disclaimer,
   napTokens,
   scale,
+  seam = NO_SEAM,
 }: {
   data: ContentSectionData
   /** Resolved by the dispatcher via resolveResultsDisclaimer(); never empty. Required. */
   disclaimer: string
   napTokens?: NapTokens | null
   scale: HeadingUnitScale
+  seam?: SeamProps
 }) {
   if (isContentSectionEmpty(data)) return null
 
@@ -127,11 +146,15 @@ export function ContentSectionBlock({
   const t = (s?: string | null) => resolveTokenString(s, napTokens)
   const items = renderableItems(data)
   const claim = rendersResultClaim(data)
-  // A ribbon is one tight line: compact unless the operator chose otherwise.
-  const appearance = layout === 'ribbon' ? {...data.appearance, spacing: data.appearance?.spacing ?? 'compact'} : data.appearance
+  const appearance = resolveAppearance(data)
 
   return (
-    <SectionShell appearance={appearance}>
+    <SectionShell
+      appearance={appearance}
+      seamTop={seam.seamTop}
+      previousGround={seam.previousGround}
+      previousEdge={seam.previousEdge}
+    >
       {(surface) => {
         const center = layout === 'statement' || layout === 'statRow'
         const onDark = surface.buttonContext === 'dark'
