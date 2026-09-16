@@ -1,5 +1,5 @@
 {
-  "_provenance": "Emitted :root tokens of buildColorCSS at template c5b9a2b, captured before Phase 14 replaced the engine. placeholder = what every Site-Build client stores (analogous-accent, #333333, #666666); absent = no colour fields (CI stub, seed-bootstrap); yanowitz = the fixture before migrate_colours.py. Generated, not hand-edited. WS-V1-PHASE14-DESIGN.md §7 amendments 1, 15, 19, 23.",
+  "_provenance": "Emitted :root tokens of buildColorCSS at template c5b9a2b, captured before Phase 14 replaced the engine. placeholder = what every Site-Build client stores (analogous-accent, #333333, #666666); absent = no colour fields (CI stub, seed-bootstrap); editedAccent = the placeholder state with an operator-edited accent (#A12A2F), which is the fixture client before migrate_colours.py. Generated, not hand-edited. WS-V1-PHASE14-DESIGN.md §7 amendments 1, 15, 19, 23.",
   "placeholder": {
     "--role-brand-dark": "#141414",
     "--role-muted": "#f5f5f5",
@@ -86,7 +86,7 @@
     "--color-accent-fg": "#ffffff",
     "--color-accent-on-dark": "#d7d7d7"
   },
-  "yanowitz": {
+  "editedAccent": {
     "--role-brand-dark": "#141414",
     "--role-muted": "#ffece9",
     "--role-action": "#a12a2f",

@@ -280,7 +280,7 @@ describe('palette presets', () => {
     expect(new Set(PALETTE_PRESETS.map((p) => p.id)).size).toBe(15)
     for (const p of PALETTE_PRESETS) {
       expect(p.id).toMatch(/^[a-z]+-[a-z]+$/)
-      expect(p.provenance.domains.length, p.id).toBeGreaterThan(0)
+      expect(p.evidence.length, p.id).toBeGreaterThan(0)
     }
   })
 

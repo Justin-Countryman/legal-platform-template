@@ -82,7 +82,7 @@ describe('colour guarantee: every blocking pair passes for any operator input', 
   }, 60_000)
 
   it('the placeholder default, the migrated fixture and every preset', () => {
-    const named: Record<string, ColourInputs> = {placeholder: {}, yanowitz: {accent: '#a12a2f'}}
+    const named: Record<string, ColourInputs> = {placeholder: {}, editedAccent: {accent: '#a12a2f'}}
     for (const p of PALETTE_PRESETS) named[p.id] = presetInputs(p)
     expectNone(Object.entries(named).flatMap(([name, inputs]) => failures(name, inputs)))
   })
@@ -123,7 +123,7 @@ describe('colour guarantee: every blocking pair passes for any operator input', 
 const EMITTED_AND_KEPT = (tokens: Record<string, string>) =>
   Object.keys(tokens).filter((k) => !k.startsWith('--role-'))
 
-function moved(name: 'placeholder' | 'yanowitz' | 'absent', inputs: ColourInputs) {
+function moved(name: 'placeholder' | 'editedAccent' | 'absent', inputs: ColourInputs) {
   const old = before[name] as Record<string, string>
   const now = resolvePalette(inputs).tokens
   return EMITTED_AND_KEPT(old)
@@ -143,7 +143,7 @@ describe('what existing sites see', () => {
   })
 
   it('the fixture after its migration: the pink muted surface goes, plus the same two fixes', () => {
-    expect(moved('yanowitz', {accent: '#a12a2f'})).toEqual([
+    expect(moved('editedAccent', {accent: '#a12a2f'})).toEqual([
       '--color-action-text-on-dark #a12a2f -> #d15756',
       '--color-foreground-subtle #8f8f8f -> #707070',
       '--color-muted #ffece9 -> #f5f5f5',

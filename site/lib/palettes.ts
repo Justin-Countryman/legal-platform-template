@@ -13,10 +13,11 @@
 // presets whose text colours converge on light pages and the two with the
 // thinnest evidence.
 //
-// Provenance. Every palette's hues come from the 65-site homepage field study
-// (BI/_workstreams/WS-Homepage-UX-UI-STUDY/records/), cited by the record's
-// domain and its own colour words, because the records name hues and never a
-// hex. Every hex below is therefore a chosen value, validated by
+// Provenance. Every palette's hues come from the 65-site homepage field study in
+// the platform monorepo. Each preset carries the colour words its study records
+// use; the records themselves, by domain, are in that repository's Phase 14
+// design record, because the template carries no firm identity. The records name
+// hues and never a hex. Every hex below is therefore a chosen value, validated by
 // lib/__tests__/colourGuarantee.test.ts (every rendered colour pair meets WCAG
 // 2.2 AA) and provisional until the Phase 18 eye pass. Justin does not pick the
 // values (2026-09-16).
@@ -36,84 +37,87 @@ export type PalettePreset = {
   accent: string
   /** Absent means buttons take the accent. */
   action?: string
-  provenance: {domains: string[]; words: string[]}
+  /** The colour words the field-study records use for this palette. The records
+   *  themselves, by domain, are listed in the monorepo's Phase 14 design record:
+   *  the template carries no firm identity (scripts/check-template-is-blank.mjs). */
+  evidence: string[]
 }
 
 export const PALETTE_PRESETS: readonly PalettePreset[] = [
   {
     id: 'black-gold', name: 'Black & Gold',
     darkGround: '#111111', accent: '#c5a253',
-    provenance: {domains: ['calesariclaw.com', 'thelitbot.com', 'capflaw.com', 'bardinelawfirm.com', 'defend-texas.com'], words: ['black', 'metallic gold']},
+    evidence: ['black', 'metallic gold'],
   },
   {
     id: 'navy-brass', name: 'Navy & Brass',
     darkGround: '#1c2b4a', lightGround: '#f5eedc', accent: '#b8893a',
-    provenance: {domains: ['duparlaw.com', 'bdgfirm.com', 'dudleylake.com', 'bhalllaw.com', 'eslingerlawfirm.com'], words: ['navy', 'brass-gold', 'ochre-gold', 'cream']},
+    evidence: ['navy', 'brass-gold', 'ochre-gold', 'cream'],
   },
   {
     id: 'navy-ice', name: 'Navy & Ice',
     darkGround: '#0b2545', lightGround: '#f3f7fa', accent: '#2f6fd6',
-    provenance: {domains: ['carbajallaw.vegas', 'familylawlakecounty.com', 'erllaw.com', 'fathersrightsomaha.com'], words: ['navy', 'ice-white', 'blue']},
+    evidence: ['navy', 'ice-white', 'blue'],
   },
   {
     id: 'navy-orange', name: 'Navy & Orange',
     darkGround: '#13294b', accent: '#f57c00',
-    provenance: {domains: ['clintonparish.com', 'bostoncriminallawyer.com', 'bardizbanian.com', 'jarrinandstanifer.com'], words: ['navy', 'safety-orange', 'rust-orange']},
+    evidence: ['navy', 'safety-orange', 'rust-orange'],
   },
   {
     id: 'burgundy-gold', name: 'Burgundy & Gold',
     darkGround: '#5a1a24', lightGround: '#f5efe3', accent: '#b89b5e',
-    provenance: {domains: ['aminlegalfirm.com', 'bergermichelena.com'], words: ['burgundy', 'aubergine', 'pale-gold', 'cream']},
+    evidence: ['burgundy', 'aubergine', 'pale-gold', 'cream'],
   },
   {
     id: 'teal-mint', name: 'Teal & Mint',
     darkGround: '#0f4c5c', accent: '#3eb489',
-    provenance: {domains: ['lewinlawfirm.com', 'aquinocpalaw.com'], words: ['teal', 'mint-green']},
+    evidence: ['teal', 'mint-green'],
   },
   {
     id: 'navy-brick', name: 'Navy & Brick',
     darkGround: '#1b2a41', accent: '#a23b2a',
-    provenance: {domains: ['driggersschultz.com', 'curleylawfirm.com'], words: ['navy', 'brick-red']},
+    evidence: ['navy', 'brick-red'],
   },
   {
     id: 'ink-lavender', name: 'Ink & Lavender',
     darkGround: '#17171f', accent: '#8e7cc3',
-    provenance: {domains: ['kashfianlaw.com'], words: ['black', 'purple', 'lavender']},
+    evidence: ['black', 'purple', 'lavender'],
   },
   {
     id: 'black-crimson', name: 'Black & Crimson',
     darkGround: '#121212', accent: '#c8102e',
-    provenance: {domains: ['hdimmigrationlaw.com', 'ckclawfirm.com', 'elbazelbazlaw.com', 'ebdlawyers.com'], words: ['black', 'crimson', 'red']},
+    evidence: ['black', 'crimson', 'red'],
   },
   {
     id: 'charcoal-coral', name: 'Charcoal & Coral',
     darkGround: '#2f3437', lightGround: '#f6efe6', accent: '#e4644b',
-    provenance: {domains: ['dbnimmigration.com'], words: ['charcoal', 'coral', 'cream']},
+    evidence: ['charcoal', 'coral', 'cream'],
   },
   {
     id: 'green-coral', name: 'Green & Coral',
     darkGround: '#1f4d3a', lightGround: '#f8f1e6', accent: '#e8735a',
-    provenance: {domains: ['veronicagarzalaw.com'], words: ['green', 'coral', 'cream']},
+    evidence: ['green', 'coral', 'cream'],
   },
   {
     id: 'forest-brass', name: 'Forest & Brass',
     darkGround: '#1f3d2b', lightGround: '#f4efe2', accent: '#a88b3f',
-    provenance: {domains: ['eternalaw.com', 'breenandperson.com', 'defend-texas.com'], words: ['forest green', 'brushed gold', 'metallic gold', 'cream']},
+    evidence: ['forest green', 'brushed gold', 'metallic gold', 'cream'],
   },
   {
     id: 'green-sage', name: 'Green & Sage',
     darkGround: '#1d3b2a', lightGround: '#f6f3ea', accent: '#467a56',
-    provenance: {domains: ['deliamillerattorney.com'], words: ['a single green family', 'mint', 'cream']},
+    evidence: ['a single green family', 'mint', 'cream'],
   },
   {
     id: 'slate-cream', name: 'Slate & Cream',
     darkGround: '#2c3e50', lightGround: '#f4efe4', accent: '#6a87a8',
-    provenance: {domains: ['ellingandelling.com'], words: ['muted slate-blue', 'cream']},
+    evidence: ['muted slate-blue', 'cream'],
   },
   {
     id: 'navy-rose', name: 'Navy & Rose',
     darkGround: '#1d2f4f', accent: '#d16d6a',
-    provenance: {domains: ['familylawco.com', 'carterlaw.org'], words: ['navy', 'dusty rose', 'coral']},
+    evidence: ['navy', 'dusty rose', 'coral'],
   },
 ]
 
