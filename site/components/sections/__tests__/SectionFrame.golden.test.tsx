@@ -123,7 +123,12 @@ const bands: Case[] = [
   ['globalCta/centered', <GlobalCta key="g" data={{layout: 'centered', tagline: 'Talk to us', heading: 'Speak with {{firmName}}', description: 'We answer.', buttons}} napTokens={tokens} />],
   ['globalCta/split', <GlobalCta key="g" data={{layout: 'split', tagline: 'Talk to us', heading: 'Speak with {{firmName}}', description: 'We answer.', buttons}} napTokens={tokens} />],
 
-  ['homepageCta', <HomepageCta key="h" data={{tagline: 'Talk to us', heading: 'Speak with {{firmName}}', description: 'We answer.', buttons}} napTokens={tokens} />],
+  // NOTE, captured deliberately: `HomepageCta` takes no `napTokens` and resolves
+  // NO tokens, while `GlobalCta` resolves them. `app/(site)/page.tsx:227` hands it
+  // raw `globalCtaData`, so the same CTA content renders `{{firmName}}` literally
+  // on the homepage and resolved on an interior page. Pre-existing, not Phase 13's;
+  // the raw token below is the evidence.
+  ['homepageCta (resolves no tokens)', <HomepageCta key="h" data={{tagline: 'Talk to us', heading: 'Speak with {{firmName}}', description: 'We answer.', buttons}} />],
 ]
 
 describe('the section frame, before-capture', () => {
