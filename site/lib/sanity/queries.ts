@@ -232,9 +232,19 @@ export const SECTION_BODY = `
     "image": image ${IMAGE_FRAGMENT},
     "video": video->{_id, title, youTubeUrl, description, videoType}
   },
+  // The appearance fieldset. EXPLICIT, not a splat, so every field the schema
+  // gains must be added HERE too or it never reaches the component. Phase 13's
+  // three frame fields were built, tested, merged and propagated before anyone
+  // noticed the query did not carry them: the unit tests pass props directly,
+  // the golden renders components directly, and the stub fixture sets none of
+  // them, so nothing in CI could see it. Only the live page did.
+  // sectionBody.test.ts now asserts the whole key set.
   "appearance": {
     "surface": surface,
     "spacing": spacing,
+    "inset": inset,
+    "edgeBottom": edgeBottom,
+    "overlapPrevious": overlapPrevious,
     "backgroundImage": sectionBackgroundImage ${IMAGE_FRAGMENT}
   },
   // practiceAreaNav (silo nav): resolve each item's page reference to an href +
