@@ -12,15 +12,19 @@
 //   light   — base background (white). The neutral default.
 //   tint    — bg-hero-tint, the neutral near-white used for light hero bands.
 //   dark    — bg-brand-dark, white text (the contrast / drama surface).
-//   accent  — bg-muted, the soft accent-tinted light wash (warm vs tint's neutral).
+//   muted   — bg-muted, the card step one notch off the light ground. NOT an
+//             operator option: it is the code default of the CTAs, and what a band
+//             stored with the retired `accent` value renders (Phase 14).
+//   accent  — RETIRED as an option in Phase 14. A stored `accent` renders exactly
+//             as `muted`. The value is never reused for another surface, least of
+//             all Phase 15's saturated one, because every stored or defaulted
+//             `accent` band would silently become an accent fill.
 //   image   — a background image + dark scrim + white text (immersive).
 //   pattern — NO background class at all: the page background layer shows through
 //             (Phase 13). Text polarity is the light cascade, because the page
 //             ground is a light ground until Phase 16's themes say otherwise.
 //
-// A bolder saturated-accent surface is intentionally deferred to the brand-color
-// system work — `accent` stays a safe light wash for v1 (no contrast risk, no new
-// tokens). See memory color-system.
+// The saturated accent surface is Phase 15's (WS-V1-PHASE15-DESIGN).
 //
 // ─── Phase 13, the section frame ─────────────────────────────────────────────────
 //
@@ -67,12 +71,12 @@
 // system by `lib/__tests__/sectionSurface.test.ts`, the guard
 // `lib/imageTreatment.ts` already documents for the same reason.
 
-export type SectionSurface = 'light' | 'tint' | 'dark' | 'accent' | 'image' | 'pattern'
+export type SectionSurface = 'light' | 'tint' | 'dark' | 'muted' | 'accent' | 'image' | 'pattern'
 export type SectionSpacing = 'compact' | 'normal' | 'spacious'
 
 /** What the visitor actually sees behind a band. `pattern` and an inset band show
  *  the page ground, so two of them in a row are a same-ground join. */
-export type VisibleGround = 'light' | 'tint' | 'dark' | 'image' | 'page'
+export type VisibleGround = 'light' | 'tint' | 'muted' | 'dark' | 'image' | 'page'
 
 /** The bottom edge a band cuts into the one below it. Desktop and up only. */
 export type SectionEdge = 'flat' | 'angled'
@@ -155,6 +159,7 @@ export function sectionSurface(surface: SectionSurface | null | undefined): Reso
       return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: true}
     case 'tint':
       return {surfaceClass: 'bg-hero-tint', ringContext: undefined, buttonContext: 'light', isImage: false}
+    case 'muted':
     case 'accent':
       return {surfaceClass: 'bg-muted', ringContext: undefined, buttonContext: 'light', isImage: false}
     // NO background class: the page background layer shows through. This is the
@@ -185,9 +190,12 @@ export function visibleGround(
     case 'dark':    return 'dark'
     case 'image':   return 'image'
     case 'tint':    return 'tint'
-    // `accent` is `bg-muted`, a light wash. It is its own ground for seam
-    // purposes: `accent` above `light` is a real colour change.
-    case 'accent':  return 'tint'
+    // `muted` (and a stored `accent`) is `bg-muted`, its own ground: it seams only
+    // with another muted band, and its edge is painted in `bg-muted`. Phase 13
+    // mapped it to `tint`, which halved the padding between two different colours
+    // and painted a hero-tint wedge beside a muted band (Phase 14 challenge).
+    case 'muted':
+    case 'accent':  return 'muted'
     case 'pattern': return 'page'
     case 'light':
     default:        return 'light'
@@ -205,12 +213,25 @@ export function visibleGround(
 const EDGE_FROM_CLASS: Record<VisibleGround, string> = {
   light: 'before:bg-background',
   tint:  'before:bg-hero-tint',
+  muted: 'before:bg-muted',
   dark:  'before:bg-brand-dark',
   image: '',
   page:  '',
 }
 
-// The wedge itself, on the NEXT band, reaching up over the previous one.
+// The wedge itself: a triangle at the TOP of the next band, painted in the previous
+// band's ground, so the previous band's bottom edge reads as a diagonal cut into this
+// one.
+//
+// Phase 14 fix. Phase 13 shipped the wedge at `bottom: 100%`, which laid it over
+// the PREVIOUS band, painted in that band's own colour: dark on dark, tint on tint.
+// It rendered nothing whenever it worked as designed (pixel-sampled in the Phase 14
+// challenge; the only visible wedge was the accent/tint mismatch, itself a bug), and
+// the Phase 13 samples that called it visible read the previous band. At `top: 0`
+// the pseudo-element still lives in the next band, so it still paints in every
+// ScrollReveal phase, and it covers only this band's own top padding, which is the
+// bound [R-452] states. The band's content sits in a later `relative` container and
+// paints above it.
 //
 // `md:` and up: mobile renders flat. At 390px a diagonal across a full-width band
 // is either invisible or eats a heading, and the study captured desktop only.
@@ -227,8 +248,8 @@ const EDGE_FROM_CLASS: Record<VisibleGround, string> = {
 // 1.4.12 (text spacing) both bind here, and an edge taller than the padding it
 // covers can hide a focused control.
 const EDGE_ANGLED =
-  'md:before:pointer-events-none md:before:absolute md:before:inset-x-0 md:before:bottom-full md:before:h-16 ' +
-  'md:before:[clip-path:polygon(0_0,100%_100%,0_100%)] md:supports-[not_(clip-path:polygon(0_0))]:before:hidden'
+  'md:before:pointer-events-none md:before:absolute md:before:inset-x-0 md:before:top-0 md:before:h-16 ' +
+  'md:before:[clip-path:polygon(0_0,100%_0,0_100%)] md:supports-[not_(clip-path:polygon(0_0))]:before:hidden'
 
 /** The classes a band needs to draw the edge of the band ABOVE it.
  *

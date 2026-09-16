@@ -14,6 +14,7 @@ vi.mock('next/image', () => ({
 import {
   ALL_PAGE_BACKGROUND_CLASSES,
   DEFAULT_PAGE_BACKGROUND_OPACITY,
+  MAX_TEXT_SAFE_LAYER_OPACITY,
   PAGE_BACKGROUND_KINDS,
   PAGE_TEXTURES,
   PageBackgroundLayer,
@@ -138,6 +139,15 @@ describe('opacity', () => {
     const {container} = render(<PageBackgroundLayer data={{kind: 'gradient'}} />)
     expect((layer(container) as HTMLElement).style.opacity).toBe(String(DEFAULT_PAGE_BACKGROUND_OPACITY))
     expect(DEFAULT_PAGE_BACKGROUND_OPACITY).toBeLessThanOrEqual(0.08)
+  })
+
+  it('a texture never renders stronger than the text-safe 0.04, whatever is stored (Phase 14)', () => {
+    // At the schema's old 0.25 warning bound label text measured 1.85:1 over the ink.
+    const {container} = render(<PageBackgroundLayer data={{kind: 'texture', texture: 'diagonalHatch', opacity: 0.25}} />)
+    expect((layer(container) as HTMLElement).style.opacity).toBe(String(MAX_TEXT_SAFE_LAYER_OPACITY))
+    expect(MAX_TEXT_SAFE_LAYER_OPACITY).toBe(0.04)
+    const faint = render(<PageBackgroundLayer data={{kind: 'texture', texture: 'diagonalHatch', opacity: 0.02}} />)
+    expect((layer(faint.container) as HTMLElement).style.opacity).toBe('0.02')
   })
 
   it('a zero the operator chose is honoured, not replaced by the default', () => {

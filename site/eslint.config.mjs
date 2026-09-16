@@ -116,7 +116,7 @@ const eslintConfig = [
       // branch). Replacement: move text to bg-background (where
       // text-accent resolves to tagline color, AA-passing) or use
       // text-foreground-muted on bg-muted.
-      "platform/no-text-accent-on-bg-muted": "error",
+      "platform/no-text-accent-on-text": "error",
 
       // ─── Component patterns / cascade ──────────────────────────────────
       // C4 — `skill-sanity-schema → "Reading design settings in async

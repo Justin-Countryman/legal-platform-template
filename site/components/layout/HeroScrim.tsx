@@ -30,13 +30,22 @@ export type HeroScrimDirection =
   | 'to-bottom-left'
 
 const TONE_VAR: Record<HeroScrimTone, string> = {
-  dark: '--color-brand-dark',
+  dark: '--color-scrim',
   light: '--color-background',
 }
 const TONE_BG: Record<HeroScrimTone, string> = {
-  dark: 'bg-brand-dark',
+  dark: 'bg-scrim',
   light: 'bg-background',
 }
+
+// A hero sets its heading and body text on this scrim. Over the lightest possible
+// photo pixel (white), every dark-surface text tier reaches WCAG 2.2 AA only when
+// the scrim is --color-scrim (the dark ground capped at L 0.20) at 80% or more
+// (Phase 14, WS-V1-PHASE14-DESIGN §7 amendment 21). So a dark scrim never renders
+// weaker than that; the operator's stored opacity is untouched and still deepens
+// it above 80. What this cannot guarantee, and the record names: the faded end of
+// a gradient scrim, a light-tone scrim, and a gradient in the action colour.
+export const MIN_TEXT_SCRIM_OPACITY = 80
 // Editor-chosen gradient base color. 'action' is the color-system action token
 // (reliably emitted as a CSS var); 'black' is a palette-independent neutral darken.
 // 'auto' is handled separately (derived from the tone).
@@ -72,12 +81,13 @@ export function HeroScrim({
   color?: HeroScrimColor
   direction?: HeroScrimDirection
 }) {
+  const effective = tone === 'dark' ? Math.max(opacity, MIN_TEXT_SCRIM_OPACITY) : opacity
   if (style !== 'gradient') {
-    return <div className={`absolute inset-0 ${TONE_BG[tone]}`} style={{opacity: opacity / 100}} data-testid="hero-scrim" />
+    return <div className={`absolute inset-0 ${TONE_BG[tone]}`} style={{opacity: effective / 100}} data-testid="hero-scrim" />
   }
   const base = color !== 'auto' ? COLOR_BASE[color] : `var(${TONE_VAR[tone]})`
-  const strong = `color-mix(in srgb, ${base} ${opacity}%, transparent)`
-  const weak = `color-mix(in srgb, ${base} ${Math.round(opacity * 0.25)}%, transparent)`
+  const strong = `color-mix(in srgb, ${base} ${effective}%, transparent)`
+  const weak = `color-mix(in srgb, ${base} ${Math.round(effective * 0.25)}%, transparent)`
   const dir = direction !== 'auto' ? DIR_CSS[direction] : align === 'center' ? 'to top' : 'to right'
   return (
     <div

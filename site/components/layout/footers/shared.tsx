@@ -118,7 +118,7 @@ export function FooterNavList({
   if (links.length === 0) return null
   const linkCls =
     linkClassName ??
-    'transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus'
+    'transition-colors duration-ui-fast hover:text-action-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus'
   return (
     <ul role="list" aria-label={label} className={className}>
       {links.map((link, i) => (

@@ -270,8 +270,8 @@ const sampleDesignSettings = {
   _id: 'designSettings',
   _type: 'designSettings',
   // All fields are .warning()-level; rely on schema initialValues for defaults
-  // (analogous-accent, default, plain, rounded, etc.).
-  colorApproach: 'analogous-accent',
+  // (default, plain, rounded, etc.). No colour is seeded: an absent colour role
+  // renders the platform default (Phase 14, item 308).
 }
 
 const sampleMainNavigation = {

@@ -125,7 +125,8 @@ describe('InternalPageHeader — useHeroScheme integration', () => {
     )
     // No-hero band inherits the site image — shared surface, no divergence.
     expect(getByTestId('hero-backdrop')).not.toBeNull()
-    expect((getByTestId('hero-scrim') as HTMLElement).style.opacity).toBe('0.6')
+    // The stored 60 renders at the dark scrim's text floor of 80 (Phase 14).
+    expect((getByTestId('hero-scrim') as HTMLElement).style.opacity).toBe('0.8')
   })
 
   it('renders the shared site FOREGROUND (two-column) on the no-hero band', () => {

@@ -1,10 +1,16 @@
 import {ImageResponse} from 'next/og'
 import {client} from '@/lib/sanity/client'
 import {OG_DATA_QUERY} from '@/lib/sanity/queries'
+import {resolvePalette} from '@/lib/designTokens'
 
 // Dynamic OG image generation per locked decision D6: composed with logo
-// + firm name + page title on brand-color background. Falls back to
+// + firm name + page title on the site's dark ground. Falls back to
 // text-only when `designSettings.logoOnDark` is absent.
+//
+// The colours come from the same engine as the pages (Phase 14): the accepted
+// dark ground and the text tier that reads on it, so a vivid or light colour
+// typed into darkGround can never produce an unreadable share card. The engine
+// is plain JS and loads at the edge (measured: +16.4 KB gzip).
 //
 // Query params:
 //   ?title=<page title>   — page heading; URL-encoded; truncated at 140 chars
@@ -15,13 +21,10 @@ import {OG_DATA_QUERY} from '@/lib/sanity/queries'
 export const runtime = 'edge'
 export const revalidate = 3600
 
-const FALLBACK_BG = '#1f2937' // neutral-800 — used only when primaryColor is unset
-const FALLBACK_FG = '#f9fafb' // neutral-50
-
 type OgData = {
   firmName?: string | null
   logo?: string | null
-  primaryColor?: string | null
+  darkGround?: string | null
 }
 
 export async function GET(request: Request) {
@@ -30,8 +33,9 @@ export async function GET(request: Request) {
 
   const data = await client.fetch<OgData>(OG_DATA_QUERY)
   const firmName = data.firmName ?? ''
-  const bg = data.primaryColor ?? FALLBACK_BG
-  const fg = FALLBACK_FG
+  const {tokens} = resolvePalette({darkGround: data.darkGround})
+  const bg = tokens['--color-brand-dark']
+  const fg = tokens['--color-foreground-on-dark']
   const logo = data.logo ?? null
 
   return new ImageResponse(

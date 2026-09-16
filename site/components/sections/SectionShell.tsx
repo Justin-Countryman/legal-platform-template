@@ -130,6 +130,10 @@ export function SectionShell({
   return (
     <Tag
       data-ring-context={resolved.ringContext}
+      // Text on a photo: the action colour and the focus ring resolve to the on-dark
+      // body text colour here (globals.css, the scrim block), because neither is
+      // guaranteed 4.5:1 or 3:1 over the lightest photo pixel.
+      data-scrim={showImage ? 'true' : undefined}
       aria-labelledby={aria['aria-labelledby']}
       aria-label={aria['aria-label']}
       className={[
@@ -152,7 +156,7 @@ export function SectionShell({
       {showImage && !isInset && (
         <>
           <SanityImage image={bg} mode="fill" alt="" sizes="100vw" />
-          <div className="absolute inset-0 bg-brand-dark/80" aria-hidden="true" />
+          <div className="absolute inset-0 bg-scrim/80" aria-hidden="true" />
         </>
       )}
       {isInset ? (
@@ -160,7 +164,7 @@ export function SectionShell({
           {showImage && (
             <>
               <SanityImage image={bg} mode="fill" alt="" sizes="100vw" />
-              <div className="absolute inset-0 bg-brand-dark/80" aria-hidden="true" />
+              <div className="absolute inset-0 bg-scrim/80" aria-hidden="true" />
             </>
           )}
           <div className={[contained ? 'container relative' : 'relative', innerClassName].filter(Boolean).join(' ')}>{inner}</div>

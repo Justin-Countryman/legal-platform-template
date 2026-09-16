@@ -104,7 +104,7 @@ describe('CtaSectionBlock — TextOnlyCta header', () => {
 //
 // BackgroundCta is the platform's second image+scrim composition (alongside
 // InternalHero). The scrim opacity is locked to the canonical image-scrim
-// value `bg-brand-dark/80` — same value asserted on InternalHero's overlay
+// value `bg-scrim/80` (the dark ground capped at L 0.20; Phase 14) — the same scrim as InternalHero's overlay
 // at __tests__/InternalHero.test.tsx so both sites stay in lock-step. See
 // `skill-color-system → Pattern 2 — Static opacity overlays` for the
 // composition-aware doctrine (image-scrim /80 vs modal /40 vs hover-wash /8).
@@ -117,9 +117,10 @@ describe('CtaSectionBlock — BackgroundCta scrim composition', () => {
     expect(img.getAttribute('data-fill')).toBe('true')
   })
 
-  it('renders the canonical image scrim overlay at bg-brand-dark/80', () => {
+  it('renders the canonical image scrim overlay at bg-scrim/80, and marks the band as text on a photo', () => {
     const {container} = render(<CtaSectionBlock data={BACKGROUND_DATA} />)
-    const overlay = container.querySelector('.bg-brand-dark\\/80') as HTMLElement
+    expect(container.querySelector('section')?.getAttribute('data-scrim')).toBe('true')
+    const overlay = container.querySelector('.bg-scrim\\/80') as HTMLElement
     expect(overlay).not.toBeNull()
     expect(overlay.getAttribute('aria-hidden')).toBe('true')
     expect(overlay.className).toContain('absolute')
@@ -131,7 +132,7 @@ describe('CtaSectionBlock — BackgroundCta scrim composition', () => {
       <CtaSectionBlock data={{...BACKGROUND_DATA, image: null}} />,
     )
     expect(queryByTestId('cta-bg')).toBeNull()
-    expect(container.querySelector('.bg-brand-dark\\/80')).toBeNull()
+    expect(container.querySelector('.bg-scrim\\/80')).toBeNull()
   })
 
   it('carries data-ring-context="dark" on the <section> regardless of image presence', () => {

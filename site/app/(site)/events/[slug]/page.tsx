@@ -254,7 +254,7 @@ export default async function EventDetailPage({params}: Props) {
                         href={event.virtualLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-1 block text-sm text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-hover"
+                        className="mt-1 block text-sm text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-text-hover"
                       >
                         Join online
                       </a>
@@ -273,7 +273,7 @@ export default async function EventDetailPage({params}: Props) {
                     {attorneys.map((a, i) => (
                       <span key={a._id}>
                         {i > 0 && ', '}
-                        <Link href={`/${a.slug}/`} className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-hover">
+                        <Link href={`/${a.slug}/`} className="text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-text-hover">
                           {a.title}
                         </Link>
                       </span>

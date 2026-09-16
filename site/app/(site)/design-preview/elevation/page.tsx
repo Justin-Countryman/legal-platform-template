@@ -65,7 +65,7 @@ export default function ElevationPreviewPage() {
       <div className="container">
 
         <div className="mb-12">
-          <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-accent">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-accent-text">
             Design Preview
           </p>
           <h1 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">Card Elevation Styles</h1>

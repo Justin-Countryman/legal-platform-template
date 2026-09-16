@@ -1,6 +1,6 @@
 // ─── Shared section Appearance fieldset ─────────────────────────────────────────
 // Spread into every full-width section (document and its inline copy) so the operator can place it on a
-// surface (light / tint / dark / accent / image) with a spacing rhythm — the
+// surface (light / tint / dark / image / pattern) with a spacing rhythm — the
 // cohesion layer that lets a stacked page read as one design. Each section sets a
 // sensible default via appearanceFields({defaultSurface}), so an untouched page is
 // clean and cohesive with zero effort. Mirrors the site's footerScheme cascade.
@@ -27,7 +27,6 @@ const SURFACE_OPTIONS = [
   {title: 'Light — page background', value: 'light'},
   {title: 'Tint — soft neutral wash', value: 'tint'},
   {title: 'Dark — brand background, light text', value: 'dark'},
-  {title: 'Accent — soft accent wash', value: 'accent'},
   {title: 'Image — background photo with overlay', value: 'image'},
   {title: 'Pattern — the page background shows through', value: 'pattern'},
 ]

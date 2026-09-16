@@ -1,428 +1,337 @@
 import {describe, it, expect} from 'vitest'
-import {deriveVariants, buildRoleMap, validateWcag, buildColorCSS, buildDesignTokenCSS, deriveNeutrals, deriveInverseNeutrals, hexToRgbTriplet, deriveHeroTint} from '../designTokens'
 import {converter, wcagContrast} from 'culori'
+import {
+  COLOUR_DEFAULTS,
+  acceptDarkGround,
+  acceptLightGround,
+  buildColorCSS,
+  buildDesignTokenCSS,
+  deriveInverseNeutrals,
+  deriveNeutrals,
+  heroTintOf,
+  hexToRgbTriplet,
+  mutedOf,
+  resolvePalette,
+  retoneFill,
+  validateWcag,
+} from '../designTokens'
+import {PALETTE_PRESETS, matchPreset, presetInputs} from '../palettes'
+
+// The colour engine's behaviour, rule by rule. The guarantee over arbitrary input
+// is colourGuarantee.test.ts; what existing sites see is pinned there too, against
+// the old engine's captured output. The two kinds of assertion do different jobs:
+// an invariant computed here catches a broken rule, and the small golden tables
+// below catch a CHANGED rule that still passes every invariant (a 0.05 step, a
+// 0.06 chroma cap), which would otherwise restyle every client silently
+// (WS-V1-PHASE14-DESIGN §7 amendment 15).
 
 const toOklch = converter('oklch')
-
-function oklchOf(hex: string) {
+const oklch = (hex: string) => {
   const c = toOklch(hex)
-  return {l: c?.l ?? 0, c: c?.c ?? 0, h: c?.h ?? 0}
+  return {l: (c?.l as number) ?? 0, c: (c?.c as number) ?? 0, h: (c?.h as number) ?? 0}
+}
+const ratio = (a: string, b: string) => wcagContrast(a, b) as number
+
+/** Hue difference in OKLab units, which stays meaningful at low chroma where degrees do not. */
+function deltaH(a: string, b: string): number {
+  const x = oklch(a)
+  const y = oklch(b)
+  const dh = ((((y.h - x.h) % 360) + 540) % 360) - 180
+  return 2 * Math.sqrt(x.c * y.c) * Math.sin((dh * Math.PI) / 360)
 }
 
-// ─── Hero tint (light internal-hero surface) ──────────────────────────────────
-describe('deriveHeroTint — neutral near-white for the light hero surface', () => {
-  // Vivid accent-adjacent primaries must NOT produce a visibly tinted hero
-  // surface (the whole point of the no-bg-muted lock). Chroma stays tiny and
-  // lightness very high across palettes.
-  it.each(['#821428', '#E68F1A', '#1E3A8A', '#065F46', '#6D28D9'])(
-    'is very light (L ≥ 0.97) and near-neutral (C ≤ 0.008 after 8-bit hex round-trip) for %s',
-    (hex) => {
-      const o = oklchOf(deriveHeroTint(hex))
-      expect(o.l).toBeGreaterThanOrEqual(0.97)
-      // Derivation caps chroma at 0.006; 8-bit hex quantization can nudge it
-      // ~0.0007 higher. Still far below any perceptible tint.
-      expect(o.c).toBeLessThanOrEqual(0.008)
-    },
-  )
+// ─── The derivation table ─────────────────────────────────────────────────────
 
-  it('is emitted as --color-hero-tint by buildColorCSS', () => {
-    const css = buildColorCSS({colorApproach: 'monochromatic', primaryColor: '#821428'})
-    expect(css).toContain('--color-hero-tint:')
-  })
-})
+describe('the derivation, row by row', () => {
+  const t = resolvePalette({}).tokens
 
-// ─── Warm analogous-accent palette (example) ──────────────────────────────────────────────────────────────
-
-describe('analogous-accent palette — warm/amber example (#821428, #E68F1A, #F5A623)', () => {
-  const PRIMARY  = '#821428'
-  const ACCENT1  = '#E68F1A'
-  const ACCENT2  = '#F5A623'
-
-  it('primary-tint reads as warm off-white with burgundy character', () => {
-    const {tint} = deriveVariants(PRIMARY)
-    const o = oklchOf(tint)
-    expect(o.l).toBeGreaterThan(0.93)
-    expect(o.c).toBeGreaterThanOrEqual(0.02)
-    expect(o.c).toBeLessThanOrEqual(0.08)
+  it('the code defaults are the render every built client already has', () => {
+    expect(COLOUR_DEFAULTS).toEqual({darkGround: '#141414', lightGround: '#ffffff', accent: '#666666'})
+    expect(t['--color-brand-dark']).toBe('#141414')
+    expect(t['--color-background']).toBe('#ffffff')
+    expect(t['--color-accent']).toBe('#666666')
+    expect(t['--color-action']).toBe('#666666')
   })
 
-  it('primary-dark reads as deep burgundy', () => {
-    const {dark} = deriveVariants(PRIMARY)
-    const o = oklchOf(dark)
-    expect(o.l).toBeLessThan(0.30)
-    expect(o.c).toBeGreaterThan(0.08)
+  it('muted is the light ground at L −0.03 and hero-tint at L −0.015, on the ground’s own hue', () => {
+    expect(t['--color-muted']).toBe('#f5f5f5')
+    expect(t['--color-hero-tint']).toBe('#fafafa')
+    const cream = '#f5eedc'
+    expect(oklch(mutedOf(cream)).l).toBeCloseTo(oklch(cream).l - 0.03, 2)
+    expect(oklch(heroTintOf(cream)).l).toBeCloseTo(oklch(cream).l - 0.015, 2)
+    // A cream ground's steps stay cream, not the grey today's recipe produced.
+    expect(Math.abs(deltaH(mutedOf(cream), cream))).toBeLessThan(0.005)
+    expect(oklch(heroTintOf(cream)).c).toBeGreaterThan(0.01)
   })
 
-  it('no variant has chroma below 0.02 (no gray drift)', () => {
-    for (const hex of [PRIMARY, ACCENT1, ACCENT2]) {
-      const v = deriveVariants(hex)
-      expect(oklchOf(v.tint).c).toBeGreaterThanOrEqual(0.02)
-      expect(oklchOf(v.dark).c).toBeGreaterThanOrEqual(0.02)
+  it('muted and hero-tint carry no accent hue: a red accent leaves every surface exactly as a grey one does', () => {
+    const grey = resolvePalette({}).tokens
+    const red = resolvePalette({accent: '#a12a2f'}).tokens
+    for (const surface of ['--color-background', '--color-muted', '--color-hero-tint', '--color-brand-dark', '--color-scrim']) {
+      expect(red[surface], surface).toBe(grey[surface])
     }
   })
 
-  it('role map is built correctly for analogous-accent', () => {
-    const roles = buildRoleMap('analogous-accent', {
-      primary: PRIMARY, accent1: ACCENT1, accent2: ACCENT2,
-    })
-    // Inputs are normalized to lowercase by normHex
-    expect(roles['role-tagline'].toLowerCase()).toBe(ACCENT1.toLowerCase())
-    expect(roles['role-action'].toLowerCase()).toBe(ACCENT2.toLowerCase())
-    // brand-dark derived from primary
-    expect(oklchOf(roles['role-brand-dark']).l).toBeLessThan(0.30)
-    // bg-light derived from accent1 tint
-    expect(oklchOf(roles['role-muted']).l).toBeGreaterThan(0.93)
-  })
-
-  it('WCAG blocking pairs all pass', () => {
-    const roles = buildRoleMap('analogous-accent', {
-      primary: PRIMARY, accent1: ACCENT1, accent2: ACCENT2,
-    })
-    const results = validateWcag(roles, PRIMARY)
-    const blocking = results.filter(r => r.blocking)
-    for (const r of blocking) {
-      expect(r.passes, `FAIL: ${r.pair} — ratio ${r.ratio}`).toBe(true)
+  it('accent-text is the accent where it passes, else the accent darkened at a fixed hue', () => {
+    const table: Array<[string, string, string]> = [
+      // name, accent, accent-text. Generated by the engine at the build and
+      // committed: a change here is a visible restyle of every kicker and link.
+      ['gold', '#c9a227', '#846700'],
+      ['orange', '#f57c00', '#ae5600'],
+      ['coral', '#ff6f61', '#c63a31'],
+      ['blue', '#1e88e5', '#0070c4'],
+      ['red', '#a12a2f', '#a12a2f'],
+    ]
+    for (const [name, accent, text] of table) {
+      const p = resolvePalette({accent}).tokens
+      expect(p['--color-accent-text'], name).toBe(text)
+      for (const ground of [p['--color-background'], p['--color-hero-tint'], p['--color-muted']]) {
+        expect(ratio(text, ground), name).toBeGreaterThanOrEqual(4.5)
+      }
+      expect(Math.abs(deltaH(accent, text)), `${name} keeps its hue`).toBeLessThan(0.005)
     }
   })
-})
 
-// ─── Blue monochromatic ───────────────────────────────────────────────────────
-
-describe('Blue monochromatic (#1E3A8A)', () => {
-  const PRIMARY = '#1E3A8A'
-
-  it('tint is light blue family', () => {
-    const {tint} = deriveVariants(PRIMARY)
-    const o = oklchOf(tint)
-    expect(o.l).toBeGreaterThan(0.93)
-    // Threshold 0.015 — high-chroma blues hit sRGB gamut clamping at L=0.97
-    // which slightly reduces post-round-trip chroma. Still visually blue, not gray.
-    expect(o.c).toBeGreaterThanOrEqual(0.015)
+  it('the accent on dark is the accent brightened, and passes on the ground', () => {
+    const p = resolvePalette({darkGround: '#14213d', accent: '#c9a227'}).tokens
+    expect(p['--color-accent-on-dark']).toBe('#f0d58c')
+    expect(ratio(p['--color-accent-on-dark'], p['--color-brand-dark'])).toBeGreaterThanOrEqual(4.5)
   })
 
-  it('dark is deep blue', () => {
-    const {dark} = deriveVariants(PRIMARY)
-    const o = oklchOf(dark)
-    expect(o.l).toBeLessThan(0.30)
-    expect(o.c).toBeGreaterThan(0.02)
+  it('action falls back to the accent and keeps the outlined-text rule', () => {
+    const p = resolvePalette({accent: '#c9a227'}).tokens
+    expect(p['--color-action']).toBe('#c9a227')
+    // Gold fails 4.5:1 as outlined text on white, so the text form is brand-dark.
+    expect(p['--color-action-text']).toBe(p['--color-brand-dark'])
+    const own = resolvePalette({accent: '#c9a227', action: '#14213d'}).tokens
+    expect(own['--color-action']).toBe('#14213d')
+    expect(own['--color-action-text']).toBe('#14213d')
   })
 
-  it('no gray drift', () => {
-    const v = deriveVariants(PRIMARY)
-    // Tint: 0.015 floor accounts for sRGB gamut clamping on high-chroma hues at L=0.97
-    expect(oklchOf(v.tint).c).toBeGreaterThanOrEqual(0.015)
-    expect(oklchOf(v.dark).c).toBeGreaterThanOrEqual(0.02)
-  })
-})
-
-// ─── Green monochromatic ──────────────────────────────────────────────────────
-
-describe('Green monochromatic (#065F46)', () => {
-  const PRIMARY = '#065F46'
-
-  it('tint is light green family', () => {
-    const {tint} = deriveVariants(PRIMARY)
-    const o = oklchOf(tint)
-    expect(o.l).toBeGreaterThan(0.93)
-    expect(o.c).toBeGreaterThanOrEqual(0.02)
+  it('action text on dark steps lighter at its own hue until it reads (#666666 measured 3.21:1)', () => {
+    const p = resolvePalette({}).tokens
+    expect(p['--color-action-text-on-dark']).toBe('#838383')
+    expect(ratio(p['--color-action-text-on-dark'], p['--color-brand-dark'])).toBeGreaterThanOrEqual(4.5)
+    const bright = resolvePalette({action: '#f5a623'}).tokens
+    expect(bright['--color-action-text-on-dark']).toBe('#f5a623')
   })
 
-  it('dark is deep green', () => {
-    const {dark} = deriveVariants(PRIMARY)
-    const o = oklchOf(dark)
-    expect(o.l).toBeLessThan(0.30)
-    expect(o.c).toBeGreaterThan(0.02)
+  it('foreground-subtle is darkened only as far as 4.5:1 (#8f8f8f measured 3.23:1 on white)', () => {
+    const p = resolvePalette({}).tokens
+    expect(p['--color-foreground-subtle']).toBe('#707070')
+    expect(p['--color-foreground']).toBe(deriveNeutrals('#141414')['color-foreground-on-light'])
+    expect(p['--color-foreground-muted']).toBe(deriveNeutrals('#141414')['color-foreground-muted-on-light'])
   })
 
-  it('no gray drift', () => {
-    const v = deriveVariants(PRIMARY)
-    expect(oklchOf(v.tint).c).toBeGreaterThanOrEqual(0.02)
-    expect(oklchOf(v.dark).c).toBeGreaterThanOrEqual(0.02)
-  })
-})
-
-// ─── WCAG fg computation ──────────────────────────────────────────────────────
-
-describe('WCAG fg computation', () => {
-  it('burgundy #821428 — white fg passes AA', () => {
-    const {fg} = deriveVariants('#821428')
-    const ratio = wcagContrast('#821428', '#ffffff') as number
-    expect(ratio).toBeGreaterThanOrEqual(4.5)
-    expect(fg).toBe('#ffffff')
+  it('the control boundary reaches 3:1 on every light ground, and on dark', () => {
+    const p = resolvePalette({}).tokens
+    for (const ground of [p['--color-background'], p['--color-hero-tint'], p['--color-muted']]) {
+      expect(ratio(p['--color-border-control'], ground)).toBeGreaterThanOrEqual(3)
+    }
+    expect(ratio(p['--color-border-control-on-dark'], p['--color-brand-dark'])).toBeGreaterThanOrEqual(3)
+    // The decorative divider is unchanged.
+    expect(p['--color-border']).toBe('#e4e4e4')
   })
 
-  it('amber #F5A623 — white fg fails AA, returns branded near-black instead', () => {
-    const {fg} = deriveVariants('#F5A623')
-    const whiteRatio = wcagContrast('#F5A623', '#ffffff') as number
-    expect(whiteRatio).toBeLessThan(4.5)
-    // fg is derived from amber's own hue — should be branded near-black, not white or pure black
-    expect(fg).not.toBe('#ffffff')
-    expect(fg).not.toBe('#000000')
-    // Must pass AA on amber
-    const fgRatio = wcagContrast(fg, '#F5A623') as number
-    expect(fgRatio).toBeGreaterThanOrEqual(4.5)
+  it('a text link’s hover keeps the button hover where it reads, and is the on-dark body text on dark', () => {
+    const p = resolvePalette({}).tokens
+    expect(p['--color-action-text-hover']).toBe(p['--color-action-hover'])
+    expect(p['--color-action-text-hover-on-dark']).toBe(p['--color-foreground-on-dark'])
+    // A gold action lightens on hover and would fail as text on white.
+    const gold = resolvePalette({accent: '#c9a227'}).tokens
+    expect(gold['--color-action-text-hover']).toBe(gold['--color-action-text'])
   })
 
-  it('deriveNeutrals text-dark is never pure black', () => {
-    for (const hex of ['#821428', '#F5A623', '#1E3A8A', '#065F46']) {
-      expect(deriveNeutrals(hex)['color-foreground-on-light']).not.toBe('#000000')
+  it('a selected pill gains a ring only where the action cannot mark the state at 3:1', () => {
+    const grey = resolvePalette({}).tokens
+    expect(grey['--color-action-state-cue']).toBe('transparent')
+    expect(grey['--color-action-state-cue-on-dark']).toBe('transparent')
+    const gold = resolvePalette({accent: '#c9a227'}).tokens
+    expect(gold['--color-action-state-cue']).toBe(gold['--color-action-text'])
+    expect(ratio(gold['--color-action-state-cue'], gold['--color-background'])).toBeGreaterThanOrEqual(3)
+  })
+
+  it('the scrim is brand-dark capped at L 0.20', () => {
+    expect(resolvePalette({}).tokens['--color-scrim']).toBe('#141414')
+    const light = resolvePalette({darkGround: '#36454f'}).tokens
+    // 8-bit hex rounding moves OKLCH L by up to about 0.001.
+    expect(oklch(light['--color-scrim']).l).toBeLessThanOrEqual(0.201)
+    expect(Math.abs(deltaH(light['--color-scrim'], light['--color-brand-dark']))).toBeLessThan(0.005)
+  })
+
+  it('every light-island twin is emitted and equals its cascade-aware value at :root', () => {
+    for (const inputs of [{}, presetInputs(PALETTE_PRESETS.find((p) => p.id === 'navy-brass')!)]) {
+      const p = resolvePalette(inputs).tokens
+      for (const name of ['foreground', 'foreground-muted', 'foreground-subtle', 'border', 'border-control', 'accent', 'accent-text', 'action-text', 'ring-focus', 'star-outline']) {
+        expect(p[`--color-${name}-on-light`], name).toBe(p[`--color-${name}`])
+      }
     }
   })
-})
 
-// ─── Inverse neutral scale ────────────────────────────────────────────────────
-
-describe('deriveInverseNeutrals contrast against warm-palette brand-dark #4e0002', () => {
-  // #4e0002 = primary.dark for #821428 (analogous-accent, warm-palette example)
-  const PRIMARY    = '#821428'
-  const BRAND_DARK = '#4e0002'
-  const inv = deriveInverseNeutrals(PRIMARY)
-
-  it('text-on-dark passes AA (4.5:1)', () => {
-    const ratio = wcagContrast(inv['color-foreground-on-dark'], BRAND_DARK) as number
-    expect(ratio).toBeGreaterThanOrEqual(4.5)
+  it('buildColorCSS emits one :root block of the resolved tokens', () => {
+    const css = buildColorCSS({accent: '#a12a2f'})
+    expect(css.startsWith(':root{')).toBe(true)
+    expect(css).toContain('--color-accent:#a12a2f')
+    expect(css).toContain('--color-accent-text:#a12a2f')
+    expect(css).toMatch(/--shadow-rgb:\d+ \d+ \d+/)
+    expect(css).not.toContain('--role-')
   })
 
-  it('text-on-dark-muted passes AA (4.5:1)', () => {
-    const ratio = wcagContrast(inv['color-foreground-muted-on-dark'], BRAND_DARK) as number
-    expect(ratio).toBeGreaterThanOrEqual(4.5)
-  })
-
-  it('text-on-dark-subtle passes AA (4.5:1)', () => {
-    const ratio = wcagContrast(inv['color-foreground-subtle-on-dark'], BRAND_DARK) as number
-    expect(ratio).toBeGreaterThanOrEqual(4.5)
-  })
-
-  it('text-on-dark is brighter than text-on-dark-muted which is brighter than text-on-dark-subtle', () => {
-    const bright = wcagContrast(inv['color-foreground-on-dark'],        BRAND_DARK) as number
-    const muted  = wcagContrast(inv['color-foreground-muted-on-dark'],  BRAND_DARK) as number
-    const subtle = wcagContrast(inv['color-foreground-subtle-on-dark'], BRAND_DARK) as number
-    expect(bright).toBeGreaterThan(muted)
-    expect(muted).toBeGreaterThan(subtle)
-  })
-
-  it('hue carries primary brand character (chroma > 0)', () => {
-    for (const v of Object.values(inv)) {
-      const o = toOklch(v)
-      expect((o?.c ?? 0), `${v} should have branded chroma`).toBeGreaterThan(0)
-    }
+  it('a navy dark ground gives cool-tinted neutrals and a cool shadow', () => {
+    const [r, , b] = hexToRgbTriplet(deriveNeutrals('#1e3a8a')['color-foreground-on-light']).split(' ').map(Number)
+    expect(b).toBeGreaterThan(r)
   })
 })
 
-// ─── border-on-dark perceptual-warmth regression (L 0.38 / C×0.50 / cap 0.08) ─
-// Locks the derivation against accidental regression to gray-reading hairlines.
-// Asserts a luminance-contrast floor on bg-brand-dark plus a ≥0.030 OKLCH chroma
-// floor so dividers read as a warm hairline, not desaturated gray, across
-// realistic primary palettes.
-//
-// Threshold note: the spec target was ≥1.30 contrast across all five palettes.
-// Under the L 0.38 / C×0.50 / cap 0.08 derivation: warm 1.524, Navy 1.787,
-// Forest 1.660, Amber 1.463, Purple 1.380. Lowest is Purple at 1.380 — the
-// 1.30 floor catches regressions while accommodating Purple's geometry.
-// Chroma floor 0.030 reflects the C×0.50 multiplier producing values from
-// 0.037 (Navy, lowest-chroma primary) up to 0.081 (Purple, capped).
+// ─── Acceptance ───────────────────────────────────────────────────────────────
 
-describe('border-on-dark perceptual-warmth across primary palettes', () => {
-  const PALETTES: Array<{label: string; primary: string}> = [
-    {label: 'warm burgundy',     primary: '#821428'},
-    {label: 'Conservative navy', primary: '#1e3a5f'},
-    {label: 'Forest green',      primary: '#2d5016'},
-    {label: 'Amber',             primary: '#f5a623'},
-    {label: 'Purple',            primary: '#6b46c1'},
+describe('dark ground acceptance', () => {
+  // name, input, accepted, steps. Generated by the engine at the build and
+  // committed: the curated hues and four vivid inputs, including a maroon like the
+  // one the design record first imagined on the fixture.
+  const TABLE: Array<[string, string, string, number]> = [
+    ['navy', '#000080', '#0c2257', 0],
+    ['deep navy', '#14213d', '#14213d', 0],
+    ['charcoal', '#36454f', '#36454f', 0],
+    ['black', '#111111', '#111111', 0],
+    ['forest', '#228b22', '#1b4f19', 9],
+    ['burgundy', '#800020', '#6e272d', 0],
+    ['teal', '#008080', '#004e4e', 8],
+    ['brand red', '#e53935', '#77312b', 10],
+    ['brand green', '#43a047', '#1b521e', 12],
+    ['brand blue', '#1e88e5', '#14497a', 11],
+    ['maroon', '#8b1e1e', '#742e2a', 1],
   ]
 
-  it('border-on-dark maintains ≥1.30 contrast on bg-brand-dark across primary palettes', () => {
-    for (const {label, primary} of PALETTES) {
-      const inv      = deriveInverseNeutrals(primary)
-      const {dark}   = deriveVariants(primary)
-      const ratio    = wcagContrast(inv['color-border-on-dark'], dark) as number
-      expect(ratio, `${label} (${primary}): border-on-dark ${inv['color-border-on-dark']} on brand-dark ${dark} should be ≥1.30 (got ${ratio})`)
-        .toBeGreaterThanOrEqual(1.30)
+  it('matches the committed table', () => {
+    for (const [name, input, hex, steps] of TABLE) {
+      const a = acceptDarkGround(input)
+      expect([a.hex, a.steps], name).toEqual([hex, steps])
+      expect(a.adjusted, name).toBe(hex !== input)
     }
   })
 
-  it('border-on-dark OKLCH chroma ≥0.030 across primary palettes (warm-hairline floor)', () => {
-    for (const {label, primary} of PALETTES) {
-      const inv      = deriveInverseNeutrals(primary)
-      const o        = toOklch(inv['color-border-on-dark'])
-      const chroma   = o?.c ?? 0
-      expect(chroma, `${label} (${primary}): border-on-dark ${inv['color-border-on-dark']} chroma should be ≥0.030 (got ${chroma})`)
-        .toBeGreaterThanOrEqual(0.030)
+  it('every accepted ground carries white at 7:1 and the lightest dark text tier at 4.5:1', () => {
+    for (const [name, input] of TABLE) {
+      const a = acceptDarkGround(input)
+      expect(ratio('#ffffff', a.hex), name).toBeGreaterThanOrEqual(7)
+      expect(ratio(deriveInverseNeutrals(input)['color-foreground-subtle-on-dark'], a.hex), name).toBeGreaterThanOrEqual(4.5)
+      // Chroma capped at 0.10, plus 8-bit hex rounding.
+      expect(oklch(a.hex).c, name).toBeLessThanOrEqual(0.102)
     }
   })
-})
 
-describe('role-tagline-on-dark derivation', () => {
-  const PRIMARY = '#821428'
-  const ACCENT1 = '#E68F1A'
-  const ACCENT2 = '#F5A623'
-
-  it('passes AA (4.5:1) against warm-palette brand-dark', () => {
-    const roles = buildRoleMap('analogous-accent', {primary: PRIMARY, accent1: ACCENT1, accent2: ACCENT2})
-    const brandDark = roles['role-brand-dark']
-    const taglineOnDark = roles['role-tagline-on-dark']
-    const ratio = wcagContrast(taglineOnDark, brandDark) as number
-    expect(ratio).toBeGreaterThanOrEqual(4.5)
-  })
-
-  it('is brighter than role-tagline', () => {
-    const roles = buildRoleMap('analogous-accent', {primary: PRIMARY, accent1: ACCENT1, accent2: ACCENT2})
-    const brandDark = roles['role-brand-dark']
-    const taglineRatio     = wcagContrast(roles['role-tagline'],         brandDark) as number
-    const taglineOnDarkRatio = wcagContrast(roles['role-tagline-on-dark'], brandDark) as number
-    expect(taglineOnDarkRatio).toBeGreaterThan(taglineRatio)
-  })
-
-  it('all three approaches produce a tagline-on-dark', () => {
-    for (const approach of ['monochromatic', 'complementary', 'analogous-accent'] as const) {
-      const roles = buildRoleMap(approach, {primary: PRIMARY, accent1: ACCENT1, accent2: ACCENT2})
-      expect(roles['role-tagline-on-dark']).toBeTruthy()
-      expect(/^#[0-9a-f]{6}$/.test(roles['role-tagline-on-dark'])).toBe(true)
+  it('keeps the input’s hue, and accepting the result again changes nothing', () => {
+    for (const [name, input] of TABLE) {
+      const a = acceptDarkGround(input)
+      expect(Math.abs(deltaH(input, a.hex)), name).toBeLessThan(0.005)
+      const again = acceptDarkGround(a.hex)
+      expect([again.hex, again.adjusted], name).toEqual([a.hex, false])
     }
   })
-})
 
-// ─── role-action-on-light derivation ─────────────────────────────────────────
-
-describe('role-action-on-light: falls back to brand-dark when action fails white', () => {
-  it('amber (#F5A623) fails white AA → returns brand-dark', () => {
-    const roles = buildRoleMap('analogous-accent', {
-      primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623',
-    })
-    // Amber contrast on white is ~2.0:1 — must fall back
-    const aol = roles['role-action-on-light']
-    const ratio = wcagContrast(aol, '#ffffff') as number
-    expect(ratio).toBeGreaterThanOrEqual(4.5)
-    // Should NOT be amber itself
-    expect(aol.toLowerCase()).not.toBe('#f5a623')
-    // Should equal brand-dark
-    expect(aol).toBe(roles['role-brand-dark'])
+  it('the inverse neutrals keep a trace of the ground’s hue and descend in contrast', () => {
+    const inv = deriveInverseNeutrals('#821428')
+    const ground = acceptDarkGround('#821428').hex
+    const bright = ratio(inv['color-foreground-on-dark'], ground)
+    const muted = ratio(inv['color-foreground-muted-on-dark'], ground)
+    const subtle = ratio(inv['color-foreground-subtle-on-dark'], ground)
+    expect(bright).toBeGreaterThan(muted)
+    expect(muted).toBeGreaterThan(subtle)
+    expect(subtle).toBeGreaterThanOrEqual(4.5)
+    for (const v of Object.values(inv)) expect(oklch(v).c).toBeGreaterThan(0)
   })
 })
 
-describe('role-action-on-light: uses action directly when it passes AA on white', () => {
-  it('Navy monochromatic (#1E3A8A) — action passes white AA → returns action', () => {
-    const roles = buildRoleMap('monochromatic', {primary: '#1E3A8A'})
-    const aol = roles['role-action-on-light']
-    const ratio = wcagContrast(aol, '#ffffff') as number
-    expect(ratio).toBeGreaterThanOrEqual(4.5)
-    expect(aol.toLowerCase()).toBe(roles['role-action'].toLowerCase())
+describe('light ground acceptance', () => {
+  it('white and every preset’s light ground are accepted unchanged', () => {
+    expect(acceptLightGround('#ffffff', '#141414').adjusted).toBe(false)
+    for (const p of PALETTE_PRESETS) {
+      if (p.lightGround) expect(acceptLightGround(p.lightGround, p.darkGround).adjusted, p.id).toBe(false)
+    }
   })
 
-  it('Green + coral analogous (#065F46, #D97706, #C2410C) — coral passes white AA → returns action', () => {
-    const roles = buildRoleMap('analogous-accent', {
-      primary: '#065F46', accent1: '#D97706', accent2: '#C2410C',
-    })
-    const aol = roles['role-action-on-light']
-    const ratio = wcagContrast(aol, '#ffffff') as number
-    expect(ratio).toBeGreaterThanOrEqual(4.5)
-    expect(aol.toLowerCase()).toBe(roles['role-action'].toLowerCase())
-  })
-
-  it('Navy + amber analogous (#1E3A8A, #7C3AED, #B45309) — amber passes white but fails vivid purple tint → falls back to brand-dark', () => {
-    const roles = buildRoleMap('analogous-accent', {
-      primary: '#1E3A8A', accent1: '#7C3AED', accent2: '#B45309',
-    })
-    const aol = roles['role-action-on-light']
-    // Amber barely passes white (~5.0:1) but fails the vivid purple tint bg-light
-    // → actionOnLight falls back to brand-dark, which always passes
-    const ratio = wcagContrast(aol, '#ffffff') as number
-    expect(ratio).toBeGreaterThanOrEqual(4.5)
-    expect(aol).toBe(roles['role-brand-dark'])
+  it('a dark colour typed as the light ground steps up until the text tiers can sit on its muted step', () => {
+    const a = acceptLightGround('#14213d', '#14213d')
+    expect(a.adjusted).toBe(true)
+    const t = resolvePalette({lightGround: '#14213d', darkGround: '#14213d'}).tokens
+    expect(t['--color-background']).toBe(a.hex)
+    expect(ratio(t['--color-foreground-subtle'], t['--color-muted'])).toBeGreaterThanOrEqual(4.5)
+    expect(acceptLightGround(a.hex, '#14213d').adjusted).toBe(false)
   })
 })
 
-describe('role-action-hover direction logic', () => {
-  it('amber action (#F5A623, dark text fg) → hover LIGHTENS the fill', () => {
-    // analogous-accent example: accent2 = #F5A623, fg = text-dark (low luminance)
-    const roles = buildRoleMap('analogous-accent', {
-      primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623',
-    })
-    const actionL = oklchOf(roles['role-action']).l
-    const hoverL  = oklchOf(roles['role-action-hover']).l
-    expect(hoverL).toBeGreaterThan(actionL)
-  })
-
-  it('navy action (#1E3A8A, white fg) → hover DARKENS the fill', () => {
-    // Monochromatic navy: primary = #1E3A8A, fg = white (high luminance)
-    const roles = buildRoleMap('monochromatic', {primary: '#1E3A8A'})
-    const actionL = oklchOf(roles['role-action']).l
-    const hoverL  = oklchOf(roles['role-action-hover']).l
-    expect(hoverL).toBeLessThan(actionL)
-  })
-
-  it('amber hover: action-fg still passes AA contrast on role-action-hover', () => {
-    const roles = buildRoleMap('analogous-accent', {
-      primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623',
-    })
-    validateWcag(roles, '#821428')
-    // No explicit pair for action-fg on action-hover in validateWcag — check directly
-    const fgHex    = roles['role-action-fg']
-    const hoverHex = roles['role-action-hover']
-    const ratio = wcagContrast(fgHex, hoverHex) as number
-    expect(ratio).toBeGreaterThanOrEqual(4.5)
-  })
-
-  it('navy hover: action-fg still passes AA contrast on role-action-hover', () => {
-    const roles = buildRoleMap('monochromatic', {primary: '#1E3A8A'})
-    const fgHex    = roles['role-action-fg']
-    const hoverHex = roles['role-action-hover']
-    const ratio = wcagContrast(fgHex, hoverHex) as number
-    expect(ratio).toBeGreaterThanOrEqual(4.5)
+describe('fill re-tone', () => {
+  it('moves a mid-tone brand red one step so its text passes, and leaves a passing fill alone', () => {
+    const red = retoneFill('#e53935')
+    expect(red.adjusted).toBe(true)
+    expect(red.steps).toBe(1)
+    expect(ratio('#ffffff', red.hex)).toBeGreaterThanOrEqual(4.5)
+    expect(retoneFill('#a12a2f')).toEqual({input: '#a12a2f', hex: '#a12a2f', adjusted: false, steps: 0})
+    for (const p of PALETTE_PRESETS) expect(retoneFill(p.accent).adjusted, p.id).toBe(false)
   })
 })
 
-// ─── tagline-fg derivation ───────────────────────────────────────────────────
+// ─── Presets ──────────────────────────────────────────────────────────────────
 
-describe('role-tagline-fg auto-pairing', () => {
-  it('light tagline (amber #E68F1A) pairs with dark fg', () => {
-    const roles = buildRoleMap('analogous-accent', {
-      primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623',
-    })
-    const fg = roles['role-tagline-fg']
-    // Light tagline → fg should be the branded near-black (L≈0.20), not white
-    expect(fg).not.toBe('#ffffff')
-    expect(oklchOf(fg).l).toBeLessThan(0.30)
-    // And must pass AA on the tagline color
-    const ratio = wcagContrast(fg, roles['role-tagline']) as number
-    expect(ratio).toBeGreaterThanOrEqual(4.5)
+describe('palette presets', () => {
+  it('there are fifteen, with unique ids in the ground-accent form', () => {
+    expect(PALETTE_PRESETS).toHaveLength(15)
+    expect(new Set(PALETTE_PRESETS.map((p) => p.id)).size).toBe(15)
+    for (const p of PALETTE_PRESETS) {
+      expect(p.id).toMatch(/^[a-z]+-[a-z]+$/)
+      expect(p.evidence.length, p.id).toBeGreaterThan(0)
+    }
   })
 
-  it('dark tagline (burgundy #821428) pairs with light fg', () => {
-    // Monochromatic burgundy: tagline = primary.base = #821428
-    const roles = buildRoleMap('monochromatic', {primary: '#821428'})
-    const fg = roles['role-tagline-fg']
-    // Dark tagline → fg should be white
-    expect(fg).toBe('#ffffff')
-    const ratio = wcagContrast(fg, roles['role-tagline']) as number
-    expect(ratio).toBeGreaterThanOrEqual(4.5)
+  it('every preset keeps its accent in text, reads differently from the heading, and needs no adjustment', () => {
+    for (const p of PALETTE_PRESETS) {
+      const palette = resolvePalette(presetInputs(p))
+      const t = palette.tokens
+      expect(t['--color-accent-text'], p.id).not.toBe(t['--color-brand-dark'])
+      expect(Math.abs(deltaH(p.accent, t['--color-accent-text'])), p.id).toBeLessThan(0.005)
+      expect(palette.acceptance.darkGround.adjusted, p.id).toBe(false)
+      expect(palette.acceptance.lightGround.adjusted, p.id).toBe(false)
+      expect(palette.acceptance.accent.adjusted, p.id).toBe(false)
+    }
   })
 
-  it('buildColorCSS emits --color-accent-fg matching role-tagline-fg', () => {
-    const css = buildColorCSS({
-      colorApproach: 'analogous-accent',
-      primaryColor: '#821428',
-      accent1Color: '#E68F1A',
-      accent2Color: '#F5A623',
-    })
-    const match = css.match(/--color-accent-fg:([^;}]+)/)
-    expect(match).not.toBeNull()
-    const emitted = match?.[1]?.trim() ?? ''
-    const roles = buildRoleMap('analogous-accent', {
-      primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623',
-    })
-    expect(emitted.toLowerCase()).toBe(roles['role-tagline-fg'].toLowerCase())
-  })
-
-  it('buildColorCSS does NOT emit --color-tagline* (retired in WS5)', () => {
-    const css = buildColorCSS({primaryColor: '#821428', accent1Color: '#E68F1A'})
-    expect(css).not.toMatch(/--color-tagline:/)
-    expect(css).not.toMatch(/--color-tagline-fg:/)
-    expect(css).not.toMatch(/--color-tagline-on-dark:/)
+  it('the active preset is derived from the stored values, and any edit makes it custom', () => {
+    const navyBrass = PALETTE_PRESETS.find((p) => p.id === 'navy-brass')!
+    expect(matchPreset(presetInputs(navyBrass))?.id).toBe('navy-brass')
+    expect(matchPreset({darkGround: '#1C2B4A', lightGround: '#F5EEDC', accent: '#B8893A'})?.id).toBe('navy-brass')
+    expect(matchPreset({...presetInputs(navyBrass), accent: '#b8893b'})).toBeNull()
+    const blackGold = PALETTE_PRESETS.find((p) => p.id === 'black-gold')!
+    expect(matchPreset({darkGround: blackGold.darkGround, lightGround: '#ffffff', accent: blackGold.accent})?.id).toBe('black-gold')
+    expect(matchPreset({})).toBeNull()
   })
 })
 
-// ─── hexToRgbTriplet ─────────────────────────────────────────────────────────
+// ─── validateWcag ─────────────────────────────────────────────────────────────
+
+describe('validateWcag', () => {
+  it('reports the blocking WCAG pairs and two design warnings, each with its threshold', () => {
+    const results = validateWcag(resolvePalette({}))
+    const blocking = results.filter((r) => r.blocking)
+    expect(blocking.length).toBeGreaterThan(30)
+    expect(blocking.every((r) => r.passes)).toBe(true)
+    expect(results.find((r) => r.pair === 'foreground-subtle on muted')?.min).toBe(4.5)
+    expect(results.find((r) => r.pair === 'border-control on background')?.min).toBe(3)
+    expect(results.filter((r) => !r.blocking).map((r) => r.pair)).toEqual([
+      'accent on background (graphics beside text)',
+      'accent-text against foreground (emphasis distinctness)',
+    ])
+  })
+
+  it('flags gold as a graphic on white as a warning, never as a failure', () => {
+    const results = validateWcag(resolvePalette({accent: '#c9a227'}))
+    const graphic = results.find((r) => r.pair.startsWith('accent on background'))!
+    expect(graphic.passes).toBe(false)
+    expect(graphic.blocking).toBe(false)
+  })
+})
+
+// ─── Unchanged UI-token and helper behaviour ──────────────────────────────────
 
 describe('hexToRgbTriplet', () => {
   it('returns space-separated R G B integers', () => {
@@ -450,32 +359,6 @@ describe('hexToRgbTriplet', () => {
 })
 
 // ─── --shadow-rgb in buildColorCSS ───────────────────────────────────────────
-
-describe('buildColorCSS --shadow-rgb', () => {
-  it('includes --shadow-rgb as a space-separated triplet', () => {
-    const css = buildColorCSS({
-      colorApproach: 'analogous-accent',
-      primaryColor:  '#821428',
-      accent1Color:  '#E68F1A',
-      accent2Color:  '#F5A623',
-    })
-    expect(css).toMatch(/--shadow-rgb:\d+ \d+ \d+/)
-  })
-
-  it('--shadow-rgb is NOT pure black for a warm palette', () => {
-    const css = buildColorCSS({primaryColor: '#821428'})
-    expect(css).not.toContain('--shadow-rgb:0 0 0')
-  })
-
-  it('cool palette (navy) produces a cool-tinted shadow-rgb', () => {
-    // Navy text-dark has more blue than red
-    const textDark = deriveNeutrals('#1E3A8A')['color-foreground-on-light']
-    const [r, , b] = hexToRgbTriplet(textDark).split(' ').map(Number)
-    expect(b).toBeGreaterThan(r)
-  })
-})
-
-// ─── buildDesignTokenCSS elevation ───────────────────────────────────────────
 
 describe('buildDesignTokenCSS elevation tokens', () => {
   it('level 0 (default) outputs --shadow-card-rest:none', () => {
@@ -531,352 +414,6 @@ describe('buildDesignTokenCSS elevation tokens', () => {
     expect(css).not.toMatch(/rgb\(\d+ \d+ \d+/)
   })
 })
-
-describe('accent-on-dark on white WCAG warning', () => {
-  it('result exists in validateWcag output and is non-blocking (warning-only)', () => {
-    const roles = buildRoleMap('analogous-accent', {
-      primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623',
-    })
-    const results = validateWcag(roles, '#821428')
-    const pair = results.find(r => r.pair === 'accent-on-dark on white')
-    expect(pair).toBeDefined()
-    expect(pair?.blocking).toBe(false)
-  })
-
-  it('always fails 4.5:1 across realistic palettes (designed incompatibility)', () => {
-    const palettes: Array<[Parameters<typeof buildRoleMap>[0], Parameters<typeof buildRoleMap>[1]]> = [
-      ['analogous-accent', {primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623'}],
-      ['monochromatic',    {primary: '#1E3A8A'}],
-      ['monochromatic',    {primary: '#065F46'}],
-    ]
-    for (const [approach, inputs] of palettes) {
-      const roles = buildRoleMap(approach, inputs)
-      const results = validateWcag(roles, inputs.primary as string)
-      const pair = results.find(r => r.pair === 'accent-on-dark on white')
-      expect(pair?.passes, `${inputs.primary}: accent-on-dark on white should fail 4.5:1`).toBe(false)
-    }
-  })
-})
-
-describe('role-action-on-light WCAG blocking checks', () => {
-  it('passes on white and on bg-light for all four test palettes', () => {
-    const palettes: Array<{label: string; approach: 'monochromatic' | 'analogous-accent'; inputs: Parameters<typeof buildRoleMap>[1]}> = [
-      {label: 'warm',         approach: 'analogous-accent', inputs: {primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623'}},
-      {label: 'Navy mono',   approach: 'monochromatic',    inputs: {primary: '#1E3A8A'}},
-      {label: 'Green+coral', approach: 'analogous-accent', inputs: {primary: '#065F46', accent1: '#D97706', accent2: '#C2410C'}},
-      {label: 'Navy+amber',  approach: 'analogous-accent', inputs: {primary: '#1E3A8A', accent1: '#7C3AED', accent2: '#B45309'}},
-    ]
-    for (const {label, approach, inputs} of palettes) {
-      const roles = buildRoleMap(approach, inputs)
-      const wcagResults = validateWcag(roles, inputs.primary as string)
-      const aolOnWhite    = wcagResults.find(r => r.pair === 'action-text on white')
-      const aolOnMuted    = wcagResults.find(r => r.pair === 'action-text on muted')
-      expect(aolOnWhite?.passes, `${label}: action-text on white should pass`).toBe(true)
-      expect(aolOnMuted?.passes, `${label}: action-text on muted should pass`).toBe(true)
-    }
-  })
-})
-
-// ─── --color-ring-focus derivation ───────────────────────────────────────────
-
-describe('--color-ring-focus: falls back to brand-dark when action fails 3:1 on white', () => {
-  it('amber action (#F5A623) ~2:1 on white → falls back to brand-dark', () => {
-    const css = buildColorCSS({
-      colorApproach: 'analogous-accent',
-      primaryColor:  '#821428',
-      accent1Color:  '#E68F1A',
-      accent2Color:  '#F5A623',
-    })
-    // Extract ring-focus value
-    const match = css.match(/--color-ring-focus:([^;}]+)/)
-    const ringFocus = match?.[1] ?? ''
-    // Amber fails 3:1 → should be brand-dark, not amber
-    expect(ringFocus.toLowerCase()).not.toBe('#f5a623')
-    // Must pass 3:1 on white
-    const ratio = wcagContrast(ringFocus, '#ffffff') as number
-    expect(ratio).toBeGreaterThanOrEqual(3.0)
-  })
-
-  it('navy action (#1E3A8A) passes 3:1 on white → uses action directly', () => {
-    const css = buildColorCSS({
-      colorApproach: 'monochromatic',
-      primaryColor:  '#1E3A8A',
-    })
-    const match = css.match(/--color-ring-focus:([^;}]+)/)
-    const ringFocus = match?.[1] ?? ''
-    const roles = buildRoleMap('monochromatic', {primary: '#1E3A8A'})
-    expect(ringFocus.toLowerCase()).toBe(roles['role-action'].toLowerCase())
-    // Must still pass 3:1
-    const ratio = wcagContrast(ringFocus, '#ffffff') as number
-    expect(ratio).toBeGreaterThanOrEqual(3.0)
-  })
-
-  it('ring-focus always passes 3:1 on white for all test palettes', () => {
-    const palettes = [
-      {approach: 'analogous-accent' as const, inputs: {primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623'}},
-      {approach: 'monochromatic'    as const, inputs: {primary: '#1E3A8A'}},
-      {approach: 'analogous-accent' as const, inputs: {primary: '#065F46', accent1: '#D97706', accent2: '#C2410C'}},
-    ]
-    for (const {approach, inputs} of palettes) {
-      const css = buildColorCSS({
-        colorApproach: approach,
-        primaryColor:  inputs.primary,
-        accent1Color:  'accent1' in inputs ? inputs.accent1 : undefined,
-        accent2Color:  'accent2' in inputs ? inputs.accent2 : undefined,
-      })
-      const match = css.match(/--color-ring-focus:([^;}]+)/)
-      const ringFocus = match?.[1] ?? ''
-      const ratio = wcagContrast(ringFocus, '#ffffff') as number
-      expect(ratio, `ring-focus for ${inputs.primary} should pass 3:1 on white`).toBeGreaterThanOrEqual(3.0)
-    }
-  })
-
-  it('buildColorCSS includes --color-ring-focus', () => {
-    const css = buildColorCSS({primaryColor: '#821428'})
-    expect(css).toContain('--color-ring-focus:')
-  })
-})
-
-// ─── --color-ring-focus-on-dark derivation ────────────────────────────────────
-
-describe('--color-ring-focus-on-dark: uses action when it passes 3:1 on brand-dark', () => {
-  it('amber (#F5A623) ~7.6:1 on brand-dark → uses amber directly', () => {
-    const css = buildColorCSS({
-      colorApproach: 'analogous-accent',
-      primaryColor:  '#821428',
-      accent1Color:  '#E68F1A',
-      accent2Color:  '#F5A623',
-    })
-    const match = css.match(/--color-ring-focus-on-dark:([^;}]+)/)
-    const ringOnDark = match?.[1]?.trim() ?? ''
-    // Amber passes 3:1 on brand-dark → should use amber directly
-    expect(ringOnDark.toLowerCase()).toBe('#f5a623')
-    // Must pass 3:1 on brand-dark
-    const brandDarkMatch = css.match(/--color-brand-dark:([^;}]+)/)
-    const brandDark = brandDarkMatch?.[1]?.trim() ?? '#4e0002'
-    const ratio = wcagContrast(ringOnDark, brandDark) as number
-    expect(ratio).toBeGreaterThanOrEqual(3.0)
-  })
-
-  it('dark action that fails 3:1 on brand-dark falls back to tagline-on-dark', () => {
-    // Use a primary color whose derived action is dark enough to fail on brand-dark
-    // but tagline-on-dark passes. Navy primary → action is dark navy, low contrast on dark bg.
-    const css = buildColorCSS({
-      colorApproach: 'monochromatic',
-      primaryColor:  '#1E3A8A',
-    })
-    const match = css.match(/--color-ring-focus-on-dark:([^;}]+)/)
-    const ringOnDark = match?.[1]?.trim() ?? ''
-    const brandDarkMatch = css.match(/--color-brand-dark:([^;}]+)/)
-    const brandDark = brandDarkMatch?.[1]?.trim() ?? '#4e0002'
-    // Whatever value was chosen must pass 3:1 on brand-dark
-    const ratio = wcagContrast(ringOnDark, brandDark) as number
-    expect(ratio).toBeGreaterThanOrEqual(3.0)
-  })
-
-  it('ring-focus-on-dark always passes 3:1 on brand-dark for all test palettes', () => {
-    const palettes = [
-      {approach: 'analogous-accent' as const, inputs: {primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623'}},
-      {approach: 'monochromatic'    as const, inputs: {primary: '#1E3A8A'}},
-      {approach: 'analogous-accent' as const, inputs: {primary: '#065F46', accent1: '#D97706', accent2: '#C2410C'}},
-    ]
-    for (const {approach, inputs} of palettes) {
-      const css = buildColorCSS({
-        colorApproach: approach,
-        primaryColor:  inputs.primary,
-        accent1Color:  'accent1' in inputs ? inputs.accent1 : undefined,
-        accent2Color:  'accent2' in inputs ? inputs.accent2 : undefined,
-      })
-      const match = css.match(/--color-ring-focus-on-dark:([^;}]+)/)
-      const ringOnDark = match?.[1]?.trim() ?? ''
-      const brandDarkMatch = css.match(/--color-brand-dark:([^;}]+)/)
-      const brandDark = brandDarkMatch?.[1]?.trim() ?? '#4e0002'
-      const ratio = wcagContrast(ringOnDark, brandDark) as number
-      expect(ratio, `ring-focus-on-dark for ${inputs.primary} should pass 3:1 on brand-dark`).toBeGreaterThanOrEqual(3.0)
-    }
-  })
-
-  it('buildColorCSS includes --color-ring-focus-on-dark', () => {
-    const css = buildColorCSS({primaryColor: '#821428'})
-    expect(css).toContain('--color-ring-focus-on-dark:')
-  })
-})
-
-// ─── Star tokens (WCAG SC 1.4.11, OUTSTANDING item 13) ───────────────────────
-
-describe('--color-star-fill / --color-star-outline derivation', () => {
-  const extract = (css: string, name: string) => css.match(new RegExp(`${name}:([^;}]+)`))?.[1] ?? ''
-
-  it('buildColorCSS emits all three star tokens', () => {
-    const css = buildColorCSS({primaryColor: '#821428'})
-    expect(css).toContain('--color-star-fill:')
-    expect(css).toContain('--color-star-outline:')
-    expect(css).toContain('--color-star-outline-on-dark:')
-  })
-
-  it('star-fill is the raw action color (stars-are-gold convention)', () => {
-    const css = buildColorCSS({
-      colorApproach: 'analogous-accent',
-      primaryColor:  '#821428',
-      accent1Color:  '#E68F1A',
-      accent2Color:  '#F5A623',
-    })
-    const roles = buildRoleMap('analogous-accent', {primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623'})
-    expect(extract(css, '--color-star-fill').toLowerCase()).toBe(roles['role-action'].toLowerCase())
-  })
-
-  it('amber (light) fill: light-surface outline is a darkened variant clearing 3:1; on-dark outline collapses to the fill (gold stays pure gold on brand-dark)', () => {
-    const css = buildColorCSS({
-      colorApproach: 'analogous-accent',
-      primaryColor:  '#821428',
-      accent1Color:  '#E68F1A',
-      accent2Color:  '#F5A623',
-    })
-    const outline  = extract(css, '--color-star-outline')
-    const fill     = extract(css, '--color-star-fill')
-    const muted    = extract(css, '--color-muted')
-    const heroTint = extract(css, '--color-hero-tint')
-    const dark     = extract(css, '--color-brand-dark')
-    // Light fill fails light surfaces on its own → the outline must be a
-    // distinct darker value that carries the shape there.
-    expect(outline.toLowerCase()).not.toBe(fill.toLowerCase())
-    for (const [label, bg] of [['white', '#ffffff'], ['bg-muted', muted], ['bg-hero-tint', heroTint]] as const) {
-      const ratio = wcagContrast(outline, bg) as number
-      expect(ratio, `outline vs ${label} must clear SC 1.4.11 3:1`).toBeGreaterThanOrEqual(3.0)
-    }
-    // Amber clears 3:1 on brand-dark by itself → the on-dark outline is the
-    // fill color (invisible stroke; the fill carries the shape).
-    const onDark = extract(css, '--color-star-outline-on-dark')
-    expect(wcagContrast(fill, dark) as number).toBeGreaterThanOrEqual(3.0)
-    expect(onDark.toLowerCase()).toBe(fill.toLowerCase())
-  })
-
-  it('every test palette: the shape boundary clears 3:1 on every star surface (light via outline, brand-dark via on-dark outline or the fill itself)', () => {
-    const palettes = [
-      {approach: 'analogous-accent' as const, primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623'},
-      {approach: 'monochromatic'    as const, primary: '#1E3A8A'},
-      {approach: 'analogous-accent' as const, primary: '#065F46', accent1: '#D97706', accent2: '#C2410C'},
-    ]
-    for (const p of palettes) {
-      const css = buildColorCSS({
-        colorApproach: p.approach,
-        primaryColor:  p.primary,
-        accent1Color:  'accent1' in p ? p.accent1 : undefined,
-        accent2Color:  'accent2' in p ? p.accent2 : undefined,
-      })
-      const outline  = extract(css, '--color-star-outline')
-      const onDark   = extract(css, '--color-star-outline-on-dark')
-      const fill     = extract(css, '--color-star-fill')
-      const muted    = extract(css, '--color-muted')
-      const heroTint = extract(css, '--color-hero-tint')
-      const dark     = extract(css, '--color-brand-dark')
-      for (const [label, bg] of [['white', '#ffffff'], ['bg-muted', muted], ['bg-hero-tint', heroTint]] as const) {
-        const ratio = wcagContrast(outline, bg) as number
-        expect(ratio, `${p.primary}: outline vs ${label}`).toBeGreaterThanOrEqual(3.0)
-      }
-      // Dark surface: either the on-dark outline rims the star at >=3:1, or
-      // it collapsed to the fill because the fill itself clears 3:1 there.
-      const boundary = onDark.toLowerCase() === fill.toLowerCase() ? fill : onDark
-      const darkRatio = wcagContrast(boundary, dark) as number
-      expect(darkRatio, `${p.primary}: dark-surface shape boundary vs brand-dark`).toBeGreaterThanOrEqual(3.0)
-    }
-  })
-})
-
-// ─── --color-border (cascade-aware) ──────────────────────────────────────────
-
-describe('--color-border cascade-aware token', () => {
-  it('buildColorCSS emits both --color-border and --color-border-on-dark', () => {
-    const css = buildColorCSS({primaryColor: '#821428'})
-    expect(css).toContain('--color-border:')
-    expect(css).toContain('--color-border-on-dark:')
-  })
-
-  it('buildColorCSS does NOT emit --color-border-light (retired in WS5)', () => {
-    const css = buildColorCSS({primaryColor: '#821428'})
-    expect(css).not.toMatch(/--color-border-light:/)
-  })
-
-  it('buildColorCSS does NOT emit --color-divider* (retired in WS5)', () => {
-    const css = buildColorCSS({primaryColor: '#821428'})
-    expect(css).not.toMatch(/--color-divider:/)
-    expect(css).not.toMatch(/--color-divider-on-dark:/)
-  })
-
-  it('--color-border mirrors role-divider-on-light (light-surface default)', () => {
-    const css = buildColorCSS({primaryColor: '#821428'})
-    const roles = buildRoleMap('analogous-accent', {primary: '#821428'})
-    const borderMatch = css.match(/--color-border:([^;}]+)/)
-    expect(borderMatch?.[1]?.trim().toLowerCase())
-      .toBe(roles['role-divider-on-light'].toLowerCase())
-  })
-
-  it('--color-border-on-dark mirrors role-divider-on-dark', () => {
-    const css = buildColorCSS({primaryColor: '#821428'})
-    const roles = buildRoleMap('analogous-accent', {primary: '#821428'})
-    const borderOnDarkMatch = css.match(/--color-border-on-dark:([^;}]+)/)
-    expect(borderOnDarkMatch?.[1]?.trim().toLowerCase())
-      .toBe(roles['role-divider-on-dark'].toLowerCase())
-  })
-
-  it('role-divider tokens exist in all three approaches with identical values (primary-derived)', () => {
-    for (const approach of ['monochromatic', 'complementary', 'analogous-accent'] as const) {
-      const roles = buildRoleMap(approach, {
-        primary: '#821428', action: '#F5A623', accent1: '#E68F1A', accent2: '#F5A623',
-      })
-      expect(roles['role-divider-on-light']).toBeTruthy()
-      expect(roles['role-divider-on-dark']).toBeTruthy()
-      expect(/^#[0-9a-f]{6}$/.test(roles['role-divider-on-light'])).toBe(true)
-      expect(/^#[0-9a-f]{6}$/.test(roles['role-divider-on-dark'])).toBe(true)
-    }
-  })
-
-  it('border-on-dark is darker than border-on-light (luminance check)', () => {
-    const roles = buildRoleMap('analogous-accent', {
-      primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623',
-    })
-    const lightL = oklchOf(roles['role-divider-on-light']).l
-    const darkL  = oklchOf(roles['role-divider-on-dark']).l
-    expect(lightL).toBeGreaterThan(darkL)
-  })
-})
-
-// ─── --color-hover-wash (cascade-aware) ──────────────────────────────────────
-
-describe('--color-hover-wash cascade-aware token', () => {
-  it('buildColorCSS emits both --color-hover-wash and --color-hover-wash-on-dark', () => {
-    const css = buildColorCSS({primaryColor: '#821428'})
-    expect(css).toContain('--color-hover-wash:')
-    expect(css).toContain('--color-hover-wash-on-dark:')
-  })
-
-  it('--color-hover-wash uses shadow-rgb expression (auto-tunes per brand)', () => {
-    const css = buildColorCSS({primaryColor: '#821428'})
-    const match = css.match(/--color-hover-wash:([^;}]+)/)
-    expect(match?.[1]?.trim()).toBe('rgb(var(--shadow-rgb) / 0.06)')
-  })
-
-  it('--color-hover-wash-on-dark uses color-mix on text-on-dark', () => {
-    const css = buildColorCSS({primaryColor: '#821428'})
-    const match = css.match(/--color-hover-wash-on-dark:([^;}]+)/)
-    expect(match?.[1]?.trim()).toBe('color-mix(in oklch, var(--color-foreground-on-dark) 8%, transparent)')
-  })
-
-  it('role-hover-wash tokens identical across all three approaches (no input dependence)', () => {
-    const palettes = [
-      ['monochromatic',    {primary: '#821428'}] as const,
-      ['complementary',    {primary: '#821428', action: '#F5A623'}] as const,
-      ['analogous-accent', {primary: '#821428', accent1: '#E68F1A', accent2: '#F5A623'}] as const,
-    ]
-    const values = palettes.map(([approach, inputs]) => buildRoleMap(approach, inputs))
-    for (const v of values) {
-      expect(v['role-hover-wash-on-light']).toBe('rgb(var(--shadow-rgb) / 0.06)')
-      expect(v['role-hover-wash-on-dark']).toBe('color-mix(in oklch, var(--color-foreground-on-dark) 8%, transparent)')
-    }
-  })
-})
-
-// ─── motionTempo tokens ───────────────────────────────────────────────────────
 
 describe('buildDesignTokenCSS motionTempo', () => {
   it('snappy outputs fastest UI values', () => {
@@ -997,97 +534,5 @@ describe('buildDesignTokenCSS marketingScale', () => {
       expect(extract(md, level)).toBeGreaterThan(extract(sm, level))
       expect(extract(lg, level)).toBeGreaterThan(extract(md, level))
     }
-  })
-})
-
-// ─── Fail-to-client-branded-fallback doctrine ────────────────────────────────
-//
-// Locked in WS-CSS-Fallback-Color-Philosophy (v0.22.0, 2026-05-12). Both
-// runtime fallback sites in this file — buildColorCSS's primary fallback at
-// the canonical site and validateWcag's primaryHex default parameter — fall
-// back to the template-default neutral (#1a1a1a) rather than producing no
-// derivation. The doctrine reverses the WS5-era fail-grey approach platform-
-// wide; multi-client safety is preserved by per-client rewriting at
-// provisioning time (the Client Provisioning Tool's templateSubstitutions
-// map). See BI/skills/skill-color-system/SKILL.md → "Fallback values".
-
-describe('Fail-to-client-branded-fallback (v0.22.0)', () => {
-  it('buildColorCSS with null primaryColor produces identical output to explicit template default #1a1a1a', () => {
-    const cssNull = buildColorCSS({primaryColor: null})
-    const cssExplicit = buildColorCSS({primaryColor: '#1a1a1a'})
-    expect(cssNull).toBe(cssExplicit)
-  })
-
-  it('buildColorCSS with undefined primaryColor produces identical output to explicit template default #1a1a1a', () => {
-    const cssMissing = buildColorCSS({})
-    const cssExplicit = buildColorCSS({primaryColor: '#1a1a1a'})
-    expect(cssMissing).toBe(cssExplicit)
-  })
-
-  it('validateWcag default primaryHex parameter derives neutrals from template default #1a1a1a', () => {
-    const roles = buildRoleMap('analogous-accent', {primary: '#1a1a1a'})
-    const resultsDefault = validateWcag(roles)
-    const resultsExplicit = validateWcag(roles, '#1a1a1a')
-    expect(resultsDefault).toEqual(resultsExplicit)
-  })
-})
-
-// ─── Neutral defaults stay neutral ────────────────────────────────────────────
-// Justin's ruling 2026-08-14: the platform's default palette is black, white and
-// greys. A client with no colors configured gets a clean neutral site, nowhere
-// pink.
-//
-// The defect this pins: every chroma floor in the derivation (tint 0.025, dark
-// 0.02, brightTagline 0.015, actionHover 0.02) used to apply unconditionally.
-// A neutral primary has chroma 0 and an undefined hue that parseOklch collapses
-// to 0 — and OKLCH hue 0 is red — so the floors manufactured pink out of grey:
-// bg-muted #ffeff4, brand-dark #0e0507, tagline/ring/star-outline-on-dark
-// #e1d4d7. The static fallbacks in globals.css were already neutral, so the
-// runtime disagreed with the stylesheet it was overriding.
-describe('neutral defaults — no configured color produces no color', () => {
-  const CHROMATIC = 0.002  // matches ACHROMATIC_CHROMA in designTokens.ts
-
-  it('buildColorCSS with no colors emits zero chromatic hex values', () => {
-    const css = buildColorCSS({} as never)
-    const offenders: string[] = []
-    for (const m of css.matchAll(/(--[a-z0-9-]+):\s*(#[0-9a-fA-F]{6})\s*[;}]/g)) {
-      if (oklchOf(m[2]).c > CHROMATIC) offenders.push(`${m[1]}: ${m[2]}`)
-    }
-    expect(offenders, `chromatic tokens emitted for a neutral default: ${offenders.join(', ')}`).toEqual([])
-  })
-
-  it.each(['#000000', '#1a1a1a', '#4a4a4a', '#666666', '#f5f5f5', '#ffffff'])(
-    'deriveVariants(%s) keeps tint and dark achromatic',
-    (hex) => {
-      const v = deriveVariants(hex)
-      expect(oklchOf(v.tint).c).toBeLessThanOrEqual(CHROMATIC)
-      expect(oklchOf(v.dark).c).toBeLessThanOrEqual(CHROMATIC)
-    },
-  )
-
-  it('the runtime default agrees with the static globals.css fallbacks', () => {
-    // buildColorCSS's own fallback is #1a1a1a; globals.css ships bg-muted
-    // #f5f5f5 and action #4a4a4a as its static neutral values. The runtime must
-    // land on the same greys rather than overriding them with a tinted variant.
-    const css = buildColorCSS({} as never)
-    expect(css).toContain('--color-muted:#f5f5f5')
-  })
-
-  it('a configured color still gets its chroma floor', () => {
-    // The floors exist to survive hex round-trip precision loss on real
-    // palettes. Neutralizing the default must not disarm them: the least
-    // saturated realistic brand color (slate #2c3e50, C 0.039) still floors.
-    //
-    // Thresholds are measured post-round-trip, not at the floor value: an
-    // 8-bit hex cannot hold C 0.025 at L 0.97, and the floored tint #e9f7ff
-    // reads back as 0.0183. Unfloored, the same tint would be #f0f6fc /
-    // C 0.0103 — so the assertion sits between the two, where only a live
-    // floor passes.
-    const v = deriveVariants('#2c3e50')
-    expect(oklchOf(v.tint).c).toBeGreaterThan(0.014)
-    expect(oklchOf(v.dark).c).toBeGreaterThanOrEqual(0.02)
-    // ...and the hue stays the client's blue, never hue 0
-    expect(oklchOf(v.tint).h).toBeGreaterThan(180)
-    expect(oklchOf(v.dark).h).toBeGreaterThan(180)
   })
 })

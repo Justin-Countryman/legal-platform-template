@@ -355,7 +355,7 @@ export const SITE_SCRIPTS_QUERY = groq`
 export const OG_DATA_QUERY = groq`{
   "firmName":     *[_type == "siteSettings"][0].firmName,
   "logo":         *[_type == "designSettings"][0].logoOnDark.asset->url,
-  "primaryColor": *[_type == "designSettings"][0].primaryColor,
+  "darkGround":   *[_type == "designSettings"][0].darkGround,
 }`
 
 // ─── Site-wide Organization JSON-LD ───────────────────────────────────────────
@@ -853,11 +853,14 @@ export const DESIGN_TOKENS_QUERY = groq`
     motionTempo,
     marketingScale,
     fontPairingPreset,
-    "colorApproach": colorApproach,
-    "primaryColor":  primaryColor,
-    "actionColor":   actionColor,
-    "accent1Color":  accent1Color,
-    "accent2Color":  accent2Color,
+    // The four colour roles (Phase 14). The five fields they replace stay in the
+    // schema, hidden, for one pin, and nothing reads them. Every field of this
+    // type either appears in this projection or is on the allow-list of the
+    // projection key-set test beside this file, which fails otherwise.
+    darkGround,
+    lightGround,
+    accent,
+    action,
     internalHeroBackground,
     heroScrimOpacity,
     // The page background layer (Phase 13). Absent on every client built so far,

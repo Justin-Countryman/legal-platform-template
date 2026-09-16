@@ -47,7 +47,7 @@ export type HomepageCtaData = {
 // singleton, which has no appearance fieldset, and adding one would fold a
 // `schema-default` into every Site-Build write (item 308, [R-450]). Design §7
 // amendment 15's "HomepageCta takes a surface prop", exactly.
-export const HOMEPAGE_CTA_DEFAULT_SURFACE: SectionSurface = 'accent'
+export const HOMEPAGE_CTA_DEFAULT_SURFACE: SectionSurface = 'muted'
 
 export function HomepageCta({
   data,

@@ -23,7 +23,7 @@ import type {FooterData, FooterLocation} from '../Footer'
 
 type Props = {data: FooterData}
 
-const LINK = 'transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus'
+const LINK = 'transition-colors duration-ui-fast hover:text-action-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus'
 
 function directionsHref(loc: FooterLocation): string {
   const q = [loc.address1, loc.address2, cityLine(loc.city, loc.state, loc.zip)].filter(Boolean).join(', ')
@@ -131,7 +131,7 @@ export function SwitchboardFooter({data}: Props) {
                   className={[
                     'rounded-full px-5 py-2 text-sm font-semibold transition-colors duration-ui-fast',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus',
-                    i === active ? 'bg-action text-action-fg' : 'text-foreground-muted hover:text-foreground hover:bg-foreground/5',
+                    i === active ? 'bg-action text-action-fg ring-1 ring-action-state-cue' : 'text-foreground-muted hover:text-foreground hover:bg-foreground/5',
                   ].join(' ')}
                 >
                   {loc.city ?? 'Office'}

@@ -227,8 +227,11 @@ export function useScrollLock(isLocked: boolean) {
 const BG: Record<string, string> = {
   light:               'bg-background',
   dark:                'bg-brand-dark',
-  glass:               'bg-background/80 backdrop-blur-md',
-  'glass-dark':        'bg-brand-dark/80 backdrop-blur-md',
+  // 90% rather than 80%: over the darkest content scrolling beneath, hover text
+  // on the light glass measured 3.58:1 at 80% and 4.60:1 at 90% (Phase 14). The
+  // dark glass takes the scrim, the dark ground capped at L 0.20.
+  glass:               'bg-background/90 backdrop-blur-md',
+  'glass-dark':        'bg-scrim/80 backdrop-blur-md',
   'transparent-dark':  'bg-transparent',
   'transparent-light': 'bg-transparent',
 }
@@ -236,13 +239,13 @@ const BG: Record<string, string> = {
 // Cascade-aware text-color constants — replace per-scheme lookup maps that
 // pre-WS5 returned different paired-token utilities by scheme. Post-WS5,
 // `text-foreground`, `text-foreground-muted`, `text-foreground-subtle`, and
-// `hover:text-accent` all auto-resolve via the global cascade rule
+// `hover:text-accent-text` all auto-resolve via the global cascade rule
 // (.bg-brand-dark / [data-ring-context="dark"]) — so a single utility per role
 // renders correctly on every header scheme. BG / TOP_BAR_BG / TOP_BAR_FG stay
 // scheme-keyed because background fills and the tagline-fg auto-pair are
 // genuinely surface-specific.
 export const HEADER_TEXT          = 'text-foreground'
-export const HEADER_HOVER_TEXT    = 'hover:text-accent'
+export const HEADER_HOVER_TEXT    = 'hover:text-accent-text'
 export const HEADER_MUTED_TEXT    = 'text-foreground-muted'
 export const HEADER_SUBTLE_TEXT   = 'text-foreground-subtle'
 
@@ -371,9 +374,13 @@ export function HeaderLogo({data, scheme, useMark = false, className = 'h-10 lg:
 
 // ─── Top bar ──────────────────────────────────────────────────────────────────
 
+// The accent strip reads the STATIC light accent, not the cascade-aware one: the top
+// bar renders inside the header, and inside a dark header bg-accent resolved to the
+// brightened accent while text-accent-fg did not cascade (white on #d7d7d7, 1.44:1,
+// Phase 14). accent-fg is paired with the accent itself.
 const TOP_BAR_BG: Record<string, string> = {
   primary:   'bg-brand-dark',
-  secondary: 'bg-accent',
+  secondary: 'bg-accent-on-light',
   dark:      'bg-brand-dark',
 }
 
@@ -1035,7 +1042,7 @@ function mobileLinkClass(active: boolean, extra = ''): string {
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus',
     active
       ? 'border-accent bg-accent/10 font-semibold text-foreground'
-      : 'border-transparent font-medium text-foreground hover:text-accent',
+      : 'border-transparent font-medium text-foreground hover:text-accent-text',
     extra,
   ].filter(Boolean).join(' ')
 }
@@ -1294,7 +1301,7 @@ function MobileSubMenu({navItem, pathname}: {navItem: NavItem; pathname: string}
                   'active:bg-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus',
                   active
                     ? 'border-accent bg-accent/10 font-semibold text-foreground'
-                    : 'border-transparent text-foreground hover:text-accent',
+                    : 'border-transparent text-foreground hover:text-accent-text',
                 ].join(' ')}
                 tabIndex={isOpen ? 0 : -1}
               >

@@ -115,10 +115,10 @@ export const designSettings = defineType({
           title: 'Strength',
           type: 'number',
           description:
-            'How strongly the background shows, from 0 to 0.25. Text sits on top of it, so keep it low: the readable contrast of body text is measured against the ground actually rendered.',
+            'How strongly the background shows. A texture or photo renders at 0.04 at most, the strength at which every text colour on it stays readable (WCAG AA); a gradient may go to 0.25.',
           hidden: ({parent}) => ((parent as {kind?: string} | undefined)?.kind ?? 'none') === 'none',
           // Warning, never error: no validation rule blocks Publish ([R-162]).
-          validation: (Rule) => Rule.min(0).max(0.25).warning('Keep the page background under 0.25 so text stays readable on it.'),
+          validation: (Rule) => Rule.min(0).max(0.25).warning('Keep the page background at 0.25 or under. A texture or photo renders at 0.04 at most.'),
         }),
       ],
     }),
@@ -225,103 +225,104 @@ export const designSettings = defineType({
 
     // ─── Brand Colors ─────────────────────────────────────────────────────────
 
-    // Color approach selector — determines how many color inputs are shown
-    // and how colors are mapped to roles across all components
-    defineField({
-      name: 'colorApproach',
-      title: 'Color Approach',
-      type: 'string',
-      fieldset: 'colors',
-      description: 'Choose how your brand colors work together. The system automatically derives dark sections, light backgrounds, hover states, and accessibility-compliant foreground colors from your inputs.',
-      options: {
-        list: [
-          {
-            title: 'Monochromatic — one brand color, everything derived',
-            value: 'monochromatic',
-          },
-          {
-            title: 'Complementary — primary drives dark sections, action color drives buttons and taglines',
-            value: 'complementary',
-          },
-          {
-            title: 'Analogous + Accent — primary drives dark, accent 1 drives taglines, accent 2 drives buttons',
-            value: 'analogous-accent',
-          },
-        ],
-        layout: 'radio',
-      },
-      initialValue: 'analogous-accent',
-      validation: (Rule) => Rule.required().warning(),
-    }),
-
-    // Primary color — always required
-    defineField({
-      name: 'primaryColor',
-      title: 'Primary Color',
-      type: 'string',
-      fieldset: 'colors',
-      description: 'Hex — e.g. #003366. Your dominant brand color. Drives dark section backgrounds, footer, hero overlays, and dark header schemes. Tints and shades are derived automatically.',
-      initialValue: '',
-      validation: (Rule) => Rule.required().regex(/^#[0-9A-Fa-f]{6}$/, {name: 'hex', invert: false}).warning('Enter a valid 6-digit hex value e.g. #003366'),
-    }),
-
-    // Action color — shown for Complementary approach
-    defineField({
-      name: 'actionColor',
-      title: 'Action Color',
-      type: 'string',
-      fieldset: 'colors',
-      description: 'Hex — e.g. #CC9933. Used for buttons and taglines. Should contrast strongly with your primary color. Opposite on the color wheel (complementary) works best.',
-      hidden: ({document}) => document?.colorApproach !== 'complementary',
-      validation: (Rule) => Rule.custom((val, ctx) => {
-        if ((ctx.document as any)?.colorApproach === 'complementary' && !val) {
-          return 'Action color is required for the Complementary approach'
-        }
-        if (val && !/^#[0-9A-Fa-f]{6}$/.test(val)) return 'Enter a valid hex e.g. #CC9933'
-        return true
-      }).warning(),
-    }),
-
-    // Accent 1 — shown for Analogous + Accent approach (tagline color)
-    defineField({
-      name: 'accent1Color',
-      title: 'Accent Color 1 — Tagline Text',
-      type: 'string',
-      fieldset: 'colors',
-      description: 'Hex — e.g. #CC9933. Used for tagline text above headings, decorative dividers, and badge accents.',
-      hidden: ({document}) => document?.colorApproach !== 'analogous-accent',
-      validation: (Rule) => Rule.custom((val, ctx) => {
-        if ((ctx.document as any)?.colorApproach === 'analogous-accent' && !val) {
-          return 'Accent 1 is required for the Analogous + Accent approach'
-        }
-        if (val && !/^#[0-9A-Fa-f]{6}$/.test(val)) return 'Enter a valid hex e.g. #CC9933'
-        return true
-      }).warning(),
-    }),
-
-    // Accent 2 — optional, shown for Analogous + Accent approach (button color)
-    defineField({
-      name: 'accent2Color',
-      title: 'Accent Color 2 — Buttons & CTAs (optional)',
-      type: 'string',
-      fieldset: 'colors',
-      description: 'Hex — e.g. #99AA66. Optional. When provided, this color drives all CTA buttons and primary actions. If left blank, Accent 1 handles both taglines and buttons.',
-      hidden: ({document}) => document?.colorApproach !== 'analogous-accent',
-      validation: (Rule) => Rule.custom((val) => {
-        if (val && !/^#[0-9A-Fa-f]{6}$/.test(val)) return 'Enter a valid hex e.g. #99AA66'
-        return true
-      }).warning(),
-    }),
-
-    // Color preview panel — live swatch grid showing all derived tokens + WCAG results
+    // Four colour roles (Phase 14, WS-V1-PHASE14-DESIGN §7). Each is a hex and
+    // none is required: an absent role renders the platform default, which is the
+    // greyscale every site already ships with. None carries an initialValue: the
+    // build folds initial values into the documents it writes (item 308), and a
+    // seeded colour would be indistinguishable from one an operator chose.
+    // verify-inline-sections.ts refuses an initialValue on any field in this
+    // fieldset.
+    //
+    // The preview field comes first because it carries the palette picker:
+    // choosing a preset writes the four hex fields below it.
     defineField({
       name: 'colorPreview',
-      title: 'Color Preview',
+      title: 'Palette',
       type: 'string',
       fieldset: 'colors',
       readOnly: true,
       components: {input: ColorPreview},
-      description: 'Live preview of all derived color tokens and WCAG accessibility results. Updates as you change the inputs above.',
+      description: 'Choose a palette to fill the four colours below, or type your own. The preview shows what the site renders: a colour that cannot be read against its background is adjusted the smallest step that reads, and shown here.',
+    }),
+
+    defineField({
+      name: 'darkGround',
+      title: 'Dark Ground',
+      type: 'string',
+      fieldset: 'colors',
+      description: 'Hex, e.g. #14213D. Dark sections, the footer, and dark header and hero schemes. A deep navy, charcoal, forest or burgundy works best; a lighter or more vivid colour is deepened until white text reads on it.',
+      validation: (Rule) => Rule.regex(/^#[0-9A-Fa-f]{6}$/, {name: 'hex'}).warning('Enter a 6-digit hex value, e.g. #14213D'),
+    }),
+
+    defineField({
+      name: 'lightGround',
+      title: 'Light Ground',
+      type: 'string',
+      fieldset: 'colors',
+      description: 'Hex, e.g. #F5EEDC. The page itself; card and alternating section backgrounds are derived one step off it. Leave blank for white.',
+      validation: (Rule) => Rule.regex(/^#[0-9A-Fa-f]{6}$/, {name: 'hex'}).warning('Enter a 6-digit hex value, e.g. #F5EEDC'),
+    }),
+
+    defineField({
+      name: 'accent',
+      title: 'Accent',
+      type: 'string',
+      fieldset: 'colors',
+      description: 'Hex, e.g. #B8893A. The brand colour on small areas: taglines, highlighted heading words, icons, rules. Where it is too light to read as text, text uses a darker shade of the same colour.',
+      validation: (Rule) => Rule.regex(/^#[0-9A-Fa-f]{6}$/, {name: 'hex'}).warning('Enter a 6-digit hex value, e.g. #B8893A'),
+    }),
+
+    defineField({
+      name: 'action',
+      title: 'Button Colour (optional)',
+      type: 'string',
+      fieldset: 'colors',
+      description: 'Hex. Buttons and calls to action. Leave blank to use the accent.',
+      validation: (Rule) => Rule.regex(/^#[0-9A-Fa-f]{6}$/, {name: 'hex'}).warning('Enter a 6-digit hex value'),
+    }),
+
+    // The five fields the roles replace. Hidden and read by nothing; kept for one
+    // pin so stored values survive until BE/Site-Build-Tool/migrate_colours.py has
+    // run, then removed in Phase 15. No initialValue, no validation.
+    defineField({
+      name: 'colorApproach',
+      title: 'Color Approach (retired)',
+      type: 'string',
+      fieldset: 'colors',
+      hidden: true,
+      deprecated: {reason: 'Replaced by the four colour roles in Phase 14; removed in Phase 15.'},
+    }),
+    defineField({
+      name: 'primaryColor',
+      title: 'Primary Color (retired)',
+      type: 'string',
+      fieldset: 'colors',
+      hidden: true,
+      deprecated: {reason: 'Replaced by Dark Ground in Phase 14; removed in Phase 15.'},
+    }),
+    defineField({
+      name: 'actionColor',
+      title: 'Action Color (retired)',
+      type: 'string',
+      fieldset: 'colors',
+      hidden: true,
+      deprecated: {reason: 'Replaced by Accent and Button Colour in Phase 14; removed in Phase 15.'},
+    }),
+    defineField({
+      name: 'accent1Color',
+      title: 'Accent Color 1 (retired)',
+      type: 'string',
+      fieldset: 'colors',
+      hidden: true,
+      deprecated: {reason: 'Replaced by Accent in Phase 14; removed in Phase 15.'},
+    }),
+    defineField({
+      name: 'accent2Color',
+      title: 'Accent Color 2 (retired)',
+      type: 'string',
+      fieldset: 'colors',
+      hidden: true,
+      deprecated: {reason: 'Replaced by Button Colour in Phase 14; removed in Phase 15.'},
     }),
 
     // ─── Typography ───────────────────────────────────────────────────────────

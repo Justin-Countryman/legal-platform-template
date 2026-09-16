@@ -110,6 +110,7 @@ describe('sectionSurface', () => {
     expect(sectionSurface('image')).toEqual({surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: true})
     expect(sectionSurface('tint')).toEqual({surfaceClass: 'bg-hero-tint', ringContext: undefined, buttonContext: 'light', isImage: false})
     expect(sectionSurface('accent')).toEqual({surfaceClass: 'bg-muted', ringContext: undefined, buttonContext: 'light', isImage: false})
+    expect(sectionSurface('muted')).toEqual(sectionSurface('accent'))
     expect(sectionSurface('light')).toEqual({surfaceClass: 'bg-background', ringContext: undefined, buttonContext: 'light', isImage: false})
   })
 
@@ -123,7 +124,10 @@ describe('visibleGround', () => {
     ['dark', 'dark'],
     ['image', 'image'],
     ['tint', 'tint'],
-    ['accent', 'tint'],
+    // A stored `accent` renders bg-muted and is its own ground, as `muted` is
+    // (Phase 14; Phase 13 mapped it to tint, which seamed two different colours).
+    ['muted', 'muted'],
+    ['accent', 'muted'],
     ['pattern', 'page'],
     ['light', 'light'],
   ])('%s sees %s', (surface, ground) => {
@@ -172,7 +176,12 @@ describe('sectionEdgeClasses', () => {
     }
     expect(classes).toContain('md:before:pointer-events-none')
     expect(classes).toContain('md:supports-[not_(clip-path:polygon(0_0))]:before:hidden')
-    expect(classes).toContain('md:before:bottom-full')
+    // At the TOP of the band that paints it, never above it: at bottom-full the
+    // wedge lay over the previous band in that band's own colour and rendered
+    // nothing (pixel-sampled, Phase 14). The clip keeps the top-left triangle.
+    expect(classes).toContain('md:before:top-0')
+    expect(classes).not.toContain('bottom-full')
+    expect(classes).toContain('md:before:[clip-path:polygon(0_0,100%_0,0_100%)]')
   })
 
   it('is capped at the compact preset’s own md top padding, so it cannot reach a heading', () => {

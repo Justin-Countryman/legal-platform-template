@@ -55,11 +55,13 @@ describe('merged header — transparent overlay scheme at the top of the hero', 
 })
 
 describe('glass schemes — the surface establishes its own contrast (item 55)', () => {
-  it('glass is a LIGHT surface: 80% white tint, dark text and logo', () => {
+  it('glass is a LIGHT surface: 90% white tint, dark text and logo', () => {
     // The pre-fix combination — 15% white tint classified as a dark surface —
     // put near-white text and a white logo on a translucent light film,
     // invisible over any light page body by construction.
-    expect(schemeBg('glass', true, true)).toContain('bg-background/80')
+    // 90% since Phase 14: hover text over dark content scrolling beneath measured
+    // 3.58:1 at 80% and 4.60:1 at 90%.
+    expect(schemeBg('glass', true, true)).toContain('bg-background/90')
     expect(schemeBg('glass', true, true)).toContain('backdrop-blur')
     expect(isDarkSurface('glass')).toBe(false)
   })
@@ -67,7 +69,7 @@ describe('glass schemes — the surface establishes its own contrast (item 55)',
   it('glass-dark is a dark surface: 80% dark tint, white text and logo', () => {
     // 40% was too translucent: composited over a white page body the surface
     // went light while the text stayed white.
-    expect(schemeBg('glass-dark', true, true)).toContain('bg-brand-dark/80')
+    expect(schemeBg('glass-dark', true, true)).toContain('bg-scrim/80')
     expect(schemeBg('glass-dark', true, true)).toContain('backdrop-blur')
     expect(isDarkSurface('glass-dark')).toBe(true)
   })

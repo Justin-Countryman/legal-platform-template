@@ -32,10 +32,13 @@ const TEMPLATES = ['attorneyPage', 'staffPage', 'blogPost', 'blogCategory', 'eve
 // The homepage list's render fixture: the homepage and the one practice area
 // its `practiceAreaNavInline` member lists in `allTopLevel` mode.
 const HOMEPAGE_LIST = ['homePage', 'practiceArea']
+// A singleton with a colour set (Phase 14), so the stub build proves a colour
+// field reaches the prerendered :root through GROQ and the engine. It has no slug.
+const SINGLETONS = ['designSettings']
 
 describe('scripts/ci/fixture.ndjson agrees with studio/schema.json', () => {
   it('carries exactly one document per generateStaticParams template, plus the homepage list fixture', () => {
-    expect(docs.map((d) => d._type).sort()).toEqual([...TEMPLATES, ...HOMEPAGE_LIST].sort())
+    expect(docs.map((d) => d._type).sort()).toEqual([...TEMPLATES, ...HOMEPAGE_LIST, ...SINGLETONS].sort())
   })
 
   it('the homepage fixture holds the inline section members the stub build asserts, each a type the canvas allows', () => {
@@ -64,6 +67,7 @@ describe('scripts/ci/fixture.ndjson agrees with studio/schema.json', () => {
       for (const field of Object.keys(doc)) {
         expect(field in attributes, `${doc._id}: field ${field} is not declared on ${doc._type}`).toBe(true)
       }
+      if (SINGLETONS.includes(doc._type)) continue
       expect(typeof (doc.slug as {current?: unknown} | undefined)?.current).toBe('string')
     }
   })

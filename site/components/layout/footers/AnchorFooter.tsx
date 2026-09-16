@@ -93,12 +93,12 @@ export function AnchorFooter({data}: Props) {
               <div>
                 <h3 className="text-base font-semibold mb-2 text-foreground-muted">Contact</h3>
                 {officePhone && (
-                  <a href={`tel:${officePhone.replace(/\D/g, '')}`} className="block text-sm transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
+                  <a href={`tel:${officePhone.replace(/\D/g, '')}`} className="block text-sm transition-colors duration-ui-fast hover:text-action-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
                     {formatPhone(officePhone)}
                   </a>
                 )}
                 {tollFreePhone && (
-                  <a href={`tel:${tollFreePhone.replace(/\D/g, '')}`} className="block text-sm transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
+                  <a href={`tel:${tollFreePhone.replace(/\D/g, '')}`} className="block text-sm transition-colors duration-ui-fast hover:text-action-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
                     {formatPhone(tollFreePhone)}
                   </a>
                 )}

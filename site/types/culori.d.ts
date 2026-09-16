@@ -5,4 +5,6 @@ declare module 'culori' {
   export function formatHex(color: string | ColorObject | undefined): string
   export function parse(color: string): ColorObject | undefined
   export function wcagContrast(a: string | ColorObject | undefined, b: string | ColorObject | undefined): number
+  export function clampChroma(color: string | ColorObject, mode?: string): ColorObject | undefined
+  export function differenceCiede2000(): (a: string | ColorObject, b: string | ColorObject) => number
 }

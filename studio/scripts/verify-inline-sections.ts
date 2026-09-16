@@ -291,6 +291,15 @@ for (const [type, field, why] of NO_SEED) {
   }
 }
 ok(`no seed on ${String(NO_SEED.length)} field(s) that the composer would fold`)
+// No colour field is seeded either (Phase 14, item 308). Derived from the
+// fieldset rather than listed, so a colour field added later is covered the day it
+// lands; the length check stops the read going vacuous if the fieldset is renamed.
+const colourFields = ((schema.get('designSettings') as ObjectSchemaType).fields ?? []).filter((f) => (f as {fieldset?: string}).fieldset === 'colors')
+if (colourFields.length < 5) fail(`designSettings has only ${String(colourFields.length)} colour field(s); the fieldset read is vacuous`)
+for (const f of colourFields) {
+  if ((f.type as {initialValue?: unknown}).initialValue !== undefined) fail(`designSettings.${f.name} carries an initialValue; no colour field is seeded (item 308)`)
+}
+ok(`no seed on ${String(colourFields.length)} designSettings colour field(s)`)
 if (initial('contentSectionInline', 'layout') !== 'split' || initial('contentSection', 'layout') !== 'split') fail('contentSection layout initial is not split')
 ok('inline mode defaults and option lists are as specified; the documents are unchanged')
 

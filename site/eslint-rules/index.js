@@ -20,7 +20,7 @@ const footerLandmarkNaming = require('./rules/footer-landmark-naming')
 const collectionGridListSemantics = require('./rules/collection-grid-list-semantics')
 const headingCascadeDiscipline = require('./rules/heading-cascade-discipline')
 const noTextActionRaw = require('./rules/no-text-action-raw')
-const noTextAccentOnBgMuted = require('./rules/no-text-accent-on-bg-muted')
+const noTextAccentOnText = require('./rules/no-text-accent-on-text')
 
 const rules = {
   'no-arbitrary-color':              noArbitraryColor,                // T1
@@ -31,7 +31,7 @@ const rules = {
   'collection-grid-list-semantics':  collectionGridListSemantics,     // A4
   'heading-cascade-discipline':      headingCascadeDiscipline,        // A2
   'no-text-action-raw':              noTextActionRaw,                 // T5a
-  'no-text-accent-on-bg-muted':      noTextAccentOnBgMuted,           // T5b
+  'no-text-accent-on-text':          noTextAccentOnText,              // Phase 14 (was T5b)
 }
 
 module.exports = {

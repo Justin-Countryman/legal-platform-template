@@ -23,11 +23,8 @@ const BASE_DESIGN_SETTINGS = {
   motionTempo: 'relaxed',
   marketingScale: 'sm',
   fontPairingPreset: '1',
-  colorApproach: 'analogous-accent',
-  primaryColor: '#821428',
-  actionColor: '#E68F1A',
-  accent1Color: '#E68F1A',
-  accent2Color: '#F5A623',
+  darkGround: '#14213d',
+  accent: '#b8893a',
   internalHeroBackground: 'dark',
 }
 

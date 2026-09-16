@@ -103,11 +103,10 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
     designTokens?.taglineStyle,
   )
   const colorCSS = buildColorCSS({
-    colorApproach:  designTokens?.colorApproach,
-    primaryColor:   designTokens?.primaryColor,
-    actionColor:    designTokens?.actionColor,
-    accent1Color:   designTokens?.accent1Color,
-    accent2Color:   designTokens?.accent2Color,
+    darkGround:  designTokens?.darkGround,
+    lightGround: designTokens?.lightGround,
+    accent:      designTokens?.accent,
+    action:      designTokens?.action,
   })
   const {heading: resolvedHeading, body: resolvedBody} = resolvefonts(
     designTokens?.fontPairingPreset,

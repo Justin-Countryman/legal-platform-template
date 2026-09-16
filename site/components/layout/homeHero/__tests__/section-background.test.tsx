@@ -115,11 +115,11 @@ describe('homepage hero — Section Background', () => {
     expect(queryByTestId('hero-backdrop')).toBeNull()
   })
 
-  it('dark band → brand-dark scrim tone', () => {
+  it('dark band → the scrim tone (the dark ground capped at L 0.20)', () => {
     const {container} = render(
       <Split config={config()} content={content} surface={surface({scheme: 'dark', isDark: true})} sectionBackground={sectionBg({scheme: 'dark', isDark: true})} />,
     )
-    expect(container.querySelector('[data-testid="hero-scrim"]')?.className).toContain('bg-brand-dark')
+    expect(container.querySelector('[data-testid="hero-scrim"]')?.className).toContain('bg-scrim')
   })
 
   it('light band → page-background scrim tone', () => {

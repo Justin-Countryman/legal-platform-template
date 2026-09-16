@@ -81,11 +81,15 @@ describe('two neighbours', () => {
     for (const el of sectionsOf(container)) expect(el.className).toContain(FULL)
   })
 
-  it('accent and tint are one ground, so they seam; accent and light do not', () => {
-    const {container} = canvas([band('a', {surface: 'accent'}), band('b', {surface: 'tint'})])
+  it('muted seams only with muted: a stored accent beside tint or light keeps its full padding', () => {
+    // Phase 14. Phase 13 treated accent (bg-muted) and tint (bg-hero-tint) as one
+    // ground and halved the padding between two different colours.
+    const {container} = canvas([band('a', {surface: 'accent'}), band('b', {surface: 'muted'})])
     expect(sectionsOf(container)[1].className).toContain(SEAM)
-    const {container: c2} = canvas([band('a', {surface: 'accent'}), band('b', {surface: 'light'})])
+    const {container: c2} = canvas([band('a', {surface: 'accent'}), band('b', {surface: 'tint'})])
     expect(sectionsOf(c2)[1].className).toContain(FULL)
+    const {container: c3} = canvas([band('a', {surface: 'accent'}), band('b', {surface: 'light'})])
+    expect(sectionsOf(c3)[1].className).toContain(FULL)
   })
 
   it('a compact band opts out of the seam', () => {
@@ -170,7 +174,7 @@ describe('the angled edge', () => {
     expect(first.className).not.toContain('before:bg-')
     // The band below paints it, in the band above's colour.
     expect(second.className).toContain('before:bg-brand-dark')
-    expect(second.className).toContain('md:before:bottom-full')
+    expect(second.className).toContain('md:before:top-0')
   })
 
   it('cancels the seam it would otherwise have, because the wedge fills the join', () => {

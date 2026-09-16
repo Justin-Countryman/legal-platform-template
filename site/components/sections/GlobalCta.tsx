@@ -118,7 +118,7 @@ function SplitCta({data, surface, seam}: {data: GlobalCtaData; surface: SectionS
 //
 // The band also carries `text-foreground` in its own class list, which the shell
 // cannot express as a surface, so it rides through `className`.
-export const GLOBAL_CTA_DEFAULT_SURFACE: SectionSurface = 'accent'
+export const GLOBAL_CTA_DEFAULT_SURFACE: SectionSurface = 'muted'
 
 /** A CTA with no heading was never authored; both layouts already bailed on it. */
 export function isEmpty(data: GlobalCtaData): boolean {

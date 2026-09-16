@@ -68,7 +68,7 @@ export function SplitHeroLayout({attorney, napTokens, cta = {label: 'Contact Us'
                   href={attorney.linkedIn}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-foreground-subtle transition-colors duration-ui-fast hover:text-accent"
+                  className="text-foreground-subtle transition-colors duration-ui-fast hover:text-accent-text"
                   aria-label="LinkedIn profile"
                 >
                   <BiLogoLinkedinSquare className="size-5 shrink-0" aria-hidden="true" />
@@ -90,7 +90,7 @@ export function SplitHeroLayout({attorney, napTokens, cta = {label: 'Contact Us'
               {attorney.location?.officePhone && (
                 <a
                   href={`tel:${attorney.location.officePhone.replace(/\D/g, '')}`}
-                  className="rounded-ui transition-colors duration-ui-fast hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2"
+                  className="rounded-ui transition-colors duration-ui-fast hover:text-accent-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2"
                   aria-label={`Call ${attorney.location.officePhone}`}
                 >
                   <Chip icon="phone" className="cursor-pointer">
