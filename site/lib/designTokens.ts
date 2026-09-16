@@ -1,4 +1,4 @@
-import { converter, formatHex, wcagContrast, parse } from 'culori'
+import { converter, formatHex, wcagContrast, parse, clampChroma } from 'culori'
 
 // ─── Shadow RGB helper ────────────────────────────────────────────────────────
 // Converts a hex color to a space-separated R G B triplet string ("28 19 20").
@@ -60,13 +60,74 @@ function chromaFloor(sourceChroma: number, scaledChroma: number, floor: number):
   return sourceChroma <= ACHROMATIC_CHROMA ? 0 : Math.max(scaledChroma, floor)
 }
 
-// ─── Neutral derivation — branded neutrals from primary hue ──────────────────
-// Neutrals carry a very small amount of primary's chroma and hue so every
-// shade on the site is subtly integrated with the brand palette.
-// Chroma caps prevent highly-saturated primaries from producing tinted grays.
+// ─── Colour by role (Phase 14) ────────────────────────────────────────────────
+//
+// Four inputs, each a role, replacing the three approaches and the "primary hue
+// that surfaces derive from" (decisions-log ruling 7, [R-439]):
+//
+//   darkGround   dark bands, the footer, dark header and hero schemes
+//   lightGround  the page; the tint and muted steps derive from it
+//   accent       kickers, heading emphasis, rules, icons, the accent strip
+//   action       buttons; the accent when unset
+//
+// Every value a component reads is derived from those four, and every
+// foreground/background pair the template renders meets WCAG 2.2 AA for ANY
+// valid hex in ANY role (Justin, 2026-09-16: "we need to ensure the colors are
+// 100% a11y"). That is a tested claim, not a promise:
+// lib/__tests__/colourGuarantee.test.ts sweeps a grid of inputs in every role
+// plus a seeded random sample and every preset. Where a chosen colour cannot
+// carry its pair, the engine moves the RENDERED value the smallest step that
+// passes and reports it; the stored hex is never rewritten.
+//
+// The design record is WS-V1-PHASE14-DESIGN.md §7 (amendments 1 to 24).
 
-export function deriveNeutrals(primaryHex: string) {
-  const o = parseOklch(primaryHex)
+export type ColourInputs = {
+  darkGround?:  string | null
+  lightGround?: string | null
+  accent?:      string | null
+  action?:      string | null
+}
+
+// The code defaults ARE the render every Site-Build client already has: it
+// stores analogous-accent + #333333 + #666666, which rendered brand-dark #141414
+// and accent #666666. A fresh build now stores no colour at all and lands on the
+// same render. Black, white and greys (Justin, 2026-08-14).
+export const COLOUR_DEFAULTS = {
+  darkGround:  '#141414',
+  lightGround: '#ffffff',
+  accent:      '#666666',
+} as const
+
+// Only a literal six-digit hex is a colour. culori would also parse 'navy' or a
+// five-digit typo's neighbour, and the Studio's own rule accepts neither, so an
+// input the Studio would flag must not reach the page as something else. An
+// unparsable value is absent: a mistyped hex can never take the layout down.
+const HEX_INPUT = /^#[0-9a-fA-F]{6}$/
+export function parseHexInput(value: unknown): string | null {
+  return typeof value === 'string' && HEX_INPUT.test(value) ? value.toLowerCase() : null
+}
+
+const round6 = (x: number) => Math.round(x * 1e6) / 1e6
+
+// Gamut-map by reducing chroma at a fixed lightness and hue. CSS Color 4's own
+// algorithms aim at the same thing within one JND; clampChroma is the
+// deterministic one, and it runs at EVERY step, because a stepped value leaves
+// the sRGB gamut (teal #008080 did at 8 of 8 steps).
+function mapped(l: number, c: number, h: number): string {
+  const L = Math.min(1, Math.max(0, l))
+  return formatHex(clampChroma({mode: 'oklch', l: L, c, h}, 'oklch')) ?? '#000000'
+}
+
+const contrast = (a: string, b: string) => (wcagContrast(a, b) as number | undefined) ?? 1
+const passesOn = (fg: string, bgs: string[], min: number) => bgs.every((bg) => contrast(fg, bg) >= min)
+
+// ─── Neutrals — hue and a trace of chroma from the dark ground ────────────────
+// Neutrals carry a very small amount of the dark ground's chroma and hue, so a
+// navy site's greys lean navy. Chroma caps keep a saturated input from tinting
+// them. The hue comes from the UNCLAMPED input, so acceptance never moves it.
+
+export function deriveNeutrals(darkGroundHex: string) {
+  const o = parseOklch(darkGroundHex)
   return {
     'color-foreground-on-light':        toHex(0.20, Math.min(o.c * 0.10, 0.015), o.h),
     'color-foreground-muted-on-light':  toHex(0.45, Math.min(o.c * 0.08, 0.012), o.h),
@@ -75,252 +136,309 @@ export function deriveNeutrals(primaryHex: string) {
   }
 }
 
-// ─── Inverse neutral derivation — for text on dark / colored backgrounds ─────
-// Same primary-hue derivation. Chroma caps keep text on dark backgrounds
-// feeling warm and readable rather than tinted.
-// All three text levels pass AA (4.5:1) against the darkest realistic
-// role-brand-dark derivation (L×0.60 of a saturated primary).
-
-export function deriveInverseNeutrals(primaryHex: string) {
-  const o = parseOklch(primaryHex)
+export function deriveInverseNeutrals(darkGroundHex: string) {
+  const o = parseOklch(darkGroundHex)
   return {
-    'color-foreground-on-dark':           toHex(0.95, Math.min(o.c * 0.10, 0.015), o.h),  // body text
-    'color-foreground-muted-on-dark':     toHex(0.88, Math.min(o.c * 0.08, 0.012), o.h),  // supporting text
-    'color-foreground-subtle-on-dark':    toHex(0.78, Math.min(o.c * 0.06, 0.010), o.h),  // labels/metadata
-    'color-border-on-dark':               toHex(0.38, Math.min(o.c * 0.50, 0.08), o.h),  // dividers
+    'color-foreground-on-dark':        toHex(0.95, Math.min(o.c * 0.10, 0.015), o.h),
+    'color-foreground-muted-on-dark':  toHex(0.88, Math.min(o.c * 0.08, 0.012), o.h),
+    'color-foreground-subtle-on-dark': toHex(0.78, Math.min(o.c * 0.06, 0.010), o.h),
+    'color-border-on-dark':            toHex(0.38, Math.min(o.c * 0.50, 0.08), o.h),
   }
 }
 
-// ─── Variant derivation ───────────────────────────────────────────────────────
-// Four variants per input color — no more, no less.
-
-export type ColorVariants = {
-  base: string   // raw input hex
-  tint: string   // warm off-white section background
-  dark: string   // deep shade — dark sections + hover states
-  fg: string     // white or text-dark — WCAG-computed text ON this color
+/** A neutral at lightness L on the dark ground's hue, with its chroma rule. */
+function neutralAt(darkGroundHex: string, l: number, scale: number, cap: number): string {
+  const o = parseOklch(darkGroundHex)
+  return toHex(l, Math.min(o.c * scale, cap), o.h)
 }
 
-// Neutral near-white for the light internal-hero surface. Derived from the
-// primary hue at L 0.985 with near-zero chroma — a soft, brand-integrated
-// off-white that is NOT stark #fff and NOT the accent-derived bg-muted tint
-// (which the no-bg-muted lock bans for hero bands because accent1 can be vivid,
-// e.g. gold). Chroma capped at 0.006 keeps it visually neutral on every palette.
-export function deriveHeroTint(primaryHex: string): string {
-  const o = parseOklch(primaryHex)
-  return toHex(0.985, Math.min(o.c * 0.04, 0.006), o.h)
+// ─── Acceptance ───────────────────────────────────────────────────────────────
+
+export type Acceptance = {
+  /** The stored (or default) value. */
+  input: string
+  /** What renders. */
+  hex: string
+  adjusted: boolean
+  /** Lightness steps taken; the Studio shows it so a mis-typed colour is obvious. */
+  steps: number
 }
 
-export function deriveVariants(hex: string): ColorVariants {
-  const o = parseOklch(hex)
+const unchanged = (hex: string): Acceptance => ({input: hex, hex, adjusted: false, steps: 0})
 
-  // Tint: L pinned to 0.97, chroma scaled to 25% — floor at 0.025 to survive hex round-trip precision loss
-  const tint = toHex(0.97, chromaFloor(o.c, o.c * 0.25, 0.025), o.h)
-
-  // Dark: L at 60% of input, chroma preserved — never below 0.02
-  const dark = toHex(o.l * 0.60, chromaFloor(o.c, o.c, 0.02), o.h)
-
-  // Fg: white when it passes WCAG AA (4.5:1) against the base; otherwise a branded
-  // near-black derived from this color's own hue (not pure #000000).
-  const textDark = toHex(0.20, Math.min(o.c * 0.10, 0.015), o.h)
-  const whiteContrast = (wcagContrast(hex, '#ffffff') as number | undefined) ?? 1
-  const fg = whiteContrast >= 4.5 ? '#ffffff' : textDark
-
-  return {base: normHex(hex), tint, dark, fg}
+// The dark ground is accepted by measured contrast, not by a lightness ceiling
+// (design §7 amendment 13, as the Phase 14 challenge amended it): chroma is
+// capped at 0.10, then lightness steps down 0.02 until white reaches 7:1 and the
+// lightest text tier on dark reaches 4.5:1. The accent is deliberately NOT part
+// of the rule: it never decided an outcome across 22 inputs and 4 accents, and it
+// would make the ground depend on the accent. An ordinary navy (#000080) trips
+// the chroma cap; that is expected and the Studio shows it.
+export function acceptDarkGround(input: string): Acceptance {
+  const o = parseOklch(input)
+  const c = Math.min(o.c, 0.10)
+  const subtle = deriveInverseNeutrals(input)['color-foreground-subtle-on-dark']
+  let l = o.l
+  let steps = 0
+  let hex = mapped(l, c, o.h)
+  while (!(contrast('#ffffff', hex) >= 7 && contrast(subtle, hex) >= 4.5)) {
+    l = round6(l - 0.02)
+    steps++
+    if (l <= 0) { hex = '#000000'; break }
+    hex = mapped(l, c, o.h)
+  }
+  return {input, hex, adjusted: hex !== normHex(input), steps}
 }
 
-// ─── Approach types ───────────────────────────────────────────────────────────
+const lightStep = (ground: string, dl: number) => {
+  const o = parseOklch(ground)
+  return mapped(o.l - dl, Math.min(o.c, 0.03), o.h)
+}
+/** The card and alternation step: the ground at L −0.03, its own hue, chroma ≤0.03. */
+export const mutedOf = (ground: string) => lightStep(ground, 0.03)
+/** The tint band step: L −0.015 on the same rule. */
+export const heroTintOf = (ground: string) => lightStep(ground, 0.015)
 
-export type ColorApproach = 'monochromatic' | 'complementary' | 'analogous-accent'
+// The lightest text tier must be able to sit at 4.5:1 on the ground's own muted
+// step. A neutral at L 0.50 is the floor that keeps foreground-subtle visibly
+// apart from foreground-muted (at 0.45 the two collapsed on 495 of 513 grounds).
+const LIGHT_GROUND_PROBE_L = 0.50
 
-export type ColorInputs = {
-  primary: string
-  action?:  string | null  // complementary
-  accent1?: string | null  // analogous-accent tagline color
-  accent2?: string | null  // analogous-accent button/CTA color (optional)
+// An operator can type a mid or dark colour as the light ground. It is accepted
+// when the probe passes on its muted step; otherwise lightness steps UP 0.02 at
+// the input's own hue and chroma. White and every preset pass unchanged.
+export function acceptLightGround(input: string, darkGroundHex: string): Acceptance {
+  const probe = neutralAt(darkGroundHex, LIGHT_GROUND_PROBE_L, 0.06, 0.010)
+  const carries = (ground: string) => contrast(probe, mutedOf(ground)) >= 4.5
+  if (carries(input)) return unchanged(normHex(input))
+  const o = parseOklch(input)
+  let l = o.l
+  let steps = 0
+  let hex = input
+  do {
+    l = round6(l + 0.02)
+    steps++
+    hex = l >= 1 ? '#ffffff' : mapped(l, o.c, o.h)
+  } while (!carries(hex) && l < 1)
+  return {input: normHex(input), hex, adjusted: true, steps}
 }
 
-// ─── Role map ─────────────────────────────────────────────────────────────────
-
-export type RoleMap = {
-  'role-brand-dark':        string  // dark sections, footer, overlays
-  'role-muted':             string  // warm off-white section alternation (--color-muted, anchored — does NOT cascade)
-  'role-action':            string  // buttons, CTAs at rest
-  'role-action-hover':      string  // buttons, CTAs on hover
-  'role-action-fg':         string  // text on top of action-colored elements
-  'role-action-on-light':   string  // outlined button text on white/light bg — action if AA passes, else brand-dark
-  'role-tagline':           string  // tagline text on light backgrounds
-  'role-tagline-on-dark':   string  // tagline text on dark backgrounds (brightened for contrast)
-  'role-tagline-fg':        string  // text ON tagline-colored backgrounds (auto-paired by luminance)
-  'role-divider-on-light':  string  // hairline divider on light surfaces — mirrors color-border-light
-  'role-divider-on-dark':   string  // hairline divider on dark surfaces — mirrors color-border-on-dark
-  'role-hover-wash-on-light': string  // CSS expression — branded subtle hover bg for light surfaces (shadow-rgb @ 0.06)
-  'role-hover-wash-on-dark':  string  // CSS expression — branded subtle hover bg for dark surfaces (text-on-dark @ 8%)
+/** The first lightness from `from`, stepping `dir` by 0.02 at fixed hue and chroma, that satisfies `test`. */
+function stepLightness(from: {l: number; c: number; h: number}, dir: 1 | -1, test: (hex: string) => boolean): string | null {
+  for (let l = round6(from.l + dir * 0.02); dir > 0 ? l <= 1.0000001 : l > 0; l = round6(l + dir * 0.02)) {
+    const candidate = mapped(l, from.c, from.h)
+    if (test(candidate)) return candidate
+  }
+  return dir > 0 && test('#ffffff') ? '#ffffff' : null
 }
 
-// Brightened tagline variant for dark backgrounds.
-// Boosts L to 0.88 and scales C to 70% to keep color identity while ensuring AA contrast.
-function brightTagline(taglineHex: string): string {
-  const t = parseOklch(taglineHex)
+// A text colour ON a fill: white when it reaches 4.5:1, else a near-black in the
+// fill's own hue.
+const darkTextFor = (fill: string) => neutralAt(fill, 0.20, 0.10, 0.015)
+const textOn = (fill: string) => (contrast('#ffffff', fill) >= 4.5 ? '#ffffff' : darkTextFor(fill))
+
+// A mid-luminance fill (a brand red such as #E53935) fails with white AND with
+// dark text. The rendered fill moves to the nearest lightness, 0.02 at a time in
+// either direction, at which one of them passes; in practice one step, ΔE00 at
+// most 2.8, and only for inputs at OKLCH L 0.56 to 0.62.
+export function retoneFill(input: string): Acceptance {
+  const carries = (fill: string) => contrast('#ffffff', fill) >= 4.5 || contrast(darkTextFor(fill), fill) >= 4.5
+  if (carries(input)) return unchanged(normHex(input))
+  const o = parseOklch(input)
+  for (let k = 1; k <= 50; k++) {
+    const darker = mapped(o.l - 0.02 * k, o.c, o.h)
+    if (contrast('#ffffff', darker) >= 4.5) return {input: normHex(input), hex: darker, adjusted: true, steps: k}
+    const lighter = mapped(o.l + 0.02 * k, o.c, o.h)
+    if (contrast(darkTextFor(lighter), lighter) >= 4.5) return {input: normHex(input), hex: lighter, adjusted: true, steps: k}
+  }
+  return {input: normHex(input), hex: '#000000', adjusted: true, steps: 50}
+}
+
+// Brightened accent for dark grounds: L 0.88, chroma at 70%. It reaches 4.5:1 on
+// every accepted dark ground (lowest measured 5.31), and a test holds that.
+function accentOnDarkOf(accent: string): string {
+  const t = parseOklch(accent)
   return toHex(0.88, chromaFloor(t.c, t.c * 0.70, 0.015), t.h)
 }
 
-// Action button hover shade — direction is automatic based on fg luminance.
-// Light fill + dark text (e.g. amber): brightens on hover to avoid muddy darkening.
-// Dark fill + light text (e.g. navy, green): darkens on hover via L × 0.60.
-function actionHover(actionHex: string, fgHex: string): string {
-  const a = parseOklch(actionHex)
-  const f = parseOklch(fgHex)
-  if (f.l > 0.5) {
-    // Light text on dark fill → darken
-    return toHex(a.l * 0.60, chromaFloor(a.c, a.c, 0.02), a.h)
-  } else {
-    // Dark text on light fill → lighten
-    return toHex(Math.min(a.l + 0.07, 0.97), a.c, a.h)
+// Button hover: today's direction rule, unchanged where it already passes.
+function actionHoverOf(action: string, fg: string): string {
+  const a = parseOklch(action)
+  const lightText = parseOklch(fg).l > 0.5
+  const hover = lightText
+    ? toHex(a.l * 0.60, chromaFloor(a.c, a.c, 0.02), a.h)
+    : toHex(Math.min(a.l + 0.07, 0.97), a.c, a.h)
+  if (contrast(fg, hover) >= 4.5) return hover
+  const from = {l: lightText ? a.l * 0.60 : Math.min(a.l + 0.07, 0.97), c: a.c, h: a.h}
+  return stepLightness(from, lightText ? -1 : 1, (h) => contrast(fg, h) >= 4.5) ?? (lightText ? '#000000' : '#ffffff')
+}
+
+// ─── The resolved palette ─────────────────────────────────────────────────────
+
+export type ResolvedPalette = {
+  /** The four inputs after parsing and defaults, before any acceptance. */
+  inputs: {darkGround: string; lightGround: string; accent: string; action: string}
+  acceptance: {darkGround: Acceptance; lightGround: Acceptance; accent: Acceptance; action: Acceptance}
+  /** Every colour token by its CSS custom property name. */
+  tokens: Record<string, string>
+}
+
+export function resolvePalette(raw: ColourInputs = {}): ResolvedPalette {
+  const darkIn   = parseHexInput(raw.darkGround)  ?? COLOUR_DEFAULTS.darkGround
+  const lightIn  = parseHexInput(raw.lightGround) ?? COLOUR_DEFAULTS.lightGround
+  const accentIn = parseHexInput(raw.accent)      ?? COLOUR_DEFAULTS.accent
+  const actionIn = parseHexInput(raw.action)      ?? accentIn
+
+  const darkA   = acceptDarkGround(darkIn)
+  const lightA  = acceptLightGround(lightIn, darkIn)
+  const accentA = retoneFill(accentIn)
+  const actionA = retoneFill(actionIn)
+
+  const brandDark  = darkA.hex
+  const background = lightA.hex
+  const muted      = mutedOf(background)
+  const heroTint   = heroTintOf(background)
+  const lightGrounds = [background, heroTint, muted]
+  const accent = accentA.hex
+  const action = actionA.hex
+
+  const neutrals = deriveNeutrals(darkIn)
+  const inverse  = deriveInverseNeutrals(darkIn)
+
+  // Light text tiers by target ratio: each keeps its lightness where it already
+  // passes 4.5:1 on every light ground, else steps down 0.005. Only
+  // foreground-subtle ever moves (#8f8f8f measured 3.23:1 on white).
+  const byRatio = (today: string, ceiling: number, scale: number, cap: number) => {
+    if (passesOn(today, lightGrounds, 4.5)) return today
+    for (let l = round6(ceiling - 0.005); l >= 0; l = round6(l - 0.005)) {
+      const candidate = neutralAt(darkIn, l, scale, cap)
+      if (passesOn(candidate, lightGrounds, 4.5)) return candidate
+    }
+    return '#000000'
   }
-}
+  const foreground       = byRatio(neutrals['color-foreground-on-light'],        0.20, 0.10, 0.015)
+  const foregroundMuted  = byRatio(neutrals['color-foreground-muted-on-light'],  0.45, 0.08, 0.012)
+  const foregroundSubtle = byRatio(neutrals['color-foreground-subtle-on-light'], 0.65, 0.06, 0.010)
 
-// Outlined secondary button text on light/white bg — use action only if it passes WCAG AA
-// on BOTH white and the actual bg-light tint; otherwise fall back to brand-dark.
-// Checking bg-light catches vivid tints (e.g. purple) where action barely passes white but fails tint.
-function actionOnLight(actionHex: string, darkFallback: string, bgLight: string): string {
-  const onWhite   = (wcagContrast(actionHex, '#ffffff') as number | undefined) ?? 1
-  const onBgLight = (wcagContrast(actionHex, bgLight)   as number | undefined) ?? 1
-  return (onWhite >= 4.5 && onBgLight >= 4.5) ? normHex(actionHex) : darkFallback
-}
+  // Accent forms. accent-text is the accent AS TEXT: the accent itself where it
+  // reaches 4.5:1 on every light ground, else the accent stepped darker at a
+  // fixed hue (gold #C9A227 renders #846700; Justin chose fixed hue over a
+  // rotation toward orange, 2026-09-16). brand-dark only if stepping bottoms out,
+  // which the guarantee test shows never happens on an accepted light ground.
+  const accentOnDark = accentOnDarkOf(accent)
+  const accentText = passesOn(accent, lightGrounds, 4.5)
+    ? accent
+    : stepLightness(parseOklch(accent), -1, (h) => passesOn(h, lightGrounds, 4.5)) ?? brandDark
+  const accentFg = textOn(accent)
 
-// Focus ring color — use action if it meets 3:1 contrast on both white and bg-light;
-// otherwise brand-dark which is always contrast-safe by construction.
-// 3:1 is the WCAG SC 1.4.11 threshold for non-text contrast (focus indicators).
-function ringFocus(actionHex: string, brandDark: string, bgLight: string): string {
-  const onWhite   = (wcagContrast(actionHex, '#ffffff') as number | undefined) ?? 1
-  const onBgLight = (wcagContrast(actionHex, bgLight)   as number | undefined) ?? 1
-  return (onWhite >= 3.0 && onBgLight >= 3.0) ? normHex(actionHex) : brandDark
-}
+  // Action forms.
+  const actionFg    = textOn(action)
+  const actionHover = actionHoverOf(action, actionFg)
+  // Outlined and tertiary button text on light grounds: the action where it
+  // passes, else brand-dark (a passing pair on every accepted ground).
+  const actionText  = passesOn(action, lightGrounds, 4.5) ? action : brandDark
+  // On dark grounds: the action where it reaches 4.5:1, else the action stepped
+  // LIGHTER at its own hue (white ends the loop, because an accepted dark ground
+  // gives white ≥7:1). The raw action measured 3.21:1 on every built client.
+  const actionTextOnDark = contrast(action, brandDark) >= 4.5
+    ? action
+    : stepLightness(parseOklch(action), 1, (h) => contrast(h, brandDark) >= 4.5) ?? '#ffffff'
 
-// Focus ring color for dark surfaces — use action if it meets 3:1 against brand-dark;
-// otherwise tagline-on-dark which is brightened for dark backgrounds and passes 4.5:1
-// on brand-dark by construction (validated in validateWcag). Example: a warm action
-// (~7.6:1 on a dark primary) passes 3:1 directly so no fallback is needed.
-function ringFocusOnDark(actionHex: string, brandDark: string, taglineOnDark: string): string {
-  const onBrandDark = (wcagContrast(actionHex, brandDark) as number | undefined) ?? 1
-  return onBrandDark >= 3.0 ? normHex(actionHex) : taglineOnDark
-}
+  // Focus rings, WCAG 1.4.11 3:1: the action where it clears every light ground
+  // and the white ring offset, else brand-dark; on dark, the action where it
+  // clears brand-dark, else the brightened accent.
+  const ringFocus       = passesOn(action, [...lightGrounds, '#ffffff'], 3) ? action : brandDark
+  const ringFocusOnDark = contrast(action, brandDark) >= 3 ? action : accentOnDark
 
-// Filled-star outline — WCAG SC 1.4.11 (OUTSTANDING item 13, ruled 2026-07-19
-// under "Accessibility wins over convention"). The star FILL stays the raw
-// action color on every surface (the stars-are-gold cultural convention); the
-// OUTLINE is what carries the 3:1 non-text contrast requirement for the
-// star's shape, so the convention and the requirement are both satisfied.
-//
-// Two tokens, one per surface family, swapped by the standard dark-surface
-// cascade rule in globals.css (the ring-focus / border / accent precedent):
-//
-//   --color-star-outline          light surfaces (white bg-background,
-//                                 bg-muted, bg-hero-tint)
-//   --color-star-outline-on-dark  bg-brand-dark sections
-//
-// Derivation principle: the outline only MATERIALIZES where the fill alone
-// cannot carry the shape. If the fill already clears 3:1 against every
-// surface in the family, the outline token is the fill color itself — an
-// invisible stroke, so a dark-green action star stays pure dark-green on
-// white, and a gold star stays pure gold on brand-dark. Where the fill
-// fails, the outline steps in:
-//   - light surfaces: step the fill's OKLCH lightness down (hue and chroma
-//     preserved, so it reads as "darker gold", not a foreign ring) until it
-//     clears 3:1 against all three light surfaces; brand-dark fallback if
-//     stepping bottoms out (brand-dark is light-surface-safe by construction).
-//   - brand-dark: taglineOnDark, which is brightened to pass on brand-dark
-//     by construction (validated in validateWcag) — a light rim that keeps a
-//     dark fill's shape perceivable on dark sections.
-function starOutline(fillHex: string, brandDark: string, lightSurfaces: string[]): string {
-  const clears = (hex: string) =>
-    lightSurfaces.every((bg) => ((wcagContrast(hex, bg) as number | undefined) ?? 1) >= 3.0)
-  if (clears(fillHex)) return normHex(fillHex)
-  const f = parseOklch(fillHex)
-  for (let l = f.l - 0.08; l >= 0.12; l -= 0.02) {
-    const candidate = toHex(l, f.c, f.h)
-    if (clears(candidate)) return candidate
-  }
-  return brandDark
-}
-
-function starOutlineOnDark(fillHex: string, brandDark: string, taglineOnDark: string): string {
-  const onBrandDark = (wcagContrast(fillHex, brandDark) as number | undefined) ?? 1
-  return onBrandDark >= 3.0 ? normHex(fillHex) : taglineOnDark
-}
-
-// Hover-wash role tokens are CSS expressions, not hex values. They reference
-// --shadow-rgb (light) and --color-foreground-on-dark (dark) — both injected by
-// buildColorCSS — so the wash auto-tunes per brand. Identical across all
-// three approaches (no approach-specific input drives them).
-const HOVER_WASH_ON_LIGHT = 'rgb(var(--shadow-rgb) / 0.06)'
-const HOVER_WASH_ON_DARK  = 'color-mix(in oklch, var(--color-foreground-on-dark) 8%, transparent)'
-
-export function buildRoleMap(approach: ColorApproach, inputs: ColorInputs): RoleMap {
-  const primary = deriveVariants(inputs.primary)
-  // Divider role tokens mirror the existing branded neutral/inverse-neutral
-  // pair. Computed from primary, identical across all three approaches.
-  const neutrals        = deriveNeutrals(inputs.primary)
-  const inverseNeutrals = deriveInverseNeutrals(inputs.primary)
-  const dividerOnLight  = neutrals['color-border-light']
-  const dividerOnDark   = inverseNeutrals['color-border-on-dark']
-
-  if (approach === 'monochromatic') {
-    return {
-      'role-brand-dark':        primary.dark,
-      'role-muted':             primary.tint,
-      'role-action':            primary.base,
-      'role-action-hover':      actionHover(primary.base, primary.fg),
-      'role-action-fg':         primary.fg,
-      'role-action-on-light':   actionOnLight(primary.base, primary.dark, primary.tint),
-      'role-tagline':           primary.base,
-      'role-tagline-on-dark':   brightTagline(primary.base),
-      'role-tagline-fg':        primary.fg,
-      'role-divider-on-light':  dividerOnLight,
-      'role-divider-on-dark':   dividerOnDark,
-      'role-hover-wash-on-light': HOVER_WASH_ON_LIGHT,
-      'role-hover-wash-on-dark':  HOVER_WASH_ON_DARK,
+  // Star outline (item 13, "accessibility wins over convention"): the fill stays
+  // the raw action; the outline only materialises where the fill cannot carry
+  // the star's shape at 3:1.
+  let starOutline = brandDark
+  if (passesOn(action, lightGrounds, 3)) starOutline = action
+  else {
+    const f = parseOklch(action)
+    for (let l = f.l - 0.08; l >= 0.12; l -= 0.02) {
+      const candidate = toHex(l, f.c, f.h)
+      if (passesOn(candidate, lightGrounds, 3)) { starOutline = candidate; break }
     }
   }
+  const starOutlineOnDark = contrast(action, brandDark) >= 3 ? action : accentOnDark
 
-  if (approach === 'complementary') {
-    const action = deriveVariants(inputs.action ?? inputs.primary)
-    return {
-      'role-brand-dark':        primary.dark,
-      'role-muted':             primary.tint,
-      'role-action':            action.base,
-      'role-action-hover':      actionHover(action.base, action.fg),
-      'role-action-fg':         action.fg,
-      'role-action-on-light':   actionOnLight(action.base, primary.dark, primary.tint),
-      'role-tagline':           action.base,
-      'role-tagline-on-dark':   brightTagline(action.base),
-      'role-tagline-fg':        action.fg,
-      'role-divider-on-light':  dividerOnLight,
-      'role-divider-on-dark':   dividerOnDark,
-      'role-hover-wash-on-light': HOVER_WASH_ON_LIGHT,
-      'role-hover-wash-on-dark':  HOVER_WASH_ON_DARK,
-    }
+  // The boundary of a control whose only visible edge is its border (form
+  // fields, inactive carousel dots, empty stars), WCAG 1.4.11 3:1. The divider
+  // colour (--color-border) is decorative and stays as it was.
+  let borderControl = '#000000'
+  for (let l = 0.92; l >= 0; l = round6(l - 0.005)) {
+    const candidate = neutralAt(darkIn, l, 0.06, 0.010)
+    if (passesOn(candidate, lightGrounds, 3)) { borderControl = candidate; break }
+  }
+  let borderControlOnDark = '#ffffff'
+  for (let l = 0.38; l <= 1; l = round6(l + 0.005)) {
+    const candidate = neutralAt(darkIn, l, 0.06, 0.010)
+    if (contrast(candidate, brandDark) >= 3) { borderControlOnDark = candidate; break }
   }
 
-  // analogous-accent: accent1 → tagline, accent2 → buttons/CTAs
-  const accent1 = deriveVariants(inputs.accent1 ?? inputs.primary)
-  const accent2 = inputs.accent2 ? deriveVariants(inputs.accent2) : accent1
+  // The image-band and glass-dark scrim: brand-dark capped at L 0.20. At 80%
+  // over the worst photo pixel (white) that is the lightest scrim under which
+  // every dark text tier holds. #141414 is L 0.191, so no built client moves.
+  const bd = parseOklch(brandDark)
+  const scrim = bd.l > 0.20 ? mapped(0.20, bd.c, bd.h) : brandDark
+
+  const tokens: Record<string, string> = {
+    '--color-background':               background,
+    '--color-muted':                    muted,
+    '--color-hero-tint':                heroTint,
+    '--color-brand-dark':               brandDark,
+    '--color-scrim':                    scrim,
+    '--shadow-rgb':                     hexToRgbTriplet(foreground),
+    // Cascade-aware light values, and their static on-light twins for light
+    // islands inside dark containers ([data-ring-context="light"]).
+    '--color-foreground':               foreground,
+    '--color-foreground-on-light':      foreground,
+    '--color-foreground-muted':         foregroundMuted,
+    '--color-foreground-muted-on-light': foregroundMuted,
+    '--color-foreground-subtle':        foregroundSubtle,
+    '--color-foreground-subtle-on-light': foregroundSubtle,
+    '--color-border':                   neutrals['color-border-light'],
+    '--color-border-on-light':          neutrals['color-border-light'],
+    '--color-border-control':           borderControl,
+    '--color-border-control-on-light':  borderControl,
+    // Dark targets the cascade swaps to.
+    '--color-foreground-on-dark':        inverse['color-foreground-on-dark'],
+    '--color-foreground-muted-on-dark':  inverse['color-foreground-muted-on-dark'],
+    '--color-foreground-subtle-on-dark': inverse['color-foreground-subtle-on-dark'],
+    '--color-border-on-dark':            inverse['color-border-on-dark'],
+    '--color-border-control-on-dark':    borderControlOnDark,
+    // Accent.
+    '--color-accent':                   accent,
+    '--color-accent-on-light':          accent,
+    '--color-accent-fg':                accentFg,
+    '--color-accent-on-dark':           accentOnDark,
+    '--color-accent-text':              accentText,
+    '--color-accent-text-on-light':     accentText,
+    // Action.
+    '--color-action':                   action,
+    '--color-action-fg':                actionFg,
+    '--color-action-hover':             actionHover,
+    '--color-action-text':              actionText,
+    '--color-action-text-on-light':     actionText,
+    '--color-action-text-on-dark':      actionTextOnDark,
+    // Hover washes are CSS expressions that retune through --shadow-rgb.
+    '--color-hover-wash':               'rgb(var(--shadow-rgb) / 0.06)',
+    '--color-hover-wash-on-dark':       'color-mix(in oklch, var(--color-foreground-on-dark) 8%, transparent)',
+    // Focus and stars.
+    '--color-ring-focus':               ringFocus,
+    '--color-ring-focus-on-light':      ringFocus,
+    '--color-ring-focus-on-dark':       ringFocusOnDark,
+    '--color-star-fill':                action,
+    '--color-star-outline':             starOutline,
+    '--color-star-outline-on-light':    starOutline,
+    '--color-star-outline-on-dark':     starOutlineOnDark,
+  }
 
   return {
-    'role-brand-dark':        primary.dark,
-    'role-muted':             accent1.tint,
-    'role-action':            accent2.base,
-    'role-action-hover':      actionHover(accent2.base, accent2.fg),
-    'role-action-fg':         accent2.fg,
-    'role-action-on-light':   actionOnLight(accent2.base, primary.dark, accent1.tint),
-    'role-tagline':           accent1.base,
-    'role-tagline-on-dark':   brightTagline(accent1.base),
-    'role-tagline-fg':        accent1.fg,
-    'role-divider-on-light':  dividerOnLight,
-    'role-divider-on-dark':   dividerOnDark,
-    'role-hover-wash-on-light': HOVER_WASH_ON_LIGHT,
-    'role-hover-wash-on-dark':  HOVER_WASH_ON_DARK,
+    inputs: {darkGround: darkIn, lightGround: lightIn, accent: accentIn, action: actionIn},
+    acceptance: {darkGround: darkA, lightGround: lightA, accent: accentA, action: actionA},
+    tokens,
   }
 }
 
@@ -329,42 +447,58 @@ export function buildRoleMap(approach: ColorApproach, inputs: ColorInputs): Role
 export type WcagResult = {
   pair: string
   ratio: number
+  /** The threshold this pair must meet: 4.5 text, 3 non-text or a warning bar. */
+  min: number
   passes: boolean
-  blocking: boolean  // true = cannot publish; false = warning only
+  /** True for a WCAG 2.2 AA requirement the engine guarantees; false for a design warning. */
+  blocking: boolean
 }
 
-// Default primaryHex matches buildColorCSS's runtime fallback per the
-// fail-to-client-branded-fallback doctrine. The template ships with a neutral
-// fallback (#1a1a1a); the Client Provisioning Tool rewrites both this default
-// and the buildColorCSS fallback at provisioning time from CS-CLIENT-CONFIG's
-// primaryColor. See BI/skills/skill-color-system/SKILL.md → "Fallback values".
-export function validateWcag(roles: RoleMap, primaryHex = '#1a1a1a'): WcagResult[] {
-  const neutrals = deriveNeutrals(primaryHex)
-  const inverseNeutrals = deriveInverseNeutrals(primaryHex)
-
+// The token-level pairs every rendered surface relies on. The component-level
+// pairings (a light card inside a dark band, and so on) are held by component
+// tests; this list is what an operator's colour choice can move.
+export function validateWcag(palette: ResolvedPalette): WcagResult[] {
+  const t = palette.tokens
   const results: WcagResult[] = []
-  const check = (pair: string, fg: string, bg: string, blocking: boolean) => {
-    const ratio = Math.round(((wcagContrast(fg, bg) as number | undefined) ?? 1) * 100) / 100
-    results.push({pair, ratio, passes: ratio >= 4.5, blocking})
+  const check = (pair: string, fg: string, bg: string, min: number, blocking = true) => {
+    const ratio = Math.round(contrast(fg, bg) * 100) / 100
+    results.push({pair, ratio, min, passes: contrast(fg, bg) >= min, blocking})
   }
-
-  check('action-fg on action',              roles['role-action-fg'],                        roles['role-action'],     true)
-  check('accent-fg on accent',              roles['role-tagline-fg'],                       roles['role-tagline'],    true)
-  check('foreground on muted',              neutrals['color-foreground-on-light'],          roles['role-muted'],      true)
-  check('white on brand-dark',              '#ffffff',                                       roles['role-brand-dark'], true)
-  check('foreground-on-dark on brand-dark', inverseNeutrals['color-foreground-on-dark'],    roles['role-brand-dark'], true)
-  check('accent-on-dark on brand-dark',     roles['role-tagline-on-dark'],                  roles['role-brand-dark'], true)
-  check('action-text on white',             roles['role-action-on-light'],                  '#ffffff',                true)
-  check('action-text on muted',             roles['role-action-on-light'],                  roles['role-muted'],      true)
-  check('action on muted',                  roles['role-action'],                           roles['role-muted'],      false)
-  check('accent on muted',                  roles['role-tagline'],                          roles['role-muted'],      false)
-  // accent-on-dark is brightened to L 0.88 by brightTagline() and is designed
-  // to be paired with brand-dark only. Pairing it with white always fails 4.5:1
-  // by construction. This pair is a documented incompatibility tripwire — kept
-  // as warning-only (not blocking) so it surfaces for awareness in studio
-  // without permanently red-flagging every palette.
-  check('accent-on-dark on white',          roles['role-tagline-on-dark'],                  '#ffffff',                false)
-
+  const lightGrounds: Array<[string, string]> = [
+    ['background', t['--color-background']],
+    ['hero-tint', t['--color-hero-tint']],
+    ['muted', t['--color-muted']],
+  ]
+  for (const [name, ground] of lightGrounds) {
+    check(`foreground on ${name}`,        t['--color-foreground'],        ground, 4.5)
+    check(`foreground-muted on ${name}`,  t['--color-foreground-muted'],  ground, 4.5)
+    check(`foreground-subtle on ${name}`, t['--color-foreground-subtle'], ground, 4.5)
+    check(`accent-text on ${name}`,       t['--color-accent-text'],       ground, 4.5)
+    check(`action-text on ${name}`,       t['--color-action-text'],       ground, 4.5)
+    check(`ring-focus on ${name}`,        t['--color-ring-focus'],        ground, 3)
+    check(`star-outline on ${name}`,      t['--color-star-outline'],      ground, 3)
+    check(`border-control on ${name}`,    t['--color-border-control'],    ground, 3)
+  }
+  const dark = t['--color-brand-dark']
+  check('white on brand-dark',                    '#ffffff',                           dark, 7)
+  check('foreground-on-dark on brand-dark',       t['--color-foreground-on-dark'],     dark, 4.5)
+  check('foreground-muted-on-dark on brand-dark', t['--color-foreground-muted-on-dark'], dark, 4.5)
+  check('foreground-subtle-on-dark on brand-dark', t['--color-foreground-subtle-on-dark'], dark, 4.5)
+  check('accent-on-dark on brand-dark',           t['--color-accent-on-dark'],         dark, 4.5)
+  check('action-text-on-dark on brand-dark',      t['--color-action-text-on-dark'],    dark, 4.5)
+  check('ring-focus-on-dark on brand-dark',       t['--color-ring-focus-on-dark'],     dark, 3)
+  check('star-outline-on-dark on brand-dark',     t['--color-star-outline-on-dark'],   dark, 3)
+  check('border-control-on-dark on brand-dark',   t['--color-border-control-on-dark'], dark, 3)
+  check('brand-dark on foreground-on-dark',       dark, t['--color-foreground-on-dark'], 4.5)
+  check('action-fg on action',                    t['--color-action-fg'], t['--color-action'],       4.5)
+  check('action-fg on action-hover',              t['--color-action-fg'], t['--color-action-hover'], 4.5)
+  check('accent-fg on accent',                    t['--color-accent-fg'], t['--color-accent'],       4.5)
+  // Warnings: design signals, not WCAG requirements. An accent icon beside its
+  // own text is exempt from 1.4.11, so the raw accent on the page is a warning;
+  // heading emphasis that reads too close to the heading's own colour is a design
+  // warning (coral on cream measured 2.94).
+  check('accent on background (graphics beside text)', t['--color-accent'], t['--color-background'], 3, false)
+  check('accent-text against foreground (emphasis distinctness)', t['--color-accent-text'], t['--color-foreground'], 3, false)
   return results
 }
 
@@ -604,148 +738,15 @@ export function buildDesignTokenCSS(
     `}`
   )
 }
-
 // ─── Color CSS — main entry point ─────────────────────────────────────────────
+// One :root block of every colour token, from the four role inputs. Absent or
+// unparsable inputs fall to COLOUR_DEFAULTS, which is the render every built
+// client already has, so a site with no brand colour renders as it always did
+// except where a pair failed WCAG 2.2 AA (§7 amendment 19).
 
-export type DesignColorSettings = {
-  colorApproach?: string | null
-  primaryColor?:  string | null
-  actionColor?:   string | null
-  accent1Color?:  string | null
-  accent2Color?:  string | null
-}
-
-export function buildColorCSS(settings: DesignColorSettings): string {
-  const approach = (settings.colorApproach ?? 'analogous-accent') as ColorApproach
-
-  // Fail-to-client-branded-fallback per platform doctrine. In the template the fallback
-  // is a neutral gray; rewritten per-client by the Client Provisioning Tool during
-  // provisioning. Production state is always branded via cascade resolution from
-  // settings.primaryColor; fallback state (broken Sanity config, FOUC milliseconds,
-  // missing client palette) should also look branded rather than obviously
-  // broken-grey. See BI/skills/skill-color-system/SKILL.md → "Fallback values"
-  // for the full doctrine + multi-client safety mechanism (per-client rewriting).
-  const inputs: ColorInputs = {
-    primary: settings.primaryColor ?? '#1a1a1a',
-    action:  settings.actionColor ?? null,
-    accent1: settings.accent1Color ?? null,
-    accent2: settings.accent2Color ?? null,
-  }
-
-  const roles = buildRoleMap(approach, inputs)
-
-  // Build the :root block
-  const vars: Record<string, string> = {}
-
-  // Role tokens — new components use these
-  for (const [k, v] of Object.entries(roles)) {
-    vars[`--${k}`] = v
-  }
-
-  // Neutral scale — derived from primary hue. All four light-surface keys are
-  // emitted as cascade-aware aliases below (--color-foreground, -muted, -subtle,
-  // --color-border). The raw on-light values are also emitted as static
-  // --color-foreground-on-light etc. so components can locally reset cascade
-  // (e.g. Button primary-on-dark white-flip needs the light text value back
-  // inside a dark parent).
-  const neutrals = deriveNeutrals(inputs.primary)
-  for (const [k, v] of Object.entries(neutrals)) {
-    if (k === 'color-foreground-on-light') continue
-    if (k === 'color-foreground-muted-on-light') continue
-    if (k === 'color-foreground-subtle-on-light') continue
-    if (k === 'color-border-light') continue
-    vars[`--${k}`] = v
-  }
-
-  // Shadow RGB — text-dark as R G B triplet for use in rgb(var(--shadow-rgb) / α)
-  vars['--shadow-rgb'] = hexToRgbTriplet(neutrals['color-foreground-on-light'])
-
-  // Inverse neutral scale — derived from primary hue
-  for (const [k, v] of Object.entries(deriveInverseNeutrals(inputs.primary))) {
-    vars[`--${k}`] = v
-  }
-
-  // Canonical color aliases — consumer-facing names that Tailwind v4
-  // wires into utility classes (bg-*, text-*, etc.). These mirror role
-  // tokens but live in the --color-* namespace because Tailwind utility
-  // generation is namespaced to --color-*.
-  vars['--color-action']             = roles['role-action']
-  vars['--color-action-fg']          = roles['role-action-fg']
-  vars['--color-action-hover']       = roles['role-action-hover']
-  // Cascade-aware action-text — outlined-button text + tertiary-style action
-  // accents. Light surface = action-on-light AA-fallback value (action color
-  // OR brand-dark when action vivid); dark surface = raw action color (always
-  // passes contrast against brand-dark by construction). Cascade rule swaps.
-  vars['--color-action-text']         = roles['role-action-on-light']
-  vars['--color-action-text-on-dark'] = roles['role-action']
-  // --color-muted is the warm off-white alternation surface. Anchored to :root
-  // (does NOT participate in the dark-surface cascade) — section-fill role,
-  // not a surface-context-sensitive value.
-  vars['--color-muted']              = roles['role-muted']
-  // Neutral hero-tint surface for the light internal-hero scheme (bg-hero-tint).
-  // Anchored to :root (does NOT cascade) — a surface fill, not a contextual value.
-  vars['--color-hero-tint']          = deriveHeroTint(inputs.primary)
-  vars['--color-brand-dark']         = roles['role-brand-dark']
-  // Cascade-aware border — --color-border holds the light-surface value at :root
-  // and is reassigned to var(--color-border-on-dark) inside .bg-brand-dark and
-  // [data-ring-context="dark"] containers (see globals.css cascade rule).
-  // (--color-border-on-dark itself is emitted via the inverseNeutrals loop above
-  // as the dark-variant value the cascade rule swaps to.)
-  vars['--color-border']             = roles['role-divider-on-light']
-  // Cascade-aware foreground — body text. Default = on-light; cascade reassigns
-  // to var(--color-foreground-on-dark) on dark surfaces.
-  vars['--color-foreground']           = neutrals['color-foreground-on-light']
-  // Static on-light escape hatch — same value as --color-foreground at :root,
-  // but NOT swapped by the cascade rule. Used by Button primary-on-dark
-  // white-flip variant (which sits inside a dark parent yet needs the light
-  // text value): `[--color-foreground:var(--color-foreground-on-light)]`.
-  vars['--color-foreground-on-light']  = neutrals['color-foreground-on-light']
-  // Cascade-aware foreground-muted — supporting text. Default = on-light;
-  // cascade reassigns to var(--color-foreground-muted-on-dark) on dark surfaces.
-  vars['--color-foreground-muted']     = neutrals['color-foreground-muted-on-light']
-  // Cascade-aware foreground-subtle — labels/metadata text. Default = on-light;
-  // cascade reassigns to var(--color-foreground-subtle-on-dark) on dark surfaces.
-  vars['--color-foreground-subtle']    = neutrals['color-foreground-subtle-on-light']
-  // Cascade-aware hover wash — same cascade pattern. CSS expressions resolve
-  // at use site: light = rgb(var(--shadow-rgb) / 0.06), dark = color-mix on
-  // text-on-dark @ 8%. Both auto-tune per brand.
-  vars['--color-hover-wash']         = roles['role-hover-wash-on-light']
-  vars['--color-hover-wash-on-dark'] = roles['role-hover-wash-on-dark']
-  vars['--color-ring-focus']         = ringFocus(roles['role-action'], roles['role-brand-dark'], roles['role-muted'])
-  vars['--color-ring-focus-on-dark'] = ringFocusOnDark(roles['role-action'], roles['role-brand-dark'], roles['role-tagline-on-dark'])
-  // Star tokens — StarRating fill + shape outline (WCAG SC 1.4.11, item 13).
-  // Fill = raw action color (stars-are-gold convention; anchored, never
-  // cascades — the whole point is that filled stars look the same on every
-  // surface). Outline = cascade-aware pair derived to clear 3:1 on every
-  // surface StarRating renders on: --color-star-outline holds the
-  // light-surface value at :root and the standard dark-surface cascade rule
-  // swaps it to --color-star-outline-on-dark inside .bg-brand-dark /
-  // [data-ring-context="dark"] containers. See starOutline()/
-  // starOutlineOnDark() for the derivation contract. Dedicated tokens rather
-  // than raw `text-action` so the component needs no
-  // `platform/no-text-action-raw` carve-out — the rule keeps zero exceptions.
-  vars['--color-star-fill']    = roles['role-action']
-  vars['--color-star-outline'] = starOutline(
-    roles['role-action'],
-    roles['role-brand-dark'],
-    ['#ffffff', roles['role-muted'], vars['--color-hero-tint'] as string],
-  )
-  vars['--color-star-outline-on-dark'] = starOutlineOnDark(
-    roles['role-action'],
-    roles['role-brand-dark'],
-    roles['role-tagline-on-dark'],
-  )
-  // Cascade-aware accent — --color-accent holds the light-surface value at :root
-  // (= tagline color) and is reassigned to var(--color-accent-on-dark) inside
-  // .bg-brand-dark and [data-ring-context="dark"] containers via the cascade rule.
-  // --color-accent-fg is luminance-paired against the light-surface accent value
-  // (text on tagline-colored TopBar backgrounds — light-surface only consumer).
-  vars['--color-accent']             = roles['role-tagline']
-  vars['--color-accent-fg']          = roles['role-tagline-fg']
-  vars['--color-accent-on-dark']     = roles['role-tagline-on-dark']
-
-  const css = Object.entries(vars).map(([k, v]) => `${k}:${v}`).join(';')
-  return `:root{${css}}`
+export function buildColorCSS(inputs: ColourInputs = {}): string {
+  const {tokens} = resolvePalette(inputs)
+  return `:root{${Object.entries(tokens).map(([k, v]) => `${k}:${v}`).join(';')}}`
 }
 
 // ─── Sidebar design settings (WS-Sidebar Phase 2.1) ───────────────────────────
