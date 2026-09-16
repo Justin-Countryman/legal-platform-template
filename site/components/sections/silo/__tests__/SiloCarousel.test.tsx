@@ -69,6 +69,8 @@ describe('SiloCarousel — mobile swipe carousel a11y + structure', () => {
     expect(dots[1].getAttribute('aria-current')).toBeNull()
     // Dot label is descriptive (uses the practice-area name, not just an index).
     expect(dots[0].getAttribute('aria-label')).toContain('Family Law')
+    // An inactive dot is a control whose only mark is its fill: 3:1, not the divider colour (Phase 14).
+    expect(dots[1].querySelector('span')!.className.split(' ')).toContain('bg-border-control')
   })
 
   it('decorative media is never exposed to assistive tech (empty alt)', () => {

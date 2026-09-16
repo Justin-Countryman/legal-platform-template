@@ -85,11 +85,11 @@ describe('StarRating — SC 1.4.11 shape outline', () => {
     })
   })
 
-  it('empty stars stay unoutlined text-border glyphs', () => {
+  it('empty stars stay unoutlined text-border-control glyphs', () => {
     const {container} = render(<StarRating count={2} total={5} />)
     const svgs = Array.from(container.querySelectorAll('svg'))
     svgs.slice(2).forEach((svg) => {
-      expect(svg.classList.contains('text-border')).toBe(true)
+      expect(svg.classList.contains('text-border-control')).toBe(true)
       expect(svg.getAttribute('stroke')).toBeNull()
     })
   })
@@ -131,21 +131,21 @@ describe('StarRating — className composition', () => {
 // ─── Token contract (filled vs empty colors) ──────────────────────────────────
 
 describe('StarRating — token contract', () => {
-  it('first `count` stars use anchored text-star-fill; remaining use text-border', () => {
+  it('first `count` stars use anchored text-star-fill; remaining use text-border-control (3:1)', () => {
     const {container} = render(<StarRating count={3} total={5} />)
     const svgs = container.querySelectorAll('svg')
     // Stars 0..2 filled, 3..4 empty.
     expect(svgs[0].classList.contains('text-star-fill')).toBe(true)
     expect(svgs[1].classList.contains('text-star-fill')).toBe(true)
     expect(svgs[2].classList.contains('text-star-fill')).toBe(true)
-    expect(svgs[3].classList.contains('text-border')).toBe(true)
-    expect(svgs[4].classList.contains('text-border')).toBe(true)
+    expect(svgs[3].classList.contains('text-border-control')).toBe(true)
+    expect(svgs[4].classList.contains('text-border-control')).toBe(true)
   })
 
-  it('count=0 → all stars use text-border', () => {
+  it('count=0 → all stars use text-border-control', () => {
     const {container} = render(<StarRating count={0} total={5} />)
     const svgs = container.querySelectorAll('svg')
-    svgs.forEach((svg) => expect(svg.classList.contains('text-border')).toBe(true))
+    svgs.forEach((svg) => expect(svg.classList.contains('text-border-control')).toBe(true))
   })
 
   it('count=total → all stars use text-star-fill', () => {

@@ -39,9 +39,9 @@ const GAP_CLASS: Record<Size, string> = {
 // cascade swaps it inside bg-brand-dark sections; on either side the stroke
 // collapses to the fill color (invisible) when the fill alone already
 // carries the shape. Dedicated tokens (not raw `text-action`) so
-// `platform/no-text-action-raw` needs no carve-out here. Empty stars use the
-// light border color so the trailing dim stars still register as a 5-star
-// scale.
+// `platform/no-text-action-raw` needs no carve-out here. Empty stars use
+// `--color-border-control`, the 3:1 boundary of a control, so the trailing
+// stars still register as a 5-star scale on any palette (Phase 14).
 
 export function StarRating({count, total = 5, size = 'sm', className}: Props) {
   const wrapperCls = [
@@ -60,7 +60,7 @@ export function StarRating({count, total = 5, size = 'sm', className}: Props) {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
-            className={[SIZE_CLASS[size], filled ? 'text-star-fill' : 'text-border'].join(' ')}
+            className={[SIZE_CLASS[size], filled ? 'text-star-fill' : 'text-border-control'].join(' ')}
             // Shape outline on filled stars only (SC 1.4.11 — see header
             // comment). strokeLinejoin=round keeps the star's points from
             // spiking (miter joins on acute star tips overshoot the glyph).

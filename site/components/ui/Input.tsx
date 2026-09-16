@@ -12,7 +12,7 @@ type Props = InputHTMLAttributes<HTMLInputElement> & {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const BASE = [
-  'block w-full rounded-ui border border-border',
+  'block w-full rounded-ui border border-border-control',
   'bg-background text-base text-foreground',
   'min-h-11 py-2',
   'placeholder:text-foreground-subtle',
