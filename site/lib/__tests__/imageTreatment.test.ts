@@ -101,3 +101,53 @@ describe('TREATMENT_CLASSES', () => {
     expect(TREATMENT_CLASSES.rounded.wrapper).toContain('rounded-ui')
   })
 })
+
+// ─── Phase 13's two placements (WS-V1-PHASE13-DESIGN §7 amendment 8) ──────────
+//
+// Requirement 6 as written would have changed a live band on every client, so it
+// is narrowed here and the narrowing is pinned.
+
+describe('the section background (Phase 13)', () => {
+  it('keeps today’s FLAT scrim, so no existing image band moves', () => {
+    // `SectionShell` renders `<div class="absolute inset-0 bg-brand-dark/80">`.
+    // The `scrim` treatment Phase 11 shipped is a GRADIENT
+    // (`after:bg-linear-to-t after:from-brand-dark/80`), so applying it to a
+    // section background would have re-scrimmed every image band on every
+    // client — against Phase 11 amendment 4's own promise. The treatment is
+    // therefore NOT applied to section backgrounds in Phase 13.
+    expect(TREATMENT_CLASSES.scrim.wrapper).toContain('after:bg-linear-to-t')
+    expect(TREATMENT_CLASSES.scrim.wrapper).not.toContain('bg-brand-dark/80 ')
+  })
+
+  it('tint on a section background removes the dark wash, which is why it is cut', () => {
+    // `resolveTreatment` deliberately EXEMPTS sectionBackground from the
+    // tint-to-plain guard, so a tint there is a 20%-accent multiply with no dark
+    // wash at all, and the band's white text would sit on a bare photograph.
+    expect(resolveTreatment('tint', null, 'sectionBackground', true)).toBe('tint')
+    expect(TREATMENT_CLASSES.tint.wrapper).not.toContain('brand-dark')
+  })
+})
+
+describe('the attorney card photo (Phase 13)', () => {
+  it('offers plain and framed; rounded is deferred with its reason', () => {
+    // `rounded` puts 8px on all four corners of a photo box sitting flush inside
+    // a `rounded-ui overflow-hidden` card, so the bottom two corners show two
+    // notches of card background. It needs `rounded-t-ui` — a PLACEMENT argument
+    // `resolveTreatment(value, siteDefault, context)` has nowhere to put.
+    expect(ALLOWED_TREATMENTS.attorneyCard).toEqual(['plain', 'framed', 'rounded'])
+    expect(resolveTreatment('framed', null, 'attorneyCard')).toBe('framed')
+    expect(resolveTreatment('slab', null, 'attorneyCard')).toBe('plain')
+  })
+
+  it('framed is a wrapper ::after border, so it adds no element and cannot move the photo', () => {
+    expect(TREATMENT_CLASSES.framed.wrapper).toContain('after:absolute')
+    expect(TREATMENT_CLASSES.framed.wrapper).toContain('after:border-accent')
+    expect(TREATMENT_CLASSES.framed.image).toBe(TREATMENT_CLASSES.plain.image)
+  })
+
+  it('an absent or inherit treatment is plain, which is exactly today’s markup', () => {
+    for (const v of [null, undefined, 'inherit'] as const) {
+      expect(resolveTreatment(v, 'plain', 'attorneyCard')).toBe('plain')
+    }
+  })
+})

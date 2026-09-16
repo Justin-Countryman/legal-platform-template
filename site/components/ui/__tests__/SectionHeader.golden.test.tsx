@@ -17,7 +17,28 @@ import {render} from '@testing-library/react'
 // WHEN IT CHANGES ON PURPOSE. Phase 16 routes `SectionHeader` through
 // `HeadingUnit` and adds the heading rule per scope. The diff this file produces
 // then is the reviewed artifact, in that PR, before propagation. Update with
-// `vitest -u` and say why in the commit. Until then it must not move.
+// `vitest -u` and say why in the commit.
+//
+// MOVED ONCE BEFORE THEN, in Phase 13 (the section frame), for the spacing split
+// and nothing else. `SECTION_SPACING` became `{top, bottom, seamTop, topNone}` so
+// a dispatcher can halve the top padding at a same-ground join, so every band on
+// `SectionShell` now emits `pt-16 md:pt-24 lg:pt-28 pb-16 md:pb-24 lg:pb-28`
+// where it emitted `py-16 md:py-24 lg:py-28`. Exactly four lines changed here,
+// all four `TestimonialsGridSection` (the only consumer in this file that is on
+// the shell), and the computed padding is identical — `lib/__tests__/
+// sectionSurface.test.ts` asserts `top + bottom` reproduces the old string per
+// breakpoint, because the composer writes no `spacing` at all (item 308) and
+// "absent" must keep rendering as it did.
+//
+// MOVED A SECOND TIME in the same phase, when the five off-shell sections joined
+// `SectionShell` (§7 amendment 5). `FaqSectionBlock`, `ReviewsSectionBlock` and
+// `VideoLibraryClient`'s band each gained `relative` on the `<section>` and on
+// the `.container`, and the padding split above. No nesting was added: each
+// layout's own wrapper classes ride on the shell's container through
+// `innerClassName`, so the element count is unchanged.
+//
+// SectionHeader itself was NOT touched: Phase 11 amendment 2 keeps it out until
+// Phase 16, and this diff carries no change to its own markup.
 
 vi.mock('next/link', () => ({
   // eslint-disable-next-line react/display-name

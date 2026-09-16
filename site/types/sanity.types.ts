@@ -208,6 +208,18 @@ export type ReviewsSectionInline = {
     } & CtaButton
   >;
   reviewsEmbed?: string;
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  sectionBackgroundImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
+  spacing?: "compact" | "normal" | "spacious";
 };
 
 export type ContentSectionInline = {
@@ -241,7 +253,7 @@ export type ContentSectionInline = {
   imageTreatment?:
     "inherit" | "plain" | "framed" | "slab" | "rounded" | "scrim" | "tint";
   marquee?: boolean;
-  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -249,6 +261,9 @@ export type ContentSectionInline = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
   spacing?: "compact" | "normal" | "spacious";
 };
 
@@ -263,6 +278,18 @@ export type VideoSectionInline = {
       _key: string;
     } & VideoReference
   >;
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  sectionBackgroundImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
+  spacing?: "compact" | "normal" | "spacious";
 };
 
 export type TestimonialReference = {
@@ -277,7 +304,7 @@ export type FeaturedTestimonialInline = {
   tagline?: string;
   heading?: string;
   testimonial?: TestimonialReference;
-  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -285,6 +312,9 @@ export type FeaturedTestimonialInline = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
   spacing?: "compact" | "normal" | "spacious";
 };
 
@@ -298,7 +328,7 @@ export type TestimonialsGridInline = {
       _key: string;
     } & TestimonialReference
   >;
-  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -306,6 +336,9 @@ export type TestimonialsGridInline = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
   spacing?: "compact" | "normal" | "spacious";
 };
 
@@ -325,6 +358,18 @@ export type BadgesSectionInline = {
     } & BadgeReference
   >;
   layout?: "inline" | "centeredGrid" | "split" | "scrolling";
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  sectionBackgroundImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
+  spacing?: "compact" | "normal" | "spacious";
 };
 
 export type CaseResultsSectionInline = {
@@ -337,7 +382,7 @@ export type CaseResultsSectionInline = {
     } & CaseResultReference
   >;
   ctaButton?: CtaButton;
-  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -345,6 +390,9 @@ export type CaseResultsSectionInline = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
   spacing?: "compact" | "normal" | "spacious";
 };
 
@@ -361,7 +409,7 @@ export type AttorneySectionInline = {
   description?: string;
   layout?: "grid" | "slider";
   cardStyle?: "classic" | "portrait" | "avatar" | "minimal" | "spotlight";
-  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -369,6 +417,9 @@ export type AttorneySectionInline = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
   spacing?: "compact" | "normal" | "spacious";
 };
 
@@ -390,7 +441,7 @@ export type PracticeAreaNavInline = {
       _key: string;
     } & PracticeAreaNavItem
   >;
-  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -398,6 +449,9 @@ export type PracticeAreaNavInline = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
   spacing?: "compact" | "normal" | "spacious";
 };
 
@@ -989,7 +1043,7 @@ export type ContentSection = {
   imageTreatment?:
     "inherit" | "plain" | "framed" | "slab" | "rounded" | "scrim" | "tint";
   marquee?: boolean;
-  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -997,6 +1051,9 @@ export type ContentSection = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
   spacing?: "compact" | "normal" | "spacious";
 };
 
@@ -1015,7 +1072,7 @@ export type CaseResultsSection = {
     } & CaseResultReference
   >;
   ctaButton?: CtaButton;
-  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1023,6 +1080,9 @@ export type CaseResultsSection = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
   spacing?: "compact" | "normal" | "spacious";
 };
 
@@ -1049,7 +1109,7 @@ export type PracticeAreaNav = {
       _key: string;
     } & PracticeAreaNavItem
   >;
-  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1057,6 +1117,9 @@ export type PracticeAreaNav = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
   spacing?: "compact" | "normal" | "spacious";
 };
 
@@ -1076,6 +1139,18 @@ export type VideoSection = {
       _key: string;
     } & VideoReference
   >;
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  sectionBackgroundImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
+  spacing?: "compact" | "normal" | "spacious";
 };
 
 export type ReviewsSection = {
@@ -1095,6 +1170,18 @@ export type ReviewsSection = {
     } & CtaButton
   >;
   reviewsEmbed?: string;
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  sectionBackgroundImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
+  spacing?: "compact" | "normal" | "spacious";
 };
 
 export type AttorneySection = {
@@ -1116,7 +1203,7 @@ export type AttorneySection = {
   description?: string;
   layout?: "grid" | "slider";
   cardStyle?: "classic" | "portrait" | "avatar" | "minimal" | "spotlight";
-  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1124,6 +1211,9 @@ export type AttorneySection = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
   spacing?: "compact" | "normal" | "spacious";
 };
 
@@ -1148,6 +1238,18 @@ export type BadgesSection = {
     } & BadgeReference
   >;
   layout?: "inline" | "centeredGrid" | "split" | "scrolling";
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  sectionBackgroundImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
+  spacing?: "compact" | "normal" | "spacious";
 };
 
 export type FaqItemReference = {
@@ -1174,6 +1276,18 @@ export type FaqSection = {
   footerHeading?: string;
   footerDescription?: string;
   footerButton?: CtaButton;
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  sectionBackgroundImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
+  spacing?: "compact" | "normal" | "spacious";
 };
 
 export type CtaSection = {
@@ -1200,6 +1314,18 @@ export type CtaSection = {
     _type: "image";
   };
   layout?: "centered" | "split" | "background" | "textOnly";
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
+  sectionBackgroundImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
+  spacing?: "compact" | "normal" | "spacious";
 };
 
 export type FeaturedTestimonial = {
@@ -1212,7 +1338,7 @@ export type FeaturedTestimonial = {
   tagline?: string;
   heading?: string;
   testimonial?: TestimonialReference;
-  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1220,6 +1346,9 @@ export type FeaturedTestimonial = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
   spacing?: "compact" | "normal" | "spacious";
 };
 
@@ -1238,7 +1367,7 @@ export type TestimonialsGrid = {
       _key: string;
     } & TestimonialReference
   >;
-  surface?: "light" | "tint" | "dark" | "accent" | "image";
+  surface?: "light" | "tint" | "dark" | "accent" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1246,6 +1375,9 @@ export type TestimonialsGrid = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  inset?: boolean;
+  edgeBottom?: "flat" | "angled";
+  overlapPrevious?: "none" | "small" | "large";
   spacing?: "compact" | "normal" | "spacious";
 };
 
@@ -2800,6 +2932,18 @@ export type DesignSettings = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  pageBackground?: {
+    kind?: "none" | "texture" | "photo" | "gradient";
+    texture?: "pinstripe" | "diagonalHatch" | "diamondLattice" | "scallop";
+    image?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    opacity?: number;
+  };
   logoOnLight?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -4036,7 +4180,7 @@ export type HOME_HERO_DESIGN_QUERY_RESULT = {
 
 // Source: ../site/lib/sanity/queries.ts
 // Variable: DESIGN_TOKENS_QUERY
-// Query: *[_type == "designSettings"][0]{    uiRadius,    buttonShape,    buttonAnimation,    tertiaryStyle,    taglineStyle,    elevationStyle,    motionTempo,    marketingScale,    fontPairingPreset,    "colorApproach": colorApproach,    "primaryColor":  primaryColor,    "actionColor":   actionColor,    "accent1Color":  accent1Color,    "accent2Color":  accent2Color,    internalHeroBackground,    heroScrimOpacity,    "siteHeroBackgroundImage": siteHeroBackgroundImage{      "src": asset->url,      "alt": alt,      "fit": fit,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    "siteHeroForegroundImage": siteHeroForegroundImage{      "src": asset->url,      "alt": alt,      "hotspot": hotspot{x, y},      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    // WS-Sidebar Phase 2.1 — sidebar UI element settings. Behavior wired in    // Phase 2.5; resolver in lib/designTokens.ts (resolveSidebarDesignSettings).    sidebarNavIconStyle,    sidebarWidgetHeaderLine,    sidebarItemSeparators,    "headingFont": customFonts.headingFont{      name,      "regular":   regular.asset->url,      "bold":      bold.asset->url,      "italic":    italic.asset->url,    },    "bodyFont": customFonts.bodyFont{      name,      "regular":   regular.asset->url,      "semibold":  semibold.asset->url,      "bold":      bold.asset->url,      "italic":    italic.asset->url,      "boldItalic": boldItalic.asset->url,    },  }
+// Query: *[_type == "designSettings"][0]{    uiRadius,    buttonShape,    buttonAnimation,    tertiaryStyle,    taglineStyle,    elevationStyle,    motionTempo,    marketingScale,    fontPairingPreset,    "colorApproach": colorApproach,    "primaryColor":  primaryColor,    "actionColor":   actionColor,    "accent1Color":  accent1Color,    "accent2Color":  accent2Color,    internalHeroBackground,    heroScrimOpacity,    // The page background layer (Phase 13). Absent on every client built so far,    // and PageBackgroundLayer renders nothing for an absent or "none" kind, so    // this changes no served page until an operator or a Phase 16 theme sets it.    //    // KEEP THIS COMMENT PLAIN, and see BI/runbooks/traps.md for why. Two hazards    // live here, both of which cost a CI cycle on PR #25: a backtick closes the    // template literal this query sits in, and several ordinary words, if written    // here, make the template blank-slate guard flag three footer field names    // that are older than this phase. The guard passes locally on the committed    // generated types and fails only once they are regenerated, so it surfaces on    // CI rather than before the push.    "pageBackground": pageBackground{      kind,      texture,      opacity,      "image": image{        "src": asset->url,        "alt": alt,        "width": asset->metadata.dimensions.width,        "height": asset->metadata.dimensions.height      }    },    "siteHeroBackgroundImage": siteHeroBackgroundImage{      "src": asset->url,      "alt": alt,      "fit": fit,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    "siteHeroForegroundImage": siteHeroForegroundImage{      "src": asset->url,      "alt": alt,      "hotspot": hotspot{x, y},      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    // WS-Sidebar Phase 2.1 — sidebar UI element settings. Behavior wired in    // Phase 2.5; resolver in lib/designTokens.ts (resolveSidebarDesignSettings).    sidebarNavIconStyle,    sidebarWidgetHeaderLine,    sidebarItemSeparators,    "headingFont": customFonts.headingFont{      name,      "regular":   regular.asset->url,      "bold":      bold.asset->url,      "italic":    italic.asset->url,    },    "bodyFont": customFonts.bodyFont{      name,      "regular":   regular.asset->url,      "semibold":  semibold.asset->url,      "bold":      bold.asset->url,      "italic":    italic.asset->url,      "boldItalic": boldItalic.asset->url,    },  }
 export type DESIGN_TOKENS_QUERY_RESULT = {
   uiRadius: "rounded" | "sharp" | "soft" | "subtle" | null;
   buttonShape: "pill" | "rounded" | "square" | "stadium" | null;
@@ -4071,6 +4215,18 @@ export type DESIGN_TOKENS_QUERY_RESULT = {
   accent2Color: string | null;
   internalHeroBackground: "dark" | "light" | null;
   heroScrimOpacity: number | null;
+  pageBackground: {
+    kind: "gradient" | "none" | "photo" | "texture" | null;
+    texture:
+      "diagonalHatch" | "diamondLattice" | "pinstripe" | "scallop" | null;
+    opacity: number | null;
+    image: {
+      src: string | null;
+      alt: null;
+      width: number | null;
+      height: number | null;
+    } | null;
+  } | null;
   siteHeroBackgroundImage: {
     src: string | null;
     alt: string | null;
@@ -4374,7 +4530,8 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           backgroundImage: {
             asset?: SanityImageAssetReference;
@@ -4467,9 +4624,19 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: null;
-          spacing: null;
-          backgroundImage: null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          spacing: "compact" | "normal" | "spacious" | null;
+          backgroundImage: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            alt: "";
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
         };
         items: null;
         buttons: Array<{
@@ -4546,7 +4713,8 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           backgroundImage: {
             asset?: SanityImageAssetReference;
@@ -4682,7 +4850,8 @@ export type HOME_QUERY_RESULT = {
           } | null;
         } | null;
         appearance: {
-          surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           backgroundImage: {
             asset?: SanityImageAssetReference;
@@ -4767,7 +4936,8 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           backgroundImage: {
             asset?: SanityImageAssetReference;
@@ -4891,7 +5061,8 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           backgroundImage: {
             asset?: SanityImageAssetReference;
@@ -4989,9 +5160,19 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: null;
-          spacing: null;
-          backgroundImage: null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          spacing: "compact" | "normal" | "spacious" | null;
+          backgroundImage: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            alt: "";
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
         };
         items: null;
         buttons: Array<{
@@ -5089,7 +5270,8 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           backgroundImage: {
             asset?: SanityImageAssetReference;
@@ -5166,9 +5348,19 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: null;
-          spacing: null;
-          backgroundImage: null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          spacing: "compact" | "normal" | "spacious" | null;
+          backgroundImage: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            alt: "";
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
         };
         items: null;
         buttons: null;
@@ -5245,7 +5437,8 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           backgroundImage: {
             asset?: SanityImageAssetReference;
@@ -5322,9 +5515,19 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: null;
-          spacing: null;
-          backgroundImage: null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          spacing: "compact" | "normal" | "spacious" | null;
+          backgroundImage: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            alt: "";
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
         };
         items: null;
         buttons: Array<{
@@ -5379,9 +5582,19 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: null;
-          spacing: null;
-          backgroundImage: null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          spacing: "compact" | "normal" | "spacious" | null;
+          backgroundImage: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            alt: "";
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
         };
         items: null;
         buttons: Array<{
@@ -5440,9 +5653,19 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: null;
-          spacing: null;
-          backgroundImage: null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          spacing: "compact" | "normal" | "spacious" | null;
+          backgroundImage: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            alt: "";
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
         };
         items: null;
         buttons: null;
@@ -5577,7 +5800,8 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           backgroundImage: {
             asset?: SanityImageAssetReference;
@@ -5650,7 +5874,8 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           backgroundImage: {
             asset?: SanityImageAssetReference;
@@ -5744,9 +5969,19 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: null;
-          spacing: null;
-          backgroundImage: null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          spacing: "compact" | "normal" | "spacious" | null;
+          backgroundImage: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            alt: "";
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
         };
         items: null;
         buttons: Array<{
@@ -5796,7 +6031,8 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           backgroundImage: {
             asset?: SanityImageAssetReference;
@@ -5869,9 +6105,19 @@ export type HOME_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: null;
-          spacing: null;
-          backgroundImage: null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          spacing: "compact" | "normal" | "spacious" | null;
+          backgroundImage: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            alt: "";
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
         };
         items: null;
         buttons: null;
@@ -7490,7 +7736,8 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           backgroundImage: {
             asset?: SanityImageAssetReference;
@@ -7567,9 +7814,19 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: null;
-          spacing: null;
-          backgroundImage: null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          spacing: "compact" | "normal" | "spacious" | null;
+          backgroundImage: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            alt: "";
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
         };
         items: null;
         buttons: Array<{
@@ -7624,7 +7881,8 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           backgroundImage: {
             asset?: SanityImageAssetReference;
@@ -7756,7 +8014,8 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
           } | null;
         } | null;
         appearance: {
-          surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           backgroundImage: {
             asset?: SanityImageAssetReference;
@@ -7826,9 +8085,19 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: null;
-          spacing: null;
-          backgroundImage: null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          spacing: "compact" | "normal" | "spacious" | null;
+          backgroundImage: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            alt: "";
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
         };
         items: null;
         buttons: Array<{
@@ -7887,9 +8156,19 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: null;
-          spacing: null;
-          backgroundImage: null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          spacing: "compact" | "normal" | "spacious" | null;
+          backgroundImage: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            alt: "";
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
         };
         items: null;
         buttons: null;
@@ -8024,7 +8303,8 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           backgroundImage: {
             asset?: SanityImageAssetReference;
@@ -8097,9 +8377,19 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: null;
-          spacing: null;
-          backgroundImage: null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          spacing: "compact" | "normal" | "spacious" | null;
+          backgroundImage: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            alt: "";
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
         };
         items: null;
         buttons: Array<{
@@ -8149,7 +8439,8 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
           spacing: "compact" | "normal" | "spacious" | null;
           backgroundImage: {
             asset?: SanityImageAssetReference;
@@ -8222,9 +8513,19 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
         proof: null;
         media: null;
         appearance: {
-          surface: null;
-          spacing: null;
-          backgroundImage: null;
+          surface:
+            "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+          spacing: "compact" | "normal" | "spacious" | null;
+          backgroundImage: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            alt: "";
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
         };
         items: null;
         buttons: null;
@@ -9667,7 +9968,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -9744,9 +10052,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -9801,7 +10125,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -9938,7 +10269,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -10008,9 +10346,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -10069,9 +10423,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -10206,7 +10576,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -10281,7 +10658,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -10375,9 +10759,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -10427,7 +10827,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -10500,9 +10907,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -11058,7 +11481,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -11135,9 +11565,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -11192,7 +11638,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -11329,7 +11782,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -11399,9 +11859,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -11460,9 +11936,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -11597,7 +12089,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -11670,9 +12169,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -11722,7 +12237,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -11795,9 +12317,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -12292,7 +12830,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -12369,9 +12914,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -12426,7 +12987,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -12563,7 +13131,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -12633,9 +13208,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -12694,9 +13285,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -12831,7 +13438,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -12904,9 +13518,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -12956,7 +13586,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -13029,9 +13666,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -13587,7 +14240,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -13664,9 +14324,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -13721,7 +14397,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -13858,7 +14541,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -13928,9 +14618,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -13989,9 +14695,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -14126,7 +14848,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -14199,9 +14928,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -14251,7 +14996,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -14324,9 +15076,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -14467,7 +15235,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -14544,9 +15319,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -14601,7 +15392,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -14738,7 +15536,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -14808,9 +15613,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -14869,9 +15690,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -15006,7 +15843,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -15079,9 +15923,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -15131,7 +15991,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -15204,9 +16071,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -15649,7 +16532,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -15726,9 +16616,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -15783,7 +16689,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -15920,7 +16833,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -15990,9 +16910,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -16051,9 +16987,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -16188,7 +17140,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -16261,9 +17220,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -16313,7 +17288,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -16386,9 +17368,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -17039,7 +18037,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -17116,9 +18121,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -17173,7 +18194,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -17310,7 +18338,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -17380,9 +18415,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -17441,9 +18492,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -17578,7 +18645,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -17651,9 +18725,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -17703,7 +18793,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -17776,9 +18873,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -18334,7 +19447,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -18411,9 +19531,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -18468,7 +19604,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -18605,7 +19748,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -18675,9 +19825,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -18736,9 +19902,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -18873,7 +20055,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -18946,9 +20135,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: Array<{
@@ -18998,7 +20203,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               backgroundImage: {
                 asset?: SanityImageAssetReference;
@@ -19071,9 +20283,25 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
             proof: null;
             media: null;
             appearance: {
-              surface: null;
-              spacing: null;
-              backgroundImage: null;
+              surface:
+                | "accent"
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "tint"
+                | null;
+              spacing: "compact" | "normal" | "spacious" | null;
+              backgroundImage: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: "image";
+                alt: "";
+                lqip: string | null;
+                dimensions: SanityImageDimensions | null;
+              } | null;
             };
             items: null;
             buttons: null;
@@ -19118,7 +20346,7 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
 
 // Source: ../site/lib/sanity/queries.ts
 // Variable: SITE_CHROME_QUERY
-// Query: {  "metadata":   *[_type == "siteSettings"][0]{    firmName,    gscVerification,    hideFromSearch,    "faviconUrl":  *[_type == "designSettings"][0].favicon.asset->url,    "faviconMime": *[_type == "designSettings"][0].favicon.asset->mimeType,    "webclipUrl":  *[_type == "designSettings"][0].webclipImage.asset->url,  },  "organization": {  "firmName": *[_type == "siteSettings"][0].firmName,  "logo":     *[_type == "designSettings"][0].logoOnLight.asset->url,  "address":  *[_type == "siteSettings"][0].primaryLocation->{      "address1": select(locationType in ["Physical", "Shared"] => address1, null),  "address2": select(locationType in ["Physical", "Shared"] => address2, null),  "address3": select(locationType in ["Physical", "Shared"] => address3, null),  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),    city,    state,    officePhone,    tollFreePhone  },  "socials":  *[_type == "footerSettings"][0]{    facebookUrl,    instagramUrl,    twitterUrl,    linkedInUrl,    youTubeUrl,    avvoUrl,    justiaUrl,    findLawUrl,    martindaleUrl,    lawyersComUrl,    yelpUrl,    superLawyersUrl,    lawInfoUrl  }},  "scripts":   *[_type == "siteSettings"][0].scriptsRequireConsent,  "header": {  "siteSettings": *[_type == "siteSettings"][0]{    firmName,    firmNameShort,    "phone": primaryLocation->officePhone,    "tollFreePhone": primaryLocation->tollFreePhone  },  "designSettings": *[_type == "designSettings"][0]{    "logoOnLight": logoOnLight{      "src": asset->url,      "alt": alt,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    "logoOnDark": logoOnDark{      "src": asset->url,      "alt": alt,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    "logoMarkOnLight": logoMarkOnLight{      "src": asset->url,      "alt": alt,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    "logoMarkOnDark": logoMarkOnDark{      "src": asset->url,      "alt": alt,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    }  },  "mainNavigation": *[_type == "mainNavigation"][0]{    headerLayout,    mobileLayout,    heroMerge,    sticky,    stickyHideSupplementary,    compactStyle,    defaultScheme,    scrolledScheme,    topBarDesktop,    topBarMobile,    topBarPinSide,    topBarLeft,    topBarRight,    topBarStyle,    headerPhone,    headerPhone2,    headerPhoneTagline,    headerCtaLabel,    headerCtaUrl,    headerCtaLabel2,    headerCtaUrl2,    "navItems": items[]{      _type,      label,      href,      displayMode,      "children": select(        _type == "navItemStandard" => children[]{label, href},        _type == "navItemAttorneys" => select(          count(attorneyOrder) > 0 => attorneyOrder[defined(@->_id)]->{            "_id": _id,            "label": coalesce(firstName, "") + " " + coalesce(lastName, ""),            "href": "/" + slug.current + "/"          },          *[_type == "attorneyPage"]{            "label": coalesce(firstName, "") + " " + coalesce(lastName, ""),            "href": "/" + slug.current + "/"          } | order(lastName asc, firstName asc)        ),        // The Zite-ranked order first, then every practice area it does not        // list, by label; children ride flat with parentRef and the header        // groups them. Until [R-201] an order hid every page it did not list.        // No backticks in this comment: it sits inside a groq template literal.        _type == "navItemPracticeAreas" => [          ...(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[defined(@->slug.current)][defined(@->_id)]->{  "_id": _id,  "label": coalesce(select(navLabel != "" => navLabel), title),  "href": "/" + slug.current + "/",  "parentRef": parentPage._ref}),          ...(*[_type == "practiceArea" && defined(slug.current) && !(_id in coalesce(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[]._ref, []))]{  "_id": _id,  "label": coalesce(select(navLabel != "" => navLabel), title),  "href": "/" + slug.current + "/",  "parentRef": parentPage._ref} | order(label asc))        ]      )    }  }},  "footer": {  "designSettings": *[_type == "designSettings"][0]{    "logoOnDark": logoOnDark{      "src": asset->url,      "alt": alt,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    "logoOnLight": logoOnLight{      "src": asset->url,      "alt": alt,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    "showBackToTop": coalesce(showBackToTop, true)  },  "siteSettings": *[_type == "siteSettings"][0]{    firmName,    privacyPolicyUrl,    disclaimerUrl,    cookiesUrl,    "address": primaryLocation->{        "address1": select(locationType in ["Physical", "Shared"] => address1, null),  "address2": select(locationType in ["Physical", "Shared"] => address2, null),  "address3": select(locationType in ["Physical", "Shared"] => address3, null),  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),      city,      state,      officePhone,      tollFreePhone,      emergency24_7,      emergencyPhone,      appointmentRequired,      hours    }  },  "footerSettings": *[_type == "footerSettings"][0]{    footerLayout,    footerScheme,    ctaText,    ctaUrl,    actionButton1Label,    actionButton1Url,    actionButton2Label,    actionButton2Url,    // Practice Areas column auto-lists top-level areas of law LIVE from the    // practiceArea docs — label = the nav-label expression, href = slug — so it    // stays in sync with the header nav and sidebar nav (single source of truth    // = the practiceArea document). The stored column1 field is ignored.    "column1": [      ...(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[defined(@->slug.current) && !defined(@->parentPage)][defined(@->_id)]->{  "label": coalesce(select(navLabel != "" => navLabel), title),  "href": "/" + slug.current + "/"}),      ...(*[_type == "practiceArea" && defined(slug.current) && !defined(parentPage) && !(_id in coalesce(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[]._ref, []))]{  "label": coalesce(select(navLabel != "" => navLabel), title),  "href": "/" + slug.current + "/"} | order(label asc))    ],    "column2": column2[]{label, href},    facebookUrl,    instagramUrl,    twitterUrl,    linkedInUrl,    youTubeUrl,    "formEmbed": form->formEmbed,  },  "locations": *[_type == "location" && locationStatus == "Active" && displayOnWebsite == true] | order(isPrimary desc, city asc) {    _id,    city,      "address1": select(locationType in ["Physical", "Shared"] => address1, null),  "address2": select(locationType in ["Physical", "Shared"] => address2, null),  "address3": select(locationType in ["Physical", "Shared"] => address3, null),  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),    state,    officePhone,    tollFreePhone,    emergency24_7,    emergencyPhone,    appointmentRequired,    hours,    "pageSlug": *[_type == "locationPage" && references(^._id)][0].slug.current  }},  "designTokens":   *[_type == "designSettings"][0]{    uiRadius,    buttonShape,    buttonAnimation,    tertiaryStyle,    taglineStyle,    elevationStyle,    motionTempo,    marketingScale,    fontPairingPreset,    "colorApproach": colorApproach,    "primaryColor":  primaryColor,    "actionColor":   actionColor,    "accent1Color":  accent1Color,    "accent2Color":  accent2Color,    internalHeroBackground,    heroScrimOpacity,    "siteHeroBackgroundImage": siteHeroBackgroundImage{      "src": asset->url,      "alt": alt,      "fit": fit,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    "siteHeroForegroundImage": siteHeroForegroundImage{      "src": asset->url,      "alt": alt,      "hotspot": hotspot{x, y},      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    // WS-Sidebar Phase 2.1 — sidebar UI element settings. Behavior wired in    // Phase 2.5; resolver in lib/designTokens.ts (resolveSidebarDesignSettings).    sidebarNavIconStyle,    sidebarWidgetHeaderLine,    sidebarItemSeparators,    "headingFont": customFonts.headingFont{      name,      "regular":   regular.asset->url,      "bold":      bold.asset->url,      "italic":    italic.asset->url,    },    "bodyFont": customFonts.bodyFont{      name,      "regular":   regular.asset->url,      "semibold":  semibold.asset->url,      "bold":      bold.asset->url,      "italic":    italic.asset->url,      "boldItalic": boldItalic.asset->url,    },  },  "heroSettings": *[_type == "heroSettings"][0]{  scheme,  scrimStyle,  scrimColor,  scrimDirection,  scrimOpacity,  "defaultButtons": defaultButtons[]{title, url, variant},  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "sectionBackgroundImage": sectionBackgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }},  "nap":   *[_type == "siteSettings"][0]{    firmName,    firmNameShort,    "profileLayout": *[_type == "designSettings"][0].profileLayout,    "profileCtaLabel": *[_type == "designSettings"][0].profileCtaLabel,    "profileCtaUrl": *[_type == "designSettings"][0].profileCtaUrl,    "primaryPhone": primaryLocation->officePhone,    "primaryTollFree": primaryLocation->tollFreePhone,    "primaryLocationId": primaryLocation->_id,    "locations": *[_type == "location" && locationStatus == "Active" && displayOnWebsite == true]{      "_id": _id,      "phone": officePhone,      "fax": officeFax,      address1,      address2,      address3,      city,      state,      zip,      appointmentRequired,      emergency24_7,      emergencyPhone    },  },  "globalCta":   *[_type == "globalCta"][0]{    layout,    tagline,    heading,    description,    "buttons": buttons[]{title, url, variant},    "formEmbed": form->formEmbed,  },  "hidden": *[_type == "siteSettings"][0].hideFromSearch}
+// Query: {  "metadata":   *[_type == "siteSettings"][0]{    firmName,    gscVerification,    hideFromSearch,    "faviconUrl":  *[_type == "designSettings"][0].favicon.asset->url,    "faviconMime": *[_type == "designSettings"][0].favicon.asset->mimeType,    "webclipUrl":  *[_type == "designSettings"][0].webclipImage.asset->url,  },  "organization": {  "firmName": *[_type == "siteSettings"][0].firmName,  "logo":     *[_type == "designSettings"][0].logoOnLight.asset->url,  "address":  *[_type == "siteSettings"][0].primaryLocation->{      "address1": select(locationType in ["Physical", "Shared"] => address1, null),  "address2": select(locationType in ["Physical", "Shared"] => address2, null),  "address3": select(locationType in ["Physical", "Shared"] => address3, null),  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),    city,    state,    officePhone,    tollFreePhone  },  "socials":  *[_type == "footerSettings"][0]{    facebookUrl,    instagramUrl,    twitterUrl,    linkedInUrl,    youTubeUrl,    avvoUrl,    justiaUrl,    findLawUrl,    martindaleUrl,    lawyersComUrl,    yelpUrl,    superLawyersUrl,    lawInfoUrl  }},  "scripts":   *[_type == "siteSettings"][0].scriptsRequireConsent,  "header": {  "siteSettings": *[_type == "siteSettings"][0]{    firmName,    firmNameShort,    "phone": primaryLocation->officePhone,    "tollFreePhone": primaryLocation->tollFreePhone  },  "designSettings": *[_type == "designSettings"][0]{    "logoOnLight": logoOnLight{      "src": asset->url,      "alt": alt,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    "logoOnDark": logoOnDark{      "src": asset->url,      "alt": alt,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    "logoMarkOnLight": logoMarkOnLight{      "src": asset->url,      "alt": alt,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    "logoMarkOnDark": logoMarkOnDark{      "src": asset->url,      "alt": alt,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    }  },  "mainNavigation": *[_type == "mainNavigation"][0]{    headerLayout,    mobileLayout,    heroMerge,    sticky,    stickyHideSupplementary,    compactStyle,    defaultScheme,    scrolledScheme,    topBarDesktop,    topBarMobile,    topBarPinSide,    topBarLeft,    topBarRight,    topBarStyle,    headerPhone,    headerPhone2,    headerPhoneTagline,    headerCtaLabel,    headerCtaUrl,    headerCtaLabel2,    headerCtaUrl2,    "navItems": items[]{      _type,      label,      href,      displayMode,      "children": select(        _type == "navItemStandard" => children[]{label, href},        _type == "navItemAttorneys" => select(          count(attorneyOrder) > 0 => attorneyOrder[defined(@->_id)]->{            "_id": _id,            "label": coalesce(firstName, "") + " " + coalesce(lastName, ""),            "href": "/" + slug.current + "/"          },          *[_type == "attorneyPage"]{            "label": coalesce(firstName, "") + " " + coalesce(lastName, ""),            "href": "/" + slug.current + "/"          } | order(lastName asc, firstName asc)        ),        // The Zite-ranked order first, then every practice area it does not        // list, by label; children ride flat with parentRef and the header        // groups them. Until [R-201] an order hid every page it did not list.        // No backticks in this comment: it sits inside a groq template literal.        _type == "navItemPracticeAreas" => [          ...(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[defined(@->slug.current)][defined(@->_id)]->{  "_id": _id,  "label": coalesce(select(navLabel != "" => navLabel), title),  "href": "/" + slug.current + "/",  "parentRef": parentPage._ref}),          ...(*[_type == "practiceArea" && defined(slug.current) && !(_id in coalesce(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[]._ref, []))]{  "_id": _id,  "label": coalesce(select(navLabel != "" => navLabel), title),  "href": "/" + slug.current + "/",  "parentRef": parentPage._ref} | order(label asc))        ]      )    }  }},  "footer": {  "designSettings": *[_type == "designSettings"][0]{    "logoOnDark": logoOnDark{      "src": asset->url,      "alt": alt,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    "logoOnLight": logoOnLight{      "src": asset->url,      "alt": alt,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    "showBackToTop": coalesce(showBackToTop, true)  },  "siteSettings": *[_type == "siteSettings"][0]{    firmName,    privacyPolicyUrl,    disclaimerUrl,    cookiesUrl,    "address": primaryLocation->{        "address1": select(locationType in ["Physical", "Shared"] => address1, null),  "address2": select(locationType in ["Physical", "Shared"] => address2, null),  "address3": select(locationType in ["Physical", "Shared"] => address3, null),  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),      city,      state,      officePhone,      tollFreePhone,      emergency24_7,      emergencyPhone,      appointmentRequired,      hours    }  },  "footerSettings": *[_type == "footerSettings"][0]{    footerLayout,    footerScheme,    ctaText,    ctaUrl,    actionButton1Label,    actionButton1Url,    actionButton2Label,    actionButton2Url,    // Practice Areas column auto-lists top-level areas of law LIVE from the    // practiceArea docs — label = the nav-label expression, href = slug — so it    // stays in sync with the header nav and sidebar nav (single source of truth    // = the practiceArea document). The stored column1 field is ignored.    "column1": [      ...(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[defined(@->slug.current) && !defined(@->parentPage)][defined(@->_id)]->{  "label": coalesce(select(navLabel != "" => navLabel), title),  "href": "/" + slug.current + "/"}),      ...(*[_type == "practiceArea" && defined(slug.current) && !defined(parentPage) && !(_id in coalesce(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[]._ref, []))]{  "label": coalesce(select(navLabel != "" => navLabel), title),  "href": "/" + slug.current + "/"} | order(label asc))    ],    "column2": column2[]{label, href},    facebookUrl,    instagramUrl,    twitterUrl,    linkedInUrl,    youTubeUrl,    "formEmbed": form->formEmbed,  },  "locations": *[_type == "location" && locationStatus == "Active" && displayOnWebsite == true] | order(isPrimary desc, city asc) {    _id,    city,      "address1": select(locationType in ["Physical", "Shared"] => address1, null),  "address2": select(locationType in ["Physical", "Shared"] => address2, null),  "address3": select(locationType in ["Physical", "Shared"] => address3, null),  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),    state,    officePhone,    tollFreePhone,    emergency24_7,    emergencyPhone,    appointmentRequired,    hours,    "pageSlug": *[_type == "locationPage" && references(^._id)][0].slug.current  }},  "designTokens":   *[_type == "designSettings"][0]{    uiRadius,    buttonShape,    buttonAnimation,    tertiaryStyle,    taglineStyle,    elevationStyle,    motionTempo,    marketingScale,    fontPairingPreset,    "colorApproach": colorApproach,    "primaryColor":  primaryColor,    "actionColor":   actionColor,    "accent1Color":  accent1Color,    "accent2Color":  accent2Color,    internalHeroBackground,    heroScrimOpacity,    // The page background layer (Phase 13). Absent on every client built so far,    // and PageBackgroundLayer renders nothing for an absent or "none" kind, so    // this changes no served page until an operator or a Phase 16 theme sets it.    //    // KEEP THIS COMMENT PLAIN, and see BI/runbooks/traps.md for why. Two hazards    // live here, both of which cost a CI cycle on PR #25: a backtick closes the    // template literal this query sits in, and several ordinary words, if written    // here, make the template blank-slate guard flag three footer field names    // that are older than this phase. The guard passes locally on the committed    // generated types and fails only once they are regenerated, so it surfaces on    // CI rather than before the push.    "pageBackground": pageBackground{      kind,      texture,      opacity,      "image": image{        "src": asset->url,        "alt": alt,        "width": asset->metadata.dimensions.width,        "height": asset->metadata.dimensions.height      }    },    "siteHeroBackgroundImage": siteHeroBackgroundImage{      "src": asset->url,      "alt": alt,      "fit": fit,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    "siteHeroForegroundImage": siteHeroForegroundImage{      "src": asset->url,      "alt": alt,      "hotspot": hotspot{x, y},      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    // WS-Sidebar Phase 2.1 — sidebar UI element settings. Behavior wired in    // Phase 2.5; resolver in lib/designTokens.ts (resolveSidebarDesignSettings).    sidebarNavIconStyle,    sidebarWidgetHeaderLine,    sidebarItemSeparators,    "headingFont": customFonts.headingFont{      name,      "regular":   regular.asset->url,      "bold":      bold.asset->url,      "italic":    italic.asset->url,    },    "bodyFont": customFonts.bodyFont{      name,      "regular":   regular.asset->url,      "semibold":  semibold.asset->url,      "bold":      bold.asset->url,      "italic":    italic.asset->url,      "boldItalic": boldItalic.asset->url,    },  },  "heroSettings": *[_type == "heroSettings"][0]{  scheme,  scrimStyle,  scrimColor,  scrimDirection,  scrimOpacity,  "defaultButtons": defaultButtons[]{title, url, variant},  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "sectionBackgroundImage": sectionBackgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }},  "nap":   *[_type == "siteSettings"][0]{    firmName,    firmNameShort,    "profileLayout": *[_type == "designSettings"][0].profileLayout,    "profileCtaLabel": *[_type == "designSettings"][0].profileCtaLabel,    "profileCtaUrl": *[_type == "designSettings"][0].profileCtaUrl,    "primaryPhone": primaryLocation->officePhone,    "primaryTollFree": primaryLocation->tollFreePhone,    "primaryLocationId": primaryLocation->_id,    "locations": *[_type == "location" && locationStatus == "Active" && displayOnWebsite == true]{      "_id": _id,      "phone": officePhone,      "fax": officeFax,      address1,      address2,      address3,      city,      state,      zip,      appointmentRequired,      emergency24_7,      emergencyPhone    },  },  "globalCta":   *[_type == "globalCta"][0]{    layout,    tagline,    heading,    description,    "buttons": buttons[]{title, url, variant},    "formEmbed": form->formEmbed,  },  "hidden": *[_type == "siteSettings"][0].hideFromSearch}
 export type SITE_CHROME_QUERY_RESULT = {
   metadata: {
     firmName: string | null;
@@ -19588,6 +20816,18 @@ export type SITE_CHROME_QUERY_RESULT = {
     accent2Color: string | null;
     internalHeroBackground: "dark" | "light" | null;
     heroScrimOpacity: number | null;
+    pageBackground: {
+      kind: "gradient" | "none" | "photo" | "texture" | null;
+      texture:
+        "diagonalHatch" | "diamondLattice" | "pinstripe" | "scallop" | null;
+      opacity: number | null;
+      image: {
+        src: string | null;
+        alt: null;
+        width: number | null;
+        height: number | null;
+      } | null;
+    } | null;
     siteHeroBackgroundImage: {
       src: string | null;
       alt: string | null;
@@ -19838,7 +21078,8 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             backgroundImage: {
               asset?: SanityImageAssetReference;
@@ -19931,9 +21172,19 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: null;
-            spacing: null;
-            backgroundImage: null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            spacing: "compact" | "normal" | "spacious" | null;
+            backgroundImage: {
+              asset?: SanityImageAssetReference;
+              media?: unknown;
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              _type: "image";
+              alt: "";
+              lqip: string | null;
+              dimensions: SanityImageDimensions | null;
+            } | null;
           };
           items: null;
           buttons: Array<{
@@ -20010,7 +21261,8 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             backgroundImage: {
               asset?: SanityImageAssetReference;
@@ -20151,7 +21403,8 @@ export type HOME_PAGE_QUERY_RESULT = {
             } | null;
           } | null;
           appearance: {
-            surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             backgroundImage: {
               asset?: SanityImageAssetReference;
@@ -20236,7 +21489,8 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             backgroundImage: {
               asset?: SanityImageAssetReference;
@@ -20360,7 +21614,8 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             backgroundImage: {
               asset?: SanityImageAssetReference;
@@ -20458,9 +21713,19 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: null;
-            spacing: null;
-            backgroundImage: null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            spacing: "compact" | "normal" | "spacious" | null;
+            backgroundImage: {
+              asset?: SanityImageAssetReference;
+              media?: unknown;
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              _type: "image";
+              alt: "";
+              lqip: string | null;
+              dimensions: SanityImageDimensions | null;
+            } | null;
           };
           items: null;
           buttons: Array<{
@@ -20558,7 +21823,8 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             backgroundImage: {
               asset?: SanityImageAssetReference;
@@ -20635,9 +21901,19 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: null;
-            spacing: null;
-            backgroundImage: null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            spacing: "compact" | "normal" | "spacious" | null;
+            backgroundImage: {
+              asset?: SanityImageAssetReference;
+              media?: unknown;
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              _type: "image";
+              alt: "";
+              lqip: string | null;
+              dimensions: SanityImageDimensions | null;
+            } | null;
           };
           items: null;
           buttons: null;
@@ -20714,7 +21990,8 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             backgroundImage: {
               asset?: SanityImageAssetReference;
@@ -20791,9 +22068,19 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: null;
-            spacing: null;
-            backgroundImage: null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            spacing: "compact" | "normal" | "spacious" | null;
+            backgroundImage: {
+              asset?: SanityImageAssetReference;
+              media?: unknown;
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              _type: "image";
+              alt: "";
+              lqip: string | null;
+              dimensions: SanityImageDimensions | null;
+            } | null;
           };
           items: null;
           buttons: Array<{
@@ -20848,9 +22135,19 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: null;
-            spacing: null;
-            backgroundImage: null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            spacing: "compact" | "normal" | "spacious" | null;
+            backgroundImage: {
+              asset?: SanityImageAssetReference;
+              media?: unknown;
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              _type: "image";
+              alt: "";
+              lqip: string | null;
+              dimensions: SanityImageDimensions | null;
+            } | null;
           };
           items: null;
           buttons: Array<{
@@ -20909,9 +22206,19 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: null;
-            spacing: null;
-            backgroundImage: null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            spacing: "compact" | "normal" | "spacious" | null;
+            backgroundImage: {
+              asset?: SanityImageAssetReference;
+              media?: unknown;
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              _type: "image";
+              alt: "";
+              lqip: string | null;
+              dimensions: SanityImageDimensions | null;
+            } | null;
           };
           items: null;
           buttons: null;
@@ -21046,7 +22353,8 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             backgroundImage: {
               asset?: SanityImageAssetReference;
@@ -21119,7 +22427,8 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             backgroundImage: {
               asset?: SanityImageAssetReference;
@@ -21213,9 +22522,19 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: null;
-            spacing: null;
-            backgroundImage: null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            spacing: "compact" | "normal" | "spacious" | null;
+            backgroundImage: {
+              asset?: SanityImageAssetReference;
+              media?: unknown;
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              _type: "image";
+              alt: "";
+              lqip: string | null;
+              dimensions: SanityImageDimensions | null;
+            } | null;
           };
           items: null;
           buttons: Array<{
@@ -21265,7 +22584,8 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: "accent" | "dark" | "image" | "light" | "tint" | null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
             spacing: "compact" | "normal" | "spacious" | null;
             backgroundImage: {
               asset?: SanityImageAssetReference;
@@ -21338,9 +22658,19 @@ export type HOME_PAGE_QUERY_RESULT = {
           proof: null;
           media: null;
           appearance: {
-            surface: null;
-            spacing: null;
-            backgroundImage: null;
+            surface:
+              "accent" | "dark" | "image" | "light" | "pattern" | "tint" | null;
+            spacing: "compact" | "normal" | "spacious" | null;
+            backgroundImage: {
+              asset?: SanityImageAssetReference;
+              media?: unknown;
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              _type: "image";
+              alt: "";
+              lqip: string | null;
+              dimensions: SanityImageDimensions | null;
+            } | null;
           };
           items: null;
           buttons: null;
@@ -21507,7 +22837,7 @@ declare global {
     '{\n  heading,\n  eyebrow,\n  description,\n  "buttons": buttons[]{title, url, variant}\n}': HOME_HERO_CONTENT_FRAGMENT_RESULT;
     '{\n  skeleton,\n  heightMode,\n  contentAlign,\n  backdrop,\n  foreground,\n  scrimStyle,\n  scrimColor,\n  scrimDirection,\n  splitMedia,\n  splitImageStyle,\n  splitImageRatio,\n  textTreatment,\n  mediaSide,\n  motion,\n  schemeOverride,\n  scrimOpacityOverride,\n  "backgroundImage": backgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "foregroundImage": foregroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "sectionBackgroundImage": sectionBackgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "galleryImages": galleryImages[]{\n    "src": asset->url,\n    "alt": alt,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  videoUrl\n}': HOME_HERO_DESIGN_FRAGMENT_RESULT;
     '*[_type == "heroSettings"][0].homepageHero {\n  skeleton,\n  heightMode,\n  contentAlign,\n  backdrop,\n  foreground,\n  scrimStyle,\n  scrimColor,\n  scrimDirection,\n  splitMedia,\n  splitImageStyle,\n  splitImageRatio,\n  textTreatment,\n  mediaSide,\n  motion,\n  schemeOverride,\n  scrimOpacityOverride,\n  "backgroundImage": backgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "foregroundImage": foregroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "sectionBackgroundImage": sectionBackgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "galleryImages": galleryImages[]{\n    "src": asset->url,\n    "alt": alt,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  videoUrl\n}': HOME_HERO_DESIGN_QUERY_RESULT;
-    '\n  *[_type == "designSettings"][0]{\n    uiRadius,\n    buttonShape,\n    buttonAnimation,\n    tertiaryStyle,\n    taglineStyle,\n    elevationStyle,\n    motionTempo,\n    marketingScale,\n    fontPairingPreset,\n    "colorApproach": colorApproach,\n    "primaryColor":  primaryColor,\n    "actionColor":   actionColor,\n    "accent1Color":  accent1Color,\n    "accent2Color":  accent2Color,\n    internalHeroBackground,\n    heroScrimOpacity,\n    "siteHeroBackgroundImage": siteHeroBackgroundImage{\n      "src": asset->url,\n      "alt": alt,\n      "fit": fit,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    "siteHeroForegroundImage": siteHeroForegroundImage{\n      "src": asset->url,\n      "alt": alt,\n      "hotspot": hotspot{x, y},\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    // WS-Sidebar Phase 2.1 \u2014 sidebar UI element settings. Behavior wired in\n    // Phase 2.5; resolver in lib/designTokens.ts (resolveSidebarDesignSettings).\n    sidebarNavIconStyle,\n    sidebarWidgetHeaderLine,\n    sidebarItemSeparators,\n    "headingFont": customFonts.headingFont{\n      name,\n      "regular":   regular.asset->url,\n      "bold":      bold.asset->url,\n      "italic":    italic.asset->url,\n    },\n    "bodyFont": customFonts.bodyFont{\n      name,\n      "regular":   regular.asset->url,\n      "semibold":  semibold.asset->url,\n      "bold":      bold.asset->url,\n      "italic":    italic.asset->url,\n      "boldItalic": boldItalic.asset->url,\n    },\n  }\n': DESIGN_TOKENS_QUERY_RESULT;
+    '\n  *[_type == "designSettings"][0]{\n    uiRadius,\n    buttonShape,\n    buttonAnimation,\n    tertiaryStyle,\n    taglineStyle,\n    elevationStyle,\n    motionTempo,\n    marketingScale,\n    fontPairingPreset,\n    "colorApproach": colorApproach,\n    "primaryColor":  primaryColor,\n    "actionColor":   actionColor,\n    "accent1Color":  accent1Color,\n    "accent2Color":  accent2Color,\n    internalHeroBackground,\n    heroScrimOpacity,\n    // The page background layer (Phase 13). Absent on every client built so far,\n    // and PageBackgroundLayer renders nothing for an absent or "none" kind, so\n    // this changes no served page until an operator or a Phase 16 theme sets it.\n    //\n    // KEEP THIS COMMENT PLAIN, and see BI/runbooks/traps.md for why. Two hazards\n    // live here, both of which cost a CI cycle on PR #25: a backtick closes the\n    // template literal this query sits in, and several ordinary words, if written\n    // here, make the template blank-slate guard flag three footer field names\n    // that are older than this phase. The guard passes locally on the committed\n    // generated types and fails only once they are regenerated, so it surfaces on\n    // CI rather than before the push.\n    "pageBackground": pageBackground{\n      kind,\n      texture,\n      opacity,\n      "image": image{\n        "src": asset->url,\n        "alt": alt,\n        "width": asset->metadata.dimensions.width,\n        "height": asset->metadata.dimensions.height\n      }\n    },\n    "siteHeroBackgroundImage": siteHeroBackgroundImage{\n      "src": asset->url,\n      "alt": alt,\n      "fit": fit,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    "siteHeroForegroundImage": siteHeroForegroundImage{\n      "src": asset->url,\n      "alt": alt,\n      "hotspot": hotspot{x, y},\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    // WS-Sidebar Phase 2.1 \u2014 sidebar UI element settings. Behavior wired in\n    // Phase 2.5; resolver in lib/designTokens.ts (resolveSidebarDesignSettings).\n    sidebarNavIconStyle,\n    sidebarWidgetHeaderLine,\n    sidebarItemSeparators,\n    "headingFont": customFonts.headingFont{\n      name,\n      "regular":   regular.asset->url,\n      "bold":      bold.asset->url,\n      "italic":    italic.asset->url,\n    },\n    "bodyFont": customFonts.bodyFont{\n      name,\n      "regular":   regular.asset->url,\n      "semibold":  semibold.asset->url,\n      "bold":      bold.asset->url,\n      "italic":    italic.asset->url,\n      "boldItalic": boldItalic.asset->url,\n    },\n  }\n': DESIGN_TOKENS_QUERY_RESULT;
     '*[_type == "heroSettings"][0]{\n  scheme,\n  scrimStyle,\n  scrimColor,\n  scrimDirection,\n  scrimOpacity,\n  "defaultButtons": defaultButtons[]{title, url, variant},\n  "backgroundImage": backgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "foregroundImage": foregroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "sectionBackgroundImage": sectionBackgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  }\n}': HERO_SETTINGS_QUERY_RESULT;
     '{\n  tagline,\n  heading,\n  description,\n  "buttons": buttons[]{title, url, variant}\n}': CTA_OVERRIDE_FRAGMENT_RESULT;
     '\n  *[_type == "globalCta"][0]{\n    layout,\n    tagline,\n    heading,\n    description,\n    "buttons": buttons[]{title, url, variant},\n    "formEmbed": form->formEmbed,\n  }\n': GLOBAL_CTA_QUERY_RESULT;
@@ -21539,7 +22869,7 @@ declare global {
     '\n  *[_type == "blogCategory" && slug.current == $slug][0]{\n    "ogImage": ogImageOverride {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    title,\n    navLabel,\n    "slug": slug.current,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    h1,\n    tagline,\n    heading,\n    description,\n    hideCtaForm,\n    "ctaOverride": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  "buttons": buttons[]{title, url, variant}\n}\n  }\n': BLOG_CATEGORY_PAGE_QUERY_RESULT;
     '{\n  "page": *[_type == "reviewPage" && slug.current == $slug][0]{\n    h1,\n    title,\n    "slug": slug.current,\n    metaDescription,\n    noIndex,\n    noFollow,\n    "blurb": blurb []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == "image" => {\n    ...,\n    "alt": coalesce(alt, ""),\n    caption,\n    "lqip": asset->metadata.lqip,\n    "dimensions": asset->metadata.dimensions\n  },\n  _type == "officeHours" => {\n    title\n  }\n},\n    "reviewLinks": reviewLinks[]{\n      platform,\n      url,\n      label\n    },\n    "feedbackFormEmbed": feedbackForm->formEmbed\n  },\n  "logo": *[_type == "designSettings"][0]{\n    logoOnLight{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    }\n  }.logoOnLight,\n  "firmInfo": *[_type == "siteSettings"][0]{\n    firmName,\n    "address": primaryLocation->{\n      \n  "address1": select(locationType in ["Physical", "Shared"] => address1, null),\n  "address2": select(locationType in ["Physical", "Shared"] => address2, null),\n  "address3": select(locationType in ["Physical", "Shared"] => address3, null),\n  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),\n\n      city,\n      state,\n      officePhone\n    }\n  }\n}': REVIEW_PAGE_QUERY_RESULT;
     '\n  *[\n    slug.current == $slug &&\n    _type in ["practiceArea", "geoPracticeArea", "serviceAreaPage", "locationPage", "aboutPage", "faqPage", "generalPage", "landingPage"]\n  ][0]{\n    "ogImage": ogImageOverride {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    _type,\n    "title": coalesce(title, ""),\n    navLabel,\n    "areasOfLaw": select(\n      _type in ["practiceArea", "geoPracticeArea", "serviceAreaPage"] => *[\n  _type == "practiceArea" && !defined(parentPage) && defined(slug.current)\n].title,\n      null\n    ),\n    "slug": slug.current,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    "parentPage": parentPage->{\n      title, navLabel, "slug": slug.current,\n      "parentPage": parentPage->{\n        title, navLabel, "slug": slug.current,\n        "parentPage": parentPage->{\n          title, navLabel, "slug": slug.current,\n          "parentPage": parentPage->{\n            title, navLabel, "slug": slug.current\n          }\n        }\n      }\n    },\n    "hero": hero {\n      "heading": coalesce(heading, ^.title),\n      \n  description,\n  "buttons": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  "backgroundImage": backgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "foregroundImage": foregroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  }\n\n    },\n    "body": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == "image" => {\n    ...,\n    "alt": coalesce(alt, ""),\n    caption,\n    "lqip": asset->metadata.lqip,\n    "dimensions": asset->metadata.dimensions\n  },\n  _type == "officeHours" => {\n    title\n  }\n},\n    "faqItems": faqItems[defined(@->_id)]->{\n      question,\n      "answer": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == "image" => {\n    ...,\n    "alt": coalesce(alt, ""),\n    caption,\n    "lqip": asset->metadata.lqip,\n    "dimensions": asset->metadata.dimensions\n  },\n  _type == "officeHours" => {\n    title\n  }\n},\n      category,\n      "slug": slug.current,\n      tags\n    },\n    sidebar[]{\n  _type,\n  _key,\n  _type == "sidebarTableOfContents" => {\n    "_componentType": "sidebarTableOfContents"\n  },\n  _type == "reference" => @->{\n    "_componentType": _type,\n    name,\n    header,\n    description,\n    mode,\n    layout,\n    postCount,\n    "formEmbed": form->formEmbed,\n    tagline,\n    supportingText1,\n    supportingText2,\n    phoneNumber,\n    "button": button{title, url, variant},\n    "orderedAolIds": *[_type == "mainNavigation"][0]\n      .items[_type == "navItemPracticeAreas"][0]\n      .practiceAreaOrder[]._ref,\n    // The title key here holds the RENDERED nav label, not the stored Name. The\n    // key keeps its name so no consumer changes, and the value obeys NAME-1 and\n    // NAME-2. The order(title asc) clauses below sort the PROJECTED key, so the\n    // tree sorts by the same string it displays.\n    "areasOfLaw": *[\n      _type == "practiceArea" && !defined(parentPage) && defined(slug.current)\n    ]{\n      _id,\n      "slug": slug.current,\n      "title": coalesce(select(navLabel != "" => navLabel), title),\n      "children": *[\n        _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)\n      ]{\n        _id,\n        "slug": slug.current,\n        "title": coalesce(select(navLabel != "" => navLabel), title),\n        "grandchildren": *[\n          _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)\n        ]{\n          "slug": slug.current,\n          "title": coalesce(select(navLabel != "" => navLabel), title),\n        } | order(title asc),\n      } | order(title asc),\n    },\n    "orderedAttorneyIds": select(\n      mode == \'practiceArea\' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,\n      null\n    ),\n    // Ruled 2026-08-07, Pass D.2. The attorney widget and the related-links\n    // widget are sidebar surfaces the 2026-08-07 nav ruling did not name; both\n    // now resolve the label in the projection, like the tree above. The title\n    // keys hold the RENDERED label and the consumer keys are unchanged.\n    "attorneys": select(\n      mode == \'all\' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}},\n      mode == \'practiceArea\' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}},\n      attorneys[defined(@->_id)]->{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}}\n    ),\n    "links": links[defined(@->_id)]->{\n      _id,\n      _type,\n      "slug": slug.current,\n      "title": coalesce(select(navLabel != "" => navLabel), title)\n    }\n  }\n},\n    "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer,\n    "sections": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  \n  name,\n  tagline,\n  heading,\n  intro,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  // contentSection (Phase 11): its eyebrow is the shared tagline key above;\n  // the rest are its own. Flat, like every other key here: a nested select\n  // would type-check against the flat props while every key read undefined.\n  headingEmphasis,\n  mediaSide,\n  showPhone,\n  marquee,\n  imageTreatment,\n  "body": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == "image" => {\n    ...,\n    "alt": coalesce(alt, ""),\n    caption,\n    "lqip": asset->metadata.lqip,\n    "dimensions": asset->metadata.dimensions\n  },\n  _type == "officeHours" => {\n    title\n  }\n},\n  "pullQuote": pullQuote{text, attribution},\n  "proof": proof{number, caption},\n  "media": media{\n    kind,\n    "image": image {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    "video": video->{_id, title, youTubeUrl, description, videoType}\n  },\n  "appearance": {\n    "surface": surface,\n    "spacing": spacing,\n    "backgroundImage": sectionBackgroundImage {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item\'s page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").\n  "items": select(\n    _type in ["practiceAreaNav", "practiceAreaNavInline"] && mode == "allTopLevel" => [\n      ...(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[defined(@->slug.current) && !defined(@->parentPage)][defined(@->_id)]->{\n  "_key": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  "description": metaDescription,\n  "icon": null,\n  "image": null,\n  "featured": false\n}),\n      ...(*[_type == "practiceArea" && defined(slug.current) && !defined(parentPage) && !(_id in coalesce(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[]._ref, []))]{\n  "_key": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  "description": metaDescription,\n  "icon": null,\n  "image": null,\n  "featured": false\n} | order(label asc))\n    ],\n    _type in ["practiceAreaNav", "practiceAreaNavInline"] =>\n      items[defined(page->slug.current)]{\n        _key,\n        "label": coalesce(label, coalesce(select(page->navLabel != "" => page->navLabel), page->title)),\n        "href": "/" + page->slug.current + "/",\n        "description": coalesce(description, page->metaDescription),\n        "icon": icon {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n        "image": image {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n        "featured": featured\n      },\n    // contentSection\'s items: a title and a body (on a stat row, the number\n    // and its caption). Without this branch the select yields null.\n    _type in ["contentSection", "contentSectionInline"] => items[]{_key, title, body}\n  ),\n  "buttons": buttons[]{title, url, variant},\n  "footerButton": footerButton{title, url, variant},\n  "ctaButton": ctaButton{title, url, variant},\n  "image": image {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  "testimonials": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  "avatar": avatar {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n},\n  "testimonial": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  "avatar": avatar {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n},\n  "questions": questions[defined(@->_id)]->{\n    question,\n    "answer": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == "image" => {\n    ...,\n    "alt": coalesce(alt, ""),\n    caption,\n    "lqip": asset->metadata.lqip,\n    "dimensions": asset->metadata.dimensions\n  },\n  _type == "officeHours" => {\n    title\n  }\n},\n    category,\n    "slug": slug.current,\n    tags\n  },\n  "caseResults": caseResults[defined(@->_id)]->{\n    _id, amount, caseType, caption, year\n  },\n  "badges": badges[defined(@->_id)]->{\n    "src": image.asset->url,\n    "alt": image.alt,\n    "width": image.asset->metadata.dimensions.width,\n    "height": image.asset->metadata.dimensions.height\n  },\n  "orderedAttorneyIds": select(\n    mode == \'practiceArea\' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  // The title key holds the RENDERED nav label, not the stored Name \u2014 same\n  // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,\n  // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the\n  // Nav Label. Three branches because the block has three modes.\n  "attorneys": select(\n    mode == \'all\' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,\n      "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n    },\n    mode == \'practiceArea\' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{\n      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,\n      "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n    },\n    mode == \'manual\' => attorneys[defined(@->_id)]->{\n      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,\n      "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  "videos": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n\n},\n    hideCtaForm,\n    "ctaOverride": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  "buttons": buttons[]{title, url, variant}\n},\n    _type == "locationPage" => {\n      mapEmbed,\n      "locationData": locationRef->{\n        "_id": _id,\n        city,\n        state,\n        \n  "address1": select(locationType in ["Physical", "Shared"] => address1, null),\n  "address2": select(locationType in ["Physical", "Shared"] => address2, null),\n  "address3": select(locationType in ["Physical", "Shared"] => address3, null),\n  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),\n\n        "geo": select(locationType in ["Physical", "Shared"] => geo{lat, lng}, null),\n        officePhone,\n        officeFax,\n        tollFreePhone,\n        hours,\n        emergency24_7,\n        emergencyPhone,\n        appointmentRequired,\n        gbpCidUrl\n      }\n    }\n  }\n': CATCH_ALL_PAGE_QUERY_RESULT;
-    '{\n  "metadata": \n  *[_type == "siteSettings"][0]{\n    firmName,\n    gscVerification,\n    hideFromSearch,\n    "faviconUrl":  *[_type == "designSettings"][0].favicon.asset->url,\n    "faviconMime": *[_type == "designSettings"][0].favicon.asset->mimeType,\n    "webclipUrl":  *[_type == "designSettings"][0].webclipImage.asset->url,\n  }\n,\n  "organization": {\n  "firmName": *[_type == "siteSettings"][0].firmName,\n  "logo":     *[_type == "designSettings"][0].logoOnLight.asset->url,\n  "address":  *[_type == "siteSettings"][0].primaryLocation->{\n    \n  "address1": select(locationType in ["Physical", "Shared"] => address1, null),\n  "address2": select(locationType in ["Physical", "Shared"] => address2, null),\n  "address3": select(locationType in ["Physical", "Shared"] => address3, null),\n  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),\n\n    city,\n    state,\n    officePhone,\n    tollFreePhone\n  },\n  "socials":  *[_type == "footerSettings"][0]{\n    facebookUrl,\n    instagramUrl,\n    twitterUrl,\n    linkedInUrl,\n    youTubeUrl,\n    avvoUrl,\n    justiaUrl,\n    findLawUrl,\n    martindaleUrl,\n    lawyersComUrl,\n    yelpUrl,\n    superLawyersUrl,\n    lawInfoUrl\n  }\n},\n  "scripts": \n  *[_type == "siteSettings"][0].scriptsRequireConsent\n,\n  "header": {\n  "siteSettings": *[_type == "siteSettings"][0]{\n    firmName,\n    firmNameShort,\n    "phone": primaryLocation->officePhone,\n    "tollFreePhone": primaryLocation->tollFreePhone\n  },\n  "designSettings": *[_type == "designSettings"][0]{\n    "logoOnLight": logoOnLight{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    "logoOnDark": logoOnDark{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    "logoMarkOnLight": logoMarkOnLight{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    "logoMarkOnDark": logoMarkOnDark{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    }\n  },\n  "mainNavigation": *[_type == "mainNavigation"][0]{\n    headerLayout,\n    mobileLayout,\n    heroMerge,\n    sticky,\n    stickyHideSupplementary,\n    compactStyle,\n    defaultScheme,\n    scrolledScheme,\n    topBarDesktop,\n    topBarMobile,\n    topBarPinSide,\n    topBarLeft,\n    topBarRight,\n    topBarStyle,\n    headerPhone,\n    headerPhone2,\n    headerPhoneTagline,\n    headerCtaLabel,\n    headerCtaUrl,\n    headerCtaLabel2,\n    headerCtaUrl2,\n    "navItems": items[]{\n      _type,\n      label,\n      href,\n      displayMode,\n      "children": select(\n        _type == "navItemStandard" => children[]{label, href},\n        _type == "navItemAttorneys" => select(\n          count(attorneyOrder) > 0 => attorneyOrder[defined(@->_id)]->{\n            "_id": _id,\n            "label": coalesce(firstName, "") + " " + coalesce(lastName, ""),\n            "href": "/" + slug.current + "/"\n          },\n          *[_type == "attorneyPage"]{\n            "label": coalesce(firstName, "") + " " + coalesce(lastName, ""),\n            "href": "/" + slug.current + "/"\n          } | order(lastName asc, firstName asc)\n        ),\n        // The Zite-ranked order first, then every practice area it does not\n        // list, by label; children ride flat with parentRef and the header\n        // groups them. Until [R-201] an order hid every page it did not list.\n        // No backticks in this comment: it sits inside a groq template literal.\n        _type == "navItemPracticeAreas" => [\n          ...(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[defined(@->slug.current)][defined(@->_id)]->{\n  "_id": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  "parentRef": parentPage._ref\n}),\n          ...(*[_type == "practiceArea" && defined(slug.current) && !(_id in coalesce(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[]._ref, []))]{\n  "_id": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  "parentRef": parentPage._ref\n} | order(label asc))\n        ]\n      )\n    }\n  }\n},\n  "footer": {\n  "designSettings": *[_type == "designSettings"][0]{\n    "logoOnDark": logoOnDark{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    "logoOnLight": logoOnLight{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    "showBackToTop": coalesce(showBackToTop, true)\n  },\n  "siteSettings": *[_type == "siteSettings"][0]{\n    firmName,\n    privacyPolicyUrl,\n    disclaimerUrl,\n    cookiesUrl,\n    "address": primaryLocation->{\n      \n  "address1": select(locationType in ["Physical", "Shared"] => address1, null),\n  "address2": select(locationType in ["Physical", "Shared"] => address2, null),\n  "address3": select(locationType in ["Physical", "Shared"] => address3, null),\n  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),\n\n      city,\n      state,\n      officePhone,\n      tollFreePhone,\n      emergency24_7,\n      emergencyPhone,\n      appointmentRequired,\n      hours\n    }\n  },\n  "footerSettings": *[_type == "footerSettings"][0]{\n    footerLayout,\n    footerScheme,\n    ctaText,\n    ctaUrl,\n    actionButton1Label,\n    actionButton1Url,\n    actionButton2Label,\n    actionButton2Url,\n    // Practice Areas column auto-lists top-level areas of law LIVE from the\n    // practiceArea docs \u2014 label = the nav-label expression, href = slug \u2014 so it\n    // stays in sync with the header nav and sidebar nav (single source of truth\n    // = the practiceArea document). The stored column1 field is ignored.\n    "column1": [\n      ...(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[defined(@->slug.current) && !defined(@->parentPage)][defined(@->_id)]->{\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/"\n}),\n      ...(*[_type == "practiceArea" && defined(slug.current) && !defined(parentPage) && !(_id in coalesce(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[]._ref, []))]{\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/"\n} | order(label asc))\n    ],\n    "column2": column2[]{label, href},\n    facebookUrl,\n    instagramUrl,\n    twitterUrl,\n    linkedInUrl,\n    youTubeUrl,\n    "formEmbed": form->formEmbed,\n  },\n  "locations": *[_type == "location" && locationStatus == "Active" && displayOnWebsite == true] | order(isPrimary desc, city asc) {\n    _id,\n    city,\n    \n  "address1": select(locationType in ["Physical", "Shared"] => address1, null),\n  "address2": select(locationType in ["Physical", "Shared"] => address2, null),\n  "address3": select(locationType in ["Physical", "Shared"] => address3, null),\n  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),\n\n    state,\n    officePhone,\n    tollFreePhone,\n    emergency24_7,\n    emergencyPhone,\n    appointmentRequired,\n    hours,\n    "pageSlug": *[_type == "locationPage" && references(^._id)][0].slug.current\n  }\n},\n  "designTokens": \n  *[_type == "designSettings"][0]{\n    uiRadius,\n    buttonShape,\n    buttonAnimation,\n    tertiaryStyle,\n    taglineStyle,\n    elevationStyle,\n    motionTempo,\n    marketingScale,\n    fontPairingPreset,\n    "colorApproach": colorApproach,\n    "primaryColor":  primaryColor,\n    "actionColor":   actionColor,\n    "accent1Color":  accent1Color,\n    "accent2Color":  accent2Color,\n    internalHeroBackground,\n    heroScrimOpacity,\n    "siteHeroBackgroundImage": siteHeroBackgroundImage{\n      "src": asset->url,\n      "alt": alt,\n      "fit": fit,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    "siteHeroForegroundImage": siteHeroForegroundImage{\n      "src": asset->url,\n      "alt": alt,\n      "hotspot": hotspot{x, y},\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    // WS-Sidebar Phase 2.1 \u2014 sidebar UI element settings. Behavior wired in\n    // Phase 2.5; resolver in lib/designTokens.ts (resolveSidebarDesignSettings).\n    sidebarNavIconStyle,\n    sidebarWidgetHeaderLine,\n    sidebarItemSeparators,\n    "headingFont": customFonts.headingFont{\n      name,\n      "regular":   regular.asset->url,\n      "bold":      bold.asset->url,\n      "italic":    italic.asset->url,\n    },\n    "bodyFont": customFonts.bodyFont{\n      name,\n      "regular":   regular.asset->url,\n      "semibold":  semibold.asset->url,\n      "bold":      bold.asset->url,\n      "italic":    italic.asset->url,\n      "boldItalic": boldItalic.asset->url,\n    },\n  }\n,\n  "heroSettings": *[_type == "heroSettings"][0]{\n  scheme,\n  scrimStyle,\n  scrimColor,\n  scrimDirection,\n  scrimOpacity,\n  "defaultButtons": defaultButtons[]{title, url, variant},\n  "backgroundImage": backgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "foregroundImage": foregroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "sectionBackgroundImage": sectionBackgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  }\n},\n  "nap": \n  *[_type == "siteSettings"][0]{\n    firmName,\n    firmNameShort,\n    "profileLayout": *[_type == "designSettings"][0].profileLayout,\n    "profileCtaLabel": *[_type == "designSettings"][0].profileCtaLabel,\n    "profileCtaUrl": *[_type == "designSettings"][0].profileCtaUrl,\n    "primaryPhone": primaryLocation->officePhone,\n    "primaryTollFree": primaryLocation->tollFreePhone,\n    "primaryLocationId": primaryLocation->_id,\n    "locations": *[_type == "location" && locationStatus == "Active" && displayOnWebsite == true]{\n      "_id": _id,\n      "phone": officePhone,\n      "fax": officeFax,\n      address1,\n      address2,\n      address3,\n      city,\n      state,\n      zip,\n      appointmentRequired,\n      emergency24_7,\n      emergencyPhone\n    },\n  }\n,\n  "globalCta": \n  *[_type == "globalCta"][0]{\n    layout,\n    tagline,\n    heading,\n    description,\n    "buttons": buttons[]{title, url, variant},\n    "formEmbed": form->formEmbed,\n  }\n,\n  "hidden": *[_type == "siteSettings"][0].hideFromSearch\n}': SITE_CHROME_QUERY_RESULT;
+    '{\n  "metadata": \n  *[_type == "siteSettings"][0]{\n    firmName,\n    gscVerification,\n    hideFromSearch,\n    "faviconUrl":  *[_type == "designSettings"][0].favicon.asset->url,\n    "faviconMime": *[_type == "designSettings"][0].favicon.asset->mimeType,\n    "webclipUrl":  *[_type == "designSettings"][0].webclipImage.asset->url,\n  }\n,\n  "organization": {\n  "firmName": *[_type == "siteSettings"][0].firmName,\n  "logo":     *[_type == "designSettings"][0].logoOnLight.asset->url,\n  "address":  *[_type == "siteSettings"][0].primaryLocation->{\n    \n  "address1": select(locationType in ["Physical", "Shared"] => address1, null),\n  "address2": select(locationType in ["Physical", "Shared"] => address2, null),\n  "address3": select(locationType in ["Physical", "Shared"] => address3, null),\n  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),\n\n    city,\n    state,\n    officePhone,\n    tollFreePhone\n  },\n  "socials":  *[_type == "footerSettings"][0]{\n    facebookUrl,\n    instagramUrl,\n    twitterUrl,\n    linkedInUrl,\n    youTubeUrl,\n    avvoUrl,\n    justiaUrl,\n    findLawUrl,\n    martindaleUrl,\n    lawyersComUrl,\n    yelpUrl,\n    superLawyersUrl,\n    lawInfoUrl\n  }\n},\n  "scripts": \n  *[_type == "siteSettings"][0].scriptsRequireConsent\n,\n  "header": {\n  "siteSettings": *[_type == "siteSettings"][0]{\n    firmName,\n    firmNameShort,\n    "phone": primaryLocation->officePhone,\n    "tollFreePhone": primaryLocation->tollFreePhone\n  },\n  "designSettings": *[_type == "designSettings"][0]{\n    "logoOnLight": logoOnLight{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    "logoOnDark": logoOnDark{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    "logoMarkOnLight": logoMarkOnLight{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    "logoMarkOnDark": logoMarkOnDark{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    }\n  },\n  "mainNavigation": *[_type == "mainNavigation"][0]{\n    headerLayout,\n    mobileLayout,\n    heroMerge,\n    sticky,\n    stickyHideSupplementary,\n    compactStyle,\n    defaultScheme,\n    scrolledScheme,\n    topBarDesktop,\n    topBarMobile,\n    topBarPinSide,\n    topBarLeft,\n    topBarRight,\n    topBarStyle,\n    headerPhone,\n    headerPhone2,\n    headerPhoneTagline,\n    headerCtaLabel,\n    headerCtaUrl,\n    headerCtaLabel2,\n    headerCtaUrl2,\n    "navItems": items[]{\n      _type,\n      label,\n      href,\n      displayMode,\n      "children": select(\n        _type == "navItemStandard" => children[]{label, href},\n        _type == "navItemAttorneys" => select(\n          count(attorneyOrder) > 0 => attorneyOrder[defined(@->_id)]->{\n            "_id": _id,\n            "label": coalesce(firstName, "") + " " + coalesce(lastName, ""),\n            "href": "/" + slug.current + "/"\n          },\n          *[_type == "attorneyPage"]{\n            "label": coalesce(firstName, "") + " " + coalesce(lastName, ""),\n            "href": "/" + slug.current + "/"\n          } | order(lastName asc, firstName asc)\n        ),\n        // The Zite-ranked order first, then every practice area it does not\n        // list, by label; children ride flat with parentRef and the header\n        // groups them. Until [R-201] an order hid every page it did not list.\n        // No backticks in this comment: it sits inside a groq template literal.\n        _type == "navItemPracticeAreas" => [\n          ...(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[defined(@->slug.current)][defined(@->_id)]->{\n  "_id": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  "parentRef": parentPage._ref\n}),\n          ...(*[_type == "practiceArea" && defined(slug.current) && !(_id in coalesce(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[]._ref, []))]{\n  "_id": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  "parentRef": parentPage._ref\n} | order(label asc))\n        ]\n      )\n    }\n  }\n},\n  "footer": {\n  "designSettings": *[_type == "designSettings"][0]{\n    "logoOnDark": logoOnDark{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    "logoOnLight": logoOnLight{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    "showBackToTop": coalesce(showBackToTop, true)\n  },\n  "siteSettings": *[_type == "siteSettings"][0]{\n    firmName,\n    privacyPolicyUrl,\n    disclaimerUrl,\n    cookiesUrl,\n    "address": primaryLocation->{\n      \n  "address1": select(locationType in ["Physical", "Shared"] => address1, null),\n  "address2": select(locationType in ["Physical", "Shared"] => address2, null),\n  "address3": select(locationType in ["Physical", "Shared"] => address3, null),\n  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),\n\n      city,\n      state,\n      officePhone,\n      tollFreePhone,\n      emergency24_7,\n      emergencyPhone,\n      appointmentRequired,\n      hours\n    }\n  },\n  "footerSettings": *[_type == "footerSettings"][0]{\n    footerLayout,\n    footerScheme,\n    ctaText,\n    ctaUrl,\n    actionButton1Label,\n    actionButton1Url,\n    actionButton2Label,\n    actionButton2Url,\n    // Practice Areas column auto-lists top-level areas of law LIVE from the\n    // practiceArea docs \u2014 label = the nav-label expression, href = slug \u2014 so it\n    // stays in sync with the header nav and sidebar nav (single source of truth\n    // = the practiceArea document). The stored column1 field is ignored.\n    "column1": [\n      ...(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[defined(@->slug.current) && !defined(@->parentPage)][defined(@->_id)]->{\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/"\n}),\n      ...(*[_type == "practiceArea" && defined(slug.current) && !defined(parentPage) && !(_id in coalesce(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[]._ref, []))]{\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/"\n} | order(label asc))\n    ],\n    "column2": column2[]{label, href},\n    facebookUrl,\n    instagramUrl,\n    twitterUrl,\n    linkedInUrl,\n    youTubeUrl,\n    "formEmbed": form->formEmbed,\n  },\n  "locations": *[_type == "location" && locationStatus == "Active" && displayOnWebsite == true] | order(isPrimary desc, city asc) {\n    _id,\n    city,\n    \n  "address1": select(locationType in ["Physical", "Shared"] => address1, null),\n  "address2": select(locationType in ["Physical", "Shared"] => address2, null),\n  "address3": select(locationType in ["Physical", "Shared"] => address3, null),\n  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),\n\n    state,\n    officePhone,\n    tollFreePhone,\n    emergency24_7,\n    emergencyPhone,\n    appointmentRequired,\n    hours,\n    "pageSlug": *[_type == "locationPage" && references(^._id)][0].slug.current\n  }\n},\n  "designTokens": \n  *[_type == "designSettings"][0]{\n    uiRadius,\n    buttonShape,\n    buttonAnimation,\n    tertiaryStyle,\n    taglineStyle,\n    elevationStyle,\n    motionTempo,\n    marketingScale,\n    fontPairingPreset,\n    "colorApproach": colorApproach,\n    "primaryColor":  primaryColor,\n    "actionColor":   actionColor,\n    "accent1Color":  accent1Color,\n    "accent2Color":  accent2Color,\n    internalHeroBackground,\n    heroScrimOpacity,\n    // The page background layer (Phase 13). Absent on every client built so far,\n    // and PageBackgroundLayer renders nothing for an absent or "none" kind, so\n    // this changes no served page until an operator or a Phase 16 theme sets it.\n    //\n    // KEEP THIS COMMENT PLAIN, and see BI/runbooks/traps.md for why. Two hazards\n    // live here, both of which cost a CI cycle on PR #25: a backtick closes the\n    // template literal this query sits in, and several ordinary words, if written\n    // here, make the template blank-slate guard flag three footer field names\n    // that are older than this phase. The guard passes locally on the committed\n    // generated types and fails only once they are regenerated, so it surfaces on\n    // CI rather than before the push.\n    "pageBackground": pageBackground{\n      kind,\n      texture,\n      opacity,\n      "image": image{\n        "src": asset->url,\n        "alt": alt,\n        "width": asset->metadata.dimensions.width,\n        "height": asset->metadata.dimensions.height\n      }\n    },\n    "siteHeroBackgroundImage": siteHeroBackgroundImage{\n      "src": asset->url,\n      "alt": alt,\n      "fit": fit,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    "siteHeroForegroundImage": siteHeroForegroundImage{\n      "src": asset->url,\n      "alt": alt,\n      "hotspot": hotspot{x, y},\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    // WS-Sidebar Phase 2.1 \u2014 sidebar UI element settings. Behavior wired in\n    // Phase 2.5; resolver in lib/designTokens.ts (resolveSidebarDesignSettings).\n    sidebarNavIconStyle,\n    sidebarWidgetHeaderLine,\n    sidebarItemSeparators,\n    "headingFont": customFonts.headingFont{\n      name,\n      "regular":   regular.asset->url,\n      "bold":      bold.asset->url,\n      "italic":    italic.asset->url,\n    },\n    "bodyFont": customFonts.bodyFont{\n      name,\n      "regular":   regular.asset->url,\n      "semibold":  semibold.asset->url,\n      "bold":      bold.asset->url,\n      "italic":    italic.asset->url,\n      "boldItalic": boldItalic.asset->url,\n    },\n  }\n,\n  "heroSettings": *[_type == "heroSettings"][0]{\n  scheme,\n  scrimStyle,\n  scrimColor,\n  scrimDirection,\n  scrimOpacity,\n  "defaultButtons": defaultButtons[]{title, url, variant},\n  "backgroundImage": backgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "foregroundImage": foregroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "sectionBackgroundImage": sectionBackgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  }\n},\n  "nap": \n  *[_type == "siteSettings"][0]{\n    firmName,\n    firmNameShort,\n    "profileLayout": *[_type == "designSettings"][0].profileLayout,\n    "profileCtaLabel": *[_type == "designSettings"][0].profileCtaLabel,\n    "profileCtaUrl": *[_type == "designSettings"][0].profileCtaUrl,\n    "primaryPhone": primaryLocation->officePhone,\n    "primaryTollFree": primaryLocation->tollFreePhone,\n    "primaryLocationId": primaryLocation->_id,\n    "locations": *[_type == "location" && locationStatus == "Active" && displayOnWebsite == true]{\n      "_id": _id,\n      "phone": officePhone,\n      "fax": officeFax,\n      address1,\n      address2,\n      address3,\n      city,\n      state,\n      zip,\n      appointmentRequired,\n      emergency24_7,\n      emergencyPhone\n    },\n  }\n,\n  "globalCta": \n  *[_type == "globalCta"][0]{\n    layout,\n    tagline,\n    heading,\n    description,\n    "buttons": buttons[]{title, url, variant},\n    "formEmbed": form->formEmbed,\n  }\n,\n  "hidden": *[_type == "siteSettings"][0].hideFromSearch\n}': SITE_CHROME_QUERY_RESULT;
     '{\n  "page": \n  *[_type == "homePage"][0]{\n    "hero": hero {\n  heading,\n  eyebrow,\n  description,\n  "buttons": buttons[]{title, url, variant}\n},\n    "canvas": canvas []{\n  _type,\n  _key,\n  // The seven inline section objects (Phase 10): the shared section body, so\n  // a page-owned copy projects exactly what its referenced document would.\n  // One conditional with a type list rather than seven copies of the body\n  // (a quarter of the encoded size, byte-identical results under groq-js);\n  // its price is that typegen emits two members per inline type, one with the\n  // keys and one without (traps.md), which nothing reads: the page casts the\n  // result to HomepageBlock and the props types derive from the schema types.\n  // No backticks in these comments: they sit inside a groq template literal.\n  _type in [\n    "practiceAreaNavInline", "attorneySectionInline", "caseResultsSectionInline",\n    "badgesSectionInline", "testimonialsGridInline", "featuredTestimonialInline",\n    "videoSectionInline", "contentSectionInline", "reviewsSectionInline"\n  ] => {\n    \n  name,\n  tagline,\n  heading,\n  intro,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  // contentSection (Phase 11): its eyebrow is the shared tagline key above;\n  // the rest are its own. Flat, like every other key here: a nested select\n  // would type-check against the flat props while every key read undefined.\n  headingEmphasis,\n  mediaSide,\n  showPhone,\n  marquee,\n  imageTreatment,\n  "body": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == "image" => {\n    ...,\n    "alt": coalesce(alt, ""),\n    caption,\n    "lqip": asset->metadata.lqip,\n    "dimensions": asset->metadata.dimensions\n  },\n  _type == "officeHours" => {\n    title\n  }\n},\n  "pullQuote": pullQuote{text, attribution},\n  "proof": proof{number, caption},\n  "media": media{\n    kind,\n    "image": image {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    "video": video->{_id, title, youTubeUrl, description, videoType}\n  },\n  "appearance": {\n    "surface": surface,\n    "spacing": spacing,\n    "backgroundImage": sectionBackgroundImage {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item\'s page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").\n  "items": select(\n    _type in ["practiceAreaNav", "practiceAreaNavInline"] && mode == "allTopLevel" => [\n      ...(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[defined(@->slug.current) && !defined(@->parentPage)][defined(@->_id)]->{\n  "_key": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  "description": metaDescription,\n  "icon": null,\n  "image": null,\n  "featured": false\n}),\n      ...(*[_type == "practiceArea" && defined(slug.current) && !defined(parentPage) && !(_id in coalesce(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[]._ref, []))]{\n  "_key": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  "description": metaDescription,\n  "icon": null,\n  "image": null,\n  "featured": false\n} | order(label asc))\n    ],\n    _type in ["practiceAreaNav", "practiceAreaNavInline"] =>\n      items[defined(page->slug.current)]{\n        _key,\n        "label": coalesce(label, coalesce(select(page->navLabel != "" => page->navLabel), page->title)),\n        "href": "/" + page->slug.current + "/",\n        "description": coalesce(description, page->metaDescription),\n        "icon": icon {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n        "image": image {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n        "featured": featured\n      },\n    // contentSection\'s items: a title and a body (on a stat row, the number\n    // and its caption). Without this branch the select yields null.\n    _type in ["contentSection", "contentSectionInline"] => items[]{_key, title, body}\n  ),\n  "buttons": buttons[]{title, url, variant},\n  "footerButton": footerButton{title, url, variant},\n  "ctaButton": ctaButton{title, url, variant},\n  "image": image {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  "testimonials": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  "avatar": avatar {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n},\n  "testimonial": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  "avatar": avatar {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n},\n  "questions": questions[defined(@->_id)]->{\n    question,\n    "answer": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == "image" => {\n    ...,\n    "alt": coalesce(alt, ""),\n    caption,\n    "lqip": asset->metadata.lqip,\n    "dimensions": asset->metadata.dimensions\n  },\n  _type == "officeHours" => {\n    title\n  }\n},\n    category,\n    "slug": slug.current,\n    tags\n  },\n  "caseResults": caseResults[defined(@->_id)]->{\n    _id, amount, caseType, caption, year\n  },\n  "badges": badges[defined(@->_id)]->{\n    "src": image.asset->url,\n    "alt": image.alt,\n    "width": image.asset->metadata.dimensions.width,\n    "height": image.asset->metadata.dimensions.height\n  },\n  "orderedAttorneyIds": select(\n    mode == \'practiceArea\' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  // The title key holds the RENDERED nav label, not the stored Name \u2014 same\n  // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,\n  // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the\n  // Nav Label. Three branches because the block has three modes.\n  "attorneys": select(\n    mode == \'all\' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,\n      "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n    },\n    mode == \'practiceArea\' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{\n      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,\n      "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n    },\n    mode == \'manual\' => attorneys[defined(@->_id)]->{\n      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,\n      "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  "videos": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n\n  },\n  // The six old block types, retired (Phase 10) and deleted in Phase 15. Their\n  // branches stay byte-for-byte so an unmigrated dataset renders as before.\n  _type == "attorneyHighlightBlock" => {\n    tagline,\n    heading,\n    mode,\n    // \'all\' reads the Attorney Index order so the homepage row matches the\n    // attorney index and the header nav; \'manual\' uses the block\'s own order.\n    "attorneys": select(\n      mode == "manual" => attorneys[defined(@->_id)]->{\n        _id,\n        // Built from the name fields, NOT from title. Zite\'s displayName carries\n        // the firm suffix, so title reads "Joseph Dudley - Firm, P.A." and would\n        // render that on an attorney card. The platform already ruled that\n        // display names build from name fields (_format_display_name); h1 wins\n        // when an operator has set one. No backticks in here: this comment sits\n        // inside a groq template literal and a backtick would close it.\n        "name": coalesce(h1, firstName + " " + lastName),\n        jobTitle,\n        "href": "/" + slug.current,\n        "photo": {\n          "src": photo.asset->url,\n          "alt": photo.alt,\n          "width": photo.asset->metadata.dimensions.width,\n          "height": photo.asset->metadata.dimensions.height\n        }\n      },\n      *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{\n        _id,\n        // Built from the name fields, NOT from title. Zite\'s displayName carries\n        // the firm suffix, so title reads "Joseph Dudley - Firm, P.A." and would\n        // render that on an attorney card. The platform already ruled that\n        // display names build from name fields (_format_display_name); h1 wins\n        // when an operator has set one. No backticks in here: this comment sits\n        // inside a groq template literal and a backtick would close it.\n        "name": coalesce(h1, firstName + " " + lastName),\n        jobTitle,\n        "href": "/" + slug.current,\n        "photo": {\n          "src": photo.asset->url,\n          "alt": photo.alt,\n          "width": photo.asset->metadata.dimensions.width,\n          "height": photo.asset->metadata.dimensions.height\n        }\n      }\n    )\n  },\n  _type == "caseResultsBlock" => {\n    heading,\n    intro,\n    "caseResults": caseResults[defined(@->_id)]->{\n      _id, amount, caseType, caption, year\n    },\n    "ctaButton": ctaButton{title, url, variant}\n  },\n  _type == "narrativeBlock" => {\n    heading,\n    "body": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == "image" => {\n    ...,\n    "alt": coalesce(alt, ""),\n    caption,\n    "lqip": asset->metadata.lqip,\n    "dimensions": asset->metadata.dimensions\n  },\n  _type == "officeHours" => {\n    title\n  }\n},\n    "image": {\n      "src": image.asset->url,\n      "alt": image.alt,\n      "width": image.asset->metadata.dimensions.width,\n      "height": image.asset->metadata.dimensions.height\n    },\n    "ctaButton": ctaButton{title, url, variant},\n    "internalLinks": internalLinks[defined(page->slug.current)]{\n      _key,\n      anchorText,\n      "href": "/" + page->slug.current + "/"\n    }\n  },\n  _type == "differentiatorBlock" => {\n    heading,\n    intro,\n    "differentiators": differentiators[]{_key, title, body}\n  },\n  _type == "badgesBlock" => {\n    heading,\n    description,\n    "badges": badges[defined(@->_id)]->{\n      "src": image.asset->url,\n      "alt": image.alt,\n      "width": image.asset->metadata.dimensions.width,\n      "height": image.asset->metadata.dimensions.height\n    }\n  },\n  // Beat 4, Areas of Law. Byte-for-byte the same item shape the interior\n  // practiceAreaNav section projects in SECTIONS_FRAGMENT, so the shared\n  // SiloNavItem type and the shared silo layouts serve both without a second\n  // model. Two branches, matching the two modes: the auto-list of every\n  // top-level practice area, and the operator\'s curated items[].\n  //\n  // Both resolve the label through the shared nav-label expressions rather than\n  // reading bare title, so an authored Nav Label reaches this surface (NAME-1 /\n  // NAME-2). This projection is inside the derivation of\n  // site/lib/__tests__/navLabelProjections.test.ts and satisfies it; it is\n  // deliberately NOT on that guard\'s EXEMPT roster.\n  _type == "siloNavBlock" => {\n    tagline,\n    heading,\n    description,\n    mode,\n    "items": select(\n      mode == "manual" =>\n        items[defined(page->slug.current)]{\n          _key,\n          "label": coalesce(label, coalesce(select(page->navLabel != "" => page->navLabel), page->title)),\n          "href": "/" + page->slug.current + "/",\n          "description": coalesce(description, page->metaDescription),\n          "icon": icon {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n          "image": image {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n        },\n      [\n        ...(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[defined(@->slug.current) && !defined(@->parentPage)][defined(@->_id)]->{\n  "_key": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  "description": metaDescription,\n  "icon": null,\n  "image": null\n}),\n        ...(*[_type == "practiceArea" && defined(slug.current) && !defined(parentPage) && !(_id in coalesce(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[]._ref, []))]{\n  "_key": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  "description": metaDescription,\n  "icon": null,\n  "image": null\n} | order(label asc))\n      ]\n    )\n  }\n},\n    // Site-level, projected alongside the canvas rather than fetched separately:\n    // the same one-liner any other page rendering case results will need. Raw\n    // and nullable here; resolveResultsDisclaimer() supplies the floor.\n    "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer,\n    // Beat 9 is a BOOKEND sourced from the globalCta singleton with this page\'s\n    // ctaFormOverride layered on top, exactly as every interior page does it.\n    // Both were missing here: the homepage rendered no CTA at all and\n    // ctaFormOverride was projected by twelve interior queries and not this one,\n    // which left homePage.hideCtaForm and ctaFormOverride inert (item 53).\n    "hideCtaForm": hideCtaForm,\n    "ctaOverride": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  "buttons": buttons[]{title, url, variant}\n},\n    "sections": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  \n  name,\n  tagline,\n  heading,\n  intro,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  // contentSection (Phase 11): its eyebrow is the shared tagline key above;\n  // the rest are its own. Flat, like every other key here: a nested select\n  // would type-check against the flat props while every key read undefined.\n  headingEmphasis,\n  mediaSide,\n  showPhone,\n  marquee,\n  imageTreatment,\n  "body": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == "image" => {\n    ...,\n    "alt": coalesce(alt, ""),\n    caption,\n    "lqip": asset->metadata.lqip,\n    "dimensions": asset->metadata.dimensions\n  },\n  _type == "officeHours" => {\n    title\n  }\n},\n  "pullQuote": pullQuote{text, attribution},\n  "proof": proof{number, caption},\n  "media": media{\n    kind,\n    "image": image {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    "video": video->{_id, title, youTubeUrl, description, videoType}\n  },\n  "appearance": {\n    "surface": surface,\n    "spacing": spacing,\n    "backgroundImage": sectionBackgroundImage {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item\'s page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").\n  "items": select(\n    _type in ["practiceAreaNav", "practiceAreaNavInline"] && mode == "allTopLevel" => [\n      ...(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[defined(@->slug.current) && !defined(@->parentPage)][defined(@->_id)]->{\n  "_key": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  "description": metaDescription,\n  "icon": null,\n  "image": null,\n  "featured": false\n}),\n      ...(*[_type == "practiceArea" && defined(slug.current) && !defined(parentPage) && !(_id in coalesce(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[]._ref, []))]{\n  "_key": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  "description": metaDescription,\n  "icon": null,\n  "image": null,\n  "featured": false\n} | order(label asc))\n    ],\n    _type in ["practiceAreaNav", "practiceAreaNavInline"] =>\n      items[defined(page->slug.current)]{\n        _key,\n        "label": coalesce(label, coalesce(select(page->navLabel != "" => page->navLabel), page->title)),\n        "href": "/" + page->slug.current + "/",\n        "description": coalesce(description, page->metaDescription),\n        "icon": icon {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n        "image": image {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n        "featured": featured\n      },\n    // contentSection\'s items: a title and a body (on a stat row, the number\n    // and its caption). Without this branch the select yields null.\n    _type in ["contentSection", "contentSectionInline"] => items[]{_key, title, body}\n  ),\n  "buttons": buttons[]{title, url, variant},\n  "footerButton": footerButton{title, url, variant},\n  "ctaButton": ctaButton{title, url, variant},\n  "image": image {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  "testimonials": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  "avatar": avatar {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n},\n  "testimonial": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  "avatar": avatar {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n},\n  "questions": questions[defined(@->_id)]->{\n    question,\n    "answer": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == "image" => {\n    ...,\n    "alt": coalesce(alt, ""),\n    caption,\n    "lqip": asset->metadata.lqip,\n    "dimensions": asset->metadata.dimensions\n  },\n  _type == "officeHours" => {\n    title\n  }\n},\n    category,\n    "slug": slug.current,\n    tags\n  },\n  "caseResults": caseResults[defined(@->_id)]->{\n    _id, amount, caseType, caption, year\n  },\n  "badges": badges[defined(@->_id)]->{\n    "src": image.asset->url,\n    "alt": image.alt,\n    "width": image.asset->metadata.dimensions.width,\n    "height": image.asset->metadata.dimensions.height\n  },\n  "orderedAttorneyIds": select(\n    mode == \'practiceArea\' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  // The title key holds the RENDERED nav label, not the stored Name \u2014 same\n  // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,\n  // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the\n  // Nav Label. Three branches because the block has three modes.\n  "attorneys": select(\n    mode == \'all\' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,\n      "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n    },\n    mode == \'practiceArea\' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{\n      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,\n      "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n    },\n    mode == \'manual\' => attorneys[defined(@->_id)]->{\n      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,\n      "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n    },\n    []\n  ),\n  "videos": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType\n  }\n\n}\n  }\n,\n  "metadata": {\n  ...(*[_type == "homePage"][0]{\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    "ogImage": ogImageOverride {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n  }),\n  "areasOfLaw": *[\n  _type == "practiceArea" && !defined(parentPage) && defined(slug.current)\n].title\n},\n  "heroDesign": *[_type == "heroSettings"][0].homepageHero {\n  skeleton,\n  heightMode,\n  contentAlign,\n  backdrop,\n  foreground,\n  scrimStyle,\n  scrimColor,\n  scrimDirection,\n  splitMedia,\n  splitImageStyle,\n  splitImageRatio,\n  textTreatment,\n  mediaSide,\n  motion,\n  schemeOverride,\n  scrimOpacityOverride,\n  "backgroundImage": backgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "foregroundImage": foregroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "sectionBackgroundImage": sectionBackgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "galleryImages": galleryImages[]{\n    "src": asset->url,\n    "alt": alt,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  videoUrl\n}\n}': HOME_PAGE_QUERY_RESULT;
   }
 }

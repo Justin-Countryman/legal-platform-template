@@ -2,6 +2,8 @@ import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {Button} from '@/components/ui/Button'
 import {FaqAccordion} from '@/components/ui/FaqAccordion'
 import {SectionHeader} from '@/components/ui/SectionHeader'
+import {SectionShell, type SectionAppearance} from './SectionShell'
+import {type SeamProps, NO_SEAM} from './sectionFrame'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -25,6 +27,7 @@ type CtaButton = {
 
 export type FaqSectionBlockData = {
   _type: 'faqSection'
+  appearance?: SectionAppearance | null
   heading?: string | null
   description?: string | null
   questions?: FaqItem[] | null
@@ -35,15 +38,33 @@ export type FaqSectionBlockData = {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
+// ─── The frame (Phase 13) ─────────────────────────────────────────────────────
+// Transparent today, so `pattern` is the default: the band paints no background
+// of its own. Its inner `mx-auto max-w-3xl` rides on the shell's container
+// through `innerClassName`, which is one of the two props the shell gained for
+// exactly this (item 308 keeps the default in code, never as an `initialValue`).
+
+/** The appearance this section will actually render with, for the seam walk. */
+export function resolveAppearance(data: FaqSectionBlockData): SectionAppearance {
+  return {...data.appearance, surface: data.appearance?.surface ?? 'pattern'}
+}
+
+/** An FAQ band IS its questions. */
+export function isEmpty(data: FaqSectionBlockData): boolean {
+  return (data.questions ?? []).length === 0
+}
+
 export function FaqSectionBlock({
   data,
   napTokens,
+  seam = NO_SEAM,
 }: {
   data: FaqSectionBlockData
   napTokens?: NapTokens | null
+  seam?: SeamProps
 }) {
   const questions = data.questions ?? []
-  if (questions.length === 0) return null
+  if (isEmpty(data)) return null
 
   const heading = resolveTokenString(data.heading, napTokens) ?? 'FAQs'
   const description = resolveTokenString(data.description, napTokens)
@@ -52,8 +73,14 @@ export function FaqSectionBlock({
   const footerButtonTitle = resolveTokenString(data.footerButton?.title, napTokens)
 
   return (
-    <section className="px-[5%] py-16 md:py-24 lg:py-28">
-      <div className="container mx-auto max-w-3xl">
+    <SectionShell
+      appearance={resolveAppearance(data)}
+      innerClassName="mx-auto max-w-3xl"
+      seamTop={seam.seamTop}
+      previousGround={seam.previousGround}
+      previousEdge={seam.previousEdge}
+    >
+      <>
 
         <SectionHeader
           heading={heading}
@@ -80,7 +107,7 @@ export function FaqSectionBlock({
           </div>
         )}
 
-      </div>
-    </section>
+      </>
+    </SectionShell>
   )
 }

@@ -1,4 +1,5 @@
 import {defineType, defineField} from 'sanity'
+import {appearanceFieldset, appearanceFields} from '../../objects/appearanceFields'
 import {TokenStringInput} from '../../../components/TokenStringInput'
 import {TokenTextInput} from '../../../components/TokenTextInput'
 
@@ -8,8 +9,17 @@ import {TokenTextInput} from '../../../components/TokenTextInput'
 // DOCUMENT (`badgesSection`) is the shared section interior pages reference,
 // the INLINE OBJECT (`badgesSectionInline`) is the page-owned copy on the
 // homepage list. See practiceAreaNav.ts for the reasoning that applies to all
-// seven sections. This section has no Appearance fieldset today, so neither
-// registration declares one; adding it is a surface change for a later phase.
+// seven sections.
+
+// ─── The Appearance fieldset (Phase 13) ──────────────────────────────────────
+// `appearanceFields({seed: false})`: this section renders through `SectionShell`
+// from Phase 13, so the operator can place it on a surface and give it a frame.
+// UNSEEDED, unlike the six sections that already had this fieldset, because
+// `compose_canvas` folds a member `initialValue` into every band it writes and
+// the canvas keeps no per-field origin (item 308, [R-450]). The default surface
+// therefore lives in CODE, per layout, which is also what lets Phase 16's
+// `surfaceRhythm` reach a band with none. Phase 16 removes the seed from the
+// other six and deletes the parameter.
 
 export function fields({inline}: {inline: boolean}) {
   return [
@@ -74,6 +84,7 @@ export function fields({inline}: {inline: boolean}) {
       initialValue: 'centeredGrid',
       validation: (Rule) => Rule.required().warning(),
     }),
+    ...appearanceFields({seed: false}),
   ]
 }
 
@@ -81,6 +92,7 @@ export const badgesSection = defineType({
   name: 'badgesSection',
   title: 'Badges Section',
   type: 'document',
+  fieldsets: [appearanceFieldset],
   fields: fields({inline: false}),
   preview: {
     select: {title: 'name'},
@@ -94,6 +106,7 @@ export const badgesSectionInline = defineType({
   name: 'badgesSectionInline',
   title: 'Badges Section',
   type: 'object',
+  fieldsets: [appearanceFieldset],
   fields: fields({inline: true}),
   preview: {
     select: {heading: 'heading', layout: 'layout', badges: 'badges'},

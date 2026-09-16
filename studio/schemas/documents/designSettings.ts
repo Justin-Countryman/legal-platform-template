@@ -47,8 +47,81 @@ export const designSettings = defineType({
       title: 'People Settings',
       options: {collapsible: true, collapsed: true},
     },
+    {
+      name: 'pageBackground',
+      title: 'Page Background',
+      options: {collapsible: true, collapsed: true},
+    },
   ],
   fields: [
+    // ─── The page background layer (Phase 13) ──────────────────────────────
+    // One decorative ground behind the whole document, so a Pattern band and the
+    // margins around an Inset Panel have something to show.
+    //
+    // NO `initialValue` ON ANY SUBFIELD, for the same reason as the frame fields
+    // on the appearance fieldset: `designSettings` seeds are folded into every
+    // Site-Build write as `schema-default`, so a seeded kind would be stamped on
+    // every client and Phase 16's themes could never tell it from a choice
+    // (item 308, [R-450]). Absent reads as "none", which renders no element.
+    defineField({
+      name: 'pageBackground',
+      title: 'Page Background',
+      type: 'object',
+      fieldset: 'pageBackground',
+      description:
+        'A subtle ground behind the whole site. Sections set to the Pattern surface, and the margins around an Inset Panel, show it; every other surface covers it.',
+      fields: [
+        defineField({
+          name: 'kind',
+          title: 'Kind',
+          type: 'string',
+          description: 'Leave as None for a plain white page, which is how every site ships.',
+          options: {
+            list: [
+              {title: 'None', value: 'none'},
+              {title: 'Texture \u2014 a fine repeating pattern', value: 'texture'},
+              {title: 'Photo', value: 'photo'},
+              {title: 'Gradient \u2014 a soft wash from the top', value: 'gradient'},
+            ],
+            layout: 'radio',
+          },
+        }),
+        defineField({
+          name: 'texture',
+          title: 'Texture',
+          type: 'string',
+          description: 'Drawn in the brand colour at the opacity below, so it follows the palette.',
+          // `parent`, never `document`: this object is nested, so `parent` is the
+          // object value. Inside an array member `document` would be the root.
+          hidden: ({parent}) => (parent as {kind?: string} | undefined)?.kind !== 'texture',
+          options: {
+            list: [
+              {title: 'Pinstripe \u2014 fine vertical lines', value: 'pinstripe'},
+              {title: 'Diagonal hatch \u2014 fine diagonal lines', value: 'diagonalHatch'},
+              {title: 'Diamond lattice \u2014 a fine crosshatch', value: 'diamondLattice'},
+              {title: 'Scallop \u2014 a repeating arc', value: 'scallop'},
+            ],
+            layout: 'radio',
+          },
+        }),
+        defineField({
+          name: 'image',
+          title: 'Photo',
+          type: 'image',
+          hidden: ({parent}) => (parent as {kind?: string} | undefined)?.kind !== 'photo',
+        }),
+        defineField({
+          name: 'opacity',
+          title: 'Strength',
+          type: 'number',
+          description:
+            'How strongly the background shows, from 0 to 0.25. Text sits on top of it, so keep it low: the readable contrast of body text is measured against the ground actually rendered.',
+          hidden: ({parent}) => ((parent as {kind?: string} | undefined)?.kind ?? 'none') === 'none',
+          // Warning, never error: no validation rule blocks Publish ([R-162]).
+          validation: (Rule) => Rule.min(0).max(0.25).warning('Keep the page background under 0.25 so text stays readable on it.'),
+        }),
+      ],
+    }),
 
     // ─── Brand Assets ─────────────────────────────────────────────────────────
     {

@@ -80,8 +80,8 @@ export type AttorneySectionProps = SectionProps<
 >
 export type BadgesSectionProps = SectionProps<
   BadgesSection,
-  'badges' | 'buttons',
-  {badges?: BadgeImage[] | null; buttons?: CtaButtonData[] | null}
+  'badges' | 'buttons' | AppearanceKeys,
+  {badges?: BadgeImage[] | null; buttons?: CtaButtonData[] | null; appearance?: SectionAppearance | null}
 >
 export type TestimonialsGridProps = SectionProps<
   TestimonialsGrid,
@@ -93,7 +93,11 @@ export type FeaturedTestimonialProps = SectionProps<
   'testimonial' | AppearanceKeys,
   {testimonial?: TestimonialData | null; appearance?: SectionAppearance | null}
 >
-export type VideoSectionProps = SectionProps<VideoSection, 'videos', {videos?: VideoItem[] | null}>
+export type VideoSectionProps = SectionProps<
+  VideoSection,
+  'videos' | AppearanceKeys,
+  {videos?: VideoItem[] | null; appearance?: SectionAppearance | null}
+>
 export type CaseResultsSectionProps = SectionProps<
   CaseResultsSection,
   'caseResults' | 'ctaButton' | AppearanceKeys,
@@ -101,7 +105,11 @@ export type CaseResultsSectionProps = SectionProps<
 >
 
 // The reviews section (2026-09-14): only its buttons resolve.
-export type ReviewsSectionProps = SectionProps<ReviewsSection, 'buttons', {buttons?: CtaButtonData[] | null}>
+export type ReviewsSectionProps = SectionProps<
+  ReviewsSection,
+  'buttons' | AppearanceKeys,
+  {buttons?: CtaButtonData[] | null; appearance?: SectionAppearance | null}
+>
 
 // The content section (Phase 11). Its nested objects are substituted by hand as
 // well as its resolved keys: `Nullable` reaches one level down, and GROQ returns

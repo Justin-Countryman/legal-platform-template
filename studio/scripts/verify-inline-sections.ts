@@ -260,7 +260,37 @@ if (initial('attorneySectionInline', 'mode') !== 'all') fail(`attorneySectionInl
 if (initial('attorneySection', 'mode') !== 'practiceArea') fail('attorneySection.mode initial moved')
 if (initial('practiceAreaNavInline', 'mode') !== 'allTopLevel') fail('practiceAreaNavInline.mode initial is not allTopLevel')
 if (initial('practiceAreaNav', 'mode') !== 'manual') fail('practiceAreaNav.mode initial moved')
-if (initial('contentSectionInline', 'imageTreatment') !== undefined || initial('contentSection', 'imageTreatment') !== undefined) fail('imageTreatment carries an initialValue; it is a theme axis and must not be seeded')
+// ─── The no-seed table (Phase 13, generalised from Phase 11's one field) ─────
+// `compose_canvas` folds member `initialValue`s into every band it writes
+// (`fold_member_defaults` writes a schema default into any empty key), and the
+// canvas keeps no per-field origin, so a seeded value can never be told from an
+// operator's choice (item 308, [R-450]). Nothing on the Python side guards this:
+// with seeds planted, `test_homepage_member_table`, `test_member_defaults`,
+// `test_schema_defaults` and `verify:field-map` all pass. THIS IS THE ONLY GUARD
+// IN THE REPO, and it was hard-coded to one field until Phase 13.
+//
+// A boolean belongs here as much as a string: `initialValue: false` is folded
+// too, because `_is_empty(False)` is False. Measured in the Phase 13 challenge.
+const NO_SEED: Array<[type: string, field: string, why: string]> = [
+  ['contentSection', 'imageTreatment', 'a theme axis (Phase 16)'],
+  ['contentSectionInline', 'imageTreatment', 'a theme axis (Phase 16)'],
+  ['attorneySection', 'imageTreatment', 'a theme axis (Phase 16)'],
+  ['attorneySectionInline', 'imageTreatment', 'a theme axis (Phase 16)'],
+]
+// Every section carrying the shared appearance fieldset must leave the three
+// frame fields unseeded, on the document and on its inline copy alike.
+for (const [doc, inline] of PAIRS) {
+  for (const field of ['inset', 'edgeBottom', 'overlapPrevious']) {
+    NO_SEED.push([doc, field, 'a frame field (item 308)'], [inline, field, 'a frame field (item 308)'])
+  }
+}
+for (const [type, field, why] of NO_SEED) {
+  if (!schema.get(type)) continue
+  if (initial(type, field) !== undefined) {
+    fail(`${type}.${field} carries an initialValue; it is ${why} and must not be seeded (item 308)`)
+  }
+}
+ok(`no seed on ${String(NO_SEED.length)} field(s) that the composer would fold`)
 if (initial('contentSectionInline', 'layout') !== 'split' || initial('contentSection', 'layout') !== 'split') fail('contentSection layout initial is not split')
 ok('inline mode defaults and option lists are as specified; the documents are unchanged')
 

@@ -850,6 +850,28 @@ export const DESIGN_TOKENS_QUERY = groq`
     "accent2Color":  accent2Color,
     internalHeroBackground,
     heroScrimOpacity,
+    // The page background layer (Phase 13). Absent on every client built so far,
+    // and PageBackgroundLayer renders nothing for an absent or "none" kind, so
+    // this changes no served page until an operator or a Phase 16 theme sets it.
+    //
+    // KEEP THIS COMMENT PLAIN, and see BI/runbooks/traps.md for why. Two hazards
+    // live here, both of which cost a CI cycle on PR #25: a backtick closes the
+    // template literal this query sits in, and several ordinary words, if written
+    // here, make the template blank-slate guard flag three footer field names
+    // that are older than this phase. The guard passes locally on the committed
+    // generated types and fails only once they are regenerated, so it surfaces on
+    // CI rather than before the push.
+    "pageBackground": pageBackground{
+      kind,
+      texture,
+      opacity,
+      "image": image{
+        "src": asset->url,
+        "alt": alt,
+        "width": asset->metadata.dimensions.width,
+        "height": asset->metadata.dimensions.height
+      }
+    },
     "siteHeroBackgroundImage": siteHeroBackgroundImage{
       "src": asset->url,
       "alt": alt,

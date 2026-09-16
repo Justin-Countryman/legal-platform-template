@@ -2,6 +2,8 @@ import Image from 'next/image'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {ButtonGroup, toCtaItems} from '@/components/ui/ButtonGroup'
 import {SectionHeader} from '@/components/ui/SectionHeader'
+import {SectionShell, type SectionAppearance} from './SectionShell'
+import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {Tagline} from '@/components/ui/Tagline'
 import {type BadgesSectionProps} from './sectionProps'
 
@@ -53,8 +55,7 @@ function BadgeList({badges, className, imageClassName}: {badges: BadgeImage[]; c
 
 function CenteredGrid({data, tagline, heading, description, buttons}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]}) {
   return (
-    <section className="px-[5%] py-16 md:py-24 lg:py-28">
-      <div className="container text-center">
+    <>
         {heading && (
           <SectionHeader
             tagline={tagline}
@@ -74,15 +75,13 @@ function CenteredGrid({data, tagline, heading, description, buttons}: {data: Bad
             className="mt-8"
           />
         )}
-      </div>
-    </section>
+    </>
   )
 }
 
 function InlineBadges({data, tagline, heading, description, buttons}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]}) {
   return (
-    <section className="px-[5%] py-16 md:py-24 lg:py-28">
-      <div className="container flex flex-col gap-8 md:flex-row md:items-center md:gap-12">
+    <>
         <div className="shrink-0 md:w-1/3">
           {heading && (
             <SectionHeader
@@ -105,15 +104,13 @@ function InlineBadges({data, tagline, heading, description, buttons}: {data: Bad
             <BadgeList badges={data.badges} className="flex flex-wrap items-center justify-start gap-8 md:justify-end" imageClassName="h-36 w-auto object-contain" />
           </div>
         )}
-      </div>
-    </section>
+    </>
   )
 }
 
 function SplitBadges({data, tagline, heading, description, buttons}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]}) {
   return (
-    <section className="px-[5%] py-16 md:py-24 lg:py-28">
-      <div className="container flex flex-col gap-12 md:flex-row md:items-start md:gap-16">
+    <>
         <div className="shrink-0 md:w-1/3">
           {heading && (
             <SectionHeader
@@ -150,8 +147,7 @@ function SplitBadges({data, tagline, heading, description, buttons}: {data: Badg
             </ul>
           </div>
         )}
-      </div>
-    </section>
+    </>
   )
 }
 
@@ -191,15 +187,48 @@ function ScrollingBadges({data, tagline, heading, description}: {data: BadgesSec
 
 // ─── Export ───────────────────────────────────────────────────────────────────
 
+// ─── The frame (Phase 13) ─────────────────────────────────────────────────────
+//
+// Three of the four layouts move onto `SectionShell`. `scrolling` does NOT: its
+// `py-12` matches no spacing preset at `md` (48px against the compact preset's
+// 64px), and it is the one band on the platform that needs the container for its
+// heading and NO gutter for its full-bleed marquee strip, which the shell cannot
+// express at once. Moving it would change a live band for no gain.
+//
+// All three that move were transparent, so `pattern` is their default surface:
+// it means "this band paints no background of its own", which keeps today's
+// rendering exactly and leaves Phase 16's `surfaceRhythm` free to decide what an
+// unset band should show. A code default, not an `initialValue`, because the
+// composer folds a seed into every band it writes (item 308, [R-450]).
+
+// Each moved layout's own wrapper classes, passed to the shell's container so no
+// extra div appears.
+const INNER_CLASS: Record<string, string> = {
+  centeredGrid: 'text-center',
+  inline:       'flex flex-col gap-8 md:flex-row md:items-center md:gap-12',
+  split:        'flex flex-col gap-12 md:flex-row md:items-start md:gap-16',
+}
+
+/** The appearance this section will actually render with, for the seam walk. */
+export function resolveAppearance(data: BadgesSectionBlockData): SectionAppearance {
+  return {...data.appearance, surface: data.appearance?.surface ?? 'pattern'}
+}
+
+/** A badges band IS its badges. */
+export function isEmpty(data: BadgesSectionBlockData): boolean {
+  return (data.badges ?? []).length === 0
+}
+
 export function BadgesSectionBlock({
   data,
   napTokens,
+  seam = NO_SEAM,
 }: {
   data: BadgesSectionBlockData
   napTokens?: NapTokens | null
+  seam?: SeamProps
 }) {
-  const badges = data.badges ?? []
-  if (badges.length === 0) return null
+  if (isEmpty(data)) return null
 
   const tagline = resolveTokenString(data.tagline, napTokens)
   const heading = resolveTokenString(data.heading, napTokens)
@@ -209,8 +238,25 @@ export function BadgesSectionBlock({
     title: resolveTokenString(btn.title, napTokens),
   }))
 
-  if (data.layout === 'inline') return <InlineBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} />
-  if (data.layout === 'scrolling') return <ScrollingBadges data={data} tagline={tagline} heading={heading} description={description} />
-  if (data.layout === 'split') return <SplitBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} />
-  return <CenteredGrid data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} />
+  // Off the shell, and staying off it.
+  if (data.layout === 'scrolling') {
+    return <ScrollingBadges data={data} tagline={tagline} heading={heading} description={description} />
+  }
+
+  const body =
+    data.layout === 'inline' ? <InlineBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} />
+    : data.layout === 'split' ? <SplitBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} />
+    : <CenteredGrid data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} />
+
+  return (
+    <SectionShell
+      appearance={resolveAppearance(data)}
+      innerClassName={INNER_CLASS[data.layout === 'inline' ? 'inline' : data.layout === 'split' ? 'split' : 'centeredGrid']}
+      seamTop={seam.seamTop}
+      previousGround={seam.previousGround}
+      previousEdge={seam.previousEdge}
+    >
+      {body}
+    </SectionShell>
+  )
 }

@@ -1,4 +1,6 @@
 import {SectionHeader} from '@/components/ui/SectionHeader'
+import {SectionShell, type SectionAppearance} from './SectionShell'
+import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {getEmbedUrl} from '@/lib/videoEmbed'
 import {VideoEmbed} from '@/components/media/VideoEmbed'
@@ -12,12 +14,31 @@ export type VideoSectionBlockData = VideoSectionProps
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
+// ─── The frame (Phase 13) ─────────────────────────────────────────────────────
+// Both layouts were transparent, so `pattern` is the default: the band paints no
+// background of its own. A code default, never an `initialValue` (item 308).
+
+/** The appearance this section will actually render with, for the seam walk. */
+export function resolveAppearance(data: VideoSectionBlockData): SectionAppearance {
+  return {...data.appearance, surface: data.appearance?.surface ?? 'pattern'}
+}
+
+/** A video band IS its playable videos. The URL filter is part of the test:
+ *  a section holding one video whose URL will not parse renders nothing. */
+export function isEmpty(data: VideoSectionBlockData): boolean {
+  return (data.videos ?? [])
+    .filter((v): v is NonNullable<typeof v> => v !== null)
+    .filter((v) => getEmbedUrl(v.youTubeUrl)).length === 0
+}
+
 export function VideoSectionBlock({
   data,
   napTokens,
+  seam = NO_SEAM,
 }: {
   data: VideoSectionBlockData
   napTokens?: NapTokens | null
+  seam?: SeamProps
 }) {
   // Belt-and-suspenders null filter — paired with GROQ post-projection
   // [defined(_id)] (see queries.ts SECTIONS_FRAGMENT videos); guards against
@@ -41,8 +62,8 @@ export function VideoSectionBlock({
   // Split — heading text in a left column, video(s) stacked on the right.
   if (layout === 'split') {
     return (
-      <section className="px-[5%] py-16 md:py-24 lg:py-28">
-        <div className="container grid grid-cols-1 items-start gap-12 md:grid-cols-2 lg:gap-20">
+      <SectionShell appearance={resolveAppearance(data)} innerClassName="grid grid-cols-1 items-start gap-12 md:grid-cols-2 lg:gap-20" seamTop={seam.seamTop} previousGround={seam.previousGround} previousEdge={seam.previousEdge}>
+        <>
           <div>
             {heading && (
               <SectionHeader
@@ -58,15 +79,15 @@ export function VideoSectionBlock({
               <VideoEmbed key={video._id} video={video} />
             ))}
           </div>
-        </div>
-      </section>
+        </>
+      </SectionShell>
     )
   }
 
   // Centered (default) — heading above, video centered (grid when multiple).
   return (
-    <section className="px-[5%] py-16 md:py-24 lg:py-28">
-      <div className="container">
+    <SectionShell appearance={resolveAppearance(data)} seamTop={seam.seamTop} previousGround={seam.previousGround} previousEdge={seam.previousEdge}>
+      <>
 
         {heading && (
           <SectionHeader
@@ -96,7 +117,7 @@ export function VideoSectionBlock({
           </ul>
         )}
 
-      </div>
-    </section>
+      </>
+    </SectionShell>
   )
 }
