@@ -5348,63 +5348,74 @@
           "type": "image"
         },
         {
-          "description": "Choose how your brand colors work together. The system automatically derives dark sections, light backgrounds, hover states, and accessibility-compliant foreground colors from your inputs.",
-          "initialValue": "analogous-accent",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "monochromatic",
-              "complementary",
-              "analogous-accent"
-            ]
-          },
-          "path": "colorApproach",
-          "required": "warning",
-          "requiredMessage": "validation:generic.required",
-          "title": "Color Approach",
-          "type": "string"
-        },
-        {
-          "description": "Hex — e.g. #003366. Your dominant brand color. Drives dark section backgrounds, footer, hero overlays, and dark header schemes. Tints and shades are derived automatically.",
-          "initialValue": "",
-          "jsonType": "string",
-          "path": "primaryColor",
-          "required": "warning",
-          "requiredMessage": "Enter a valid 6-digit hex value e.g. #003366",
-          "title": "Primary Color",
-          "type": "string"
-        },
-        {
-          "description": "Hex — e.g. #CC9933. Used for buttons and taglines. Should contrast strongly with your primary color. Opposite on the color wheel (complementary) works best.",
-          "hidden": "<predicate>",
-          "jsonType": "string",
-          "path": "actionColor",
-          "title": "Action Color",
-          "type": "string"
-        },
-        {
-          "description": "Hex — e.g. #CC9933. Used for tagline text above headings, decorative dividers, and badge accents.",
-          "hidden": "<predicate>",
-          "jsonType": "string",
-          "path": "accent1Color",
-          "title": "Accent Color 1 — Tagline Text",
-          "type": "string"
-        },
-        {
-          "description": "Hex — e.g. #99AA66. Optional. When provided, this color drives all CTA buttons and primary actions. If left blank, Accent 1 handles both taglines and buttons.",
-          "hidden": "<predicate>",
-          "jsonType": "string",
-          "path": "accent2Color",
-          "title": "Accent Color 2 — Buttons & CTAs (optional)",
-          "type": "string"
-        },
-        {
-          "description": "Live preview of all derived color tokens and WCAG accessibility results. Updates as you change the inputs above.",
+          "description": "Choose a palette to fill the four colours below, or type your own. The preview shows what the site renders: a colour that cannot be read against its background is adjusted the smallest step that reads, and shown here.",
           "jsonType": "string",
           "path": "colorPreview",
           "readOnly": true,
-          "title": "Color Preview",
+          "title": "Palette",
+          "type": "string"
+        },
+        {
+          "description": "Hex, e.g. #14213D. Dark sections, the footer, and dark header and hero schemes. A deep navy, charcoal, forest or burgundy works best; a lighter or more vivid colour is deepened until white text reads on it.",
+          "jsonType": "string",
+          "path": "darkGround",
+          "title": "Dark Ground",
+          "type": "string"
+        },
+        {
+          "description": "Hex, e.g. #F5EEDC. The page itself; card and alternating section backgrounds are derived one step off it. Leave blank for white.",
+          "jsonType": "string",
+          "path": "lightGround",
+          "title": "Light Ground",
+          "type": "string"
+        },
+        {
+          "description": "Hex, e.g. #B8893A. The brand colour on small areas: taglines, highlighted heading words, icons, rules. Where it is too light to read as text, text uses a darker shade of the same colour.",
+          "jsonType": "string",
+          "path": "accent",
+          "title": "Accent",
+          "type": "string"
+        },
+        {
+          "description": "Hex. Buttons and calls to action. Leave blank to use the accent.",
+          "jsonType": "string",
+          "path": "action",
+          "title": "Button Colour (optional)",
+          "type": "string"
+        },
+        {
+          "hidden": true,
+          "jsonType": "string",
+          "path": "colorApproach",
+          "title": "Color Approach (retired)",
+          "type": "string"
+        },
+        {
+          "hidden": true,
+          "jsonType": "string",
+          "path": "primaryColor",
+          "title": "Primary Color (retired)",
+          "type": "string"
+        },
+        {
+          "hidden": true,
+          "jsonType": "string",
+          "path": "actionColor",
+          "title": "Action Color (retired)",
+          "type": "string"
+        },
+        {
+          "hidden": true,
+          "jsonType": "string",
+          "path": "accent1Color",
+          "title": "Accent Color 1 (retired)",
+          "type": "string"
+        },
+        {
+          "hidden": true,
+          "jsonType": "string",
+          "path": "accent2Color",
+          "title": "Accent Color 2 (retired)",
           "type": "string"
         },
         {
@@ -5785,7 +5796,6 @@
         "_type": "designSettings",
         "buttonAnimation": "none",
         "buttonShape": "rounded",
-        "colorApproach": "analogous-accent",
         "elevationStyle": "0",
         "heroScrimOpacity": 80,
         "internalHeroBackground": "dark",
@@ -5807,7 +5817,6 @@
         },
         "marketingScale": "default",
         "motionTempo": "relaxed",
-        "primaryColor": "",
         "profileCtaLabel": "Contact Us",
         "profileCtaUrl": "/contact/",
         "profileLayout": "splitHero",

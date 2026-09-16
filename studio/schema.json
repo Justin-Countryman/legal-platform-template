@@ -19503,24 +19503,45 @@
         },
         "optional": true
       },
+      "colorPreview": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "darkGround": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "lightGround": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "accent": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "action": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "colorApproach": {
         "type": "objectAttribute",
         "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "monochromatic"
-            },
-            {
-              "type": "string",
-              "value": "complementary"
-            },
-            {
-              "type": "string",
-              "value": "analogous-accent"
-            }
-          ]
+          "type": "string"
         },
         "optional": true
       },
@@ -19546,13 +19567,6 @@
         "optional": true
       },
       "accent2Color": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "colorPreview": {
         "type": "objectAttribute",
         "value": {
           "type": "string"

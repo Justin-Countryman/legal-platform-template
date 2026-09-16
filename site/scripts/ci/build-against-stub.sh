@@ -101,7 +101,7 @@ fi
 
 MISSING=0
 while IFS= read -r line; do
-  typed=$(printf '%s' "$line" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const d=JSON.parse(s);process.stdout.write(d._type+" "+d.slug.current)})')
+  typed=$(printf '%s' "$line" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const d=JSON.parse(s);process.stdout.write(d._type+" "+((d.slug&&d.slug.current)||""))})')
   type=${typed%% *}
   slug=${typed#* }
   case "$type" in
@@ -128,7 +128,19 @@ while IFS= read -r line; do
     # Listed by the homepage member above; served by the catch-all at request
     # time (no generateStaticParams), so it has no prerendered route to assert.
     practiceArea) continue ;;
+    # A singleton has no slug and no route of its own. Its evidence is the colour
+    # its value produces in the prerendered layout's :root, which is the end-to-end
+    # proof that a colour field reaches the page through GROQ and the engine (the
+    # Phase 13 appearance bug passed every other check for want of exactly this).
+    designSettings)
+      needle='--color-accent:#1e5aa8'
+      if ! grep -qF -- "$needle" .next/server/app/index.html; then
+        echo "::error::The fixture's designSettings accent did not reach the prerendered :root ($needle missing from .next/server/app/index.html)."
+        MISSING=1
+      fi
+      continue ;;
   esac
+  if [ -z "$slug" ]; then continue; fi
   case "$slug" in
     attorneys/*|staff/*|blog/*|events/*) route="/$slug" ;;
     *) route="/review/$slug" ;;
