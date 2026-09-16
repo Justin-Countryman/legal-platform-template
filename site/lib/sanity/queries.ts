@@ -854,17 +854,13 @@ export const DESIGN_TOKENS_QUERY = groq`
     // and PageBackgroundLayer renders nothing for an absent or "none" kind, so
     // this changes no served page until an operator or a Phase 16 theme sets it.
     //
-    // TWO THINGS THIS COMMENT CANNOT CONTAIN, both learned the hard way here.
-    // A backtick, because this is inside a groq template literal and one closes
-    // it, producing a syntax error tens of lines below. And the word for a
-    // Content Lake d-a-t-a-s-e-t, because the whole query is emitted as ONE LINE
-    // into the generated Sanity types, and the template scrub guard reads any
-    // line matching /sanity|projectid|project_id|dataset/i as Sanity context,
-    // then flags every quoted eight-character token on it that mixes letters and
-    // digits as a possible project id. The footer's address1, address2 and
-    // address3 are exactly eight characters, so one word here turned the guard
-    // red on three field names older than this phase. Both found on PR #25, and
-    // both are in BI/runbooks/traps.md.
+    // KEEP THIS COMMENT PLAIN, and see BI/runbooks/traps.md for why. Two hazards
+    // live here, both of which cost a CI cycle on PR #25: a backtick closes the
+    // template literal this query sits in, and several ordinary words, if written
+    // here, make the template blank-slate guard flag three footer field names
+    // that are older than this phase. The guard passes locally on the committed
+    // generated types and fails only once they are regenerated, so it surfaces on
+    // CI rather than before the push.
     "pageBackground": pageBackground{
       kind,
       texture,
