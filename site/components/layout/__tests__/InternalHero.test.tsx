@@ -226,19 +226,22 @@ describe('InternalHero — background image composition', () => {
     expect(queryByTestId('hero-bg')).toBeNull()
   })
 
-  it('renders a configurable scrim above the image (bg-brand-dark, default opacity 0.8)', () => {
+  it('renders a configurable scrim above the image (bg-scrim, default opacity 0.8)', () => {
     const {getByTestId} = render(<InternalHero data={WITH_IMAGE} />)
     const scrim = getByTestId('hero-scrim') as HTMLElement
-    expect(scrim.className).toContain('bg-brand-dark')
+    expect(scrim.className).toContain('bg-scrim')
     // Scrim opacity is now an inline style driven by the resolver (was hardcoded /80).
     expect(scrim.style.opacity).toBe('0.8')
   })
 
-  it('honors a per-page scrimOpacityOverride on the scrim layer', () => {
-    const {getByTestId} = render(
-      <InternalHero data={{...WITH_IMAGE, scrimOpacityOverride: 40}} />,
-    )
-    expect((getByTestId('hero-scrim') as HTMLElement).style.opacity).toBe('0.4')
+  it('honors a per-page scrimOpacityOverride above the text floor, and never renders a dark scrim below 80', () => {
+    // Phase 14: under 80% a dark scrim cannot hold every text tier at 4.5:1 over the
+    // lightest photo pixel, so a lighter stored override renders at the floor.
+    const deeper = render(<InternalHero data={{...WITH_IMAGE, scrimOpacityOverride: 90}} />)
+    expect((deeper.getByTestId('hero-scrim') as HTMLElement).style.opacity).toBe('0.9')
+    deeper.unmount()
+    const lighter = render(<InternalHero data={{...WITH_IMAGE, scrimOpacityOverride: 40}} />)
+    expect((lighter.getByTestId('hero-scrim') as HTMLElement).style.opacity).toBe('0.8')
   })
 
   it('renders a tiled backdrop (no next/image) when custom fit is "tile"', () => {
@@ -253,7 +256,7 @@ describe('InternalHero — background image composition', () => {
     const {getByTestId} = render(<InternalHero data={{...WITH_IMAGE, scrimStyleOverride: 'gradient'}} />)
     const scrim = getByTestId('hero-scrim') as HTMLElement
     expect(scrim.style.backgroundImage).toContain('linear-gradient')
-    expect(scrim.className).not.toContain('bg-brand-dark')
+    expect(scrim.className).not.toContain('bg-scrim')
   })
 })
 

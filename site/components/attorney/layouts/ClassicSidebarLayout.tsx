@@ -60,7 +60,7 @@ export function ClassicSidebarLayout({attorney, napTokens, cta = {label: 'Contac
             {attorney.showLocations && attorney.location?.officePhone && (
               <a
                 href={`tel:${attorney.location.officePhone.replace(/\D/g, '')}`}
-                className="flex items-center gap-2 text-sm text-foreground transition-colors duration-ui-fast hover:text-accent"
+                className="flex items-center gap-2 text-sm text-foreground transition-colors duration-ui-fast hover:text-accent-text"
                 aria-label={`Call ${attorney.location.officePhone}`}
               >
                 <MdPhone className="size-4 shrink-0" aria-hidden="true" />

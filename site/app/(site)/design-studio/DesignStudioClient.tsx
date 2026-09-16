@@ -3311,7 +3311,7 @@ function FoundationPanel() {
                 </div>
                 <div className="grid grid-cols-1 items-center gap-3 border-b border-border py-3 md:grid-cols-[8rem_1fr]">
                   <div className="h-16 w-32 rounded-ui bg-accent" />
-                  <p className="text-sm text-accent"><code>text-accent</code> brightened tagline</p>
+                  <p className="text-sm text-accent-text"><code>text-accent-text</code> the accent as text</p>
                 </div>
                 <div className="grid grid-cols-1 items-center gap-3 border-b border-border py-3 md:grid-cols-[8rem_1fr]">
                   <div className="h-16 w-32 rounded-ui bg-action-text" />
@@ -3627,15 +3627,17 @@ function FoundationPanel() {
               </div>
             </div>
 
-            {/* text-accent on bg-muted (warning) */}
+            {/* The raw accent on text (the forbidden form; platform/no-text-accent-on-text) */}
             <div className="relative overflow-hidden rounded-ui border-2 border-foreground-muted bg-muted p-6">
+              {/* eslint-disable-next-line platform/no-text-accent-on-text -- the forbidden form, shown on purpose */}
               <p className="text-accent">
-                <code>text-accent</code> on <code>bg-muted</code>
+                <code>text-accent</code> on a text element
               </p>
+              {/* eslint-disable-next-line platform/no-text-accent-on-text -- the forbidden form, shown on purpose */}
               <p className="mt-1 text-sm text-accent">
-                Sample copy — accent (tagline color) on warm-cream is roughly 2.27:1 contrast.
-                Tagline copy belongs on <code>bg-background</code> or <code>bg-brand-dark</code>{' '}
-                (cascade-resolves to brightened accent-on-dark), not on <code>bg-muted</code>.
+                Sample copy in the accent&rsquo;s fill form, which is not contrast-checked as
+                text: a gold accent measures about 2.4:1 on white. Text takes{' '}
+                <code>text-accent-text</code>, which reaches 4.5:1 for any accent (Phase 14).
               </p>
               <div className="mt-3 inline-flex items-center gap-2 rounded-ui border border-foreground-muted bg-background px-3 py-1.5">
                 <span className="text-xs font-semibold uppercase tracking-widest text-foreground-muted">

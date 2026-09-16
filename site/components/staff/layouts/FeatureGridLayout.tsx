@@ -79,7 +79,7 @@ export function FeatureGridLayout({member, napTokens, cta = {label: 'Contact Us'
               {(member.phone || member.location?.officePhone) && (
                 <a
                   href={`tel:${(member.phone ?? member.location?.officePhone ?? '').replace(/\D/g, '')}`}
-                  className="rounded-ui transition-colors duration-ui-fast hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2"
+                  className="rounded-ui transition-colors duration-ui-fast hover:text-accent-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2"
                 >
                   <Chip icon="phone" className="cursor-pointer">
                     {member.phone ?? member.location?.officePhone}

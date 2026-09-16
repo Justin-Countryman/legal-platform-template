@@ -14,7 +14,7 @@ const NINE = [
   'heading-cascade-discipline',
   'no-arbitrary-color',
   'no-svg-without-aria-decision',
-  'no-text-accent-on-bg-muted',
+  'no-text-accent-on-text',
   'no-text-action-raw',
   'no-use-hero-scheme-in-server',
 ].sort()

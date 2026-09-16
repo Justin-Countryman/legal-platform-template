@@ -6,4 +6,4 @@
 {"_id": "fx-review", "_type": "reviewPage", "slug": {"current": "fixture-review"}}
 {"_id": "fx-practice-area", "_type": "practiceArea", "title": "Fixture Practice Area", "slug": {"current": "fixture-practice-area"}, "metaDescription": "A fixture practice area."}
 {"_id": "fx-home", "_type": "homePage", "canvas": [{"_key": "fx-inline", "_type": "practiceAreaNavInline", "heading": "Fixture areas", "mode": "allTopLevel", "layout": "tile", "mobileDisplay": "stacked"}, {"_key": "fx-content-stats", "_type": "contentSectionInline", "layout": "statRow", "heading": "Fixture numbers", "headingEmphasis": "numbers", "items": [{"_key": "fx-stat-1", "_type": "contentSectionItem", "title": "500+", "body": "fixture families"}]}, {"_key": "fx-content-ribbon", "_type": "contentSectionInline", "layout": "ribbon", "heading": "Fixture ribbon line", "marquee": true}], "slug": {"current": "home"}, "title": "Home"}
-{"_id": "designSettings", "_type": "designSettings", "accent": "#1e5aa8"}
+{"_id": "fx-design-settings", "_type": "designSettings", "accent": "#1e5aa8"}
