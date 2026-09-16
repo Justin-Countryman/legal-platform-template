@@ -98,7 +98,7 @@ export function CrestFooter({data}: Props) {
           {officePhone && (
             <a
               href={`tel:${officePhone.replace(/\D/g, '')}`}
-              className="block text-xl font-light text-foreground transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
+              className="block text-xl font-light text-foreground transition-colors duration-ui-fast hover:text-action-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
             >
               {formatPhone(officePhone)}
             </a>
@@ -106,7 +106,7 @@ export function CrestFooter({data}: Props) {
           {tollFreePhone && (
             <a
               href={`tel:${tollFreePhone.replace(/\D/g, '')}`}
-              className="mt-1 block text-sm text-foreground-muted transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
+              className="mt-1 block text-sm text-foreground-muted transition-colors duration-ui-fast hover:text-action-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
             >
               {formatPhone(tollFreePhone)}
             </a>
@@ -145,13 +145,13 @@ export function CrestFooter({data}: Props) {
                 label="Practice areas"
                 links={col1}
                 liClassName="py-1"
-                linkClassName="text-sm transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
+                linkClassName="text-sm transition-colors duration-ui-fast hover:text-action-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
               />
               <FooterNavList
                 label="Site navigation"
                 links={col2}
                 liClassName="py-1"
-                linkClassName="text-sm transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
+                linkClassName="text-sm transition-colors duration-ui-fast hover:text-action-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
               />
             </div>
           </FooterNavRegion>

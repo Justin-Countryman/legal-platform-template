@@ -23,7 +23,7 @@ import type {FooterData, FooterLocation} from '../Footer'
 
 type Props = {data: FooterData}
 
-const LINK = 'transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus'
+const LINK = 'transition-colors duration-ui-fast hover:text-action-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus'
 
 function directionsHref(loc: FooterLocation): string {
   const q = [loc.address1, loc.address2, cityLine(loc.city, loc.state, loc.zip)].filter(Boolean).join(', ')

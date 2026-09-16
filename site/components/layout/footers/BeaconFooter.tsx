@@ -96,7 +96,7 @@ export function BeaconFooter({data}: Props) {
               {officePhone && (
                 <a
                   href={`tel:${officePhone.replace(/\D/g, '')}`}
-                  className="block text-xl font-light text-foreground transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
+                  className="block text-xl font-light text-foreground transition-colors duration-ui-fast hover:text-action-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
                 >
                   {formatPhone(officePhone)}
                 </a>
@@ -104,7 +104,7 @@ export function BeaconFooter({data}: Props) {
               {tollFreePhone && (
                 <a
                   href={`tel:${tollFreePhone.replace(/\D/g, '')}`}
-                  className="block text-sm text-foreground-subtle transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
+                  className="block text-sm text-foreground-subtle transition-colors duration-ui-fast hover:text-action-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
                 >
                   {formatPhone(tollFreePhone)}
                 </a>
