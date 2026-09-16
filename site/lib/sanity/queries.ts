@@ -850,10 +850,20 @@ export const DESIGN_TOKENS_QUERY = groq`
     "accent2Color":  accent2Color,
     internalHeroBackground,
     heroScrimOpacity,
-    // The page background layer (Phase 13). Absent on every existing dataset,
+    // The page background layer (Phase 13). Absent on every client built so far,
     // and PageBackgroundLayer renders nothing for an absent or "none" kind, so
     // this changes no served page until an operator or a Phase 16 theme sets it.
-    // No backticks in this comment: it is inside a groq template literal.
+    //
+    // TWO WORDS THIS COMMENT CANNOT USE. No backticks: it is inside a groq
+    // template literal, and one closes it. And not the word for a Content Lake
+    // d-a-t-a-s-e-t: the whole query is emitted as ONE LINE into
+    // `site/types/sanity.types.ts`, and `scripts/check-template-is-blank.mjs`
+    // reads any line matching /sanity|projectid|project_id|dataset/i as Sanity
+    // context, then flags every quoted eight-character token on it that mixes
+    // letters and digits as a possible project id. The footer's `address1`,
+    // `address2` and `address3` are exactly eight characters, so one word here
+    // turned the scrub guard red on three field names that have been in the
+    // template since before this phase. Found on PR #25.
     "pageBackground": pageBackground{
       kind,
       texture,
