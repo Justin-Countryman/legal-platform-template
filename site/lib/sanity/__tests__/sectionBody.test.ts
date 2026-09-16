@@ -188,3 +188,74 @@ describe('SECTION_BODY: the inline member and the referenced document project th
     expect(oldSilo.items.map((i) => i.href).sort()).toEqual(['/estate-planning/', '/family-law/'])
   })
 })
+
+// ─── The appearance fieldset reaches the component (Phase 13) ────────────────
+//
+// THE BUG THIS EXISTS FOR, found on the fixture's served page and not by any
+// test: `"appearance"` is an EXPLICIT object projection, so a field added to
+// `appearanceFields.ts` does not appear in the query result until it is added
+// here too. Phase 13's `inset`, `edgeBottom` and `overlapPrevious` were built,
+// unit-tested, golden-tested, type-checked, merged AND propagated before anyone
+// noticed the query never carried them — because the unit tests pass props
+// straight into the components, the golden renders the components directly, and
+// the stub build's fixture sets none of these fields. Only the live page showed
+// it.
+//
+// So this asserts the KEY SET, not just the values: a schema field with no
+// projection line is a red test from now on.
+
+const APPEARANCE_KEYS = ['surface', 'spacing', 'inset', 'edgeBottom', 'overlapPrevious', 'backgroundImage'] as const
+
+async function projectOne(fragment: string, doc: Record<string, unknown>, wrap: 'canvas' | 'sections') {
+  // Mirrors the harness the rest of this file uses: the host document holds the
+  // list, and the sections path dereferences.
+  const dataset =
+    wrap === 'canvas'
+      ? [{_id: 'homePage-home', _type: 'homePage', canvas: [doc]}]
+      : [{_id: 'host', _type: 'aboutPage', sections: [{_type: 'reference', _ref: 'sec'}]}, {...doc, _id: 'sec'}]
+  const query =
+    wrap === 'canvas'
+      ? `*[_id == "homePage-home"][0].canvas ${fragment}`
+      : `*[_id == "host"][0].sections ${fragment}`
+  const value = await (await evaluate(parse(query), {dataset})).get()
+  return (value as Array<Record<string, unknown>>)[0] ?? null
+}
+
+describe('the appearance fieldset in the projection', () => {
+  const appearance = {
+    surface: 'pattern',
+    spacing: 'compact',
+    inset: true,
+    edgeBottom: 'angled',
+    overlapPrevious: 'large',
+  }
+
+  it('the canvas fragment carries every appearance field the schema has', async () => {
+    const out = await projectOne(CANVAS_FRAGMENT, {_type: 'contentSectionInline', _key: 'k', layout: 'statement', heading: 'H', ...appearance}, 'canvas')
+    expect(out).not.toBeNull()
+    const got = out!.appearance as Record<string, unknown>
+    expect(Object.keys(got).sort()).toEqual([...APPEARANCE_KEYS].sort())
+    expect(got.surface).toBe('pattern')
+    expect(got.spacing).toBe('compact')
+    expect(got.inset).toBe(true)
+    expect(got.edgeBottom).toBe('angled')
+    expect(got.overlapPrevious).toBe('large')
+  })
+
+  it('the sections fragment carries them too, so an interior page frames the same way', async () => {
+    const out = await projectOne(SECTIONS_FRAGMENT, {_type: 'contentSection', name: 'n', layout: 'statement', heading: 'H', ...appearance}, 'sections')
+    expect(out).not.toBeNull()
+    const got = out!.appearance as Record<string, unknown>
+    expect(Object.keys(got).sort()).toEqual([...APPEARANCE_KEYS].sort())
+    expect(got.inset).toBe(true)
+    expect(got.edgeBottom).toBe('angled')
+    expect(got.overlapPrevious).toBe('large')
+  })
+
+  it('an unset frame field projects null, never undefined, so absent stays absent', async () => {
+    const out = await projectOne(CANVAS_FRAGMENT, {_type: 'contentSectionInline', _key: 'k', layout: 'statement', heading: 'H'}, 'canvas')
+    const got = out!.appearance as Record<string, unknown>
+    expect(Object.keys(got).sort()).toEqual([...APPEARANCE_KEYS].sort())
+    for (const k of APPEARANCE_KEYS) expect(got[k], k).toBeNull()
+  })
+})
