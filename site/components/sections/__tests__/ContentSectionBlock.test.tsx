@@ -21,6 +21,7 @@ vi.mock('@/components/media/VideoEmbed', () => ({
 }))
 
 import {ContentSectionBlock, isContentSectionEmpty, rendersResultClaim, type ContentSectionData} from '../ContentSectionBlock'
+import resultClaimCases from './fixtures/result-claim-cases.json'
 import {HEADING_UNIT_TIER_CLASS} from '@/components/ui/HeadingUnit'
 import {TREATMENT_CLASSES} from '@/lib/imageTreatment'
 
@@ -193,6 +194,21 @@ describe('the results disclaimer renders exactly when a result figure does', () 
   ] as Array<[string, ContentSectionData, boolean]>)('%s', (_label, data, expected) => {
     expect(rendersResultClaim(data)).toBe(expected)
     expect(renderSection(data).queryByTestId('results-disclaimer') !== null).toBe(expected)
+  })
+})
+
+describe('the results-disclaimer cases shared with the homepage composer', () => {
+  // The monorepo's composer gates read the same rule in Python
+  // (BE/_shared/homepage_member_table.py). Each repo asserts its own side against
+  // its own copy of this case file; the monorepo compares the two copies.
+  it.each(resultClaimCases.cases.map((c) => [JSON.stringify(c.data), c.data, c.claims] as const))(
+    '%s', (_label, data, claims) => {
+      expect(rendersResultClaim(data as ContentSectionData)).toBe(claims)
+    },
+  )
+
+  it('holds all eighteen cases', () => {
+    expect(resultClaimCases.cases).toHaveLength(18)
   })
 })
 
