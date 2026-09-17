@@ -142,14 +142,6 @@ const PRACTICE_AREAS_ORDERED_ALL = `${PRACTICE_AREA_ORDER_REFS}[defined(@->slug.
 const PRACTICE_AREAS_REST_TOP_LEVEL = `*[_type == "practiceArea" && defined(slug.current) && !defined(parentPage) && !(_id in coalesce(${PRACTICE_AREA_ORDER_REFS}[]._ref, []))]`
 const PRACTICE_AREAS_REST_ALL = `*[_type == "practiceArea" && defined(slug.current) && !(_id in coalesce(${PRACTICE_AREA_ORDER_REFS}[]._ref, []))]`
 
-const PRACTICE_AREA_TILE_ITEM = `{
-  "_key": _id,
-  "label": ${NAV_LABEL_EXPR},
-  "href": "/" + slug.current + "/",
-  "description": metaDescription,
-  "icon": null,
-  "image": null
-}`
 const PRACTICE_AREA_SECTION_ITEM = `{
   "_key": _id,
   "label": ${NAV_LABEL_EXPR},
@@ -350,8 +342,8 @@ export const SITE_SCRIPTS_QUERY = groq`
 
 // ─── OG image composition ─────────────────────────────────────────────────────
 // Used by `app/api/og/route.tsx` to render branded 1200×630 social cards.
-// `primaryColor` falls back at render time to a neutral background when
-// Sanity hasn't been configured yet.
+// An absent `darkGround` falls back at render time to the colour engine's
+// default dark ground when Sanity hasn't been configured yet.
 export const OG_DATA_QUERY = groq`{
   "firmName":     *[_type == "siteSettings"][0].firmName,
   "logo":         *[_type == "designSettings"][0].logoOnDark.asset->url,
@@ -833,9 +825,10 @@ export const HOME_HERO_DESIGN_FRAGMENT = groq`{
 // `siloLayout` and a `practiceAreaItems[]` list resolving each page reference to
 // a label + href. Removed 2026-08-09 on Justin's ruling, monorepo
 // `OUTSTANDING.md` item 163: the strip rendered the same SiloTileLayout the
-// `siloNavBlock` canvas block renders, so the homepage carried two look-alike
-// practice-area surfaces governed by two unrelated controls. The block's own
-// projection is the surviving one, and it resolves the Nav Label the same way.
+// Areas of Law canvas block rendered, so the homepage carried two look-alike
+// practice-area surfaces governed by two unrelated controls. The practice-area
+// section's projection is the surviving one, and it resolves the Nav Label the
+// same way.
 
 // The homepage hero's design, read from the Hero Settings singleton. Null until
 // authored / migrated — the page renders its placeholder band in that case.
@@ -1047,124 +1040,6 @@ export const CANVAS_FRAGMENT = groq`[]{
     "videoSectionInline", "contentSectionInline", "reviewsSectionInline"
   ] => {
     ${SECTION_BODY}
-  },
-  // The six old block types, retired (Phase 10) and deleted in Phase 15. Their
-  // branches stay byte-for-byte so an unmigrated dataset renders as before.
-  _type == "attorneyHighlightBlock" => {
-    tagline,
-    heading,
-    mode,
-    // 'all' reads the Attorney Index order so the homepage row matches the
-    // attorney index and the header nav; 'manual' uses the block's own order.
-    "attorneys": select(
-      mode == "manual" => attorneys[defined(@->_id)]->{
-        _id,
-        // Built from the name fields, NOT from title. Zite's displayName carries
-        // the firm suffix, so title reads "Joseph Dudley - Firm, P.A." and would
-        // render that on an attorney card. The platform already ruled that
-        // display names build from name fields (_format_display_name); h1 wins
-        // when an operator has set one. No backticks in here: this comment sits
-        // inside a groq template literal and a backtick would close it.
-        "name": coalesce(h1, firstName + " " + lastName),
-        jobTitle,
-        "href": "/" + slug.current,
-        "photo": {
-          "src": photo.asset->url,
-          "alt": photo.alt,
-          "width": photo.asset->metadata.dimensions.width,
-          "height": photo.asset->metadata.dimensions.height
-        }
-      },
-      *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{
-        _id,
-        // Built from the name fields, NOT from title. Zite's displayName carries
-        // the firm suffix, so title reads "Joseph Dudley - Firm, P.A." and would
-        // render that on an attorney card. The platform already ruled that
-        // display names build from name fields (_format_display_name); h1 wins
-        // when an operator has set one. No backticks in here: this comment sits
-        // inside a groq template literal and a backtick would close it.
-        "name": coalesce(h1, firstName + " " + lastName),
-        jobTitle,
-        "href": "/" + slug.current,
-        "photo": {
-          "src": photo.asset->url,
-          "alt": photo.alt,
-          "width": photo.asset->metadata.dimensions.width,
-          "height": photo.asset->metadata.dimensions.height
-        }
-      }
-    )
-  },
-  _type == "caseResultsBlock" => {
-    heading,
-    intro,
-    "caseResults": caseResults[defined(@->_id)]->{
-      _id, amount, caseType, caption, year
-    },
-    "ctaButton": ctaButton{title, url, variant}
-  },
-  _type == "narrativeBlock" => {
-    heading,
-    "body": body ${BLOCK_CONTENT_FRAGMENT},
-    "image": {
-      "src": image.asset->url,
-      "alt": image.alt,
-      "width": image.asset->metadata.dimensions.width,
-      "height": image.asset->metadata.dimensions.height
-    },
-    "ctaButton": ctaButton{title, url, variant},
-    "internalLinks": internalLinks[defined(page->slug.current)]{
-      _key,
-      anchorText,
-      "href": "/" + page->slug.current + "/"
-    }
-  },
-  _type == "differentiatorBlock" => {
-    heading,
-    intro,
-    "differentiators": differentiators[]{_key, title, body}
-  },
-  _type == "badgesBlock" => {
-    heading,
-    description,
-    "badges": badges[defined(@->_id)]->{
-      "src": image.asset->url,
-      "alt": image.alt,
-      "width": image.asset->metadata.dimensions.width,
-      "height": image.asset->metadata.dimensions.height
-    }
-  },
-  // Beat 4, Areas of Law. Byte-for-byte the same item shape the interior
-  // practiceAreaNav section projects in SECTIONS_FRAGMENT, so the shared
-  // SiloNavItem type and the shared silo layouts serve both without a second
-  // model. Two branches, matching the two modes: the auto-list of every
-  // top-level practice area, and the operator's curated items[].
-  //
-  // Both resolve the label through the shared nav-label expressions rather than
-  // reading bare title, so an authored Nav Label reaches this surface (NAME-1 /
-  // NAME-2). This projection is inside the derivation of
-  // site/lib/__tests__/navLabelProjections.test.ts and satisfies it; it is
-  // deliberately NOT on that guard's EXEMPT roster.
-  _type == "siloNavBlock" => {
-    tagline,
-    heading,
-    description,
-    mode,
-    "items": select(
-      mode == "manual" =>
-        items[defined(page->slug.current)]{
-          _key,
-          "label": coalesce(label, ${NAV_LABEL_VIA_PAGE_EXPR}),
-          "href": "/" + page->slug.current + "/",
-          "description": coalesce(description, page->metaDescription),
-          "icon": icon ${IMAGE_FRAGMENT},
-          "image": image ${IMAGE_FRAGMENT}
-        },
-      [
-        ...(${PRACTICE_AREAS_ORDERED_TOP_LEVEL}${PRACTICE_AREA_TILE_ITEM}),
-        ...(${PRACTICE_AREAS_REST_TOP_LEVEL}${PRACTICE_AREA_TILE_ITEM} | order(label asc))
-      ]
-    )
   }
 }`
 
@@ -1220,8 +1095,7 @@ export const HOME_QUERY = groq`
     // ctaFormOverride was projected by twelve interior queries and not this one,
     // which left homePage.hideCtaForm and ctaFormOverride inert (item 53).
     "hideCtaForm": hideCtaForm,
-    "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT},
-    "sections": sections ${SECTIONS_FRAGMENT}
+    "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT}
   }
 `
 

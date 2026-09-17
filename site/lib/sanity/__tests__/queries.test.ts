@@ -187,7 +187,7 @@ describe('GROQ canonical filter-before-dereference pattern', () => {
   // See BI/skills/skill-sanity-schema/SKILL.md → "Reference array dereferencing"
   // for the mechanism + consumer-side belt-and-suspenders pairing.
 
-  it('catalog-stability: queries.ts contains exactly 29 canonical filter-before-deref patterns', () => {
+  it('catalog-stability: queries.ts contains exactly 26 canonical filter-before-deref patterns', () => {
     // If this count changes, the catalog has drifted. Update this number in
     // lockstep with any new []-> projection and verify the new projection ships
     // with the canonical [defined(@->_id)]-> shape.
@@ -230,7 +230,10 @@ describe('GROQ canonical filter-before-dereference pattern', () => {
     // is ONE constant (SECTION_BODY) interpolated into SECTIONS_FRAGMENT and
     // CANVAS_FRAGMENT, so its seven patterns count once in this source scan
     // however many fragments apply it; the six old block branches keep theirs.
-    expect(matches.length).toBe(30)
+    // 30 → 26 in Phase 15: the six old block branches are deleted, and with them
+    // badgesBlock's `badges[]`, caseResultsBlock's `caseResults[]` and the two
+    // attorneyHighlightBlock arrays.
+    expect(matches.length).toBe(26)
   })
 
   it('source-text meta: queries.ts contains zero broken-pattern occurrences', () => {

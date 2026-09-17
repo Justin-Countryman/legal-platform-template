@@ -17,8 +17,8 @@
  * studio/seedData/regenerate.md step 6 to produce
  * `studio/seedData/sampleFirm.ndjson` — never export straight to that path.
  *
- * Reference-only item types (item 43): `badgesSection`/`badgesBlock` and
- * `caseResultsBlock` hold references and render nothing without target
+ * Reference-only item types (item 43): the badges and case-results sections
+ * (`badgesSectionInline`, `caseResultsSectionInline`) hold references and render nothing without target
  * documents, so the seed carries one of each, wired into the homepage
  * canvas. `faqItem` and `testimonial` are seeded as reference targets for
  * the operator to wire (no faqSection/testimonialsGrid document ships in
@@ -173,23 +173,24 @@ const sampleHomePage = {
     'Sample Firm provides general legal counsel. Replace this content with your firm details via the Site Prep Tool.',
   noIndex: false,
   h1: 'Trusted legal counsel for every chapter',
-  // Homepage canvas — wires the reference-only item docs so their blocks
-  // render populated on a fresh client (item 43): a badges block referencing
-  // sample-badge and a case-results block referencing sample-case-result.
-  // Blocks are inline objects; the referenced documents are created first in
-  // the run order below so reference resolution succeeds.
+  // Homepage canvas — wires the reference-only item docs so their sections
+  // render populated on a fresh client (item 43): a badges section referencing
+  // sample-badge and a case-results section referencing sample-case-result.
+  // Members are inline section objects; the referenced documents are created
+  // first in the run order below so reference resolution succeeds.
   canvas: [
     {
-      _type: 'caseResultsBlock',
+      _type: 'caseResultsSectionInline',
       _key: 'seed-case-results',
       heading: 'Results That Matter',
       intro: 'A sample of outcomes — placeholder content shipped with the template.',
       caseResults: [{_type: 'reference', _ref: 'sample-case-result', _key: 'seed-case-result-1'}],
     },
     {
-      _type: 'badgesBlock',
+      _type: 'badgesSectionInline',
       _key: 'seed-badges',
       heading: 'Recognized for Excellence',
+      layout: 'centeredGrid',
       badges: [{_type: 'reference', _ref: 'sample-badge', _key: 'seed-badge-1'}],
     },
   ],

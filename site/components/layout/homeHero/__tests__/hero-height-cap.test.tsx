@@ -10,7 +10,7 @@ import {render} from '@testing-library/react'
 // decision and the render decision could not disagree.
 //
 // Item 163 (ruled 2026-08-09 by Justin) removed the strip entirely — it rendered
-// the same tile layout the `siloNavBlock` canvas block renders, so the homepage
+// the same tile layout the Areas of Law canvas block rendered, so the homepage
 // carried two look-alike practice-area surfaces under two unrelated controls.
 // With the strip gone the only content that could outgrow the ceiling is gone
 // with it, so the cap is unconditional and `uncapped` no longer exists. What

@@ -74,6 +74,8 @@ const PAIRS: Array<[doc: string, inline: string, fields: Record<string, unknown>
   }],
 ]
 
+// Stored members of the six block types deleted in Phase 15, as an unmigrated
+// canvas would still hold them.
 const OLD_MEMBERS = [
   {_type: 'narrativeBlock', _key: 'o1', heading: 'Story', body: [{_type: 'block', _key: 'b', children: [{_type: 'span', _key: 's', text: 'Hi', marks: []}]}]},
   {_type: 'differentiatorBlock', _key: 'o2', heading: 'Why', differentiators: [{_key: 'd', title: 't', body: 'b'}]},
@@ -175,17 +177,10 @@ describe('SECTION_BODY: the inline member and the referenced document project th
     expect(results.ctaButton.title).toBe('More')
   })
 
-  it('still projects the six old block types through their own branches', async () => {
+  it('a stored member of a deleted block type projects only its type and key', async () => {
     const canvas = (await run(`*[_id == "homePage-home"][0].canvas ${CANVAS_FRAGMENT}`)) as Array<Record<string, unknown>>
     const old = canvas.slice(PAIRS.length)
-    expect(old.map((m) => m._type)).toEqual(OLD_MEMBERS.map((m) => m._type))
-    // The old branches project their own shapes, not the section body: an old
-    // attorney member carries `name`/`href` cards, a section member `title`/`slug`.
-    const oldAttorneys = old[3] as {attorneys: Array<{name: string; href: string}>}
-    expect(oldAttorneys.attorneys[0]).toEqual(expect.objectContaining({name: 'Jane Roe', href: '/attorneys/jane-roe'}))
-    expect(old[3]).not.toHaveProperty('appearance')
-    const oldSilo = old[5] as {items: Array<{href: string}>}
-    expect(oldSilo.items.map((i) => i.href).sort()).toEqual(['/estate-planning/', '/family-law/'])
+    expect(old).toEqual(OLD_MEMBERS.map((m) => ({_type: m._type, _key: m._key})))
   })
 })
 

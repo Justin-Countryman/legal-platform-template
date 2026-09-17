@@ -1,9 +1,9 @@
 import {defineType} from 'sanity'
 
 // Reusable practice-area nav item — references a practice-area page (title /
-// description / image auto-resolve from it) with per-item overrides. Used by BOTH
-// the full-width Practice Area Navigation section AND the `siloNavBlock` canvas
-// block, so the two share one item model. Extracted from the inline definition
+// description / image auto-resolve from it) with per-item overrides. Used by the
+// full-width Practice Area Navigation section and its homepage copy
+// (`practiceAreaNavInline`), so the two share one item model. Extracted from the inline definition
 // that previously lived in documents/sections/practiceAreaNav.ts (same name +
 // fields, so existing section data is unaffected). The homepage hero's content
 // strip was a third user of it until 2026-08-09, when the ruling on monorepo
@@ -30,8 +30,7 @@ export const practiceAreaNavItem = defineType({
       // Bento is a Practice Area Navigation mode only. The item cannot see its
       // grandparent, so this reads the host DOCUMENT: the section document, or
       // the homepage, whose canvas holds `practiceAreaNavInline` (Phase 10,
-      // 2026-09-14). On the homepage the retired `siloNavBlock` shows it inert
-      // for one pin; that block is deleted in Phase 15.
+      // 2026-09-14).
       hidden: ({document}: {document?: {_type?: string}}) =>
         document?._type !== 'practiceAreaNav' && document?._type !== 'homePage',
     },

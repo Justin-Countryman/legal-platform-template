@@ -16,9 +16,8 @@ import {resolveToken, type NapTokens} from '@/lib/tokens'
 // that wants a heading writes its own, at marketing scale, outside this
 // component.
 //
-// It lives in ui/ rather than in the client-owned homepage/ directory for the
-// same reason the canvas dispatcher does: it is identical on every client, and
-// `components/homepage/` holds block components only.
+// It lives in ui/ because it is identical on every client; the content section
+// renders it, as the retired homepage blocks once did.
 //
 // TOKENS ONLY. Color from role tokens, spacing from the scale. No hex, no font
 // family; `platform/no-raw-color-value` and `platform/no-hardcoded-font-family`

@@ -156,12 +156,13 @@ export const homeHeroDesign = defineType({
     // REMOVED 2026-08-09 (Justin's ruling, OUTSTANDING item 163, option (a)).
     // `contentStrip`, `siloLayout` and `practiceAreaItems` used to put a
     // practice-area card row inside the hero band. They rendered the SAME
-    // SiloTileLayout the `siloNavBlock` canvas block renders, so a homepage with
+    // SiloTileLayout the Areas of Law canvas block rendered, so a homepage with
     // both showed two rows of identical tiles governed by two unrelated controls
     // in two different documents — and an operator who turned the strip off saw
-    // the block's cards remain and concluded the setting did nothing. The block
-    // is now the sole practice-area surface on the homepage, and it sits directly
-    // beneath the hero, so what was given up is a band boundary, not a position.
+    // the block's cards remain and concluded the setting did nothing. The
+    // canvas's practice-area section is now the sole practice-area surface on the
+    // homepage, and it sits directly beneath the hero, so what was given up is a
+    // band boundary, not a position.
   ],
   preview: {
     select: {skeleton: 'skeleton'},

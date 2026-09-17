@@ -1,19 +1,4 @@
 import {ScrollReveal} from '@/components/ui/ScrollReveal'
-import {BadgesBlock, type BadgesBlockData} from '@/components/homepage/BadgesBlock'
-import {
-  DifferentiatorBlock,
-  type DifferentiatorBlockData,
-} from '@/components/homepage/DifferentiatorBlock'
-import {NarrativeBlock, type NarrativeBlockData} from '@/components/homepage/NarrativeBlock'
-import {
-  CaseResultsBlock,
-  type CaseResultsBlockData,
-} from '@/components/homepage/CaseResultsBlock'
-import {
-  AttorneyHighlightBlock,
-  type AttorneyHighlightBlockData,
-} from '@/components/homepage/AttorneyHighlightBlock'
-import {SiloNavBlock, type SiloNavBlockData} from '@/components/homepage/SiloNavBlock'
 import {PracticeAreaNavBlock, type PracticeAreaNavBlockData} from '@/components/sections/PracticeAreaNavBlock'
 import {AttorneySectionBlock, type AttorneySectionBlockData} from '@/components/sections/AttorneySectionBlock'
 import {BadgesSectionBlock, type BadgesSectionBlockData} from '@/components/sections/BadgesSectionBlock'
@@ -42,33 +27,20 @@ import * as VideoFrame from '@/components/sections/VideoSectionBlock'
 // Renders the composed mid-page: the ordered blocks between the hero primitive
 // and the footer primitive.
 //
-// PLATFORM-OWNED, and deliberately NOT in `components/homepage/`. This file is
-// identical on every client and it carries the first-block motion rule, so a
-// client-owned copy forks that rule per client and nothing reports the
-// divergence. It sits with the other page-shell primitives (Header, Footer,
-// homeHero, InternalHero) because it is one: the structural container for the
-// homepage mid-page.
+// PLATFORM-OWNED. This file is identical on every client and it carries the
+// first-block motion rule. It sits with the other page-shell primitives (Header,
+// Footer, homeHero, InternalHero) because it is one: the structural container
+// for the homepage mid-page.
 //
-// THE LIST IT RENDERS (Phase 10, 2026-09-14; monorepo WS-V1-PHASE10-DESIGN).
-// `homePage.canvas` holds two kinds of member for one pin:
-//
-//   - the eight INLINE SECTION OBJECTS (`<name>Inline`), page-owned copies of
-//     the shared sections and the content section (Phase 11), rendered by the same section components interior
-//     pages use (`components/sections/`), which take their data as props and
-//     carry no `_type`: this switch owns the discriminant;
-//   - the six OLD BLOCK TYPES, retired (deprecated in the schema) and rendered
-//     through `components/homepage/*Block.tsx` exactly as before, so a dataset
-//     nobody has migrated yet renders unchanged. Phase 12 migrates the stored
-//     members to the inline types; Phase 15 deletes the six cases, the block
-//     components and the schema types. There is no render-time upgrade: an old
-//     member is an old member until the migration rewrites it, and the golden
-//     in __tests__/HomepageCanvas.parity.test.tsx pins that nothing here moved.
-//
-// THE CONTRACT WITH THE CLIENT-OWNED SIDE, for the old blocks while they last.
-// `components/homepage/` holds block components only, never plumbing. Each
-// block ships at a fixed path and export name, so the imports below are stable
-// on every client. A client rewrites the MARKUP inside a block file; it never
-// renames the file or its export, and it never edits this dispatcher.
+// THE LIST IT RENDERS. `homePage.canvas` holds the nine INLINE SECTION OBJECTS
+// (`<name>Inline`), page-owned copies of the shared sections and the content
+// section, rendered by the same section components interior pages use
+// (`components/sections/`), which take their data as props and carry no
+// `_type`: this switch owns the discriminant. The six old block types that
+// shared the list from Phase 10 to Phase 15 are deleted (monorepo
+// WS-V1-PHASE15-DESIGN §7 amendment 1); a stored member of a deleted or unknown
+// type renders nothing, and the golden in __tests__/HomepageCanvas.parity.test.tsx
+// pins what a migrated canvas renders.
 //
 // THIS IS NOT PageSections. PageSections renders the interior-page section
 // system, which produces fixed stacked bands and forbids crossing between them.
@@ -90,12 +62,6 @@ import * as VideoFrame from '@/components/sections/VideoSectionBlock'
 type InlineMember<T extends string, D> = {_type: T; _key: string} & D
 
 export type HomepageBlock =
-  | BadgesBlockData
-  | DifferentiatorBlockData
-  | NarrativeBlockData
-  | CaseResultsBlockData
-  | AttorneyHighlightBlockData
-  | SiloNavBlockData
   | InlineMember<'practiceAreaNavInline', PracticeAreaNavBlockData>
   | InlineMember<'attorneySectionInline', AttorneySectionBlockData>
   | InlineMember<'badgesSectionInline', BadgesSectionBlockData>
@@ -119,20 +85,6 @@ function renderBlock(
   seam: SeamProps = NO_SEAM,
 ) {
   switch (block._type) {
-    case 'caseResultsBlock':
-      return (
-        <CaseResultsBlock data={block} disclaimer={resolveResultsDisclaimer(resultsDisclaimer)} />
-      )
-    case 'attorneyHighlightBlock':
-      return <AttorneyHighlightBlock data={block} />
-    case 'narrativeBlock':
-      return <NarrativeBlock data={block} napTokens={napTokens} />
-    case 'differentiatorBlock':
-      return <DifferentiatorBlock data={block} />
-    case 'badgesBlock':
-      return <BadgesBlock data={block} />
-    case 'siloNavBlock':
-      return <SiloNavBlock data={block} napTokens={napTokens} />
     // The inline section objects: the shared section components, the same ones
     // PageSections renders for the referenced documents.
     case 'practiceAreaNavInline':
@@ -186,10 +138,13 @@ function renderBlock(
 // it WILL use, and whether it will render at all. Both come from the component
 // that owns the answer, never from the stored value (see sectionFrame.ts).
 //
-// The six RETIRED block types answer `{appearance: undefined, empty: false}`:
-// they carry no appearance field and render their own hardcoded bands, so they
-// are opaque light grounds that take no seam and give none. Phase 15 deletes
-// them with these rows.
+// A member whose type this switch does not know renders nothing (see
+// `renderBlock`), so the walk must count it as empty too. Answering
+// `empty: false` made an unknown member at index 0 the "previous band": the
+// first real band lost its full top padding to a seam and gained a ScrollReveal
+// wrapper against the first-band rule (measured, Phase 15 challenge). Before
+// Phase 15 the six retired block types also fell here and did render; they are
+// deleted, so only an unknown type reaches `default` now.
 function frameOf(block: HomepageBlock): {appearance: SectionAppearance | null | undefined; empty: boolean} {
   switch (block._type) {
     case 'practiceAreaNavInline':
@@ -211,7 +166,7 @@ function frameOf(block: HomepageBlock): {appearance: SectionAppearance | null | 
     case 'reviewsSectionInline':
       return {appearance: ReviewsFrame.resolveAppearance(block), empty: ReviewsFrame.isEmpty(block)}
     default:
-      return {appearance: undefined, empty: false}
+      return {appearance: undefined, empty: true}
   }
 }
 

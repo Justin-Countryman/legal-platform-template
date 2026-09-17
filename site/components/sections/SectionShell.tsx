@@ -2,7 +2,7 @@ import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import {
   sectionSurface, SECTION_SPACING, TIGHT_SPACING, DEFAULT_SECTION_SPACING,
-  type SectionSurface, type SectionSpacing, type SectionEdge, type VisibleGround,
+  type StoredSurface, type SectionSpacing, type SectionEdge, type VisibleGround,
   type ResolvedSectionSurface, type SectionSpacingSteps,
   sectionEdgeClasses,
 } from '@/lib/sectionSurface'
@@ -33,7 +33,7 @@ import {
 // for both CTAs and the badges marquee.
 
 export type SectionAppearance = {
-  surface?: SectionSurface | null
+  surface?: StoredSurface | null
   spacing?: SectionSpacing | null
   backgroundImage?: SanityImageData | null
   /** Render the band as a panel inside the container, with the page ground

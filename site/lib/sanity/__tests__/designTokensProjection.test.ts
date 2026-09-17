@@ -37,11 +37,6 @@ const READ_ELSEWHERE: Record<string, string> = {
   profileLayout: 'the profile page queries',
   profileCtaLabel: 'the profile page queries',
   profileCtaUrl: 'the profile page queries',
-  colorApproach: 'nothing: retired in Phase 14, removed in Phase 15',
-  primaryColor: 'nothing: retired in Phase 14, removed in Phase 15',
-  actionColor: 'nothing: retired in Phase 14, removed in Phase 15',
-  accent1Color: 'nothing: retired in Phase 14, removed in Phase 15',
-  accent2Color: 'nothing: retired in Phase 14, removed in Phase 15',
 }
 
 const sentinel = (r: Row) =>
