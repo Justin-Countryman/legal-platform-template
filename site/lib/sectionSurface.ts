@@ -15,10 +15,11 @@
 //   muted   — bg-muted, the card step one notch off the light ground. NOT an
 //             operator option: it is the code default of the CTAs, and what a band
 //             stored with the retired `accent` value renders (Phase 14).
-//   accent  — RETIRED as an option in Phase 14. A stored `accent` renders exactly
-//             as `muted`. The value is never reused for another surface, least of
-//             all Phase 15's saturated one, because every stored or defaulted
-//             `accent` band would silently become an accent fill.
+//   accent  — NOT A SURFACE. Retired as an option in Phase 14; a band stored with it
+//             before then renders exactly as `muted`. It is accepted as a
+//             `StoredSurface` and normalised here, and is not in `SectionSurface`
+//             (Phase 15), so this file never lists it beside a surface that paints
+//             the accent. The value is never reused for another surface.
 //   image   — a background image + dark scrim + white text (immersive).
 //   pattern — NO background class at all: the page background layer shows through
 //             (Phase 13). Text polarity is the light cascade, because the page
@@ -71,7 +72,9 @@
 // system by `lib/__tests__/sectionSurface.test.ts`, the guard
 // `lib/imageTreatment.ts` already documents for the same reason.
 
-export type SectionSurface = 'light' | 'tint' | 'dark' | 'muted' | 'accent' | 'image' | 'pattern'
+export type SectionSurface = 'light' | 'tint' | 'dark' | 'muted' | 'image' | 'pattern'
+/** What a document may store: a surface, or the legacy `accent`, which renders as `muted`. */
+export type StoredSurface = SectionSurface | 'accent'
 export type SectionSpacing = 'compact' | 'normal' | 'spacious'
 
 /** What the visitor actually sees behind a band. `pattern` and an inset band show
@@ -149,7 +152,7 @@ export type ResolvedSectionSurface = {
   isImage: boolean
 }
 
-export function sectionSurface(surface: SectionSurface | null | undefined): ResolvedSectionSurface {
+export function sectionSurface(surface: StoredSurface | null | undefined): ResolvedSectionSurface {
   switch (surface) {
     case 'dark':
       return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: false}
@@ -160,7 +163,7 @@ export function sectionSurface(surface: SectionSurface | null | undefined): Reso
     case 'tint':
       return {surfaceClass: 'bg-hero-tint', ringContext: undefined, buttonContext: 'light', isImage: false}
     case 'muted':
-    case 'accent':
+    case 'accent': // the legacy stored value (see the header)
       return {surfaceClass: 'bg-muted', ringContext: undefined, buttonContext: 'light', isImage: false}
     // NO background class: the page background layer shows through. This is the
     // whole mechanism — the band paints nothing and the layer behind it is what
@@ -183,7 +186,7 @@ export function sectionSurface(surface: SectionSurface | null | undefined): Reso
  *  it: two inset bands in a row are a same-ground join even when the panels
  *  differ. `pattern` is the same case with no panel. */
 export function visibleGround(
-  appearance: {surface?: SectionSurface | null; inset?: boolean | null} | null | undefined,
+  appearance: {surface?: StoredSurface | null; inset?: boolean | null} | null | undefined,
 ): VisibleGround {
   if (appearance?.inset) return 'page'
   switch (appearance?.surface) {

@@ -14,7 +14,7 @@ import {defineField} from 'sanity'
 // Mirror of the site's SectionSurface/SectionSpacing unions — the studio is a separate
 // package, so don't import across the studio↔site boundary (keeps studio tsc green and
 // the file portable to the canonical template).
-type SectionSurface = 'light' | 'tint' | 'dark' | 'accent' | 'image' | 'pattern'
+type SectionSurface = 'light' | 'tint' | 'dark' | 'image' | 'pattern'
 type SectionSpacing = 'compact' | 'normal' | 'spacious'
 
 export const appearanceFieldset = {

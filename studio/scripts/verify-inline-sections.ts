@@ -11,10 +11,10 @@
  *      object under `<name>Inline`, both compiled, no duplicate type name, one
  *      field list (`fields({inline})`) so the two cannot drift except where the
  *      inline copy deliberately narrows (`name` and the practice-area mode).
- *   2. `homePage.canvas.of` lists the eight inline objects and the six retired
- *      block types, the six carrying `deprecated`. The Studio renders that
- *      badge; the extract, typegen and the field map all drop it, so the
- *      compiled schema is the only artifact that can be asserted.
+ *   2. `homePage.canvas.of` lists the nine inline objects and nothing else, all
+ *      offered in Add item; the six block types retired in Phase 10 and the
+ *      retired homepage and colour fields are gone from the compiled schema
+ *      (deleted in Phase 15, monorepo WS-V1-PHASE15-DESIGN §7 amendment 1).
  *   3. Every `hidden` and `validation` callback in a shared list reads
  *      `parent`, never `document`: called with a DECOY root document that says
  *      the opposite of the parent, the callback must follow the parent. Inside
@@ -43,7 +43,6 @@
 
 import {createSchema, validateDocument, type ArraySchemaType, type ObjectSchemaType, type SanityDocument} from 'sanity'
 import {schemaTypes} from '../schemas/index.ts'
-import {insertableTypes} from '../components/CanvasArrayInput.tsx'
 
 let failures = 0
 function fail(msg: string): void {
@@ -66,7 +65,18 @@ const PAIRS: Array<[doc: string, inline: string]> = [
   ['reviewsSection', 'reviewsSectionInline'],
 ]
 const INLINE_ONLY: string[] = []
-const RETIRED = ['narrativeBlock', 'differentiatorBlock', 'caseResultsBlock', 'attorneyHighlightBlock', 'badgesBlock', 'siloNavBlock']
+// Deleted in Phase 15. Kept by name so a type or field that comes back is caught.
+const DELETED_TYPES = ['narrativeBlock', 'differentiatorBlock', 'caseResultsBlock', 'attorneyHighlightBlock', 'badgesBlock', 'siloNavBlock']
+const DELETED_FIELDS: Array<[type: string, field: string]> = [
+  ['homePage', 'sections'],
+  ['homePage', 'reviewsEmbed'],
+  ['homePage', 'codaLine'],
+  ['designSettings', 'colorApproach'],
+  ['designSettings', 'primaryColor'],
+  ['designSettings', 'actionColor'],
+  ['designSettings', 'accent1Color'],
+  ['designSettings', 'accent2Color'],
+]
 
 // ─── 1. The schema compiles with two names per section and no duplicates ──────
 const names = schemaTypes.map((t) => (t as {name: string}).name)
@@ -104,36 +114,29 @@ for (const inline of INLINE_ONLY) {
 }
 ok(`${PAIRS.length} pairs compile with the expected field sets`)
 
-// ─── 2. homePage.canvas.of: eight inline objects, six retired blocks with `deprecated`
+// ─── 2. homePage.canvas.of: the nine inline objects, all offered; the retired gone
 const homePage = schema.get('homePage') as ObjectSchemaType
 const canvas = homePage.fields.find((f) => f.name === 'canvas')?.type as ArraySchemaType | undefined
 if (!canvas) fail('homePage.canvas missing')
 else {
   const members = canvas.of.map((m) => ({name: m.name, deprecated: (m as {deprecated?: {reason: string}}).deprecated}))
-  const expected = [...PAIRS.map(([, i]) => i), ...INLINE_ONLY, ...RETIRED].sort()
+  const expected = [...PAIRS.map(([, i]) => i), ...INLINE_ONLY].sort()
   const actual = members.map((m) => m.name).sort()
   if (JSON.stringify(actual) !== JSON.stringify(expected)) fail(`canvas.of is ${actual.join(', ')}`)
-  else ok(`canvas.of holds the ${expected.length} members`)
-  for (const m of members) {
-    const retired = RETIRED.includes(m.name)
-    if (retired && !m.deprecated?.reason?.includes('Phase 15')) fail(`${m.name} is not deprecated with a reason naming Phase 15`)
-    if (!retired && m.deprecated) fail(`${m.name} is deprecated and must not be`)
-  }
-  ok('the six retired blocks carry `deprecated` naming Phase 15; the inline objects do not')
-  // Areas of Law is no longer offered in Add item (2026-09-14): still a member,
-  // named in no insert-menu group, dropped by the canvas input's filter alone.
+  else ok(`canvas.of holds the ${expected.length} inline objects and nothing else`)
+  for (const m of members) if (m.deprecated) fail(`${m.name} is deprecated and must not be`)
   const groups = (canvas.options as {insertMenu?: {groups?: Array<{of?: string[]}>}} | undefined)?.insertMenu?.groups ?? []
-  const offered = insertableTypes(canvas.of as Array<{name: string}>).map((t) => t.name)
-  const input = (homePage.fields.find((f) => f.name === 'canvas')?.type as {components?: {input?: unknown}} | undefined)?.components?.input
-  if (!members.some((m) => m.name === 'siloNavBlock')) fail('siloNavBlock left canvas.of; stored members and the build still need it until Phase 12')
-  else if (groups.some((g) => (g.of ?? []).includes('siloNavBlock'))) fail('siloNavBlock is still named in an insert-menu group')
-  else if (!input) fail('homePage.canvas does not use the canvas input that filters the Add item menu')
-  else if (offered.includes('siloNavBlock') || offered.length !== members.length - 1) fail(`the canvas insert filter offers ${offered.length} of ${members.length} members`)
-  else ok('Areas of Law stays a canvas member but is not offered in the Add item menu')
-  const sections = homePage.fields.find((f) => f.name === 'sections')?.type as {deprecated?: {reason: string}} | undefined
-  if (!sections?.deprecated?.reason?.includes('Phase 15')) fail('homePage.sections is not deprecated with a reason naming Phase 15')
-  else ok('homePage.sections is deprecated')
+  const grouped = groups.flatMap((g) => g.of ?? []).sort()
+  if (JSON.stringify(grouped) !== JSON.stringify(expected)) fail(`the Add item groups offer ${grouped.join(', ')}`)
+  else ok('every canvas member is offered in Add item')
 }
+for (const name of DELETED_TYPES) {
+  if (schema.get(name)) fail(`${name} is registered again; it was deleted in Phase 15`)
+}
+for (const [type, field] of DELETED_FIELDS) {
+  if ((schema.get(type) as ObjectSchemaType | undefined)?.fields?.some((f) => f.name === field)) fail(`${type}.${field} is declared again; it was deleted in Phase 15`)
+}
+ok(`the ${DELETED_TYPES.length} retired block types and ${DELETED_FIELDS.length} retired fields stay deleted`)
 
 // ─── 3. Callbacks follow `parent`, not `document` ─────────────────────────────
 type HiddenFn = (ctx: {document: unknown; parent: unknown; value: unknown; currentUser: null}) => boolean
@@ -306,7 +309,7 @@ ok('inline mode defaults and option lists are as specified; the documents are un
 // ─── 5. The registered documents render somewhere ─────────────────────────────
 // A document no page can reference appears under "Create new" and renders
 // nowhere. Every interior `sections` list that offers ctaSection must offer the
-// two documents Phase 11 registered (homePage.sections is deprecated and left).
+// two documents Phase 11 registered.
 let listsChecked = 0
 for (const t of schemaTypes as Array<{name: string}>) {
   if (t.name === 'homePage') continue
@@ -320,18 +323,6 @@ for (const t of schemaTypes as Array<{name: string}>) {
 }
 if (listsChecked < 17) fail(`only ${listsChecked} interior sections lists offer ctaSection; expected 17`)
 else ok(`${listsChecked} interior sections lists offer caseResultsSection and contentSection`)
-
-// Retired homepage fields: the reviews embed (never rendered) and the coda line
-// (removed 2026-09-14). Each is deprecated naming Phase 15 and hidden while empty.
-for (const fieldName of ['reviewsEmbed', 'codaLine']) {
-  const field = (schema.get('homePage') as ObjectSchemaType).fields.find((f) => f.name === fieldName)
-  const deprecation = (field?.type as {deprecated?: {reason?: string}} | undefined)?.deprecated
-  const hidden = field?.type.hidden as HiddenFn | undefined
-  if (!deprecation?.reason?.includes('Phase 15')) fail(`homePage.${fieldName} is not deprecated with a reason naming Phase 15`)
-  else if (!hidden) fail(`homePage.${fieldName} has no hidden callback`)
-  else if (hidden({document: {}, parent: {}, value: undefined, currentUser: null}) !== true || hidden({document: {}, parent: {}, value: 'x', currentUser: null}) !== false) fail(`homePage.${fieldName} is not hidden exactly while empty`)
-  else ok(`homePage.${fieldName} is retired and hidden while empty`)
-}
 
 // ─── 6. `featured` is reachable where a practice-area list lives ──────────────
 const featured = hiddenOf('practiceAreaNavItem', 'featured')

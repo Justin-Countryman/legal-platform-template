@@ -18,21 +18,21 @@ vi.mock('@/components/ui/ScrollReveal', () => ({
 }))
 
 import {HomepageCanvas, type HomepageBlock} from '../HomepageCanvas'
-import {type BadgeImage} from '@/components/homepage/BadgesBlock'
 import {RESULTS_DISCLAIMER_DEFAULT} from '@/lib/legal'
 
-const badge = (n: number): BadgeImage => ({
+const badge = (n: number) => ({
   src: `https://cdn.example.com/badge-${n}.png`,
   alt: `Badge ${n}`,
   width: 400,
   height: 400,
 })
 
-const badgesBlock = (key: string, badges: BadgeImage[] = [badge(1), badge(2)]): HomepageBlock => ({
-  _type: 'badgesBlock',
+const badgesBlock = (key: string, badges = [badge(1), badge(2)]): HomepageBlock => ({
+  _type: 'badgesSectionInline',
   _key: key,
   heading: 'Recognised by our peers',
   description: 'A short description.',
+  layout: 'centeredGrid',
   badges,
 })
 
@@ -64,17 +64,29 @@ describe('HomepageCanvas — first-block rule', () => {
     const {container} = render(<HomepageCanvas blocks={[unknown]} />)
     expect(container.innerHTML).toBe('')
   })
+
+  it('an unknown member moves nothing: the band after it keeps the first-band rule and its full top padding', () => {
+    // A stored member whose type has left the schema (an unmigrated canvas after
+    // a contraction) renders nothing, so it must not count as the band above.
+    const unknown = {_type: 'notARealBlock', _key: 'x'} as unknown as HomepageBlock
+    const band: HomepageBlock = {_type: 'practiceAreaNavInline', _key: 'p', heading: 'Areas', items: [{_key: 'i', label: 'Family Law', href: '/family-law/'}]}
+    const alone = render(<HomepageCanvas blocks={[band]} />).container.querySelector('section')!.className.split(' ')
+    const {container, queryAllByTestId} = render(<HomepageCanvas blocks={[unknown, band]} />)
+    const after = container.querySelector('section')!.className.split(' ')
+    expect(queryAllByTestId('scroll-reveal')).toHaveLength(0)
+    expect(after).toContain('pt-16')
+    expect(after).not.toContain('pt-8')
+    expect(after).toEqual(alone)
+  })
 })
 
 describe('HomepageCanvas — the results disclaimer cannot be switched off', () => {
   // Bar advertising rules require past results to be paired with a disclaimer,
-  // ALWAYS. This suite lives platform-side on purpose: the block markup is
-  // client-owned and may be rewritten per firm, so a test living beside the
-  // block could be rewritten with it. These assertions are the third leg of the
-  // enforcement, after the code constant and the required prop.
+  // ALWAYS. These assertions are the third leg of the enforcement, after the
+  // code constant and the required prop, and they run through the dispatcher.
   const caseResultsBlock = (): HomepageBlock =>
     ({
-      _type: 'caseResultsBlock',
+      _type: 'caseResultsSectionInline',
       _key: 'cr',
       heading: 'Recent results',
       caseResults: [{_id: 'r1', amount: '$1.4 Million', caseType: 'Truck Accident', caption: 'A settlement.'}],
@@ -112,7 +124,7 @@ describe('HomepageCanvas — the results disclaimer cannot be switched off', () 
   it('renders no results and no disclaimer when the block has no case results', () => {
     // The only branch where the disclaimer does not render is the one where no
     // case result renders either. Nothing is published, so nothing is disclaimed.
-    const empty = {_type: 'caseResultsBlock', _key: 'cr', heading: 'Recent results', caseResults: []}
+    const empty = {_type: 'caseResultsSectionInline', _key: 'cr', heading: 'Recent results', caseResults: []}
     const {container, queryByTestId} = render(
       <HomepageCanvas blocks={[empty as unknown as HomepageBlock]} />,
     )
@@ -129,11 +141,9 @@ describe('HomepageCanvas — the results disclaimer cannot be switched off', () 
 })
 
 describe('HomepageCanvas — the inline section objects dispatch to the shared section components', () => {
-  // Phase 10 (2026-09-14): `homePage.canvas` accepts the seven `<name>Inline`
-  // objects beside the six old block types. The inline members render through
-  // the SAME components PageSections uses for the referenced documents; the old
-  // members keep their old components (no render-time upgrade; the parity
-  // golden pins that). This suite is the dispatch table, one case per type.
+  // `homePage.canvas` holds the nine `<name>Inline` objects, rendered through the
+  // SAME components PageSections uses for the referenced documents. This suite
+  // is the dispatch table, one case per type.
   const items = [{_key: 'i1', label: 'Family Law', href: '/family-law/'}]
 
   it('practiceAreaNavInline renders through PracticeAreaNavBlock (nav landmark, one grid when stacked)', () => {
@@ -189,16 +199,13 @@ describe('HomepageCanvas — the inline section objects dispatch to the shared s
     expect(getByRole('heading', {level: 2}).textContent).toBe('Watch')
   })
 
-  it('an old member still renders through its old component: there is no render-time upgrade', () => {
-    const {container} = render(<HomepageCanvas blocks={[{_type: 'siloNavBlock', _key: 's', heading: 'Areas', items}]} />)
-    expect(container.querySelector('h2')?.className).toContain('marketing-h2')
-  })
-
-  it('the first-band rule holds across old and inline members', () => {
-    const {queryAllByTestId} = render(
-      <HomepageCanvas blocks={[{_type: 'siloNavBlock', _key: 's', heading: 'Areas', items}, {_type: 'practiceAreaNavInline', _key: 'p', heading: 'H', items}]} />,
+  it('a member of a deleted block type renders nothing (deleted in Phase 15)', () => {
+    const retired = {_type: 'siloNavBlock', _key: 's', heading: 'Areas', items} as unknown as HomepageBlock
+    const {container, queryAllByTestId} = render(
+      <HomepageCanvas blocks={[retired, {_type: 'practiceAreaNavInline', _key: 'p', heading: 'H', items}]} />,
     )
-    expect(queryAllByTestId('scroll-reveal')).toHaveLength(1)
+    expect(container.querySelectorAll('section')).toHaveLength(1)
+    expect(queryAllByTestId('scroll-reveal')).toHaveLength(0)
   })
 })
 

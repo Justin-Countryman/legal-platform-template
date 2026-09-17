@@ -1,0 +1,152 @@
+{
+  "about": "When a content section renders a result figure, and so the results disclaimer. The template's ContentSectionBlock test and the monorepo's BE/_shared/homepage_member_table.py each assert their own side against their own copy of this file (the redirect-resolution-cases.json precedent).",
+  "cases": [
+    {
+      "data": {
+        "layout": "split",
+        "proof": {
+          "number": "$2M"
+        }
+      },
+      "claims": true
+    },
+    {
+      "data": {
+        "layout": "split",
+        "proof": {
+          "number": "  "
+        }
+      },
+      "claims": false
+    },
+    {
+      "data": {
+        "layout": "split"
+      },
+      "claims": false
+    },
+    {
+      "data": {
+        "layout": "twoColumnText",
+        "proof": {
+          "number": "98%"
+        }
+      },
+      "claims": true
+    },
+    {
+      "data": {
+        "layout": "twoColumnText"
+      },
+      "claims": false
+    },
+    {
+      "data": {
+        "layout": "statement",
+        "proof": {
+          "number": "500+"
+        }
+      },
+      "claims": true
+    },
+    {
+      "data": {
+        "layout": "statement",
+        "proof": {}
+      },
+      "claims": false
+    },
+    {
+      "data": {
+        "layout": "ribbon",
+        "proof": {
+          "number": "$2M"
+        }
+      },
+      "claims": false
+    },
+    {
+      "data": {
+        "layout": "ribbon"
+      },
+      "claims": false
+    },
+    {
+      "data": {
+        "layout": "statRow",
+        "items": [
+          {
+            "title": "30"
+          }
+        ]
+      },
+      "claims": true
+    },
+    {
+      "data": {
+        "layout": "statRow",
+        "items": [
+          {
+            "body": "families served"
+          }
+        ]
+      },
+      "claims": true
+    },
+    {
+      "data": {
+        "layout": "statRow",
+        "items": [
+          {
+            "title": " ",
+            "body": ""
+          }
+        ]
+      },
+      "claims": false
+    },
+    {
+      "data": {
+        "layout": "statRow",
+        "items": []
+      },
+      "claims": false
+    },
+    {
+      "data": {
+        "layout": "statRow",
+        "proof": {
+          "number": "$2M"
+        }
+      },
+      "claims": false
+    },
+    {
+      "data": {
+        "proof": {
+          "number": "$2M"
+        }
+      },
+      "claims": true
+    },
+    {
+      "data": {
+        "layout": "mystery",
+        "proof": {
+          "number": "$2M"
+        }
+      },
+      "claims": true
+    },
+    {
+      "data": {
+        "layout": "mystery"
+      },
+      "claims": false
+    },
+    {
+      "data": {},
+      "claims": false
+    }
+  ]
+}

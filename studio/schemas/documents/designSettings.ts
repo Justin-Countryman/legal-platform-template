@@ -281,50 +281,6 @@ export const designSettings = defineType({
       validation: (Rule) => Rule.regex(/^#[0-9A-Fa-f]{6}$/, {name: 'hex'}).warning('Enter a 6-digit hex value'),
     }),
 
-    // The five fields the roles replace. Hidden and read by nothing; kept for one
-    // pin so stored values survive until BE/Site-Build-Tool/migrate_colours.py has
-    // run, then removed in Phase 15. No initialValue, no validation.
-    defineField({
-      name: 'colorApproach',
-      title: 'Color Approach (retired)',
-      type: 'string',
-      fieldset: 'colors',
-      hidden: true,
-      deprecated: {reason: 'Replaced by the four colour roles in Phase 14; removed in Phase 15.'},
-    }),
-    defineField({
-      name: 'primaryColor',
-      title: 'Primary Color (retired)',
-      type: 'string',
-      fieldset: 'colors',
-      hidden: true,
-      deprecated: {reason: 'Replaced by Dark Ground in Phase 14; removed in Phase 15.'},
-    }),
-    defineField({
-      name: 'actionColor',
-      title: 'Action Color (retired)',
-      type: 'string',
-      fieldset: 'colors',
-      hidden: true,
-      deprecated: {reason: 'Replaced by Accent and Button Colour in Phase 14; removed in Phase 15.'},
-    }),
-    defineField({
-      name: 'accent1Color',
-      title: 'Accent Color 1 (retired)',
-      type: 'string',
-      fieldset: 'colors',
-      hidden: true,
-      deprecated: {reason: 'Replaced by Accent in Phase 14; removed in Phase 15.'},
-    }),
-    defineField({
-      name: 'accent2Color',
-      title: 'Accent Color 2 (retired)',
-      type: 'string',
-      fieldset: 'colors',
-      hidden: true,
-      deprecated: {reason: 'Replaced by Button Colour in Phase 14; removed in Phase 15.'},
-    }),
-
     // ─── Typography ───────────────────────────────────────────────────────────
     {
       name: 'fontPairingPreset',

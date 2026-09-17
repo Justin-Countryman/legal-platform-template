@@ -2,7 +2,7 @@
  * The practice-area order on every list surface ([R-201], 2026-09-12).
  *
  * The build writes the Zite ranking onto `mainNavigation.items[].practiceAreaOrder`;
- * the header, the footer's column 1 and the homepage's Areas of Law block read
+ * the header, the footer's column 1 and the homepage's practice-area section read
  * it through one helper: the listed pages in that order, then every practice
  * area the order does not list, alphabetically by the RENDERED label. With no
  * order (no nav, no item, an empty array) every surface is alphabetical.
@@ -54,7 +54,7 @@ const NAV_WITH_ORDER = {
   ],
 }
 
-const HOME = {_id: 'homePage-home', _type: 'homePage', canvas: [{_type: 'siloNavBlock', _key: 's', mode: 'allTopLevel'}]}
+const HOME = {_id: 'homePage-home', _type: 'homePage', canvas: [{_type: 'practiceAreaNavInline', _key: 's', mode: 'allTopLevel'}]}
 const SITE = {_id: 'siteSettings', _type: 'siteSettings', firmName: 'Fixture'}
 const FOOTER = {_id: 'footerSettings', _type: 'footerSettings'}
 
@@ -68,7 +68,7 @@ const labelsOf = (items: Array<{label?: string}> | null | undefined) => (items ?
 describe('[R-201] the practice-area order follows the nav order, then the rest alphabetically', () => {
   const withOrder = [...PAGES, NAV_WITH_ORDER, HOME, SITE, FOOTER]
 
-  it('the homepage block lists the ordered top-level pages first, then the rest by label', async () => {
+  it('the homepage practice-area section lists the ordered top-level pages first, then the rest by label', async () => {
     const home = await run(HOME_QUERY, withOrder)
     const block = home.canvas[0]
     expect(labelsOf(block.items)).toEqual(['Family Law', 'Real Estate', 'Appeals', 'Zed Business'])
@@ -107,7 +107,7 @@ describe('[R-201] with no order every surface is alphabetical by the rendered la
     ['an order listing only a child', [...PAGES, {...NAV_WITH_ORDER, items: [{...NAV_WITH_ORDER.items[1], practiceAreaOrder: [ref('pa-child')]}]}, HOME, SITE, FOOTER]],
   ]
   for (const [name, dataset] of cases) {
-    it(`${name}: block, footer and header agree, Appeals first and Zed Business last`, async () => {
+    it(`${name}: section, footer and header agree, Appeals first and Zed Business last`, async () => {
       const home = await run(HOME_QUERY, dataset)
       const footer = await run(FOOTER_QUERY, dataset)
       const header = await run(HEADER_QUERY, dataset)

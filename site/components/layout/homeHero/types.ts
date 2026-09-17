@@ -33,9 +33,9 @@ export type ScrimDirection =
 // The hero used to carry its own practice-area card strip (`contentStrip`,
 // `siloLayout`, `practiceAreaItems`) and a `HeroSiloLayout` vocabulary for it.
 // Removed 2026-08-09 on Justin's ruling, monorepo `OUTSTANDING.md` item 163: it
-// rendered the same SiloTileLayout the `siloNavBlock` canvas block renders, so
+// rendered the same SiloTileLayout the Areas of Law canvas block rendered, so
 // the homepage carried two look-alike practice-area surfaces under two unrelated
-// controls. The block is now the only one.
+// controls. The canvas's practice-area section is now the only one.
 
 // The fully-resolved layout configuration the skeleton components consume.
 export type HeroConfig = {

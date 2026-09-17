@@ -14,7 +14,6 @@ export const revalidate = 3600
 
 import type {Metadata} from 'next'
 import {chromeGlobalCta, chromeHeader, chromeNap, getHomePage} from '@/lib/sanity/fetchers'
-import {PageSections, type PageSectionData} from '@/components/sections/PageSections'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
 import {HomepageHero} from '@/components/layout/homeHero'
@@ -155,13 +154,11 @@ type HomeHeroContent = Pick<HomeHeroData, 'heading' | 'eyebrow' | 'description' 
 type HomeHeroDesign = Omit<HomeHeroData, 'heading' | 'eyebrow' | 'description' | 'buttons'>
 type HomeData = {
   hero?: HomeHeroContent | null
-  // The composed mid-page. Renders between the hero and the interior-page
-  // sections, which stay on homePage for now and are a separate decision.
+  // The composed mid-page, between the hero and the closing CTA.
   canvas?: HomepageBlock[] | null
   resultsDisclaimer?: string | null
   hideCtaForm?: boolean | null
   ctaOverride?: Partial<HomepageCtaData> | null
-  sections?: PageSectionData[] | null
 }
 
 export default async function HomePage() {
@@ -179,7 +176,6 @@ export default async function HomePage() {
   // authored/migrated. An empty/unmigrated heroSettings.homepageHero falls through
   // to the minimal band below — the hard-cut safety net, never a crash.
   const hero: HomeHeroData | null = content?.heading && design ? {...design, ...content} : null
-  const sections = home?.sections ?? []
 
   return (
     <>
@@ -218,8 +214,6 @@ export default async function HomePage() {
         napTokens={tokens}
         resultsDisclaimer={home?.resultsDisclaimer}
       />
-
-      {sections.length > 0 && <PageSections sections={sections} napTokens={tokens} resultsDisclaimer={home?.resultsDisclaimer} />}
 
       {/* Beat 9. Bookend, after the canvas and before the footer. `hideCtaForm`
           is now live; it gated nothing before this. */}
