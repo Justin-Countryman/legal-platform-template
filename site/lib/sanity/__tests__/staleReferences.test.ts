@@ -29,8 +29,8 @@ const KNOWN_NULL_KEYS = new Set([
 
 /** `_type` literals a query compares against that no schema type declares. */
 const KNOWN_UNDECLARED_TYPES = new Set([
-  // monorepo backlog item 327: the FAQ section's `faqPosts` mode queries a type
-  // no schema has declared, so that mode always returns nothing.
+  // monorepo backlog item 327: the sidebar navigation's `faqPosts` mode ("FAQ
+  // Blog Posts") queries a type no schema has declared, so it lists nothing.
   'blogPostFaq',
 ])
 
