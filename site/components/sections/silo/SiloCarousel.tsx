@@ -123,7 +123,8 @@ export function SiloCarousel({
               <span
                 className={[
                   'block h-2 rounded-full transition-[width,background-color] duration-ui-base',
-                  i === active ? 'w-5 bg-action' : 'w-2 bg-border-control group-hover:bg-foreground-subtle',
+                  // See AttorneySlider: the cue ring is transparent unless the action fails 3:1.
+                  i === active ? 'w-5 bg-action ring-1 ring-action-state-cue' : 'w-2 bg-border-control group-hover:bg-foreground-subtle',
                 ].join(' ')}
               />
             </button>

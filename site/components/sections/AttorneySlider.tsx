@@ -135,7 +135,11 @@ export function AttorneySlider({
               <span
                 className={[
                   'block h-2 rounded-full transition-[width,background-color] duration-ui-base',
-                  i === active ? 'w-5 bg-action' : 'w-2 bg-border-control group-hover:bg-foreground-subtle',
+                  // The active dot is a state indicator: WCAG 1.4.11 asks 3:1 against the ground
+                  // beside it, and an action colour that fails that (a gold action on white
+                  // measures about 2.3:1) gains the 1px cue ring, which is transparent wherever
+                  // the action already passes (Phase 15 amendment 21).
+                  i === active ? 'w-5 bg-action ring-1 ring-action-state-cue' : 'w-2 bg-border-control group-hover:bg-foreground-subtle',
                 ].join(' ')}
               />
             </button>
