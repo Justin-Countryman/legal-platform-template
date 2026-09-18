@@ -2926,6 +2926,7 @@ export type DesignSettings = {
       };
     };
   };
+  cornerPreview?: string;
   uiRadius?: "sharp" | "subtle" | "rounded" | "soft";
   buttonShape?: "square" | "rounded" | "stadium" | "pill";
   buttonAnimation?: "none" | "sweep" | "fill-center" | "inset" | "lift";

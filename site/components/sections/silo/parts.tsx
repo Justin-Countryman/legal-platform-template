@@ -121,7 +121,7 @@ export function TileIcon({
   return (
     <span
       className={[
-        'grid shrink-0 place-items-center rounded-md transition-transform duration-ui-base ease-gentle',
+        'grid shrink-0 place-items-center rounded-ui transition-transform duration-ui-base ease-gentle',
         chip,
         onImage ? 'bg-white/90' : 'bg-action/10',
         fx.icon,

@@ -2,6 +2,7 @@ import {defineType, defineField} from 'sanity'
 import {PageLinkInput} from '../../components/PageLinkInput'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {ColorPreview} from '../../components/ColorPreview'
+import {CornerPreview} from '../../components/CornerPreview'
 
 // Design Settings
 // Visual identity: logos, colors, typography, UI style
@@ -25,6 +26,11 @@ export const designSettings = defineType({
     {
       name: 'typography',
       title: 'Typography',
+      options: {collapsible: true, collapsed: true},
+    },
+    {
+      name: 'corners',
+      title: 'Corners',
       options: {collapsible: true, collapsed: true},
     },
     {
@@ -416,13 +422,24 @@ export const designSettings = defineType({
       ],
     },
 
-    // ─── UI Elements ──────────────────────────────────────────────────────────
+    // ─── Corners (Phase 16A, [R-473]) ──────────────────────────────────────────
+    // Two stored fields chosen as one family: the picker writes both, and the site
+    // reads each as before. See studio/components/CornerPreview.tsx.
+    defineField({
+      name: 'cornerPreview',
+      title: 'Corner Family',
+      type: 'string',
+      fieldset: 'corners',
+      readOnly: true,
+      components: {input: CornerPreview},
+      description: 'Choose a family to set card and button corners together, so they always belong together. The two fields below hold what it sets.',
+    }),
     {
       name: 'uiRadius',
       title: 'UI Corner Radius',
       type: 'string',
-      fieldset: 'uiElements',
-      description: 'Controls the corner rounding on cards, images, form fields, badges, and section containers. Does not affect buttons — set those separately below.',
+      fieldset: 'corners',
+      description: 'Corners on cards, images, form fields, badges, and section panels. Set by the Corner Family above; change it here only to mix on purpose.',
       options: {
         list: [
           {title: 'Sharp — 0px, formal and authoritative', value: 'sharp'},
@@ -439,8 +456,8 @@ export const designSettings = defineType({
       name: 'buttonShape',
       title: 'Button Shape',
       type: 'string',
-      fieldset: 'buttons',
-      description: 'Controls the shape of all buttons site-wide. Pairs well with — but is independent from — the UI Corner Radius above.',
+      fieldset: 'corners',
+      description: 'The shape of every button. Set by the Corner Family above; a button rounder than the cards reads as a mismatch unless it is a pill.',
       options: {
         list: [
           {title: 'Square — 0px, sharp and authoritative', value: 'square'},

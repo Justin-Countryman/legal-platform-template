@@ -117,6 +117,10 @@ const eslintConfig = [
       // text-accent resolves to tagline color, AA-passing) or use
       // text-foreground-muted on bg-muted.
       "platform/no-text-accent-on-text": "error",
+      // Phase 16A, [R-473]: a site's corners are one family. Surfaces read
+      // rounded-ui and controls rounded-btn; a fixed radius stays behind when the
+      // family changes. See skill-radius-system.
+      "platform/no-fixed-radius": "error",
 
       // ─── Component patterns / cascade ──────────────────────────────────
       // C4 — `skill-sanity-schema → "Reading design settings in async

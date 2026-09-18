@@ -32,6 +32,7 @@ const READ_ELSEWHERE: Record<string, string> = {
   favicon: 'the root layout metadata',
   webclipImage: 'the root layout metadata',
   colorPreview: 'nothing: the Studio palette panel, which stores no value',
+  cornerPreview: 'nothing: the Studio corner-family panel, which stores no value',
   customFonts: 'the font query',
   showBackToTop: 'the footer query',
   profileLayout: 'the profile page queries',

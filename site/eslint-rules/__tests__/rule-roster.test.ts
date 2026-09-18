@@ -7,12 +7,13 @@
 import {describe, expect, it} from 'vitest'
 import plugin from '../index.js'
 
-const NINE = [
+const TEN = [
   'collection-grid-list-semantics',
   'footer-landmark-naming',
   'h1-mobile-cap',
   'heading-cascade-discipline',
   'no-arbitrary-color',
+  'no-fixed-radius',
   'no-svg-without-aria-decision',
   'no-text-accent-on-text',
   'no-text-action-raw',
@@ -20,7 +21,8 @@ const NINE = [
 ].sort()
 
 describe('platform plugin rule roster', () => {
-  it('exports exactly the nine Phase 8 keepers', () => {
-    expect(Object.keys(plugin.rules).sort()).toEqual(NINE)
+  // Phase 16A added no-fixed-radius ([R-473]: corners follow the site family).
+  it('exports exactly the nine Phase 8 keepers and Phase 16A\'s corner rule', () => {
+    expect(Object.keys(plugin.rules).sort()).toEqual(TEN)
   })
 })

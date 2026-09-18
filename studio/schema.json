@@ -19121,6 +19121,13 @@
         },
         "optional": true
       },
+      "cornerPreview": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "uiRadius": {
         "type": "objectAttribute",
         "value": {

@@ -351,7 +351,7 @@ export default async function CatchAllPage({params}: Props) {
         {/* Map embed — location pages only, below content */}
         {isLocation && page.mapEmbed && (
           <div
-            className="mt-10 w-full overflow-hidden rounded-sm [&_iframe]:aspect-video [&_iframe]:h-auto [&_iframe]:w-full"
+            className="mt-10 w-full overflow-hidden rounded-ui [&_iframe]:aspect-video [&_iframe]:h-auto [&_iframe]:w-full"
             dangerouslySetInnerHTML={{__html: page.mapEmbed}}
             aria-label="Office location map"
           />

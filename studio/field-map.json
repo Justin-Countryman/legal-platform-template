@@ -5488,7 +5488,15 @@
           "type": "file"
         },
         {
-          "description": "Controls the corner rounding on cards, images, form fields, badges, and section containers. Does not affect buttons — set those separately below.",
+          "description": "Choose a family to set card and button corners together, so they always belong together. The two fields below hold what it sets.",
+          "jsonType": "string",
+          "path": "cornerPreview",
+          "readOnly": true,
+          "title": "Corner Family",
+          "type": "string"
+        },
+        {
+          "description": "Corners on cards, images, form fields, badges, and section panels. Set by the Corner Family above; change it here only to mix on purpose.",
           "initialValue": "rounded",
           "jsonType": "string",
           "options": {
@@ -5507,7 +5515,7 @@
           "type": "string"
         },
         {
-          "description": "Controls the shape of all buttons site-wide. Pairs well with — but is independent from — the UI Corner Radius above.",
+          "description": "The shape of every button. Set by the Corner Family above; a button rounder than the cards reads as a mismatch unless it is a pill.",
           "initialValue": "rounded",
           "jsonType": "string",
           "options": {
