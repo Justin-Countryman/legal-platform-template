@@ -280,12 +280,17 @@ const NO_SEED: Array<[type: string, field: string, why: string]> = [
   ['attorneySection', 'imageTreatment', 'a theme axis (Phase 16)'],
   ['attorneySectionInline', 'imageTreatment', 'a theme axis (Phase 16)'],
 ]
-// Every section carrying the shared appearance fieldset must leave the three
-// frame fields unseeded, on the document and on its inline copy alike.
+// Every section carrying the shared appearance fieldset leaves every appearance
+// field unseeded, on the document and on its inline copy alike: the three frame
+// fields since Phase 13, and `surface` and `spacing` since Phase 16A, which
+// removed the seed the original six sections carried (item 308).
 for (const [doc, inline] of PAIRS) {
-  for (const field of ['inset', 'edgeBottom', 'overlapPrevious']) {
-    NO_SEED.push([doc, field, 'a frame field (item 308)'], [inline, field, 'a frame field (item 308)'])
+  for (const field of ['surface', 'spacing', 'inset', 'edgeBottom', 'overlapPrevious']) {
+    NO_SEED.push([doc, field, 'an appearance field (item 308)'], [inline, field, 'an appearance field (item 308)'])
   }
+}
+for (const doc of ['ctaSection', 'faqSection']) {
+  for (const field of ['surface', 'spacing']) NO_SEED.push([doc, field, 'an appearance field (item 308)'])
 }
 for (const [type, field, why] of NO_SEED) {
   if (!schema.get(type)) continue

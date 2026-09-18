@@ -12,14 +12,10 @@ import {TokenTextInput} from '../../../components/TokenTextInput'
 // seven sections.
 
 // ─── The Appearance fieldset (Phase 13) ──────────────────────────────────────
-// `appearanceFields({seed: false})`: this section renders through `SectionShell`
-// from Phase 13, so the operator can place it on a surface and give it a frame.
-// UNSEEDED, unlike the six sections that already had this fieldset, because
-// `compose_canvas` folds a member `initialValue` into every band it writes and
-// the canvas keeps no per-field origin (item 308, [R-450]). The default surface
-// therefore lives in CODE, per layout, which is also what lets Phase 16's
-// `surfaceRhythm` reach a band with none. Phase 16 removes the seed from the
-// other six and deletes the parameter.
+// `appearanceFields()`: this section renders through `SectionShell` from Phase 13,
+// so the operator can place it on a surface and give it a frame. No appearance
+// field is seeded on any section since Phase 16A (item 308): the default
+// surface lives in CODE, per layout.
 
 export function fields({inline}: {inline: boolean}) {
   return [
@@ -84,7 +80,7 @@ export function fields({inline}: {inline: boolean}) {
       initialValue: 'centeredGrid',
       validation: (Rule) => Rule.required().warning(),
     }),
-    ...appearanceFields({seed: false, offerPattern: inline}),
+    ...appearanceFields({offerPattern: inline}),
   ]
 }
 

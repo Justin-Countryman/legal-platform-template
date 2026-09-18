@@ -135,7 +135,7 @@ export function fields({inline}: {inline: boolean}) {
       initialValue: 'classic',
       validation: (Rule) => Rule.required().warning(),
     }),
-    ...appearanceFields({defaultSurface: 'light', offerPattern: inline}),
+    ...appearanceFields({offerPattern: inline}),
   ]
 }
 

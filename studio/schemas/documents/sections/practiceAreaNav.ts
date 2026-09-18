@@ -207,7 +207,7 @@ export function fields({inline}: {inline: boolean}) {
           return true
         }).warning(),
     }),
-    ...appearanceFields({defaultSurface: 'light', offerPattern: inline}),
+    ...appearanceFields({offerPattern: inline}),
   ]
 }
 

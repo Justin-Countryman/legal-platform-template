@@ -2760,7 +2760,6 @@
         },
         {
           "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
-          "initialValue": "light",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -2822,7 +2821,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -2841,9 +2839,7 @@
         "_type": "attorneySection",
         "cardStyle": "classic",
         "layout": "grid",
-        "mode": "practiceArea",
-        "spacing": "normal",
-        "surface": "light"
+        "mode": "practiceArea"
       },
       "kind": "document",
       "singletonId": null,
@@ -4194,7 +4190,6 @@
         },
         {
           "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
-          "initialValue": "light",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -4256,7 +4251,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -4276,9 +4270,7 @@
         "ctaButton": {
           "_type": "ctaButton",
           "variant": "primary"
-        },
-        "spacing": "normal",
-        "surface": "light"
+        }
       },
       "kind": "document",
       "singletonId": null,
@@ -4978,7 +4970,6 @@
         },
         {
           "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
-          "initialValue": "light",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5041,7 +5032,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5058,9 +5048,7 @@
       ],
       "initialDocument": {
         "_type": "contentSection",
-        "layout": "split",
-        "spacing": "normal",
-        "surface": "light"
+        "layout": "split"
       },
       "kind": "document",
       "singletonId": null,
@@ -7474,7 +7462,6 @@
         },
         {
           "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
-          "initialValue": "tint",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -7536,7 +7523,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -7553,9 +7539,7 @@
       ],
       "initialDocument": {
         "_type": "featuredTestimonial",
-        "heading": "Client Testimonial",
-        "spacing": "normal",
-        "surface": "tint"
+        "heading": "Client Testimonial"
       },
       "kind": "document",
       "singletonId": null,
@@ -9797,7 +9781,6 @@
         },
         {
           "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
-          "initialValue": "light",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -9860,7 +9843,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -9952,7 +9934,6 @@
         },
         {
           "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
-          "initialValue": "light",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10015,7 +9996,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10088,7 +10068,6 @@
         },
         {
           "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
-          "initialValue": "light",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10151,7 +10130,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10352,7 +10330,6 @@
         },
         {
           "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
-          "initialValue": "tint",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10415,7 +10392,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10451,7 +10427,6 @@
         },
         {
           "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
-          "initialValue": "tint",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10514,7 +10489,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10980,7 +10954,6 @@
         },
         {
           "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
-          "initialValue": "light",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11044,7 +11017,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -13704,7 +13676,6 @@
         },
         {
           "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
-          "initialValue": "light",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -13766,7 +13737,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -13789,9 +13759,7 @@
         "mobileDisplay": "carousel",
         "mode": "manual",
         "sectionLayout": "centered",
-        "showArrow": true,
-        "spacing": "normal",
-        "surface": "light"
+        "showArrow": true
       },
       "kind": "document",
       "singletonId": null,
@@ -16478,7 +16446,6 @@
         },
         {
           "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
-          "initialValue": "tint",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -16540,7 +16507,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -16556,9 +16522,7 @@
         }
       ],
       "initialDocument": {
-        "_type": "testimonialsGrid",
-        "spacing": "normal",
-        "surface": "tint"
+        "_type": "testimonialsGrid"
       },
       "kind": "document",
       "singletonId": null,

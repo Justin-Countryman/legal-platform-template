@@ -1,21 +1,19 @@
 // ─── Shared section Appearance fieldset ─────────────────────────────────────────
 // Spread into every full-width section (document and its inline copy) so the operator can place it on a
 // surface (light / tint / dark / image / pattern) with a spacing rhythm — the
-// cohesion layer that lets a stacked page read as one design. Each section sets a
-// sensible default via appearanceFields({defaultSurface}), so an untouched page is
-// clean and cohesive with zero effort. Mirrors the site's footerScheme cascade.
+// cohesion layer that lets a stacked page read as one design.
+//
+// NO FIELD HERE CARRIES AN `initialValue` (Phase 16A, item 308). A seed is folded
+// into every band the build writes and stamped on every band an operator adds in
+// Studio, where nothing can tell it from a choice, so a theme could never set it.
+// An unset surface or spacing renders the section's code default (the shell's
+// light and normal, or the section's own, such as a ribbon's compact).
 //
 // Usage in a section schema:
 //   fieldsets: [appearanceFieldset, ...],
-//   fields: [ ...sectionFields, ...appearanceFields({defaultSurface: 'tint'}) ]
+//   fields: [ ...sectionFields, ...appearanceFields({offerPattern: inline}) ]
 
 import {defineField} from 'sanity'
-
-// Mirror of the site's SectionSurface/SectionSpacing unions — the studio is a separate
-// package, so don't import across the studio↔site boundary (keeps studio tsc green and
-// the file portable to the canonical template).
-type SectionSurface = 'light' | 'tint' | 'dark' | 'image' | 'pattern' | 'saturated'
-type SectionSpacing = 'compact' | 'normal' | 'spacious'
 
 export const appearanceFieldset = {
   name: 'appearance',
@@ -49,26 +47,11 @@ const SPACING_OPTIONS = [
 ]
 
 export function appearanceFields(opts?: {
-  defaultSurface?: SectionSurface
-  defaultSpacing?: SectionSpacing
-  /** Seed `surface` and `spacing` with a Studio default. TRUE for the six
-   *  sections that already had this fieldset, so their stored data and their
-   *  `initialDocument`s do not move; FALSE for the five Phase 13 added, because
-   *  a seed here is folded into every band the build writes and could never be
-   *  told from an operator's choice (item 308, [R-450]).
-   *
-   *  The asymmetry is deliberate and temporary. Phase 16 removes the seed from
-   *  the other six, which is a visible change on two tint-default types and so
-   *  is not this phase's to make, and deletes this parameter. Until then the
-   *  five new sections take their default surface from CODE, per layout, which
-   *  is also what lets Phase 16's `surfaceRhythm` reach them. */
-  seed?: boolean
   /** Offer the `saturated` surface. Only the content section does (Phase 15). */
   offerSaturated?: boolean
   /** Offer the `pattern` surface. Only the homepage's inline copies do (Phase 16A). */
   offerPattern?: boolean
 }) {
-  const seed = opts?.seed !== false
   const surfaceOptions = [
     ...SURFACE_OPTIONS.slice(0, 3),
     ...(opts?.offerSaturated ? [SATURATED_OPTION] : []),
@@ -83,7 +66,6 @@ export function appearanceFields(opts?: {
       fieldset: 'appearance',
       description: 'The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.',
       options: {list: surfaceOptions, layout: 'radio'},
-      ...(seed ? {initialValue: opts?.defaultSurface ?? 'light'} : {}),
     }),
     defineField({
       name: 'sectionBackgroundImage',
@@ -158,7 +140,6 @@ export function appearanceFields(opts?: {
       description:
         'The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.',
       options: {list: SPACING_OPTIONS, layout: 'radio'},
-      ...(seed ? {initialValue: opts?.defaultSpacing ?? 'normal'} : {}),
     }),
   ]
 }
