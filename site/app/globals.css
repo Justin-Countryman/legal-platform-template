@@ -114,46 +114,15 @@
     0 16px 40px rgb(var(--shadow-rgb) / 0.10),
     0 40px 80px rgb(var(--shadow-rgb) / 0.06);
 
-  /* Relume Wireframe Colors */
-  --color-brand-black: #000000;
+  /* Four names from the wireframe kit the template started from, kept because
+     something reads them: `background` and `border` are emitted by the engine at
+     runtime (these are their static fallbacks), and `brand-white` and
+     `border-secondary` are read directly. The kit's other 35 names had no reader
+     and were deleted in Phase 16A (item 339). */
   --color-brand-white: #ffffff;
-  --color-neutral: #666666;
-  --color-neutral-black: #000000;
-  --color-neutral-white: #ffffff;
-  --color-neutral-lightest: #eeeeee;
-  --color-neutral-lighter: #cccccc;
-  --color-neutral-light: #aaaaaa;
-  --color-neutral-dark: #444444;
-  --color-neutral-darker: #222222;
-  --color-neutral-darkest: #111111;
-  --color-system-success-green: #027a48;
-  --color-system-success-green-light: #ecfdf3;
-  --color-system-error-red: #b42318;
-  --color-system-error-red-light: #fef3f2;
   --color-background: #ffffff;
-  --color-background-primary: #ffffff;
-  --color-background-secondary: #eeeeee;
-  --color-background-tertiary: #666666;
-  --color-background-alternative: #000000;
-  --color-background-success: #ecfdf3;
-  --color-background-error: #fef3f2;
   --color-border: #000000;
-  --color-border-primary: #000000;
   --color-border-secondary: #aaaaaa;
-  --color-border-tertiary: #444444;
-  --color-border-alternative: #ffffff;
-  --color-border-success: #027a48;
-  --color-border-error: #b42318;
-  --color-text: #000000;
-  --color-text-primary: #000000;
-  --color-text-secondary: #aaaaaa;
-  --color-text-alternative: #ffffff;
-  --color-text-success: #027a48;
-  --color-text-error: #b42318;
-  --color-link: #000000;
-  --color-link-primary: #000000;
-  --color-link-secondary: #666666;
-  --color-link-alternative: #ffffff;
 
   /* Non-standard font sizes from Relume */
   --text-md: 1.125rem;
