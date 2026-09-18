@@ -304,6 +304,27 @@ for (const f of colourFields) {
 }
 ok(`no seed on ${String(colourFields.length)} designSettings colour field(s)`)
 if (initial('contentSectionInline', 'layout') !== 'split' || initial('contentSection', 'layout') !== 'split') fail('contentSection layout initial is not split')
+// ─── The saturated surface (Phase 15, §7 amendment 17) ──────────────────────
+// Offered on the content section ONLY, document and inline alike: it is the one
+// section that passes its own button context, and the others draw controls in the
+// action colour, which an operator may leave equal to the accent that fills the
+// band. The label must not start with "Accent" either: a band stored with the
+// retired `accent` value renders a light step, not a fill, and a hand flip from
+// one to the other would repaint a live band.
+const SATURATED_ALLOWED = new Set(['contentSection', 'contentSectionInline'])
+for (const type of [...PAIRS.flat(), ...INLINE_ONLY]) {
+  if (!schema.get(type)) continue
+  const offered = optionValues(type, 'surface').includes('saturated')
+  if (offered !== SATURATED_ALLOWED.has(type)) {
+    fail(offered ? `${type} offers the saturated surface and may not` : `${type} lost the saturated surface`)
+  }
+}
+{
+  const options = ((schema.get('contentSection') as ObjectSchemaType).fields.find((f) => f.name === 'surface')?.type as {options?: {list?: Array<{title?: string; value?: string}>}} | undefined)?.options?.list ?? []
+  const saturated = options.find((o) => o.value === 'saturated')
+  if (!saturated?.title?.startsWith('Saturated')) fail(`the saturated option's title is ${String(saturated?.title)}`)
+}
+ok(`the saturated surface is offered on ${String(SATURATED_ALLOWED.size)} type(s) and nowhere else`)
 ok('inline mode defaults and option lists are as specified; the documents are unchanged')
 
 // ─── 5. The registered documents render somewhere ─────────────────────────────

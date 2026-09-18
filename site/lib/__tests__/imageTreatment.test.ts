@@ -66,9 +66,13 @@ describe('resolveTreatment', () => {
   })
 
   it('tint renders plain on a dark surface, except as a section background', () => {
-    expect(resolveTreatment('tint', null, 'contentMedia', true)).toBe('plain')
-    expect(resolveTreatment('tint', null, 'contentMedia', false)).toBe('tint')
-    expect(resolveTreatment('tint', null, 'sectionBackground', true)).toBe('tint')
+    expect(resolveTreatment('tint', null, 'contentMedia', 'dark')).toBe('plain')
+    // Phase 15: the accent fill is the ground, so the accent wash reads nothing.
+    expect(resolveTreatment('tint', null, 'contentMedia', 'saturated')).toBe('plain')
+    expect(resolveTreatment('tint', null, 'contentMedia', 'light')).toBe('tint')
+    expect(resolveTreatment('tint', null, 'contentMedia')).toBe('tint')
+    expect(resolveTreatment('tint', null, 'sectionBackground', 'dark')).toBe('tint')
+    expect(resolveTreatment('tint', null, 'sectionBackground', 'saturated')).toBe('tint')
   })
 })
 
@@ -123,7 +127,8 @@ describe('the section background (Phase 13)', () => {
     // `resolveTreatment` deliberately EXEMPTS sectionBackground from the
     // tint-to-plain guard, so a tint there is a 20%-accent multiply with no dark
     // wash at all, and the band's white text would sit on a bare photograph.
-    expect(resolveTreatment('tint', null, 'sectionBackground', true)).toBe('tint')
+    expect(resolveTreatment('tint', null, 'sectionBackground', 'dark')).toBe('tint')
+    expect(resolveTreatment('tint', null, 'sectionBackground', 'saturated')).toBe('tint')
     expect(TREATMENT_CLASSES.tint.wrapper).not.toContain('brand-dark')
   })
 })

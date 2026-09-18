@@ -603,6 +603,11 @@
      L 0.20 for image bands and the glass-dark header. */
   --color-accent-text:              #666666;
   --color-accent-on-light:          #666666;
+  /* The accent as a FILL (Phase 15): a name for the anchored accent, not a new
+     value. No cascade block redeclares it, so a band, a strip or an inverse
+     button painted with it stays the accent inside a dark or saturated context,
+     where --color-accent itself is swapped. Pair it with --color-accent-fg. */
+  --color-accent-fill:              var(--color-accent-on-light);
   --color-accent-text-on-light:     #666666;
   --color-action-text-on-light:     #666666;
   --color-action-text-hover:        #2f2f2f;
@@ -714,6 +719,43 @@ h1, h2, h3, h4, h5, h6 {
   --color-foreground-subtle: var(--color-foreground-subtle-on-light);
   --color-hover-wash:        rgb(var(--shadow-rgb) / 0.06);
   --color-star-outline:      var(--color-star-outline-on-light);
+}
+
+/* The saturated band (Phase 15, WS-V1-PHASE15-DESIGN §7 amendment 12): the
+   accent as a full-width fill (`bg-accent-fill`). It redeclares every token the
+   dark block does. The only text colour guaranteed on the fill for any accent is
+   --color-accent-fg (4.5:1 by construction: the fill is re-toned where neither
+   white nor its dark text would reach it), so every text tier, the accent's own
+   text and rule forms, the action text, the focus ring, a control's boundary, the
+   star outline and a selected state's cue are accent-fg. The divider is a
+   decorative 25% of it; the hover wash is off, because no component offered on
+   the band reads it and a colour-mixed wash is not provable for every accent.
+   Pairs: accent-fg on accent-fill in `validateWcag`, swept for any input. */
+[data-ring-context="saturated"] {
+  --color-ring-focus:        var(--color-accent-fg);
+  --color-border:            color-mix(in srgb, var(--color-accent-fg) 25%, transparent);
+  --color-border-control:    var(--color-accent-fg);
+  --color-accent:            var(--color-accent-fg);
+  --color-accent-text:       var(--color-accent-fg);
+  --color-action-text:       var(--color-accent-fg);
+  --color-action-text-hover: var(--color-accent-fg);
+  --color-action-state-cue:  var(--color-accent-fg);
+  --color-foreground:        var(--color-accent-fg);
+  --color-foreground-muted:  var(--color-accent-fg);
+  --color-foreground-subtle: var(--color-accent-fg);
+  --color-hover-wash:        transparent;
+  --color-star-outline:      var(--color-accent-fg);
+}
+
+/* Highlighted words on a saturated band ([R-461], Justin 2026-09-17: a word is
+   the exact brand colour or the normal text colour, never a shade of it). The
+   band's ground IS the accent, so no colour can mark the words: they take the
+   band's one text colour and lean instead. The `em` already carries the meaning
+   for a screen reader; this is the visual half. Phase 16's
+   `headingEmphasisStyle` owns the Italic/Bold choice, with bold setting the rest
+   of the heading regular so the words are the heavier run. */
+[data-ring-context="saturated"] .heading-emphasis {
+  font-style: italic;
 }
 
 /* Text over a photo under a scrim (an image band, an image-backed hero). The

@@ -323,6 +323,35 @@ describe('validateWcag', () => {
     ])
   })
 
+  // Phase 15 amendment 14. The saturated band and the accent strip paint
+  // `bg-accent-fill` (the anchored accent) with accent-fg text, and the band's
+  // inverse primary button is the same pair reversed, which has the same ratio.
+  // The `[data-ring-context="saturated"]` block resolves EVERY text token to
+  // accent-fg on the strength of this one pair, so the pair has to stay blocking
+  // and accent-fg has to stay one of the two forms `textOn` can return.
+  it('keeps accent-fg on accent-fill blocking: it is the only pair the saturated band has', () => {
+    const pair = validateWcag(resolvePalette({})).find((r) => r.pair === 'accent-fg on accent-fill')
+    expect(pair?.blocking).toBe(true)
+    expect(pair?.min).toBe(4.5)
+    expect(validateWcag(resolvePalette({})).some((r) => r.pair === 'accent-fg on accent')).toBe(false)
+  })
+
+  it('emits accent-fg as white or a near-black in the fill’s own hue, for every preset and either extreme', () => {
+    const oklch = converter('oklch')
+    const inputs = [{}, {accent: '#ffffff'}, {accent: '#000000'}, ...PALETTE_PRESETS.map((preset) => presetInputs(preset))]
+    for (const input of inputs) {
+      const tokens = resolvePalette(input).tokens
+      const fg = tokens['--color-accent-fg']
+      const fill = tokens['--color-accent']
+      if (fg !== '#ffffff') {
+        // The dark form is a near-black: light enough text on the fill would be a
+        // third value, and the band's one-tier rule could not hold.
+        expect(oklch(fg)!.l, `${JSON.stringify(input)} accent-fg ${fg}`).toBeLessThan(0.3)
+      }
+      expect(wcagContrast(fg, fill)!, `${JSON.stringify(input)} ${fg} on ${fill}`).toBeGreaterThanOrEqual(4.5)
+    }
+  })
+
   it('flags gold as a graphic on white as a warning, never as a failure', () => {
     const results = validateWcag(resolvePalette({accent: '#c9a227'}))
     const graphic = results.find((r) => r.pair.startsWith('accent on background'))!

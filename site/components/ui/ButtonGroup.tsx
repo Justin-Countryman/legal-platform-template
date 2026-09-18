@@ -22,7 +22,7 @@ export type SanityCtaButton = {
 
 export type ButtonGroupProps = {
   items: CtaItem[]
-  context?: 'light' | 'dark'
+  context?: 'light' | 'dark' | 'saturated'
   size?: 'small' | 'compact' | 'normal'
   align?: 'start' | 'center'
   fullWidth?: boolean

@@ -9,6 +9,7 @@ import {
   DEFAULT_SECTION_SPACING,
   DEFAULT_SECTION_SURFACE,
   SECTION_SPACING,
+  SECTION_SURFACES,
   TIGHT_SPACING,
   edgeCancelsSeam,
   sectionEdgeClasses,
@@ -105,6 +106,31 @@ describe('sectionSurface', () => {
     expect(sectionSurface('pattern').isImage).toBe(false)
   })
 
+  // Phase 15: the table is keyed by the exported surface list, so a surface added
+  // to the union without a case here fails rather than falling through to light.
+  it('every surface in the union has a case, and none falls through to the default', () => {
+    const expected: Record<(typeof SECTION_SURFACES)[number], ReturnType<typeof sectionSurface>> = {
+      light:     {surfaceClass: 'bg-background',  ringContext: undefined,   buttonContext: 'light',     isImage: false},
+      tint:      {surfaceClass: 'bg-hero-tint',   ringContext: undefined,   buttonContext: 'light',     isImage: false},
+      muted:     {surfaceClass: 'bg-muted',       ringContext: undefined,   buttonContext: 'light',     isImage: false},
+      dark:      {surfaceClass: 'bg-brand-dark',  ringContext: 'dark',      buttonContext: 'dark',      isImage: false},
+      image:     {surfaceClass: 'bg-brand-dark',  ringContext: 'dark',      buttonContext: 'dark',      isImage: true},
+      pattern:   {surfaceClass: '',               ringContext: undefined,   buttonContext: 'light',     isImage: false},
+      saturated: {surfaceClass: 'bg-accent-fill', ringContext: 'saturated', buttonContext: 'saturated', isImage: false},
+    }
+    expect(Object.keys(expected).sort()).toEqual([...SECTION_SURFACES].sort())
+    for (const surface of SECTION_SURFACES) expect(sectionSurface(surface), surface).toEqual(expected[surface])
+  })
+
+  // The fill is a NAME for the anchored accent, not a new value (amendment 11):
+  // the band, its edge and the top bar's accent strip all paint the same class,
+  // and no cascade block re-declares it (`cascadeBlocks.test.ts`).
+  it('the saturated band paints the accent fill and carries its own button context', () => {
+    expect(sectionSurface('saturated').surfaceClass).toBe('bg-accent-fill')
+    expect(sectionSurface('saturated').buttonContext).toBe('saturated')
+    expect(ALL_FRAME_CLASSES).toContain('bg-accent-fill')
+  })
+
   it('every other surface is unchanged from before Phase 13', () => {
     expect(sectionSurface('dark')).toEqual({surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: false})
     expect(sectionSurface('image')).toEqual({surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: true})
@@ -130,6 +156,9 @@ describe('visibleGround', () => {
     ['accent', 'muted'],
     ['pattern', 'page'],
     ['light', 'light'],
+    // Its own ground: two saturated bands join, and a band below it cuts its edge
+    // in the fill rather than in the light page ground.
+    ['saturated', 'saturated'],
   ])('%s sees %s', (surface, ground) => {
     expect(visibleGround({surface: surface as never})).toBe(ground)
   })
@@ -140,7 +169,7 @@ describe('visibleGround', () => {
   })
 
   it('an inset band sees the page ground whatever its own surface is', () => {
-    for (const surface of ['light', 'tint', 'dark', 'accent', 'image', 'pattern'] as const) {
+    for (const surface of [...SECTION_SURFACES, 'accent'] as const) {
       expect(visibleGround({surface, inset: true}), surface).toBe('page')
     }
   })

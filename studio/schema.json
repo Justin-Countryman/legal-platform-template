@@ -924,6 +924,10 @@
               },
               {
                 "type": "string",
+                "value": "saturated"
+              },
+              {
+                "type": "string",
                 "value": "image"
               },
               {
@@ -6458,6 +6462,10 @@
             {
               "type": "string",
               "value": "dark"
+            },
+            {
+              "type": "string",
+              "value": "saturated"
             },
             {
               "type": "string",

@@ -53,21 +53,29 @@ export function isResolvedTreatment(value: unknown): value is ResolvedTreatment 
   return typeof value === 'string' && (RESOLVED_TREATMENTS as readonly string[]).includes(value)
 }
 
+/** The ground a placement sits on. Phase 15 replaced the `onDarkSurface` boolean:
+ *  a saturated band is neither light nor dark, and it is the section's own
+ *  `buttonContext`, so a caller passes what it already has. */
+export type TreatmentGround = 'light' | 'dark' | 'saturated'
+
 /**
  * The treatment a placement renders. An explicit value wins; `inherit`, null or
  * an unknown value takes `siteDefault`; with no site default, `plain`. The
- * placement's allowed set applies last. On a dark surface `tint` renders plain:
- * an accent multiplied over a photo on a dark band only darkens it.
+ * placement's allowed set applies last. Off a light ground `tint` renders plain:
+ * an accent multiplied over a photo on a dark band only darkens it, and on a
+ * saturated band the accent IS the ground, where the cascade resolves the wash to
+ * the band's one text colour — white, which multiplies to nothing, or a near-black,
+ * which is the dark case again (Phase 15 amendment 18).
  */
 export function resolveTreatment(
   value: string | null | undefined,
   siteDefault: string | null | undefined,
   context: TreatmentContext,
-  onDarkSurface = false,
+  ground: TreatmentGround = 'light',
 ): ResolvedTreatment {
   const wanted = isResolvedTreatment(value) ? value : isResolvedTreatment(siteDefault) ? siteDefault : 'plain'
   const allowed = ALLOWED_TREATMENTS[context].includes(wanted) ? wanted : CONTEXT_FALLBACK[context]
-  return allowed === 'tint' && onDarkSurface && context !== 'sectionBackground' ? 'plain' : allowed
+  return allowed === 'tint' && ground !== 'light' && context !== 'sectionBackground' ? 'plain' : allowed
 }
 
 export type TreatmentClasses = {wrapper: string; image: string}

@@ -5,7 +5,7 @@ import {TertiaryArrow} from '@/components/ui/TertiaryArrow'
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type ButtonVariant = 'primary' | 'secondary' | 'tertiary'
-type ButtonContext = 'light' | 'dark'
+type ButtonContext = 'light' | 'dark' | 'saturated'
 type ButtonSize    = 'small' | 'compact' | 'normal'
 type ArrowPosition = 'leading' | 'trailing'
 type ArrowGlyph    = 'arrow' | 'chevron'
@@ -72,6 +72,11 @@ const VARIANTS: Record<'primary' | 'secondary', Record<ButtonContext, string>> =
     // property override resets --color-foreground locally so `text-foreground`
     // resolves to the light-surface value (dark text on white fill).
     dark:  '[--color-foreground:var(--color-foreground-on-light)] bg-background text-foreground hover:bg-muted active:brightness-95 focus-visible:ring-white focus-visible:ring-offset-brand-dark',
+    // On the accent fill (Phase 15): the inverse of the band's own pair, so the
+    // label (accent-fill on accent-fg) and the button against the band (accent-fg
+    // on accent-fill) are the one pair `validateWcag` guarantees. The action colour
+    // is not used: it defaults to the accent, which would vanish into the band.
+    saturated: 'bg-accent-fg text-accent-fill hover:underline active:brightness-95 focus-visible:ring-accent-fg focus-visible:ring-offset-accent-fill',
   },
   secondary: {
     light: 'bg-transparent border border-action text-action-text hover:bg-action hover:text-action-fg hover:border-action active:brightness-95 focus-visible:ring-focus',
@@ -81,6 +86,7 @@ const VARIANTS: Record<'primary' | 'secondary', Record<ButtonContext, string>> =
     // green on dark green), failing WCAG contrast. White outline guarantees
     // contrast on ANY dark brand; the action color still fills on hover.
     dark:  'bg-transparent border border-current text-foreground hover:bg-action hover:text-action-fg hover:border-action active:brightness-95 focus-visible:ring-white focus-visible:ring-offset-brand-dark',
+    saturated: 'bg-transparent border border-current text-foreground hover:bg-accent-fg hover:text-accent-fill active:brightness-95 focus-visible:ring-accent-fg focus-visible:ring-offset-accent-fill',
   },
 }
 
@@ -101,6 +107,7 @@ const TERTIARY_TEXT = 'text-action-text'
 const TERTIARY_RING: Record<ButtonContext, string> = {
   light: 'focus-visible:ring-focus',
   dark:  'focus-visible:ring-white focus-visible:ring-offset-brand-dark',
+  saturated: 'focus-visible:ring-accent-fg focus-visible:ring-offset-accent-fill',
 }
 
 // ─── Spinner ──────────────────────────────────────────────────────────────────

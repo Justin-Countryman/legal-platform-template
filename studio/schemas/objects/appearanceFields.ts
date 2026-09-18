@@ -14,7 +14,7 @@ import {defineField} from 'sanity'
 // Mirror of the site's SectionSurface/SectionSpacing unions — the studio is a separate
 // package, so don't import across the studio↔site boundary (keeps studio tsc green and
 // the file portable to the canonical template).
-type SectionSurface = 'light' | 'tint' | 'dark' | 'image' | 'pattern'
+type SectionSurface = 'light' | 'tint' | 'dark' | 'image' | 'pattern' | 'saturated'
 type SectionSpacing = 'compact' | 'normal' | 'spacious'
 
 export const appearanceFieldset = {
@@ -30,6 +30,13 @@ const SURFACE_OPTIONS = [
   {title: 'Image — background photo with overlay', value: 'image'},
   {title: 'Pattern — the page background shows through', value: 'pattern'},
 ]
+
+// Offered only where a section passes its button context and draws nothing in the
+// action colour, which can equal the fill: the content section (Phase 15, §7
+// amendment 17). The label never starts with "Accent", so a band stored with the
+// retired `accent` value (which renders a light step, not a fill) is not flipped
+// to a colour fill by hand.
+const SATURATED_OPTION = {title: 'Saturated — the accent colour fills the section; text turns white or dark to read', value: 'saturated'}
 
 const SPACING_OPTIONS = [
   {title: 'Compact — tighter band (≈48–64px)', value: 'compact'},
@@ -52,8 +59,11 @@ export function appearanceFields(opts?: {
    *  five new sections take their default surface from CODE, per layout, which
    *  is also what lets Phase 16's `surfaceRhythm` reach them. */
   seed?: boolean
+  /** Offer the `saturated` surface. Only the content section does (Phase 15). */
+  offerSaturated?: boolean
 }) {
   const seed = opts?.seed !== false
+  const surfaceOptions = opts?.offerSaturated ? [...SURFACE_OPTIONS.slice(0, 3), SATURATED_OPTION, ...SURFACE_OPTIONS.slice(3)] : SURFACE_OPTIONS
   return [
     defineField({
       name: 'surface',
@@ -61,7 +71,7 @@ export function appearanceFields(opts?: {
       type: 'string',
       fieldset: 'appearance',
       description: 'The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. \u201CPattern\u201D paints no background of its own so the page background shows through, so it looks the same as \u201CLight\u201D on a site whose Design Settings set no page background.',
-      options: {list: SURFACE_OPTIONS, layout: 'radio'},
+      options: {list: surfaceOptions, layout: 'radio'},
       ...(seed ? {initialValue: opts?.defaultSurface ?? 'light'} : {}),
     }),
     defineField({

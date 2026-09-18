@@ -516,7 +516,10 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
   check('brand-dark on foreground-on-dark',       dark, t['--color-foreground-on-dark'], 4.5)
   check('action-fg on action',                    t['--color-action-fg'], t['--color-action'],       4.5)
   check('action-fg on action-hover',              t['--color-action-fg'], t['--color-action-hover'], 4.5)
-  check('accent-fg on accent',                    t['--color-accent-fg'], t['--color-accent'],       4.5)
+  // The accent strip and the saturated band paint `bg-accent-fill` (the anchored
+  // accent) with `accent-fg` text, and the saturated band's inverse primary button
+  // is the same pair reversed, which has the same ratio (Phase 15).
+  check('accent-fg on accent-fill',               t['--color-accent-fg'], t['--color-accent'],       4.5)
   // Warnings: design signals, not WCAG requirements. An accent icon beside its
   // own text is exempt from 1.4.11, so the raw accent on the page is a warning;
   // heading emphasis that reads too close to the heading's own colour is a design
