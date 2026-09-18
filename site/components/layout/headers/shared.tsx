@@ -380,7 +380,7 @@ export function HeaderLogo({data, scheme, useMark = false, className = 'h-10 lg:
 // Phase 14). accent-fg is paired with the accent itself.
 const TOP_BAR_BG: Record<string, string> = {
   primary:   'bg-brand-dark',
-  secondary: 'bg-accent-on-light',
+  secondary: 'bg-accent-fill',
   dark:      'bg-brand-dark',
 }
 

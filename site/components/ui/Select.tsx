@@ -29,7 +29,8 @@ export const Select = forwardRef<HTMLSelectElement, Props>(function Select(
   ref,
 ) {
   return (
-    <div className="relative">
+    // A light island wherever it sits: see Input.tsx (Phase 15 amendment 21).
+    <div className="relative" data-ring-context="light">
       <select
         ref={ref}
         className={[BASE, className ?? ''].filter(Boolean).join(' ')}

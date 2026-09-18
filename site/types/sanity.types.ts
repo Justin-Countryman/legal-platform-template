@@ -151,7 +151,7 @@ export type ContentSectionInline = {
   imageTreatment?:
     "inherit" | "plain" | "framed" | "slab" | "rounded" | "scrim" | "tint";
   marquee?: boolean;
-  surface?: "light" | "tint" | "dark" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "saturated" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -962,7 +962,7 @@ export type ContentSection = {
   imageTreatment?:
     "inherit" | "plain" | "framed" | "slab" | "rounded" | "scrim" | "tint";
   marquee?: boolean;
-  surface?: "light" | "tint" | "dark" | "image" | "pattern";
+  surface?: "light" | "tint" | "dark" | "saturated" | "image" | "pattern";
   sectionBackgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -4687,7 +4687,14 @@ export type HOME_QUERY_RESULT = {
           } | null;
         } | null;
         appearance: {
-          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface:
+            | "dark"
+            | "image"
+            | "light"
+            | "pattern"
+            | "saturated"
+            | "tint"
+            | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -7026,7 +7033,14 @@ export type EVENT_INDEX_PAGE_QUERY_RESULT = {
           } | null;
         } | null;
         appearance: {
-          surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
+          surface:
+            | "dark"
+            | "image"
+            | "light"
+            | "pattern"
+            | "saturated"
+            | "tint"
+            | null;
           spacing: "compact" | "normal" | "spacious" | null;
           inset: boolean | null;
           edgeBottom: "angled" | "flat" | null;
@@ -9283,7 +9297,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
+              surface:
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "saturated"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -10752,7 +10773,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
+              surface:
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "saturated"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -12061,7 +12089,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
+              surface:
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "saturated"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -13431,7 +13466,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
+              surface:
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "saturated"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -14386,7 +14428,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
+              surface:
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "saturated"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -15643,7 +15692,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
+              surface:
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "saturated"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -17108,7 +17164,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
+              surface:
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "saturated"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -18478,7 +18541,14 @@ export type CATCH_ALL_PAGE_QUERY_RESULT =
               } | null;
             } | null;
             appearance: {
-              surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
+              surface:
+                | "dark"
+                | "image"
+                | "light"
+                | "pattern"
+                | "saturated"
+                | "tint"
+                | null;
               spacing: "compact" | "normal" | "spacious" | null;
               inset: boolean | null;
               edgeBottom: "angled" | "flat" | null;
@@ -20060,7 +20130,14 @@ export type HOME_PAGE_QUERY_RESULT = {
             } | null;
           } | null;
           appearance: {
-            surface: "dark" | "image" | "light" | "pattern" | "tint" | null;
+            surface:
+              | "dark"
+              | "image"
+              | "light"
+              | "pattern"
+              | "saturated"
+              | "tint"
+              | null;
             spacing: "compact" | "normal" | "spacious" | null;
             inset: boolean | null;
             edgeBottom: "angled" | "flat" | null;

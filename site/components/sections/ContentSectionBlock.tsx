@@ -5,7 +5,7 @@ import {HeadingUnit, type HeadingUnitScale} from '@/components/ui/HeadingUnit'
 import {SanityImage} from '@/components/ui/SanityImage'
 import {VideoEmbed} from '@/components/media/VideoEmbed'
 import {splitEmphasis} from '@/lib/headingEmphasis'
-import {resolveTreatment, treatmentClasses} from '@/lib/imageTreatment'
+import {resolveTreatment, treatmentClasses, type TreatmentGround} from '@/lib/imageTreatment'
 import {hasImage} from '@/lib/sanity/image'
 import {formatPhone, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {MarqueeRibbon} from './MarqueeRibbon'
@@ -157,7 +157,9 @@ export function ContentSectionBlock({
     >
       {(surface) => {
         const center = layout === 'statement' || layout === 'statRow'
-        const onDark = surface.buttonContext === 'dark'
+        // The media's ground is the section's own button context (Phase 15): light,
+        // dark, or the accent fill, where a tint would wash nothing.
+        const ground = surface.buttonContext
 
         const heading = has(data.heading) ? (
           <HeadingUnit
@@ -313,7 +315,7 @@ export function ContentSectionBlock({
             return (
               <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
                 <div className={data.mediaSide === 'left' ? 'md:order-first' : 'md:order-last'}>
-                  <ContentMedia data={data} onDark={onDark} />
+                  <ContentMedia data={data} ground={ground} />
                 </div>
                 {text}
               </div>
@@ -325,7 +327,7 @@ export function ContentSectionBlock({
   )
 }
 
-function ContentMedia({data, onDark}: {data: ContentSectionData; onDark: boolean}) {
+function ContentMedia({data, ground}: {data: ContentSectionData; ground: TreatmentGround}) {
   const media = data.media
   if (media?.kind === 'video' && media.video?.youTubeUrl) {
     return <VideoEmbed video={media.video} />
@@ -333,7 +335,7 @@ function ContentMedia({data, onDark}: {data: ContentSectionData; onDark: boolean
   if (!media || !hasImage(media.image)) return null
   const cutout = media.kind === 'cutout'
   // No site default exists until Phase 16, so `inherit` resolves to plain.
-  const treatment = treatmentClasses(resolveTreatment(data.imageTreatment, undefined, cutout ? 'cutout' : 'contentMedia', onDark))
+  const treatment = treatmentClasses(resolveTreatment(data.imageTreatment, undefined, cutout ? 'cutout' : 'contentMedia', ground))
   return (
     <div className={treatment.wrapper}>
       <SanityImage

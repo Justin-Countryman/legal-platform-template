@@ -25,7 +25,12 @@
 //             (Phase 13). Text polarity is the light cascade, because the page
 //             ground is a light ground until Phase 16's themes say otherwise.
 //
-// The saturated accent surface is Phase 15's (WS-V1-PHASE15-DESIGN).
+//   saturated — the accent as a full-width fill (`bg-accent-fill`), text in
+//             `accent-fg` through the `[data-ring-context="saturated"]` block,
+//             buttons in their own context (Phase 15, WS-V1-PHASE15-DESIGN §7
+//             amendments 11 to 17). Offered on the content section only: the
+//             other sections draw controls in the action colour, which can equal
+//             the fill.
 //
 // ─── Phase 13, the section frame ─────────────────────────────────────────────────
 //
@@ -72,14 +77,16 @@
 // system by `lib/__tests__/sectionSurface.test.ts`, the guard
 // `lib/imageTreatment.ts` already documents for the same reason.
 
-export type SectionSurface = 'light' | 'tint' | 'dark' | 'muted' | 'image' | 'pattern'
+export type SectionSurface = 'light' | 'tint' | 'dark' | 'muted' | 'image' | 'pattern' | 'saturated'
+/** Every surface, for the tests that must cover each one. */
+export const SECTION_SURFACES: readonly SectionSurface[] = ['light', 'tint', 'dark', 'muted', 'image', 'pattern', 'saturated']
 /** What a document may store: a surface, or the legacy `accent`, which renders as `muted`. */
 export type StoredSurface = SectionSurface | 'accent'
 export type SectionSpacing = 'compact' | 'normal' | 'spacious'
 
 /** What the visitor actually sees behind a band. `pattern` and an inset band show
  *  the page ground, so two of them in a row are a same-ground join. */
-export type VisibleGround = 'light' | 'tint' | 'muted' | 'dark' | 'image' | 'page'
+export type VisibleGround = 'light' | 'tint' | 'muted' | 'dark' | 'image' | 'page' | 'saturated'
 
 /** The bottom edge a band cuts into the one below it. Desktop and up only. */
 export type SectionEdge = 'flat' | 'angled'
@@ -144,10 +151,10 @@ export const TIGHT_SPACING: SectionSpacingSteps = {
 export type ResolvedSectionSurface = {
   /** Background class for the section band. Empty for `pattern`. */
   surfaceClass: string
-  /** `data-ring-context` value — 'dark' on dark/image surfaces, else omitted. */
-  ringContext: 'dark' | undefined
+  /** `data-ring-context` value — 'dark' on dark/image surfaces, 'saturated' on the accent fill, else omitted. */
+  ringContext: 'dark' | 'saturated' | undefined
   /** Surface context for Button / ButtonGroup inside the section. */
-  buttonContext: 'light' | 'dark'
+  buttonContext: 'light' | 'dark' | 'saturated'
   /** True when the caller should render a background image + scrim (image surface). */
   isImage: boolean
 }
@@ -160,6 +167,8 @@ export function sectionSurface(surface: StoredSurface | null | undefined): Resol
       // The image rides on a brand-dark base so a missing/loading image still has
       // a safe dark surface for the white text + scrim.
       return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: true}
+    case 'saturated':
+      return {surfaceClass: 'bg-accent-fill', ringContext: 'saturated', buttonContext: 'saturated', isImage: false}
     case 'tint':
       return {surfaceClass: 'bg-hero-tint', ringContext: undefined, buttonContext: 'light', isImage: false}
     case 'muted':
@@ -193,6 +202,7 @@ export function visibleGround(
     case 'dark':    return 'dark'
     case 'image':   return 'image'
     case 'tint':    return 'tint'
+    case 'saturated': return 'saturated'
     // `muted` (and a stored `accent`) is `bg-muted`, its own ground: it seams only
     // with another muted band, and its edge is painted in `bg-muted`. Phase 13
     // mapped it to `tint`, which halved the padding between two different colours
@@ -218,6 +228,7 @@ const EDGE_FROM_CLASS: Record<VisibleGround, string> = {
   tint:  'before:bg-hero-tint',
   muted: 'before:bg-muted',
   dark:  'before:bg-brand-dark',
+  saturated: 'before:bg-accent-fill',
   image: '',
   page:  '',
 }
@@ -283,7 +294,7 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
   TIGHT_SPACING.top, TIGHT_SPACING.bottom, TIGHT_SPACING.seamTop, TIGHT_SPACING.topNone,
   ...Object.values(EDGE_FROM_CLASS).filter(Boolean),
   EDGE_ANGLED,
-  'bg-brand-dark', 'bg-hero-tint', 'bg-muted', 'bg-background',
+  'bg-brand-dark', 'bg-hero-tint', 'bg-muted', 'bg-background', 'bg-accent-fill',
 ]
   .join(' ')
   .split(/\s+/)
