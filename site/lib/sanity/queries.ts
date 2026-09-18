@@ -342,7 +342,7 @@ export const SITE_SCRIPTS_QUERY = groq`
 
 // ─── OG image composition ─────────────────────────────────────────────────────
 // Used by `app/api/og/route.tsx` to render branded 1200×630 social cards.
-// An absent `darkGround` falls back at render time to the colour engine's
+// An absent `darkGround` falls back at render time to the color engine's
 // default dark ground when Sanity hasn't been configured yet.
 export const OG_DATA_QUERY = groq`{
   "firmName":     *[_type == "siteSettings"][0].firmName,
@@ -846,7 +846,7 @@ export const DESIGN_TOKENS_QUERY = groq`
     motionTempo,
     marketingScale,
     fontPairingPreset,
-    // The four colour roles (Phase 14). The five fields they replace stay in the
+    // The four color roles (Phase 14). The five fields they replace stay in the
     // schema, hidden, for one pin, and nothing reads them. Every field of this
     // type either appears in this projection or is on the allow-list of the
     // projection key-set test beside this file, which fails otherwise.

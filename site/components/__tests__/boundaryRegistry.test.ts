@@ -9,7 +9,7 @@ import {describe, expect, it} from 'vitest'
 // WHAT A BOUNDARY IS. Where a component draws something a visitor must SEE
 // without reading it — the edge of a form control, the fill or ring that marks a
 // selected tab, the mark on the page they are on — WCAG 1.4.11 asks 3:1 against
-// what is beside it, and 1.4.1 asks that it not be colour alone. Those marks are
+// what is beside it, and 1.4.1 asks that it not be color alone. Those marks are
 // spread across nine files and are drawn with utilities, so no ratio test can
 // find them by reading the palette: `validateWcag` measures token PAIRS, and it
 // cannot know which pair a component actually puts side by side.
@@ -22,7 +22,7 @@ import {describe, expect, it} from 'vitest'
 // PR #28 shipped a kicker that resolved the light accent inside a dark band, and
 // a list like this one, asserted, is what would have held it.
 //
-// WHAT IT CANNOT DO. It does not measure ratios (that is `colourGuarantee`) and
+// WHAT IT CANNOT DO. It does not measure ratios (that is `colorGuarantee`) and
 // it does not see a boundary drawn in a file that renders no control and no
 // `aria-current` — a decorative divider, say. It holds the classes of record for
 // the components that have one.
@@ -64,7 +64,7 @@ const REGISTRY: readonly Row[] = [
     file: 'sections/AttorneySlider.tsx',
     draws: 'which slide of the attorney carousel is showing',
     marks: ['bg-cue ring-1 ring-action-state-cue', 'aria-current', 'bg-border-control'],
-    contract: '1.4.11 3:1 for the active dot, with the cue ring where the action alone does not reach it; 1.4.1 not colour alone (the active dot is wider)',
+    contract: '1.4.11 3:1 for the active dot, with the cue ring where the action alone does not reach it; 1.4.1 not color alone (the active dot is wider)',
     grounds: ['light'],
   },
   {
@@ -99,14 +99,14 @@ const REGISTRY: readonly Row[] = [
     file: 'layout/headers/shared.tsx',
     draws: 'the navigation item for the page being viewed',
     marks: ['aria-current', "border-cue bg-cue/10 font-semibold text-foreground"],
-    contract: '1.4.1 not colour alone (a left rule and the weight carry it); 4.1.2 aria-current="page"',
+    contract: '1.4.1 not color alone (a left rule and the weight carry it); 4.1.2 aria-current="page"',
     grounds: ['light', 'dark'],
   },
   {
     file: 'layout/Sidebar.tsx',
     draws: 'the sidebar row for the page being viewed',
     marks: ['aria-current'],
-    contract: '4.1.2 aria-current="page"; weight and colour carry the visual mark',
+    contract: '4.1.2 aria-current="page"; weight and color carry the visual mark',
     grounds: ['light'],
   },
   {
@@ -120,7 +120,7 @@ const REGISTRY: readonly Row[] = [
     file: 'ui/PracticeAreaList.tsx',
     draws: 'the practice area being viewed, inside a list of links',
     marks: ['aria-current', '!font-semibold'],
-    contract: '1.4.1 not colour alone (the weight carries it); 4.1.2 aria-current="page"',
+    contract: '1.4.1 not color alone (the weight carries it); 4.1.2 aria-current="page"',
     grounds: ['light', 'dark'],
   },
 ]

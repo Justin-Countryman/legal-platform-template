@@ -2,25 +2,25 @@
 
 import React from 'react'
 import {useDocumentOperation, useFormValue} from 'sanity'
-import {resolvePalette, validateWcag, type Acceptance, type ColourInputs} from '../../site/lib/designTokens'
+import {resolvePalette, validateWcag, type Acceptance, type ColorInputs} from '../../site/lib/designTokens'
 import {PALETTE_PRESETS, matchPreset, presetInputs, type PalettePreset} from '../../site/lib/palettes'
 
 // The palette field (Phase 14). It stores nothing itself. It shows the fifteen
-// presets, writes a chosen preset's values into the four colour fields, and
+// presets, writes a chosen preset's values into the four color fields, and
 // previews what the site RENDERS from whatever those fields hold, including any
-// colour the engine had to adjust so that every pair stays readable (WCAG 2.2 AA).
+// color the engine had to adjust so that every pair stays readable (WCAG 2.2 AA).
 // The engine is the site's own (site/lib/designTokens.ts), imported here as the
 // studio has always imported it, so the preview cannot drift from the page.
 //
-// The active preset is derived by matching values; an edit to any colour simply
+// The active preset is derived by matching values; an edit to any color simply
 // shows "Custom". Nothing records which preset was chosen
 // (WS-V1-PHASE14-DESIGN §7 amendment 9).
 
-const ROLE_LABELS: Record<keyof Required<ColourInputs>, string> = {
+const ROLE_LABELS: Record<keyof Required<ColorInputs>, string> = {
   darkGround:  'Dark ground',
   lightGround: 'Light ground',
   accent:      'Accent',
-  action:      'Button colour',
+  action:      'Button color',
 }
 
 const label: React.CSSProperties = {fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#555', margin: '0 0 8px'}
@@ -84,7 +84,7 @@ export function ColorPreview() {
   const documentId = (useFormValue(['_id']) as string | undefined) ?? 'designSettings'
   const {patch} = useDocumentOperation(documentId.replace(/^drafts\./, ''), 'designSettings')
 
-  const inputs: ColourInputs = {
+  const inputs: ColorInputs = {
     darkGround:  useFormValue(['darkGround'])  as string | undefined,
     lightGround: useFormValue(['lightGround']) as string | undefined,
     accent:      useFormValue(['accent'])      as string | undefined,
@@ -100,16 +100,16 @@ export function ColorPreview() {
     const values = presetInputs(preset)
     const set: Record<string, string> = {}
     const unset: string[] = []
-    for (const role of Object.keys(ROLE_LABELS) as Array<keyof ColourInputs>) {
+    for (const role of Object.keys(ROLE_LABELS) as Array<keyof ColorInputs>) {
       const value = values[role]
       if (value) set[role] = value
       else unset.push(role)
     }
     patch.execute([{set}, ...(unset.length ? [{unset}] : [])])
   }
-  const writeRendered = (role: keyof ColourInputs, hex: string) => patch.execute([{set: {[role]: hex}}])
+  const writeRendered = (role: keyof ColorInputs, hex: string) => patch.execute([{set: {[role]: hex}}])
 
-  const adjusted = (Object.keys(palette.acceptance) as Array<keyof ColourInputs>)
+  const adjusted = (Object.keys(palette.acceptance) as Array<keyof ColorInputs>)
     .filter((role) => palette.acceptance[role].adjusted && parseStored(inputs[role]))
 
   const warnings = results.filter((r) => !r.blocking && !r.passes)
@@ -181,7 +181,7 @@ export function ColorPreview() {
         <p style={label}>Accessibility (WCAG 2.2 AA)</p>
         {blockingFails.length === 0 ? (
           <div style={{padding: '8px 10px', background: '#dcfce7', borderRadius: 4, fontSize: 11, color: '#166534', fontWeight: 600}}>
-            ✓ All {results.filter((r) => r.blocking).length} required colour pairs pass.
+            ✓ All {results.filter((r) => r.blocking).length} required color pairs pass.
           </div>
         ) : (
           <div style={{padding: '8px 10px', background: '#fee2e2', borderRadius: 4, fontSize: 11, color: '#991b1b', fontWeight: 600}}>

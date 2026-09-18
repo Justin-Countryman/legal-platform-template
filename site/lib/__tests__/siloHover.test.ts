@@ -43,7 +43,7 @@ describe('siloHover — each effect activates only its own layer', () => {
     expect(fx.arrow).toBe('')
   })
 
-  it('grayscale → image is B&W at rest, colours on hover (image filter layer)', () => {
+  it('grayscale → image is B&W at rest, colors on hover (image filter layer)', () => {
     const fx = siloHover(['grayscale'])
     expect(fx.image).toContain('grayscale')
     expect(fx.image).toContain('group-hover:grayscale-0')
@@ -83,7 +83,7 @@ describe('siloHover — composition (multiple effects stack)', () => {
     expect(fx.border).toContain('group-hover:border-cue')
   })
 
-  it('imageZoom + grayscale stack on the image (zoom AND colour reveal)', () => {
+  it('imageZoom + grayscale stack on the image (zoom AND color reveal)', () => {
     const fx = siloHover(['imageZoom', 'grayscale'])
     expect(fx.image).toContain('group-hover:scale-105')
     expect(fx.image).toContain('group-hover:grayscale-0')

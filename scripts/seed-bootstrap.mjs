@@ -271,7 +271,7 @@ const sampleDesignSettings = {
   _id: 'designSettings',
   _type: 'designSettings',
   // All fields are .warning()-level; rely on schema initialValues for defaults
-  // (default, plain, rounded, etc.). No colour is seeded: an absent colour role
+  // (default, plain, rounded, etc.). No color is seeded: an absent color role
   // renders the platform default (Phase 14, item 308).
 }
 

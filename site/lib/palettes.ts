@@ -1,32 +1,32 @@
 // ─── Palette presets (Phase 14) ───────────────────────────────────────────────
 //
 // Fifteen curated palettes, each the four role inputs of lib/designTokens.ts.
-// Choosing one in the Studio writes its hex values into the four colour fields;
+// Choosing one in the Studio writes its hex values into the four color fields;
 // the hex values are the truth and nothing stores which preset was chosen. The
 // active preset is DERIVED by matching the stored values (matchPreset), so an
-// edit to any one colour simply stops matching, and a preset retuned later never
+// edit to any one color simply stops matching, and a preset retuned later never
 // leaves a stale id behind. That is how Gutenberg's style variations and Shopify's
 // theme presets behave (WS-V1-PHASE14-DESIGN §7 amendment 9).
 //
 // Fifteen, not twenty: Justin asked for "10 to 15 different high quality color
 // palettes" ([R-440]) and ruled fifteen on 2026-09-16, cutting the three gold
-// presets whose text colours converge on light pages and the two with the
+// presets whose text colors converge on light pages and the two with the
 // thinnest evidence.
 //
 // Provenance. Every palette's hues come from the 65-site homepage field study in
-// the platform monorepo. Each preset carries the colour words its study records
+// the platform monorepo. Each preset carries the color words its study records
 // use; the records themselves, by domain, are in that repository's Phase 14
 // design record, because the template carries no firm identity. The records name
 // hues and never a hex. Every hex below is therefore a chosen value, validated by
-// lib/__tests__/colourGuarantee.test.ts (every rendered colour pair meets WCAG
+// lib/__tests__/colorGuarantee.test.ts (every rendered color pair meets WCAG
 // 2.2 AA) and provisional until the Phase 18 eye pass. Justin does not pick the
 // values (2026-09-16).
 //
 // Ids read `<dark ground>-<accent>`, as the decisions log's ruling 11 already
-// writes them. A palette is chosen by its colours, so its name predicts its
+// writes them. A palette is chosen by its colors, so its name predicts its
 // swatches; theme names stay the one-word style.
 
-import {COLOUR_DEFAULTS, parseHexInput, type ColourInputs} from './designTokens'
+import {COLOR_DEFAULTS, parseHexInput, type ColorInputs} from './designTokens'
 
 export type PalettePreset = {
   id: string
@@ -37,7 +37,7 @@ export type PalettePreset = {
   accent: string
   /** Absent means buttons take the accent. */
   action?: string
-  /** The colour words the field-study records use for this palette. The records
+  /** The color words the field-study records use for this palette. The records
    *  themselves, by domain, are listed in the monorepo's Phase 14 design record:
    *  the template carries no firm identity (scripts/check-template-is-blank.mjs). */
   evidence: string[]
@@ -122,23 +122,23 @@ export const PALETTE_PRESETS: readonly PalettePreset[] = [
 ]
 
 /** The four role inputs a preset writes. Absent roles stay absent. */
-export function presetInputs(preset: PalettePreset): ColourInputs {
+export function presetInputs(preset: PalettePreset): ColorInputs {
   return {darkGround: preset.darkGround, lightGround: preset.lightGround ?? null, accent: preset.accent, action: preset.action ?? null}
 }
 
 // Compare values as the engine reads them: case-insensitive, an absent or
 // unparsable light ground is white, an absent action is absent.
-function normalised(inputs: ColourInputs) {
+function normalised(inputs: ColorInputs) {
   return {
     darkGround:  parseHexInput(inputs.darkGround),
-    lightGround: parseHexInput(inputs.lightGround) ?? COLOUR_DEFAULTS.lightGround,
+    lightGround: parseHexInput(inputs.lightGround) ?? COLOR_DEFAULTS.lightGround,
     accent:      parseHexInput(inputs.accent),
     action:      parseHexInput(inputs.action),
   }
 }
 
-/** The preset whose values the stored colours equal, or null ("custom"). */
-export function matchPreset(inputs: ColourInputs): PalettePreset | null {
+/** The preset whose values the stored colors equal, or null ("custom"). */
+export function matchPreset(inputs: ColorInputs): PalettePreset | null {
   const stored = normalised(inputs)
   return PALETTE_PRESETS.find((preset) => {
     const p = normalised(presetInputs(preset))

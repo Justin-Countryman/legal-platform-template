@@ -83,7 +83,7 @@ describe('two neighbours', () => {
 
   it('muted seams only with muted: a stored accent beside tint or light keeps its full padding', () => {
     // Phase 14. Phase 13 treated accent (bg-muted) and tint (bg-hero-tint) as one
-    // ground and halved the padding between two different colours.
+    // ground and halved the padding between two different colors.
     const {container} = canvas([band('a', {surface: 'accent'}), band('b', {surface: 'muted'})])
     expect(sectionsOf(container)[1].className).toContain(SEAM)
     const {container: c2} = canvas([band('a', {surface: 'accent'}), band('b', {surface: 'tint'})])
@@ -167,12 +167,12 @@ describe('the first-block motion rule', () => {
 })
 
 describe('the angled edge', () => {
-  it('is painted by the NEXT band, in the previous band’s ground colour', () => {
+  it('is painted by the NEXT band, in the previous band’s ground color', () => {
     const {container} = canvas([band('a', {surface: 'dark', edgeBottom: 'angled'}), band('b', {surface: 'light'})])
     const [first, second] = sectionsOf(container)
     // The band that CHOSE the edge paints nothing itself.
     expect(first.className).not.toContain('before:bg-')
-    // The band below paints it, in the band above's colour.
+    // The band below paints it, in the band above's color.
     expect(second.className).toContain('before:bg-brand-dark')
     expect(second.className).toContain('md:before:top-0')
   })

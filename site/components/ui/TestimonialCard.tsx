@@ -18,7 +18,7 @@ export type TestimonialData = {
 export function TestimonialCard({t}: {t: TestimonialData}) {
   return (
     // A light card: its text and stars stay light-surface inside a dark testimonials
-    // band (they inherited the dark band's colours at 1.16:1 before Phase 14).
+    // band (they inherited the dark band's colors at 1.16:1 before Phase 14).
     <article data-ring-context="light" className="flex flex-col h-full rounded-ui border border-border bg-background p-6 shadow-card-rest">
 
       {t.numberOfStars && t.numberOfStars > 0 && (

@@ -44,7 +44,7 @@ const TONE_BG: Record<HeroScrimTone, string> = {
 // (Phase 14, WS-V1-PHASE14-DESIGN §7 amendment 21). So a dark scrim never renders
 // weaker than that; the operator's stored opacity is untouched and still deepens
 // it above 80. What this cannot guarantee, and the record names: the faded end of
-// a gradient scrim, a light-tone scrim, and a gradient in the action colour.
+// a gradient scrim, a light-tone scrim, and a gradient in the action color.
 export const MIN_TEXT_SCRIM_OPACITY = 80
 // Editor-chosen gradient base color. 'action' is the color-system action token
 // (reliably emitted as a CSS var); 'black' is a palette-independent neutral darken.

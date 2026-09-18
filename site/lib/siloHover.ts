@@ -69,7 +69,7 @@ export function siloHover(effects: SiloHoverEffect[]): SiloHoverClasses {
   const has = (e: SiloHoverEffect) => effects.includes(e)
   return {
     container: has('lift') ? LIFT : '',
-    // Image layer composes zoom + grayscale (B&W at rest → colour on hover). The
+    // Image layer composes zoom + grayscale (B&W at rest → color on hover). The
     // base transitions `scale` + `filter`, so both ease.
     image: [
       has('imageZoom') ? 'group-hover:scale-105' : '',

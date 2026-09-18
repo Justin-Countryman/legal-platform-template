@@ -39,7 +39,7 @@ export const CardLink = forwardRef<HTMLAnchorElement, Props>(function CardLink(
 
   return (
     // The card is a light surface wherever it is placed, so its text keeps the
-    // light-surface colours inside a dark band (Phase 14).
+    // light-surface colors inside a dark band (Phase 14).
     <Link ref={ref} data-ring-context="light" className={cls} {...rest}>
       {children}
     </Link>

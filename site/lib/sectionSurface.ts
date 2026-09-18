@@ -29,21 +29,21 @@
 //             `accent-fg` through the `[data-ring-context="saturated"]` block,
 //             buttons in their own context (Phase 15, WS-V1-PHASE15-DESIGN §7
 //             amendments 11 to 17). Offered on the content section only: the
-//             other sections draw controls in the action colour, which can equal
+//             other sections draw controls in the action color, which can equal
 //             the fill.
 //
 // ─── Phase 13, the section frame ─────────────────────────────────────────────────
 //
 // `surface` alone cannot make a stacked page read as one design, for a reason
 // measured on the deployed build in 2026-07 and re-measured in the Phase 13
-// challenge: two bands set to the SAME surface render as one continuous colour
+// challenge: two bands set to the SAME surface render as one continuous color
 // with no seam, and then put 128px of doubled padding at the join (192px from
 // 768px, 224px from 992px — `--breakpoint-lg` here is 992, not Tailwind's 1024).
 // Two sections grouped onto one background still read as two, not because of a
 // visible seam but because of a canyon.
 //
 // So the frame adds:
-//   - `visibleGround()`, which answers "what colour does the visitor SEE here",
+//   - `visibleGround()`, which answers "what color does the visitor SEE here",
 //     which walks `pattern` and an inset band as the light ground;
 //   - a spacing preset split into `top` / `bottom` / `seamTop` / `topOverlap` /
 //     `bottomBeforeOverlap`, so a
@@ -220,7 +220,7 @@ export function visibleGround(
     case 'saturated': return 'saturated'
     // `muted` (and a stored `accent`) is `bg-muted`, its own ground: it seams only
     // with another muted band, and its edge is painted in `bg-muted`. Phase 13
-    // mapped it to `tint`, which halved the padding between two different colours
+    // mapped it to `tint`, which halved the padding between two different colors
     // and painted a hero-tint wedge beside a muted band (Phase 14 challenge).
     case 'muted':
     case 'accent':  return 'muted'
@@ -251,7 +251,7 @@ const EDGE_FROM_CLASS: Record<VisibleGround, string> = {
 // one.
 //
 // Phase 14 fix. Phase 13 shipped the wedge at `bottom: 100%`, which laid it over
-// the PREVIOUS band, painted in that band's own colour: dark on dark, tint on tint.
+// the PREVIOUS band, painted in that band's own color: dark on dark, tint on tint.
 // It rendered nothing whenever it worked as designed (pixel-sampled in the Phase 14
 // challenge; the only visible wedge was the accent/tint mismatch, itself a bug), and
 // the Phase 13 samples that called it visible read the previous band. At `top: 0`

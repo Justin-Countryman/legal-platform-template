@@ -61,7 +61,7 @@ function chromaFloor(sourceChroma: number, scaledChroma: number, floor: number):
   return sourceChroma <= ACHROMATIC_CHROMA ? 0 : Math.max(scaledChroma, floor)
 }
 
-// ─── Colour by role (Phase 14) ────────────────────────────────────────────────
+// ─── Color by role (Phase 14) ────────────────────────────────────────────────
 //
 // Four inputs, each a role, replacing the three approaches and the "primary hue
 // that surfaces derive from" (decisions-log ruling 7, [R-439]):
@@ -75,14 +75,14 @@ function chromaFloor(sourceChroma: number, scaledChroma: number, floor: number):
 // foreground/background pair the template renders meets WCAG 2.2 AA for ANY
 // valid hex in ANY role (Justin, 2026-09-16: "we need to ensure the colors are
 // 100% a11y"). That is a tested claim, not a promise:
-// lib/__tests__/colourGuarantee.test.ts sweeps a grid of inputs in every role
-// plus a seeded random sample and every preset. Where a chosen colour cannot
+// lib/__tests__/colorGuarantee.test.ts sweeps a grid of inputs in every role
+// plus a seeded random sample and every preset. Where a chosen color cannot
 // carry its pair, the engine moves the RENDERED value the smallest step that
 // passes and reports it; the stored hex is never rewritten.
 //
 // The design record is WS-V1-PHASE14-DESIGN.md §7 (amendments 1 to 24).
 
-export type ColourInputs = {
+export type ColorInputs = {
   darkGround?:  string | null
   lightGround?: string | null
   accent?:      string | null
@@ -91,15 +91,15 @@ export type ColourInputs = {
 
 // The code defaults ARE the render every Site-Build client already has: it
 // stores analogous-accent + #333333 + #666666, which rendered brand-dark #141414
-// and accent #666666. A fresh build now stores no colour at all and lands on the
+// and accent #666666. A fresh build now stores no color at all and lands on the
 // same render. Black, white and greys (Justin, 2026-08-14).
-export const COLOUR_DEFAULTS = {
+export const COLOR_DEFAULTS = {
   darkGround:  '#141414',
   lightGround: '#ffffff',
   accent:      '#666666',
 } as const
 
-// Only a literal six-digit hex is a colour. culori would also parse 'navy' or a
+// Only a literal six-digit hex is a color. culori would also parse 'navy' or a
 // five-digit typo's neighbour, and the Studio's own rule accepts neither, so an
 // input the Studio would flag must not reach the page as something else. An
 // unparsable value is absent: a mistyped hex can never take the layout down.
@@ -161,7 +161,7 @@ export type Acceptance = {
   /** What renders. */
   hex: string
   adjusted: boolean
-  /** Lightness steps taken; the Studio shows it so a mis-typed colour is obvious. */
+  /** Lightness steps taken; the Studio shows it so a mis-typed color is obvious. */
   steps: number
 }
 
@@ -204,7 +204,7 @@ export const heroTintOf = (ground: string) => lightStep(ground, 0.015)
 // apart from foreground-muted (at 0.45 the two collapsed on 495 of 513 grounds).
 const LIGHT_GROUND_PROBE_L = 0.50
 
-// An operator can type a mid or dark colour as the light ground. It is accepted
+// An operator can type a mid or dark color as the light ground. It is accepted
 // when the probe passes on its muted step; otherwise lightness steps UP 0.02 at
 // the input's own hue and chroma. White and every preset pass unchanged.
 export function acceptLightGround(input: string, darkGroundHex: string): Acceptance {
@@ -232,7 +232,7 @@ function stepLightness(from: {l: number; c: number; h: number}, dir: 1 | -1, tes
   return dir > 0 && test('#ffffff') ? '#ffffff' : null
 }
 
-// A text colour ON a fill: white when it reaches 4.5:1, else a near-black in the
+// A text color ON a fill: white when it reaches 4.5:1, else a near-black in the
 // fill's own hue.
 const darkTextFor = (fill: string) => neutralAt(fill, 0.20, 0.10, 0.015)
 const textOn = (fill: string) => (contrast('#ffffff', fill) >= 4.5 ? '#ffffff' : darkTextFor(fill))
@@ -279,14 +279,14 @@ export type ResolvedPalette = {
   /** The four inputs after parsing and defaults, before any acceptance. */
   inputs: {darkGround: string; lightGround: string; accent: string; action: string}
   acceptance: {darkGround: Acceptance; lightGround: Acceptance; accent: Acceptance; action: Acceptance}
-  /** Every colour token by its CSS custom property name. */
+  /** Every color token by its CSS custom property name. */
   tokens: Record<string, string>
 }
 
-export function resolvePalette(raw: ColourInputs = {}): ResolvedPalette {
-  const darkIn   = parseHexInput(raw.darkGround)  ?? COLOUR_DEFAULTS.darkGround
-  const lightIn  = parseHexInput(raw.lightGround) ?? COLOUR_DEFAULTS.lightGround
-  const accentIn = parseHexInput(raw.accent)      ?? COLOUR_DEFAULTS.accent
+export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
+  const darkIn   = parseHexInput(raw.darkGround)  ?? COLOR_DEFAULTS.darkGround
+  const lightIn  = parseHexInput(raw.lightGround) ?? COLOR_DEFAULTS.lightGround
+  const accentIn = parseHexInput(raw.accent)      ?? COLOR_DEFAULTS.accent
   const actionIn = parseHexInput(raw.action)      ?? accentIn
 
   const darkA   = acceptDarkGround(darkIn)
@@ -344,19 +344,19 @@ export function resolvePalette(raw: ColourInputs = {}): ResolvedPalette {
     ? action
     : stepLightness(parseOklch(action), 1, (h) => contrast(h, brandDark) >= 4.5) ?? '#ffffff'
 
-  // A text link's hover colour (prose links). It was the button hover fill used as
+  // A text link's hover color (prose links). It was the button hover fill used as
   // text, which is not cascade-aware: inside a dark band it measured 1.38:1, and a
   // gold palette's lighter hover fails on white. On light grounds it keeps the
   // button hover where that passes 4.5:1 (every built client: #2f2f2f), else the
-  // resting link colour; on dark grounds it is the on-dark body text.
+  // resting link color; on dark grounds it is the on-dark body text.
   const actionTextHover = passesOn(actionHover, lightGrounds, 4.5) ? actionHover : actionText
   const actionTextHoverOnDark = inverse['color-foreground-on-dark']
 
-  // A selected pill or tab is shown by an action-coloured fill, and WCAG 1.4.11
+  // A selected pill or tab is shown by an action-colored fill, and WCAG 1.4.11
   // asks 3:1 between that state indicator and the ground beside it. Where the
   // action already clears 3:1 the cue is transparent, so nothing is drawn and no
   // built client changes; where it does not (a gold action on white measures about
-  // 2.3:1) the selected control gains a 1px ring in the action text colour.
+  // 2.3:1) the selected control gains a 1px ring in the action text color.
   const actionStateCue = passesOn(action, lightGrounds, 3) ? 'transparent' : actionText
   const actionStateCueOnDark = contrast(action, brandDark) >= 3 ? 'transparent' : actionTextOnDark
 
@@ -384,7 +384,7 @@ export function resolvePalette(raw: ColourInputs = {}): ResolvedPalette {
 
   // The boundary of a control whose only visible edge is its border (form
   // fields, inactive carousel dots, empty stars), WCAG 1.4.11 3:1. The divider
-  // colour (--color-border) is decorative and stays as it was.
+  // color (--color-border) is decorative and stays as it was.
   let borderControl = '#000000'
   for (let l = 0.92; l >= 0; l = round6(l - 0.005)) {
     const candidate = neutralAt(darkIn, l, 0.06, 0.010)
@@ -494,7 +494,7 @@ function blendOver(ground: string, ink: string, alpha: number): string {
 
 // The token-level pairs every rendered surface relies on. The component-level
 // pairings (a light card inside a dark band, and so on) are held by component
-// tests; this list is what an operator's colour choice can move.
+// tests; this list is what an operator's color choice can move.
 export function validateWcag(palette: ResolvedPalette): WcagResult[] {
   const t = palette.tokens
   const results: WcagResult[] = []
@@ -542,7 +542,7 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
   check('accent-fg on accent-fill',               t['--color-accent-fg'], t['--color-accent'],       4.5)
   // Warnings: design signals, not WCAG requirements. An accent icon beside its
   // own text is exempt from 1.4.11, so the raw accent on the page is a warning;
-  // heading emphasis that reads too close to the heading's own colour is a design
+  // heading emphasis that reads too close to the heading's own color is a design
   // warning (coral on cream measured 2.94).
   check('accent on background (graphics beside text)', t['--color-accent'], t['--color-background'], 3, false)
   check('accent-text against foreground (emphasis distinctness)', t['--color-accent-text'], t['--color-foreground'], 3, false)
@@ -822,12 +822,12 @@ export function buildDesignTokenCSS(
   )
 }
 // ─── Color CSS — main entry point ─────────────────────────────────────────────
-// One :root block of every colour token, from the four role inputs. Absent or
-// unparsable inputs fall to COLOUR_DEFAULTS, which is the render every built
-// client already has, so a site with no brand colour renders as it always did
+// One :root block of every color token, from the four role inputs. Absent or
+// unparsable inputs fall to COLOR_DEFAULTS, which is the render every built
+// client already has, so a site with no brand color renders as it always did
 // except where a pair failed WCAG 2.2 AA (§7 amendment 19).
 
-export function buildColorCSS(inputs: ColourInputs = {}): string {
+export function buildColorCSS(inputs: ColorInputs = {}): string {
   const {tokens} = resolvePalette(inputs)
   return `:root{${Object.entries(tokens).map(([k, v]) => `${k}:${v}`).join(';')}}`
 }

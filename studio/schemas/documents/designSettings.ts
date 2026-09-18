@@ -190,11 +190,11 @@ export const designSettings = defineType({
 
     // ─── Brand Colors ─────────────────────────────────────────────────────────
 
-    // Four colour roles (Phase 14, WS-V1-PHASE14-DESIGN §7). Each is a hex and
+    // Four color roles (Phase 14, WS-V1-PHASE14-DESIGN §7). Each is a hex and
     // none is required: an absent role renders the platform default, which is the
     // greyscale every site already ships with. None carries an initialValue: the
     // build folds initial values into the documents it writes (item 308), and a
-    // seeded colour would be indistinguishable from one an operator chose.
+    // seeded color would be indistinguishable from one an operator chose.
     // verify-inline-sections.ts refuses an initialValue on any field in this
     // fieldset.
     //
@@ -207,7 +207,7 @@ export const designSettings = defineType({
       fieldset: 'colors',
       readOnly: true,
       components: {input: ColorPreview},
-      description: 'Choose a palette to fill the four colours below, or type your own. The preview shows what the site renders: a colour that cannot be read against its background is adjusted the smallest step that reads, and shown here.',
+      description: 'Choose a palette to fill the four colors below, or type your own. The preview shows what the site renders: a color that cannot be read against its background is adjusted the smallest step that reads, and shown here.',
     }),
 
     defineField({
@@ -215,7 +215,7 @@ export const designSettings = defineType({
       title: 'Dark Ground',
       type: 'string',
       fieldset: 'colors',
-      description: 'Hex, e.g. #14213D. Dark sections, the footer, and dark header and hero schemes. A deep navy, charcoal, forest or burgundy works best; a lighter or more vivid colour is deepened until white text reads on it.',
+      description: 'Hex, e.g. #14213D. Dark sections, the footer, and dark header and hero schemes. A deep navy, charcoal, forest or burgundy works best; a lighter or more vivid color is deepened until white text reads on it.',
       validation: (Rule) => Rule.regex(/^#[0-9A-Fa-f]{6}$/, {name: 'hex'}).warning('Enter a 6-digit hex value, e.g. #14213D'),
     }),
 
@@ -233,13 +233,13 @@ export const designSettings = defineType({
       title: 'Accent',
       type: 'string',
       fieldset: 'colors',
-      description: 'Hex, e.g. #B8893A. The brand colour on small areas: taglines, highlighted heading words, icons, rules. Where it is too light to read as text, text uses a darker shade of the same colour.',
+      description: 'Hex, e.g. #B8893A. The brand color on small areas: taglines, highlighted heading words, icons, rules. Where it is too light to read as text, text uses a darker shade of the same color.',
       validation: (Rule) => Rule.regex(/^#[0-9A-Fa-f]{6}$/, {name: 'hex'}).warning('Enter a 6-digit hex value, e.g. #B8893A'),
     }),
 
     defineField({
       name: 'action',
-      title: 'Button Colour (optional)',
+      title: 'Button Color (optional)',
       type: 'string',
       fieldset: 'colors',
       description: 'Hex. Buttons and calls to action. Leave blank to use the accent.',

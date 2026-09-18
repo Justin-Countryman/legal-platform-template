@@ -74,7 +74,7 @@ const VARIANTS: Record<'primary' | 'secondary', Record<ButtonContext, string>> =
     dark:  '[--color-foreground:var(--color-foreground-on-light)] bg-background text-foreground hover:bg-muted active:brightness-95 focus-visible:ring-white focus-visible:ring-offset-brand-dark',
     // On the accent fill (Phase 15): the inverse of the band's own pair, so the
     // label (accent-fill on accent-fg) and the button against the band (accent-fg
-    // on accent-fill) are the one pair `validateWcag` guarantees. The action colour
+    // on accent-fill) are the one pair `validateWcag` guarantees. The action color
     // is not used: it defaults to the accent, which would vanish into the band.
     saturated: 'bg-accent-fg text-accent-fill hover:underline active:brightness-95 focus-visible:ring-accent-fg focus-visible:ring-offset-accent-fill',
   },

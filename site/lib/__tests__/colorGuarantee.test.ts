@@ -1,8 +1,8 @@
 // @vitest-environment node
 //
-// THE COLOUR GUARANTEE. Justin, 2026-09-16: "we need to ensure the colors are
+// THE COLOR GUARANTEE. Justin, 2026-09-16: "we need to ensure the colors are
 // 100% a11y", and when accessibility conflicts with "nothing changes", it wins.
-// So "every blocking colour pair meets WCAG 2.2 AA for ANY hex an operator types
+// So "every blocking color pair meets WCAG 2.2 AA for ANY hex an operator types
 // into ANY role" is a tested claim rather than a promise, and a failure prints the
 // exact input that reproduces it.
 //
@@ -10,7 +10,7 @@
 // the 95 rendered pairs the Phase 14 accessibility audit enumerated
 // (WS-V1-PHASE14-DESIGN §7 amendments 19 to 24). The component-level half (a light
 // card inside a dark band, and so on) is held by component tests, because no
-// colour input can move it.
+// color input can move it.
 //
 // Two generators, both deterministic, so a red run reproduces anywhere:
 //   - an OKLCH grid (L by 0.05, C by 0.07, hue by 30 degrees, gamut-mapped), swept
@@ -22,16 +22,16 @@
 
 import {describe, expect, it} from 'vitest'
 import {converter, clampChroma, formatHex} from 'culori'
-import {parseHexInput, resolvePalette, validateWcag, type ColourInputs} from '../designTokens'
+import {parseHexInput, resolvePalette, validateWcag, type ColorInputs} from '../designTokens'
 import {PALETTE_PRESETS, presetInputs} from '../palettes'
-import before from './fixtures/colour-tokens-before-phase14.json'
+import before from './fixtures/color-tokens-before-phase14.json'
 
 const toOklch = converter('oklch')
 const lightness = (hex: string) => (toOklch(hex)?.l as number | undefined) ?? 0
 
 const ROLES = ['darkGround', 'lightGround', 'accent', 'action'] as const
 const preset = (id: string) => presetInputs(PALETTE_PRESETS.find((p) => p.id === id)!)
-const CONTEXTS: Record<string, ColourInputs> = {
+const CONTEXTS: Record<string, ColorInputs> = {
   placeholder: {},
   'navy-brass': preset('navy-brass'),
   'black-crimson': preset('black-crimson'),
@@ -49,14 +49,14 @@ function grid(): string[] {
   return [...seen]
 }
 
-function seeded(n: number, seed: number): ColourInputs[] {
+function seeded(n: number, seed: number): ColorInputs[] {
   let s = seed >>> 0
   const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 2 ** 32
   const hex = () => '#' + Math.floor(rnd() * 0x1000000).toString(16).padStart(6, '0')
   return Array.from({length: n}, () => ({darkGround: hex(), lightGround: hex(), accent: hex(), action: rnd() < 0.5 ? hex() : null}))
 }
 
-function failures(label: string, inputs: ColourInputs): string[] {
+function failures(label: string, inputs: ColorInputs): string[] {
   return validateWcag(resolvePalette(inputs))
     .filter((r) => r.blocking && !r.passes)
     .map((r) => `${label} ${JSON.stringify(inputs)}: ${r.pair} = ${r.ratio} < ${r.min}`)
@@ -66,7 +66,7 @@ function expectNone(found: string[]) {
   expect(found.length, `${found.length} failing pairs. First:\n${found.slice(0, 20).join('\n')}`).toBe(0)
 }
 
-describe('colour guarantee: every blocking pair passes for any operator input', () => {
+describe('color guarantee: every blocking pair passes for any operator input', () => {
   it('each role alone over the OKLCH grid, at the placeholder and two stress presets', () => {
     const found: string[] = []
     for (const [context, base] of Object.entries(CONTEXTS)) {
@@ -82,7 +82,7 @@ describe('colour guarantee: every blocking pair passes for any operator input', 
   }, 60_000)
 
   it('the placeholder default, the migrated fixture and every preset', () => {
-    const named: Record<string, ColourInputs> = {placeholder: {}, editedAccent: {accent: '#a12a2f'}}
+    const named: Record<string, ColorInputs> = {placeholder: {}, editedAccent: {accent: '#a12a2f'}}
     for (const p of PALETTE_PRESETS) named[p.id] = presetInputs(p)
     expectNone(Object.entries(named).flatMap(([name, inputs]) => failures(name, inputs)))
   })
@@ -114,7 +114,7 @@ describe('colour guarantee: every blocking pair passes for any operator input', 
 })
 
 // ─── What moved, against the engine this phase replaced ──────────────────────
-// fixtures/colour-tokens-before-phase14.json is the old engine's output, captured
+// fixtures/color-tokens-before-phase14.json is the old engine's output, captured
 // as this PR's first commit. Every token an existing site renders is compared, not
 // sampled. A token may move only where a pair it belongs to failed WCAG 2.2 AA
 // under the old engine, and the moved set is named, so a change to the rules that
@@ -123,7 +123,7 @@ describe('colour guarantee: every blocking pair passes for any operator input', 
 const EMITTED_AND_KEPT = (tokens: Record<string, string>) =>
   Object.keys(tokens).filter((k) => !k.startsWith('--role-'))
 
-function moved(name: 'placeholder' | 'editedAccent' | 'absent', inputs: ColourInputs) {
+function moved(name: 'placeholder' | 'editedAccent' | 'absent', inputs: ColorInputs) {
   const old = before[name] as Record<string, string>
   const now = resolvePalette(inputs).tokens
   return EMITTED_AND_KEPT(old)
@@ -165,7 +165,7 @@ describe('what existing sites see', () => {
     ])
   })
 
-  it('a dataset with no colour fields at all now renders like every built client, in greys', () => {
+  it('a dataset with no color fields at all now renders like every built client, in greys', () => {
     // Only the CI stub and the seed-bootstrap scratch dataset are in this state.
     // Its moves take it to the placeholder render, and every value stays achromatic.
     const now = resolvePalette({}).tokens

@@ -34,11 +34,11 @@ const SURFACE_OPTIONS = [
 const PATTERN_OPTION = {title: 'Pattern — the site texture (Design Settings) on the light background', value: 'pattern'}
 
 // Offered only where a section passes its button context and draws nothing in the
-// action colour, which can equal the fill: the content section (Phase 15, §7
+// action color, which can equal the fill: the content section (Phase 15, §7
 // amendment 17). The label never starts with "Accent", so a band stored with the
 // retired `accent` value (which renders a light step, not a fill) is not flipped
-// to a colour fill by hand.
-const SATURATED_OPTION = {title: 'Saturated — the accent colour fills the section; text turns white or dark to read', value: 'saturated'}
+// to a color fill by hand.
+const SATURATED_OPTION = {title: 'Saturated — the accent color fills the section; text turns white or dark to read', value: 'saturated'}
 
 const SPACING_OPTIONS = [
   {title: 'Compact — tighter band (≈48–64px)', value: 'compact'},

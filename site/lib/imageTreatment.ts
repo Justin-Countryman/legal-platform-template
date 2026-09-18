@@ -16,8 +16,8 @@
 // TOKENS. `framed` and `tint` read `--color-accent` on the element, so the dark
 // and light cascade swaps reach them; `slab` and `scrim` read
 // `--color-brand-dark`; `rounded` is the operator's `--radius-ui`. Nothing here
-// aliases a colour at `:root` (an alias computed there misses the swap) and
-// nothing carries a literal colour. `framed` makes no contrast claim: an inset
+// aliases a color at `:root` (an alias computed there misses the swap) and
+// nothing carries a literal color. `framed` makes no contrast claim: an inset
 // frame's neighbour is the photograph, which is not a token pair.
 //
 // The classes live in a TS map, where neither the class checker nor ESLint looks,
@@ -64,7 +64,7 @@ export type TreatmentGround = 'light' | 'dark' | 'saturated'
  * placement's allowed set applies last. Off a light ground `tint` renders plain:
  * an accent multiplied over a photo on a dark band only darkens it, and on a
  * saturated band the accent IS the ground, where the cascade resolves the wash to
- * the band's one text colour — white, which multiplies to nothing, or a near-black,
+ * the band's one text color — white, which multiplies to nothing, or a near-black,
  * which is the dark case again (Phase 15 amendment 18).
  */
 export function resolveTreatment(

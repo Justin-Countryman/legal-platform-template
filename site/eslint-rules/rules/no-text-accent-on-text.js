@@ -5,13 +5,13 @@
 // (<ClockIcon>, <IconComponent>) and SVG elements are not flagged.
 //
 // Why. Since Phase 14 the accent has two forms. `--color-accent` is the brand
-// colour as a fill, a rule or an icon: WCAG 2.2 1.4.11 asks 3:1 of a meaningful
+// color as a fill, a rule or an icon: WCAG 2.2 1.4.11 asks 3:1 of a meaningful
 // graphic and exempts an icon beside its own text, and a gold accent measures
 // about 2.4:1 on white. `--color-accent-text` is the accent AS TEXT: the accent
 // itself where it reaches 4.5:1 on every light ground, else the accent darkened at
 // its own hue until it does (gold #C9A227 renders #846700), and on dark grounds the
 // brightened accent. Text is measured by 1.4.3 at 4.5:1, so text must take
-// `text-accent-text`. The colour guarantee test proves `accent-text` passes for any
+// `text-accent-text`. The color guarantee test proves `accent-text` passes for any
 // accent an operator types; nothing proves it for the raw accent.
 //
 // The old rule flagged `text-accent` beside `bg-muted` in one className. It could
@@ -22,7 +22,7 @@
 // Branch semantics are the tokenizer's: `cond ? "text-accent" : "x"` flags,
 // because the branch that renders is text-accent on a text element.
 //
-// Auto-fix: none. An intrinsic element coloured with the accent is almost always
+// Auto-fix: none. An intrinsic element colored with the accent is almost always
 // text (use `text-accent-text`); where it is genuinely a decorative glyph, wrap the
 // glyph in an icon component or disable the line and say why.
 
@@ -56,7 +56,7 @@ module.exports = {
     schema: [],
     messages: {
       raw:
-        "'text-accent' colours text with the accent's fill form, which is not contrast-checked as text (gold measures about 2.4:1 on white). Use 'text-accent-text', the accent as text, which reaches 4.5:1 on every ground for any accent. Icons beside their own text may keep 'text-accent' on the icon component. See skill-color-system.",
+        "'text-accent' colors text with the accent's fill form, which is not contrast-checked as text (gold measures about 2.4:1 on white). Use 'text-accent-text', the accent as text, which reaches 4.5:1 on every ground for any accent. Icons beside their own text may keep 'text-accent' on the icon component. See skill-color-system.",
     },
   },
   create(context) {

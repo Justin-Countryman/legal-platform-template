@@ -20,14 +20,14 @@ import {describe, expect, it} from 'vitest'
 // keeps the list from rotting.
 //
 // WHAT IT CANNOT DO. It does not prove the value is right (that is
-// `colourGuarantee.test.ts`), nor that the reader is on a ground where the pair
+// `colorGuarantee.test.ts`), nor that the reader is on a ground where the pair
 // passes (that is the boundary registry and the cascade-block parity test).
 
 const SITE = path.resolve(__dirname, '../..')
 const CSS = fs.readFileSync(path.join(SITE, 'app/globals.css'), 'utf8')
 
 /** Every `--color-*` declared in a `@theme` block. */
-function themeColourNames(): string[] {
+function themeColorNames(): string[] {
   const names = new Set<string>()
   for (const match of CSS.matchAll(/@theme[^{]*\{/g)) {
     let depth = 1
@@ -79,12 +79,12 @@ const UNREAD: Record<string, Reason> = Object.fromEntries([
     '--color-foreground-subtle-on-dark', '--color-foreground-subtle-on-light',
     '--color-hover-wash-on-dark', '--color-star-outline-on-dark', '--color-star-outline-on-light',
   ].map((name) => [name, 'cascade' as Reason]),
-  // Tailwind v4 does not generate a ring utility from a colour name, so globals.css
+  // Tailwind v4 does not generate a ring utility from a color name, so globals.css
   // bridges these with `@utility ring-focus` / `@utility ring-focus-on-dark`.
   ...['--color-ring-focus', '--color-ring-focus-on-dark', '--color-ring-focus-on-light'].map((name) => [name, 'utility-bridge' as Reason]),
 ])
 
-const names = themeColourNames()
+const names = themeColorNames()
 // Comments are not readers (Phase 16A: the word "text-link" in a comment counted
 // `--color-link` as read). Block comments, JSX comments and `//` line comments that
 // start a line or follow whitespace go; a URL's `https://` follows a colon and stays.
@@ -98,14 +98,14 @@ const isRead = (name: string) => {
   return new RegExp(`(?:^|[\\s"'\`:!{(])${UTILITY}-${suffix}(?![\\w-])`, 'm').test(source) || source.includes(`var(${name})`)
 }
 
-describe('the colour reader census', () => {
+describe('the color reader census', () => {
   it('reads a sensible number of names, so a broken parse cannot pass this file', () => {
     // 50 after Phase 16A deleted the wireframe kit's 35 unread names (item 339).
     expect(names.length).toBeGreaterThan(40)
     expect(names).toContain('--color-accent-fill')
   })
 
-  it('every theme colour name is read by a component, or listed with a reason', () => {
+  it('every theme color name is read by a component, or listed with a reason', () => {
     const unlisted = names.filter((name) => !isRead(name) && !(name in UNREAD))
     expect(unlisted, 'give it a reader, delete it, or add it to UNREAD with its reason').toEqual([])
   })

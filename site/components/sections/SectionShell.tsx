@@ -139,8 +139,8 @@ export function SectionShell({
   return (
     <Tag
       data-ring-context={resolved.ringContext}
-      // Text on a photo: the action colour and the focus ring resolve to the on-dark
-      // body text colour here (globals.css, the scrim block), because neither is
+      // Text on a photo: the action color and the focus ring resolve to the on-dark
+      // body text color here (globals.css, the scrim block), because neither is
       // guaranteed 4.5:1 or 3:1 over the lightest photo pixel.
       data-scrim={showImage ? 'true' : undefined}
       aria-labelledby={aria['aria-labelledby']}

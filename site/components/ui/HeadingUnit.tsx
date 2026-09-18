@@ -15,7 +15,7 @@ import {splitEmphasis} from '@/lib/headingEmphasis'
 // `{{firmName}}` meets the resolved firm name. The first occurrence renders as
 // `<em class="heading-emphasis">`: `em` for its default meaning, though screen
 // readers do not announce it. Until Phase 16's theme tokens exist the class sets
-// the accent colour and upright type (`globals.css`).
+// the accent color and upright type (`globals.css`).
 //
 // THE TIER. A typed scale, never a class passthrough, so every class a heading
 // can carry is enumerable: `__tests__/HeadingUnit.test.tsx` runs the real

@@ -282,7 +282,7 @@ jobs:
       # and installing it is what makes extraction succeed.
       #
       # THIS IS A WORKAROUND AND NOT A FIX. Item 22's option (1) — extracting the
-      # colour-derivation core into a package both sides consume — is the fix,
+      # color-derivation core into a package both sides consume — is the fix,
       # and it is unscheduled. What lands here is that item's option (2),
       # install site deps in CI as well, which costs one install and leaves the
       # cross-package import exactly where it is. A developer who installs studio
@@ -335,7 +335,7 @@ jobs:
     name: Lint (eslint)
     runs-on: ubuntu-latest
     # The platform ships 17 custom `platform/*` rules encoding locked doctrine —
-    # cascade discipline, token-first colour, heading semantics, footer landmark
+    # cascade discipline, token-first color, heading semantics, footer landmark
     # naming, the mobile h1 cap. Until this job existed NONE of them could block
     # anything: `npm run lint` was never wired into CI and is not on the path to
     # a deploy, so a rule violation reached main and stayed there. Two did, and

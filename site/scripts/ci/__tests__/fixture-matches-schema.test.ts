@@ -32,7 +32,7 @@ const TEMPLATES = ['attorneyPage', 'staffPage', 'blogPost', 'blogCategory', 'eve
 // The homepage list's render fixture: the homepage and the one practice area
 // its `practiceAreaNavInline` member lists in `allTopLevel` mode.
 const HOMEPAGE_LIST = ['homePage', 'practiceArea']
-// A singleton with a colour set (Phase 14), so the stub build proves a colour
+// A singleton with a color set (Phase 14), so the stub build proves a color
 // field reaches the prerendered :root through GROQ and the engine. It has no slug.
 const SINGLETONS = ['designSettings']
 

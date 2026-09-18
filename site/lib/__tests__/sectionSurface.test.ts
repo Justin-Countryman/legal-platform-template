@@ -174,7 +174,7 @@ describe('visibleGround', () => {
     ['image', 'image'],
     ['tint', 'tint'],
     // A stored `accent` renders bg-muted and is its own ground, as `muted` is
-    // (Phase 14; Phase 13 mapped it to tint, which seamed two different colours).
+    // (Phase 14; Phase 13 mapped it to tint, which seamed two different colors).
     ['muted', 'muted'],
     ['accent', 'muted'],
     // The light ground wearing a faint texture: it joins a light band as one
@@ -214,13 +214,13 @@ describe('sectionEdgeClasses', () => {
     for (const edge of ['flat', null, undefined] as const) expect(sectionEdgeClasses('light', edge)).toBe('')
   })
 
-  it('angled paints a wedge in the previous band’s own ground colour', () => {
+  it('angled paints a wedge in the previous band’s own ground color', () => {
     expect(sectionEdgeClasses('light', 'angled')).toContain('before:bg-background')
     expect(sectionEdgeClasses('tint', 'angled')).toContain('before:bg-hero-tint')
     expect(sectionEdgeClasses('dark', 'angled')).toContain('before:bg-brand-dark')
   })
 
-  it('paints nothing over an image ground: there is no solid colour to cut', () => {
+  it('paints nothing over an image ground: there is no solid color to cut', () => {
     // `image`: the photo is a child element, not a background, so a wedge could
     // only inherit the brand-dark base and would match no part of the band above.
     expect(sectionEdgeClasses('image', 'angled')).toBe('')
@@ -234,7 +234,7 @@ describe('sectionEdgeClasses', () => {
     expect(classes).toContain('md:before:pointer-events-none')
     expect(classes).toContain('md:supports-[not_(clip-path:polygon(0_0))]:before:hidden')
     // At the TOP of the band that paints it, never above it: at bottom-full the
-    // wedge lay over the previous band in that band's own colour and rendered
+    // wedge lay over the previous band in that band's own color and rendered
     // nothing (pixel-sampled, Phase 14). The clip keeps the top-left triangle.
     expect(classes).toContain('md:before:top-0')
     expect(classes).not.toContain('bottom-full')
@@ -270,7 +270,7 @@ describe('the frame classes', () => {
     expect(findUnknown(['rounded-ui-lg', 'before:bg-backgrond', 'pt-nope'], designSystem, plainCss)).toHaveLength(3)
   })
 
-  it('carries no literal colour: provisioning rewrites #1a1a1a, #4a4a4a and #666666', () => {
+  it('carries no literal color: provisioning rewrites #1a1a1a, #4a4a4a and #666666', () => {
     const literal = /\[(?:#|rgb|hsl|oklch|color:)/
     expect([...ALL_FRAME_CLASSES].filter((c) => literal.test(c))).toEqual([])
   })

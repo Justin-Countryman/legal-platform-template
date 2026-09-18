@@ -732,13 +732,13 @@ h1, h2, h3, h4, h5, h6 {
 
 /* The saturated band (Phase 15, WS-V1-PHASE15-DESIGN §7 amendment 12): the
    accent as a full-width fill (`bg-accent-fill`). It redeclares every token the
-   dark block does. The only text colour guaranteed on the fill for any accent is
+   dark block does. The only text color guaranteed on the fill for any accent is
    --color-accent-fg (4.5:1 by construction: the fill is re-toned where neither
    white nor its dark text would reach it), so every text tier, the accent's own
    text and rule forms, the action text, the focus ring, a control's boundary, the
    star outline and a selected state's cue are accent-fg. The divider is a
    decorative 25% of it; the hover wash is off, because no component offered on
-   the band reads it and a colour-mixed wash is not provable for every accent.
+   the band reads it and a color-mixed wash is not provable for every accent.
    Pairs: accent-fg on accent-fill in `validateWcag`, swept for any input. */
 [data-ring-context="saturated"] {
   --color-ring-focus:        var(--color-accent-fg);
@@ -757,9 +757,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Highlighted words on a saturated band ([R-461], Justin 2026-09-17: a word is
-   the exact brand colour or the normal text colour, never a shade of it). The
-   band's ground IS the accent, so no colour can mark the words: they take the
-   band's one text colour and lean instead. The `em` already carries the meaning
+   the exact brand color or the normal text color, never a shade of it). The
+   band's ground IS the accent, so no color can mark the words: they take the
+   band's one text color and lean instead. The `em` already carries the meaning
    for a screen reader; this is the visual half. Phase 16's
    `headingEmphasisStyle` owns the Italic/Bold choice, with bold setting the rest
    of the heading regular so the words are the heavier run. */
@@ -769,8 +769,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Text over a photo under a scrim (an image band, an image-backed hero). The
    scrim is --color-scrim at 80% or more, under which every dark text tier holds
-   against the lightest photo pixel; the action colour and the focus ring do not,
-   so both resolve to the on-dark body text colour here, as the image hero's
+   against the lightest photo pixel; the action color and the focus ring do not,
+   so both resolve to the on-dark body text color here, as the image hero's
    secondary button already did (Phase 14, §7 amendment 21). */
 [data-scrim="true"],
 [data-hero-image="true"] {
@@ -782,15 +782,15 @@ h1, h2, h3, h4, h5, h6 {
 /* ─── Heading unit ──────────────────────────────────────────────────────────── */
 /* The emphasis span inside a heading (Phase 11; components/ui/HeadingUnit.tsx).
    <em> is italic in every UA stylesheet, so font-style is explicit until Phase
-   16's --heading-emphasis-style exists. The colour is the accent AS TEXT, read at
+   16's --heading-emphasis-style exists. The color is the accent AS TEXT, read at
    the span so the dark and light-island swaps reach it (Phase 14). */
 @utility heading-emphasis {
   font-style: normal;
   color: var(--color-accent-text);
 }
 
-/* In forced-colors mode every text colour becomes the system text colour, so an
-   emphasis carried by colour alone vanishes; italic is the one cue left. */
+/* In forced-colors mode every text color becomes the system text color, so an
+   emphasis carried by color alone vanishes; italic is the one cue left. */
 @media (forced-colors: active) {
   .heading-emphasis { font-style: italic; }
 }

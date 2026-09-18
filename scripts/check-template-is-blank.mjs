@@ -40,6 +40,14 @@
 //   3. The Sanity project sentinel, `TEMPLATE_SANITY_PROJECT_ID`.
 //
 // Everything else fails, and the failure names the identifier, file and line.
+//
+// ─── One more thing it refuses: the British spelling of "color" ──────────────
+//
+// The platform spells it "color" (Justin, 2026-09-18, `[R-470]` in the monorepo),
+// as CSS, Tailwind, Sanity and the design-token format do. This script already
+// reads every file the template ships, so it holds the spelling too, in any case,
+// in code, text and comments alike. Package lockfiles are skipped above, which is
+// where a third-party package spelled the British way lives.
 
 import fs from 'node:fs'
 import path from 'node:path'
@@ -182,6 +190,8 @@ const PROJECT_CONTEXTS = [
 // the blocklist this guard replaced. Requiring Sanity context on the line is a
 // rule, not a roster.
 const BARE_PROJECT_ID = /['"`]([a-z0-9]{8})['"`]/g
+// Assembled so this file does not match itself.
+const BRITISH_COLOR = new RegExp('col' + 'our', 'i')
 const SANITY_CONTEXT = /sanity|projectid|project_id|dataset/i
 
 // ─── Walk ───────────────────────────────────────────────────────────────────
@@ -254,6 +264,13 @@ function findingsForFile(relPath, text) {
           value, text: line.trim().slice(0, 150),
         })
       }
+    }
+
+    if (BRITISH_COLOR.test(line)) {
+      findings.push({
+        file: relPath, line: lineNo, kind: 'spelling (the platform writes "color")',
+        value: line.match(BRITISH_COLOR)[0], text: line.trim().slice(0, 150),
+      })
     }
 
     if (!SANITY_CONTEXT.test(line)) return
