@@ -72,7 +72,7 @@ describe('MobileDrawer — active-page indicator', () => {
   it('applies the accent rail class to the active link (not color alone)', () => {
     mockUsePathname.mockReturnValue('/about')
     const {getByRole} = renderDrawer()
-    expect(getByRole('link', {name: 'About'}).className).toContain('border-accent')
+    expect(getByRole('link', {name: 'About'}).className.split(' ')).toContain('border-cue')
   })
 })
 

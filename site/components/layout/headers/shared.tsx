@@ -1041,7 +1041,7 @@ function mobileLinkClass(active: boolean, extra = ''): string {
     'active:bg-foreground/10',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus',
     active
-      ? 'border-accent bg-accent/10 font-semibold text-foreground'
+      ? 'border-cue bg-cue/10 font-semibold text-foreground'
       : 'border-transparent font-medium text-foreground hover:text-accent-text',
     extra,
   ].filter(Boolean).join(' ')
@@ -1300,7 +1300,7 @@ function MobileSubMenu({navItem, pathname}: {navItem: NavItem; pathname: string}
                   'block border-l-2 py-3 pl-4 text-sm transition-colors duration-ui-fast',
                   'active:bg-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus',
                   active
-                    ? 'border-accent bg-accent/10 font-semibold text-foreground'
+                    ? 'border-cue bg-cue/10 font-semibold text-foreground'
                     : 'border-transparent text-foreground hover:text-accent-text',
                 ].join(' ')}
                 tabIndex={isOpen ? 0 : -1}

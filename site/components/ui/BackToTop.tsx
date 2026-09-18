@@ -26,7 +26,7 @@ export function BackToTop() {
         // visible against any backdrop (light page sections OR dark footer).
         // Chevron inherits via currentColor → swaps to text-action-fg on
         // hover so the icon never disappears into the hover-state fill.
-        'hover:bg-action hover:text-action-fg hover:border-action hover:shadow-elevation-lg hover:scale-110',
+        'hover:bg-cue hover:text-action-fg hover:border-cue hover:shadow-elevation-lg hover:scale-110',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus',
         // Transition
         'transition-[opacity,transform,box-shadow] duration-ui-fast ease-smooth',

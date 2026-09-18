@@ -121,6 +121,9 @@ const eslintConfig = [
       // rounded-ui and controls rounded-btn; a fixed radius stays behind when the
       // family changes. See skill-radius-system.
       "platform/no-fixed-radius": "error",
+      // Phase 16A, [R-471]: the color role map. States take cue, decorations
+      // decor, and the button color stays on Button (exempt below).
+      "platform/color-roles": "error",
 
       // ─── Component patterns / cascade ──────────────────────────────────
       // C4 — `skill-sanity-schema → "Reading design settings in async
@@ -254,6 +257,19 @@ const eslintConfig = [
     rules: {
       "@typescript-eslint/no-require-imports": "off",
       "no-restricted-syntax": "off",
+    },
+  },
+
+  // Phase 16A, [R-471]: the button color lives on Button, and the dev-only design
+  // surfaces ([R-214]) draw swatches of every role by name.
+  {
+    files: [
+      "components/ui/Button.tsx",
+      "app/(site)/design-studio/**",
+      "app/(site)/design-preview/**",
+    ],
+    rules: {
+      "platform/color-roles": "off",
     },
   },
 

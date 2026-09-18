@@ -139,7 +139,7 @@ export function AttorneySlider({
                   // beside it, and an action colour that fails that (a gold action on white
                   // measures about 2.3:1) gains the 1px cue ring, which is transparent wherever
                   // the action already passes (Phase 15 amendment 21).
-                  i === active ? 'w-5 bg-action ring-1 ring-action-state-cue' : 'w-2 bg-border-control group-hover:bg-foreground-subtle',
+                  i === active ? 'w-5 bg-cue ring-1 ring-action-state-cue' : 'w-2 bg-border-control group-hover:bg-foreground-subtle',
                 ].join(' ')}
               />
             </button>

@@ -84,7 +84,7 @@ export type TreatmentClasses = {wrapper: string; image: string}
 export const TREATMENT_CLASSES: Record<ResolvedTreatment, TreatmentClasses> = {
   plain: {wrapper: 'relative', image: 'block h-auto w-full'},
   framed: {
-    wrapper: 'relative after:pointer-events-none after:absolute after:inset-3 after:border-2 after:border-accent md:after:inset-4',
+    wrapper: 'relative after:pointer-events-none after:absolute after:inset-3 after:border-2 after:border-decor md:after:inset-4',
     image: 'block h-auto w-full',
   },
   slab: {
@@ -99,7 +99,7 @@ export const TREATMENT_CLASSES: Record<ResolvedTreatment, TreatmentClasses> = {
     image: 'block h-auto w-full',
   },
   tint: {
-    wrapper: 'relative after:pointer-events-none after:absolute after:inset-0 after:bg-accent/20 after:mix-blend-multiply',
+    wrapper: 'relative after:pointer-events-none after:absolute after:inset-0 after:bg-decor/20 after:mix-blend-multiply',
     image: 'block h-auto w-full',
   },
 }

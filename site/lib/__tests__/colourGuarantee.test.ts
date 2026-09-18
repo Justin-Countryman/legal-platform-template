@@ -132,21 +132,36 @@ function moved(name: 'placeholder' | 'editedAccent' | 'absent', inputs: ColourIn
     .sort()
 }
 
+// Stars are one fixed gold on every site since Phase 16A (`[R-474]`, Justin
+// 2026-09-18), so the fill and its derived outlines move on every palette: the
+// outline is the gold darkened at its own hue until the shape holds 3:1.
+const STARS_TO_GOLD = [
+  '--color-star-fill',
+  '--color-star-outline',
+  '--color-star-outline-on-dark',
+]
+
 describe('what existing sites see', () => {
-  it('every built client (the placeholder state): only the two tokens that failed WCAG move', () => {
+  it('every built client (the placeholder state): the two tokens that failed WCAG move, and the stars turn gold', () => {
     // #8f8f8f measured 3.23:1 on white and 2.97:1 on muted; #666666 on #141414
     // measured 3.21:1. Both are text, so both need 4.5:1.
     expect(moved('placeholder', {})).toEqual([
       '--color-action-text-on-dark #666666 -> #838383',
       '--color-foreground-subtle #8f8f8f -> #707070',
+      '--color-star-fill #666666 -> #f5b301',
+      '--color-star-outline #666666 -> #c08000',
+      '--color-star-outline-on-dark #666666 -> #f5b301',
     ])
   })
 
-  it('the fixture after its migration: the pink muted surface goes, plus the same two fixes', () => {
+  it('the fixture after its migration: the pink muted surface goes, plus the same two fixes and the gold stars', () => {
     expect(moved('editedAccent', {accent: '#a12a2f'})).toEqual([
       '--color-action-text-on-dark #a12a2f -> #d15756',
       '--color-foreground-subtle #8f8f8f -> #707070',
       '--color-muted #ffece9 -> #f5f5f5',
+      '--color-star-fill #a12a2f -> #f5b301',
+      '--color-star-outline #a12a2f -> #c08000',
+      '--color-star-outline-on-dark #ffbbb6 -> #f5b301',
     ])
   })
 
@@ -157,7 +172,7 @@ describe('what existing sites see', () => {
     for (const line of moved('absent', {})) {
       const token = line.split(' ')[0]
       const value = now[token]
-      if (!value.startsWith('#')) continue
+      if (!value.startsWith('#') || STARS_TO_GOLD.includes(token)) continue
       expect((toOklch(value)?.c as number | undefined) ?? 0, `${line} should stay grey`).toBeLessThan(0.002)
     }
   })

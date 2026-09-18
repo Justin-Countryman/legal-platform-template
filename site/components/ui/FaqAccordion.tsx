@@ -81,8 +81,8 @@ export function FaqAccordion({items, napTokens, headingLevel = 'h3'}: Props) {
                     'flex h-6 w-6 shrink-0 items-center justify-center rounded-full',
                     'border border-border transition-colors duration-ui-base ease-smooth',
                     isOpen
-                      ? 'bg-action border-action text-action-fg rotate-180'
-                      : 'bg-transparent text-foreground group-hover:border-action',
+                      ? 'bg-cue border-cue text-action-fg rotate-180'
+                      : 'bg-transparent text-foreground group-hover:border-cue',
                   ].join(' ')}
                 >
                   <svg

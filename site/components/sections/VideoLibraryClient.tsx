@@ -98,7 +98,7 @@ const CARD_CHROME = [
   'group block w-full overflow-hidden text-left',
   'rounded-ui border border-border bg-background shadow-card-rest',
   'transition-[translate,box-shadow,border-color] duration-ui-slow ease-smooth',
-  'hover:shadow-card-hover hover:card-lift hover:border-action',
+  'hover:shadow-card-hover hover:card-lift hover:border-cue',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2',
 ].join(' ')
 
@@ -163,7 +163,7 @@ function FilterChip({active, onClick, children}: {active: boolean; onClick: () =
         'transition-colors duration-ui-fast',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2',
         active
-          ? 'border-action bg-action text-action-fg ring-1 ring-action-state-cue'
+          ? 'border-cue bg-cue text-action-fg ring-1 ring-action-state-cue'
           : 'border-border bg-transparent text-foreground-muted hover:bg-hover-wash hover:text-foreground',
       ].join(' ')}
     >

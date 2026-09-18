@@ -366,19 +366,21 @@ export function resolvePalette(raw: ColourInputs = {}): ResolvedPalette {
   const ringFocus       = passesOn(action, [...lightGrounds, '#ffffff'], 3) ? action : brandDark
   const ringFocusOnDark = contrast(action, brandDark) >= 3 ? action : accentOnDark
 
-  // Star outline (item 13, "accessibility wins over convention"): the fill stays
-  // the raw action; the outline only materialises where the fill cannot carry
-  // the star's shape at 3:1.
+  // Stars (`[R-474]`, Justin 2026-09-18): one fixed gold on every site, not tied to
+  // the palette, because gold reads as "rating" and a star in a navy or green
+  // button color reads as a mistake. Item 13's outline stands ("accessibility wins
+  // over convention"): it only materialises where the gold cannot carry the
+  // star's shape at 3:1, darkened at the gold's own hue.
   let starOutline = brandDark
-  if (passesOn(action, lightGrounds, 3)) starOutline = action
+  if (passesOn(STAR_GOLD, lightGrounds, 3)) starOutline = STAR_GOLD
   else {
-    const f = parseOklch(action)
+    const f = parseOklch(STAR_GOLD)
     for (let l = f.l - 0.08; l >= 0.12; l -= 0.02) {
       const candidate = toHex(l, f.c, f.h)
       if (passesOn(candidate, lightGrounds, 3)) { starOutline = candidate; break }
     }
   }
-  const starOutlineOnDark = contrast(action, brandDark) >= 3 ? action : accentOnDark
+  const starOutlineOnDark = contrast(STAR_GOLD, brandDark) >= 3 ? STAR_GOLD : accentOnDark
 
   // The boundary of a control whose only visible edge is its border (form
   // fields, inactive carousel dots, empty stars), WCAG 1.4.11 3:1. The divider
@@ -452,7 +454,7 @@ export function resolvePalette(raw: ColourInputs = {}): ResolvedPalette {
     '--color-ring-focus':               ringFocus,
     '--color-ring-focus-on-light':      ringFocus,
     '--color-ring-focus-on-dark':       ringFocusOnDark,
-    '--color-star-fill':                action,
+    '--color-star-fill':                STAR_GOLD,
     '--color-star-outline':             starOutline,
     '--color-star-outline-on-light':    starOutline,
     '--color-star-outline-on-dark':     starOutlineOnDark,
@@ -464,6 +466,9 @@ export function resolvePalette(raw: ColourInputs = {}): ResolvedPalette {
     tokens,
   }
 }
+
+/** The one rating gold every site's stars are filled with (`[R-474]`). */
+export const STAR_GOLD = '#f5b301'
 
 // ─── WCAG validation ──────────────────────────────────────────────────────────
 

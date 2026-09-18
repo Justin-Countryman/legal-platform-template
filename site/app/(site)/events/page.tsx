@@ -120,7 +120,7 @@ function EventCard({event, tokens}: {event: EventCard; tokens: NapTokens}) {
         'group flex flex-col overflow-hidden rounded-ui border bg-background shadow-card-rest transition-[translate,box-shadow,border-color] duration-ui-slow ease-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
         // A past event is marked by its visible Past Event chip, not by fading the
         // card: at opacity-75 its supporting text measured 3.95:1 (Phase 14).
-        past ? 'border-border' : 'border-border hover:card-lift hover:border-accent hover:shadow-card-hover',
+        past ? 'border-border' : 'border-border hover:card-lift hover:border-cue hover:shadow-card-hover',
       ].join(' ')}
     >
 

@@ -36,7 +36,7 @@ describe('siloHover — each effect activates only its own layer', () => {
 
   it('accentBorder → accent border on the TOP overlay (not the occluded container)', () => {
     const fx = siloHover(['accentBorder'])
-    expect(fx.border).toContain('group-hover:border-action')
+    expect(fx.border).toContain('group-hover:border-cue')
     expect(fx.container).toBe('')
     expect(fx.image).toBe('')
     expect(fx.glow).toBe('')
@@ -72,7 +72,7 @@ describe('siloHover — composition (multiple effects stack)', () => {
     const fx = siloHover(['lift', 'glow', 'accentBorder'])
     expect(fx.container).toContain('hover:-translate-y-1') // lift
     expect(fx.glow).toBe('group-hover:opacity-100') // glow
-    expect(fx.border).toContain('group-hover:border-action') // accent border
+    expect(fx.border).toContain('group-hover:border-cue') // accent border
     expect(fx.arrow).toContain('group-hover:translate-x-1') // arrow from lift
     expect(fx.image).toBe('') // no zoom (not selected)
   })
@@ -80,7 +80,7 @@ describe('siloHover — composition (multiple effects stack)', () => {
   it('imageZoom + accentBorder compose on different layers', () => {
     const fx = siloHover(['imageZoom', 'accentBorder'])
     expect(fx.image).toContain('group-hover:scale-105')
-    expect(fx.border).toContain('group-hover:border-action')
+    expect(fx.border).toContain('group-hover:border-cue')
   })
 
   it('imageZoom + grayscale stack on the image (zoom AND colour reveal)', () => {

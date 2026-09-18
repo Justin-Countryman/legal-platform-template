@@ -82,7 +82,7 @@ export function siloHover(effects: SiloHoverEffect[]): SiloHoverClasses {
     arrow: has('imageZoom') || has('lift') ? 'group-hover:translate-x-1' : '',
     // Accent border draws on a TOP overlay (the container's own border/shadow would
     // be occluded by the full-bleed image/scrim/glow layers). border-color eases.
-    border: has('accentBorder') ? 'group-hover:border-action' : '',
+    border: has('accentBorder') ? 'group-hover:border-cue' : '',
     // Accent underline scales in (transform, no reflow) under the label.
     underline: has('accentUnderline') ? 'group-hover:scale-x-100' : '',
     // Icon pop — the icon chip lifts + scales a touch (only when an icon is present).

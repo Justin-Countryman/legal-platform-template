@@ -113,7 +113,7 @@ describe('Input — focus-ring contract', () => {
     expect(input.className).toContain('focus-visible:ring-2')
     expect(input.className).toContain('focus-visible:ring-focus')
     expect(input.className).toContain('focus-visible:ring-offset-2')
-    expect(input.className).toContain('focus-visible:border-action')
+    expect(input.className.split(' ')).toContain('focus-visible:border-cue')
   })
 
   it('receives focus and becomes document.activeElement', () => {

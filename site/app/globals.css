@@ -448,6 +448,26 @@
   --font-body:    var(--dynamic-font-body,    system-ui, sans-serif);
 }
 
+/* ─── The color role map (Phase 16A, [R-471]) ────────────────────────────────
+   Every kind of element takes one role, whatever the palette. Most roles already
+   have a name a component reads: buttons `action` (with `action-fg`), text links
+   `action-text`, highlighted words and the small line above a heading
+   `accent-text` ([R-461]), text the foreground tiers, card and field borders
+   `border` and `border-control`, stars `star-fill` (one fixed gold, [R-474]).
+   These two name the roles that had none, so a component can no longer paint a
+   decoration in the button color, or a hover state in the accent:
+     cue   — a hover, focus, selected or open state on something you can click
+     decor — a static decoration: an icon chip, a mark, an ornament
+   INLINE on purpose: the utility then reads the role itself (`var(--color-action)`)
+   where it is used, so a dark or saturated band's redeclaration of that role
+   reaches it. Declared in plain `@theme`, the alias would resolve once at :root
+   and paint the fill color on a saturated band. The rule under a heading and
+   the divider between rows get their names when 16B builds the heading rule. */
+@theme inline {
+  --color-cue:   var(--color-action);
+  --color-decor: var(--color-accent);
+}
+
 /* @theme — generates var() references in utilities so runtime :root injection works.
    Defaults here are overridden by server-injected :root values from designTokens.ts */
 @theme {
@@ -467,9 +487,9 @@
   --color-brand-dark:          #141414;   /* the accepted dark ground: dark sections, footer */
   --color-accent:              #666666;   /* the accent as a fill, rule or icon (cascade-aware) */
   --color-accent-on-dark:      #d7d7d7;   /* accent brightened for dark bg                  */
-  --color-star-fill:           #666666;   /* StarRating fill — raw action color (stars-are-gold convention; anchored, never cascades) */
-  --color-star-outline:        #666666;   /* StarRating shape outline, light surfaces — >=3:1 vs bg-background/bg-muted/bg-hero-tint (WCAG SC 1.4.11, item 13); runtime value from starOutline(); cascade swaps to -on-dark inside dark containers */
-  --color-star-outline-on-dark: #666666;  /* StarRating shape outline, dark surfaces — fill color when the fill clears 3:1 on brand-dark (invisible stroke), else brightened tagline-on-dark; runtime value from starOutlineOnDark() */
+  --color-star-fill:           #f5b301;   /* StarRating fill — one fixed rating gold on every site, not the palette ([R-474]; STAR_GOLD; anchored, never cascades) */
+  --color-star-outline:        #c08000;   /* StarRating shape outline, light surfaces — the gold darkened at its hue to >=3:1 vs bg-background/bg-muted/bg-hero-tint (WCAG SC 1.4.11, item 13); cascade swaps to -on-dark inside dark containers */
+  --color-star-outline-on-dark: #f5b301;  /* StarRating shape outline, dark surfaces — the gold itself where it clears 3:1 on brand-dark (invisible stroke), else brightened tagline-on-dark */
 
   /* ── Neutral scale — branded-derived; overridden at runtime by buildColorCSS ─
      The four light-surface neutrals (foreground/muted/subtle/border) ship only
@@ -592,7 +612,7 @@
   --color-border-control-on-light:  #8d8d8d;
   --color-border-control-on-dark:   #626262;
   --color-ring-focus-on-light:      #666666;
-  --color-star-outline-on-light:    #666666;
+  --color-star-outline-on-light:    #c08000;
   --color-scrim:                    #141414;
   --shadow-rgb:                     22 22 22;
 }

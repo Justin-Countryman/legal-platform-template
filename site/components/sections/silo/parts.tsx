@@ -90,7 +90,7 @@ export function TileGlow({fx}: {fx: SiloHoverClasses}) {
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none absolute inset-0 bg-gradient-to-br from-action/30 to-action/10 opacity-0 transition-opacity duration-ui-base ease-gentle ${fx.glow}`}
+      className={`pointer-events-none absolute inset-0 bg-gradient-to-br from-cue/30 to-cue/10 opacity-0 transition-opacity duration-ui-base ease-gentle ${fx.glow}`}
     />
   )
 }
@@ -123,7 +123,7 @@ export function TileIcon({
       className={[
         'grid shrink-0 place-items-center rounded-ui transition-transform duration-ui-base ease-gentle',
         chip,
-        onImage ? 'bg-white/90' : 'bg-action/10',
+        onImage ? 'bg-white/90' : 'bg-decor/10',
         fx.icon,
       ].join(' ')}
     >
@@ -149,7 +149,7 @@ export function TileLabel({
       {fx.underline && (
         <span
           aria-hidden="true"
-          className={`mt-2 block h-0.5 w-10 ${center ? 'origin-center' : 'origin-left'} scale-x-0 bg-action transition-transform duration-ui-base ease-gentle ${fx.underline}`}
+          className={`mt-2 block h-0.5 w-10 ${center ? 'origin-center' : 'origin-left'} scale-x-0 bg-cue transition-transform duration-ui-base ease-gentle ${fx.underline}`}
         />
       )}
     </div>

@@ -25,7 +25,7 @@ const BASE = [
   'group block bg-background border border-border rounded-ui',
   'shadow-card-rest',
   'transition-[translate,box-shadow,border-color] duration-ui-slow ease-smooth',
-  'hover:shadow-card-hover hover:card-lift hover:border-action',
+  'hover:shadow-card-hover hover:card-lift hover:border-cue',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2',
 ].join(' ')
 
