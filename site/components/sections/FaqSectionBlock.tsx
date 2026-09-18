@@ -76,9 +76,7 @@ export function FaqSectionBlock({
     <SectionShell
       appearance={resolveAppearance(data)}
       innerClassName="mx-auto max-w-3xl"
-      seamTop={seam.seamTop}
-      previousGround={seam.previousGround}
-      previousEdge={seam.previousEdge}
+      seam={seam}
     >
       <>
 

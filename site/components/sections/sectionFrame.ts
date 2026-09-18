@@ -50,14 +50,25 @@ export type FrameResolver<T> = {
   isEmpty: (data: T) => boolean
 }
 
+/** How far an inset panel rides up over the band above it. */
+export type Overlap = 'none' | 'small' | 'large'
+
 /** Per-band frame props the dispatcher passes into `SectionShell`. */
 export type SeamProps = {
   seamTop: boolean
   previousGround: VisibleGround | null
   previousEdge: SectionEdge | null
+  /** The overlap of the NEXT band, so this band can keep its content clear of it. */
+  nextOverlap: Overlap
 }
 
-export const NO_SEAM: SeamProps = {seamTop: false, previousGround: null, previousEdge: null}
+export const NO_SEAM: SeamProps = {seamTop: false, previousGround: null, previousEdge: null, nextOverlap: 'none'}
+
+/** Overlap applies to an inset panel only (Phase 16A, `[R-475]`): a full-width band
+ *  riding over the one above only hid that band's bottom, text included. */
+export function overlapOf(appearance: SectionAppearance | null | undefined): Overlap {
+  return appearance?.inset ? (appearance.overlapPrevious ?? 'none') : 'none'
+}
 
 /**
  * Walk a list of members, dropping the ones that render nothing, and compute the
@@ -88,10 +99,10 @@ export function walkFrame<M>(
 
     const ground = visibleGround(appearance)
     const edge = appearance?.edgeBottom ?? null
-    // An overlapping band takes no top padding at all, so a seam would be
+    // An overlapping panel takes no top padding from `md`, so a seam would be
     // meaningless; `SectionShell` already resolves that, and asking for both
     // here would be a contradiction rather than a refinement.
-    const overlapping = (appearance?.overlapPrevious ?? 'none') !== 'none'
+    const overlapping = overlapOf(appearance) !== 'none'
 
     const seam: SeamProps =
       out.length === 0
@@ -100,7 +111,15 @@ export function walkFrame<M>(
             seamTop: !overlapping && !edgeCancelsSeam(prevGround, prevEdge) && prevGround === ground,
             previousGround: prevGround,
             previousEdge: prevEdge,
+            nextOverlap: 'none',
           }
+
+    // The backward half: the band above an overlapping panel keeps the panel off
+    // its content by growing its own bottom padding by the overlap.
+    if (overlapping && out.length > 0) {
+      const above = out[out.length - 1]
+      above.seam = {...above.seam, nextOverlap: overlapOf(appearance)}
+    }
 
     out.push({member, index, seam})
     prevGround = ground

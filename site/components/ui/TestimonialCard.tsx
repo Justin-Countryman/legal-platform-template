@@ -28,7 +28,10 @@ export function TestimonialCard({t}: {t: TestimonialData}) {
       )}
 
       <blockquote className="grow">
-        <p className="text-foreground-muted leading-relaxed before:content-['\u201C'] after:content-['\u201D']">
+        {/* CSS escapes, not JS ones: a JSX attribute string is not unescaped, so
+            `\u201C` reached the stylesheet as-is and printed "u201C" (found in the
+            Phase 16A block catalog). `\201C` is the CSS escape for the quote. */}
+        <p className="text-foreground-muted leading-relaxed before:content-['\201C'] after:content-['\201D']">
           {t.quote}
         </p>
       </blockquote>

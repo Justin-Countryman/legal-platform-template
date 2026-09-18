@@ -214,13 +214,35 @@ describe('inset and overlap', () => {
     expect(el.querySelector('.rounded-ui')).not.toBeNull()
   })
 
-  it('an overlapping band drops its top padding, so the negative margin IS the overlap', () => {
-    const {container} = canvas([band('a'), band('b', {overlapPrevious: 'large'})])
-    const second = sectionsOf(container)[1]
-    expect(second.className).toContain('pt-0')
-    expect(second.className).toContain('md:-mt-24')
-    expect(second.className).toContain('md:z-10')
-    expect(second.className).not.toContain(SEAM)
+  // Phase 16A ([R-475], Justin: "Approve B"): overlap is an inset panel rising into
+  // the band above. A full-width band only hid the bottom of the band above, text
+  // included, so it no longer overlaps at all.
+  it('a full-width band never overlaps, whatever it stores', () => {
+    const {container} = canvas([band('a', {surface: 'dark'}), band('b', {overlapPrevious: 'large'})])
+    const [first, second] = sectionsOf(container)
+    expect(second.className.split(' ')).not.toContain('md:-mt-24')
+    expect(second.className.split(' ')).not.toContain('md:pt-0')
+    expect(first.className.split(' ')).toEqual(expect.arrayContaining(SECTION_SPACING.normal.bottom.split(' ')))
+  })
+
+  it('an inset panel overlaps: no top padding from md, so the negative margin IS the overlap', () => {
+    const {container} = canvas([band('a', {surface: 'dark'}), band('b', {inset: true, overlapPrevious: 'large'})])
+    const classes = sectionsOf(container)[1].className.split(' ')
+    expect(classes).toEqual(expect.arrayContaining(['md:-mt-24', 'md:z-10', 'md:pt-0']))
+    expect(classes).not.toContain(SEAM)
+  })
+
+  it('it keeps its phone padding, where nothing overlaps', () => {
+    const {container} = canvas([band('a', {surface: 'dark'}), band('b', {inset: true, overlapPrevious: 'large'})])
+    expect(sectionsOf(container)[1].className.split(' ')).toContain(SECTION_SPACING.normal.top.split(' ')[0])
+  })
+
+  it('the band above grows its bottom by the overlap, so the panel never covers its content', () => {
+    for (const size of ['small', 'large'] as const) {
+      const {container} = canvas([band('a', {surface: 'dark'}), band('b', {inset: true, overlapPrevious: size})])
+      const above = sectionsOf(container)[0].className.split(' ')
+      expect(above, size).toEqual(expect.arrayContaining(SECTION_SPACING.normal.bottomBeforeOverlap[size].split(' ')))
+    }
   })
 })
 

@@ -73,7 +73,7 @@ export function HomepageCta({
   const items = toCtaItems(merged.buttons)
 
   return (
-    <SectionShell appearance={{surface}} contained={false} className="text-foreground" seamTop={seam.seamTop} previousGround={seam.previousGround} previousEdge={seam.previousEdge}>
+    <SectionShell appearance={{surface}} contained={false} className="text-foreground" seam={seam}>
       <div className="mx-auto w-full max-w-3xl text-center">
         {merged.tagline ? <Tagline as="p">{merged.tagline}</Tagline> : null}
 

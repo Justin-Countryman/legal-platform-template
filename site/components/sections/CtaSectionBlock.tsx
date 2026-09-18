@@ -193,9 +193,7 @@ export function CtaSectionBlock({
       // does not move. Only when the operator has chosen no spacing of their own.
       tight={layout === 'centered' && !resolved.appearance?.spacing}
       innerClassName={INNER_CLASS[layout]}
-      seamTop={seam.seamTop}
-      previousGround={seam.previousGround}
-      previousEdge={seam.previousEdge}
+      seam={seam}
     >
       {body}
     </SectionShell>

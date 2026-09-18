@@ -2805,7 +2805,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -3044,7 +3045,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -4237,7 +4239,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5021,7 +5024,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5201,7 +5205,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -7390,7 +7395,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -7513,7 +7519,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -9836,7 +9843,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -9990,7 +9998,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10125,7 +10134,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10283,7 +10293,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10387,7 +10398,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10485,7 +10497,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10604,7 +10617,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11013,7 +11027,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11167,7 +11182,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -13733,7 +13749,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -14195,7 +14212,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -16505,7 +16523,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -17537,7 +17556,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",

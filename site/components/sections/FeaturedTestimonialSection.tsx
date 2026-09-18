@@ -51,9 +51,7 @@ export function FeaturedTestimonialSection({
   return (
     <SectionShell
       appearance={resolveAppearance(data)}
-      seamTop={seam.seamTop}
-      previousGround={seam.previousGround}
-      previousEdge={seam.previousEdge}
+      seam={seam}
     >
       <div className="mx-auto max-w-4xl">
 

@@ -4,7 +4,6 @@ import {ButtonGroup, toCtaItems} from '@/components/ui/ButtonGroup'
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {SectionShell, type SectionAppearance} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
-import {Tagline} from '@/components/ui/Tagline'
 import {type BadgesSectionProps} from './sectionProps'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -151,17 +150,19 @@ function SplitBadges({data, tagline, heading, description, buttons}: {data: Badg
   )
 }
 
-function ScrollingBadges({data, tagline, heading, description}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null}) {
+// The marquee layout, inside the shell like the other three (Phase 16A): its Surface
+// and Buttons fields did nothing while it painted its own `<section>`. The shell
+// runs without its gutter and container so the strip stays edge to edge; the
+// heading and the buttons sit in a container of their own.
+function ScrollingBadges({data, tagline, heading, description, buttons}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]}) {
   const badges = data.badges ?? []
   if (badges.length === 0) return null
 
   return (
-    <section className="overflow-hidden py-12">
-      {(tagline || heading || description) && (
-        <div className="container mb-8 text-center">
-          {tagline && <Tagline as="p">{tagline}</Tagline>}
-          {heading && <h2 className="mb-4 text-3xl font-bold text-foreground">{heading}</h2>}
-          {description && <p className="text-foreground-muted">{description}</p>}
+    <>
+      {heading && (
+        <div className="container px-[5%]">
+          <SectionHeader tagline={tagline} heading={heading} description={description} className={description ? 'mb-10' : undefined} />
         </div>
       )}
       <div className="w-full overflow-hidden" aria-label="Awards and recognition badges">
@@ -181,7 +182,12 @@ function ScrollingBadges({data, tagline, heading, description}: {data: BadgesSec
           )}
         </div>
       </div>
-    </section>
+      {buttons && buttons.length > 0 && (
+        <div className="container px-[5%]">
+          <ButtonGroup items={toCtaItems(buttons)} align="center" respectVariantField={false} className="mt-8" />
+        </div>
+      )}
+    </>
   )
 }
 
@@ -189,11 +195,10 @@ function ScrollingBadges({data, tagline, heading, description}: {data: BadgesSec
 
 // ─── The frame (Phase 13) ─────────────────────────────────────────────────────
 //
-// Three of the four layouts move onto `SectionShell`. `scrolling` does NOT: its
-// `py-12` matches no spacing preset at `md` (48px against the compact preset's
-// 64px), and it is the one band on the platform that needs the container for its
-// heading and NO gutter for its full-bleed marquee strip, which the shell cannot
-// express at once. Moving it would change a live band for no gain.
+// All four layouts render on `SectionShell`. `scrolling` joined in Phase 16A,
+// where its Surface and Buttons fields were found doing nothing: the shell can
+// now drop its gutter and container, and the band takes the spacing preset in
+// place of its old `py-12`, like every other band.
 //
 // An unset band is `light`, never `pattern` (Phase 16A): `pattern` now paints the
 // site's section texture, which only a band someone deliberately set to Pattern
@@ -240,7 +245,12 @@ export function BadgesSectionBlock({
 
   // Off the shell, and staying off it.
   if (data.layout === 'scrolling') {
-    return <ScrollingBadges data={data} tagline={tagline} heading={heading} description={description} />
+    if (!data.badges || data.badges.length === 0) return null
+    return (
+      <SectionShell appearance={resolveAppearance(data)} contained={false} gutter={false} className="overflow-hidden" seam={seam}>
+        <ScrollingBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} />
+      </SectionShell>
+    )
   }
 
   const body =
@@ -252,9 +262,7 @@ export function BadgesSectionBlock({
     <SectionShell
       appearance={resolveAppearance(data)}
       innerClassName={INNER_CLASS[data.layout === 'inline' ? 'inline' : data.layout === 'split' ? 'split' : 'centeredGrid']}
-      seamTop={seam.seamTop}
-      previousGround={seam.previousGround}
-      previousEdge={seam.previousEdge}
+      seam={seam}
     >
       {body}
     </SectionShell>

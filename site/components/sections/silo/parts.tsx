@@ -143,7 +143,7 @@ export function TileLabel({
 }) {
   return (
     <div className={center ? 'flex flex-col items-center' : undefined}>
-      <h3 className={className ?? 'font-heading text-xl font-semibold leading-tight tracking-tight text-foreground md:text-2xl'}>
+      <h3 className={className ?? 'font-heading card-title font-semibold tracking-tight text-foreground'}>
         {item.label}
       </h3>
       {fx.underline && (

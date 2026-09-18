@@ -136,7 +136,11 @@ export function appearanceFields(opts?: {
       type: 'string',
       fieldset: 'appearance',
       description:
-        'Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.',
+        'Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.',
+      // An inset panel only (Phase 16A, [R-475]): a full-width section that
+      // overlapped only hid the bottom of the section above. `parent`, never
+      // `document`, for the reason given on `sectionBackgroundImage` above.
+      hidden: ({parent}) => (parent as {inset?: boolean} | undefined)?.inset !== true,
       options: {
         list: [
           {title: 'None', value: 'none'},

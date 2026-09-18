@@ -94,9 +94,7 @@ export function ReviewsSectionBlock({
     <SectionShell
       appearance={resolveAppearance(data)}
       innerClassName={data.layout === 'split' ? 'grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-16' : undefined}
-      seamTop={seam.seamTop}
-      previousGround={seam.previousGround}
-      previousEdge={seam.previousEdge}
+      seam={seam}
     >
       {body}
     </SectionShell>

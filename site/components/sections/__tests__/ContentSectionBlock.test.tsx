@@ -243,4 +243,13 @@ describe('the marquee ribbon can be paused on the page (WCAG 2.2.2)', () => {
     expect(copies[0].hasAttribute('aria-hidden')).toBe(false)
     for (const copy of copies.slice(1)) expect(classTokens(copy)).toContain('motion-reduce:hidden')
   })
+
+  // Phase 16A, found in the block catalog: standing still, the ribbon sat at the
+  // left while a still ribbon is centred.
+  it('stands still centred under reduced motion, as a still ribbon does', () => {
+    const {getByTestId} = renderSection(marquee)
+    const track = getByTestId('marquee-track')
+    expect(classTokens(track)).toContain('motion-reduce:justify-center')
+    expect(classTokens(track.children[0])).toContain('motion-reduce:text-center')
+  })
 })

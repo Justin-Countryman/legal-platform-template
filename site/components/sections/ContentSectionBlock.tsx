@@ -151,9 +151,7 @@ export function ContentSectionBlock({
   return (
     <SectionShell
       appearance={appearance}
-      seamTop={seam.seamTop}
-      previousGround={seam.previousGround}
-      previousEdge={seam.previousEdge}
+      seam={seam}
     >
       {(surface) => {
         const center = layout === 'statement' || layout === 'statRow'

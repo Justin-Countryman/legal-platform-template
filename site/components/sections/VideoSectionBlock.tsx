@@ -62,7 +62,7 @@ export function VideoSectionBlock({
   // Split — heading text in a left column, video(s) stacked on the right.
   if (layout === 'split') {
     return (
-      <SectionShell appearance={resolveAppearance(data)} innerClassName="grid grid-cols-1 items-start gap-12 md:grid-cols-2 lg:gap-20" seamTop={seam.seamTop} previousGround={seam.previousGround} previousEdge={seam.previousEdge}>
+      <SectionShell appearance={resolveAppearance(data)} innerClassName="grid grid-cols-1 items-start gap-12 md:grid-cols-2 lg:gap-20" seam={seam}>
         <>
           <div>
             {heading && (
@@ -86,7 +86,7 @@ export function VideoSectionBlock({
 
   // Centered (default) — heading above, video centered (grid when multiple).
   return (
-    <SectionShell appearance={resolveAppearance(data)} seamTop={seam.seamTop} previousGround={seam.previousGround} previousEdge={seam.previousEdge}>
+    <SectionShell appearance={resolveAppearance(data)} seam={seam}>
       <>
 
         {heading && (

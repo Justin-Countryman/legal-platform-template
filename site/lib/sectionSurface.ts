@@ -45,7 +45,8 @@
 // So the frame adds:
 //   - `visibleGround()`, which answers "what colour does the visitor SEE here",
 //     which walks `pattern` and an inset band as the light ground;
-//   - a spacing preset split into `top` / `bottom` / `seamTop` / `topNone`, so a
+//   - a spacing preset split into `top` / `bottom` / `seamTop` / `topOverlap` /
+//     `bottomBeforeOverlap`, so a
 //     dispatcher can halve the top padding at a same-ground join;
 //   - the edge classes, which the NEXT band uses to draw the previous band's
 //     bottom edge.
@@ -103,9 +104,14 @@ export type SectionSpacingSteps = {
   bottom: string
   /** Top padding at a same-ground join: half of `top`, per breakpoint. */
   seamTop: string
-  /** No top padding, so a band can overlap the one above it by exactly its
-   *  negative margin. */
-  topNone: string
+  /** Top padding of an inset panel that overlaps the band above: the preset's
+   *  own padding on phones, where nothing overlaps, and none from `md`, so the
+   *  negative margin IS the overlap. */
+  topOverlap: string
+  /** Bottom padding of the band ABOVE an overlapping panel: the preset's own plus
+   *  the overlap from `md`, so the panel covers only padding it added and never
+   *  the band's content (Phase 16A, `[R-475]`). */
+  bottomBeforeOverlap: {small: string; large: string}
 }
 
 // Vertical rhythm presets. Horizontal padding (px-[5%]) is applied by the shell.
@@ -123,19 +129,22 @@ export const SECTION_SPACING: Record<SectionSpacing, SectionSpacingSteps> = {
     top:     'pt-12 md:pt-16',
     bottom:  'pb-12 md:pb-16',
     seamTop: 'pt-6 md:pt-8',
-    topNone: 'pt-0',
+    topOverlap: 'pt-12 md:pt-0',
+    bottomBeforeOverlap: {small: 'pb-12 md:pb-28', large: 'pb-12 md:pb-40'},
   },
   normal: {
     top:     'pt-16 md:pt-24 lg:pt-28',
     bottom:  'pb-16 md:pb-24 lg:pb-28',
     seamTop: 'pt-8 md:pt-12 lg:pt-14',
-    topNone: 'pt-0',
+    topOverlap: 'pt-16 md:pt-0',
+    bottomBeforeOverlap: {small: 'pb-16 md:pb-36 lg:pb-40', large: 'pb-16 md:pb-48 lg:pb-52'},
   },
   spacious: {
     top:     'pt-24 md:pt-32 lg:pt-40',
     bottom:  'pb-24 md:pb-32 lg:pb-40',
     seamTop: 'pt-12 md:pt-16 lg:pt-20',
-    topNone: 'pt-0',
+    topOverlap: 'pt-24 md:pt-0',
+    bottomBeforeOverlap: {small: 'pb-24 md:pb-44 lg:pb-52', large: 'pb-24 md:pb-56 lg:pb-64'},
   },
 }
 
@@ -147,7 +156,8 @@ export const TIGHT_SPACING: SectionSpacingSteps = {
   top:     'pt-10 md:pt-12',
   bottom:  'pb-10 md:pb-12',
   seamTop: 'pt-5 md:pt-6',
-  topNone: 'pt-0',
+  topOverlap: 'pt-10 md:pt-0',
+  bottomBeforeOverlap: {small: 'pb-10 md:pb-24', large: 'pb-10 md:pb-36'},
 }
 
 export type ResolvedSectionSurface = {
@@ -293,8 +303,9 @@ export function edgeCancelsSeam(
 /** Exported for the test that resolves every class through Tailwind's own design
  *  system. Nothing in the app reads it. */
 export const ALL_FRAME_CLASSES: readonly string[] = [
-  ...Object.values(SECTION_SPACING).flatMap((s) => [s.top, s.bottom, s.seamTop, s.topNone]),
-  TIGHT_SPACING.top, TIGHT_SPACING.bottom, TIGHT_SPACING.seamTop, TIGHT_SPACING.topNone,
+  ...[...Object.values(SECTION_SPACING), TIGHT_SPACING].flatMap((s) => [
+    s.top, s.bottom, s.seamTop, s.topOverlap, s.bottomBeforeOverlap.small, s.bottomBeforeOverlap.large,
+  ]),
   ...Object.values(EDGE_FROM_CLASS).filter(Boolean),
   EDGE_ANGLED,
   'bg-brand-dark', 'bg-hero-tint', 'bg-muted', 'bg-background', 'bg-accent-fill',

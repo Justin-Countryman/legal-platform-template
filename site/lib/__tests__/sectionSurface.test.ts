@@ -87,9 +87,28 @@ describe('SECTION_SPACING: absent renders exactly as it did', () => {
     }
   })
 
-  it('topNone is a single class at every preset: the overlap is the negative margin', () => {
-    for (const [name, steps] of Object.entries(SECTION_SPACING)) expect(steps.topNone, name).toBe('pt-0')
-    expect(TIGHT_SPACING.topNone).toBe('pt-0')
+  // Phase 16A, [R-475]: an overlapping panel keeps its phone padding (nothing
+  // overlaps below md) and has none from md, where the negative margin is the
+  // overlap; the band above grows its bottom by exactly the overlap from md.
+  it('topOverlap is the preset on phones and zero from md', () => {
+    for (const steps of [...Object.values(SECTION_SPACING), TIGHT_SPACING]) {
+      expect(steps.topOverlap.split(' ')[0]).toBe(steps.top.split(' ')[0])
+      expect(steps.topOverlap.split(' ').slice(1)).toEqual(['md:pt-0'])
+    }
+  })
+
+  it('bottomBeforeOverlap adds exactly the overlap (48px small, 96px large) at every breakpoint from md', () => {
+    const units = (cls: string, bp: string) => Number(cls.split(' ').find((c) => c.startsWith(bp))?.split('-').pop())
+    for (const steps of [...Object.values(SECTION_SPACING), TIGHT_SPACING]) {
+      for (const [size, add] of [['small', 12], ['large', 24]] as const) {
+        const grown = steps.bottomBeforeOverlap[size]
+        expect(grown.split(' ')[0], size).toBe(steps.bottom.split(' ')[0])
+        for (const bp of ['md:pb-', 'lg:pb-']) {
+          if (!steps.bottom.includes(bp)) continue
+          expect(units(grown, bp), `${size} ${bp}`).toBe(units(steps.bottom, bp) + add)
+        }
+      }
+    }
   })
 
   it('the tight preset is not a storable spacing (it exists only for cta/centered)', () => {
