@@ -195,11 +195,11 @@ function ScrollingBadges({data, tagline, heading, description}: {data: BadgesSec
 // heading and NO gutter for its full-bleed marquee strip, which the shell cannot
 // express at once. Moving it would change a live band for no gain.
 //
-// All three that move were transparent, so `pattern` is their default surface:
-// it means "this band paints no background of its own", which keeps today's
-// rendering exactly and leaves Phase 16's `surfaceRhythm` free to decide what an
-// unset band should show. A code default, not an `initialValue`, because the
-// composer folds a seed into every band it writes (item 308, [R-450]).
+// An unset band is `light`, never `pattern` (Phase 16A): `pattern` now paints the
+// site's section texture, which only a band someone deliberately set to Pattern
+// may wear. Both render the light ground, so nothing moves on a site with no
+// texture. A code default, not an `initialValue`, because the composer folds a
+// seed into every band it writes (item 308, [R-450]).
 
 // Each moved layout's own wrapper classes, passed to the shell's container so no
 // extra div appears.
@@ -211,7 +211,7 @@ const INNER_CLASS: Record<string, string> = {
 
 /** The appearance this section will actually render with, for the seam walk. */
 export function resolveAppearance(data: BadgesSectionBlockData): SectionAppearance {
-  return {...data.appearance, surface: data.appearance?.surface ?? 'pattern'}
+  return {...data.appearance, surface: data.appearance?.surface ?? 'light'}
 }
 
 /** A badges band IS its badges. */

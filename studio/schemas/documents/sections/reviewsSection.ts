@@ -75,7 +75,7 @@ export function fields({inline}: {inline: boolean}) {
         'Paste the embed code from your reviews provider, for example an Elfsight Google Reviews widget. The section does not appear without it.',
       validation: (Rule) => Rule.required().warning('Reviews embed code is required'),
     }),
-    ...appearanceFields({seed: false}),
+    ...appearanceFields({seed: false, offerPattern: inline}),
   ]
 }
 

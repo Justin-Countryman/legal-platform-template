@@ -48,79 +48,38 @@ export const designSettings = defineType({
       options: {collapsible: true, collapsed: true},
     },
     {
-      name: 'pageBackground',
-      title: 'Page Background',
+      name: 'patternTexture',
+      title: 'Pattern Texture',
       options: {collapsible: true, collapsed: true},
     },
   ],
   fields: [
-    // ─── The page background layer (Phase 13) ──────────────────────────────
-    // One decorative ground behind the whole document, so a Pattern band and the
-    // margins around an Inset Panel have something to show.
+    // ─── The section texture (Phase 16A, [R-472]) ─────────────────────────────
+    // There is no site-wide background: interior pages are always a clean ground,
+    // and a texture appears only on a HOMEPAGE section someone set to the Pattern
+    // surface. This chooses which texture those sections wear. It replaces the
+    // Phase 13 page background (texture, photo or gradient behind the whole site).
     //
-    // NO `initialValue` ON ANY SUBFIELD, for the same reason as the frame fields
-    // on the appearance fieldset: `designSettings` seeds are folded into every
-    // Site-Build write as `schema-default`, so a seeded kind would be stamped on
-    // every client and Phase 16's themes could never tell it from a choice
-    // (item 308, [R-450]). Absent reads as "none", which renders no element.
+    // NO `initialValue`: `designSettings` seeds are folded into every Site-Build
+    // write, and a seeded texture would be stamped on every client and could never
+    // be told from a choice (item 308, [R-450]). Absent means none, and a Pattern
+    // section then looks like Light.
     defineField({
-      name: 'pageBackground',
-      title: 'Page Background',
-      type: 'object',
-      fieldset: 'pageBackground',
+      name: 'patternTexture',
+      title: 'Pattern Texture',
+      type: 'string',
+      fieldset: 'patternTexture',
       description:
-        'A subtle ground behind the whole site. Sections set to the Pattern surface, and the margins around an Inset Panel, show it; every other surface covers it.',
-      fields: [
-        defineField({
-          name: 'kind',
-          title: 'Kind',
-          type: 'string',
-          description: 'Leave as None for a plain white page, which is how every site ships.',
-          options: {
-            list: [
-              {title: 'None', value: 'none'},
-              {title: 'Texture \u2014 a fine repeating pattern', value: 'texture'},
-              {title: 'Photo', value: 'photo'},
-              {title: 'Gradient \u2014 a soft wash from the top', value: 'gradient'},
-            ],
-            layout: 'radio',
-          },
-        }),
-        defineField({
-          name: 'texture',
-          title: 'Texture',
-          type: 'string',
-          description: 'Drawn in the brand colour at the opacity below, so it follows the palette.',
-          // `parent`, never `document`: this object is nested, so `parent` is the
-          // object value. Inside an array member `document` would be the root.
-          hidden: ({parent}) => (parent as {kind?: string} | undefined)?.kind !== 'texture',
-          options: {
-            list: [
-              {title: 'Pinstripe \u2014 fine vertical lines', value: 'pinstripe'},
-              {title: 'Diagonal hatch \u2014 fine diagonal lines', value: 'diagonalHatch'},
-              {title: 'Diamond lattice \u2014 a fine crosshatch', value: 'diamondLattice'},
-              {title: 'Scallop \u2014 a repeating arc', value: 'scallop'},
-            ],
-            layout: 'radio',
-          },
-        }),
-        defineField({
-          name: 'image',
-          title: 'Photo',
-          type: 'image',
-          hidden: ({parent}) => (parent as {kind?: string} | undefined)?.kind !== 'photo',
-        }),
-        defineField({
-          name: 'opacity',
-          title: 'Strength',
-          type: 'number',
-          description:
-            'How strongly the background shows. A texture or photo renders at 0.04 at most, the strength at which every text colour on it stays readable (WCAG AA); a gradient may go to 0.25.',
-          hidden: ({parent}) => ((parent as {kind?: string} | undefined)?.kind ?? 'none') === 'none',
-          // Warning, never error: no validation rule blocks Publish ([R-162]).
-          validation: (Rule) => Rule.min(0).max(0.25).warning('Keep the page background at 0.25 or under. A texture or photo renders at 0.04 at most.'),
-        }),
-      ],
+        'The texture a homepage section set to the Pattern surface wears, drawn faintly in the dark ground color so text stays readable. Nothing else on the site shows it, and interior pages never do. Leave blank for none.',
+      options: {
+        list: [
+          {title: 'Pinstripe \u2014 fine vertical lines', value: 'pinstripe'},
+          {title: 'Diagonal hatch \u2014 fine diagonal lines', value: 'diagonalHatch'},
+          {title: 'Diamond lattice \u2014 a fine crosshatch', value: 'diamondLattice'},
+          {title: 'Scallop \u2014 a repeating arc', value: 'scallop'},
+        ],
+        layout: 'radio',
+      },
     }),
 
     // ─── Brand Assets ─────────────────────────────────────────────────────────

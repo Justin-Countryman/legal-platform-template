@@ -20,6 +20,7 @@ export { hexToRgbTriplet }
 // ─── OKLCH helpers ────────────────────────────────────────────────────────────
 
 const toOklch = converter('oklch')
+const toRgb = converter('rgb')
 
 type OklchColor = {mode: 'oklch'; l: number; c: number; h: number}
 
@@ -476,6 +477,16 @@ export type WcagResult = {
   blocking: boolean
 }
 
+/** `ink` at `alpha` over `ground`, composited per channel in gamma-encoded sRGB, as
+ *  the browser composites an element's opacity. */
+function blendOver(ground: string, ink: string, alpha: number): string {
+  type Rgb = {r: number; g: number; b: number}
+  const g = toRgb(ground) as unknown as Rgb
+  const k = toRgb(ink) as unknown as Rgb
+  const mix = (a: number, b: number) => a * (1 - alpha) + b * alpha
+  return formatHex({mode: 'rgb', r: mix(g.r, k.r), g: mix(g.g, k.g), b: mix(g.b, k.b)})
+}
+
 // The token-level pairs every rendered surface relies on. The component-level
 // pairings (a light card inside a dark band, and so on) are held by component
 // tests; this list is what an operator's colour choice can move.
@@ -490,6 +501,10 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
     ['background', t['--color-background']],
     ['hero-tint', t['--color-hero-tint']],
     ['muted', t['--color-muted']],
+    // A Pattern band's darkest pixel: its ink line at the texture's opacity over the
+    // light ground. WCAG measures text against the lowest-contrast part of what is
+    // behind it (F83), so every light tier must hold here too (Phase 16A).
+    ['section-texture', blendOver(t['--color-background'], t['--color-brand-dark'], SECTION_TEXTURE_OPACITY)],
   ]
   for (const [name, ground] of lightGrounds) {
     check(`foreground on ${name}`,        t['--color-foreground'],        ground, 4.5)
@@ -721,6 +736,38 @@ export const MARKETING_SCALE_MAP: Record<string, MarketingScaleTokens> = {
   lg: {h1: '8rem',     h2: '6.854rem', h3: '4.236rem', h4: '2.618rem'},
 }
 
+// ─── The section texture ──────────────────────────────────────────────────────
+// What a band set to the Pattern surface wears (Phase 16A, `[R-472]`: no
+// site-wide background; a texture only on a homepage section someone set to
+// Pattern). The choice is a site value, `designSettings.patternTexture`, so it is
+// emitted as two custom properties that one `section-texture` utility reads: no
+// prop threads through the section dispatchers, and a theme sets it like any other
+// axis. The four units are the ones the study's textured sites wear (Phase 13).
+//
+// Gradients, not SVG, so the ink is `var(--color-brand-dark)` and follows the
+// palette with no literal color. Scallop is the one that needs a tile size.
+//
+// THE STRENGTH IS NOT HERE. The layer renders at `opacity-4` (0.04) in
+// `SectionShell`, the most at which every light text tier still meets AA on the
+// darkest pixel of the blend for any palette (measured over 11,172 palettes in the
+// Phase 16A challenge: 0 failures at 0.04, 2,679 at 0.05). `validateWcag` holds
+// that blend as its own ground, so the claim is tested, not remembered.
+export const SECTION_TEXTURES = ['pinstripe', 'diagonalHatch', 'diamondLattice', 'scallop'] as const
+export type SectionTexture = (typeof SECTION_TEXTURES)[number]
+
+export const SECTION_TEXTURE_MAP: Record<SectionTexture, {image: string; size: string}> = {
+  pinstripe:      {image: 'repeating-linear-gradient(90deg,var(--color-brand-dark) 0 1px,transparent 1px 10px)', size: 'auto'},
+  diagonalHatch:  {image: 'repeating-linear-gradient(45deg,var(--color-brand-dark) 0 1px,transparent 1px 8px)', size: 'auto'},
+  diamondLattice: {
+    image: 'repeating-linear-gradient(45deg,var(--color-brand-dark) 0 1px,transparent 1px 14px),repeating-linear-gradient(-45deg,var(--color-brand-dark) 0 1px,transparent 1px 14px)',
+    size: 'auto',
+  },
+  scallop:        {image: 'radial-gradient(circle at 50% 100%,transparent 0 7px,var(--color-brand-dark) 7px 8px,transparent 8px)', size: '16px 16px'},
+}
+
+/** The opacity the section texture renders at, and the one `validateWcag` blends. */
+export const SECTION_TEXTURE_OPACITY = 0.04
+
 export function buildDesignTokenCSS(
   uiRadius?:           string | null,
   buttonShape?:        string | null,
@@ -729,6 +776,7 @@ export function buildDesignTokenCSS(
   motionTempo?:        string | null,
   marketingScale?:     string | null,
   taglineStyle?:       string | null,
+  patternTexture?:     string | null,
 ): string {
   const radius    = UI_RADIUS_MAP[uiRadius ?? '']            ?? UI_RADIUS_MAP.rounded
   const btn       = BUTTON_SHAPE_MAP[buttonShape ?? '']      ?? BUTTON_SHAPE_MAP.rounded
@@ -744,6 +792,8 @@ export function buildDesignTokenCSS(
     ? `--marketing-h1:${marketing.h1};--marketing-h2:${marketing.h2};--marketing-h3:${marketing.h3};--marketing-h4:${marketing.h4};`
     : ''
   const taglineVars = Object.entries(tagline).map(([k, v]) => `${k}:${v};`).join('')
+  const texture = SECTION_TEXTURE_MAP[(patternTexture ?? '') as SectionTexture]
+  const textureVars = `--section-texture-image:${texture?.image ?? 'none'};--section-texture-size:${texture?.size ?? 'auto'};`
   return (
     `:root{` +
     `--radius-ui:${radius};` +
@@ -761,6 +811,7 @@ export function buildDesignTokenCSS(
     `--motion-structural-base:${STRUCTURAL_BASE};` +
     `--motion-structural-slow:${STRUCTURAL_SLOW};` +
     taglineVars +
+    textureVars +
     marketingVars +
     `}`
   )

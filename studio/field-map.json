@@ -2759,7 +2759,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -2768,8 +2768,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -2792,7 +2791,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -3000,7 +2999,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -3008,8 +3007,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -3032,7 +3030,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -4193,7 +4191,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -4202,8 +4200,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -4226,7 +4223,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -4977,7 +4974,7 @@
           "type": "boolean"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -4987,8 +4984,7 @@
               "tint",
               "dark",
               "saturated",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -5011,7 +5007,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5160,7 +5156,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5168,8 +5164,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -5192,7 +5187,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5247,31 +5242,7 @@
     "designSettings": {
       "fields": [
         {
-          "description": "A subtle ground behind the whole site. Sections set to the Pattern surface, and the margins around an Inset Panel, show it; every other surface covers it.",
-          "jsonType": "object",
-          "path": "pageBackground",
-          "title": "Page Background",
-          "type": "object"
-        },
-        {
-          "description": "Leave as None for a plain white page, which is how every site ships.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "none",
-              "texture",
-              "photo",
-              "gradient"
-            ]
-          },
-          "path": "pageBackground.kind",
-          "title": "Kind",
-          "type": "string"
-        },
-        {
-          "description": "Drawn in the brand colour at the opacity below, so it follows the palette.",
-          "hidden": "<predicate>",
+          "description": "The texture a homepage section set to the Pattern surface wears, drawn faintly in the dark ground color so text stays readable. Nothing else on the site shows it, and interior pages never do. Leave blank for none.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5282,24 +5253,9 @@
               "scallop"
             ]
           },
-          "path": "pageBackground.texture",
-          "title": "Texture",
+          "path": "patternTexture",
+          "title": "Pattern Texture",
           "type": "string"
-        },
-        {
-          "hidden": "<predicate>",
-          "jsonType": "object",
-          "path": "pageBackground.image",
-          "title": "Photo",
-          "type": "image"
-        },
-        {
-          "description": "How strongly the background shows. A texture or photo renders at 0.04 at most, the strength at which every text colour on it stays readable (WCAG AA); a gradient may go to 0.25.",
-          "hidden": "<predicate>",
-          "jsonType": "number",
-          "path": "pageBackground.opacity",
-          "title": "Strength",
-          "type": "number"
         },
         {
           "description": "Used in headers, footers, and sections with a light background. Typically your full-color or dark logo.",
@@ -7381,7 +7337,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -7389,8 +7345,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -7413,7 +7368,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -7504,7 +7459,7 @@
           "type": "reference"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "initialValue": "tint",
           "jsonType": "string",
           "options": {
@@ -7513,8 +7468,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -7537,7 +7491,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -9827,7 +9781,7 @@
           "type": "image"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -9860,7 +9814,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -9981,7 +9935,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -10014,7 +9968,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10116,7 +10070,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -10149,7 +10103,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10275,7 +10229,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10307,7 +10261,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10378,7 +10332,7 @@
           "type": "array"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "initialValue": "tint",
           "jsonType": "string",
           "options": {
@@ -10411,7 +10365,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10476,7 +10430,7 @@
           "type": "reference"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "initialValue": "tint",
           "jsonType": "string",
           "options": {
@@ -10509,7 +10463,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10596,7 +10550,7 @@
           "type": "array"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10628,7 +10582,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11003,7 +10957,7 @@
           "type": "boolean"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -11037,7 +10991,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11159,7 +11113,7 @@
           "type": "text"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11191,7 +11145,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -13725,7 +13679,7 @@
           "type": "image"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "initialValue": "light",
           "jsonType": "string",
           "options": {
@@ -13734,8 +13688,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -13758,7 +13711,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -14189,7 +14142,7 @@
           "type": "text"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -14197,8 +14150,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -14221,7 +14173,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -16499,7 +16451,7 @@
           "type": "array"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "initialValue": "tint",
           "jsonType": "string",
           "options": {
@@ -16508,8 +16460,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -16532,7 +16483,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -17533,7 +17484,7 @@
           "type": "array"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -17541,8 +17492,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -17565,7 +17515,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",

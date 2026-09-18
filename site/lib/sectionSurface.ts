@@ -21,9 +21,9 @@
 //             (Phase 15), so this file never lists it beside a surface that paints
 //             the accent. The value is never reused for another surface.
 //   image   — a background image + dark scrim + white text (immersive).
-//   pattern — NO background class at all: the page background layer shows through
-//             (Phase 13). Text polarity is the light cascade, because the page
-//             ground is a light ground until Phase 16's themes say otherwise.
+//   pattern — the light ground wearing the site's section texture, which the band
+//             paints itself (Phase 16A). Offered on homepage sections only; nothing
+//             else on the site, and no interior page, ever shows a texture.
 //
 //   saturated — the accent as a full-width fill (`bg-accent-fill`), text in
 //             `accent-fg` through the `[data-ring-context="saturated"]` block,
@@ -44,7 +44,7 @@
 //
 // So the frame adds:
 //   - `visibleGround()`, which answers "what colour does the visitor SEE here",
-//     collapsing `pattern` and an inset band onto the page ground;
+//     which walks `pattern` and an inset band as the light ground;
 //   - a spacing preset split into `top` / `bottom` / `seamTop` / `topNone`, so a
 //     dispatcher can halve the top padding at a same-ground join;
 //   - the edge classes, which the NEXT band uses to draw the previous band's
@@ -84,9 +84,11 @@ export const SECTION_SURFACES: readonly SectionSurface[] = ['light', 'tint', 'da
 export type StoredSurface = SectionSurface | 'accent'
 export type SectionSpacing = 'compact' | 'normal' | 'spacious'
 
-/** What the visitor actually sees behind a band. `pattern` and an inset band show
- *  the page ground, so two of them in a row are a same-ground join. */
-export type VisibleGround = 'light' | 'tint' | 'muted' | 'dark' | 'image' | 'page' | 'saturated'
+/** What the visitor actually sees behind a band, which is what decides a seam.
+ *  There is no page ground any more (Phase 16A, `[R-472]`): a `pattern` band is the
+ *  light ground wearing a faint texture, and the page around an inset panel is the
+ *  light ground, so both walk as `light`. */
+export type VisibleGround = 'light' | 'tint' | 'muted' | 'dark' | 'image' | 'saturated'
 
 /** The bottom edge a band cuts into the one below it. Desktop and up only. */
 export type SectionEdge = 'flat' | 'angled'
@@ -149,8 +151,11 @@ export const TIGHT_SPACING: SectionSpacingSteps = {
 }
 
 export type ResolvedSectionSurface = {
-  /** Background class for the section band. Empty for `pattern`. */
+  /** Background class for the section band. */
   surfaceClass: string
+  /** True for `pattern`: the shell paints the site's section texture over the light
+   *  ground. Nothing else on the site ever wears it. */
+  textured: boolean
   /** `data-ring-context` value — 'dark' on dark/image surfaces, 'saturated' on the accent fill, else omitted. */
   ringContext: 'dark' | 'saturated' | undefined
   /** Surface context for Button / ButtonGroup inside the section. */
@@ -162,42 +167,42 @@ export type ResolvedSectionSurface = {
 export function sectionSurface(surface: StoredSurface | null | undefined): ResolvedSectionSurface {
   switch (surface) {
     case 'dark':
-      return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: false}
+      return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: false, textured: false}
     case 'image':
       // The image rides on a brand-dark base so a missing/loading image still has
       // a safe dark surface for the white text + scrim.
-      return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: true}
+      return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: true, textured: false}
     case 'saturated':
-      return {surfaceClass: 'bg-accent-fill', ringContext: 'saturated', buttonContext: 'saturated', isImage: false}
+      return {surfaceClass: 'bg-accent-fill', ringContext: 'saturated', buttonContext: 'saturated', isImage: false, textured: false}
     case 'tint':
-      return {surfaceClass: 'bg-hero-tint', ringContext: undefined, buttonContext: 'light', isImage: false}
+      return {surfaceClass: 'bg-hero-tint', ringContext: undefined, buttonContext: 'light', isImage: false, textured: false}
     case 'muted':
     case 'accent': // the legacy stored value (see the header)
-      return {surfaceClass: 'bg-muted', ringContext: undefined, buttonContext: 'light', isImage: false}
-    // NO background class: the page background layer shows through. This is the
-    // whole mechanism — the band paints nothing and the layer behind it is what
-    // the visitor sees. A `pattern` band on a site with no page layer therefore
-    // renders exactly as `light`, which is stated on the schema field and raised
-    // as a build NOTE rather than blocked: Studio cannot check it, because inside
-    // a canvas member `parent` is the member, not `designSettings`.
+      return {surfaceClass: 'bg-muted', ringContext: undefined, buttonContext: 'light', isImage: false, textured: false}
+    // The light ground plus the site's section texture, painted by the band itself
+    // (`SectionShell`). Phase 13 left this band transparent so a page-wide layer
+    // showed through; that layer is gone (Phase 16A, `[R-472]`: no site-wide
+    // background, interior pages always clean). With no `patternTexture` set the
+    // texture is `none` and the band looks exactly like `light`.
     case 'pattern':
-      return {surfaceClass: '', ringContext: undefined, buttonContext: 'light', isImage: false}
+      return {surfaceClass: 'bg-background', ringContext: undefined, buttonContext: 'light', isImage: false, textured: true}
     case 'light':
     default:
-      return {surfaceClass: 'bg-background', ringContext: undefined, buttonContext: 'light', isImage: false}
+      return {surfaceClass: 'bg-background', ringContext: undefined, buttonContext: 'light', isImage: false, textured: false}
   }
 }
 
 /** What the visitor sees behind this band, which is what decides a seam.
  *
  *  An inset band keeps its own surface but renders as a panel inside the
- *  container, so the page ground runs past it on both sides and ABOVE and BELOW
+ *  container, so the light ground runs past it on both sides and ABOVE and BELOW
  *  it: two inset bands in a row are a same-ground join even when the panels
- *  differ. `pattern` is the same case with no panel. */
+ *  differ. A `pattern` band is the light ground with a faint texture, so it joins
+ *  a light band as one ground. */
 export function visibleGround(
   appearance: {surface?: StoredSurface | null; inset?: boolean | null} | null | undefined,
 ): VisibleGround {
-  if (appearance?.inset) return 'page'
+  if (appearance?.inset) return 'light'
   switch (appearance?.surface) {
     case 'dark':    return 'dark'
     case 'image':   return 'image'
@@ -209,16 +214,15 @@ export function visibleGround(
     // and painted a hero-tint wedge beside a muted band (Phase 14 challenge).
     case 'muted':
     case 'accent':  return 'muted'
-    case 'pattern': return 'page'
+    case 'pattern': return 'light'
     case 'light':
     default:        return 'light'
   }
 }
 
 // The edge the NEXT band draws for the band above it, keyed on what that band's
-// ground actually was. `page` paints nothing on purpose: there is no solid colour
-// to cut, and an inset or pattern band has the page ground on both sides of the
-// seam already.
+// ground actually was. A `pattern` or inset band walks as `light`, so its edge is
+// the plain light ground (the faint texture is not carried into the wedge).
 //
 // `image` also paints nothing. The photo is a `SanityImage` child element, not a
 // background, so an edge could only inherit the `bg-brand-dark` base underneath
@@ -230,7 +234,6 @@ const EDGE_FROM_CLASS: Record<VisibleGround, string> = {
   dark:  'before:bg-brand-dark',
   saturated: 'before:bg-accent-fill',
   image: '',
-  page:  '',
 }
 
 // The wedge itself: a triangle at the TOP of the next band, painted in the previous

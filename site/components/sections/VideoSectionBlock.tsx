@@ -15,12 +15,12 @@ export type VideoSectionBlockData = VideoSectionProps
 // ─── Component ────────────────────────────────────────────────────────────────
 
 // ─── The frame (Phase 13) ─────────────────────────────────────────────────────
-// Both layouts were transparent, so `pattern` is the default: the band paints no
-// background of its own. A code default, never an `initialValue` (item 308).
+// An unset band is `light`, never `pattern`, which now paints the site's section
+// texture (Phase 16A). A code default, never an `initialValue` (item 308).
 
 /** The appearance this section will actually render with, for the seam walk. */
 export function resolveAppearance(data: VideoSectionBlockData): SectionAppearance {
-  return {...data.appearance, surface: data.appearance?.surface ?? 'pattern'}
+  return {...data.appearance, surface: data.appearance?.surface ?? 'light'}
 }
 
 /** A video band IS its playable videos. The URL filter is part of the test:

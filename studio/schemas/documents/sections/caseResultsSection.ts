@@ -78,7 +78,7 @@ export function fields({inline}: {inline: boolean}) {
       type: 'ctaButton',
       description: 'Optional. Usually a link to a fuller results page.',
     }),
-    ...appearanceFields({defaultSurface: 'light'}),
+    ...appearanceFields({defaultSurface: 'light', offerPattern: inline}),
   ]
 }
 

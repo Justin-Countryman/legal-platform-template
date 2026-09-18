@@ -79,6 +79,18 @@ export type PageSectionData =
   | ({_type: 'contentSection'} & ContentSectionData)
   | ({_type: 'caseResultsSection'} & CaseResultsSectionData)
 
+// ─── Interior pages never wear a texture ──────────────────────────────────────
+// `[R-472]`: interior pages are always a clean ground, and a texture appears only
+// on a HOMEPAGE section someone set to Pattern. The Studio no longer offers
+// Pattern on these section documents (Phase 16A); this renders a `pattern` stored
+// before then as `light`, which is the same ground without the texture.
+function withoutTexture(section: PageSectionData): PageSectionData {
+  const appearance = (section as {appearance?: SectionAppearance | null}).appearance
+  return appearance?.surface === 'pattern'
+    ? ({...section, appearance: {...appearance, surface: 'light'}} as PageSectionData)
+    : section
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function PageSections({
@@ -96,7 +108,7 @@ export function PageSections({
 
   return (
     <>
-      {walkFrame(sections, frameOf).map(({member: section, index: i, seam}) => {
+      {walkFrame(sections.map(withoutTexture), frameOf).map(({member: section, index: i, seam}) => {
         switch (section._type) {
           case 'testimonialsGrid':
             return <TestimonialsGridSection key={i} data={section} napTokens={napTokens} seam={seam} />

@@ -84,7 +84,7 @@ export function fields({inline}: {inline: boolean}) {
       initialValue: 'centeredGrid',
       validation: (Rule) => Rule.required().warning(),
     }),
-    ...appearanceFields({seed: false}),
+    ...appearanceFields({seed: false, offerPattern: inline}),
   ]
 }
 

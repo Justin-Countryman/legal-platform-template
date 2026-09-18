@@ -99,24 +99,28 @@ describe('SECTION_SPACING: absent renders exactly as it did', () => {
 })
 
 describe('sectionSurface', () => {
-  it('pattern emits NO background class, so the page layer shows through', () => {
-    expect(sectionSurface('pattern').surfaceClass).toBe('')
+  // Phase 16A ([R-472]): no site-wide layer. A pattern band paints the light
+  // ground itself and asks the shell for the section texture; it is the only
+  // surface that does.
+  it('pattern paints the light ground and is the only textured surface', () => {
+    expect(sectionSurface('pattern').surfaceClass).toBe('bg-background')
     expect(sectionSurface('pattern').ringContext).toBeUndefined()
     expect(sectionSurface('pattern').buttonContext).toBe('light')
     expect(sectionSurface('pattern').isImage).toBe(false)
+    expect(SECTION_SURFACES.filter((surface) => sectionSurface(surface).textured)).toEqual(['pattern'])
   })
 
   // Phase 15: the table is keyed by the exported surface list, so a surface added
   // to the union without a case here fails rather than falling through to light.
   it('every surface in the union has a case, and none falls through to the default', () => {
     const expected: Record<(typeof SECTION_SURFACES)[number], ReturnType<typeof sectionSurface>> = {
-      light:     {surfaceClass: 'bg-background',  ringContext: undefined,   buttonContext: 'light',     isImage: false},
-      tint:      {surfaceClass: 'bg-hero-tint',   ringContext: undefined,   buttonContext: 'light',     isImage: false},
-      muted:     {surfaceClass: 'bg-muted',       ringContext: undefined,   buttonContext: 'light',     isImage: false},
-      dark:      {surfaceClass: 'bg-brand-dark',  ringContext: 'dark',      buttonContext: 'dark',      isImage: false},
-      image:     {surfaceClass: 'bg-brand-dark',  ringContext: 'dark',      buttonContext: 'dark',      isImage: true},
-      pattern:   {surfaceClass: '',               ringContext: undefined,   buttonContext: 'light',     isImage: false},
-      saturated: {surfaceClass: 'bg-accent-fill', ringContext: 'saturated', buttonContext: 'saturated', isImage: false},
+      light:     {surfaceClass: 'bg-background',  ringContext: undefined,   buttonContext: 'light',     isImage: false, textured: false},
+      tint:      {surfaceClass: 'bg-hero-tint',   ringContext: undefined,   buttonContext: 'light',     isImage: false, textured: false},
+      muted:     {surfaceClass: 'bg-muted',       ringContext: undefined,   buttonContext: 'light',     isImage: false, textured: false},
+      dark:      {surfaceClass: 'bg-brand-dark',  ringContext: 'dark',      buttonContext: 'dark',      isImage: false, textured: false},
+      image:     {surfaceClass: 'bg-brand-dark',  ringContext: 'dark',      buttonContext: 'dark',      isImage: true,  textured: false},
+      pattern:   {surfaceClass: 'bg-background',  ringContext: undefined,   buttonContext: 'light',     isImage: false, textured: true},
+      saturated: {surfaceClass: 'bg-accent-fill', ringContext: 'saturated', buttonContext: 'saturated', isImage: false, textured: false},
     }
     expect(Object.keys(expected).sort()).toEqual([...SECTION_SURFACES].sort())
     for (const surface of SECTION_SURFACES) expect(sectionSurface(surface), surface).toEqual(expected[surface])
@@ -132,12 +136,12 @@ describe('sectionSurface', () => {
   })
 
   it('every other surface is unchanged from before Phase 13', () => {
-    expect(sectionSurface('dark')).toEqual({surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: false})
-    expect(sectionSurface('image')).toEqual({surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: true})
-    expect(sectionSurface('tint')).toEqual({surfaceClass: 'bg-hero-tint', ringContext: undefined, buttonContext: 'light', isImage: false})
-    expect(sectionSurface('accent')).toEqual({surfaceClass: 'bg-muted', ringContext: undefined, buttonContext: 'light', isImage: false})
+    expect(sectionSurface('dark')).toEqual({surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: false, textured: false})
+    expect(sectionSurface('image')).toEqual({surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: true, textured: false})
+    expect(sectionSurface('tint')).toEqual({surfaceClass: 'bg-hero-tint', ringContext: undefined, buttonContext: 'light', isImage: false, textured: false})
+    expect(sectionSurface('accent')).toEqual({surfaceClass: 'bg-muted', ringContext: undefined, buttonContext: 'light', isImage: false, textured: false})
     expect(sectionSurface('muted')).toEqual(sectionSurface('accent'))
-    expect(sectionSurface('light')).toEqual({surfaceClass: 'bg-background', ringContext: undefined, buttonContext: 'light', isImage: false})
+    expect(sectionSurface('light')).toEqual({surfaceClass: 'bg-background', ringContext: undefined, buttonContext: 'light', isImage: false, textured: false})
   })
 
   it.each([[null], [undefined], ['not-a-surface']])('%s renders as light', (value) => {
@@ -154,10 +158,13 @@ describe('visibleGround', () => {
     // (Phase 14; Phase 13 mapped it to tint, which seamed two different colours).
     ['muted', 'muted'],
     ['accent', 'muted'],
-    ['pattern', 'page'],
+    // The light ground wearing a faint texture: it joins a light band as one
+    // ground (Phase 16A; it was its own `page` ground while a site-wide layer
+    // could show through it).
+    ['pattern', 'light'],
     ['light', 'light'],
     // Its own ground: two saturated bands join, and a band below it cuts its edge
-    // in the fill rather than in the light page ground.
+    // in the fill rather than in the light ground.
     ['saturated', 'saturated'],
   ])('%s sees %s', (surface, ground) => {
     expect(visibleGround({surface: surface as never})).toBe(ground)
@@ -168,10 +175,14 @@ describe('visibleGround', () => {
     expect(visibleGround({surface: value as never})).toBe('light')
   })
 
-  it('an inset band sees the page ground whatever its own surface is', () => {
+  // The page around an inset panel is the light ground now that no site-wide
+  // layer exists (Phase 16A), so a light band next to an inset band is one ground
+  // and does not carry a doubled padding.
+  it('an inset band sees the light ground whatever its own surface is', () => {
     for (const surface of [...SECTION_SURFACES, 'accent'] as const) {
-      expect(visibleGround({surface, inset: true}), surface).toBe('page')
+      expect(visibleGround({surface, inset: true}), surface).toBe('light')
     }
+    expect(visibleGround({surface: 'dark', inset: true})).toBe(visibleGround({surface: 'light'}))
   })
 
   it('two inset bands are a same-ground join even when their panels differ', () => {
@@ -190,9 +201,7 @@ describe('sectionEdgeClasses', () => {
     expect(sectionEdgeClasses('dark', 'angled')).toContain('before:bg-brand-dark')
   })
 
-  it('paints nothing over a page or image ground: there is no solid colour to cut', () => {
-    // `page` (pattern or inset): the page ground is already on both sides.
-    expect(sectionEdgeClasses('page', 'angled')).toBe('')
+  it('paints nothing over an image ground: there is no solid colour to cut', () => {
     // `image`: the photo is a child element, not a background, so a wedge could
     // only inherit the brand-dark base and would match no part of the band above.
     expect(sectionEdgeClasses('image', 'angled')).toBe('')
@@ -224,7 +233,6 @@ describe('sectionEdgeClasses', () => {
     expect(edgeCancelsSeam('dark', 'angled')).toBe(true)
     expect(edgeCancelsSeam('dark', 'flat')).toBe(false)
     // An edge that paints nothing must not cancel a seam it never filled.
-    expect(edgeCancelsSeam('page', 'angled')).toBe(false)
     expect(edgeCancelsSeam('image', 'angled')).toBe(false)
     expect(edgeCancelsSeam(null, 'angled')).toBe(false)
   })

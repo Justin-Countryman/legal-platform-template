@@ -77,7 +77,7 @@ export function fields({inline}: {inline: boolean}) {
       of: [{type: 'reference', to: [{type: 'video'}]}],
       validation: (Rule) => Rule.required().min(1).warning('At least one video is required'),
     }),
-    ...appearanceFields({seed: false}),
+    ...appearanceFields({seed: false, offerPattern: inline}),
   ]
 }
 

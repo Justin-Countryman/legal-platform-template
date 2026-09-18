@@ -182,14 +182,22 @@ describe('the angled edge', () => {
     expect(sectionsOf(container)[1].className).toContain(FULL)
   })
 
-  it('paints nothing over a pattern or image ground, and so cancels no seam', () => {
-    for (const surface of ['pattern', 'image'] as const) {
-      const {container} = canvas([band('a', {surface, edgeBottom: 'angled'}), band('b', {surface})])
-      const second = sectionsOf(container)[1]
-      expect(second.className, surface).not.toContain('before:bg-')
-      // Same ground, no edge painted, so the seam still applies.
-      expect(second.className, surface).toContain(SEAM)
-    }
+  it('paints nothing over an image ground, and so cancels no seam', () => {
+    const {container} = canvas([band('a', {surface: 'image', edgeBottom: 'angled'}), band('b', {surface: 'image'})])
+    const second = sectionsOf(container)[1]
+    expect(second.className).not.toContain('before:bg-')
+    // Same ground, no edge painted, so the seam still applies.
+    expect(second.className).toContain(SEAM)
+  })
+
+  // Phase 16A: a Pattern band is the light ground wearing a faint texture, so its
+  // edge is cut in the light ground (the texture is not carried into the wedge),
+  // and a Pattern band beside a light one is a same-ground join.
+  it('a Pattern band cuts its edge in the light ground and seams with a light band', () => {
+    const edged = canvas([band('a', {surface: 'pattern', edgeBottom: 'angled'}), band('b', {surface: 'dark'})])
+    expect(sectionsOf(edged.container)[1].className).toContain('before:bg-background')
+    const joined = canvas([band('a', {surface: 'pattern'}), band('b', {surface: 'light'})])
+    expect(sectionsOf(joined.container)[1].className).toContain(SEAM)
   })
 })
 

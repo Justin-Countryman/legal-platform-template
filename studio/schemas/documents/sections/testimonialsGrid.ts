@@ -50,7 +50,7 @@ export function fields({inline}: {inline: boolean}) {
       of: [{type: 'reference', to: [{type: 'testimonial'}]}],
       validation: (Rule) => Rule.min(1).warning('At least one testimonial is required'),
     }),
-    ...appearanceFields({defaultSurface: 'tint'}),
+    ...appearanceFields({defaultSurface: 'tint', offerPattern: inline}),
   ]
 }
 

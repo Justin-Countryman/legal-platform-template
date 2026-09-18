@@ -127,6 +127,16 @@ export function SectionShell({
   // of the axes a theme fixes, so a panel follows its theme for free).
   const isInset = appearance?.inset === true
 
+  // The site's section texture, on a Pattern band only (Phase 16A, `[R-472]`). One
+  // decorative child, absolutely placed BEFORE the content container, which is
+  // `relative` and so paints above it in tree order, exactly as the background
+  // photo and its scrim do. `opacity-4` is the tested ceiling (see
+  // `SECTION_TEXTURE_OPACITY`). `data-section-texture` is what the forced-colors and
+  // print rules remove.
+  const texture = resolved.textured ? (
+    <div aria-hidden="true" data-section-texture className="section-texture pointer-events-none absolute inset-0 opacity-4" />
+  ) : null
+
   return (
     <Tag
       data-ring-context={resolved.ringContext}
@@ -167,10 +177,14 @@ export function SectionShell({
               <div className="absolute inset-0 bg-scrim/80" aria-hidden="true" />
             </>
           )}
+          {texture}
           <div className={[contained ? 'container relative' : 'relative', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
         </div>
       ) : (
-        <div className={[contained ? 'container relative' : 'relative', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
+        <>
+          {texture}
+          <div className={[contained ? 'container relative' : 'relative', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
+        </>
       )}
     </Tag>
   )

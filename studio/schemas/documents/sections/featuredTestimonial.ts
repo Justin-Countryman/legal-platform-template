@@ -45,7 +45,7 @@ export function fields({inline}: {inline: boolean}) {
       to: [{type: 'testimonial'}],
       validation: (Rule) => Rule.required().warning(),
     }),
-    ...appearanceFields({defaultSurface: 'tint'}),
+    ...appearanceFields({defaultSurface: 'tint', offerPattern: inline}),
   ]
 }
 

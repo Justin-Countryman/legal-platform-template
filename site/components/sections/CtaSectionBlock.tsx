@@ -53,13 +53,10 @@ const DEFAULT_SURFACE: Record<Layout, SectionSurface> = {
   // `bg-muted` is the `accent` surface.
   centered: 'muted',
   textOnly: 'muted',
-  // Transparent today, and LEFT transparent, which is what `pattern` means: the
-  // band paints no background of its own. `light` would emit `bg-background` and
-  // change a live band, and it would also pre-empt the question Justin deferred
-  // to Phase 16 on 2026-09-16 — whether the bands that ship transparent should
-  // cover a page texture or show it. `pattern` keeps today's rendering exactly
-  // and leaves `surfaceRhythm` free to answer it.
-  split: 'pattern',
+  // `light`, not `pattern`: Justin answered the question deferred here on
+  // 2026-09-16 with `[R-472]` (no site-wide background; a texture only where a
+  // section is deliberately set to Pattern). Both are the light ground.
+  split: 'light',
   // THE FIX: white text needs a dark ground. With an image the shell paints the
   // photo and the scrim over this base, exactly as the old markup did.
   background: 'image',

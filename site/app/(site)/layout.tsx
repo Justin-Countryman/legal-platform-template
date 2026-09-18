@@ -15,7 +15,6 @@ import {Header, type NavItem, type NavChild} from '@/components/layout/Header'
 import {Footer} from '@/components/layout/Footer'
 import {BackToTop} from '@/components/ui/BackToTop'
 import {MotionRoot} from '@/components/ui/MotionRoot'
-import {PageBackgroundLayer} from '@/components/layout/PageBackgroundLayer'
 
 // ─── Practice area ordering ────────────────────────────────────────────────────
 // GROQ returns a flat ordered array of {_id, label, href, parentRef?} for
@@ -101,6 +100,7 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
     designTokens?.motionTempo,
     designTokens?.marketingScale,
     designTokens?.taglineStyle,
+    designTokens?.patternTexture,
   )
   const colorCSS = buildColorCSS({
     darkGround:  designTokens?.darkGround,
@@ -180,11 +180,7 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
       ))}
       <style dangerouslySetInnerHTML={{__html: tokenCSS + colorCSS + headerHeightSSR}} />
       {fontCSS && <style dangerouslySetInnerHTML={{__html: fontCSS}} />}
-      {/* `relative` so the page background layer's `absolute inset-0` covers the
-          whole document rather than the viewport. It changes nothing else: the
-          header is `fixed` against the viewport, not this box. */}
       <div data-button-animation={buttonAnimation} className="relative">
-      <PageBackgroundLayer data={designTokens?.pageBackground} />
       <MotionRoot>
       <Header
         data={{

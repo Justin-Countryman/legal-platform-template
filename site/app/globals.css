@@ -786,66 +786,24 @@ h1, h2, h3, h4, h5, h6 {
   .heading-emphasis { font-style: italic; }
 }
 
-/* ─── The page background layer (Phase 13) ─────────────────────────────────── */
-/* One fixed-size decorative layer behind the whole document, so `pattern` bands
-   and the gutters around an `inset` panel have something to show. Rendered once
-   by components/layout/PageBackgroundLayer.tsx; `designSettings.pageBackground`
-   chooses the kind.
-
-   WHY GRADIENTS AND NOT SVG DATA URIS (Justin, 2026-09-16). A gradient takes
-   `var(--color-...)` directly, so the texture follows the client's palette and
-   the dark/light cascade with no literal colour in the CSS at all — which
-   matters here more than anywhere, because provisioning's CSS_FALLBACK_SITES
-   rewrites literals in THIS FILE and a planted hex was measured silently
-   rewritten to a client's brand colour (41 replacements, no warning). A data-URI
-   SVG cannot do it: `fill="currentColor"` inside a data URI paints BLACK
-   (measured), so an SVG texture must carry a literal. Gradients also need no
-   `@supports` gate, cost fewer bytes, and are stripped for free in
-   forced-colors mode because they are not url() values.
-
-   The four units are the ones the ten themes' sample sites actually wear
-   (WS-V1-PHASE13-DESIGN §7 amendments 17 to 20). `fineGrid` and `dotLattice`,
-   which the record named, have ZERO sites in the field study and are not here.
-
-   The ink is `--color-brand-dark` at the element's own opacity, which
-   `pageBackground.opacity` sets and the schema bounds: WCAG 1.4.3 measures
-   contrast against the ground actually rendered, and the ground under body text
-   on a `pattern` band becomes blend(background, texture, opacity). */
-
-@utility page-texture-pinstripe {
-  background-image: repeating-linear-gradient(90deg, var(--color-brand-dark) 0 1px, transparent 1px 10px);
-}
-
-@utility page-texture-diagonal-hatch {
-  background-image: repeating-linear-gradient(45deg, var(--color-brand-dark) 0 1px, transparent 1px 8px);
-}
-
-@utility page-texture-diamond-lattice {
-  background-image:
-    repeating-linear-gradient(45deg,  var(--color-brand-dark) 0 1px, transparent 1px 14px),
-    repeating-linear-gradient(-45deg, var(--color-brand-dark) 0 1px, transparent 1px 14px);
-}
-
-@utility page-texture-scallop {
-  background-image: radial-gradient(circle at 50% 100%, transparent 0 7px, var(--color-brand-dark) 7px 8px, transparent 8px);
-  background-size: 16px 16px;
-}
-
-/* `kind: gradient`. One vertical two-stop off the existing ground tokens, which
-   is the shape both of Immersive's sample sites use; its direction and stops
-   become operator-visible in Phase 14 (§7 amendment 21). */
-@utility page-wash-gradient {
-  background-image: linear-gradient(to bottom, var(--color-hero-tint) 0%, transparent 60%);
+/* ─── The section texture (Phase 16A) ───────────────────────────────────────── */
+/* What a band set to the Pattern surface wears, and nothing else on the site:
+   there is no site-wide background (`[R-472]`). The site's choice arrives as two
+   custom properties from `buildDesignTokenCSS` (`SECTION_TEXTURE_MAP`), so one
+   utility serves all four textures and a site with none paints `none`. The ink is
+   `--color-brand-dark` inside the gradient, so no literal color lives here.
+   `SectionShell` renders it on one decorative child at `opacity-4`. */
+@utility section-texture {
+  background-image: var(--section-texture-image, none);
+  background-size: var(--section-texture-size, auto);
 }
 
 /* Forced-colors mode overrides background-color but forces background-image to
-   `none` only for NON-url values, and never touches mask-image. A decorative
-   ground drawn in a system colour behind body text fights the UA's own text
-   backplates, so the layer is removed outright. This is the file's first
-   forced-colors block and its first print block; both carry no colour. */
+   `none` only for NON-url values; a decorative layer behind text fights the UA's
+   own text backplates, so it is removed outright, and in print. */
 @media (forced-colors: active) {
-  [data-page-background] { display: none; }
+  [data-section-texture] { display: none; }
 }
 @media print {
-  [data-page-background] { display: none; }
+  [data-section-texture] { display: none; }
 }

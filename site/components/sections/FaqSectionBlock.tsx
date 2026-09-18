@@ -39,14 +39,14 @@ export type FaqSectionBlockData = {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 // ─── The frame (Phase 13) ─────────────────────────────────────────────────────
-// Transparent today, so `pattern` is the default: the band paints no background
-// of its own. Its inner `mx-auto max-w-3xl` rides on the shell's container
+// An unset band is `light`, never `pattern`, which now paints the site's section
+// texture (Phase 16A). Its inner `mx-auto max-w-3xl` rides on the shell's container
 // through `innerClassName`, which is one of the two props the shell gained for
 // exactly this (item 308 keeps the default in code, never as an `initialValue`).
 
 /** The appearance this section will actually render with, for the seam walk. */
 export function resolveAppearance(data: FaqSectionBlockData): SectionAppearance {
-  return {...data.appearance, surface: data.appearance?.surface ?? 'pattern'}
+  return {...data.appearance, surface: data.appearance?.surface ?? 'light'}
 }
 
 /** An FAQ band IS its questions. */
