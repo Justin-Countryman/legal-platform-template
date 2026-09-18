@@ -7,12 +7,14 @@
 import {describe, expect, it} from 'vitest'
 import plugin from '../index.js'
 
-const NINE = [
+const ELEVEN = [
   'collection-grid-list-semantics',
+  'color-roles',
   'footer-landmark-naming',
   'h1-mobile-cap',
   'heading-cascade-discipline',
   'no-arbitrary-color',
+  'no-fixed-radius',
   'no-svg-without-aria-decision',
   'no-text-accent-on-text',
   'no-text-action-raw',
@@ -20,7 +22,8 @@ const NINE = [
 ].sort()
 
 describe('platform plugin rule roster', () => {
-  it('exports exactly the nine Phase 8 keepers', () => {
-    expect(Object.keys(plugin.rules).sort()).toEqual(NINE)
+  // Phase 16A added no-fixed-radius ([R-473]) and color-roles ([R-471]).
+  it('exports exactly the nine Phase 8 keepers and Phase 16A\'s two', () => {
+    expect(Object.keys(plugin.rules).sort()).toEqual(ELEVEN)
   })
 })

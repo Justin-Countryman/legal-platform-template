@@ -4,7 +4,7 @@ import {describe, expect, it} from 'vitest'
 
 // ─── The cascade blocks ───────────────────────────────────────────────────────
 //
-// Three blocks in `app/globals.css` re-declare the cascade-aware colour tokens
+// Three blocks in `app/globals.css` re-declare the cascade-aware color tokens
 // for a context: the dark block (`.bg-brand-dark, [data-ring-context="dark"]`),
 // the light island (`[data-ring-context="light"]`) and, from Phase 15, the
 // saturated band (`[data-ring-context="saturated"]`).
@@ -19,7 +19,7 @@ import {describe, expect, it} from 'vitest'
 // sees class names, not custom-property declarations.
 //
 // WHAT THIS CANNOT CATCH: whether the value each block picks is the right one.
-// That is `colourGuarantee.test.ts` (ratios) and `designTokens.test.ts` (forms).
+// That is `colorGuarantee.test.ts` (ratios) and `designTokens.test.ts` (forms).
 
 const CSS = fs.readFileSync(path.resolve(__dirname, '../../app/globals.css'), 'utf8')
 
@@ -53,7 +53,7 @@ describe('the cascade blocks re-declare the same token set', () => {
     expect([...other.keys()].sort()).toEqual([...dark.keys()].sort())
   })
 
-  it('every declaration is a token reference or a computed colour, never a literal', () => {
+  it('every declaration is a token reference or a computed color, never a literal', () => {
     for (const [name, value] of [...dark, ...light, ...saturated]) {
       expect(value, name).toMatch(/^(var\(--|color-mix\(|rgb\(var\(|transparent$)/)
     }
@@ -75,7 +75,7 @@ describe('the saturated band', () => {
   })
 
   // [R-461]: the accent cannot mark a word on its own fill, so the lean does.
-  it('leans its highlighted words, because no colour can mark them on the fill', () => {
+  it('leans its highlighted words, because no color can mark them on the fill', () => {
     const rule = /\[data-ring-context="saturated"\] \.heading-emphasis \{\s*font-style: italic;\s*\}/
     expect(CSS).toMatch(rule)
   })

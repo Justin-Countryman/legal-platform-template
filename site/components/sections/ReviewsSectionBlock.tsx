@@ -24,14 +24,14 @@ export type ReviewsSectionBlockData = ReviewsSectionProps
 // the right from tablet width up.
 
 // ─── The frame (Phase 13) ─────────────────────────────────────────────────────
-// All three shapes were transparent, so `pattern` is the default: the band paints
-// no background of its own, which is today's rendering exactly. A code default,
-// never an `initialValue`, because the composer folds a seed into every band it
-// writes (item 308, [R-450]).
+// An unset band is `light`, never `pattern`, which now paints the site's section
+// texture (Phase 16A); both are the light ground. A code default, never an
+// `initialValue`, because the composer folds a seed into every band it writes
+// (item 308, [R-450]).
 
 /** The appearance this section will actually render with, for the seam walk. */
 export function resolveAppearance(data: ReviewsSectionBlockData): SectionAppearance {
-  return {...data.appearance, surface: data.appearance?.surface ?? 'pattern'}
+  return {...data.appearance, surface: data.appearance?.surface ?? 'light'}
 }
 
 /** A reviews band IS its embed. */
@@ -94,9 +94,7 @@ export function ReviewsSectionBlock({
     <SectionShell
       appearance={resolveAppearance(data)}
       innerClassName={data.layout === 'split' ? 'grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-16' : undefined}
-      seamTop={seam.seamTop}
-      previousGround={seam.previousGround}
-      previousEdge={seam.previousEdge}
+      seam={seam}
     >
       {body}
     </SectionShell>

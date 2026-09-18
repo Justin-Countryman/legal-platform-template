@@ -6470,10 +6470,6 @@
             {
               "type": "string",
               "value": "image"
-            },
-            {
-              "type": "string",
-              "value": "pattern"
             }
           ]
         },
@@ -6700,10 +6696,6 @@
             {
               "type": "string",
               "value": "image"
-            },
-            {
-              "type": "string",
-              "value": "pattern"
             }
           ]
         },
@@ -7092,10 +7084,6 @@
             {
               "type": "string",
               "value": "image"
-            },
-            {
-              "type": "string",
-              "value": "pattern"
             }
           ]
         },
@@ -7338,10 +7326,6 @@
             {
               "type": "string",
               "value": "image"
-            },
-            {
-              "type": "string",
-              "value": "pattern"
             }
           ]
         },
@@ -7591,10 +7575,6 @@
             {
               "type": "string",
               "value": "image"
-            },
-            {
-              "type": "string",
-              "value": "pattern"
             }
           ]
         },
@@ -7895,10 +7875,6 @@
             {
               "type": "string",
               "value": "image"
-            },
-            {
-              "type": "string",
-              "value": "pattern"
             }
           ]
         },
@@ -8171,10 +8147,6 @@
             {
               "type": "string",
               "value": "image"
-            },
-            {
-              "type": "string",
-              "value": "pattern"
             }
           ]
         },
@@ -8445,10 +8417,6 @@
             {
               "type": "string",
               "value": "image"
-            },
-            {
-              "type": "string",
-              "value": "pattern"
             }
           ]
         },
@@ -8753,10 +8721,6 @@
             {
               "type": "string",
               "value": "image"
-            },
-            {
-              "type": "string",
-              "value": "pattern"
             }
           ]
         },
@@ -8961,10 +8925,6 @@
             {
               "type": "string",
               "value": "image"
-            },
-            {
-              "type": "string",
-              "value": "pattern"
             }
           ]
         },
@@ -9190,10 +9150,6 @@
             {
               "type": "string",
               "value": "image"
-            },
-            {
-              "type": "string",
-              "value": "pattern"
             }
           ]
         },
@@ -18373,116 +18329,28 @@
           "type": "string"
         }
       },
-      "pageBackground": {
+      "patternTexture": {
         "type": "objectAttribute",
         "value": {
-          "type": "object",
-          "attributes": {
-            "kind": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "union",
-                "of": [
-                  {
-                    "type": "string",
-                    "value": "none"
-                  },
-                  {
-                    "type": "string",
-                    "value": "texture"
-                  },
-                  {
-                    "type": "string",
-                    "value": "photo"
-                  },
-                  {
-                    "type": "string",
-                    "value": "gradient"
-                  }
-                ]
-              },
-              "optional": true
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "pinstripe"
             },
-            "texture": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "union",
-                "of": [
-                  {
-                    "type": "string",
-                    "value": "pinstripe"
-                  },
-                  {
-                    "type": "string",
-                    "value": "diagonalHatch"
-                  },
-                  {
-                    "type": "string",
-                    "value": "diamondLattice"
-                  },
-                  {
-                    "type": "string",
-                    "value": "scallop"
-                  }
-                ]
-              },
-              "optional": true
+            {
+              "type": "string",
+              "value": "diagonalHatch"
             },
-            "image": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "object",
-                "attributes": {
-                  "asset": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "inline",
-                      "name": "sanity.imageAsset.reference"
-                    },
-                    "optional": true
-                  },
-                  "media": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "unknown"
-                    },
-                    "optional": true
-                  },
-                  "hotspot": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "inline",
-                      "name": "sanity.imageHotspot"
-                    },
-                    "optional": true
-                  },
-                  "crop": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "inline",
-                      "name": "sanity.imageCrop"
-                    },
-                    "optional": true
-                  },
-                  "_type": {
-                    "type": "objectAttribute",
-                    "value": {
-                      "type": "string",
-                      "value": "image"
-                    }
-                  }
-                }
-              },
-              "optional": true
+            {
+              "type": "string",
+              "value": "diamondLattice"
             },
-            "opacity": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "number"
-              },
-              "optional": true
+            {
+              "type": "string",
+              "value": "scallop"
             }
-          }
+          ]
         },
         "optional": true
       },
@@ -19250,6 +19118,13 @@
               "optional": true
             }
           }
+        },
+        "optional": true
+      },
+      "cornerPreview": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
         },
         "optional": true
       },

@@ -114,46 +114,15 @@
     0 16px 40px rgb(var(--shadow-rgb) / 0.10),
     0 40px 80px rgb(var(--shadow-rgb) / 0.06);
 
-  /* Relume Wireframe Colors */
-  --color-brand-black: #000000;
+  /* Four names from the wireframe kit the template started from, kept because
+     something reads them: `background` and `border` are emitted by the engine at
+     runtime (these are their static fallbacks), and `brand-white` and
+     `border-secondary` are read directly. The kit's other 35 names had no reader
+     and were deleted in Phase 16A (item 339). */
   --color-brand-white: #ffffff;
-  --color-neutral: #666666;
-  --color-neutral-black: #000000;
-  --color-neutral-white: #ffffff;
-  --color-neutral-lightest: #eeeeee;
-  --color-neutral-lighter: #cccccc;
-  --color-neutral-light: #aaaaaa;
-  --color-neutral-dark: #444444;
-  --color-neutral-darker: #222222;
-  --color-neutral-darkest: #111111;
-  --color-system-success-green: #027a48;
-  --color-system-success-green-light: #ecfdf3;
-  --color-system-error-red: #b42318;
-  --color-system-error-red-light: #fef3f2;
   --color-background: #ffffff;
-  --color-background-primary: #ffffff;
-  --color-background-secondary: #eeeeee;
-  --color-background-tertiary: #666666;
-  --color-background-alternative: #000000;
-  --color-background-success: #ecfdf3;
-  --color-background-error: #fef3f2;
   --color-border: #000000;
-  --color-border-primary: #000000;
   --color-border-secondary: #aaaaaa;
-  --color-border-tertiary: #444444;
-  --color-border-alternative: #ffffff;
-  --color-border-success: #027a48;
-  --color-border-error: #b42318;
-  --color-text: #000000;
-  --color-text-primary: #000000;
-  --color-text-secondary: #aaaaaa;
-  --color-text-alternative: #ffffff;
-  --color-text-success: #027a48;
-  --color-text-error: #b42318;
-  --color-link: #000000;
-  --color-link-primary: #000000;
-  --color-link-secondary: #666666;
-  --color-link-alternative: #ffffff;
 
   /* Non-standard font sizes from Relume */
   --text-md: 1.125rem;
@@ -285,6 +254,26 @@
 @utility marketing-h4 {
   font-size: clamp(1.125rem, 0.5rem + 2vw, var(--marketing-h4, 1.5rem));
   line-height: 1.25;
+}
+
+/* ─── One type size per role (Phase 16A, [R-468]) ────────────────────────── */
+/* A card's title is one size in every card layout, and a list row's title is one
+   size in every row layout, so the practice areas read as one system whichever
+   layout a section uses. The font, weight, tracking and color stay on the
+   element, where they already were. */
+@utility card-title {
+  font-size: var(--text-xl);
+  line-height: 1.3;
+  @variant md {
+    font-size: var(--text-2xl);
+  }
+}
+@utility row-title {
+  font-size: var(--text-base);
+  line-height: 1.35;
+  @variant sm {
+    font-size: var(--text-lg);
+  }
 }
 
 /* ─── Focus Ring Utilities ───────────────────────────────────────────────── */
@@ -479,6 +468,26 @@
   --font-body:    var(--dynamic-font-body,    system-ui, sans-serif);
 }
 
+/* ─── The color role map (Phase 16A, [R-471]) ────────────────────────────────
+   Every kind of element takes one role, whatever the palette. Most roles already
+   have a name a component reads: buttons `action` (with `action-fg`), text links
+   `action-text`, highlighted words and the small line above a heading
+   `accent-text` ([R-461]), text the foreground tiers, card and field borders
+   `border` and `border-control`, stars `star-fill` (one fixed gold, [R-474]).
+   These two name the roles that had none, so a component can no longer paint a
+   decoration in the button color, or a hover state in the accent:
+     cue   — a hover, focus, selected or open state on something you can click
+     decor — a static decoration: an icon chip, a mark, an ornament
+   INLINE on purpose: the utility then reads the role itself (`var(--color-action)`)
+   where it is used, so a dark or saturated band's redeclaration of that role
+   reaches it. Declared in plain `@theme`, the alias would resolve once at :root
+   and paint the fill color on a saturated band. The rule under a heading and
+   the divider between rows get their names when 16B builds the heading rule. */
+@theme inline {
+  --color-cue:   var(--color-action);
+  --color-decor: var(--color-accent);
+}
+
 /* @theme — generates var() references in utilities so runtime :root injection works.
    Defaults here are overridden by server-injected :root values from designTokens.ts */
 @theme {
@@ -498,9 +507,9 @@
   --color-brand-dark:          #141414;   /* the accepted dark ground: dark sections, footer */
   --color-accent:              #666666;   /* the accent as a fill, rule or icon (cascade-aware) */
   --color-accent-on-dark:      #d7d7d7;   /* accent brightened for dark bg                  */
-  --color-star-fill:           #666666;   /* StarRating fill — raw action color (stars-are-gold convention; anchored, never cascades) */
-  --color-star-outline:        #666666;   /* StarRating shape outline, light surfaces — >=3:1 vs bg-background/bg-muted/bg-hero-tint (WCAG SC 1.4.11, item 13); runtime value from starOutline(); cascade swaps to -on-dark inside dark containers */
-  --color-star-outline-on-dark: #666666;  /* StarRating shape outline, dark surfaces — fill color when the fill clears 3:1 on brand-dark (invisible stroke), else brightened tagline-on-dark; runtime value from starOutlineOnDark() */
+  --color-star-fill:           #f5b301;   /* StarRating fill — one fixed rating gold on every site, not the palette ([R-474]; STAR_GOLD; anchored, never cascades) */
+  --color-star-outline:        #c08000;   /* StarRating shape outline, light surfaces — the gold darkened at its hue to >=3:1 vs bg-background/bg-muted/bg-hero-tint (WCAG SC 1.4.11, item 13); cascade swaps to -on-dark inside dark containers */
+  --color-star-outline-on-dark: #f5b301;  /* StarRating shape outline, dark surfaces — the gold itself where it clears 3:1 on brand-dark (invisible stroke), else brightened tagline-on-dark */
 
   /* ── Neutral scale — branded-derived; overridden at runtime by buildColorCSS ─
      The four light-surface neutrals (foreground/muted/subtle/border) ship only
@@ -623,7 +632,7 @@
   --color-border-control-on-light:  #8d8d8d;
   --color-border-control-on-dark:   #626262;
   --color-ring-focus-on-light:      #666666;
-  --color-star-outline-on-light:    #666666;
+  --color-star-outline-on-light:    #c08000;
   --color-scrim:                    #141414;
   --shadow-rgb:                     22 22 22;
 }
@@ -723,13 +732,13 @@ h1, h2, h3, h4, h5, h6 {
 
 /* The saturated band (Phase 15, WS-V1-PHASE15-DESIGN §7 amendment 12): the
    accent as a full-width fill (`bg-accent-fill`). It redeclares every token the
-   dark block does. The only text colour guaranteed on the fill for any accent is
+   dark block does. The only text color guaranteed on the fill for any accent is
    --color-accent-fg (4.5:1 by construction: the fill is re-toned where neither
    white nor its dark text would reach it), so every text tier, the accent's own
    text and rule forms, the action text, the focus ring, a control's boundary, the
    star outline and a selected state's cue are accent-fg. The divider is a
    decorative 25% of it; the hover wash is off, because no component offered on
-   the band reads it and a colour-mixed wash is not provable for every accent.
+   the band reads it and a color-mixed wash is not provable for every accent.
    Pairs: accent-fg on accent-fill in `validateWcag`, swept for any input. */
 [data-ring-context="saturated"] {
   --color-ring-focus:        var(--color-accent-fg);
@@ -748,9 +757,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Highlighted words on a saturated band ([R-461], Justin 2026-09-17: a word is
-   the exact brand colour or the normal text colour, never a shade of it). The
-   band's ground IS the accent, so no colour can mark the words: they take the
-   band's one text colour and lean instead. The `em` already carries the meaning
+   the exact brand color or the normal text color, never a shade of it). The
+   band's ground IS the accent, so no color can mark the words: they take the
+   band's one text color and lean instead. The `em` already carries the meaning
    for a screen reader; this is the visual half. Phase 16's
    `headingEmphasisStyle` owns the Italic/Bold choice, with bold setting the rest
    of the heading regular so the words are the heavier run. */
@@ -760,8 +769,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Text over a photo under a scrim (an image band, an image-backed hero). The
    scrim is --color-scrim at 80% or more, under which every dark text tier holds
-   against the lightest photo pixel; the action colour and the focus ring do not,
-   so both resolve to the on-dark body text colour here, as the image hero's
+   against the lightest photo pixel; the action color and the focus ring do not,
+   so both resolve to the on-dark body text color here, as the image hero's
    secondary button already did (Phase 14, §7 amendment 21). */
 [data-scrim="true"],
 [data-hero-image="true"] {
@@ -773,79 +782,37 @@ h1, h2, h3, h4, h5, h6 {
 /* ─── Heading unit ──────────────────────────────────────────────────────────── */
 /* The emphasis span inside a heading (Phase 11; components/ui/HeadingUnit.tsx).
    <em> is italic in every UA stylesheet, so font-style is explicit until Phase
-   16's --heading-emphasis-style exists. The colour is the accent AS TEXT, read at
+   16's --heading-emphasis-style exists. The color is the accent AS TEXT, read at
    the span so the dark and light-island swaps reach it (Phase 14). */
 @utility heading-emphasis {
   font-style: normal;
   color: var(--color-accent-text);
 }
 
-/* In forced-colors mode every text colour becomes the system text colour, so an
-   emphasis carried by colour alone vanishes; italic is the one cue left. */
+/* In forced-colors mode every text color becomes the system text color, so an
+   emphasis carried by color alone vanishes; italic is the one cue left. */
 @media (forced-colors: active) {
   .heading-emphasis { font-style: italic; }
 }
 
-/* ─── The page background layer (Phase 13) ─────────────────────────────────── */
-/* One fixed-size decorative layer behind the whole document, so `pattern` bands
-   and the gutters around an `inset` panel have something to show. Rendered once
-   by components/layout/PageBackgroundLayer.tsx; `designSettings.pageBackground`
-   chooses the kind.
-
-   WHY GRADIENTS AND NOT SVG DATA URIS (Justin, 2026-09-16). A gradient takes
-   `var(--color-...)` directly, so the texture follows the client's palette and
-   the dark/light cascade with no literal colour in the CSS at all — which
-   matters here more than anywhere, because provisioning's CSS_FALLBACK_SITES
-   rewrites literals in THIS FILE and a planted hex was measured silently
-   rewritten to a client's brand colour (41 replacements, no warning). A data-URI
-   SVG cannot do it: `fill="currentColor"` inside a data URI paints BLACK
-   (measured), so an SVG texture must carry a literal. Gradients also need no
-   `@supports` gate, cost fewer bytes, and are stripped for free in
-   forced-colors mode because they are not url() values.
-
-   The four units are the ones the ten themes' sample sites actually wear
-   (WS-V1-PHASE13-DESIGN §7 amendments 17 to 20). `fineGrid` and `dotLattice`,
-   which the record named, have ZERO sites in the field study and are not here.
-
-   The ink is `--color-brand-dark` at the element's own opacity, which
-   `pageBackground.opacity` sets and the schema bounds: WCAG 1.4.3 measures
-   contrast against the ground actually rendered, and the ground under body text
-   on a `pattern` band becomes blend(background, texture, opacity). */
-
-@utility page-texture-pinstripe {
-  background-image: repeating-linear-gradient(90deg, var(--color-brand-dark) 0 1px, transparent 1px 10px);
-}
-
-@utility page-texture-diagonal-hatch {
-  background-image: repeating-linear-gradient(45deg, var(--color-brand-dark) 0 1px, transparent 1px 8px);
-}
-
-@utility page-texture-diamond-lattice {
-  background-image:
-    repeating-linear-gradient(45deg,  var(--color-brand-dark) 0 1px, transparent 1px 14px),
-    repeating-linear-gradient(-45deg, var(--color-brand-dark) 0 1px, transparent 1px 14px);
-}
-
-@utility page-texture-scallop {
-  background-image: radial-gradient(circle at 50% 100%, transparent 0 7px, var(--color-brand-dark) 7px 8px, transparent 8px);
-  background-size: 16px 16px;
-}
-
-/* `kind: gradient`. One vertical two-stop off the existing ground tokens, which
-   is the shape both of Immersive's sample sites use; its direction and stops
-   become operator-visible in Phase 14 (§7 amendment 21). */
-@utility page-wash-gradient {
-  background-image: linear-gradient(to bottom, var(--color-hero-tint) 0%, transparent 60%);
+/* ─── The section texture (Phase 16A) ───────────────────────────────────────── */
+/* What a band set to the Pattern surface wears, and nothing else on the site:
+   there is no site-wide background (`[R-472]`). The site's choice arrives as two
+   custom properties from `buildDesignTokenCSS` (`SECTION_TEXTURE_MAP`), so one
+   utility serves all four textures and a site with none paints `none`. The ink is
+   `--color-brand-dark` inside the gradient, so no literal color lives here.
+   `SectionShell` renders it on one decorative child at `opacity-4`. */
+@utility section-texture {
+  background-image: var(--section-texture-image, none);
+  background-size: var(--section-texture-size, auto);
 }
 
 /* Forced-colors mode overrides background-color but forces background-image to
-   `none` only for NON-url values, and never touches mask-image. A decorative
-   ground drawn in a system colour behind body text fights the UA's own text
-   backplates, so the layer is removed outright. This is the file's first
-   forced-colors block and its first print block; both carry no colour. */
+   `none` only for NON-url values; a decorative layer behind text fights the UA's
+   own text backplates, so it is removed outright, and in print. */
 @media (forced-colors: active) {
-  [data-page-background] { display: none; }
+  [data-section-texture] { display: none; }
 }
 @media print {
-  [data-page-background] { display: none; }
+  [data-section-texture] { display: none; }
 }

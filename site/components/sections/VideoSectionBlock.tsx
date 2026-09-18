@@ -15,12 +15,12 @@ export type VideoSectionBlockData = VideoSectionProps
 // ─── Component ────────────────────────────────────────────────────────────────
 
 // ─── The frame (Phase 13) ─────────────────────────────────────────────────────
-// Both layouts were transparent, so `pattern` is the default: the band paints no
-// background of its own. A code default, never an `initialValue` (item 308).
+// An unset band is `light`, never `pattern`, which now paints the site's section
+// texture (Phase 16A). A code default, never an `initialValue` (item 308).
 
 /** The appearance this section will actually render with, for the seam walk. */
 export function resolveAppearance(data: VideoSectionBlockData): SectionAppearance {
-  return {...data.appearance, surface: data.appearance?.surface ?? 'pattern'}
+  return {...data.appearance, surface: data.appearance?.surface ?? 'light'}
 }
 
 /** A video band IS its playable videos. The URL filter is part of the test:
@@ -62,7 +62,7 @@ export function VideoSectionBlock({
   // Split — heading text in a left column, video(s) stacked on the right.
   if (layout === 'split') {
     return (
-      <SectionShell appearance={resolveAppearance(data)} innerClassName="grid grid-cols-1 items-start gap-12 md:grid-cols-2 lg:gap-20" seamTop={seam.seamTop} previousGround={seam.previousGround} previousEdge={seam.previousEdge}>
+      <SectionShell appearance={resolveAppearance(data)} innerClassName="grid grid-cols-1 items-start gap-12 md:grid-cols-2 lg:gap-20" seam={seam}>
         <>
           <div>
             {heading && (
@@ -86,7 +86,7 @@ export function VideoSectionBlock({
 
   // Centered (default) — heading above, video centered (grid when multiple).
   return (
-    <SectionShell appearance={resolveAppearance(data)} seamTop={seam.seamTop} previousGround={seam.previousGround} previousEdge={seam.previousEdge}>
+    <SectionShell appearance={resolveAppearance(data)} seam={seam}>
       <>
 
         {heading && (

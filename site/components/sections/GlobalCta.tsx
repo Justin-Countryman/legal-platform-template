@@ -63,7 +63,7 @@ function CenteredCta({data, surface, seam}: {data: GlobalCtaData; surface: Secti
   const items = toCtaItems(buttons)
 
   return (
-    <SectionShell appearance={{surface}} contained={false} className="text-foreground" seamTop={seam.seamTop} previousGround={seam.previousGround} previousEdge={seam.previousEdge}>
+    <SectionShell appearance={{surface}} contained={false} className="text-foreground" seam={seam}>
       <div className="mx-auto w-full max-w-lg text-center">
         <CtaText tagline={tagline} heading={heading} description={description} centered />
 
@@ -88,7 +88,7 @@ function SplitCta({data, surface, seam}: {data: GlobalCtaData; surface: SectionS
   if (!heading) return null
 
   return (
-    <SectionShell appearance={{surface}} className="text-foreground" innerClassName="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-x-12 lg:gap-x-20 md:items-start" seamTop={seam.seamTop} previousGround={seam.previousGround} previousEdge={seam.previousEdge}>
+    <SectionShell appearance={{surface}} className="text-foreground" innerClassName="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-x-12 lg:gap-x-20 md:items-start" seam={seam}>
 
         {/* Left: text */}
         <div>

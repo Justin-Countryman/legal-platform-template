@@ -342,7 +342,7 @@ export const SITE_SCRIPTS_QUERY = groq`
 
 // ─── OG image composition ─────────────────────────────────────────────────────
 // Used by `app/api/og/route.tsx` to render branded 1200×630 social cards.
-// An absent `darkGround` falls back at render time to the colour engine's
+// An absent `darkGround` falls back at render time to the color engine's
 // default dark ground when Sanity hasn't been configured yet.
 export const OG_DATA_QUERY = groq`{
   "firmName":     *[_type == "siteSettings"][0].firmName,
@@ -846,7 +846,7 @@ export const DESIGN_TOKENS_QUERY = groq`
     motionTempo,
     marketingScale,
     fontPairingPreset,
-    // The four colour roles (Phase 14). The five fields they replace stay in the
+    // The four color roles (Phase 14). The five fields they replace stay in the
     // schema, hidden, for one pin, and nothing reads them. Every field of this
     // type either appears in this projection or is on the allow-list of the
     // projection key-set test beside this file, which fails otherwise.
@@ -856,28 +856,13 @@ export const DESIGN_TOKENS_QUERY = groq`
     action,
     internalHeroBackground,
     heroScrimOpacity,
-    // The page background layer (Phase 13). Absent on every client built so far,
-    // and PageBackgroundLayer renders nothing for an absent or "none" kind, so
-    // this changes no served page until an operator or a Phase 16 theme sets it.
+    // The texture a Pattern section wears (Phase 16A). Absent means none.
     //
-    // KEEP THIS COMMENT PLAIN, and see BI/runbooks/traps.md for why. Two hazards
-    // live here, both of which cost a CI cycle on PR #25: a backtick closes the
-    // template literal this query sits in, and several ordinary words, if written
-    // here, make the template blank-slate guard flag three footer field names
-    // that are older than this phase. The guard passes locally on the committed
-    // generated types and fails only once they are regenerated, so it surfaces on
-    // CI rather than before the push.
-    "pageBackground": pageBackground{
-      kind,
-      texture,
-      opacity,
-      "image": image{
-        "src": asset->url,
-        "alt": alt,
-        "width": asset->metadata.dimensions.width,
-        "height": asset->metadata.dimensions.height
-      }
-    },
+    // KEEP THIS COMMENT PLAIN, and see BI/runbooks/traps.md for why: a backtick
+    // closes the template literal this query sits in, and several ordinary words
+    // make the template blank-slate guard flag older field names once the
+    // generated types are regenerated, which surfaces on CI rather than before.
+    patternTexture,
     "siteHeroBackgroundImage": siteHeroBackgroundImage{
       "src": asset->url,
       "alt": alt,

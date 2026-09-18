@@ -92,13 +92,16 @@ export function SiloFeature({items, ariaLabel, hoverEffects, showArrow, iconPosi
                 {onImage ? <TileImage item={item} fx={fx} scrim={false} /> : <TileFill />}
               </div>
               <div className="relative z-10 flex flex-1 flex-col p-6">
-                {showIcon && (
+                {/* The chip rides up over the photo's bottom edge, so its wrapper
+                    exists only when there is a chip: without one, the -mt-12 pulled
+                    the title up over the photo (Phase 16A, found in the catalog). */}
+                {showIcon && hasImage(item.icon) && (
                   <div className="-mt-12 mb-3">
                     <TileIcon item={item} fx={fx} onImage={onImage} />
                   </div>
                 )}
                 <div>
-                  <TileLabel item={item} fx={fx} className="font-heading text-lg font-semibold leading-snug tracking-tight text-foreground md:text-xl" />
+                  <TileLabel item={item} fx={fx} className="font-heading card-title font-semibold tracking-tight text-foreground" />
                   <TileBlurb item={item} className="mt-2 text-sm leading-relaxed text-foreground-muted line-clamp-2" />
                 </div>
                 {showArrow && (
@@ -139,7 +142,7 @@ export function SiloTileLayout({items, ariaLabel, hoverEffects, iconPosition}: S
                 {pos === 'left' && <TileIcon item={item} fx={fx} onImage={onImage} />}
                 {pos === 'top' && <TileIcon item={item} fx={fx} onImage={onImage} size="lg" />}
                 <div className={stacked ? 'flex flex-col items-center' : 'min-w-0'}>
-                  <TileLabel item={item} fx={fx} center={stacked} className="font-heading text-lg font-semibold leading-snug tracking-tight text-foreground" />
+                  <TileLabel item={item} fx={fx} center={stacked} className="font-heading card-title font-semibold tracking-tight text-foreground" />
                   <TileBlurb item={item} className={`mt-1.5 text-sm leading-snug text-foreground-muted line-clamp-2 ${stacked ? 'text-center' : ''}`} />
                 </div>
                 {pos === 'right' && <TileIcon item={item} fx={fx} onImage={onImage} />}
@@ -167,7 +170,7 @@ export function SiloInline({items, ariaLabel, hoverEffects, showArrow, iconPosit
             <div className="relative z-10 flex w-full items-center gap-4">
               {pos === 'left' && <TileIcon item={item} fx={fx} />}
               <div className="min-w-0 flex-1">
-                <TileLabel item={item} fx={fx} className="font-heading text-base font-semibold tracking-tight text-foreground sm:text-lg" />
+                <TileLabel item={item} fx={fx} className="font-heading row-title font-semibold tracking-tight text-foreground" />
                 <TileBlurb item={item} className="mt-1 text-sm leading-snug text-foreground-muted line-clamp-1" />
               </div>
               {pos === 'right' && <TileIcon item={item} fx={fx} />}
@@ -201,7 +204,7 @@ export function SiloSplit({items, ariaLabel, hoverEffects, showArrow, iconPositi
               <div className="relative z-10 flex min-w-0 flex-1 flex-col p-6">
                 {showIcon && <TileIcon item={item} fx={fx} size="sm" />}
                 <div className="mt-3">
-                  <TileLabel item={item} fx={fx} className="font-heading text-lg font-semibold leading-snug tracking-tight text-foreground" />
+                  <TileLabel item={item} fx={fx} className="font-heading card-title font-semibold tracking-tight text-foreground" />
                   <TileBlurb item={item} className="mt-2 text-sm leading-relaxed text-foreground-muted line-clamp-2" />
                 </div>
                 {showArrow && (

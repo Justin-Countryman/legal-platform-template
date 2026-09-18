@@ -20,14 +20,14 @@ import {describe, expect, it} from 'vitest'
 // keeps the list from rotting.
 //
 // WHAT IT CANNOT DO. It does not prove the value is right (that is
-// `colourGuarantee.test.ts`), nor that the reader is on a ground where the pair
+// `colorGuarantee.test.ts`), nor that the reader is on a ground where the pair
 // passes (that is the boundary registry and the cascade-block parity test).
 
 const SITE = path.resolve(__dirname, '../..')
 const CSS = fs.readFileSync(path.join(SITE, 'app/globals.css'), 'utf8')
 
 /** Every `--color-*` declared in a `@theme` block. */
-function themeColourNames(): string[] {
+function themeColorNames(): string[] {
   const names = new Set<string>()
   for (const match of CSS.matchAll(/@theme[^{]*\{/g)) {
     let depth = 1
@@ -64,7 +64,7 @@ function shippedSource(): string {
 const UTILITY = '(?:bg|text|border|border-[trblxy]|ring|ring-offset|from|via|to|fill|stroke|divide|outline|caret|placeholder|accent|shadow|decoration)'
 
 // Why each unread name is still here. The reason is asserted below, not trusted.
-type Reason = 'cascade' | 'utility-bridge' | 'wireframe-leftover'
+type Reason = 'cascade' | 'utility-bridge'
 const UNREAD: Record<string, Reason> = Object.fromEntries([
   // Read by the cascade blocks in globals.css, never by a component: a component
   // reads the context-free name (`text-foreground`) and the block swaps it.
@@ -79,43 +79,33 @@ const UNREAD: Record<string, Reason> = Object.fromEntries([
     '--color-foreground-subtle-on-dark', '--color-foreground-subtle-on-light',
     '--color-hover-wash-on-dark', '--color-star-outline-on-dark', '--color-star-outline-on-light',
   ].map((name) => [name, 'cascade' as Reason]),
-  // Tailwind v4 does not generate a ring utility from a colour name, so globals.css
+  // Tailwind v4 does not generate a ring utility from a color name, so globals.css
   // bridges these with `@utility ring-focus` / `@utility ring-focus-on-dark`.
   ...['--color-ring-focus', '--color-ring-focus-on-dark', '--color-ring-focus-on-light'].map((name) => [name, 'utility-bridge' as Reason]),
-  // The wireframe kit the template started from. Nothing renders them and the
-  // engine does not keep them current; backlog item 339 deletes them in Phase 16,
-  // which owns the colour axes.
-  ...[
-    '--color-brand-black', '--color-neutral', '--color-neutral-black', '--color-neutral-dark',
-    '--color-neutral-darker', '--color-neutral-darkest', '--color-neutral-light', '--color-neutral-lighter',
-    '--color-neutral-lightest', '--color-neutral-white',
-    '--color-background-alternative', '--color-background-error', '--color-background-primary',
-    '--color-background-secondary', '--color-background-success', '--color-background-tertiary',
-    '--color-border-alternative', '--color-border-error', '--color-border-primary',
-    '--color-border-success', '--color-border-tertiary',
-    '--color-link-alternative', '--color-link-primary', '--color-link-secondary',
-    '--color-system-error-red', '--color-system-error-red-light',
-    '--color-system-success-green', '--color-system-success-green-light',
-    '--color-text-alternative', '--color-text-error', '--color-text-primary',
-    '--color-text-secondary', '--color-text-success',
-  ].map((name) => [name, 'wireframe-leftover' as Reason]),
 ])
 
-const names = themeColourNames()
-const source = shippedSource()
+const names = themeColorNames()
+// Comments are not readers (Phase 16A: the word "text-link" in a comment counted
+// `--color-link` as read). Block comments, JSX comments and `//` line comments that
+// start a line or follow whitespace go; a URL's `https://` follows a colon and stays.
+const source = shippedSource().replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|\s)\/\/[^\n]*/gm, '$1')
 
+// A reader is a whole class: the utility starts at a class boundary (start, space,
+// quote, backtick, a variant's colon or `!`) and ends at one. Unanchored,
+// `text-accent-text` counted `--color-text` as read through `accent-text` (Phase 16A).
 const isRead = (name: string) => {
   const suffix = name.slice('--color-'.length)
-  return new RegExp(`${UTILITY}-${suffix}\\b`).test(source) || source.includes(`var(${name})`)
+  return new RegExp(`(?:^|[\\s"'\`:!{(])${UTILITY}-${suffix}(?![\\w-])`, 'm').test(source) || source.includes(`var(${name})`)
 }
 
-describe('the colour reader census', () => {
+describe('the color reader census', () => {
   it('reads a sensible number of names, so a broken parse cannot pass this file', () => {
-    expect(names.length).toBeGreaterThan(60)
+    // 50 after Phase 16A deleted the wireframe kit's 35 unread names (item 339).
+    expect(names.length).toBeGreaterThan(40)
     expect(names).toContain('--color-accent-fill')
   })
 
-  it('every theme colour name is read by a component, or listed with a reason', () => {
+  it('every theme color name is read by a component, or listed with a reason', () => {
     const unlisted = names.filter((name) => !isRead(name) && !(name in UNREAD))
     expect(unlisted, 'give it a reader, delete it, or add it to UNREAD with its reason').toEqual([])
   })

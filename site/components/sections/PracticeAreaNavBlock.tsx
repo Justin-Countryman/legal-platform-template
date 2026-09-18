@@ -130,9 +130,7 @@ export function PracticeAreaNavBlock({
   return (
     <SectionShell
       appearance={resolveAppearance(data)}
-      seamTop={seam.seamTop}
-      previousGround={seam.previousGround}
-      previousEdge={seam.previousEdge}
+      seam={seam}
     >
       <SiloSectionFrame
         layout={sectionLayout}

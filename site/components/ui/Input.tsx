@@ -20,7 +20,7 @@ const BASE = [
   'hover:border-foreground-muted',
   'focus-visible:outline-none focus-visible:ring-2',
   'focus-visible:ring-focus focus-visible:ring-offset-2',
-  'focus-visible:border-action',
+  'focus-visible:border-cue',
   'disabled:opacity-40 disabled:cursor-not-allowed',
 ].join(' ')
 

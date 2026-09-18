@@ -1,7 +1,7 @@
 import {describe, it, expect} from 'vitest'
 import {converter, wcagContrast} from 'culori'
 import {
-  COLOUR_DEFAULTS,
+  COLOR_DEFAULTS,
   acceptDarkGround,
   acceptLightGround,
   buildColorCSS,
@@ -17,8 +17,8 @@ import {
 } from '../designTokens'
 import {PALETTE_PRESETS, matchPreset, presetInputs} from '../palettes'
 
-// The colour engine's behaviour, rule by rule. The guarantee over arbitrary input
-// is colourGuarantee.test.ts; what existing sites see is pinned there too, against
+// The color engine's behaviour, rule by rule. The guarantee over arbitrary input
+// is colorGuarantee.test.ts; what existing sites see is pinned there too, against
 // the old engine's captured output. The two kinds of assertion do different jobs:
 // an invariant computed here catches a broken rule, and the small golden tables
 // below catch a CHANGED rule that still passes every invariant (a 0.05 step, a
@@ -46,7 +46,7 @@ describe('the derivation, row by row', () => {
   const t = resolvePalette({}).tokens
 
   it('the code defaults are the render every built client already has', () => {
-    expect(COLOUR_DEFAULTS).toEqual({darkGround: '#141414', lightGround: '#ffffff', accent: '#666666'})
+    expect(COLOR_DEFAULTS).toEqual({darkGround: '#141414', lightGround: '#ffffff', accent: '#666666'})
     expect(t['--color-brand-dark']).toBe('#141414')
     expect(t['--color-background']).toBe('#ffffff')
     expect(t['--color-accent']).toBe('#666666')
@@ -251,7 +251,7 @@ describe('light ground acceptance', () => {
     }
   })
 
-  it('a dark colour typed as the light ground steps up until the text tiers can sit on its muted step', () => {
+  it('a dark color typed as the light ground steps up until the text tiers can sit on its muted step', () => {
     const a = acceptLightGround('#14213d', '#14213d')
     expect(a.adjusted).toBe(true)
     const t = resolvePalette({lightGround: '#14213d', darkGround: '#14213d'}).tokens

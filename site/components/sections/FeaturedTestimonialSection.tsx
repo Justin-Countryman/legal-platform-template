@@ -51,9 +51,7 @@ export function FeaturedTestimonialSection({
   return (
     <SectionShell
       appearance={resolveAppearance(data)}
-      seamTop={seam.seamTop}
-      previousGround={seam.previousGround}
-      previousEdge={seam.previousEdge}
+      seam={seam}
     >
       <div className="mx-auto max-w-4xl">
 
@@ -69,7 +67,7 @@ export function FeaturedTestimonialSection({
         )}
 
         {/* Quote */}
-        <blockquote className="border-l-4 border-accent pl-8 text-left">
+        <blockquote className="border-l-4 border-decor pl-8 text-left">
           <p className="text-xl font-medium leading-relaxed text-foreground md:text-2xl lg:text-3xl">
             {t.quote}
           </p>

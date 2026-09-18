@@ -62,7 +62,7 @@ type IconStyleProps = {
 
 function iconStyleProps(iconStyle: SidebarNavIconStyle): IconStyleProps {
   if (iconStyle === 'none') {
-    return {noArrow: true, arrowGlyph: 'arrow', extraClassName: 'hover:bg-foreground/5 rounded'}
+    return {noArrow: true, arrowGlyph: 'arrow', extraClassName: 'hover:bg-foreground/5 rounded-ui'}
   }
   if (iconStyle === 'chevrons') {
     return {noArrow: false, arrowGlyph: 'chevron', extraClassName: ''}
@@ -436,7 +436,7 @@ function HierarchyChildItem({
           // Focus ring uses `ring-inset` — matches the FaqAccordion exception
           // (row-based UI; outset ring would visually fight sibling rows).
           className={[
-            'shrink-0 -mr-1 inline-flex h-6 w-6 items-center justify-center rounded',
+            'shrink-0 -mr-1 inline-flex h-6 w-6 items-center justify-center rounded-btn',
             'text-foreground-muted hover:text-foreground',
             'transition-colors duration-ui-base ease-smooth',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus',
@@ -557,7 +557,7 @@ function HierarchyExpandedAol({
             aria-label={isOpen ? `Collapse ${aol.title} pages` : `Expand ${aol.title} pages`}
             onClick={() => setIsOpen((v) => !v)}
             className={[
-              'shrink-0 -mr-1 inline-flex h-6 w-6 items-center justify-center rounded',
+              'shrink-0 -mr-1 inline-flex h-6 w-6 items-center justify-center rounded-btn',
               'text-foreground-muted hover:text-foreground',
               'transition-colors duration-ui-base ease-smooth',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus',

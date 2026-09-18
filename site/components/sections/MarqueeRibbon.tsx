@@ -36,7 +36,7 @@ export function MarqueeRibbon({children}: {children: ReactNode}) {
         <div
           data-testid="marquee-track"
           className={[
-            'flex w-max gap-16 animate-[marquee-top_40s_linear_infinite] group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused] motion-reduce:w-auto motion-reduce:animate-none',
+            'flex w-max gap-16 animate-[marquee-top_40s_linear_infinite] group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused] motion-reduce:w-auto motion-reduce:animate-none motion-reduce:justify-center',
             paused ? '[animation-play-state:paused]' : null,
           ]
             .filter(Boolean)
@@ -48,7 +48,8 @@ export function MarqueeRibbon({children}: {children: ReactNode}) {
               aria-hidden={i > 0 ? true : undefined}
               className={
                 i === 0
-                  ? 'whitespace-nowrap text-lg font-semibold text-foreground motion-reduce:whitespace-normal'
+                  // Centred when it stands still, as a still ribbon is (Phase 16A).
+                  ? 'whitespace-nowrap text-lg font-semibold text-foreground motion-reduce:whitespace-normal motion-reduce:text-center'
                   : 'whitespace-nowrap text-lg font-semibold text-foreground motion-reduce:hidden'
               }
             >

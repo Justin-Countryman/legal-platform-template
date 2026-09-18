@@ -20,6 +20,7 @@ export { hexToRgbTriplet }
 // ─── OKLCH helpers ────────────────────────────────────────────────────────────
 
 const toOklch = converter('oklch')
+const toRgb = converter('rgb')
 
 type OklchColor = {mode: 'oklch'; l: number; c: number; h: number}
 
@@ -60,7 +61,7 @@ function chromaFloor(sourceChroma: number, scaledChroma: number, floor: number):
   return sourceChroma <= ACHROMATIC_CHROMA ? 0 : Math.max(scaledChroma, floor)
 }
 
-// ─── Colour by role (Phase 14) ────────────────────────────────────────────────
+// ─── Color by role (Phase 14) ────────────────────────────────────────────────
 //
 // Four inputs, each a role, replacing the three approaches and the "primary hue
 // that surfaces derive from" (decisions-log ruling 7, [R-439]):
@@ -74,14 +75,14 @@ function chromaFloor(sourceChroma: number, scaledChroma: number, floor: number):
 // foreground/background pair the template renders meets WCAG 2.2 AA for ANY
 // valid hex in ANY role (Justin, 2026-09-16: "we need to ensure the colors are
 // 100% a11y"). That is a tested claim, not a promise:
-// lib/__tests__/colourGuarantee.test.ts sweeps a grid of inputs in every role
-// plus a seeded random sample and every preset. Where a chosen colour cannot
+// lib/__tests__/colorGuarantee.test.ts sweeps a grid of inputs in every role
+// plus a seeded random sample and every preset. Where a chosen color cannot
 // carry its pair, the engine moves the RENDERED value the smallest step that
 // passes and reports it; the stored hex is never rewritten.
 //
 // The design record is WS-V1-PHASE14-DESIGN.md §7 (amendments 1 to 24).
 
-export type ColourInputs = {
+export type ColorInputs = {
   darkGround?:  string | null
   lightGround?: string | null
   accent?:      string | null
@@ -90,15 +91,15 @@ export type ColourInputs = {
 
 // The code defaults ARE the render every Site-Build client already has: it
 // stores analogous-accent + #333333 + #666666, which rendered brand-dark #141414
-// and accent #666666. A fresh build now stores no colour at all and lands on the
+// and accent #666666. A fresh build now stores no color at all and lands on the
 // same render. Black, white and greys (Justin, 2026-08-14).
-export const COLOUR_DEFAULTS = {
+export const COLOR_DEFAULTS = {
   darkGround:  '#141414',
   lightGround: '#ffffff',
   accent:      '#666666',
 } as const
 
-// Only a literal six-digit hex is a colour. culori would also parse 'navy' or a
+// Only a literal six-digit hex is a color. culori would also parse 'navy' or a
 // five-digit typo's neighbour, and the Studio's own rule accepts neither, so an
 // input the Studio would flag must not reach the page as something else. An
 // unparsable value is absent: a mistyped hex can never take the layout down.
@@ -160,7 +161,7 @@ export type Acceptance = {
   /** What renders. */
   hex: string
   adjusted: boolean
-  /** Lightness steps taken; the Studio shows it so a mis-typed colour is obvious. */
+  /** Lightness steps taken; the Studio shows it so a mis-typed color is obvious. */
   steps: number
 }
 
@@ -203,7 +204,7 @@ export const heroTintOf = (ground: string) => lightStep(ground, 0.015)
 // apart from foreground-muted (at 0.45 the two collapsed on 495 of 513 grounds).
 const LIGHT_GROUND_PROBE_L = 0.50
 
-// An operator can type a mid or dark colour as the light ground. It is accepted
+// An operator can type a mid or dark color as the light ground. It is accepted
 // when the probe passes on its muted step; otherwise lightness steps UP 0.02 at
 // the input's own hue and chroma. White and every preset pass unchanged.
 export function acceptLightGround(input: string, darkGroundHex: string): Acceptance {
@@ -231,7 +232,7 @@ function stepLightness(from: {l: number; c: number; h: number}, dir: 1 | -1, tes
   return dir > 0 && test('#ffffff') ? '#ffffff' : null
 }
 
-// A text colour ON a fill: white when it reaches 4.5:1, else a near-black in the
+// A text color ON a fill: white when it reaches 4.5:1, else a near-black in the
 // fill's own hue.
 const darkTextFor = (fill: string) => neutralAt(fill, 0.20, 0.10, 0.015)
 const textOn = (fill: string) => (contrast('#ffffff', fill) >= 4.5 ? '#ffffff' : darkTextFor(fill))
@@ -278,14 +279,14 @@ export type ResolvedPalette = {
   /** The four inputs after parsing and defaults, before any acceptance. */
   inputs: {darkGround: string; lightGround: string; accent: string; action: string}
   acceptance: {darkGround: Acceptance; lightGround: Acceptance; accent: Acceptance; action: Acceptance}
-  /** Every colour token by its CSS custom property name. */
+  /** Every color token by its CSS custom property name. */
   tokens: Record<string, string>
 }
 
-export function resolvePalette(raw: ColourInputs = {}): ResolvedPalette {
-  const darkIn   = parseHexInput(raw.darkGround)  ?? COLOUR_DEFAULTS.darkGround
-  const lightIn  = parseHexInput(raw.lightGround) ?? COLOUR_DEFAULTS.lightGround
-  const accentIn = parseHexInput(raw.accent)      ?? COLOUR_DEFAULTS.accent
+export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
+  const darkIn   = parseHexInput(raw.darkGround)  ?? COLOR_DEFAULTS.darkGround
+  const lightIn  = parseHexInput(raw.lightGround) ?? COLOR_DEFAULTS.lightGround
+  const accentIn = parseHexInput(raw.accent)      ?? COLOR_DEFAULTS.accent
   const actionIn = parseHexInput(raw.action)      ?? accentIn
 
   const darkA   = acceptDarkGround(darkIn)
@@ -343,19 +344,19 @@ export function resolvePalette(raw: ColourInputs = {}): ResolvedPalette {
     ? action
     : stepLightness(parseOklch(action), 1, (h) => contrast(h, brandDark) >= 4.5) ?? '#ffffff'
 
-  // A text link's hover colour (prose links). It was the button hover fill used as
+  // A text link's hover color (prose links). It was the button hover fill used as
   // text, which is not cascade-aware: inside a dark band it measured 1.38:1, and a
   // gold palette's lighter hover fails on white. On light grounds it keeps the
   // button hover where that passes 4.5:1 (every built client: #2f2f2f), else the
-  // resting link colour; on dark grounds it is the on-dark body text.
+  // resting link color; on dark grounds it is the on-dark body text.
   const actionTextHover = passesOn(actionHover, lightGrounds, 4.5) ? actionHover : actionText
   const actionTextHoverOnDark = inverse['color-foreground-on-dark']
 
-  // A selected pill or tab is shown by an action-coloured fill, and WCAG 1.4.11
+  // A selected pill or tab is shown by an action-colored fill, and WCAG 1.4.11
   // asks 3:1 between that state indicator and the ground beside it. Where the
   // action already clears 3:1 the cue is transparent, so nothing is drawn and no
   // built client changes; where it does not (a gold action on white measures about
-  // 2.3:1) the selected control gains a 1px ring in the action text colour.
+  // 2.3:1) the selected control gains a 1px ring in the action text color.
   const actionStateCue = passesOn(action, lightGrounds, 3) ? 'transparent' : actionText
   const actionStateCueOnDark = contrast(action, brandDark) >= 3 ? 'transparent' : actionTextOnDark
 
@@ -365,23 +366,25 @@ export function resolvePalette(raw: ColourInputs = {}): ResolvedPalette {
   const ringFocus       = passesOn(action, [...lightGrounds, '#ffffff'], 3) ? action : brandDark
   const ringFocusOnDark = contrast(action, brandDark) >= 3 ? action : accentOnDark
 
-  // Star outline (item 13, "accessibility wins over convention"): the fill stays
-  // the raw action; the outline only materialises where the fill cannot carry
-  // the star's shape at 3:1.
+  // Stars (`[R-474]`, Justin 2026-09-18): one fixed gold on every site, not tied to
+  // the palette, because gold reads as "rating" and a star in a navy or green
+  // button color reads as a mistake. Item 13's outline stands ("accessibility wins
+  // over convention"): it only materialises where the gold cannot carry the
+  // star's shape at 3:1, darkened at the gold's own hue.
   let starOutline = brandDark
-  if (passesOn(action, lightGrounds, 3)) starOutline = action
+  if (passesOn(STAR_GOLD, lightGrounds, 3)) starOutline = STAR_GOLD
   else {
-    const f = parseOklch(action)
+    const f = parseOklch(STAR_GOLD)
     for (let l = f.l - 0.08; l >= 0.12; l -= 0.02) {
       const candidate = toHex(l, f.c, f.h)
       if (passesOn(candidate, lightGrounds, 3)) { starOutline = candidate; break }
     }
   }
-  const starOutlineOnDark = contrast(action, brandDark) >= 3 ? action : accentOnDark
+  const starOutlineOnDark = contrast(STAR_GOLD, brandDark) >= 3 ? STAR_GOLD : accentOnDark
 
   // The boundary of a control whose only visible edge is its border (form
   // fields, inactive carousel dots, empty stars), WCAG 1.4.11 3:1. The divider
-  // colour (--color-border) is decorative and stays as it was.
+  // color (--color-border) is decorative and stays as it was.
   let borderControl = '#000000'
   for (let l = 0.92; l >= 0; l = round6(l - 0.005)) {
     const candidate = neutralAt(darkIn, l, 0.06, 0.010)
@@ -451,7 +454,7 @@ export function resolvePalette(raw: ColourInputs = {}): ResolvedPalette {
     '--color-ring-focus':               ringFocus,
     '--color-ring-focus-on-light':      ringFocus,
     '--color-ring-focus-on-dark':       ringFocusOnDark,
-    '--color-star-fill':                action,
+    '--color-star-fill':                STAR_GOLD,
     '--color-star-outline':             starOutline,
     '--color-star-outline-on-light':    starOutline,
     '--color-star-outline-on-dark':     starOutlineOnDark,
@@ -463,6 +466,9 @@ export function resolvePalette(raw: ColourInputs = {}): ResolvedPalette {
     tokens,
   }
 }
+
+/** The one rating gold every site's stars are filled with (`[R-474]`). */
+export const STAR_GOLD = '#f5b301'
 
 // ─── WCAG validation ──────────────────────────────────────────────────────────
 
@@ -476,9 +482,19 @@ export type WcagResult = {
   blocking: boolean
 }
 
+/** `ink` at `alpha` over `ground`, composited per channel in gamma-encoded sRGB, as
+ *  the browser composites an element's opacity. */
+function blendOver(ground: string, ink: string, alpha: number): string {
+  type Rgb = {r: number; g: number; b: number}
+  const g = toRgb(ground) as unknown as Rgb
+  const k = toRgb(ink) as unknown as Rgb
+  const mix = (a: number, b: number) => a * (1 - alpha) + b * alpha
+  return formatHex({mode: 'rgb', r: mix(g.r, k.r), g: mix(g.g, k.g), b: mix(g.b, k.b)})
+}
+
 // The token-level pairs every rendered surface relies on. The component-level
 // pairings (a light card inside a dark band, and so on) are held by component
-// tests; this list is what an operator's colour choice can move.
+// tests; this list is what an operator's color choice can move.
 export function validateWcag(palette: ResolvedPalette): WcagResult[] {
   const t = palette.tokens
   const results: WcagResult[] = []
@@ -490,6 +506,10 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
     ['background', t['--color-background']],
     ['hero-tint', t['--color-hero-tint']],
     ['muted', t['--color-muted']],
+    // A Pattern band's darkest pixel: its ink line at the texture's opacity over the
+    // light ground. WCAG measures text against the lowest-contrast part of what is
+    // behind it (F83), so every light tier must hold here too (Phase 16A).
+    ['section-texture', blendOver(t['--color-background'], t['--color-brand-dark'], SECTION_TEXTURE_OPACITY)],
   ]
   for (const [name, ground] of lightGrounds) {
     check(`foreground on ${name}`,        t['--color-foreground'],        ground, 4.5)
@@ -522,7 +542,7 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
   check('accent-fg on accent-fill',               t['--color-accent-fg'], t['--color-accent'],       4.5)
   // Warnings: design signals, not WCAG requirements. An accent icon beside its
   // own text is exempt from 1.4.11, so the raw accent on the page is a warning;
-  // heading emphasis that reads too close to the heading's own colour is a design
+  // heading emphasis that reads too close to the heading's own color is a design
   // warning (coral on cream measured 2.94).
   check('accent on background (graphics beside text)', t['--color-accent'], t['--color-background'], 3, false)
   check('accent-text against foreground (emphasis distinctness)', t['--color-accent-text'], t['--color-foreground'], 3, false)
@@ -721,6 +741,38 @@ export const MARKETING_SCALE_MAP: Record<string, MarketingScaleTokens> = {
   lg: {h1: '8rem',     h2: '6.854rem', h3: '4.236rem', h4: '2.618rem'},
 }
 
+// ─── The section texture ──────────────────────────────────────────────────────
+// What a band set to the Pattern surface wears (Phase 16A, `[R-472]`: no
+// site-wide background; a texture only on a homepage section someone set to
+// Pattern). The choice is a site value, `designSettings.patternTexture`, so it is
+// emitted as two custom properties that one `section-texture` utility reads: no
+// prop threads through the section dispatchers, and a theme sets it like any other
+// axis. The four units are the ones the study's textured sites wear (Phase 13).
+//
+// Gradients, not SVG, so the ink is `var(--color-brand-dark)` and follows the
+// palette with no literal color. Scallop is the one that needs a tile size.
+//
+// THE STRENGTH IS NOT HERE. The layer renders at `opacity-4` (0.04) in
+// `SectionShell`, the most at which every light text tier still meets AA on the
+// darkest pixel of the blend for any palette (measured over 11,172 palettes in the
+// Phase 16A challenge: 0 failures at 0.04, 2,679 at 0.05). `validateWcag` holds
+// that blend as its own ground, so the claim is tested, not remembered.
+export const SECTION_TEXTURES = ['pinstripe', 'diagonalHatch', 'diamondLattice', 'scallop'] as const
+export type SectionTexture = (typeof SECTION_TEXTURES)[number]
+
+export const SECTION_TEXTURE_MAP: Record<SectionTexture, {image: string; size: string}> = {
+  pinstripe:      {image: 'repeating-linear-gradient(90deg,var(--color-brand-dark) 0 1px,transparent 1px 10px)', size: 'auto'},
+  diagonalHatch:  {image: 'repeating-linear-gradient(45deg,var(--color-brand-dark) 0 1px,transparent 1px 8px)', size: 'auto'},
+  diamondLattice: {
+    image: 'repeating-linear-gradient(45deg,var(--color-brand-dark) 0 1px,transparent 1px 14px),repeating-linear-gradient(-45deg,var(--color-brand-dark) 0 1px,transparent 1px 14px)',
+    size: 'auto',
+  },
+  scallop:        {image: 'radial-gradient(circle at 50% 100%,transparent 0 7px,var(--color-brand-dark) 7px 8px,transparent 8px)', size: '16px 16px'},
+}
+
+/** The opacity the section texture renders at, and the one `validateWcag` blends. */
+export const SECTION_TEXTURE_OPACITY = 0.04
+
 export function buildDesignTokenCSS(
   uiRadius?:           string | null,
   buttonShape?:        string | null,
@@ -729,6 +781,7 @@ export function buildDesignTokenCSS(
   motionTempo?:        string | null,
   marketingScale?:     string | null,
   taglineStyle?:       string | null,
+  patternTexture?:     string | null,
 ): string {
   const radius    = UI_RADIUS_MAP[uiRadius ?? '']            ?? UI_RADIUS_MAP.rounded
   const btn       = BUTTON_SHAPE_MAP[buttonShape ?? '']      ?? BUTTON_SHAPE_MAP.rounded
@@ -744,6 +797,8 @@ export function buildDesignTokenCSS(
     ? `--marketing-h1:${marketing.h1};--marketing-h2:${marketing.h2};--marketing-h3:${marketing.h3};--marketing-h4:${marketing.h4};`
     : ''
   const taglineVars = Object.entries(tagline).map(([k, v]) => `${k}:${v};`).join('')
+  const texture = SECTION_TEXTURE_MAP[(patternTexture ?? '') as SectionTexture]
+  const textureVars = `--section-texture-image:${texture?.image ?? 'none'};--section-texture-size:${texture?.size ?? 'auto'};`
   return (
     `:root{` +
     `--radius-ui:${radius};` +
@@ -761,17 +816,18 @@ export function buildDesignTokenCSS(
     `--motion-structural-base:${STRUCTURAL_BASE};` +
     `--motion-structural-slow:${STRUCTURAL_SLOW};` +
     taglineVars +
+    textureVars +
     marketingVars +
     `}`
   )
 }
 // ─── Color CSS — main entry point ─────────────────────────────────────────────
-// One :root block of every colour token, from the four role inputs. Absent or
-// unparsable inputs fall to COLOUR_DEFAULTS, which is the render every built
-// client already has, so a site with no brand colour renders as it always did
+// One :root block of every color token, from the four role inputs. Absent or
+// unparsable inputs fall to COLOR_DEFAULTS, which is the render every built
+// client already has, so a site with no brand color renders as it always did
 // except where a pair failed WCAG 2.2 AA (§7 amendment 19).
 
-export function buildColorCSS(inputs: ColourInputs = {}): string {
+export function buildColorCSS(inputs: ColorInputs = {}): string {
   const {tokens} = resolvePalette(inputs)
   return `:root{${Object.entries(tokens).map(([k, v]) => `${k}:${v}`).join(';')}}`
 }

@@ -2,6 +2,7 @@ import {defineType, defineField} from 'sanity'
 import {PageLinkInput} from '../../components/PageLinkInput'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {ColorPreview} from '../../components/ColorPreview'
+import {CornerPreview} from '../../components/CornerPreview'
 
 // Design Settings
 // Visual identity: logos, colors, typography, UI style
@@ -28,6 +29,11 @@ export const designSettings = defineType({
       options: {collapsible: true, collapsed: true},
     },
     {
+      name: 'corners',
+      title: 'Corners',
+      options: {collapsible: true, collapsed: true},
+    },
+    {
       name: 'uiElements',
       title: 'UI Elements',
       options: {collapsible: true, collapsed: true},
@@ -48,79 +54,38 @@ export const designSettings = defineType({
       options: {collapsible: true, collapsed: true},
     },
     {
-      name: 'pageBackground',
-      title: 'Page Background',
+      name: 'patternTexture',
+      title: 'Pattern Texture',
       options: {collapsible: true, collapsed: true},
     },
   ],
   fields: [
-    // ─── The page background layer (Phase 13) ──────────────────────────────
-    // One decorative ground behind the whole document, so a Pattern band and the
-    // margins around an Inset Panel have something to show.
+    // ─── The section texture (Phase 16A, [R-472]) ─────────────────────────────
+    // There is no site-wide background: interior pages are always a clean ground,
+    // and a texture appears only on a HOMEPAGE section someone set to the Pattern
+    // surface. This chooses which texture those sections wear. It replaces the
+    // Phase 13 page background (texture, photo or gradient behind the whole site).
     //
-    // NO `initialValue` ON ANY SUBFIELD, for the same reason as the frame fields
-    // on the appearance fieldset: `designSettings` seeds are folded into every
-    // Site-Build write as `schema-default`, so a seeded kind would be stamped on
-    // every client and Phase 16's themes could never tell it from a choice
-    // (item 308, [R-450]). Absent reads as "none", which renders no element.
+    // NO `initialValue`: `designSettings` seeds are folded into every Site-Build
+    // write, and a seeded texture would be stamped on every client and could never
+    // be told from a choice (item 308, [R-450]). Absent means none, and a Pattern
+    // section then looks like Light.
     defineField({
-      name: 'pageBackground',
-      title: 'Page Background',
-      type: 'object',
-      fieldset: 'pageBackground',
+      name: 'patternTexture',
+      title: 'Pattern Texture',
+      type: 'string',
+      fieldset: 'patternTexture',
       description:
-        'A subtle ground behind the whole site. Sections set to the Pattern surface, and the margins around an Inset Panel, show it; every other surface covers it.',
-      fields: [
-        defineField({
-          name: 'kind',
-          title: 'Kind',
-          type: 'string',
-          description: 'Leave as None for a plain white page, which is how every site ships.',
-          options: {
-            list: [
-              {title: 'None', value: 'none'},
-              {title: 'Texture \u2014 a fine repeating pattern', value: 'texture'},
-              {title: 'Photo', value: 'photo'},
-              {title: 'Gradient \u2014 a soft wash from the top', value: 'gradient'},
-            ],
-            layout: 'radio',
-          },
-        }),
-        defineField({
-          name: 'texture',
-          title: 'Texture',
-          type: 'string',
-          description: 'Drawn in the brand colour at the opacity below, so it follows the palette.',
-          // `parent`, never `document`: this object is nested, so `parent` is the
-          // object value. Inside an array member `document` would be the root.
-          hidden: ({parent}) => (parent as {kind?: string} | undefined)?.kind !== 'texture',
-          options: {
-            list: [
-              {title: 'Pinstripe \u2014 fine vertical lines', value: 'pinstripe'},
-              {title: 'Diagonal hatch \u2014 fine diagonal lines', value: 'diagonalHatch'},
-              {title: 'Diamond lattice \u2014 a fine crosshatch', value: 'diamondLattice'},
-              {title: 'Scallop \u2014 a repeating arc', value: 'scallop'},
-            ],
-            layout: 'radio',
-          },
-        }),
-        defineField({
-          name: 'image',
-          title: 'Photo',
-          type: 'image',
-          hidden: ({parent}) => (parent as {kind?: string} | undefined)?.kind !== 'photo',
-        }),
-        defineField({
-          name: 'opacity',
-          title: 'Strength',
-          type: 'number',
-          description:
-            'How strongly the background shows. A texture or photo renders at 0.04 at most, the strength at which every text colour on it stays readable (WCAG AA); a gradient may go to 0.25.',
-          hidden: ({parent}) => ((parent as {kind?: string} | undefined)?.kind ?? 'none') === 'none',
-          // Warning, never error: no validation rule blocks Publish ([R-162]).
-          validation: (Rule) => Rule.min(0).max(0.25).warning('Keep the page background at 0.25 or under. A texture or photo renders at 0.04 at most.'),
-        }),
-      ],
+        'The texture a homepage section set to the Pattern surface wears, drawn faintly in the dark ground color so text stays readable. Nothing else on the site shows it, and interior pages never do. Leave blank for none.',
+      options: {
+        list: [
+          {title: 'Pinstripe \u2014 fine vertical lines', value: 'pinstripe'},
+          {title: 'Diagonal hatch \u2014 fine diagonal lines', value: 'diagonalHatch'},
+          {title: 'Diamond lattice \u2014 a fine crosshatch', value: 'diamondLattice'},
+          {title: 'Scallop \u2014 a repeating arc', value: 'scallop'},
+        ],
+        layout: 'radio',
+      },
     }),
 
     // ─── Brand Assets ─────────────────────────────────────────────────────────
@@ -225,11 +190,11 @@ export const designSettings = defineType({
 
     // ─── Brand Colors ─────────────────────────────────────────────────────────
 
-    // Four colour roles (Phase 14, WS-V1-PHASE14-DESIGN §7). Each is a hex and
+    // Four color roles (Phase 14, WS-V1-PHASE14-DESIGN §7). Each is a hex and
     // none is required: an absent role renders the platform default, which is the
     // greyscale every site already ships with. None carries an initialValue: the
     // build folds initial values into the documents it writes (item 308), and a
-    // seeded colour would be indistinguishable from one an operator chose.
+    // seeded color would be indistinguishable from one an operator chose.
     // verify-inline-sections.ts refuses an initialValue on any field in this
     // fieldset.
     //
@@ -242,7 +207,7 @@ export const designSettings = defineType({
       fieldset: 'colors',
       readOnly: true,
       components: {input: ColorPreview},
-      description: 'Choose a palette to fill the four colours below, or type your own. The preview shows what the site renders: a colour that cannot be read against its background is adjusted the smallest step that reads, and shown here.',
+      description: 'Choose a palette to fill the four colors below, or type your own. The preview shows what the site renders: a color that cannot be read against its background is adjusted the smallest step that reads, and shown here.',
     }),
 
     defineField({
@@ -250,7 +215,7 @@ export const designSettings = defineType({
       title: 'Dark Ground',
       type: 'string',
       fieldset: 'colors',
-      description: 'Hex, e.g. #14213D. Dark sections, the footer, and dark header and hero schemes. A deep navy, charcoal, forest or burgundy works best; a lighter or more vivid colour is deepened until white text reads on it.',
+      description: 'Hex, e.g. #14213D. Dark sections, the footer, and dark header and hero schemes. A deep navy, charcoal, forest or burgundy works best; a lighter or more vivid color is deepened until white text reads on it.',
       validation: (Rule) => Rule.regex(/^#[0-9A-Fa-f]{6}$/, {name: 'hex'}).warning('Enter a 6-digit hex value, e.g. #14213D'),
     }),
 
@@ -268,13 +233,13 @@ export const designSettings = defineType({
       title: 'Accent',
       type: 'string',
       fieldset: 'colors',
-      description: 'Hex, e.g. #B8893A. The brand colour on small areas: taglines, highlighted heading words, icons, rules. Where it is too light to read as text, text uses a darker shade of the same colour.',
+      description: 'Hex, e.g. #B8893A. The brand color on small areas: taglines, highlighted heading words, icons, rules. Where it is too light to read as text, text uses a darker shade of the same color.',
       validation: (Rule) => Rule.regex(/^#[0-9A-Fa-f]{6}$/, {name: 'hex'}).warning('Enter a 6-digit hex value, e.g. #B8893A'),
     }),
 
     defineField({
       name: 'action',
-      title: 'Button Colour (optional)',
+      title: 'Button Color (optional)',
       type: 'string',
       fieldset: 'colors',
       description: 'Hex. Buttons and calls to action. Leave blank to use the accent.',
@@ -457,13 +422,24 @@ export const designSettings = defineType({
       ],
     },
 
-    // ─── UI Elements ──────────────────────────────────────────────────────────
+    // ─── Corners (Phase 16A, [R-473]) ──────────────────────────────────────────
+    // Two stored fields chosen as one family: the picker writes both, and the site
+    // reads each as before. See studio/components/CornerPreview.tsx.
+    defineField({
+      name: 'cornerPreview',
+      title: 'Corner Family',
+      type: 'string',
+      fieldset: 'corners',
+      readOnly: true,
+      components: {input: CornerPreview},
+      description: 'Choose a family to set card and button corners together, so they always belong together. The two fields below hold what it sets.',
+    }),
     {
       name: 'uiRadius',
       title: 'UI Corner Radius',
       type: 'string',
-      fieldset: 'uiElements',
-      description: 'Controls the corner rounding on cards, images, form fields, badges, and section containers. Does not affect buttons — set those separately below.',
+      fieldset: 'corners',
+      description: 'Corners on cards, images, form fields, badges, and section panels. Set by the Corner Family above; change it here only to mix on purpose.',
       options: {
         list: [
           {title: 'Sharp — 0px, formal and authoritative', value: 'sharp'},
@@ -480,8 +456,8 @@ export const designSettings = defineType({
       name: 'buttonShape',
       title: 'Button Shape',
       type: 'string',
-      fieldset: 'buttons',
-      description: 'Controls the shape of all buttons site-wide. Pairs well with — but is independent from — the UI Corner Radius above.',
+      fieldset: 'corners',
+      description: 'The shape of every button. Set by the Corner Family above; a button rounder than the cards reads as a mismatch unless it is a pill.',
       options: {
         list: [
           {title: 'Square — 0px, sharp and authoritative', value: 'square'},

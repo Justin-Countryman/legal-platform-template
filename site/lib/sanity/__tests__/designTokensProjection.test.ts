@@ -4,7 +4,7 @@ import {resolve} from 'node:path'
 import {parse, evaluate} from 'groq-js'
 import {DESIGN_TOKENS_QUERY, OG_DATA_QUERY} from '../queries'
 
-// THE PHASE 13 BUG, GUARDED FOR COLOUR. The appearance projection was an explicit
+// THE PHASE 13 BUG, GUARDED FOR COLOR. The appearance projection was an explicit
 // object, so three new fields passed five review agents, twelve CI checks, a merge,
 // a pin and a propagation while reaching no component: nothing executable rendered
 // a band through GROQ with those fields set. DESIGN_TOKENS_QUERY is explicit too,
@@ -32,6 +32,7 @@ const READ_ELSEWHERE: Record<string, string> = {
   favicon: 'the root layout metadata',
   webclipImage: 'the root layout metadata',
   colorPreview: 'nothing: the Studio palette panel, which stores no value',
+  cornerPreview: 'nothing: the Studio corner-family panel, which stores no value',
   customFonts: 'the font query',
   showBackToTop: 'the footer query',
   profileLayout: 'the profile page queries',
@@ -63,7 +64,7 @@ describe('DESIGN_TOKENS_QUERY carries every designSettings field the site reads'
     expect(stale, `allow-list names fields the schema no longer has: ${stale.join(', ')}`).toEqual([])
   })
 
-  it('the four colour roles come through with their stored values', async () => {
+  it('the four color roles come through with their stored values', async () => {
     const out = await run(DESIGN_TOKENS_QUERY, {
       _id: 'designSettings', _type: 'designSettings',
       darkGround: '#1c2b4a', lightGround: '#f5eedc', accent: '#b8893a', action: '#14213d',

@@ -94,7 +94,7 @@ describe('Select — focus-ring contract', () => {
     expect(select.className).toContain('focus-visible:ring-2')
     expect(select.className).toContain('focus-visible:ring-focus')
     expect(select.className).toContain('focus-visible:ring-offset-2')
-    expect(select.className).toContain('focus-visible:border-action')
+    expect(select.className.split(' ')).toContain('focus-visible:border-cue')
   })
 
   it('select receives focus and becomes document.activeElement', () => {

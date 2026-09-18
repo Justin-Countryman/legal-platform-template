@@ -83,7 +83,7 @@ describe('two neighbours', () => {
 
   it('muted seams only with muted: a stored accent beside tint or light keeps its full padding', () => {
     // Phase 14. Phase 13 treated accent (bg-muted) and tint (bg-hero-tint) as one
-    // ground and halved the padding between two different colours.
+    // ground and halved the padding between two different colors.
     const {container} = canvas([band('a', {surface: 'accent'}), band('b', {surface: 'muted'})])
     expect(sectionsOf(container)[1].className).toContain(SEAM)
     const {container: c2} = canvas([band('a', {surface: 'accent'}), band('b', {surface: 'tint'})])
@@ -167,12 +167,12 @@ describe('the first-block motion rule', () => {
 })
 
 describe('the angled edge', () => {
-  it('is painted by the NEXT band, in the previous band’s ground colour', () => {
+  it('is painted by the NEXT band, in the previous band’s ground color', () => {
     const {container} = canvas([band('a', {surface: 'dark', edgeBottom: 'angled'}), band('b', {surface: 'light'})])
     const [first, second] = sectionsOf(container)
     // The band that CHOSE the edge paints nothing itself.
     expect(first.className).not.toContain('before:bg-')
-    // The band below paints it, in the band above's colour.
+    // The band below paints it, in the band above's color.
     expect(second.className).toContain('before:bg-brand-dark')
     expect(second.className).toContain('md:before:top-0')
   })
@@ -182,14 +182,22 @@ describe('the angled edge', () => {
     expect(sectionsOf(container)[1].className).toContain(FULL)
   })
 
-  it('paints nothing over a pattern or image ground, and so cancels no seam', () => {
-    for (const surface of ['pattern', 'image'] as const) {
-      const {container} = canvas([band('a', {surface, edgeBottom: 'angled'}), band('b', {surface})])
-      const second = sectionsOf(container)[1]
-      expect(second.className, surface).not.toContain('before:bg-')
-      // Same ground, no edge painted, so the seam still applies.
-      expect(second.className, surface).toContain(SEAM)
-    }
+  it('paints nothing over an image ground, and so cancels no seam', () => {
+    const {container} = canvas([band('a', {surface: 'image', edgeBottom: 'angled'}), band('b', {surface: 'image'})])
+    const second = sectionsOf(container)[1]
+    expect(second.className).not.toContain('before:bg-')
+    // Same ground, no edge painted, so the seam still applies.
+    expect(second.className).toContain(SEAM)
+  })
+
+  // Phase 16A: a Pattern band is the light ground wearing a faint texture, so its
+  // edge is cut in the light ground (the texture is not carried into the wedge),
+  // and a Pattern band beside a light one is a same-ground join.
+  it('a Pattern band cuts its edge in the light ground and seams with a light band', () => {
+    const edged = canvas([band('a', {surface: 'pattern', edgeBottom: 'angled'}), band('b', {surface: 'dark'})])
+    expect(sectionsOf(edged.container)[1].className).toContain('before:bg-background')
+    const joined = canvas([band('a', {surface: 'pattern'}), band('b', {surface: 'light'})])
+    expect(sectionsOf(joined.container)[1].className).toContain(SEAM)
   })
 })
 
@@ -206,13 +214,35 @@ describe('inset and overlap', () => {
     expect(el.querySelector('.rounded-ui')).not.toBeNull()
   })
 
-  it('an overlapping band drops its top padding, so the negative margin IS the overlap', () => {
-    const {container} = canvas([band('a'), band('b', {overlapPrevious: 'large'})])
-    const second = sectionsOf(container)[1]
-    expect(second.className).toContain('pt-0')
-    expect(second.className).toContain('md:-mt-24')
-    expect(second.className).toContain('md:z-10')
-    expect(second.className).not.toContain(SEAM)
+  // Phase 16A ([R-475], Justin: "Approve B"): overlap is an inset panel rising into
+  // the band above. A full-width band only hid the bottom of the band above, text
+  // included, so it no longer overlaps at all.
+  it('a full-width band never overlaps, whatever it stores', () => {
+    const {container} = canvas([band('a', {surface: 'dark'}), band('b', {overlapPrevious: 'large'})])
+    const [first, second] = sectionsOf(container)
+    expect(second.className.split(' ')).not.toContain('md:-mt-24')
+    expect(second.className.split(' ')).not.toContain('md:pt-0')
+    expect(first.className.split(' ')).toEqual(expect.arrayContaining(SECTION_SPACING.normal.bottom.split(' ')))
+  })
+
+  it('an inset panel overlaps: no top padding from md, so the negative margin IS the overlap', () => {
+    const {container} = canvas([band('a', {surface: 'dark'}), band('b', {inset: true, overlapPrevious: 'large'})])
+    const classes = sectionsOf(container)[1].className.split(' ')
+    expect(classes).toEqual(expect.arrayContaining(['md:-mt-24', 'md:z-10', 'md:pt-0']))
+    expect(classes).not.toContain(SEAM)
+  })
+
+  it('it keeps its phone padding, where nothing overlaps', () => {
+    const {container} = canvas([band('a', {surface: 'dark'}), band('b', {inset: true, overlapPrevious: 'large'})])
+    expect(sectionsOf(container)[1].className.split(' ')).toContain(SECTION_SPACING.normal.top.split(' ')[0])
+  })
+
+  it('the band above grows its bottom by the overlap, so the panel never covers its content', () => {
+    for (const size of ['small', 'large'] as const) {
+      const {container} = canvas([band('a', {surface: 'dark'}), band('b', {inset: true, overlapPrevious: size})])
+      const above = sectionsOf(container)[0].className.split(' ')
+      expect(above, size).toEqual(expect.arrayContaining(SECTION_SPACING.normal.bottomBeforeOverlap[size].split(' ')))
+    }
   })
 })
 

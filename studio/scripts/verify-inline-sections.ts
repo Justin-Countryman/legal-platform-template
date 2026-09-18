@@ -13,7 +13,7 @@
  *      inline copy deliberately narrows (`name` and the practice-area mode).
  *   2. `homePage.canvas.of` lists the nine inline objects and nothing else, all
  *      offered in Add item; the six block types retired in Phase 10 and the
- *      retired homepage and colour fields are gone from the compiled schema
+ *      retired homepage and color fields are gone from the compiled schema
  *      (deleted in Phase 15, monorepo WS-V1-PHASE15-DESIGN §7 amendment 1).
  *   3. Every `hidden` and `validation` callback in a shared list reads
  *      `parent`, never `document`: called with a DECOY root document that says
@@ -280,12 +280,17 @@ const NO_SEED: Array<[type: string, field: string, why: string]> = [
   ['attorneySection', 'imageTreatment', 'a theme axis (Phase 16)'],
   ['attorneySectionInline', 'imageTreatment', 'a theme axis (Phase 16)'],
 ]
-// Every section carrying the shared appearance fieldset must leave the three
-// frame fields unseeded, on the document and on its inline copy alike.
+// Every section carrying the shared appearance fieldset leaves every appearance
+// field unseeded, on the document and on its inline copy alike: the three frame
+// fields since Phase 13, and `surface` and `spacing` since Phase 16A, which
+// removed the seed the original six sections carried (item 308).
 for (const [doc, inline] of PAIRS) {
-  for (const field of ['inset', 'edgeBottom', 'overlapPrevious']) {
-    NO_SEED.push([doc, field, 'a frame field (item 308)'], [inline, field, 'a frame field (item 308)'])
+  for (const field of ['surface', 'spacing', 'inset', 'edgeBottom', 'overlapPrevious']) {
+    NO_SEED.push([doc, field, 'an appearance field (item 308)'], [inline, field, 'an appearance field (item 308)'])
   }
+}
+for (const doc of ['ctaSection', 'faqSection']) {
+  for (const field of ['surface', 'spacing']) NO_SEED.push([doc, field, 'an appearance field (item 308)'])
 }
 for (const [type, field, why] of NO_SEED) {
   if (!schema.get(type)) continue
@@ -294,20 +299,20 @@ for (const [type, field, why] of NO_SEED) {
   }
 }
 ok(`no seed on ${String(NO_SEED.length)} field(s) that the composer would fold`)
-// No colour field is seeded either (Phase 14, item 308). Derived from the
-// fieldset rather than listed, so a colour field added later is covered the day it
+// No color field is seeded either (Phase 14, item 308). Derived from the
+// fieldset rather than listed, so a color field added later is covered the day it
 // lands; the length check stops the read going vacuous if the fieldset is renamed.
-const colourFields = ((schema.get('designSettings') as ObjectSchemaType).fields ?? []).filter((f) => (f as {fieldset?: string}).fieldset === 'colors')
-if (colourFields.length < 5) fail(`designSettings has only ${String(colourFields.length)} colour field(s); the fieldset read is vacuous`)
-for (const f of colourFields) {
-  if ((f.type as {initialValue?: unknown}).initialValue !== undefined) fail(`designSettings.${f.name} carries an initialValue; no colour field is seeded (item 308)`)
+const colorFields = ((schema.get('designSettings') as ObjectSchemaType).fields ?? []).filter((f) => (f as {fieldset?: string}).fieldset === 'colors')
+if (colorFields.length < 5) fail(`designSettings has only ${String(colorFields.length)} color field(s); the fieldset read is vacuous`)
+for (const f of colorFields) {
+  if ((f.type as {initialValue?: unknown}).initialValue !== undefined) fail(`designSettings.${f.name} carries an initialValue; no color field is seeded (item 308)`)
 }
-ok(`no seed on ${String(colourFields.length)} designSettings colour field(s)`)
+ok(`no seed on ${String(colorFields.length)} designSettings color field(s)`)
 if (initial('contentSectionInline', 'layout') !== 'split' || initial('contentSection', 'layout') !== 'split') fail('contentSection layout initial is not split')
 // ─── The saturated surface (Phase 15, §7 amendment 17) ──────────────────────
 // Offered on the content section ONLY, document and inline alike: it is the one
 // section that passes its own button context, and the others draw controls in the
-// action colour, which an operator may leave equal to the accent that fills the
+// action color, which an operator may leave equal to the accent that fills the
 // band. The label must not start with "Accent" either: a band stored with the
 // retired `accent` value renders a light step, not a fill, and a hand flip from
 // one to the other would repaint a live band.

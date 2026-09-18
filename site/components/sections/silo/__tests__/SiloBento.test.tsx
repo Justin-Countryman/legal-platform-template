@@ -14,7 +14,7 @@ vi.mock('next/image', () => ({
 }))
 
 import {SiloBento} from '../SiloBento'
-import {bentoLayout, isBentoMode, mosaicCellSpan} from '../bento'
+import {bentoLayout, isBentoMode} from '../bento'
 import type {SiloNavItem, SiloGridMode} from '../types'
 import type {SiloHoverEffect} from '@/lib/siloHover'
 
@@ -56,10 +56,10 @@ describe('bentoLayout — hero selection + spans', () => {
     }
   })
 
-  it('Mosaic varies the remaining tiles (tall neighbour, periodic wide)', () => {
-    expect(mosaicCellSpan(0)).toContain('row-span-2') // sits tall beside the hero
-    expect(mosaicCellSpan(2)).toContain('col-span-2') // periodic wide accent
-    expect(mosaicCellSpan(1)).toBe('')
+  it('Mosaic varies the remaining tiles (tall beside the hero, then a wide one)', () => {
+    const {cellClasses} = bentoLayout(ITEMS, 'bentoMosaic')
+    expect(cellClasses[0].split(' ')).toContain('@4xl:row-span-2') // sits tall beside the hero
+    expect(cellClasses.some((c) => c.split(' ').includes('@4xl:col-span-2'))).toBe(true) // a wide accent
   })
 
   it('isBentoMode recognises only the bento presets', () => {
@@ -99,8 +99,9 @@ describe('SiloBento — a11y + structure', () => {
     const {container} = render(<SiloBento {...props({gridMode: 'bentoMosaic'})} />)
     const lis = container.querySelectorAll(':scope > nav > ul > li')
     expect(lis[0].className).toContain('row-span-2') // hero 2×2
-    // the first non-hero tile sits tall beside the hero
-    expect(lis[1].className).toContain('@sm:row-span-2')
+    // the first non-hero tile sits tall beside the hero at three columns, where
+    // there is a column beside it (Phase 16A: at two the hero is full width)
+    expect(lis[1].className.split(' ')).toContain('@4xl:row-span-2')
   })
 
   it('Feature & List pairs a hero with a scannable list — every item still a link', () => {

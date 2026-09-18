@@ -58,7 +58,7 @@ export function RelatedPosts({
                 <h3 className="font-heading text-lg font-bold leading-snug text-foreground">
                   <Link
                     href={`/${post.slug}/`}
-                    className="text-foreground transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 rounded-sm"
+                    className="text-foreground transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:rounded-sm"
                   >
                     {resolveTokenString(post.h1, tokens)}
                   </Link>

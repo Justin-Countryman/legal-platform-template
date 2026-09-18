@@ -162,7 +162,7 @@ export const attorneyPage = defineType({
       name: 'ogImageOverride',
       title: 'OG Image (custom)',
       type: 'image',
-      description: '1200×630px — overrides the auto-generated share image. Optional; when empty the site generates a branded one from the firm name, logo and brand colour.',
+      description: '1200×630px — overrides the auto-generated share image. Optional; when empty the site generates a branded one from the firm name, logo and brand color.',
       fieldset: 'seo',
       options: {hotspot: true},
       fields: [

@@ -44,7 +44,7 @@ export function AttorneyCardAvatar({attorney}: {attorney: AttorneyCard}) {
         <CardImage
           attorney={attorney}
           ratio="aspect-square"
-          className="rounded-full ring-2 ring-border transition-[box-shadow] duration-ui-slow group-hover:ring-action"
+          className="rounded-full ring-2 ring-border transition-[box-shadow] duration-ui-slow group-hover:ring-cue"
           imgClassName="transition-transform duration-ui-slow group-hover:scale-105"
           sizes="160px"
         />
@@ -75,7 +75,7 @@ export function AttorneyCardMinimal({attorney}: {attorney: AttorneyCard}) {
         imgClassName="transition-transform duration-ui-slow group-hover:scale-105"
         sizes={PORTRAIT_SIZES}
       />
-      <p className="mt-4 font-heading text-lg font-semibold leading-snug text-foreground underline-offset-4 decoration-action group-hover:underline">
+      <p className="mt-4 font-heading text-lg font-semibold leading-snug text-foreground underline-offset-4 decoration-cue group-hover:underline">
         {name}
       </p>
       {attorney.jobTitle && <p className="mt-1 text-sm text-foreground-muted">{attorney.jobTitle}</p>}

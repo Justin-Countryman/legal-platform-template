@@ -13,9 +13,9 @@ import {Button} from '../Button'
 // `saturated` surface paints `bg-accent-fill` and passes `context="saturated"`.
 //
 // THE PAIR. The band guarantees exactly one pair, `accent-fg on accent-fill`
-// (`validateWcag`, swept for any input by `colourGuarantee.test.ts`). The primary
+// (`validateWcag`, swept for any input by `colorGuarantee.test.ts`). The primary
 // button is that pair reversed, which has the same ratio, so the band and its
-// button are guaranteed together. The action colour is never used here: an
+// button are guaranteed together. The action color is never used here: an
 // operator who sets no action gets the accent, which would vanish into the fill.
 //
 // WHY A SEPARATE FILE from `Button.test.tsx`: it also asks Tailwind whether every
@@ -38,7 +38,7 @@ beforeAll(async () => {
 const classesOf = (element: HTMLElement) => element.className.split(/\s+/).filter(Boolean)
 
 describe('Button, saturated context', () => {
-  it('primary is the band’s own pair reversed, and never the action colour', () => {
+  it('primary is the band’s own pair reversed, and never the action color', () => {
     render(<Button variant="primary" context="saturated">Talk with us</Button>)
     const className = screen.getByRole('button').className
     expect(className).toContain('bg-accent-fg')
@@ -47,7 +47,7 @@ describe('Button, saturated context', () => {
     expect(className).not.toContain('text-action-fg')
   })
 
-  it('secondary draws its outline in the current text colour, which the band sets to accent-fg', () => {
+  it('secondary draws its outline in the current text color, which the band sets to accent-fg', () => {
     render(<Button variant="secondary" context="saturated">How we work</Button>)
     const className = screen.getByRole('button').className
     expect(className).toContain('border-current')
@@ -58,7 +58,7 @@ describe('Button, saturated context', () => {
   })
 
   it.each(['primary', 'secondary', 'tertiary'] as const)(
-    '%s focuses with a two-colour ring: the mark on accent-fg, the gap on the fill (WCAG technique C40)',
+    '%s focuses with a two-color ring: the mark on accent-fg, the gap on the fill (WCAG technique C40)',
     (variant) => {
       render(<Button variant={variant} context="saturated">Read more</Button>)
       const className = screen.getByRole('button').className

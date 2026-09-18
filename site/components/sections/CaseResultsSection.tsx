@@ -78,9 +78,7 @@ export function CaseResultsSection({
   return (
     <SectionShell
       appearance={resolveAppearance(data)}
-      seamTop={seam.seamTop}
-      previousGround={seam.previousGround}
-      previousEdge={seam.previousEdge}
+      seam={seam}
     >
       {heading && (
         <SectionHeader heading={heading} description={intro} className="mx-auto mb-12 max-w-2xl" />

@@ -295,7 +295,7 @@ export function fields({inline}: {inline: boolean}) {
         'Scrolls the ribbon text across the band. Visitors get a pause button, it pauses on hover and keyboard focus, and it stays still for anyone who prefers reduced motion.',
       hidden: hiddenUnless('ribbon'),
     }),
-    ...appearanceFields({defaultSurface: 'light', offerSaturated: true}),
+    ...appearanceFields({offerSaturated: true, offerPattern: inline}),
   ]
 }
 

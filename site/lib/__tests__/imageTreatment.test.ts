@@ -92,14 +92,14 @@ describe('TREATMENT_CLASSES', () => {
     expect(findUnknown(['rounded-ui-lg', 'after:border-acent'], designSystem, plainCss)).toHaveLength(2)
   })
 
-  it('carries no literal colour (tokens only, so the cascade swaps and provisioning never see a literal)', () => {
+  it('carries no literal color (tokens only, so the cascade swaps and provisioning never see a literal)', () => {
     const literal = /\[(?:#|rgb|hsl|oklch|color:)/
     expect(everyClass().filter((c) => literal.test(c))).toEqual([])
   })
 
-  it('reads the colour roles the record names: accent for framed and tint, brand-dark for slab and scrim', () => {
-    expect(TREATMENT_CLASSES.framed.wrapper).toContain('after:border-accent')
-    expect(TREATMENT_CLASSES.tint.wrapper).toContain('after:bg-accent/20')
+  it('reads the color roles the record names: decor (the accent) for framed and tint, brand-dark for slab and scrim', () => {
+    expect(TREATMENT_CLASSES.framed.wrapper).toContain('after:border-decor')
+    expect(TREATMENT_CLASSES.tint.wrapper).toContain('after:bg-decor/20')
     expect(TREATMENT_CLASSES.slab.wrapper).toContain('before:bg-brand-dark')
     expect(TREATMENT_CLASSES.scrim.wrapper).toContain('after:from-brand-dark/80')
     expect(TREATMENT_CLASSES.rounded.wrapper).toContain('rounded-ui')
@@ -146,7 +146,7 @@ describe('the attorney card photo (Phase 13)', () => {
 
   it('framed is a wrapper ::after border, so it adds no element and cannot move the photo', () => {
     expect(TREATMENT_CLASSES.framed.wrapper).toContain('after:absolute')
-    expect(TREATMENT_CLASSES.framed.wrapper).toContain('after:border-accent')
+    expect(TREATMENT_CLASSES.framed.wrapper).toContain('after:border-decor')
     expect(TREATMENT_CLASSES.framed.image).toBe(TREATMENT_CLASSES.plain.image)
   })
 

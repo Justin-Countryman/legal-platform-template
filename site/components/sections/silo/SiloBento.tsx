@@ -4,7 +4,7 @@ import type {SiloNavItem, SiloIconPosition, SiloGridMode} from './types'
 import {
   SiloNav, TileLink, TileImage, TileFill, TileGlow, TileBorder, TileIcon, TileLabel, TileBlurb, TileArrow,
 } from './parts'
-import {bentoLayout, mosaicCellSpan} from './bento'
+import {bentoLayout} from './bento'
 
 // Bento mode — a unified photo mosaic with the Primary item as the hero, always
 // leading top-left. Each photo tile is a @container, so the SAME card renders compact
@@ -85,7 +85,7 @@ function BentoRow({
 export function SiloBento({items, ariaLabel, hoverEffects, showArrow, iconPosition, gridMode}: SiloBentoProps) {
   const fx = siloHover(hoverEffects)
   const showIcon = iconPosition !== 'none'
-  const {gridClass, heroSpan, hero, rest} = bentoLayout(items, gridMode)
+  const {gridClass, heroSpan, hero, rest, cellClasses} = bentoLayout(items, gridMode)
   if (!hero) return null
 
   // Feature & List — a hero card beside a scannable column of the remaining links.
@@ -115,7 +115,7 @@ export function SiloBento({items, ariaLabel, hoverEffects, showArrow, iconPositi
         <BentoTile item={hero} fx={fx} showArrow={showArrow} showIcon={showIcon} />
       </li>
       {rest.map((item, i) => (
-        <li key={item._key} className={gridMode === 'bentoMosaic' ? mosaicCellSpan(i) : undefined}>
+        <li key={item._key} className={cellClasses[i] || undefined}>
           <BentoTile item={item} fx={fx} showArrow={showArrow} showIcon={showIcon} />
         </li>
       ))}

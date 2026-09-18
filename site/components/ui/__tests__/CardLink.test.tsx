@@ -132,7 +132,7 @@ describe('CardLink — className composition', () => {
     const link = screen.getByRole('link')
     expect(link.className).toContain('hover:shadow-card-hover')
     expect(link.className).toContain('hover:card-lift')
-    expect(link.className).toContain('hover:border-action')
+    expect(link.className.split(' ')).toContain('hover:border-cue')
   })
 })
 
@@ -144,7 +144,7 @@ describe('CardLink — cascade-aware contract', () => {
     const link = screen.getByRole('link')
     expect(link.className).toContain('bg-background')
     expect(link.className).toContain('border-border')
-    expect(link.className).toContain('hover:border-action')
+    expect(link.className.split(' ')).toContain('hover:border-cue')
     expect(link.className).toContain('focus-visible:ring-focus')
   })
 

@@ -4,7 +4,7 @@
 // Each rule cites its canonical BI / skill source in its error message and
 // in `meta.docs.description`.
 //
-// Roster: nine rules. Eight design-token rules were cut 2026-09-13
+// Roster: eleven rules (Phase 16A added no-fixed-radius and color-roles). Eight design-token rules were cut 2026-09-13
 // (monorepo WS-V1-PLAN Phase 8, WS-V1-PHASE8-DESIGN §2.4 and §7.10); the
 // skills carry those postures. The roster is pinned by
 // `__tests__/rule-roster.test.ts`. See `eslint-rules/README.md` for the
@@ -21,6 +21,8 @@ const collectionGridListSemantics = require('./rules/collection-grid-list-semant
 const headingCascadeDiscipline = require('./rules/heading-cascade-discipline')
 const noTextActionRaw = require('./rules/no-text-action-raw')
 const noTextAccentOnText = require('./rules/no-text-accent-on-text')
+const noFixedRadius = require('./rules/no-fixed-radius')
+const colorRoles = require('./rules/color-roles')
 
 const rules = {
   'no-arbitrary-color':              noArbitraryColor,                // T1
@@ -32,6 +34,8 @@ const rules = {
   'heading-cascade-discipline':      headingCascadeDiscipline,        // A2
   'no-text-action-raw':              noTextActionRaw,                 // T5a
   'no-text-accent-on-text':          noTextAccentOnText,              // Phase 14 (was T5b)
+  'no-fixed-radius':                 noFixedRadius,                   // Phase 16A, [R-473]
+  'color-roles':                     colorRoles,                      // Phase 16A, [R-471]
 }
 
 module.exports = {

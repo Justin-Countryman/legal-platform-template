@@ -128,9 +128,9 @@ while IFS= read -r line; do
     # Listed by the homepage member above; served by the catch-all at request
     # time (no generateStaticParams), so it has no prerendered route to assert.
     practiceArea) continue ;;
-    # A singleton has no slug and no route of its own. Its evidence is the colour
+    # A singleton has no slug and no route of its own. Its evidence is the color
     # its value produces in the prerendered layout's :root, which is the end-to-end
-    # proof that a colour field reaches the page through GROQ and the engine (the
+    # proof that a color field reaches the page through GROQ and the engine (the
     # Phase 13 appearance bug passed every other check for want of exactly this).
     designSettings)
       needle='--color-accent:#1e5aa8'

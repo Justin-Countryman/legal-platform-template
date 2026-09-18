@@ -29,7 +29,7 @@ export function SiloCompactList({
                 <TileLabel
                   item={item}
                   fx={fx}
-                  className="font-heading text-base font-semibold leading-tight tracking-tight text-foreground"
+                  className="font-heading row-title font-semibold tracking-tight text-foreground"
                 />
                 <TileBlurb item={item} className="mt-0.5 text-sm leading-snug text-foreground-muted line-clamp-1" />
               </div>

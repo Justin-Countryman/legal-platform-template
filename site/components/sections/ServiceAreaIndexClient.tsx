@@ -82,7 +82,7 @@ export function ServiceAreaIndexClient({pages}: {pages: ServiceAreaCard[]}) {
             onClick={() => handleLetter(null)}
             className={`px-3 py-1.5 text-sm font-semibold transition-colors duration-ui-fast ${
               activeLetter === null && !search
-                ? 'bg-action text-action-fg ring-1 ring-action-state-cue'
+                ? 'bg-cue text-action-fg ring-1 ring-action-state-cue'
                 : 'border border-border hover:bg-muted'
             }`}
           >
@@ -97,7 +97,7 @@ export function ServiceAreaIndexClient({pages}: {pages: ServiceAreaCard[]}) {
                 disabled={!has}
                 className={`w-9 py-1.5 text-sm font-semibold transition-colors duration-ui-fast ${
                   activeLetter === letter
-                    ? 'bg-action text-action-fg ring-1 ring-action-state-cue'
+                    ? 'bg-cue text-action-fg ring-1 ring-action-state-cue'
                     : has
                       ? 'border border-border hover:bg-muted'
                       : 'border border-border text-foreground-muted opacity-25 cursor-not-allowed'

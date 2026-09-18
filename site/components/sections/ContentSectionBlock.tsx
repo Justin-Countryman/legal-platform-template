@@ -151,9 +151,7 @@ export function ContentSectionBlock({
   return (
     <SectionShell
       appearance={appearance}
-      seamTop={seam.seamTop}
-      previousGround={seam.previousGround}
-      previousEdge={seam.previousEdge}
+      seam={seam}
     >
       {(surface) => {
         const center = layout === 'statement' || layout === 'statRow'
@@ -191,7 +189,7 @@ export function ContentSectionBlock({
           ) : null
 
         const pullQuote = has(data.pullQuote?.text) ? (
-          <figure className="mt-8 border-l-2 border-accent pl-6">
+          <figure className="mt-8 border-l-2 border-decor pl-6">
             <blockquote className="font-heading text-xl text-foreground">{t(data.pullQuote?.text)}</blockquote>
             {has(data.pullQuote?.attribution) && (
               <figcaption className="mt-3 text-sm text-foreground-muted">{t(data.pullQuote?.attribution)}</figcaption>

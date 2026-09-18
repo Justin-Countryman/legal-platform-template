@@ -124,7 +124,7 @@ export function SiloCarousel({
                 className={[
                   'block h-2 rounded-full transition-[width,background-color] duration-ui-base',
                   // See AttorneySlider: the cue ring is transparent unless the action fails 3:1.
-                  i === active ? 'w-5 bg-action ring-1 ring-action-state-cue' : 'w-2 bg-border-control group-hover:bg-foreground-subtle',
+                  i === active ? 'w-5 bg-cue ring-1 ring-action-state-cue' : 'w-2 bg-border-control group-hover:bg-foreground-subtle',
                 ].join(' ')}
               />
             </button>

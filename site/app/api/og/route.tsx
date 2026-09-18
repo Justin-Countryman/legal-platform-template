@@ -7,8 +7,8 @@ import {resolvePalette} from '@/lib/designTokens'
 // + firm name + page title on the site's dark ground. Falls back to
 // text-only when `designSettings.logoOnDark` is absent.
 //
-// The colours come from the same engine as the pages (Phase 14): the accepted
-// dark ground and the text tier that reads on it, so a vivid or light colour
+// The colors come from the same engine as the pages (Phase 14): the accepted
+// dark ground and the text tier that reads on it, so a vivid or light color
 // typed into darkGround can never produce an unreadable share card. The engine
 // is plain JS and loads at the edge (measured: +16.4 KB gzip).
 //

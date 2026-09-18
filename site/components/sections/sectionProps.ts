@@ -137,7 +137,12 @@ export type ContentSectionProps = SectionProps<
 >
 
 // ─── The inline object is a subset of its document ────────────────────────────
-type Subset<I, D> = Omit<I, '_type'> extends Omit<D, DocKeys> ? true : never
+// With one exception, `surface`: the homepage's inline copy offers Pattern and the
+// document an interior page uses does not (Phase 16A, [R-472]: interior pages are
+// always a clean ground). So `surface` is held the other way round below: every
+// surface a document can store, its inline copy can store too.
+type Subset<I, D> = Omit<I, '_type' | 'surface'> extends Omit<D, DocKeys | 'surface'> ? true : never
+type SurfaceWidens<I extends {surface?: unknown}, D extends {surface?: unknown}> = NonNullable<D['surface']> extends NonNullable<I['surface']> ? true : never
 const _practiceAreaNav: Subset<PracticeAreaNavInline, PracticeAreaNav> = true
 const _attorneySection: Subset<AttorneySectionInline, AttorneySection> = true
 const _badgesSection: Subset<BadgesSectionInline, BadgesSection> = true
@@ -156,3 +161,11 @@ void _caseResultsSection
 void _contentSection
 const _reviewsSection: Subset<ReviewsSectionInline, ReviewsSection> = true
 void _reviewsSection
+const _surfaces: [
+  SurfaceWidens<PracticeAreaNavInline, PracticeAreaNav>, SurfaceWidens<AttorneySectionInline, AttorneySection>,
+  SurfaceWidens<BadgesSectionInline, BadgesSection>, SurfaceWidens<TestimonialsGridInline, TestimonialsGrid>,
+  SurfaceWidens<FeaturedTestimonialInline, FeaturedTestimonial>, SurfaceWidens<VideoSectionInline, VideoSection>,
+  SurfaceWidens<CaseResultsSectionInline, CaseResultsSection>, SurfaceWidens<ContentSectionInline, ContentSection>,
+  SurfaceWidens<ReviewsSectionInline, ReviewsSection>,
+] = [true, true, true, true, true, true, true, true, true]
+void _surfaces

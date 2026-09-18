@@ -158,7 +158,7 @@ export function fields({inline}: {inline: boolean}) {
       options: {
         list: [
           {title: 'Image Zoom — background photo scales', value: 'imageZoom'},
-          {title: 'Grayscale → Color — photo is B&W at rest, colours on hover', value: 'grayscale'},
+          {title: 'Grayscale → Color — photo is B&W at rest, colors on hover', value: 'grayscale'},
           {title: 'Lift — tile raises with soft elevation', value: 'lift'},
           {title: 'Glow — accent glow fades in', value: 'glow'},
           {title: 'Accent Border — border draws to the accent', value: 'accentBorder'},
@@ -207,7 +207,7 @@ export function fields({inline}: {inline: boolean}) {
           return true
         }).warning(),
     }),
-    ...appearanceFields({defaultSurface: 'light'}),
+    ...appearanceFields({offerPattern: inline}),
   ]
 }
 

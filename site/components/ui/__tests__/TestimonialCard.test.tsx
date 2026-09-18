@@ -204,3 +204,25 @@ describe('TestimonialCard — cascade-aware contract', () => {
     expect(html).not.toMatch(/#[0-9a-fA-F]{3,8}/)
   })
 })
+
+// ─── The quote marks (Phase 16A) ──────────────────────────────────────────────
+// The card printed "u201C" and "u201D" around every quote: the classes carried a JS
+// escape inside a JSX attribute string, which is never unescaped, so the literal
+// `“` reached the stylesheet, where `\u` escapes the letter u. This resolves the
+// classes the card renders through Tailwind and reads the glyph CSS will draw.
+describe('TestimonialCard — the quote marks', () => {
+  it('draws curly quotes, not the letters u201C', async () => {
+    const {__unstable__loadDesignSystem} = await import('@tailwindcss/node')
+    const fs = await import('node:fs')
+    const path = await import('node:path')
+    const root = path.resolve(__dirname, '../../..')
+    const ds = await __unstable__loadDesignSystem(fs.readFileSync(path.join(root, 'app/globals.css'), 'utf8'), {base: root})
+    const {container} = render(<TestimonialCard t={BASE} />)
+    const tokens = (container.querySelector('blockquote p')!.getAttribute('class') ?? '').split(' ').filter((t) => t.includes('content-'))
+    expect(tokens).toHaveLength(2)
+    const css = ds.candidatesToCss(tokens).join('\n')
+    expect(css).toContain("'\\201C'")
+    expect(css).toContain("'\\201D'")
+    expect(css).not.toContain('\\u201')
+  })
+})

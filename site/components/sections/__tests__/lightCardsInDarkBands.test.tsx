@@ -5,7 +5,7 @@ import {render} from '@testing-library/react'
 // A light card inside a dark band (Phase 14 accessibility audit, E's F1 to F6). An
 // operator can set a case-results, testimonials or attorney section to dark or
 // image, and the cards inside stayed light surfaces while their text inherited the
-// dark band's colours: body text measured 1.06:1 on a muted card and 1.16:1 on a
+// dark band's colors: body text measured 1.06:1 on a muted card and 1.16:1 on a
 // white one. Each light card now declares its own light context, which the
 // [data-ring-context="light"] cascade block resolves to the palette's light
 // values. On a light band the twins equal the root values, so nothing moves there.
@@ -21,7 +21,7 @@ import {CaseResultsSection} from '../CaseResultsSection'
 import {TestimonialCard} from '@/components/ui/TestimonialCard'
 import {CardLink} from '@/components/ui/CardLink'
 
-describe('light cards declare a light context, so a dark band cannot recolour their text', () => {
+describe('light cards declare a light context, so a dark band cannot recolor their text', () => {
   it('case results in a dark band', () => {
     const {container} = render(
       <CaseResultsSection

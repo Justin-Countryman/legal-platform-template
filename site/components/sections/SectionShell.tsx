@@ -2,10 +2,11 @@ import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import {
   sectionSurface, SECTION_SPACING, TIGHT_SPACING, DEFAULT_SECTION_SPACING,
-  type StoredSurface, type SectionSpacing, type SectionEdge, type VisibleGround,
+  type StoredSurface, type SectionSpacing, type SectionEdge,
   type ResolvedSectionSurface, type SectionSpacingSteps,
   sectionEdgeClasses,
 } from '@/lib/sectionSurface'
+import {type SeamProps, NO_SEAM, overlapOf} from './sectionFrame'
 
 // ─── SectionShell ───────────────────────────────────────────────────────────────
 // The band wrapper every full-width section renders into. It owns the surface
@@ -46,15 +47,17 @@ export type SectionAppearance = {
   overlapPrevious?: 'none' | 'small' | 'large' | null
 }
 
-// How far a band rides up over the one above it. `md:` and up, so mobile stacks
-// flat. These are the record's original values and they work ONLY because the
-// overlapping band drops its own top padding to zero (`topNone`): a negative
-// margin cannot clear the parent's border box unless it exceeds the parent's top
-// padding, and `-mt-24` against `md:pt-24` measured 0px of overlap in the Phase 13
-// challenge. With `pt-0` the margin IS the overlap, measured 96px.
+// How far an inset panel rides up over the band above it. `md:` and up, so mobile
+// stacks flat, and inset panels only (Phase 16A, `[R-475]`; a full-width band that
+// overlapped only hid the bottom of the band above, text included). These work
+// ONLY because the overlapping panel has no top padding from `md`
+// (`topOverlap`): a negative margin cannot clear the parent's border box unless it
+// exceeds the parent's top padding, and `-mt-24` against `md:pt-24` measured 0px
+// of overlap in the Phase 13 challenge. With `md:pt-0` the margin IS the overlap.
 //
-// It also keeps WCAG 2.2's 2.4.11 by construction: the band only ever rides up
-// over the previous band's BOTTOM PADDING, never over its content.
+// WCAG 2.2's 2.4.11 holds by construction: the band above grows its bottom
+// padding by exactly the overlap (`bottomBeforeOverlap`, told by the walk), so
+// the panel rides over padding that band added for it, never over its content.
 const OVERLAP_CLASS: Record<'none' | 'small' | 'large', string> = {
   none:  '',
   small: 'md:-mt-12 md:relative md:z-10',
@@ -71,15 +74,11 @@ type SectionShellProps = {
   className?: string
   /** Extra classes on the inner container, for a layout that needs its own max-width. */
   innerClassName?: string
-  /** Halve the top padding: this band sits on the same visible ground as the one
-   *  above it, so the join would otherwise carry both paddings. Computed by the
-   *  dispatcher. */
-  seamTop?: boolean
-  /** The visible ground of the band above, so this band can paint that band's
-   *  bottom edge. Computed by the dispatcher. */
-  previousGround?: VisibleGround | null
-  /** The `edgeBottom` of the band above. Computed by the dispatcher. */
-  previousEdge?: SectionEdge | null
+  /** The band's relationship to its neighbours, computed by the dispatcher's walk
+   *  (`walkFrame`): whether to halve the top padding at a same-ground join, the
+   *  ground and edge of the band above (so this band paints that edge), and the
+   *  next band's overlap (so this band keeps its content clear of it). */
+  seam?: SeamProps
   /** Use the operator-invisible tight preset. For `cta/centered` only, whose
    *  shipped `py-10 md:py-12` matches no storable spacing. */
   tight?: boolean
@@ -97,9 +96,7 @@ export function SectionShell({
   gutter = true,
   className,
   innerClassName,
-  seamTop = false,
-  previousGround,
-  previousEdge,
+  seam = NO_SEAM,
   tight = false,
   as: Tag = 'section',
   children,
@@ -110,11 +107,13 @@ export function SectionShell({
     ? TIGHT_SPACING
     : SECTION_SPACING[appearance?.spacing ?? DEFAULT_SECTION_SPACING]
 
-  const overlap = appearance?.overlapPrevious ?? 'none'
+  const overlap = overlapOf(appearance)
   // The three top-padding states are exclusive, most specific first. An
-  // overlapping band takes no top padding at all, because the negative margin is
-  // measured against it; a seam halves it; otherwise it is the preset.
-  const top = overlap !== 'none' ? steps.topNone : seamTop ? steps.seamTop : steps.top
+  // overlapping panel takes no top padding from `md`, because the negative margin
+  // is measured against it; a seam halves it; otherwise it is the preset.
+  const top = overlap !== 'none' ? steps.topOverlap : seam.seamTop ? steps.seamTop : steps.top
+  // The band above an overlapping panel makes room for it.
+  const bottom = seam.nextOverlap !== 'none' ? steps.bottomBeforeOverlap[seam.nextOverlap] : steps.bottom
 
   const bg = appearance?.backgroundImage
   const showImage = resolved.isImage && hasImage(bg)
@@ -127,11 +126,21 @@ export function SectionShell({
   // of the axes a theme fixes, so a panel follows its theme for free).
   const isInset = appearance?.inset === true
 
+  // The site's section texture, on a Pattern band only (Phase 16A, `[R-472]`). One
+  // decorative child, absolutely placed BEFORE the content container, which is
+  // `relative` and so paints above it in tree order, exactly as the background
+  // photo and its scrim do. `opacity-4` is the tested ceiling (see
+  // `SECTION_TEXTURE_OPACITY`). `data-section-texture` is what the forced-colors and
+  // print rules remove.
+  const texture = resolved.textured ? (
+    <div aria-hidden="true" data-section-texture className="section-texture pointer-events-none absolute inset-0 opacity-4" />
+  ) : null
+
   return (
     <Tag
       data-ring-context={resolved.ringContext}
-      // Text on a photo: the action colour and the focus ring resolve to the on-dark
-      // body text colour here (globals.css, the scrim block), because neither is
+      // Text on a photo: the action color and the focus ring resolve to the on-dark
+      // body text color here (globals.css, the scrim block), because neither is
       // guaranteed 4.5:1 or 3:1 over the lightest photo pixel.
       data-scrim={showImage ? 'true' : undefined}
       aria-labelledby={aria['aria-labelledby']}
@@ -141,13 +150,13 @@ export function SectionShell({
         gutter && 'px-[5%]',
         // The band above's edge, painted by this band so it survives
         // ScrollReveal's transform. Empty unless that band asked for one.
-        sectionEdgeClasses(previousGround, previousEdge),
+        sectionEdgeClasses(seam.previousGround, seam.previousEdge),
         OVERLAP_CLASS[overlap],
         // An inset band's own box is transparent; the panel inside carries the
         // surface. A normal band carries it here.
         !isInset && resolved.surfaceClass,
         top,
-        steps.bottom,
+        bottom,
         className,
       ]
         .filter(Boolean)
@@ -167,10 +176,14 @@ export function SectionShell({
               <div className="absolute inset-0 bg-scrim/80" aria-hidden="true" />
             </>
           )}
+          {texture}
           <div className={[contained ? 'container relative' : 'relative', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
         </div>
       ) : (
-        <div className={[contained ? 'container relative' : 'relative', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
+        <>
+          {texture}
+          <div className={[contained ? 'container relative' : 'relative', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
+        </>
       )}
     </Tag>
   )

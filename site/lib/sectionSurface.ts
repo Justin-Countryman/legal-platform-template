@@ -21,31 +21,32 @@
 //             (Phase 15), so this file never lists it beside a surface that paints
 //             the accent. The value is never reused for another surface.
 //   image   — a background image + dark scrim + white text (immersive).
-//   pattern — NO background class at all: the page background layer shows through
-//             (Phase 13). Text polarity is the light cascade, because the page
-//             ground is a light ground until Phase 16's themes say otherwise.
+//   pattern — the light ground wearing the site's section texture, which the band
+//             paints itself (Phase 16A). Offered on homepage sections only; nothing
+//             else on the site, and no interior page, ever shows a texture.
 //
 //   saturated — the accent as a full-width fill (`bg-accent-fill`), text in
 //             `accent-fg` through the `[data-ring-context="saturated"]` block,
 //             buttons in their own context (Phase 15, WS-V1-PHASE15-DESIGN §7
 //             amendments 11 to 17). Offered on the content section only: the
-//             other sections draw controls in the action colour, which can equal
+//             other sections draw controls in the action color, which can equal
 //             the fill.
 //
 // ─── Phase 13, the section frame ─────────────────────────────────────────────────
 //
 // `surface` alone cannot make a stacked page read as one design, for a reason
 // measured on the deployed build in 2026-07 and re-measured in the Phase 13
-// challenge: two bands set to the SAME surface render as one continuous colour
+// challenge: two bands set to the SAME surface render as one continuous color
 // with no seam, and then put 128px of doubled padding at the join (192px from
 // 768px, 224px from 992px — `--breakpoint-lg` here is 992, not Tailwind's 1024).
 // Two sections grouped onto one background still read as two, not because of a
 // visible seam but because of a canyon.
 //
 // So the frame adds:
-//   - `visibleGround()`, which answers "what colour does the visitor SEE here",
-//     collapsing `pattern` and an inset band onto the page ground;
-//   - a spacing preset split into `top` / `bottom` / `seamTop` / `topNone`, so a
+//   - `visibleGround()`, which answers "what color does the visitor SEE here",
+//     which walks `pattern` and an inset band as the light ground;
+//   - a spacing preset split into `top` / `bottom` / `seamTop` / `topOverlap` /
+//     `bottomBeforeOverlap`, so a
 //     dispatcher can halve the top padding at a same-ground join;
 //   - the edge classes, which the NEXT band uses to draw the previous band's
 //     bottom edge.
@@ -84,9 +85,11 @@ export const SECTION_SURFACES: readonly SectionSurface[] = ['light', 'tint', 'da
 export type StoredSurface = SectionSurface | 'accent'
 export type SectionSpacing = 'compact' | 'normal' | 'spacious'
 
-/** What the visitor actually sees behind a band. `pattern` and an inset band show
- *  the page ground, so two of them in a row are a same-ground join. */
-export type VisibleGround = 'light' | 'tint' | 'muted' | 'dark' | 'image' | 'page' | 'saturated'
+/** What the visitor actually sees behind a band, which is what decides a seam.
+ *  There is no page ground any more (Phase 16A, `[R-472]`): a `pattern` band is the
+ *  light ground wearing a faint texture, and the page around an inset panel is the
+ *  light ground, so both walk as `light`. */
+export type VisibleGround = 'light' | 'tint' | 'muted' | 'dark' | 'image' | 'saturated'
 
 /** The bottom edge a band cuts into the one below it. Desktop and up only. */
 export type SectionEdge = 'flat' | 'angled'
@@ -101,9 +104,14 @@ export type SectionSpacingSteps = {
   bottom: string
   /** Top padding at a same-ground join: half of `top`, per breakpoint. */
   seamTop: string
-  /** No top padding, so a band can overlap the one above it by exactly its
-   *  negative margin. */
-  topNone: string
+  /** Top padding of an inset panel that overlaps the band above: the preset's
+   *  own padding on phones, where nothing overlaps, and none from `md`, so the
+   *  negative margin IS the overlap. */
+  topOverlap: string
+  /** Bottom padding of the band ABOVE an overlapping panel: the preset's own plus
+   *  the overlap from `md`, so the panel covers only padding it added and never
+   *  the band's content (Phase 16A, `[R-475]`). */
+  bottomBeforeOverlap: {small: string; large: string}
 }
 
 // Vertical rhythm presets. Horizontal padding (px-[5%]) is applied by the shell.
@@ -121,19 +129,22 @@ export const SECTION_SPACING: Record<SectionSpacing, SectionSpacingSteps> = {
     top:     'pt-12 md:pt-16',
     bottom:  'pb-12 md:pb-16',
     seamTop: 'pt-6 md:pt-8',
-    topNone: 'pt-0',
+    topOverlap: 'pt-12 md:pt-0',
+    bottomBeforeOverlap: {small: 'pb-12 md:pb-28', large: 'pb-12 md:pb-40'},
   },
   normal: {
     top:     'pt-16 md:pt-24 lg:pt-28',
     bottom:  'pb-16 md:pb-24 lg:pb-28',
     seamTop: 'pt-8 md:pt-12 lg:pt-14',
-    topNone: 'pt-0',
+    topOverlap: 'pt-16 md:pt-0',
+    bottomBeforeOverlap: {small: 'pb-16 md:pb-36 lg:pb-40', large: 'pb-16 md:pb-48 lg:pb-52'},
   },
   spacious: {
     top:     'pt-24 md:pt-32 lg:pt-40',
     bottom:  'pb-24 md:pb-32 lg:pb-40',
     seamTop: 'pt-12 md:pt-16 lg:pt-20',
-    topNone: 'pt-0',
+    topOverlap: 'pt-24 md:pt-0',
+    bottomBeforeOverlap: {small: 'pb-24 md:pb-44 lg:pb-52', large: 'pb-24 md:pb-56 lg:pb-64'},
   },
 }
 
@@ -145,12 +156,16 @@ export const TIGHT_SPACING: SectionSpacingSteps = {
   top:     'pt-10 md:pt-12',
   bottom:  'pb-10 md:pb-12',
   seamTop: 'pt-5 md:pt-6',
-  topNone: 'pt-0',
+  topOverlap: 'pt-10 md:pt-0',
+  bottomBeforeOverlap: {small: 'pb-10 md:pb-24', large: 'pb-10 md:pb-36'},
 }
 
 export type ResolvedSectionSurface = {
-  /** Background class for the section band. Empty for `pattern`. */
+  /** Background class for the section band. */
   surfaceClass: string
+  /** True for `pattern`: the shell paints the site's section texture over the light
+   *  ground. Nothing else on the site ever wears it. */
+  textured: boolean
   /** `data-ring-context` value — 'dark' on dark/image surfaces, 'saturated' on the accent fill, else omitted. */
   ringContext: 'dark' | 'saturated' | undefined
   /** Surface context for Button / ButtonGroup inside the section. */
@@ -162,42 +177,42 @@ export type ResolvedSectionSurface = {
 export function sectionSurface(surface: StoredSurface | null | undefined): ResolvedSectionSurface {
   switch (surface) {
     case 'dark':
-      return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: false}
+      return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: false, textured: false}
     case 'image':
       // The image rides on a brand-dark base so a missing/loading image still has
       // a safe dark surface for the white text + scrim.
-      return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: true}
+      return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: true, textured: false}
     case 'saturated':
-      return {surfaceClass: 'bg-accent-fill', ringContext: 'saturated', buttonContext: 'saturated', isImage: false}
+      return {surfaceClass: 'bg-accent-fill', ringContext: 'saturated', buttonContext: 'saturated', isImage: false, textured: false}
     case 'tint':
-      return {surfaceClass: 'bg-hero-tint', ringContext: undefined, buttonContext: 'light', isImage: false}
+      return {surfaceClass: 'bg-hero-tint', ringContext: undefined, buttonContext: 'light', isImage: false, textured: false}
     case 'muted':
     case 'accent': // the legacy stored value (see the header)
-      return {surfaceClass: 'bg-muted', ringContext: undefined, buttonContext: 'light', isImage: false}
-    // NO background class: the page background layer shows through. This is the
-    // whole mechanism — the band paints nothing and the layer behind it is what
-    // the visitor sees. A `pattern` band on a site with no page layer therefore
-    // renders exactly as `light`, which is stated on the schema field and raised
-    // as a build NOTE rather than blocked: Studio cannot check it, because inside
-    // a canvas member `parent` is the member, not `designSettings`.
+      return {surfaceClass: 'bg-muted', ringContext: undefined, buttonContext: 'light', isImage: false, textured: false}
+    // The light ground plus the site's section texture, painted by the band itself
+    // (`SectionShell`). Phase 13 left this band transparent so a page-wide layer
+    // showed through; that layer is gone (Phase 16A, `[R-472]`: no site-wide
+    // background, interior pages always clean). With no `patternTexture` set the
+    // texture is `none` and the band looks exactly like `light`.
     case 'pattern':
-      return {surfaceClass: '', ringContext: undefined, buttonContext: 'light', isImage: false}
+      return {surfaceClass: 'bg-background', ringContext: undefined, buttonContext: 'light', isImage: false, textured: true}
     case 'light':
     default:
-      return {surfaceClass: 'bg-background', ringContext: undefined, buttonContext: 'light', isImage: false}
+      return {surfaceClass: 'bg-background', ringContext: undefined, buttonContext: 'light', isImage: false, textured: false}
   }
 }
 
 /** What the visitor sees behind this band, which is what decides a seam.
  *
  *  An inset band keeps its own surface but renders as a panel inside the
- *  container, so the page ground runs past it on both sides and ABOVE and BELOW
+ *  container, so the light ground runs past it on both sides and ABOVE and BELOW
  *  it: two inset bands in a row are a same-ground join even when the panels
- *  differ. `pattern` is the same case with no panel. */
+ *  differ. A `pattern` band is the light ground with a faint texture, so it joins
+ *  a light band as one ground. */
 export function visibleGround(
   appearance: {surface?: StoredSurface | null; inset?: boolean | null} | null | undefined,
 ): VisibleGround {
-  if (appearance?.inset) return 'page'
+  if (appearance?.inset) return 'light'
   switch (appearance?.surface) {
     case 'dark':    return 'dark'
     case 'image':   return 'image'
@@ -205,20 +220,19 @@ export function visibleGround(
     case 'saturated': return 'saturated'
     // `muted` (and a stored `accent`) is `bg-muted`, its own ground: it seams only
     // with another muted band, and its edge is painted in `bg-muted`. Phase 13
-    // mapped it to `tint`, which halved the padding between two different colours
+    // mapped it to `tint`, which halved the padding between two different colors
     // and painted a hero-tint wedge beside a muted band (Phase 14 challenge).
     case 'muted':
     case 'accent':  return 'muted'
-    case 'pattern': return 'page'
+    case 'pattern': return 'light'
     case 'light':
     default:        return 'light'
   }
 }
 
 // The edge the NEXT band draws for the band above it, keyed on what that band's
-// ground actually was. `page` paints nothing on purpose: there is no solid colour
-// to cut, and an inset or pattern band has the page ground on both sides of the
-// seam already.
+// ground actually was. A `pattern` or inset band walks as `light`, so its edge is
+// the plain light ground (the faint texture is not carried into the wedge).
 //
 // `image` also paints nothing. The photo is a `SanityImage` child element, not a
 // background, so an edge could only inherit the `bg-brand-dark` base underneath
@@ -230,7 +244,6 @@ const EDGE_FROM_CLASS: Record<VisibleGround, string> = {
   dark:  'before:bg-brand-dark',
   saturated: 'before:bg-accent-fill',
   image: '',
-  page:  '',
 }
 
 // The wedge itself: a triangle at the TOP of the next band, painted in the previous
@@ -238,7 +251,7 @@ const EDGE_FROM_CLASS: Record<VisibleGround, string> = {
 // one.
 //
 // Phase 14 fix. Phase 13 shipped the wedge at `bottom: 100%`, which laid it over
-// the PREVIOUS band, painted in that band's own colour: dark on dark, tint on tint.
+// the PREVIOUS band, painted in that band's own color: dark on dark, tint on tint.
 // It rendered nothing whenever it worked as designed (pixel-sampled in the Phase 14
 // challenge; the only visible wedge was the accent/tint mismatch, itself a bug), and
 // the Phase 13 samples that called it visible read the previous band. At `top: 0`
@@ -290,8 +303,9 @@ export function edgeCancelsSeam(
 /** Exported for the test that resolves every class through Tailwind's own design
  *  system. Nothing in the app reads it. */
 export const ALL_FRAME_CLASSES: readonly string[] = [
-  ...Object.values(SECTION_SPACING).flatMap((s) => [s.top, s.bottom, s.seamTop, s.topNone]),
-  TIGHT_SPACING.top, TIGHT_SPACING.bottom, TIGHT_SPACING.seamTop, TIGHT_SPACING.topNone,
+  ...[...Object.values(SECTION_SPACING), TIGHT_SPACING].flatMap((s) => [
+    s.top, s.bottom, s.seamTop, s.topOverlap, s.bottomBeforeOverlap.small, s.bottomBeforeOverlap.large,
+  ]),
   ...Object.values(EDGE_FROM_CLASS).filter(Boolean),
   EDGE_ANGLED,
   'bg-brand-dark', 'bg-hero-tint', 'bg-muted', 'bg-background', 'bg-accent-fill',

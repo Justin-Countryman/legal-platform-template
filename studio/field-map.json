@@ -75,7 +75,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -598,7 +598,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -1023,7 +1023,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630px — overrides the auto-generated share image. Optional; when empty the site generates a branded one from the firm name, logo and brand colour.",
+          "description": "1200×630px — overrides the auto-generated share image. Optional; when empty the site generates a branded one from the firm name, logo and brand color.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image (custom)",
@@ -2759,8 +2759,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
-          "initialValue": "light",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -2768,8 +2767,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -2792,7 +2790,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -2806,7 +2804,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -2822,7 +2821,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -2841,9 +2839,7 @@
         "_type": "attorneySection",
         "cardStyle": "classic",
         "layout": "grid",
-        "mode": "practiceArea",
-        "spacing": "normal",
-        "surface": "light"
+        "mode": "practiceArea"
       },
       "kind": "document",
       "singletonId": null,
@@ -3000,7 +2996,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -3008,8 +3004,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -3032,7 +3027,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -3046,7 +3041,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -3138,7 +3134,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -3335,7 +3331,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -3723,7 +3719,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -4193,8 +4189,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
-          "initialValue": "light",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -4202,8 +4197,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -4226,7 +4220,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -4240,7 +4234,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -4256,7 +4251,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -4276,9 +4270,7 @@
         "ctaButton": {
           "_type": "ctaButton",
           "variant": "primary"
-        },
-        "spacing": "normal",
-        "surface": "light"
+        }
       },
       "kind": "document",
       "singletonId": null,
@@ -4338,7 +4330,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -4977,8 +4969,7 @@
           "type": "boolean"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
-          "initialValue": "light",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -4987,8 +4978,7 @@
               "tint",
               "dark",
               "saturated",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -5011,7 +5001,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5025,7 +5015,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5041,7 +5032,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5058,9 +5048,7 @@
       ],
       "initialDocument": {
         "_type": "contentSection",
-        "layout": "split",
-        "spacing": "normal",
-        "surface": "light"
+        "layout": "split"
       },
       "kind": "document",
       "singletonId": null,
@@ -5160,7 +5148,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5168,8 +5156,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -5192,7 +5179,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5206,7 +5193,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5247,31 +5235,7 @@
     "designSettings": {
       "fields": [
         {
-          "description": "A subtle ground behind the whole site. Sections set to the Pattern surface, and the margins around an Inset Panel, show it; every other surface covers it.",
-          "jsonType": "object",
-          "path": "pageBackground",
-          "title": "Page Background",
-          "type": "object"
-        },
-        {
-          "description": "Leave as None for a plain white page, which is how every site ships.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "none",
-              "texture",
-              "photo",
-              "gradient"
-            ]
-          },
-          "path": "pageBackground.kind",
-          "title": "Kind",
-          "type": "string"
-        },
-        {
-          "description": "Drawn in the brand colour at the opacity below, so it follows the palette.",
-          "hidden": "<predicate>",
+          "description": "The texture a homepage section set to the Pattern surface wears, drawn faintly in the dark ground color so text stays readable. Nothing else on the site shows it, and interior pages never do. Leave blank for none.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5282,24 +5246,9 @@
               "scallop"
             ]
           },
-          "path": "pageBackground.texture",
-          "title": "Texture",
+          "path": "patternTexture",
+          "title": "Pattern Texture",
           "type": "string"
-        },
-        {
-          "hidden": "<predicate>",
-          "jsonType": "object",
-          "path": "pageBackground.image",
-          "title": "Photo",
-          "type": "image"
-        },
-        {
-          "description": "How strongly the background shows. A texture or photo renders at 0.04 at most, the strength at which every text colour on it stays readable (WCAG AA); a gradient may go to 0.25.",
-          "hidden": "<predicate>",
-          "jsonType": "number",
-          "path": "pageBackground.opacity",
-          "title": "Strength",
-          "type": "number"
         },
         {
           "description": "Used in headers, footers, and sections with a light background. Typically your full-color or dark logo.",
@@ -5344,7 +5293,7 @@
           "type": "image"
         },
         {
-          "description": "Choose a palette to fill the four colours below, or type your own. The preview shows what the site renders: a colour that cannot be read against its background is adjusted the smallest step that reads, and shown here.",
+          "description": "Choose a palette to fill the four colors below, or type your own. The preview shows what the site renders: a color that cannot be read against its background is adjusted the smallest step that reads, and shown here.",
           "jsonType": "string",
           "path": "colorPreview",
           "readOnly": true,
@@ -5352,7 +5301,7 @@
           "type": "string"
         },
         {
-          "description": "Hex, e.g. #14213D. Dark sections, the footer, and dark header and hero schemes. A deep navy, charcoal, forest or burgundy works best; a lighter or more vivid colour is deepened until white text reads on it.",
+          "description": "Hex, e.g. #14213D. Dark sections, the footer, and dark header and hero schemes. A deep navy, charcoal, forest or burgundy works best; a lighter or more vivid color is deepened until white text reads on it.",
           "jsonType": "string",
           "path": "darkGround",
           "title": "Dark Ground",
@@ -5366,7 +5315,7 @@
           "type": "string"
         },
         {
-          "description": "Hex, e.g. #B8893A. The brand colour on small areas: taglines, highlighted heading words, icons, rules. Where it is too light to read as text, text uses a darker shade of the same colour.",
+          "description": "Hex, e.g. #B8893A. The brand color on small areas: taglines, highlighted heading words, icons, rules. Where it is too light to read as text, text uses a darker shade of the same color.",
           "jsonType": "string",
           "path": "accent",
           "title": "Accent",
@@ -5376,7 +5325,7 @@
           "description": "Hex. Buttons and calls to action. Leave blank to use the accent.",
           "jsonType": "string",
           "path": "action",
-          "title": "Button Colour (optional)",
+          "title": "Button Color (optional)",
           "type": "string"
         },
         {
@@ -5532,7 +5481,15 @@
           "type": "file"
         },
         {
-          "description": "Controls the corner rounding on cards, images, form fields, badges, and section containers. Does not affect buttons — set those separately below.",
+          "description": "Choose a family to set card and button corners together, so they always belong together. The two fields below hold what it sets.",
+          "jsonType": "string",
+          "path": "cornerPreview",
+          "readOnly": true,
+          "title": "Corner Family",
+          "type": "string"
+        },
+        {
+          "description": "Corners on cards, images, form fields, badges, and section panels. Set by the Corner Family above; change it here only to mix on purpose.",
           "initialValue": "rounded",
           "jsonType": "string",
           "options": {
@@ -5551,7 +5508,7 @@
           "type": "string"
         },
         {
-          "description": "Controls the shape of all buttons site-wide. Pairs well with — but is independent from — the UI Corner Radius above.",
+          "description": "The shape of every button. Set by the Corner Family above; a button rounder than the cards reads as a mismatch unless it is a pill.",
           "initialValue": "rounded",
           "jsonType": "string",
           "options": {
@@ -5874,7 +5831,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -6262,7 +6219,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -6826,7 +6783,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -7381,7 +7338,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -7389,8 +7346,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -7413,7 +7369,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -7427,7 +7383,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -7504,8 +7461,7 @@
           "type": "reference"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
-          "initialValue": "tint",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -7513,8 +7469,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -7537,7 +7492,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -7551,7 +7506,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -7567,7 +7523,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -7584,9 +7539,7 @@
       ],
       "initialDocument": {
         "_type": "featuredTestimonial",
-        "heading": "Client Testimonial",
-        "spacing": "normal",
-        "surface": "tint"
+        "heading": "Client Testimonial"
       },
       "kind": "document",
       "singletonId": null,
@@ -7886,7 +7839,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -8408,7 +8361,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -9514,7 +9467,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -9827,8 +9780,7 @@
           "type": "image"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
-          "initialValue": "light",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -9860,7 +9812,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -9874,7 +9826,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -9890,7 +9843,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -9981,8 +9933,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
-          "initialValue": "light",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10014,7 +9965,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10028,7 +9979,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10044,7 +9996,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10116,8 +10067,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
-          "initialValue": "light",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10149,7 +10099,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10163,7 +10113,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10179,7 +10130,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10275,7 +10225,7 @@
           "type": "string"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10307,7 +10257,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10321,7 +10271,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10378,8 +10329,7 @@
           "type": "array"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
-          "initialValue": "tint",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10411,7 +10361,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10425,7 +10375,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10441,7 +10392,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10476,8 +10426,7 @@
           "type": "reference"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
-          "initialValue": "tint",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10509,7 +10458,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10523,7 +10472,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10539,7 +10489,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10596,7 +10545,7 @@
           "type": "array"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10628,7 +10577,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -10642,7 +10591,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11003,8 +10953,7 @@
           "type": "boolean"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
-          "initialValue": "light",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11037,7 +10986,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11051,7 +11000,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11067,7 +11017,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11159,7 +11108,7 @@
           "type": "text"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11191,7 +11140,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11205,7 +11154,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11374,7 +11324,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -12143,7 +12093,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -13034,7 +12984,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -13725,8 +13675,7 @@
           "type": "image"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
-          "initialValue": "light",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -13734,8 +13683,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -13758,7 +13706,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -13772,7 +13720,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -13788,7 +13737,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -13811,9 +13759,7 @@
         "mobileDisplay": "carousel",
         "mode": "manual",
         "sectionLayout": "centered",
-        "showArrow": true,
-        "spacing": "normal",
-        "surface": "light"
+        "showArrow": true
       },
       "kind": "document",
       "singletonId": null,
@@ -14189,7 +14135,7 @@
           "type": "text"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -14197,8 +14143,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -14221,7 +14166,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -14235,7 +14180,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -14326,7 +14272,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -14735,7 +14681,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -15729,7 +15675,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -16127,7 +16073,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -16499,8 +16445,7 @@
           "type": "array"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
-          "initialValue": "tint",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -16508,8 +16453,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -16532,7 +16476,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -16546,7 +16490,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -16562,7 +16507,6 @@
         },
         {
           "description": "The empty space (padding) above and below this section’s content — applied equally to the top and bottom (the left/right gutter is fixed). It controls how much the section breathes and how far it sits from the sections above and below. Each section adds its own, so the gap between two sections is the sum of both. Scales up on larger screens.",
-          "initialValue": "normal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -16578,9 +16522,7 @@
         }
       ],
       "initialDocument": {
-        "_type": "testimonialsGrid",
-        "spacing": "normal",
-        "surface": "tint"
+        "_type": "testimonialsGrid"
       },
       "kind": "document",
       "singletonId": null,
@@ -16640,7 +16582,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -17103,7 +17045,7 @@
           "type": "text"
         },
         {
-          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand colour, so leaving this blank is a valid choice rather than a gap.",
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
           "jsonType": "object",
           "path": "ogImageOverride",
           "title": "OG Image",
@@ -17533,7 +17475,7 @@
           "type": "array"
         },
         {
-          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically. “Pattern” paints no background of its own so the page background shows through, so it looks the same as “Light” on a site whose Design Settings set no page background.",
+          "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -17541,8 +17483,7 @@
               "light",
               "tint",
               "dark",
-              "image",
-              "pattern"
+              "image"
             ]
           },
           "path": "surface",
@@ -17565,7 +17506,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo or the Pattern surface, because there is no solid colour to cut.",
+          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -17579,7 +17520,8 @@
           "type": "string"
         },
         {
-          "description": "Pull this section up so it rides over the one above it, tying the two together. It only ever covers the empty space at the bottom of the section above, never its text. Desktop and tablet only: phones stack normally.",
+          "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
+          "hidden": "<predicate>",
           "jsonType": "string",
           "options": {
             "layout": "radio",
