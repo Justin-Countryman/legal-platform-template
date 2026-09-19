@@ -5716,7 +5716,7 @@
           "type": "string"
         },
         {
-          "description": "What a practice area card does on hover, in every practice area section that has not chosen its own. Zoom and Glow need a photo; cards without one use their layout’s own. Leave blank for each layout’s own.",
+          "description": "What a practice area card does on hover, in every practice area section that has not chosen its own. Zoom needs a photo; cards without one use their layout’s own. Leave blank for each layout’s own.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
