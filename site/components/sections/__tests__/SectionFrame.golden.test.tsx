@@ -9,7 +9,7 @@ import {render} from '@testing-library/react'
 // WS-V1-PHASE13-DESIGN §7, amendment 5; the method is Phase 11's amendment 2).
 //
 // WHY IT EXISTS. Phase 13 moves thirteen of these bands onto `SectionShell` so a
-// theme's `surfaceRhythm` can reach them at all (§7 amendment 16). Requirement 5
+// theme can reach them at all (§7 amendment 16). Requirement 5
 // says "existing datasets keep their look", and nothing executable holds that
 // today: `HomepageCanvas.parity.test.tsx`'s fixture holds only the retired block
 // types, Verify never reads a band, and the stub build greps text. So the claim

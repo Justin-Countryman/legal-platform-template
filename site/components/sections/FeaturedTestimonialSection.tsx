@@ -57,7 +57,7 @@ export function FeaturedTestimonialSection({
 
         {/* Section heading */}
         {tagline && <Tagline as="p">{tagline}</Tagline>}
-        <h2 className="mb-6 font-heading text-xl font-bold text-foreground md:text-2xl">
+        <h2 className="section-heading mb-6 font-heading text-xl font-bold text-foreground md:text-2xl">
           {heading}
         </h2>
 

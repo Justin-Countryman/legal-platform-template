@@ -107,12 +107,23 @@ export function defaultHoverForStyle(style?: string | null): SiloHoverEffect {
 // Resolve the operator's selection into the effects to apply:
 //   • includes 'none'  → [] (explicitly static; 'none' overrides the rest)
 //   • non-empty        → exactly the (valid) chosen effects, all composed
-//   • unset / empty    → the per-style default (a single effect)
-export function resolveHovers(effects?: string[] | null, style?: string | null): SiloHoverEffect[] {
+//   • unset / empty    → the SITE's hover (`designSettings.cardHover`, which a theme
+//                        sets, Phase 16B) where this layout can show it, else the
+//                        per-style default (a single effect)
+// A zoom (or grayscale) acts on the photo; the two layouts that may carry none
+// take their own default instead of a hover that would do nothing. A glow is its
+// own overlay and needs no photo (it is the tile layout's own default).
+const PHOTOLESS_STYLES = new Set(['inline', 'tile'])
+const NEEDS_PHOTO = new Set<SiloHoverEffect>(['imageZoom', 'grayscale'])
+
+export function resolveHovers(effects?: string[] | null, style?: string | null, siteDefault?: string | null): SiloHoverEffect[] {
   const valid = (effects ?? []).filter((e): e is SiloHoverEffect =>
     (SILO_HOVER_EFFECTS as string[]).includes(e),
   )
   if (valid.includes('none')) return []
   if (valid.length > 0) return valid
+  const site = (SILO_HOVER_EFFECTS as string[]).includes(siteDefault ?? '') ? (siteDefault as SiloHoverEffect) : null
+  if (site === 'none') return []
+  if (site && !(PHOTOLESS_STYLES.has(style ?? '') && NEEDS_PHOTO.has(site))) return [site]
   return [defaultHoverForStyle(style)]
 }

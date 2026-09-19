@@ -7,15 +7,16 @@ import {splitEmphasis} from '@/lib/headingEmphasis'
 // Tagline above, one heading element, and an emphasis span inside the heading
 // (Phase 11, 2026-09-14; monorepo WS-V1-PHASE11-DESIGN §7 amendment 3). The
 // content section consumes it now; the hero, the closing CTA and SectionHeader
-// join it later (Phase 16 adds the heading rule and a `context` prop, drawn as a
-// pseudo-element so no consumer gains an element).
+// join it later. The heading rule and capitals come from the `section-heading`
+// class every section heading carries (Phase 16B), drawn as a pseudo-element so no
+// consumer gains an element.
 //
 // THE EMPHASIS. `headingEmphasis` is a string that occurs in `heading`. Tokens
 // resolve in the tagline, the heading and the emphasis BEFORE the split, so
 // `{{firmName}}` meets the resolved firm name. The first occurrence renders as
 // `<em class="heading-emphasis">`: `em` for its default meaning, though screen
-// readers do not announce it. Until Phase 16's theme tokens exist the class sets
-// the accent color and upright type (`globals.css`).
+// readers do not announce it. The class sets the accent color, upright or in the
+// pairing's italic as the theme chooses (`globals.css`, Phase 16B).
 //
 // THE TIER. A typed scale, never a class passthrough, so every class a heading
 // can carry is enumerable: `__tests__/HeadingUnit.test.tsx` runs the real
@@ -28,10 +29,10 @@ export type HeadingUnitScale = 'marketing' | 'interior'
 export const HEADING_UNIT_TIER_CLASS: Record<HeadingUnitScale, string> = {
   // The homepage tier: the marketing scale, so designSettings.marketingScale
   // moves it, as it moves the old homepage blocks.
-  marketing: 'marketing-h2 font-heading font-bold text-foreground',
+  marketing: 'marketing-h2 section-heading font-heading font-bold text-foreground',
   // The interior tier: SectionHeader's standard (md) type size, without its
   // trailing margin; the consumer owns the gap below the unit.
-  interior: 'text-3xl font-bold text-foreground md:text-4xl',
+  interior: 'section-heading text-3xl font-bold text-foreground md:text-4xl',
 }
 
 export type HeadingUnitProps = {

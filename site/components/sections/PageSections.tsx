@@ -11,7 +11,7 @@ import {AttorneySectionBlock, type AttorneySectionBlockData} from './AttorneySec
 import {ReviewsSectionBlock, type ReviewsSectionBlockData} from './ReviewsSectionBlock'
 import {VideoSectionBlock, type VideoSectionBlockData} from './VideoSectionBlock'
 import {PracticeAreaNavBlock, type PracticeAreaNavBlockData} from './PracticeAreaNavBlock'
-import {walkFrame} from './sectionFrame'
+import {walkFrame, interiorLook, type SiteLook} from './sectionFrame'
 import {type SectionAppearance} from './SectionShell'
 import * as AttorneyFrame from './AttorneySectionBlock'
 import * as BadgesFrame from './BadgesSectionBlock'
@@ -97,9 +97,13 @@ export function PageSections({
   sections,
   napTokens,
   resultsDisclaimer,
+  site,
 }: {
   sections: PageSectionData[]
   napTokens?: NapTokens | null
+  /** The site's look (`siteLookOf`). Interior pages take its cards and frames but
+   *  never a join or a textured ground (`interiorLook`, Phase 16B). */
+  site?: SiteLook | null
   /** Raw siteSettings.resultsDisclaimer, projected by the page query. Nullable
    *  by design: the resolver supplies the code constant when it is absent. */
   resultsDisclaimer?: string | null
@@ -108,7 +112,7 @@ export function PageSections({
 
   return (
     <>
-      {walkFrame(sections.map(withoutTexture), frameOf).map(({member: section, index: i, seam}) => {
+      {walkFrame(sections.map(withoutTexture), frameOf, interiorLook(site)).map(({member: section, index: i, seam}) => {
         switch (section._type) {
           case 'testimonialsGrid':
             return <TestimonialsGridSection key={i} data={section} napTokens={napTokens} seam={seam} />

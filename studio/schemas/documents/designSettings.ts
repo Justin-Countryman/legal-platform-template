@@ -3,6 +3,7 @@ import {PageLinkInput} from '../../components/PageLinkInput'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {ColorPreview} from '../../components/ColorPreview'
 import {CornerPreview} from '../../components/CornerPreview'
+import {ThemePreview} from '../../components/ThemePreview'
 
 // Design Settings
 // Visual identity: logos, colors, typography, UI style
@@ -13,6 +14,16 @@ export const designSettings = defineType({
   title: 'Design Settings',
   type: 'document',
   fieldsets: [
+    {
+      name: 'theme',
+      title: 'Theme',
+      options: {collapsible: true, collapsed: false},
+    },
+    {
+      name: 'headings',
+      title: 'Headings',
+      options: {collapsible: true, collapsed: true},
+    },
     {
       name: 'brandAssets',
       title: 'Brand Assets',
@@ -55,11 +66,77 @@ export const designSettings = defineType({
     },
     {
       name: 'patternTexture',
-      title: 'Pattern Texture',
+      title: 'Section Texture and Edges',
       options: {collapsible: true, collapsed: true},
     },
   ],
   fields: [
+    // ─── The theme (Phase 16B, [R-468], [R-469], [R-477]) ─────────────────────
+    // A theme is the site's signature and UI system. Choosing one writes the
+    // settings it names, across the fieldsets below, in one patch; the settings are
+    // the truth after that, and the Studio names the theme only while they still
+    // match it. Nothing records which theme was chosen and the site never reads a
+    // theme. See site/lib/themes.ts and studio/components/ThemePreview.tsx.
+    //
+    // NONE of the theme's own new fields below carries an `initialValue`: a seed is
+    // folded into every Site-Build write and stamped on every client, where nothing
+    // can tell it from a choice (item 308, [R-450]). Absent is the default render.
+    defineField({
+      name: 'themePreview',
+      title: 'Theme',
+      type: 'string',
+      fieldset: 'theme',
+      readOnly: true,
+      components: {input: ThemePreview},
+      description: 'Choose a theme to set the fonts, corners, headings, photo frames, section edges, texture and hover together. It never changes your colors, and a look set on one section on purpose stays as it was set.',
+    }),
+
+    // ─── Headings (Phase 16B) ─────────────────────────────────────────────────
+    defineField({
+      name: 'headingEmphasisStyle',
+      title: 'Highlighted Words',
+      type: 'string',
+      fieldset: 'headings',
+      description: 'How the highlighted words in a heading stand out. Color: upright, in the accent. Italic: in the heading font\u2019s italic, in the accent. Leave blank for Color.',
+      options: {
+        list: [
+          {title: 'Color \u2014 upright, in the accent', value: 'color'},
+          {title: 'Italic \u2014 the heading font\u2019s italic, in the accent', value: 'italic'},
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
+      name: 'headingRule',
+      title: 'Line Under Section Headings',
+      type: 'string',
+      fieldset: 'headings',
+      description: 'A short line under every section heading, in the accent, centered under a centered heading. Leave blank for none.',
+      options: {
+        list: [
+          {title: 'None', value: 'none'},
+          {title: 'Line \u2014 a short solid line', value: 'line'},
+          {title: 'Double \u2014 two fine lines', value: 'double'},
+          {title: 'Hatched \u2014 a short band of fine diagonals', value: 'hatched'},
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
+      name: 'headingCase',
+      title: 'Section Heading Capitals',
+      type: 'string',
+      fieldset: 'headings',
+      description: 'Set section headings in capitals, slightly spaced. Page titles and the homepage headline keep the case they are written in. Leave blank for as written.',
+      options: {
+        list: [
+          {title: 'As written', value: 'normal'},
+          {title: 'Capitals', value: 'upper'},
+        ],
+        layout: 'radio',
+      },
+    }),
+
     // ─── The section texture (Phase 16A, [R-472]) ─────────────────────────────
     // There is no site-wide background: interior pages are always a clean ground,
     // and a texture appears only on a HOMEPAGE section someone set to the Pattern
@@ -76,13 +153,41 @@ export const designSettings = defineType({
       type: 'string',
       fieldset: 'patternTexture',
       description:
-        'The texture a homepage section set to the Pattern surface wears, drawn faintly in the dark ground color so text stays readable. Nothing else on the site shows it, and interior pages never do. Leave blank for none.',
+        'The texture a homepage section set to the Pattern surface wears, drawn faintly so text stays readable. Nothing else on the site shows it, and interior pages never do. Leave blank for none.',
       options: {
         list: [
           {title: 'Pinstripe \u2014 fine vertical lines', value: 'pinstripe'},
           {title: 'Diagonal hatch \u2014 fine diagonal lines', value: 'diagonalHatch'},
           {title: 'Diamond lattice \u2014 a fine crosshatch', value: 'diamondLattice'},
           {title: 'Scallop \u2014 a repeating arc', value: 'scallop'},
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
+      name: 'patternGround',
+      title: 'Texture Ground',
+      type: 'string',
+      fieldset: 'patternTexture',
+      description: 'Which background a Pattern section sits on. Dark draws the texture darker than the dark background, so text on it stays at least as readable. Needs a texture above; leave blank for Light.',
+      options: {
+        list: [
+          {title: 'Light', value: 'light'},
+          {title: 'Dark', value: 'dark'},
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
+      name: 'sectionJoin',
+      title: 'Section Edge',
+      type: 'string',
+      fieldset: 'patternTexture',
+      description: 'The shape of the edge where a homepage section that asks for "the site\u2019s edge" meets the next one. Angled suits sharp-cornered themes; Straight suits soft ones. Sections that do not ask stay straight. Desktop and tablet only. Leave blank for Straight.',
+      options: {
+        list: [
+          {title: 'Straight', value: 'straight'},
+          {title: 'Angled \u2014 a diagonal cut', value: 'angled'},
         ],
         layout: 'radio',
       },
@@ -601,6 +706,60 @@ export const designSettings = defineType({
       },
       initialValue: '0',
     },
+
+    // ─── Photos and cards (Phase 16B) ─────────────────────────────────────────
+    // Site values a section follows unless it sets its own ([R-468]'s continuity
+    // rule). No `initialValue`, as the note at the top of the fields explains.
+    defineField({
+      name: 'imageFrame',
+      title: 'Photo Frame',
+      type: 'string',
+      fieldset: 'uiElements',
+      description: 'How feature photos are framed across the site; a section can set its own. Photos take the corner family either way. Framed also reaches attorney photos. Leave blank for Plain.',
+      options: {
+        list: [
+          {title: 'Plain', value: 'plain'},
+          {title: 'Framed \u2014 a fine accent line inside the photo edge', value: 'framed'},
+          {title: 'Slab \u2014 an offset block behind the photo', value: 'slab'},
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
+      name: 'cardHover',
+      title: 'Practice Area Card Hover',
+      type: 'string',
+      fieldset: 'uiElements',
+      description: 'What a practice area card does on hover, in every practice area section that has not chosen its own. Zoom needs a photo; cards without one use their layout\u2019s own. Leave blank for each layout\u2019s own.',
+      options: {
+        list: [
+          {title: 'Image zoom \u2014 the photo scales', value: 'imageZoom'},
+          {title: 'Lift \u2014 the card raises', value: 'lift'},
+          {title: 'Glow \u2014 an accent glow fades in', value: 'glow'},
+          {title: 'Accent border \u2014 a border draws in', value: 'accentBorder'},
+          {title: 'Accent underline \u2014 a line draws under the name', value: 'accentUnderline'},
+          {title: 'None \u2014 static', value: 'none'},
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
+      name: 'attorneyCardStyle',
+      title: 'Attorney Card Style',
+      type: 'string',
+      fieldset: 'uiElements',
+      description: 'The look of attorney cards in every attorney section that has not chosen its own. Leave blank for Classic.',
+      options: {
+        list: [
+          {title: 'Classic \u2014 photo left, details right', value: 'classic'},
+          {title: 'Portrait \u2014 photo on top, details below', value: 'portrait'},
+          {title: 'Avatar \u2014 round headshot, centered', value: 'avatar'},
+          {title: 'Minimal \u2014 frameless photo, lots of whitespace', value: 'minimal'},
+          {title: 'Spotlight \u2014 photo with bio revealed on hover', value: 'spotlight'},
+        ],
+        layout: 'radio',
+      },
+    }),
 
     // ─── Sidebar (UI Elements) ────────────────────────────────────────────────
     // WS-Sidebar Phase 2.1 — three site-level settings governing sidebar nav

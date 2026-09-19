@@ -13,7 +13,8 @@
 export const revalidate = 3600
 
 import type {Metadata} from 'next'
-import {chromeGlobalCta, chromeHeader, chromeNap, getHomePage} from '@/lib/sanity/fetchers'
+import {chromeGlobalCta, chromeHeader, chromeNap, getHomePage, getSiteChrome} from '@/lib/sanity/fetchers'
+import {siteLookOf} from '@/components/sections/sectionFrame'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
 import {HomepageHero} from '@/components/layout/homeHero'
@@ -210,6 +211,7 @@ export default async function HomePage() {
       )}
 
       <HomepageCanvas
+        site={siteLookOf((await getSiteChrome())?.designTokens)}
         blocks={home?.canvas}
         napTokens={tokens}
         resultsDisclaimer={home?.resultsDisclaimer}

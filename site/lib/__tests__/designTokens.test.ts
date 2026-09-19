@@ -14,6 +14,7 @@ import {
   resolvePalette,
   retoneFill,
   validateWcag,
+  textureOnDark,
 } from '../designTokens'
 import {PALETTE_PRESETS, matchPreset, presetInputs} from '../palettes'
 
@@ -398,47 +399,47 @@ describe('buildDesignTokenCSS elevation tokens', () => {
   })
 
   it('elevationStyle "0" outputs none explicitly', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, '0')
+    const css = buildDesignTokenCSS({elevationStyle: '0'})
     expect(css).toContain('--shadow-card-rest:none')
   })
 
   it('level 1 outputs 2-layer shadow for rest', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, '1')
+    const css = buildDesignTokenCSS({elevationStyle: '1'})
     const match = css.match(/--shadow-card-rest:([^;}]+)/)
     const layers = (match?.[1] ?? '').split('rgb(').length - 1
     expect(layers).toBe(2)
   })
 
   it('level 4 outputs 3-layer shadow for rest', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, '4')
+    const css = buildDesignTokenCSS({elevationStyle: '4'})
     const match = css.match(/--shadow-card-rest:([^;}]+)/)
     const layers = (match?.[1] ?? '').split('rgb(').length - 1
     expect(layers).toBe(3)
   })
 
   it('level 6 outputs 3-layer shadow with largest offsets', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, '6')
+    const css = buildDesignTokenCSS({elevationStyle: '6'})
     expect(css).toContain('48px')
     expect(css).toContain('64px')
     expect(css).toContain('--transform-card-hover:-3px')
   })
 
   it('transform-card-hover values increase with intensity', () => {
-    const level2 = buildDesignTokenCSS(undefined, undefined, undefined, '2')
-    const level4 = buildDesignTokenCSS(undefined, undefined, undefined, '4')
-    const level6 = buildDesignTokenCSS(undefined, undefined, undefined, '6')
+    const level2 = buildDesignTokenCSS({elevationStyle: '2'})
+    const level4 = buildDesignTokenCSS({elevationStyle: '4'})
+    const level6 = buildDesignTokenCSS({elevationStyle: '6'})
     expect(level2).toContain('--transform-card-hover:-1px')
     expect(level4).toContain('--transform-card-hover:-2px')
     expect(level6).toContain('--transform-card-hover:-3px')
   })
 
   it('unknown elevationStyle falls back to flat', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, 'nonexistent')
+    const css = buildDesignTokenCSS({elevationStyle: 'nonexistent'})
     expect(css).toContain('--shadow-card-rest:none')
   })
 
   it('elevation tokens reference var(--shadow-rgb) (not hardcoded color)', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, '4')
+    const css = buildDesignTokenCSS({elevationStyle: '4'})
     expect(css).toContain('var(--shadow-rgb)')
     expect(css).not.toMatch(/rgb\(\d+ \d+ \d+/)
   })
@@ -446,41 +447,41 @@ describe('buildDesignTokenCSS elevation tokens', () => {
 
 describe('buildDesignTokenCSS motionTempo', () => {
   it('snappy outputs fastest UI values', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, undefined, 'snappy')
+    const css = buildDesignTokenCSS({motionTempo: 'snappy'})
     expect(css).toContain('--motion-ui-fast:150ms')
     expect(css).toContain('--motion-ui-base:250ms')
     expect(css).toContain('--motion-ui-slow:400ms')
   })
 
   it('balanced outputs mid-range UI values', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, undefined, 'balanced')
+    const css = buildDesignTokenCSS({motionTempo: 'balanced'})
     expect(css).toContain('--motion-ui-fast:200ms')
     expect(css).toContain('--motion-ui-base:325ms')
     expect(css).toContain('--motion-ui-slow:500ms')
   })
 
   it('relaxed outputs slowest UI values', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, undefined, 'relaxed')
+    const css = buildDesignTokenCSS({motionTempo: 'relaxed'})
     expect(css).toContain('--motion-ui-fast:250ms')
     expect(css).toContain('--motion-ui-base:400ms')
     expect(css).toContain('--motion-ui-slow:600ms')
   })
 
   it('null/undefined motionTempo defaults to relaxed', () => {
-    const cssNull    = buildDesignTokenCSS(undefined, undefined, undefined, undefined, null)
+    const cssNull    = buildDesignTokenCSS({motionTempo: null})
     const cssDefault = buildDesignTokenCSS()
     expect(cssNull).toContain('--motion-ui-fast:250ms')
     expect(cssDefault).toContain('--motion-ui-fast:250ms')
   })
 
   it('unknown motionTempo falls back to relaxed', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, undefined, 'turbo')
+    const css = buildDesignTokenCSS({motionTempo: 'turbo'})
     expect(css).toContain('--motion-ui-fast:250ms')
   })
 
   it('structural tokens are always fixed regardless of motionTempo', () => {
     for (const tempo of ['snappy', 'balanced', 'relaxed', null]) {
-      const css = buildDesignTokenCSS(undefined, undefined, undefined, undefined, tempo)
+      const css = buildDesignTokenCSS({motionTempo: tempo})
       expect(css).toContain('--motion-structural-fast:150ms')
       expect(css).toContain('--motion-structural-base:250ms')
       expect(css).toContain('--motion-structural-slow:400ms')
@@ -488,8 +489,8 @@ describe('buildDesignTokenCSS motionTempo', () => {
   })
 
   it('snappy UI values are all faster than relaxed UI values', () => {
-    const snappy  = buildDesignTokenCSS(undefined, undefined, undefined, undefined, 'snappy')
-    const relaxed = buildDesignTokenCSS(undefined, undefined, undefined, undefined, 'relaxed')
+    const snappy  = buildDesignTokenCSS({motionTempo: 'snappy'})
+    const relaxed = buildDesignTokenCSS({motionTempo: 'relaxed'})
     const extract = (css: string, token: string) =>
       parseInt(css.match(new RegExp(`${token}:(\\d+)ms`))?.[1] ?? '0', 10)
 
@@ -511,22 +512,22 @@ describe('buildDesignTokenCSS marketingScale', () => {
   })
 
   it('"default" emits no --marketing-* vars (utilities fall back to standard)', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, undefined, undefined, 'default')
+    const css = buildDesignTokenCSS({marketingScale: 'default'})
     expect(css).not.toContain('--marketing-h1')
   })
 
   it('null emits no --marketing-* vars', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, undefined, undefined, null)
+    const css = buildDesignTokenCSS({marketingScale: null})
     expect(css).not.toContain('--marketing-h1')
   })
 
   it('unknown value emits no --marketing-* vars (graceful fallback)', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, undefined, undefined, 'xl')
+    const css = buildDesignTokenCSS({marketingScale: 'xl'})
     expect(css).not.toContain('--marketing-h1')
   })
 
   it('sm — Perfect Fourth ratio values', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, undefined, undefined, 'sm')
+    const css = buildDesignTokenCSS({marketingScale: 'sm'})
     expect(css).toContain('--marketing-h1:4.214rem')
     expect(css).toContain('--marketing-h2:3.161rem')
     expect(css).toContain('--marketing-h3:2.371rem')
@@ -534,7 +535,7 @@ describe('buildDesignTokenCSS marketingScale', () => {
   })
 
   it('md — Augmented Fourth ratio values', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, undefined, undefined, 'md')
+    const css = buildDesignTokenCSS({marketingScale: 'md'})
     expect(css).toContain('--marketing-h1:5.657rem')
     expect(css).toContain('--marketing-h2:4rem')
     expect(css).toContain('--marketing-h3:2.828rem')
@@ -542,7 +543,7 @@ describe('buildDesignTokenCSS marketingScale', () => {
   })
 
   it('lg — Golden Ratio values, H1 capped at 8rem', () => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, undefined, undefined, 'lg')
+    const css = buildDesignTokenCSS({marketingScale: 'lg'})
     expect(css).toContain('--marketing-h1:8rem')
     expect(css).toContain('--marketing-h2:6.854rem')
     expect(css).toContain('--marketing-h3:4.236rem')
@@ -552,9 +553,9 @@ describe('buildDesignTokenCSS marketingScale', () => {
   })
 
   it('values increase with preset across all four levels', () => {
-    const sm = buildDesignTokenCSS(undefined, undefined, undefined, undefined, undefined, 'sm')
-    const md = buildDesignTokenCSS(undefined, undefined, undefined, undefined, undefined, 'md')
-    const lg = buildDesignTokenCSS(undefined, undefined, undefined, undefined, undefined, 'lg')
+    const sm = buildDesignTokenCSS({marketingScale: 'sm'})
+    const md = buildDesignTokenCSS({marketingScale: 'md'})
+    const lg = buildDesignTokenCSS({marketingScale: 'lg'})
     const extract = (css: string, level: string) => {
       const match = css.match(new RegExp(`--marketing-${level}:([\\d.]+)rem`))
       return parseFloat(match?.[1] ?? '0')
@@ -562,6 +563,83 @@ describe('buildDesignTokenCSS marketingScale', () => {
     for (const level of ['h1', 'h2', 'h3', 'h4']) {
       expect(extract(md, level)).toBeGreaterThan(extract(sm, level))
       expect(extract(lg, level)).toBeGreaterThan(extract(md, level))
+    }
+  })
+})
+
+// ─── Phase 16B: the heading signature, the dark texture, the slab ─────────────
+
+describe('the heading signature tokens (Phase 16B)', () => {
+  it('emits upright accent words and as-written headings when nothing is set', () => {
+    const css = buildDesignTokenCSS()
+    expect(css).toContain('--heading-emphasis-style:normal;--heading-emphasis-weight:inherit;')
+    expect(css).toContain('--heading-case:none;--heading-tracking:normal;')
+  })
+
+  it('italic is the real italic face at 400, and capitals take wider tracking', () => {
+    const css = buildDesignTokenCSS({headingEmphasisStyle: 'italic', headingCase: 'upper'})
+    expect(css).toContain('--heading-emphasis-style:italic;--heading-emphasis-weight:400;')
+    expect(css).toContain('--heading-case:uppercase;--heading-tracking:0.06em;')
+  })
+
+  it('an unknown value renders the default, never a broken token', () => {
+    const css = buildDesignTokenCSS({headingEmphasisStyle: 'bold', headingCase: 'shouting'})
+    expect(css).toContain('--heading-emphasis-style:normal;')
+    expect(css).toContain('--heading-case:none;')
+  })
+})
+
+describe('the texture on a dark band (Phase 16B, [R-479])', () => {
+  const lab = converter('lab')
+  const L = (hex: string) => (lab(hex) as unknown as {l: number}).l
+  const blend = (g: string, k: string, a: number) => {
+    const rgb = converter('rgb')
+    const G = rgb(g) as unknown as {r: number; g: number; b: number}
+    const K = rgb(k) as unknown as {r: number; g: number; b: number}
+    const m = (x: number, y: number) => Math.round((x * (1 - a) + y * a) * 255)
+    return `#${[m(G.r, K.r), m(G.g, K.g), m(G.b, K.b)].map((v) => v.toString(16).padStart(2, '0')).join('')}`
+  }
+  const cases = [{id: 'placeholder', inputs: {}}, ...PALETTE_PRESETS.map((p) => ({id: p.id, inputs: presetInputs(p)}))]
+
+  it.each(cases.map((c) => [c.id, c.inputs] as const))('%s: drawn darker than the ground, as faint as the light texture, never lowering a text pair', (_, inputs) => {
+    const t = resolvePalette(inputs).tokens
+    const dark = t['--color-brand-dark']
+    const ink = t['--color-texture-ink-on-dark']
+    const opacity = Number(t['--section-texture-opacity-on-dark'])
+    expect(ink).toBe('#000000')
+    expect(opacity).toBeGreaterThan(0)
+    expect(opacity).toBeLessThanOrEqual(1)
+    const lightMove = L(t['--color-background']) - L(blend(t['--color-background'], dark, 0.04))
+    const darkMove = L(dark) - L(blend(dark, ink, opacity))
+    expect(Math.abs(darkMove - lightMove)).toBeLessThan(0.6)
+    for (const tier of ['--color-foreground-on-dark', '--color-foreground-muted-on-dark', '--color-foreground-subtle-on-dark', '--color-accent-on-dark', '--color-action-text-on-dark']) {
+      expect((wcagContrast(t[tier], blend(dark, ink, opacity)) as number) + 0.01, tier).toBeGreaterThanOrEqual(wcagContrast(t[tier], dark) as number)
+    }
+  })
+
+  it('a ground too dark to go darker takes the on-dark text color, at an opacity every text tier holds AA on', () => {
+    const {ink, opacity} = textureOnDark('#050505', '#ffffff', ['#eeeeee', '#b7b7b7'])
+    expect(ink).toBe('#eeeeee')
+    expect(opacity).toBeGreaterThan(0)
+    expect(wcagContrast('#b7b7b7', blend('#050505', '#eeeeee', opacity)) as number).toBeGreaterThanOrEqual(4.5)
+  })
+
+  it('validateWcag holds every on-dark text tier on the dark texture blend', () => {
+    for (const c of cases) {
+      const results = validateWcag(resolvePalette(c.inputs)).filter((r) => r.pair.endsWith('on section-texture-dark'))
+      expect(results.map((r) => r.pair).sort()).toEqual([
+        'accent-on-dark on section-texture-dark', 'action-text-on-dark on section-texture-dark',
+        'foreground-muted-on-dark on section-texture-dark', 'foreground-on-dark on section-texture-dark',
+        'foreground-subtle-on-dark on section-texture-dark',
+      ])
+      expect(results.filter((r) => !r.passes || !r.blocking), c.id).toEqual([])
+    }
+  })
+
+  it('the slab behind a photo is the dark ground at :root (the cascade swaps it on dark bands)', () => {
+    for (const c of cases) {
+      const t = resolvePalette(c.inputs).tokens
+      expect(t['--color-slab']).toBe(t['--color-brand-dark'])
     }
   })
 })

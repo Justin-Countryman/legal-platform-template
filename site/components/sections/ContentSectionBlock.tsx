@@ -313,7 +313,7 @@ export function ContentSectionBlock({
             return (
               <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
                 <div className={data.mediaSide === 'left' ? 'md:order-first' : 'md:order-last'}>
-                  <ContentMedia data={data} ground={ground} />
+                  <ContentMedia data={data} ground={ground} siteFrame={seam.site?.imageFrame} />
                 </div>
                 {text}
               </div>
@@ -325,7 +325,9 @@ export function ContentSectionBlock({
   )
 }
 
-function ContentMedia({data, ground}: {data: ContentSectionData; ground: TreatmentGround}) {
+/** `siteFrame` is the site's photo frame (`designSettings.imageFrame`, Phase 16B),
+ *  which a stored treatment other than `inherit` overrides. */
+function ContentMedia({data, ground, siteFrame}: {data: ContentSectionData; ground: TreatmentGround; siteFrame?: string | null}) {
   const media = data.media
   if (media?.kind === 'video' && media.video?.youTubeUrl) {
     return <VideoEmbed video={media.video} />
@@ -333,7 +335,8 @@ function ContentMedia({data, ground}: {data: ContentSectionData; ground: Treatme
   if (!media || !hasImage(media.image)) return null
   const cutout = media.kind === 'cutout'
   // No site default exists until Phase 16, so `inherit` resolves to plain.
-  const treatment = treatmentClasses(resolveTreatment(data.imageTreatment, undefined, cutout ? 'cutout' : 'contentMedia', ground))
+  const context = cutout ? 'cutout' : 'contentMedia'
+  const treatment = treatmentClasses(resolveTreatment(data.imageTreatment, siteFrame, context, ground), context)
   return (
     <div className={treatment.wrapper}>
       <SanityImage

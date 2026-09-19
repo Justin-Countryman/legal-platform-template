@@ -1,9 +1,9 @@
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
-import {AttorneyCard} from './AttorneyCard'
+import {AttorneyCard, type AttorneyCardStyle} from './AttorneyCard'
 import {AttorneySlider} from './AttorneySlider'
 import {SectionShell} from './SectionShell'
-import {type SeamProps, NO_SEAM} from './sectionFrame'
+import {type SeamProps, NO_SEAM, followSite} from './sectionFrame'
 import {type AttorneySectionProps} from './sectionProps'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -49,7 +49,9 @@ export function AttorneySectionBlock({
   const tagline = resolveTokenString(data.tagline, napTokens)
   const heading = resolveTokenString(data.heading, napTokens)
   const description = resolveTokenString(data.description, napTokens)
-  const cardStyle = data.cardStyle
+  // The section's own style where it has one; otherwise the site's (Phase 16B: a
+  // theme sets it, `[R-468]`'s continuity rule), otherwise Classic.
+  const cardStyle = followSite(data.cardStyle as string | null | undefined, seam.site?.attorneyCardStyle) as AttorneyCardStyle | null
   const isSlider = data.layout === 'slider'
 
   return (

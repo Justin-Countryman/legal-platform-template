@@ -45,7 +45,7 @@ export const badge = defineType({
       title: 'Granting Body',
       type: 'string',
       description:
-        'WHO issued it — the organisation, publication or bar association behind the award, e.g. "Thomson Reuters" or "American Board of Trial Advocates". Not the award name, and not the firm. An award with no named issuer reads as self-awarded.',
+        'WHO issued it — the organization, publication or bar association behind the award, e.g. "Thomson Reuters" or "American Board of Trial Advocates". Not the award name, and not the firm. An award with no named issuer reads as self-awarded.',
     },
     {
       name: 'year',
@@ -60,7 +60,7 @@ export const badge = defineType({
       type: 'text',
       rows: 2,
       description:
-        'One or two sentences on WHAT the award means and how hard it is to get — for visitors who will not recognise the name. "Awarded to the top 2.5% of attorneys under 40 in the state" earns trust; the bare logo does not. Leave blank only for recognitions a layperson already understands.',
+        'One or two sentences on WHAT the award means and how hard it is to get — for visitors who will not recognize the name. "Awarded to the top 2.5% of attorneys under 40 in the state" earns trust; the bare logo does not. Leave blank only for recognitions a layperson already understands.',
     },
     {
       name: 'url',

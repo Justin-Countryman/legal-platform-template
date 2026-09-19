@@ -93,6 +93,8 @@ export type VisibleGround = 'light' | 'tint' | 'muted' | 'dark' | 'image' | 'sat
 
 /** The bottom edge a band cuts into the one below it. Desktop and up only. */
 export type SectionEdge = 'flat' | 'angled'
+/** What a band may store: an edge, or `site`, which takes the site's join shape (Phase 16B). */
+export type StoredEdge = SectionEdge | 'site'
 
 export const DEFAULT_SECTION_SURFACE: SectionSurface = 'light'
 export const DEFAULT_SECTION_SPACING: SectionSpacing = 'normal'
@@ -174,7 +176,7 @@ export type ResolvedSectionSurface = {
   isImage: boolean
 }
 
-export function sectionSurface(surface: StoredSurface | null | undefined): ResolvedSectionSurface {
+export function sectionSurface(surface: StoredSurface | null | undefined, patternDark = false): ResolvedSectionSurface {
   switch (surface) {
     case 'dark':
       return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: false, textured: false}
@@ -194,7 +196,10 @@ export function sectionSurface(surface: StoredSurface | null | undefined): Resol
     // showed through; that layer is gone (Phase 16A, `[R-472]`: no site-wide
     // background, interior pages always clean). With no `patternTexture` set the
     // texture is `none` and the band looks exactly like `light`.
+    // A theme may put its texture on the dark ground (Phase 16B, `[R-479]`): the band
+    // is then a dark band in every respect, and its texture is drawn darker still.
     case 'pattern':
+      if (patternDark) return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: false, textured: true}
       return {surfaceClass: 'bg-background', ringContext: undefined, buttonContext: 'light', isImage: false, textured: true}
     case 'light':
     default:
@@ -211,6 +216,7 @@ export function sectionSurface(surface: StoredSurface | null | undefined): Resol
  *  a light band as one ground. */
 export function visibleGround(
   appearance: {surface?: StoredSurface | null; inset?: boolean | null} | null | undefined,
+  patternDark = false,
 ): VisibleGround {
   if (appearance?.inset) return 'light'
   switch (appearance?.surface) {
@@ -224,7 +230,7 @@ export function visibleGround(
     // and painted a hero-tint wedge beside a muted band (Phase 14 challenge).
     case 'muted':
     case 'accent':  return 'muted'
-    case 'pattern': return 'light'
+    case 'pattern': return patternDark ? 'dark' : 'light'
     case 'light':
     default:        return 'light'
   }

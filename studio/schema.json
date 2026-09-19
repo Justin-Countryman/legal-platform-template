@@ -569,6 +569,10 @@
             "of": [
               {
                 "type": "string",
+                "value": "site"
+              },
+              {
+                "type": "string",
                 "value": "flat"
               },
               {
@@ -884,10 +888,6 @@
               },
               {
                 "type": "string",
-                "value": "rounded"
-              },
-              {
-                "type": "string",
                 "value": "scrim"
               },
               {
@@ -997,6 +997,10 @@
           "value": {
             "type": "union",
             "of": [
+              {
+                "type": "string",
+                "value": "site"
+              },
               {
                 "type": "string",
                 "value": "flat"
@@ -1217,6 +1221,10 @@
             "of": [
               {
                 "type": "string",
+                "value": "site"
+              },
+              {
+                "type": "string",
                 "value": "flat"
               },
               {
@@ -1427,6 +1435,10 @@
             "of": [
               {
                 "type": "string",
+                "value": "site"
+              },
+              {
+                "type": "string",
                 "value": "flat"
               },
               {
@@ -1626,6 +1638,10 @@
           "value": {
             "type": "union",
             "of": [
+              {
+                "type": "string",
+                "value": "site"
+              },
               {
                 "type": "string",
                 "value": "flat"
@@ -1876,6 +1892,10 @@
             "of": [
               {
                 "type": "string",
+                "value": "site"
+              },
+              {
+                "type": "string",
                 "value": "flat"
               },
               {
@@ -2108,6 +2128,10 @@
             "of": [
               {
                 "type": "string",
+                "value": "site"
+              },
+              {
+                "type": "string",
                 "value": "flat"
               },
               {
@@ -2290,6 +2314,10 @@
             "of": [
               {
                 "type": "string",
+                "value": "inherit"
+              },
+              {
+                "type": "string",
                 "value": "classic"
               },
               {
@@ -2400,6 +2428,10 @@
           "value": {
             "type": "union",
             "of": [
+              {
+                "type": "string",
+                "value": "site"
+              },
               {
                 "type": "string",
                 "value": "flat"
@@ -2764,6 +2796,10 @@
           "value": {
             "type": "union",
             "of": [
+              {
+                "type": "string",
+                "value": "site"
+              },
               {
                 "type": "string",
                 "value": "flat"
@@ -6425,10 +6461,6 @@
             },
             {
               "type": "string",
-              "value": "rounded"
-            },
-            {
-              "type": "string",
               "value": "scrim"
             },
             {
@@ -7831,6 +7863,10 @@
         "value": {
           "type": "union",
           "of": [
+            {
+              "type": "string",
+              "value": "inherit"
+            },
             {
               "type": "string",
               "value": "classic"
@@ -18329,6 +18365,72 @@
           "type": "string"
         }
       },
+      "themePreview": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "headingEmphasisStyle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "color"
+            },
+            {
+              "type": "string",
+              "value": "italic"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "headingRule": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "none"
+            },
+            {
+              "type": "string",
+              "value": "line"
+            },
+            {
+              "type": "string",
+              "value": "double"
+            },
+            {
+              "type": "string",
+              "value": "hatched"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "headingCase": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "normal"
+            },
+            {
+              "type": "string",
+              "value": "upper"
+            }
+          ]
+        },
+        "optional": true
+      },
       "patternTexture": {
         "type": "objectAttribute",
         "value": {
@@ -18349,6 +18451,40 @@
             {
               "type": "string",
               "value": "scallop"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "patternGround": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "light"
+            },
+            {
+              "type": "string",
+              "value": "dark"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "sectionJoin": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "straight"
+            },
+            {
+              "type": "string",
+              "value": "angled"
             }
           ]
         },
@@ -19404,6 +19540,89 @@
             {
               "type": "string",
               "value": "6"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "imageFrame": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "plain"
+            },
+            {
+              "type": "string",
+              "value": "framed"
+            },
+            {
+              "type": "string",
+              "value": "slab"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "cardHover": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "imageZoom"
+            },
+            {
+              "type": "string",
+              "value": "lift"
+            },
+            {
+              "type": "string",
+              "value": "glow"
+            },
+            {
+              "type": "string",
+              "value": "accentBorder"
+            },
+            {
+              "type": "string",
+              "value": "accentUnderline"
+            },
+            {
+              "type": "string",
+              "value": "none"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "attorneyCardStyle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "classic"
+            },
+            {
+              "type": "string",
+              "value": "portrait"
+            },
+            {
+              "type": "string",
+              "value": "avatar"
+            },
+            {
+              "type": "string",
+              "value": "minimal"
+            },
+            {
+              "type": "string",
+              "value": "spotlight"
             }
           ]
         },

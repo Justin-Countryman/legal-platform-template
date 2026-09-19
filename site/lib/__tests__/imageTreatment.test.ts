@@ -97,10 +97,12 @@ describe('TREATMENT_CLASSES', () => {
     expect(everyClass().filter((c) => literal.test(c))).toEqual([])
   })
 
-  it('reads the color roles the record names: decor (the accent) for framed and tint, brand-dark for slab and scrim', () => {
+  it('reads the color roles the record names: decor (the accent) for framed and tint, the swapped slab color for slab, brand-dark for scrim', () => {
     expect(TREATMENT_CLASSES.framed.wrapper).toContain('after:border-decor')
     expect(TREATMENT_CLASSES.tint.wrapper).toContain('after:bg-decor/20')
-    expect(TREATMENT_CLASSES.slab.wrapper).toContain('before:bg-brand-dark')
+    // Phase 16B amendment 13: in `bg-brand-dark`, which no cascade block swaps, the
+    // slab vanished on every dark band; `--color-slab` is swapped in each block.
+    expect(TREATMENT_CLASSES.slab.wrapper.split(' ')).toContain('before:bg-slab')
     expect(TREATMENT_CLASSES.scrim.wrapper).toContain('after:from-brand-dark/80')
     expect(TREATMENT_CLASSES.rounded.wrapper).toContain('rounded-ui')
   })
@@ -154,5 +156,32 @@ describe('the attorney card photo (Phase 13)', () => {
     for (const v of [null, undefined, 'inherit'] as const) {
       expect(resolveTreatment(v, 'plain', 'attorneyCard')).toBe('plain')
     }
+  })
+})
+
+// ─── Photos take the site's corners (Phase 16B, `[R-479]`) ───────────────────
+describe('the corner family on photos (Phase 16B)', () => {
+  it('rounds every framing of a feature photo to the card radius', () => {
+    for (const t of RESOLVED_TREATMENTS) {
+      const all = `${TREATMENT_CLASSES[t].wrapper} ${TREATMENT_CLASSES[t].image}`.split(' ')
+      expect(all.some((c) => c === 'rounded-ui' || c === 'before:rounded-ui'), t).toBe(true)
+    }
+  })
+
+  it('never rounds a cutout figure, which would only clip it', () => {
+    for (const t of ['plain', 'slab'] as const) {
+      const {wrapper, image} = treatmentClasses(t, 'cutout')
+      expect(`${wrapper} ${image}`.split(' ').filter((c) => /rounded-ui$|^overflow-hidden$/.test(c)), t).toEqual([])
+    }
+    // The slab behind a cutout keeps its offset block.
+    expect(treatmentClasses('slab', 'cutout').wrapper.split(' ')).toContain('before:bg-slab')
+  })
+
+  it('takes the site frame where the section stores none, and the section value where it does', () => {
+    expect(resolveTreatment(undefined, 'framed', 'contentMedia')).toBe('framed')
+    expect(resolveTreatment('inherit', 'slab', 'contentMedia')).toBe('slab')
+    expect(resolveTreatment('plain', 'slab', 'contentMedia')).toBe('plain')
+    expect(resolveTreatment(undefined, null, 'contentMedia')).toBe('plain')
+    expect(resolveTreatment(undefined, 'framed', 'cutout')).toBe('plain')
   })
 })

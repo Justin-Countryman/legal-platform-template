@@ -120,10 +120,12 @@ export function fields({inline}: {inline: boolean}) {
       name: 'cardStyle',
       title: 'Card Style',
       description:
-        'The look of each attorney card. Portrait, Avatar, Minimal, and Spotlight feature a larger photo — upload headshots for best results (a placeholder monogram shows when no photo is set; Avatar shows a clean initials circle).',
+        'The look of each attorney card. The site\u2019s style (Design Settings) follows the theme; the others are this section\u2019s own. Portrait, Avatar, Minimal, and Spotlight feature a larger photo, so upload headshots for best results (a placeholder monogram shows when no photo is set; Avatar shows a clean initials circle).',
       type: 'string',
       options: {
         list: [
+          // Phase 16B ([R-468]): absent or this option follows the site's style.
+          {title: 'The site\u2019s style (Design Settings)', value: 'inherit'},
           {title: 'Classic — photo left, details right', value: 'classic'},
           {title: 'Portrait — photo on top, details below', value: 'portrait'},
           {title: 'Avatar — round headshot, centered', value: 'avatar'},
@@ -132,8 +134,8 @@ export function fields({inline}: {inline: boolean}) {
         ],
         layout: 'radio',
       },
-      initialValue: 'classic',
-      validation: (Rule) => Rule.required().warning(),
+      // No `initialValue` and no required warning (Phase 16B): absent follows the
+      // site's style, and a seed would be folded into every build as a choice.
     }),
     ...appearanceFields({offerPattern: inline}),
   ]

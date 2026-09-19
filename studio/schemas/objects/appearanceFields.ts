@@ -40,6 +40,11 @@ const PATTERN_OPTION = {title: 'Pattern — the site texture (Design Settings) o
 // to a color fill by hand.
 const SATURATED_OPTION = {title: 'Saturated — the accent color fills the section; text turns white or dark to read', value: 'saturated'}
 
+// A homepage section asks for the site's edge and the theme decides its shape
+// (Phase 16B, [R-479]). Interior pages never draw one, so their documents do not
+// offer it.
+const SITE_EDGE_OPTION = {title: 'The site\u2019s edge (Design Settings)', value: 'site'}
+
 const SPACING_OPTIONS = [
   {title: 'Compact — tighter band (≈48–64px)', value: 'compact'},
   {title: 'Normal — standard rhythm (≈64–112px)', value: 'normal'},
@@ -102,10 +107,13 @@ export function appearanceFields(opts?: {
       title: 'Bottom Edge',
       type: 'string',
       fieldset: 'appearance',
-      description:
-        'The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.',
+      description: opts?.offerPattern
+        ? 'The edge where this section meets the next one. "The site\u2019s edge" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section\u2019s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.'
+        : 'The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.',
       options: {
         list: [
+          // Homepage sections only (Phase 16B, [R-479]): a theme decides the shape.
+          ...(opts?.offerPattern ? [SITE_EDGE_OPTION] : []),
           {title: 'Straight', value: 'flat'},
           {title: 'Angled \u2014 a diagonal cut into the next section', value: 'angled'},
         ],

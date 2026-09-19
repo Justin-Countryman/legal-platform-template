@@ -2739,12 +2739,12 @@
           "type": "string"
         },
         {
-          "description": "The look of each attorney card. Portrait, Avatar, Minimal, and Spotlight feature a larger photo — upload headshots for best results (a placeholder monogram shows when no photo is set; Avatar shows a clean initials circle).",
-          "initialValue": "classic",
+          "description": "The look of each attorney card. The site’s style (Design Settings) follows the theme; the others are this section’s own. Portrait, Avatar, Minimal, and Spotlight feature a larger photo, so upload headshots for best results (a placeholder monogram shows when no photo is set; Avatar shows a clean initials circle).",
           "jsonType": "string",
           "options": {
             "layout": "radio",
             "list": [
+              "inherit",
               "classic",
               "portrait",
               "avatar",
@@ -2753,8 +2753,6 @@
             ]
           },
           "path": "cardStyle",
-          "required": "warning",
-          "requiredMessage": "validation:generic.required",
           "title": "Card Style",
           "type": "string"
         },
@@ -2790,7 +2788,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -2837,7 +2835,6 @@
       ],
       "initialDocument": {
         "_type": "attorneySection",
-        "cardStyle": "classic",
         "layout": "grid",
         "mode": "practiceArea"
       },
@@ -2866,7 +2863,7 @@
           "type": "image"
         },
         {
-          "description": "WHO issued it — the organisation, publication or bar association behind the award, e.g. \"Thomson Reuters\" or \"American Board of Trial Advocates\". Not the award name, and not the firm. An award with no named issuer reads as self-awarded.",
+          "description": "WHO issued it — the organization, publication or bar association behind the award, e.g. \"Thomson Reuters\" or \"American Board of Trial Advocates\". Not the award name, and not the firm. An award with no named issuer reads as self-awarded.",
           "jsonType": "string",
           "path": "grantingBody",
           "title": "Granting Body",
@@ -2880,7 +2877,7 @@
           "type": "string"
         },
         {
-          "description": "One or two sentences on WHAT the award means and how hard it is to get — for visitors who will not recognise the name. \"Awarded to the top 2.5% of attorneys under 40 in the state\" earns trust; the bare logo does not. Leave blank only for recognitions a layperson already understands.",
+          "description": "One or two sentences on WHAT the award means and how hard it is to get — for visitors who will not recognize the name. \"Awarded to the top 2.5% of attorneys under 40 in the state\" earns trust; the bare logo does not. Leave blank only for recognitions a layperson already understands.",
           "jsonType": "string",
           "path": "explanation",
           "title": "Explanation",
@@ -3027,7 +3024,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -4220,7 +4217,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -4951,7 +4948,6 @@
               "plain",
               "framed",
               "slab",
-              "rounded",
               "scrim",
               "tint"
             ]
@@ -5001,7 +4997,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5179,7 +5175,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5235,7 +5231,59 @@
     "designSettings": {
       "fields": [
         {
-          "description": "The texture a homepage section set to the Pattern surface wears, drawn faintly in the dark ground color so text stays readable. Nothing else on the site shows it, and interior pages never do. Leave blank for none.",
+          "description": "Choose a theme to set the fonts, corners, headings, photo frames, section edges, texture and hover together. It never changes your colors, and a look set on one section on purpose stays as it was set.",
+          "jsonType": "string",
+          "path": "themePreview",
+          "readOnly": true,
+          "title": "Theme",
+          "type": "string"
+        },
+        {
+          "description": "How the highlighted words in a heading stand out. Color: upright, in the accent. Italic: in the heading font’s italic, in the accent. Leave blank for Color.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "color",
+              "italic"
+            ]
+          },
+          "path": "headingEmphasisStyle",
+          "title": "Highlighted Words",
+          "type": "string"
+        },
+        {
+          "description": "A short line under every section heading, in the accent, centered under a centered heading. Leave blank for none.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "line",
+              "double",
+              "hatched"
+            ]
+          },
+          "path": "headingRule",
+          "title": "Line Under Section Headings",
+          "type": "string"
+        },
+        {
+          "description": "Set section headings in capitals, slightly spaced. Page titles and the homepage headline keep the case they are written in. Leave blank for as written.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "normal",
+              "upper"
+            ]
+          },
+          "path": "headingCase",
+          "title": "Section Heading Capitals",
+          "type": "string"
+        },
+        {
+          "description": "The texture a homepage section set to the Pattern surface wears, drawn faintly so text stays readable. Nothing else on the site shows it, and interior pages never do. Leave blank for none.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5248,6 +5296,34 @@
           },
           "path": "patternTexture",
           "title": "Pattern Texture",
+          "type": "string"
+        },
+        {
+          "description": "Which background a Pattern section sits on. Dark draws the texture darker than the dark background, so text on it stays at least as readable. Needs a texture above; leave blank for Light.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "light",
+              "dark"
+            ]
+          },
+          "path": "patternGround",
+          "title": "Texture Ground",
+          "type": "string"
+        },
+        {
+          "description": "The shape of the edge where a homepage section that asks for \"the site’s edge\" meets the next one. Angled suits sharp-cornered themes; Straight suits soft ones. Sections that do not ask stay straight. Desktop and tablet only. Leave blank for Straight.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "straight",
+              "angled"
+            ]
+          },
+          "path": "sectionJoin",
+          "title": "Section Edge",
           "type": "string"
         },
         {
@@ -5622,6 +5698,56 @@
           },
           "path": "elevationStyle",
           "title": "Card Elevation Style",
+          "type": "string"
+        },
+        {
+          "description": "How feature photos are framed across the site; a section can set its own. Photos take the corner family either way. Framed also reaches attorney photos. Leave blank for Plain.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "plain",
+              "framed",
+              "slab"
+            ]
+          },
+          "path": "imageFrame",
+          "title": "Photo Frame",
+          "type": "string"
+        },
+        {
+          "description": "What a practice area card does on hover, in every practice area section that has not chosen its own. Zoom needs a photo; cards without one use their layout’s own. Leave blank for each layout’s own.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "imageZoom",
+              "lift",
+              "glow",
+              "accentBorder",
+              "accentUnderline",
+              "none"
+            ]
+          },
+          "path": "cardHover",
+          "title": "Practice Area Card Hover",
+          "type": "string"
+        },
+        {
+          "description": "The look of attorney cards in every attorney section that has not chosen its own. Leave blank for Classic.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "classic",
+              "portrait",
+              "avatar",
+              "minimal",
+              "spotlight"
+            ]
+          },
+          "path": "attorneyCardStyle",
+          "title": "Attorney Card Style",
           "type": "string"
         },
         {
@@ -7369,7 +7495,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -7492,7 +7618,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -9614,7 +9740,6 @@
         },
         {
           "description": "Equal renders your chosen Button Layout in an even grid. Bento renders a unified photo mosaic with the Primary practice area as a large hero tile (mark one below).",
-          "initialValue": "equal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -9631,7 +9756,6 @@
         },
         {
           "description": "Where the heading/tagline/description sit relative to the buttons (independent of the button layout).",
-          "initialValue": "centered",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -9664,7 +9788,6 @@
         },
         {
           "description": "Where the icon sits relative to the label. Auto = each layout’s natural spot. None hides icons. Each layout uses the positions that fit its shape.",
-          "initialValue": "auto",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -9682,14 +9805,13 @@
         },
         {
           "description": "Show the “→” affordance on each button (layouts that have one).",
-          "initialValue": true,
           "jsonType": "boolean",
           "path": "canvas[]<practiceAreaNavInline>.showArrow",
           "title": "Show Arrow",
           "type": "boolean"
         },
         {
-          "description": "Pick one or more — every selected effect applies together on hover. Leave empty for the layout’s recommended default; choose None for a fully static hover (None overrides the others).",
+          "description": "Pick one or more; every selected effect applies together on hover. Leave empty to follow the site’s card hover (Design Settings), or the layout’s own where the site sets none; choose None for a fully static hover (None overrides the others).",
           "jsonType": "array",
           "of": [
             "string"
@@ -9812,11 +9934,12 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
             "list": [
+              "site",
               "flat",
               "angled"
             ]
@@ -9915,12 +10038,12 @@
           "type": "string"
         },
         {
-          "description": "The look of each attorney card. Portrait, Avatar, Minimal, and Spotlight feature a larger photo — upload headshots for best results (a placeholder monogram shows when no photo is set; Avatar shows a clean initials circle).",
-          "initialValue": "classic",
+          "description": "The look of each attorney card. The site’s style (Design Settings) follows the theme; the others are this section’s own. Portrait, Avatar, Minimal, and Spotlight feature a larger photo, so upload headshots for best results (a placeholder monogram shows when no photo is set; Avatar shows a clean initials circle).",
           "jsonType": "string",
           "options": {
             "layout": "radio",
             "list": [
+              "inherit",
               "classic",
               "portrait",
               "avatar",
@@ -9965,11 +10088,12 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
             "list": [
+              "site",
               "flat",
               "angled"
             ]
@@ -10099,11 +10223,12 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
             "list": [
+              "site",
               "flat",
               "angled"
             ]
@@ -10257,11 +10382,12 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
             "list": [
+              "site",
               "flat",
               "angled"
             ]
@@ -10361,11 +10487,12 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
             "list": [
+              "site",
               "flat",
               "angled"
             ]
@@ -10458,11 +10585,12 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
             "list": [
+              "site",
               "flat",
               "angled"
             ]
@@ -10577,11 +10705,12 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
             "list": [
+              "site",
               "flat",
               "angled"
             ]
@@ -10935,7 +11064,6 @@
               "plain",
               "framed",
               "slab",
-              "rounded",
               "scrim",
               "tint"
             ]
@@ -10986,11 +11114,12 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
             "list": [
+              "site",
               "flat",
               "angled"
             ]
@@ -11031,7 +11160,7 @@
           "type": "string"
         },
         {
-          "description": "Stacked (the default): the heading, description and buttons centred above the reviews. Split: they sit to the left of the reviews from tablet width up; on mobile they stack above.",
+          "description": "Stacked (the default): the heading, description and buttons centered above the reviews. Split: they sit to the left of the reviews from tablet width up; on mobile they stack above.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11140,11 +11269,12 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
             "list": [
+              "site",
               "flat",
               "angled"
             ]
@@ -13506,7 +13636,6 @@
         },
         {
           "description": "Equal renders your chosen Button Layout in an even grid. Bento renders a unified photo mosaic with the Primary practice area as a large hero tile (mark one below).",
-          "initialValue": "equal",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -13523,7 +13652,6 @@
         },
         {
           "description": "Where the heading/tagline/description sit relative to the buttons (independent of the button layout).",
-          "initialValue": "centered",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -13556,7 +13684,6 @@
         },
         {
           "description": "Where the icon sits relative to the label. Auto = each layout’s natural spot. None hides icons. Each layout uses the positions that fit its shape.",
-          "initialValue": "auto",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -13574,14 +13701,13 @@
         },
         {
           "description": "Show the “→” affordance on each button (layouts that have one).",
-          "initialValue": true,
           "jsonType": "boolean",
           "path": "showArrow",
           "title": "Show Arrow",
           "type": "boolean"
         },
         {
-          "description": "Pick one or more — every selected effect applies together on hover. Leave empty for the layout’s recommended default; choose None for a fully static hover (None overrides the others).",
+          "description": "Pick one or more; every selected effect applies together on hover. Leave empty to follow the site’s card hover (Design Settings), or the layout’s own where the site sets none; choose None for a fully static hover (None overrides the others).",
           "jsonType": "array",
           "of": [
             "string"
@@ -13706,7 +13832,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -13753,13 +13879,9 @@
       ],
       "initialDocument": {
         "_type": "practiceAreaNav",
-        "gridMode": "equal",
-        "iconPosition": "auto",
         "layout": "spotlight",
         "mobileDisplay": "carousel",
-        "mode": "manual",
-        "sectionLayout": "centered",
-        "showArrow": true
+        "mode": "manual"
       },
       "kind": "document",
       "singletonId": null,
@@ -14056,7 +14178,7 @@
           "type": "string"
         },
         {
-          "description": "Stacked (the default): the heading, description and buttons centred above the reviews. Split: they sit to the left of the reviews from tablet width up; on mobile they stack above.",
+          "description": "Stacked (the default): the heading, description and buttons centered above the reviews. Split: they sit to the left of the reviews from tablet width up; on mobile they stack above.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -14166,7 +14288,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -16476,7 +16598,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -17506,7 +17628,7 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Angled suits a sharp-cornered, hard-edged design and looks out of place on a soft, rounded one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
+          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
