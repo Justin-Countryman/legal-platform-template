@@ -44,6 +44,7 @@ export function AttorneyCardAvatar({attorney}: {attorney: AttorneyCard}) {
         <CardImage
           attorney={attorney}
           ratio="aspect-square"
+          frameable={false}
           className="rounded-full ring-2 ring-border transition-[box-shadow] duration-ui-slow group-hover:ring-cue"
           imgClassName="transition-transform duration-ui-slow group-hover:scale-105"
           sizes="160px"

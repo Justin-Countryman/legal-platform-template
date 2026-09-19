@@ -34,7 +34,7 @@ const textures = (el: Element) => el.querySelectorAll('[data-section-texture]')
 
 describe('item 338: the site texture reaches a band only through the token builder', () => {
   it.each(SECTION_TEXTURES)('%s emits its image and tile size', (texture) => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, undefined, undefined, undefined, undefined, texture)
+    const css = buildDesignTokenCSS({patternTexture: texture})
     expect(css).toContain(`--section-texture-image:${SECTION_TEXTURE_MAP[texture].image};`)
     expect(css).toContain(`--section-texture-size:${SECTION_TEXTURE_MAP[texture].size};`)
     // The ink follows the palette: no literal color in any texture.
@@ -46,7 +46,7 @@ describe('item 338: the site texture reaches a band only through the token build
   })
 
   it.each([[undefined], [null], ['photo'], ['gradient']])('%s emits no texture at all', (value) => {
-    const css = buildDesignTokenCSS(undefined, undefined, undefined, undefined, undefined, undefined, undefined, value as never)
+    const css = buildDesignTokenCSS({patternTexture: value as never})
     expect(css).toContain('--section-texture-image:none;')
     expect(css).toContain('--section-texture-size:auto;')
   })

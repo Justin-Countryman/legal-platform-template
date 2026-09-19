@@ -84,7 +84,6 @@ export function fields({inline}: {inline: boolean}) {
         ],
         layout: 'radio',
       },
-      initialValue: 'equal',
     }),
     defineField({
       name: 'sectionLayout',
@@ -101,7 +100,6 @@ export function fields({inline}: {inline: boolean}) {
         ],
         layout: 'radio',
       },
-      initialValue: 'centered',
     }),
     defineField({
       name: 'mobileDisplay',
@@ -137,7 +135,6 @@ export function fields({inline}: {inline: boolean}) {
         ],
         layout: 'radio',
       },
-      initialValue: 'auto',
     }),
     defineField({
       name: 'showArrow',
@@ -145,7 +142,6 @@ export function fields({inline}: {inline: boolean}) {
       type: 'boolean',
       fieldset: 'navigation',
       description: 'Show the “→” affordance on each button (layouts that have one).',
-      initialValue: true,
     }),
     defineField({
       name: 'hoverEffects',
@@ -154,7 +150,7 @@ export function fields({inline}: {inline: boolean}) {
       fieldset: 'navigation',
       of: [{type: 'string'}],
       description:
-        'Pick one or more — every selected effect applies together on hover. Leave empty for the layout’s recommended default; choose None for a fully static hover (None overrides the others).',
+        'Pick one or more; every selected effect applies together on hover. Leave empty to follow the site’s card hover (Design Settings), or the layout’s own where the site sets none; choose None for a fully static hover (None overrides the others).',
       options: {
         list: [
           {title: 'Image Zoom — background photo scales', value: 'imageZoom'},

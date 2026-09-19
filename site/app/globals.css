@@ -481,8 +481,10 @@
    INLINE on purpose: the utility then reads the role itself (`var(--color-action)`)
    where it is used, so a dark or saturated band's redeclaration of that role
    reaches it. Declared in plain `@theme`, the alias would resolve once at :root
-   and paint the fill color on a saturated band. The rule under a heading and
-   the divider between rows get their names when 16B builds the heading rule. */
+   and paint the fill color on a saturated band. The rule under a section heading
+   is a static decoration and reads `decor` (through `--theme()`, which compiles
+   to the role itself, resolved on the element); the divider between rows is
+   structure and stays the border neutral (Phase 16B amendment 9). */
 @theme inline {
   --color-cue:   var(--color-action);
   --color-decor: var(--color-accent);
@@ -509,6 +511,7 @@
   --color-accent-on-dark:      #d7d7d7;   /* accent brightened for dark bg                  */
   --color-star-fill:           #f5b301;   /* StarRating fill — one fixed rating gold on every site, not the palette ([R-474]; STAR_GOLD; anchored, never cascades) */
   --color-star-outline:        #c08000;   /* StarRating shape outline, light surfaces — the gold darkened at its hue to >=3:1 vs bg-background/bg-muted/bg-hero-tint (WCAG SC 1.4.11, item 13); cascade swaps to -on-dark inside dark containers */
+  --color-slab:                #141414;   /* the offset slab behind a photo (the `slab` frame): the dark ground, swapped on dark and saturated bands (Phase 16B) */
   --color-star-outline-on-dark: #f5b301;  /* StarRating shape outline, dark surfaces — the gold itself where it clears 3:1 on brand-dark (invisible stroke), else brightened tagline-on-dark */
 
   /* ── Neutral scale — branded-derived; overridden at runtime by buildColorCSS ─
@@ -706,6 +709,8 @@ h1, h2, h3, h4, h5, h6 {
   --color-foreground-subtle: var(--color-foreground-subtle-on-dark);
   --color-hover-wash:        var(--color-hover-wash-on-dark);
   --color-star-outline:      var(--color-star-outline-on-dark);
+  /* A slab in the dark ground would vanish on a dark band; it takes the accent. */
+  --color-slab:              var(--color-accent-on-dark);
 }
 
 /* Light-surface containers nested inside dark-context ancestors: re-declare
@@ -728,6 +733,7 @@ h1, h2, h3, h4, h5, h6 {
   --color-foreground-subtle: var(--color-foreground-subtle-on-light);
   --color-hover-wash:        rgb(var(--shadow-rgb) / 0.06);
   --color-star-outline:      var(--color-star-outline-on-light);
+  --color-slab:              var(--color-brand-dark);
 }
 
 /* The saturated band (Phase 15, WS-V1-PHASE15-DESIGN §7 amendment 12): the
@@ -754,6 +760,7 @@ h1, h2, h3, h4, h5, h6 {
   --color-foreground-subtle: var(--color-accent-fg);
   --color-hover-wash:        transparent;
   --color-star-outline:      var(--color-accent-fg);
+  --color-slab:              var(--color-accent-fg);
 }
 
 /* Highlighted words on a saturated band ([R-461], Justin 2026-09-17: a word is
@@ -781,13 +788,52 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─── Heading unit ──────────────────────────────────────────────────────────── */
 /* The emphasis span inside a heading (Phase 11; components/ui/HeadingUnit.tsx).
-   <em> is italic in every UA stylesheet, so font-style is explicit until Phase
-   16's --heading-emphasis-style exists. The color is the accent AS TEXT, read at
-   the span so the dark and light-island swaps reach it (Phase 14). */
+   Upright in the accent by default; a theme may set it in the pairing's real
+   italic at 400 (`--heading-emphasis-style`, `--heading-emphasis-weight`, from
+   buildDesignTokenCSS, Phase 16B). Synthesis is off, so a font with no italic
+   file shows the words upright rather than a faked slant. The color is the accent
+   AS TEXT, read at the span so the dark and light-island swaps reach it (Phase 14). */
 @utility heading-emphasis {
-  font-style: normal;
+  font-style: var(--heading-emphasis-style, normal);
+  font-weight: var(--heading-emphasis-weight, inherit);
+  font-synthesis-style: none;
   color: var(--color-accent-text);
 }
+
+/* ─── Section headings (Phase 16B, `[R-468]`) ──────────────────────────────── */
+/* Every section's <h2> carries `section-heading` (a rendered test holds it), so a
+   theme's heading signature reaches all of them: capitals from `--heading-case`,
+   and the short rule under the heading from the layout wrapper's
+   `data-heading-rule`. The rule is drawn by the heading's own ::after (a DOM element
+   moved 215 of 928 captures in Phase 11), in the decor role resolved on the heading,
+   so a dark or saturated band's redeclared accent reaches it. Centred under a
+   centred heading; an empty heading (a tagline-only header) draws none. */
+@utility section-heading {
+  text-transform: var(--heading-case, none);
+  letter-spacing: var(--heading-tracking, normal);
+}
+[data-heading-rule="line"] .section-heading::after,
+[data-heading-rule="double"] .section-heading::after,
+[data-heading-rule="hatched"] .section-heading::after {
+  content: '';
+  display: block;
+  width: 3rem;
+  margin-top: 0.75rem;
+}
+[data-heading-rule="line"] .section-heading::after {
+  height: 2px;
+  background-color: --theme(--color-decor);
+}
+[data-heading-rule="double"] .section-heading::after {
+  height: 5px;
+  border-block: 1px solid --theme(--color-decor);
+}
+[data-heading-rule="hatched"] .section-heading::after {
+  height: 6px;
+  background-image: repeating-linear-gradient(-45deg, --theme(--color-decor) 0 1px, transparent 1px 4px);
+}
+.text-center .section-heading::after { margin-inline: auto; }
+.section-heading:empty::after { display: none; }
 
 /* In forced-colors mode every text color becomes the system text color, so an
    emphasis carried by color alone vanishes; italic is the one cue left. */
@@ -806,6 +852,13 @@ h1, h2, h3, h4, h5, h6 {
   background-image: var(--section-texture-image, none);
   background-size: var(--section-texture-size, auto);
 }
+/* On a dark band (a theme's `patternGround: dark`, Phase 16B): the ink and the
+   opacity the engine derived for this palette (`textureOnDark`). The light layer
+   takes `text-brand-dark opacity-4` in SectionShell. */
+@utility section-texture-dark {
+  color: var(--color-texture-ink-on-dark);
+  opacity: var(--section-texture-opacity-on-dark);
+}
 
 /* Forced-colors mode overrides background-color but forces background-image to
    `none` only for NON-url values; a decorative layer behind text fights the UA's
@@ -815,4 +868,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 @media print {
   [data-section-texture] { display: none; }
+}
+
+/* ─── The site's photo frame on attorney photos (Phase 16B) ─────────────────── */
+/* `designSettings.imageFrame` reaches attorney photos through the layout wrapper's
+   `data-image-frame`, not through nine component signatures (ADV-P16B-A). Only
+   `framed` applies there: the card already clips its corners, and a slab behind
+   a photo inside a card has nowhere to sit. The round Avatar photo carries no
+   marker, because a square frame breaks inside a circle. */
+[data-image-frame="framed"] [data-attorney-photo]::after {
+  content: '';
+  position: absolute;
+  inset: 0.75rem;
+  border: 2px solid --theme(--color-decor);
+  pointer-events: none;
 }

@@ -135,14 +135,14 @@ describe('SectionHeader — noTrailingGap prop', () => {
   it('drops mb-5 from the lg tier and keeps the full type scale', () => {
     const {container} = render(<SectionHeader heading="x" scale="lg" noTrailingGap />)
     const h2 = container.querySelector('h2') as HTMLElement
-    expect(h2.className).toBe('text-3xl font-bold text-foreground md:text-4xl lg:text-5xl')
+    expect(h2.className).toBe('text-3xl font-bold text-foreground md:text-4xl lg:text-5xl section-heading')
     expect(h2.className).not.toContain('mb-')
   })
 
   it('drops mb-4 from the md tier', () => {
     const {container} = render(<SectionHeader heading="x" noTrailingGap />)
     const h2 = container.querySelector('h2') as HTMLElement
-    expect(h2.className).toBe('text-3xl font-bold text-foreground md:text-4xl')
+    expect(h2.className).toBe('text-3xl font-bold text-foreground md:text-4xl section-heading')
   })
 
   it('drops the responsive md:mb-6 as well as mb-5 from the xl tier', () => {
@@ -150,7 +150,7 @@ describe('SectionHeader — noTrailingGap prop', () => {
     // `mb-X` strip would leave md:mb-6 behind and the gap would survive at md+.
     const {container} = render(<SectionHeader heading="x" scale="xl" noTrailingGap />)
     const h2 = container.querySelector('h2') as HTMLElement
-    expect(h2.className).toBe('text-4xl font-bold text-foreground md:text-5xl')
+    expect(h2.className).toBe('text-4xl font-bold text-foreground md:text-5xl section-heading')
     expect(h2.className).not.toContain('mb-5')
     expect(h2.className).not.toContain('md:mb-6')
   })

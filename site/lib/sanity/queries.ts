@@ -863,6 +863,16 @@ export const DESIGN_TOKENS_QUERY = groq`
     // make the template blank-slate guard flag older field names once the
     // generated types are regenerated, which surfaces on CI rather than before.
     patternTexture,
+    // The theme settings (Phase 16B): a theme in the Studio writes them with the
+    // fields above. The site never reads which theme it is.
+    patternGround,
+    headingEmphasisStyle,
+    headingRule,
+    headingCase,
+    imageFrame,
+    sectionJoin,
+    cardHover,
+    attorneyCardStyle,
     "siteHeroBackgroundImage": siteHeroBackgroundImage{
       "src": asset->url,
       "alt": alt,

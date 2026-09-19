@@ -4,7 +4,8 @@ import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import Link from 'next/link'
 import {EVENT_INDEX_PAGE_QUERY, EVENT_INDEX_QUERY} from '@/lib/sanity/queries'
-import {chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
+import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
+import {siteLookOf} from '@/components/sections/sectionFrame'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -262,7 +263,7 @@ export default async function EventsIndexPage() {
 
       {/* Full-width sections */}
       {indexPage?.sections && indexPage.sections.length > 0 && (
-        <PageSections sections={indexPage.sections} napTokens={tokens} resultsDisclaimer={indexPage.resultsDisclaimer} />
+        <PageSections sections={indexPage.sections} napTokens={tokens} resultsDisclaimer={indexPage.resultsDisclaimer} site={siteLookOf((await getSiteChrome())?.designTokens)} />
       )}
 
       {/* Global CTA */}

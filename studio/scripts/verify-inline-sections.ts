@@ -292,6 +292,19 @@ for (const [doc, inline] of PAIRS) {
 for (const doc of ['ctaSection', 'faqSection']) {
   for (const field of ['surface', 'spacing']) NO_SEED.push([doc, field, 'an appearance field (item 308)'])
 }
+// Phase 16B: the per-section looks a theme reaches when the section sets none
+// ([R-468]'s continuity rule), and item 341's four practice-area layout fields,
+// which the composer folded into every build.
+for (const [doc, inline] of [['attorneySection', 'attorneySectionInline'], ['practiceAreaNav', 'practiceAreaNavInline']]) {
+  for (const field of ['cardStyle', 'hoverEffects', 'gridMode', 'sectionLayout', 'iconPosition', 'showArrow']) {
+    NO_SEED.push([doc, field, 'a look that follows the theme, or item 341'], [inline, field, 'a look that follows the theme, or item 341'])
+  }
+}
+// The theme's own new Design Settings fields: a seed would be written to every
+// client by the build and read as a choice (Phase 16B).
+for (const field of ['patternGround', 'headingEmphasisStyle', 'headingRule', 'headingCase', 'imageFrame', 'sectionJoin', 'cardHover', 'attorneyCardStyle', 'patternTexture']) {
+  NO_SEED.push(['designSettings', field, 'a theme field (Phase 16B)'])
+}
 for (const [type, field, why] of NO_SEED) {
   if (!schema.get(type)) continue
   if (initial(type, field) !== undefined) {

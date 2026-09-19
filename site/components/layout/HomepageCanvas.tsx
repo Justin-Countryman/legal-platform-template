@@ -11,7 +11,7 @@ import {ReviewsSectionBlock, type ReviewsSectionBlockData} from '@/components/se
 import {resolveResultsDisclaimer} from '@/lib/legal'
 import {type NapTokens} from '@/lib/tokens'
 import {type SectionAppearance} from '@/components/sections/SectionShell'
-import {walkFrame, type SeamProps, NO_SEAM} from '@/components/sections/sectionFrame'
+import {walkFrame, type SeamProps, type SiteLook, NO_SEAM} from '@/components/sections/sectionFrame'
 import * as AttorneyFrame from '@/components/sections/AttorneySectionBlock'
 import * as BadgesFrame from '@/components/sections/BadgesSectionBlock'
 import * as CaseResultsFrame from '@/components/sections/CaseResultsSection'
@@ -174,9 +174,13 @@ export function HomepageCanvas({
   blocks,
   napTokens,
   resultsDisclaimer,
+  site,
 }: {
   blocks?: HomepageBlock[] | null
   napTokens?: NapTokens | null
+  /** The site's look from Design Settings (`siteLookOf`), carried to every band on
+   *  its seam (Phase 16B). Absent renders every default. */
+  site?: SiteLook | null
   /** Raw siteSettings.resultsDisclaimer. Nullable by design: the resolver
    *  supplies the code constant whenever it is absent or blank. */
   resultsDisclaimer?: string | null
@@ -185,7 +189,7 @@ export function HomepageCanvas({
 
   return (
     <>
-      {walkFrame(blocks, frameOf).map(({member, seam}, surviving) => {
+      {walkFrame(blocks, frameOf, site ?? null).map(({member, seam}, surviving) => {
         const rendered = renderBlock(member, napTokens, resultsDisclaimer, seam)
         if (!rendered) return null
         // THE FIRST SURVIVING BAND, not the member at index 0. `i === 0` on the

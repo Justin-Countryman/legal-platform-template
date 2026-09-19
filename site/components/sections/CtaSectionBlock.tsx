@@ -47,8 +47,8 @@ function layoutOf(data: CtaSectionBlockData): Layout {
 // The defaults live here in CODE rather than as a Studio `initialValue`, because
 // `compose_canvas` folds a member `initialValue` into every band the build
 // writes and the canvas keeps no per-field origin, so a seed could never be told
-// from an operator's choice (item 308, [R-450]). A code default is also what
-// Phase 16's `surfaceRhythm` replaces.
+// from an operator's choice (item 308, [R-450]). No theme sets a surface: the
+// planner (Phase 17) composes the page's rhythm, band by band.
 const DEFAULT_SURFACE: Record<Layout, SectionSurface> = {
   // `bg-muted` is the `accent` surface.
   centered: 'muted',
@@ -100,7 +100,7 @@ function CenteredCta({data}: {data: CtaSectionBlockData}) {
   return (
     <>
       {tagline && <Tagline as="p">{tagline}</Tagline>}
-      <h2 className="mb-4 text-2xl font-bold text-foreground md:text-3xl lg:text-4xl">{heading}</h2>
+      <h2 className="section-heading mb-4 text-2xl font-bold text-foreground md:text-3xl lg:text-4xl">{heading}</h2>
       {description && <p className="text-foreground-muted">{description}</p>}
       {buttons && <ButtonGroup items={toCtaItems(buttons)} align="center" className="mt-6 md:mt-8" />}
     </>

@@ -43,7 +43,9 @@ function themeColorNames(): string[] {
   return [...names].sort()
 }
 
-/** Every shipped `.tsx` — dev-only design surfaces excluded ([R-214]). */
+/** Every shipped `.tsx` and `.ts` — dev-only design surfaces excluded ([R-214]).
+ *  `.ts` since Phase 16B: class maps such as `lib/imageTreatment.ts` hold readers
+ *  (`before:bg-slab`) that no `.tsx` spells. */
 function shippedSource(): string {
   const parts: string[] = []
   const walk = (dir: string) => {
@@ -54,7 +56,7 @@ function shippedSource(): string {
         }
         continue
       }
-      if (entry.name.endsWith('.tsx')) parts.push(fs.readFileSync(path.join(dir, entry.name), 'utf8'))
+      if (/\.tsx?$/.test(entry.name) && !entry.name.endsWith('.d.ts')) parts.push(fs.readFileSync(path.join(dir, entry.name), 'utf8'))
     }
   }
   for (const dir of ['components', 'app', 'lib']) walk(path.join(SITE, dir))

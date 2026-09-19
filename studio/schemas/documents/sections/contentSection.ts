@@ -55,17 +55,16 @@ export function countOccurrences(haystack: string, needle: string): number {
 const LAYOUTS = [
   {title: 'Split: media on one side, text on the other (media stacks above the text on mobile)', value: 'split'},
   {title: 'Two-column text: heading on the left, body on the right (stacks on mobile)', value: 'twoColumnText'},
-  {title: 'Statement: tagline, heading, body and buttons, centred', value: 'statement'},
+  {title: 'Statement: tagline, heading, body and buttons, centered', value: 'statement'},
   {title: 'Ribbon: one line at body size across the band (wraps on mobile)', value: 'ribbon'},
   {title: 'Stat row: number and caption tiles (two across on tablets, one on phones)', value: 'statRow'},
 ]
 
 const TREATMENTS = [
-  {title: 'Inherit: the site default (plain until a theme sets one)', value: 'inherit'},
+  {title: 'The site\u2019s photo frame (Design Settings)', value: 'inherit'},
   {title: 'Plain', value: 'plain'},
   {title: 'Framed: an accent border inside the image edge', value: 'framed'},
-  {title: 'Slab: an offset dark block behind the image', value: 'slab'},
-  {title: 'Rounded: the site corner radius', value: 'rounded'},
+  {title: 'Slab: an offset block behind the image', value: 'slab'},
   {title: 'Scrim: a dark gradient over the image', value: 'scrim'},
   {title: 'Tint: an accent wash over the image (plain on a dark surface)', value: 'tint'},
 ]

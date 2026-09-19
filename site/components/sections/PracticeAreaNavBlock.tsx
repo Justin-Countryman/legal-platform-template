@@ -89,7 +89,7 @@ export function PracticeAreaNavBlock({
   // Accessible name for the <nav> landmark — the heading when set, else a stable
   // fallback so the landmark is always named (assistive-tech requirement).
   const navLabel = heading?.trim() || 'Practice areas'
-  const hoverEffects = resolveHovers(data.hoverEffects, data.layout)
+  const hoverEffects = resolveHovers(data.hoverEffects, data.layout, seam.site?.cardHover)
   // Show Arrow defaults on; Icon Position defaults to each layout's natural spot.
   const showArrow = data.showArrow ?? true
   const iconPosition = data.iconPosition ?? 'auto'

@@ -2,7 +2,7 @@ import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import {
   sectionSurface, SECTION_SPACING, TIGHT_SPACING, DEFAULT_SECTION_SPACING,
-  type StoredSurface, type SectionSpacing, type SectionEdge,
+  type StoredSurface, type SectionSpacing, type StoredEdge,
   type ResolvedSectionSurface, type SectionSpacingSteps,
   sectionEdgeClasses,
 } from '@/lib/sectionSurface'
@@ -19,9 +19,9 @@ import {type SeamProps, NO_SEAM, overlapOf} from './sectionFrame'
 //
 // WHY EVERY BAND MUST BE HERE. Not for the operator's sake: because a theme
 // cannot reach a band that hardcodes its own `<section className="px-[5%]
-// py-16 …">`. Phase 16's `surfaceRhythm` supplies the default surface for a band
-// that has none, and eleven of the fifteen bands were unreachable by any theme
-// until Phase 13 moved them (WS-V1-PHASE13-DESIGN §7 amendment 16).
+// py-16 …">`. A theme's texture ground and join shape reach a band only through
+// this shell (Phase 16B), and eleven of the fifteen bands were unreachable by any
+// theme until Phase 13 moved them (WS-V1-PHASE13-DESIGN §7 amendment 16).
 //
 // THE FRAME PROPS ARE COMPUTED BY THE DISPATCHER, NEVER HERE. `seamTop`,
 // `overlap` and `previousGround` all describe a RELATIONSHIP between two bands,
@@ -40,9 +40,9 @@ export type SectionAppearance = {
   /** Render the band as a panel inside the container, with the page ground
    *  running past it on all four sides. The schema field is `inset`. */
   inset?: boolean | null
-  /** The bottom edge this band cuts into the band below it. The band BELOW
-   *  paints it; see `sectionEdgeClasses`. */
-  edgeBottom?: SectionEdge | null
+  /** The bottom edge this band cuts into the band below it, or `site` for the
+   *  site's join shape. The band BELOW paints it; see `sectionEdgeClasses`. */
+  edgeBottom?: StoredEdge | null
   /** Pull this band up over the one above it. Desktop and up. */
   overlapPrevious?: 'none' | 'small' | 'large' | null
 }
@@ -102,7 +102,7 @@ export function SectionShell({
   children,
   ...aria
 }: SectionShellProps) {
-  const resolved = sectionSurface(appearance?.surface)
+  const resolved = sectionSurface(appearance?.surface, seam.site?.patternDark)
   const steps: SectionSpacingSteps = tight
     ? TIGHT_SPACING
     : SECTION_SPACING[appearance?.spacing ?? DEFAULT_SECTION_SPACING]
@@ -129,11 +129,19 @@ export function SectionShell({
   // The site's section texture, on a Pattern band only (Phase 16A, `[R-472]`). One
   // decorative child, absolutely placed BEFORE the content container, which is
   // `relative` and so paints above it in tree order, exactly as the background
-  // photo and its scrim do. `opacity-4` is the tested ceiling (see
-  // `SECTION_TEXTURE_OPACITY`). `data-section-texture` is what the forced-colors and
-  // print rules remove.
+  // photo and its scrim do. The gradients are drawn in `currentColor`: on a light
+  // band the dark ground at `opacity-4`, the tested ceiling (see
+  // `SECTION_TEXTURE_OPACITY`); on a dark band the ink and opacity the engine
+  // derived for the palette (`section-texture-dark`, Phase 16B). `-z-10` inside an
+  // `isolate` band keeps it under the angled edge this band paints for the band
+  // above, which it otherwise striped. `data-section-texture` is what the
+  // forced-colors and print rules remove.
   const texture = resolved.textured ? (
-    <div aria-hidden="true" data-section-texture className="section-texture pointer-events-none absolute inset-0 opacity-4" />
+    <div
+      aria-hidden="true"
+      data-section-texture
+      className={`section-texture pointer-events-none absolute inset-0 -z-10 ${resolved.ringContext === 'dark' ? 'section-texture-dark' : 'text-brand-dark opacity-4'}`}
+    />
   ) : null
 
   return (
@@ -155,6 +163,7 @@ export function SectionShell({
         // An inset band's own box is transparent; the panel inside carries the
         // surface. A normal band carries it here.
         !isInset && resolved.surfaceClass,
+        resolved.textured && !isInset && 'isolate',
         top,
         bottom,
         className,
@@ -169,7 +178,7 @@ export function SectionShell({
         </>
       )}
       {isInset ? (
-        <div className={['relative overflow-hidden rounded-ui px-[5%] py-12 md:py-16', resolved.surfaceClass].filter(Boolean).join(' ')}>
+        <div className={['relative overflow-hidden rounded-ui px-[5%] py-12 md:py-16', resolved.textured && 'isolate', resolved.surfaceClass].filter(Boolean).join(' ')}>
           {showImage && (
             <>
               <SanityImage image={bg} mode="fill" alt="" sizes="100vw" />

@@ -92,16 +92,18 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
     defaultButtons: heroSettings?.defaultButtons ?? [],
   }
 
-  const tokenCSS = buildDesignTokenCSS(
-    designTokens?.uiRadius,
-    designTokens?.buttonShape,
-    designTokens?.tertiaryStyle,
-    designTokens?.elevationStyle,
-    designTokens?.motionTempo,
-    designTokens?.marketingScale,
-    designTokens?.taglineStyle,
-    designTokens?.patternTexture,
-  )
+  const tokenCSS = buildDesignTokenCSS({
+    uiRadius:             designTokens?.uiRadius,
+    buttonShape:          designTokens?.buttonShape,
+    tertiaryStyle:        designTokens?.tertiaryStyle,
+    elevationStyle:       designTokens?.elevationStyle,
+    motionTempo:          designTokens?.motionTempo,
+    marketingScale:       designTokens?.marketingScale,
+    taglineStyle:         designTokens?.taglineStyle,
+    patternTexture:       designTokens?.patternTexture,
+    headingEmphasisStyle: designTokens?.headingEmphasisStyle,
+    headingCase:          designTokens?.headingCase,
+  })
   const colorCSS = buildColorCSS({
     darkGround:  designTokens?.darkGround,
     lightGround: designTokens?.lightGround,
@@ -128,6 +130,12 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
   // layout (rather than <html>, which is rendered by the root layout that
   // doesn't fetch designSettings) so the GROQ call isn't duplicated.
   const buttonAnimation = designTokens?.buttonAnimation ?? 'none'
+  // The same wrapper carries two theme settings whose paint must resolve on the
+  // element it decorates, not at :root (Phase 16B): the rule under section headings
+  // (`data-heading-rule`) and the site's photo frame on attorney photos
+  // (`data-image-frame`). globals.css reads both.
+  const headingRule = designTokens?.headingRule ?? 'none'
+  const imageFrame = designTokens?.imageFrame ?? 'plain'
 
   // Merged-header contrast guardrail: when heroMerge is on, the transparent
   // at-top header overlays the hero, so its text polarity must follow the
@@ -180,7 +188,7 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
       ))}
       <style dangerouslySetInnerHTML={{__html: tokenCSS + colorCSS + headerHeightSSR}} />
       {fontCSS && <style dangerouslySetInnerHTML={{__html: fontCSS}} />}
-      <div data-button-animation={buttonAnimation} className="relative">
+      <div data-button-animation={buttonAnimation} data-heading-rule={headingRule} data-image-frame={imageFrame} className="relative">
       <MotionRoot>
       <Header
         data={{

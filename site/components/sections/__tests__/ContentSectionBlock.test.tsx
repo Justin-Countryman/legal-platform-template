@@ -23,7 +23,8 @@ vi.mock('@/components/media/VideoEmbed', () => ({
 import {ContentSectionBlock, isContentSectionEmpty, rendersResultClaim, type ContentSectionData} from '../ContentSectionBlock'
 import resultClaimCases from './fixtures/result-claim-cases.json'
 import {HEADING_UNIT_TIER_CLASS} from '@/components/ui/HeadingUnit'
-import {TREATMENT_CLASSES} from '@/lib/imageTreatment'
+import {TREATMENT_CLASSES, treatmentClasses} from '@/lib/imageTreatment'
+import {NO_SEAM, type SeamProps} from '../sectionFrame'
 
 // ─── The content section ──────────────────────────────────────────────────────
 //
@@ -41,8 +42,10 @@ const image = {asset: {_ref: 'image-abc-800x600-jpg'}, alt: 'The office'}
 const mediaImg = (container: HTMLElement) => container.querySelector<HTMLElement>('[data-testid="media-img"]')!
 const classTokens = (el: Element) => el.className.split(/\s+/)
 
-function renderSection(data: ContentSectionData, opts: {scale?: 'marketing' | 'interior'; tokens?: Record<string, string>} = {}) {
-  return render(<ContentSectionBlock data={data} disclaimer={DISCLAIMER} napTokens={opts.tokens} scale={opts.scale ?? 'marketing'} />)
+function renderSection(data: ContentSectionData, seamOrOpts: SeamProps | {scale?: 'marketing' | 'interior'; tokens?: Record<string, string>} = {}) {
+  const seam = 'seamTop' in seamOrOpts ? seamOrOpts : NO_SEAM
+  const opts = 'seamTop' in seamOrOpts ? {} : seamOrOpts
+  return render(<ContentSectionBlock data={data} disclaimer={DISCLAIMER} napTokens={opts.tokens} scale={opts.scale ?? 'marketing'} seam={seam} />)
 }
 
 describe('isContentSectionEmpty, per layout', () => {
@@ -174,12 +177,21 @@ describe('slots', () => {
     const framed = renderSection({layout: 'split', body: block('b'), media: {kind: 'photo', image}, imageTreatment: 'framed'}).container
     expect(mediaImg(framed).parentElement!.className).toBe(TREATMENT_CLASSES.framed.wrapper)
     const cutoutFramed = renderSection({layout: 'split', body: block('b'), media: {kind: 'cutout', image}, imageTreatment: 'framed'}).container
-    expect(mediaImg(cutoutFramed).parentElement!.className).toBe(TREATMENT_CLASSES.plain.wrapper)
+    // A cutout never takes the corners (Phase 16B): its plain wrapper is square.
+    expect(mediaImg(cutoutFramed).parentElement!.className).toBe(treatmentClasses('plain', 'cutout').wrapper)
     expect(classTokens(mediaImg(cutoutFramed))).toContain('object-contain')
     const cutoutSlab = renderSection({layout: 'split', body: block('b'), media: {kind: 'cutout', image}, imageTreatment: 'slab'}).container
-    expect(mediaImg(cutoutSlab).parentElement!.className).toBe(TREATMENT_CLASSES.slab.wrapper)
+    expect(mediaImg(cutoutSlab).parentElement!.className).toBe(treatmentClasses('slab', 'cutout').wrapper)
     const inherit = renderSection({layout: 'split', body: block('b'), media: {kind: 'photo', image}, imageTreatment: 'inherit'}).container
     expect(mediaImg(inherit).parentElement!.className).toBe(TREATMENT_CLASSES.plain.wrapper)
+  })
+
+  it('takes the site photo frame when the section stores none, and keeps its own when it does (Phase 16B)', () => {
+    const site = {...NO_SEAM, site: {imageFrame: 'slab', sectionJoin: 'straight' as const, patternDark: false, cardHover: null, attorneyCardStyle: null}}
+    const inherit = renderSection({layout: 'split', body: block('b'), media: {kind: 'photo', image}}, site).container
+    expect(mediaImg(inherit).parentElement!.className).toBe(TREATMENT_CLASSES.slab.wrapper)
+    const own = renderSection({layout: 'split', body: block('b'), media: {kind: 'photo', image}, imageTreatment: 'framed'}, site).container
+    expect(mediaImg(own).parentElement!.className).toBe(TREATMENT_CLASSES.framed.wrapper)
   })
 })
 

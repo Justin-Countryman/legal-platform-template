@@ -454,17 +454,70 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
     '--color-ring-focus':               ringFocus,
     '--color-ring-focus-on-light':      ringFocus,
     '--color-ring-focus-on-dark':       ringFocusOnDark,
+    // The offset slab behind a photo (the `slab` frame): the dark ground on a light
+    // band. The cascade blocks swap it, so a slab on a dark band is not the band's
+    // own color (Phase 16B amendment 13).
+    '--color-slab':                     brandDark,
     '--color-star-fill':                STAR_GOLD,
     '--color-star-outline':             starOutline,
     '--color-star-outline-on-light':    starOutline,
     '--color-star-outline-on-dark':     starOutlineOnDark,
   }
 
+  // The texture on a dark band (Phase 16B): its ink and opacity, derived from this
+  // palette so the dark texture reads as faintly as the light one does.
+  const texture = textureOnDark(brandDark, background, [
+    tokens['--color-foreground-on-dark'], tokens['--color-foreground-muted-on-dark'],
+    tokens['--color-foreground-subtle-on-dark'], tokens['--color-accent-on-dark'], tokens['--color-action-text-on-dark'],
+  ])
+  tokens['--color-texture-ink-on-dark'] = texture.ink
+  tokens['--section-texture-opacity-on-dark'] = String(texture.opacity)
+
   return {
     inputs: {darkGround: darkIn, lightGround: lightIn, accent: accentIn, action: actionIn},
     acceptance: {darkGround: darkA, lightGround: lightA, accent: accentA, action: actionA},
     tokens,
   }
+}
+
+// ─── The texture on a dark band (Phase 16B, `[R-479]`) ────────────────────────
+//
+// A theme may put its texture on the dark ground. The ink is drawn AWAY from the
+// text: text on a dark band is light, so lines darker than the ground can only
+// raise its contrast, never lower it. How dark, and how strong, is derived per
+// palette so the texture reads the same on every palette: the opacity is solved
+// so the lines move CIE L* by exactly what the light texture (the dark ground at
+// 0.04 over the light ground) moves it on the same palette. A fixed opacity would
+// be nearly invisible on a near-black ground and three times stronger on teal
+// (ADV-P16B-B). Where the ground is too dark to go darker by that much, the ink
+// is the on-dark body text color instead, at the solved opacity, lowered until
+// every on-dark text tier still meets AA on the blend; `validateWcag` holds it.
+// Measured on the placeholder and the fifteen presets: black on all sixteen,
+// opacity 0.084 to 0.676, every on-dark pair raised.
+const toLab = converter('lab')
+const lightness = (hex: string) => (toLab(hex) as unknown as {l: number}).l
+
+export function textureOnDark(dark: string, lightGround: string, onDarkText: string[]): {ink: string; opacity: number} {
+  const target = lightness(lightGround) - lightness(blendOver(lightGround, dark, SECTION_TEXTURE_OPACITY))
+  // The opacity at which `ink` over `dark` moves L* by `target`, found by bisection;
+  // `dir` is -1 for an ink darker than the ground, +1 for a lighter one.
+  const solve = (ink: string, dir: 1 | -1) => {
+    let lo = 0
+    let hi = 1
+    for (let i = 0; i < 30; i++) {
+      const mid = (lo + hi) / 2
+      if (dir * (lightness(blendOver(dark, ink, mid)) - lightness(dark)) < target) lo = mid
+      else hi = mid
+    }
+    return Math.round(hi * 1000) / 1000
+  }
+  if (lightness(dark) - lightness('#000000') >= target) return {ink: '#000000', opacity: solve('#000000', -1)}
+  const ink = onDarkText[0]
+  let opacity = solve(ink, 1)
+  while (opacity > 0 && onDarkText.some((c) => contrast(c, blendOver(dark, ink, opacity)) < 4.5)) {
+    opacity = Math.round((opacity - 0.005) * 1000) / 1000
+  }
+  return {ink, opacity: Math.max(0, opacity)}
 }
 
 /** The one rating gold every site's stars are filled with (`[R-474]`). */
@@ -523,6 +576,15 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
     check(`border-control on ${name}`,    t['--color-border-control'],    ground, 3)
   }
   const dark = t['--color-brand-dark']
+  // A dark Pattern band's texture blend: every on-dark text tier must hold there too
+  // (Phase 16B). Where the ink is darker than the ground this cannot fail; where it
+  // is lighter, the engine lowered the opacity until it holds, and this says so.
+  const darkTexture = blendOver(dark, t['--color-texture-ink-on-dark'], Number(t['--section-texture-opacity-on-dark']))
+  check('foreground-on-dark on section-texture-dark',        t['--color-foreground-on-dark'],        darkTexture, 4.5)
+  check('foreground-muted-on-dark on section-texture-dark',  t['--color-foreground-muted-on-dark'],  darkTexture, 4.5)
+  check('foreground-subtle-on-dark on section-texture-dark', t['--color-foreground-subtle-on-dark'], darkTexture, 4.5)
+  check('accent-on-dark on section-texture-dark',            t['--color-accent-on-dark'],            darkTexture, 4.5)
+  check('action-text-on-dark on section-texture-dark',       t['--color-action-text-on-dark'],       darkTexture, 4.5)
   check('white on brand-dark',                    '#ffffff',                           dark, 7)
   check('foreground-on-dark on brand-dark',       t['--color-foreground-on-dark'],     dark, 4.5)
   check('foreground-muted-on-dark on brand-dark', t['--color-foreground-muted-on-dark'], dark, 4.5)
@@ -606,7 +668,7 @@ export const BUTTON_SHAPE_MAP: Record<string, string> = {
 
 type TertiaryTokens = {textTransform: string; letterSpacing: string; arrowDx: string}
 
-const TERTIARY_STYLE_MAP: Record<string, TertiaryTokens> = {
+export const TERTIARY_STYLE_MAP: Record<string, TertiaryTokens> = {
   plain:   {textTransform: 'none',       letterSpacing: '0em',    arrowDx: '0.125rem'},
   tracked: {textTransform: 'capitalize', letterSpacing: '0.04em', arrowDx: '0.125rem'},
 }
@@ -741,6 +803,36 @@ export const MARKETING_SCALE_MAP: Record<string, MarketingScaleTokens> = {
   lg: {h1: '8rem',     h2: '6.854rem', h3: '4.236rem', h4: '2.618rem'},
 }
 
+// ─── The heading signature (Phase 16B) ────────────────────────────────────────
+// How highlighted words in a heading are marked, the short rule under section
+// headings, and whether section headings are set in capitals: three settings a
+// theme writes (lib/themes.ts). The emphasis and the case are custom properties
+// the `heading-emphasis` and `section-heading` utilities read; the rule's kind is
+// a data attribute on the layout's wrapper (`data-heading-rule`), because its paint
+// must resolve on the heading, where a dark or saturated band has redeclared the
+// accent (globals.css).
+//
+// `italic` is the pairing's real italic face at 400: an italic phrase inside a
+// 700 heading would otherwise be a synthesised bold italic (Phase 16B amendment
+// 10), and `.heading-emphasis` turns synthesis off. There is no `bold`: no theme
+// chose it, and it re-weighted every section heading on the site.
+export const HEADING_EMPHASIS_STYLES = ['color', 'italic'] as const
+export const HEADING_RULES = ['none', 'line', 'double', 'hatched'] as const
+export const HEADING_CASES = ['normal', 'upper'] as const
+
+export const HEADING_EMPHASIS_MAP: Record<string, {style: string; weight: string}> = {
+  color:  {style: 'normal', weight: 'inherit'},
+  italic: {style: 'italic', weight: '400'},
+}
+
+// Capitals take wider tracking than mixed case (0.05 to 0.12em is the published
+// range, Phase 16B amendment 12). Section headings only: hero and page titles run
+// to a line or more, where capitals read slowly.
+export const HEADING_CASE_MAP: Record<string, {transform: string; tracking: string}> = {
+  normal: {transform: 'none',      tracking: 'normal'},
+  upper:  {transform: 'uppercase', tracking: '0.06em'},
+}
+
 // ─── The section texture ──────────────────────────────────────────────────────
 // What a band set to the Pattern surface wears (Phase 16A, `[R-472]`: no
 // site-wide background; a texture only on a homepage section someone set to
@@ -749,40 +841,52 @@ export const MARKETING_SCALE_MAP: Record<string, MarketingScaleTokens> = {
 // prop threads through the section dispatchers, and a theme sets it like any other
 // axis. The four units are the ones the study's textured sites wear (Phase 13).
 //
-// Gradients, not SVG, so the ink is `var(--color-brand-dark)` and follows the
-// palette with no literal color. Scallop is the one that needs a tile size.
+// Gradients, not SVG, drawn in `currentColor`, so the layer that wears them sets the
+// ink with a text color resolved on that element: the dark ground on a light band,
+// the derived dark-band ink on a dark one (Phase 16B, `textureOnDark`). A custom
+// property holding `var(--color-brand-dark)` would be substituted at `:root` and
+// could not change per band. Scallop is the one that needs a tile size.
 //
-// THE STRENGTH IS NOT HERE. The layer renders at `opacity-4` (0.04) in
-// `SectionShell`, the most at which every light text tier still meets AA on the
+// THE STRENGTH IS NOT HERE. On a light band the layer renders at `opacity-4` (0.04)
+// in `SectionShell`, the most at which every light text tier still meets AA on the
 // darkest pixel of the blend for any palette (measured over 11,172 palettes in the
-// Phase 16A challenge: 0 failures at 0.04, 2,679 at 0.05). `validateWcag` holds
-// that blend as its own ground, so the claim is tested, not remembered.
+// Phase 16A challenge: 0 failures at 0.04, 2,679 at 0.05). On a dark band the ink
+// and its opacity come from `textureOnDark`. `validateWcag` holds both blends as
+// grounds of their own, so the claim is tested, not remembered.
 export const SECTION_TEXTURES = ['pinstripe', 'diagonalHatch', 'diamondLattice', 'scallop'] as const
 export type SectionTexture = (typeof SECTION_TEXTURES)[number]
 
 export const SECTION_TEXTURE_MAP: Record<SectionTexture, {image: string; size: string}> = {
-  pinstripe:      {image: 'repeating-linear-gradient(90deg,var(--color-brand-dark) 0 1px,transparent 1px 10px)', size: 'auto'},
-  diagonalHatch:  {image: 'repeating-linear-gradient(45deg,var(--color-brand-dark) 0 1px,transparent 1px 8px)', size: 'auto'},
+  pinstripe:      {image: 'repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 10px)', size: 'auto'},
+  diagonalHatch:  {image: 'repeating-linear-gradient(45deg,currentColor 0 1px,transparent 1px 8px)', size: 'auto'},
   diamondLattice: {
-    image: 'repeating-linear-gradient(45deg,var(--color-brand-dark) 0 1px,transparent 1px 14px),repeating-linear-gradient(-45deg,var(--color-brand-dark) 0 1px,transparent 1px 14px)',
+    image: 'repeating-linear-gradient(45deg,currentColor 0 1px,transparent 1px 14px),repeating-linear-gradient(-45deg,currentColor 0 1px,transparent 1px 14px)',
     size: 'auto',
   },
-  scallop:        {image: 'radial-gradient(circle at 50% 100%,transparent 0 7px,var(--color-brand-dark) 7px 8px,transparent 8px)', size: '16px 16px'},
+  scallop:        {image: 'radial-gradient(circle at 50% 100%,transparent 0 7px,currentColor 7px 8px,transparent 8px)', size: '16px 16px'},
 }
 
 /** The opacity the section texture renders at, and the one `validateWcag` blends. */
 export const SECTION_TEXTURE_OPACITY = 0.04
 
-export function buildDesignTokenCSS(
-  uiRadius?:           string | null,
-  buttonShape?:        string | null,
-  tertiaryStyle?:      string | null,
-  elevationStyle?:     string | null,
-  motionTempo?:        string | null,
-  marketingScale?:     string | null,
-  taglineStyle?:       string | null,
-  patternTexture?:     string | null,
-): string {
+/** Every design setting the token CSS reads. Absent or unknown means the default. */
+export type DesignTokenSettings = {
+  uiRadius?:             string | null
+  buttonShape?:          string | null
+  tertiaryStyle?:        string | null
+  elevationStyle?:       string | null
+  motionTempo?:          string | null
+  marketingScale?:       string | null
+  taglineStyle?:         string | null
+  patternTexture?:       string | null
+  headingEmphasisStyle?: string | null
+  headingCase?:          string | null
+}
+
+export function buildDesignTokenCSS({
+  uiRadius, buttonShape, tertiaryStyle, elevationStyle, motionTempo, marketingScale, taglineStyle, patternTexture,
+  headingEmphasisStyle, headingCase,
+}: DesignTokenSettings = {}): string {
   const radius    = UI_RADIUS_MAP[uiRadius ?? '']            ?? UI_RADIUS_MAP.rounded
   const btn       = BUTTON_SHAPE_MAP[buttonShape ?? '']      ?? BUTTON_SHAPE_MAP.rounded
   const tertiary  = TERTIARY_STYLE_MAP[tertiaryStyle ?? '']  ?? TERTIARY_STYLE_MAP.plain
@@ -799,6 +903,11 @@ export function buildDesignTokenCSS(
   const taglineVars = Object.entries(tagline).map(([k, v]) => `${k}:${v};`).join('')
   const texture = SECTION_TEXTURE_MAP[(patternTexture ?? '') as SectionTexture]
   const textureVars = `--section-texture-image:${texture?.image ?? 'none'};--section-texture-size:${texture?.size ?? 'auto'};`
+  const emphasis = HEADING_EMPHASIS_MAP[headingEmphasisStyle ?? ''] ?? HEADING_EMPHASIS_MAP.color
+  const hcase    = HEADING_CASE_MAP[headingCase ?? '']          ?? HEADING_CASE_MAP.normal
+  const headingVars =
+    `--heading-emphasis-style:${emphasis.style};--heading-emphasis-weight:${emphasis.weight};` +
+    `--heading-case:${hcase.transform};--heading-tracking:${hcase.tracking};`
   return (
     `:root{` +
     `--radius-ui:${radius};` +
@@ -817,6 +926,7 @@ export function buildDesignTokenCSS(
     `--motion-structural-slow:${STRUCTURAL_SLOW};` +
     taglineVars +
     textureVars +
+    headingVars +
     marketingVars +
     `}`
   )
