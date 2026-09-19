@@ -67,7 +67,7 @@ export const RENDERED_TITLE_MAX = 60
  * recorded above: blank is a legitimate value and Studio must let it save.
  * **Do not add one back.** The tension this array used to carry in a comment —
  * doctrine calling blank a fallback while Studio refused it — was resolved on
- * 2026-08-09 in doctrine's favour, and `scripts/verify-seo-title-validation.ts`
+ * 2026-08-09 in doctrine's favor, and `scripts/verify-seo-title-validation.ts`
  * runs Sanity's real validator against a blank field to keep it resolved.
  */
 export const seoTitleValidation = (rule: Rule) => [

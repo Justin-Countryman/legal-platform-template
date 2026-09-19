@@ -42,7 +42,7 @@ export function fields({inline}: {inline: boolean}) {
       title: 'Layout',
       type: 'string',
       description:
-        'Stacked (the default): the heading, description and buttons centred above the reviews. Split: they sit to the left of the reviews from tablet width up; on mobile they stack above.',
+        'Stacked (the default): the heading, description and buttons centered above the reviews. Split: they sit to the left of the reviews from tablet width up; on mobile they stack above.',
       options: {
         list: [
           {title: 'Stacked: heading above the reviews', value: 'stacked'},

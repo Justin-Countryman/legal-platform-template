@@ -28,13 +28,13 @@ const GAP_CLASS: Record<Size, string> = {
 //
 // Decorative star-rating row used by testimonial composables. Filled stars
 // render per the "Stars semantic color doctrine" (skill-color-system):
-// gold/amber FILL on every surface — `text-star-fill`, a dedicated anchored
-// token holding the raw action color — plus an OUTLINE
+// one fixed rating gold on every site, not the palette (`[R-474]`) —
+// `text-star-fill`, an anchored token holding `STAR_GOLD` — plus an OUTLINE
 // (`--color-star-outline`) that carries the WCAG SC 1.4.11 3:1 non-text
 // contrast requirement for the star's shape (OUTSTANDING item 13, ruled
 // 2026-07-19 under "Accessibility wins over convention"). The outline is a
 // cascade-aware pair derived in designTokens.ts (`starOutline()` /
-// `starOutlineOnDark()`): the :root value clears 3:1 on the light surfaces
+// `starOutlineOnDark()`, from the gold): the :root value clears 3:1 on the light surfaces
 // (bg-background / bg-muted / bg-hero-tint) and the standard dark-surface
 // cascade swaps it inside bg-brand-dark sections; on either side the stroke
 // collapses to the fill color (invisible) when the fill alone already
