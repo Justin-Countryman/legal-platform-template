@@ -91,11 +91,6 @@ export type SectionSpacing = 'compact' | 'normal' | 'spacious'
  *  light ground, so both walk as `light`. */
 export type VisibleGround = 'light' | 'tint' | 'muted' | 'dark' | 'image' | 'saturated'
 
-/** The bottom edge a band cuts into the one below it. Desktop and up only. */
-export type SectionEdge = 'flat' | 'angled'
-/** What a band may store: an edge, or `site`, which takes the site's join shape (Phase 16B). */
-export type StoredEdge = SectionEdge | 'site'
-
 export const DEFAULT_SECTION_SURFACE: SectionSurface = 'light'
 export const DEFAULT_SECTION_SPACING: SectionSpacing = 'normal'
 
@@ -236,75 +231,11 @@ export function visibleGround(
   }
 }
 
-// The edge the NEXT band draws for the band above it, keyed on what that band's
-// ground actually was. A `pattern` or inset band walks as `light`, so its edge is
-// the plain light ground (the faint texture is not carried into the wedge).
-//
-// `image` also paints nothing. The photo is a `SanityImage` child element, not a
-// background, so an edge could only inherit the `bg-brand-dark` base underneath
-// it and would render a flat dark wedge that matches no part of the band above.
-const EDGE_FROM_CLASS: Record<VisibleGround, string> = {
-  light: 'before:bg-background',
-  tint:  'before:bg-hero-tint',
-  muted: 'before:bg-muted',
-  dark:  'before:bg-brand-dark',
-  saturated: 'before:bg-accent-fill',
-  image: '',
-}
-
-// The wedge itself: a triangle at the TOP of the next band, painted in the previous
-// band's ground, so the previous band's bottom edge reads as a diagonal cut into this
-// one.
-//
-// Phase 14 fix. Phase 13 shipped the wedge at `bottom: 100%`, which laid it over
-// the PREVIOUS band, painted in that band's own color: dark on dark, tint on tint.
-// It rendered nothing whenever it worked as designed (pixel-sampled in the Phase 14
-// challenge; the only visible wedge was the accent/tint mismatch, itself a bug), and
-// the Phase 13 samples that called it visible read the previous band. At `top: 0`
-// the pseudo-element still lives in the next band, so it still paints in every
-// ScrollReveal phase, and it covers only this band's own top padding, which is the
-// bound [R-452] states. The band's content sits in a later `relative` container and
-// paints above it.
-//
-// `md:` and up: mobile renders flat. At 390px a diagonal across a full-width band
-// is either invisible or eats a heading, and the study captured desktop only.
-//
-// `@supports` gates the pseudo-element's EXISTENCE, not just its clip: without
-// `clip-path` this would paint a solid 64px bar across the top of the band, which
-// is worse than a flat seam. Tailwind v4 spells that `supports-[...]`.
-//
-// `pointer-events-none` because the pseudo-element is a child box lying over the
-// band's own top strip, and without it the band grows a full-width dead zone.
-//
-// Capped at 4rem, which is the `compact` preset's own top padding at `md`, so the
-// wedge can never reach a heading: WCAG 2.2's 2.4.11 (focus not obscured) and
-// 1.4.12 (text spacing) both bind here, and an edge taller than the padding it
-// covers can hide a focused control.
-const EDGE_ANGLED =
-  'md:before:pointer-events-none md:before:absolute md:before:inset-x-0 md:before:top-0 md:before:h-16 ' +
-  'md:before:[clip-path:polygon(0_0,100%_0,0_100%)] md:supports-[not_(clip-path:polygon(0_0))]:before:hidden'
-
-/** The classes a band needs to draw the edge of the band ABOVE it.
- *
- *  Called with the PREVIOUS band's ground and the PREVIOUS band's `edgeBottom`,
- *  because the previous band owns the choice and the next band owns the paint. */
-export function sectionEdgeClasses(
-  previousGround: VisibleGround | null | undefined,
-  edge: SectionEdge | null | undefined,
-): string {
-  if (edge !== 'angled' || !previousGround) return ''
-  const from = EDGE_FROM_CLASS[previousGround]
-  return from ? `${EDGE_ANGLED} ${from}` : ''
-}
-
-/** True when the previous band's edge makes a seam meaningless: the wedge already
- *  fills the join, so halving the padding on top of it would crowd the heading. */
-export function edgeCancelsSeam(
-  previousGround: VisibleGround | null | undefined,
-  edge: SectionEdge | null | undefined,
-): boolean {
-  return sectionEdgeClasses(previousGround, edge) !== ''
-}
+// Phase 16C: the bottom edge a band stored (`edgeBottom`) is gone, and with it
+// `EDGE_ANGLED`, `sectionEdgeClasses` and `edgeCancelsSeam`. A divider is placed by the
+// rule in `components/sections/sectionFrame.ts` (`[R-481]`: under the hero and wherever
+// the page enters a dark or saturated section), its shape is the site's
+// (`designSettings.sectionJoin`), and `SectionShell` paints it.
 
 /** Exported for the test that resolves every class through Tailwind's own design
  *  system. Nothing in the app reads it. */
@@ -312,9 +243,11 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
   ...[...Object.values(SECTION_SPACING), TIGHT_SPACING].flatMap((s) => [
     s.top, s.bottom, s.seamTop, s.topOverlap, s.bottomBeforeOverlap.small, s.bottomBeforeOverlap.large,
   ]),
-  ...Object.values(EDGE_FROM_CLASS).filter(Boolean),
-  EDGE_ANGLED,
   'bg-brand-dark', 'bg-hero-tint', 'bg-muted', 'bg-background', 'bg-accent-fill',
+  // Phase 16C: the divider's own classes, which live in `SectionShell`'s maps and in the
+  // hero's spacer, where neither checker looks.
+  'divider-cut', 'divider-rise', 'divider-flip', 'mt-divider', 'h-divider',
+  'before:bg-background', 'before:bg-hero-tint', 'before:bg-muted', 'before:bg-brand-dark', 'before:bg-accent-fill',
 ]
   .join(' ')
   .split(/\s+/)

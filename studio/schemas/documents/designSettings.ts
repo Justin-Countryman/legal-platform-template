@@ -4,6 +4,8 @@ import {TokenStringInput} from '../../components/TokenStringInput'
 import {ColorPreview} from '../../components/ColorPreview'
 import {CornerPreview} from '../../components/CornerPreview'
 import {ThemePreview} from '../../components/ThemePreview'
+import {HeadingLinePicker} from '../../components/HeadingLinePicker'
+import {DividerPicker} from '../../components/DividerPicker'
 
 // Design Settings
 // Visual identity: logos, colors, typography, UI style
@@ -111,13 +113,49 @@ export const designSettings = defineType({
       title: 'Line Under Section Headings',
       type: 'string',
       fieldset: 'headings',
-      description: 'A short line under every section heading, in the accent, centered under a centered heading. Leave blank for none.',
+      components: {input: HeadingLinePicker},
+      description:
+        'The line under every section heading, in the accent, centered under a centered heading. Twenty-three designs, ordered by how often law firms use them; a theme sets one and you can pick any other without changing the theme\u2019s name. Leave blank for none.',
       options: {
         list: [
           {title: 'None', value: 'none'},
-          {title: 'Line \u2014 a short solid line', value: 'line'},
+          {title: 'Bar \u2014 a short solid bar', value: 'line'},
+          {title: 'Hairline \u2014 a long fine line', value: 'hairline'},
+          {title: 'Slab \u2014 a short heavy block', value: 'slab'},
           {title: 'Double \u2014 two fine lines', value: 'double'},
-          {title: 'Hatched \u2014 a short band of fine diagonals', value: 'hatched'},
+          {title: 'Fade \u2014 a line fading out at both ends', value: 'fade'},
+          {title: 'Thick-thin \u2014 a heavy line over a fine one', value: 'thickThin'},
+          {title: 'Thin-thick-thin \u2014 a heavy line between two fine ones', value: 'thinThickThin'},
+          {title: 'Tapered \u2014 thick in the middle, pointed at the ends', value: 'tapered'},
+          {title: 'Dot-line-dot \u2014 a line with a dot at each end', value: 'terminals'},
+          {title: 'Diamond on a line', value: 'diamond'},
+          {title: 'Section mark \u2014 a \u00a7 between two fine lines', value: 'sectionMark'},
+          {title: 'Lead dot \u2014 a dot at the start of the line', value: 'leadDot'},
+          {title: 'Lead diamond \u2014 a diamond at the start of the line', value: 'leadDiamond'},
+          {title: 'Broken \u2014 two short lines with a gap', value: 'broken'},
+          {title: 'Flanking \u2014 short lines either side of a centered heading', value: 'flanking'},
+          {title: 'Vertical rule \u2014 a bar beside the heading', value: 'vertical'},
+          {title: 'Corner mark \u2014 a small L', value: 'corner'},
+          {title: 'Dotted \u2014 a row of dots', value: 'dotted'},
+          {title: 'Dashed \u2014 short dashes', value: 'dashed'},
+          {title: 'Hatched \u2014 a band of fine diagonals', value: 'hatched'},
+          {title: 'Wave \u2014 a low, gentle wave', value: 'wave'},
+          {title: 'Zigzag \u2014 a low chevron line', value: 'zigzag'},
+          {title: 'Three dots', value: 'dinkus'},
+        ],
+      },
+    }),
+    defineField({
+      name: 'headingWeight',
+      title: 'Heading Weight',
+      type: 'string',
+      fieldset: 'headings',
+      description:
+        'How heavy the display headings are: section headings, the homepage headline and page titles. Regular needs a font that has one; where the font has only a bold or only a regular, that is what renders. Leave blank for Bold.',
+      options: {
+        list: [
+          {title: 'Bold', value: 'bold'},
+          {title: 'Regular', value: 'regular'},
         ],
         layout: 'radio',
       },
@@ -180,16 +218,40 @@ export const designSettings = defineType({
     }),
     defineField({
       name: 'sectionJoin',
-      title: 'Section Edge',
+      title: 'Section Divider',
       type: 'string',
       fieldset: 'patternTexture',
-      description: 'The shape of the edge where a homepage section that asks for "the site\u2019s edge" meets the next one. Angled suits sharp-cornered themes; Straight suits soft ones. Sections that do not ask stay straight. Desktop and tablet only. Leave blank for Straight.',
+      components: {input: DividerPicker},
+      description:
+        'The shape of the edge where one homepage section meets the next. It is drawn under the hero and wherever the page enters a dark or saturated section, and the section below gains the space it takes, so nothing looks scrunched. Interior pages never draw one. A theme sets a shape and you can pick any other without changing the theme\u2019s name. Leave blank for Straight.',
       options: {
         list: [
-          {title: 'Straight', value: 'straight'},
+          {title: 'Straight \u2014 no shape', value: 'straight'},
           {title: 'Angled \u2014 a diagonal cut', value: 'angled'},
+          {title: 'Angled, alternating \u2014 the diagonal mirrors each time', value: 'angledAlternating'},
+          {title: 'Shallow arc \u2014 a wide, gentle curve', value: 'arc'},
+          {title: 'Notch \u2014 a small V at the centre', value: 'notch'},
+          {title: 'Arrow \u2014 a wide V across the width', value: 'arrow'},
+          {title: 'Gentle wave', value: 'wave'},
+          {title: 'Peak \u2014 the section below rises to a point', value: 'peak'},
         ],
-        layout: 'radio',
+      },
+    }),
+    defineField({
+      name: 'dividerCarry',
+      title: 'Carry the Divider\u2019s Shape',
+      type: 'array',
+      of: [{type: 'string'}],
+      fieldset: 'patternTexture',
+      description:
+        'Small places that repeat the divider\u2019s shape, so the page reads as one design. Needs a divider above. Buttons show it only on square-cornered themes, and a photo takes it only where the photo has no frame.',
+      options: {
+        list: [
+          {title: 'Card corners', value: 'cards'},
+          {title: 'Button corners', value: 'buttons'},
+          {title: 'A feature photo\u2019s corner', value: 'photo'},
+          {title: 'A mark above headings on dark sections', value: 'mark'},
+        ],
       },
     }),
 

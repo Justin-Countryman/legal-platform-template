@@ -11,8 +11,6 @@ import {
   SECTION_SPACING,
   SECTION_SURFACES,
   TIGHT_SPACING,
-  edgeCancelsSeam,
-  sectionEdgeClasses,
   sectionSurface,
   visibleGround,
 } from '../sectionSurface'
@@ -209,55 +207,14 @@ describe('visibleGround', () => {
   })
 })
 
-describe('sectionEdgeClasses', () => {
-  it('flat, absent and null paint nothing', () => {
-    for (const edge of ['flat', null, undefined] as const) expect(sectionEdgeClasses('light', edge)).toBe('')
-  })
-
-  it('angled paints a wedge in the previous band’s own ground color', () => {
-    expect(sectionEdgeClasses('light', 'angled')).toContain('before:bg-background')
-    expect(sectionEdgeClasses('tint', 'angled')).toContain('before:bg-hero-tint')
-    expect(sectionEdgeClasses('dark', 'angled')).toContain('before:bg-brand-dark')
-  })
-
-  it('paints nothing over an image ground: there is no solid color to cut', () => {
-    // `image`: the photo is a child element, not a background, so a wedge could
-    // only inherit the brand-dark base and would match no part of the band above.
-    expect(sectionEdgeClasses('image', 'angled')).toBe('')
-  })
-
-  it('is desktop-and-up, gated on clip-path support, and never eats clicks', () => {
-    const classes = sectionEdgeClasses('dark', 'angled')
-    for (const token of classes.split(/\s+/).filter((c) => c.startsWith('md:before:'))) {
-      expect(token, 'every paint class is md: and up').toMatch(/^md:before:/)
-    }
-    expect(classes).toContain('md:before:pointer-events-none')
-    expect(classes).toContain('md:supports-[not_(clip-path:polygon(0_0))]:before:hidden')
-    // At the TOP of the band that paints it, never above it: at bottom-full the
-    // wedge lay over the previous band in that band's own color and rendered
-    // nothing (pixel-sampled, Phase 14). The clip keeps the top-left triangle.
-    expect(classes).toContain('md:before:top-0')
-    expect(classes).not.toContain('bottom-full')
-    expect(classes).toContain('md:before:[clip-path:polygon(0_0,100%_0,0_100%)]')
-  })
-
-  it('is capped at the compact preset’s own md top padding, so it cannot reach a heading', () => {
-    // h-16 is 4rem = 64px; compact's md:pt-16 is also 4rem. WCAG 2.4.11 and
-    // 1.4.12 both bind: a wedge taller than the padding it covers can obscure a
-    // focused control or a heading.
-    expect(sectionEdgeClasses('dark', 'angled')).toContain('md:before:h-16')
-  })
-
-  it('edgeCancelsSeam follows whether the edge actually paints', () => {
-    expect(edgeCancelsSeam('dark', 'angled')).toBe(true)
-    expect(edgeCancelsSeam('dark', 'flat')).toBe(false)
-    // An edge that paints nothing must not cancel a seam it never filled.
-    expect(edgeCancelsSeam('image', 'angled')).toBe(false)
-    expect(edgeCancelsSeam(null, 'angled')).toBe(false)
-  })
-})
-
 describe('the frame classes', () => {
+  // Phase 16C: the divider's utilities and the spacing token it reads. `mt-divider` and
+  // `h-divider` exist only because `--spacing-divider` is a theme variable, so they are
+  // real utilities rather than arbitrary values ([R-463]).
+  it('the divider utilities and its spacing token resolve', () => {
+    expect(findUnknown(['divider-cut', 'divider-rise', 'divider-flip', 'mt-divider', 'h-divider'], designSystem, plainCss)).toEqual([])
+  })
+
   it('every class resolves through Tailwind (neither checker can see a TS map)', () => {
     expect(findUnknown([...ALL_FRAME_CLASSES], designSystem, plainCss)).toEqual([])
   })

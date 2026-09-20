@@ -57,7 +57,7 @@ export function BlogIndexFallback({
       >
         {filtered.map((post) => (
           <li key={post.slug}>
-            <article className="flex h-full flex-col rounded-ui border border-border bg-background px-5 py-6 shadow-card-rest md:p-6">
+            <article data-card="" className="flex h-full flex-col rounded-ui border border-border bg-background px-5 py-6 shadow-card-rest md:p-6">
               {/* Title — Link to the post */}
               <h2 className="font-heading text-xl font-bold leading-snug text-foreground md:text-2xl">
                 <Link

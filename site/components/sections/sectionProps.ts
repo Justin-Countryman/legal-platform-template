@@ -137,15 +137,13 @@ export type ContentSectionProps = SectionProps<
 >
 
 // ─── The inline object is a subset of its document ────────────────────────────
-// With two exceptions: `surface`, where the homepage's inline copy offers Pattern and
-// the document an interior page uses does not (Phase 16A, [R-472]: interior pages
-// are always a clean ground), and `edgeBottom`, where the inline copy offers "the
-// site's edge" and the document does not (Phase 16B: interior pages draw no join).
-// Both are held the other way round below: every value a document can store, its
-// inline copy can store too.
-type Subset<I, D> = Omit<I, '_type' | 'surface' | 'edgeBottom'> extends Omit<D, DocKeys | 'surface' | 'edgeBottom'> ? true : never
+// With one exception: `surface`, where the homepage's inline copy offers Pattern and the
+// document an interior page uses does not (Phase 16A, [R-472]: interior pages are always
+// a clean ground). It is held the other way round below: every value a document can
+// store, its inline copy can store too. (Phase 16C removed the second exception with the
+// stored bottom edge: a divider is placed by a rule, not asked for per section.)
+type Subset<I, D> = Omit<I, '_type' | 'surface'> extends Omit<D, DocKeys | 'surface'> ? true : never
 type SurfaceWidens<I extends {surface?: unknown}, D extends {surface?: unknown}> = NonNullable<D['surface']> extends NonNullable<I['surface']> ? true : never
-type EdgeWidens<I extends {edgeBottom?: unknown}, D extends {edgeBottom?: unknown}> = NonNullable<D['edgeBottom']> extends NonNullable<I['edgeBottom']> ? true : never
 const _practiceAreaNav: Subset<PracticeAreaNavInline, PracticeAreaNav> = true
 const _attorneySection: Subset<AttorneySectionInline, AttorneySection> = true
 const _badgesSection: Subset<BadgesSectionInline, BadgesSection> = true
@@ -171,12 +169,5 @@ const _surfaces: [
   SurfaceWidens<CaseResultsSectionInline, CaseResultsSection>, SurfaceWidens<ContentSectionInline, ContentSection>,
   SurfaceWidens<ReviewsSectionInline, ReviewsSection>,
 ] = [true, true, true, true, true, true, true, true, true]
-const _edges: [
-  EdgeWidens<PracticeAreaNavInline, PracticeAreaNav>, EdgeWidens<AttorneySectionInline, AttorneySection>,
-  EdgeWidens<BadgesSectionInline, BadgesSection>, EdgeWidens<TestimonialsGridInline, TestimonialsGrid>,
-  EdgeWidens<FeaturedTestimonialInline, FeaturedTestimonial>, EdgeWidens<VideoSectionInline, VideoSection>,
-  EdgeWidens<CaseResultsSectionInline, CaseResultsSection>, EdgeWidens<ContentSectionInline, ContentSection>,
-  EdgeWidens<ReviewsSectionInline, ReviewsSection>,
-] = [true, true, true, true, true, true, true, true, true]
-void _edges
+
 void _surfaces

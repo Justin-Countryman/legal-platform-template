@@ -47,7 +47,7 @@ function Backdrop({config, surface, content}: {config: HeroConfig; surface: Reso
   )
 }
 
-export function Overlay({config, content, surface, sectionBackground}: SkeletonProps) {
+export function Overlay({config, content, surface, sectionBackground, edgeBelow}: SkeletonProps) {
   const fullViewport = config.heightMode === 'fullViewport'
   const centered = config.contentAlign === 'center'
   const hasBackdrop = config.backdrop === 'image' || config.backdrop === 'mosaic'
@@ -77,7 +77,7 @@ export function Overlay({config, content, surface, sectionBackground}: SkeletonP
   )
 
   return (
-    <HeroBand
+    <HeroBand edgeBelow={edgeBelow}
       surface={surface}
       fullViewport={fullViewport}
       backdropNode={backdropNode}

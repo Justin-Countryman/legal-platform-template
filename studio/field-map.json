@@ -2788,20 +2788,6 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
-        },
-        {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
           "hidden": "<predicate>",
           "jsonType": "string",
@@ -3022,20 +3008,6 @@
           "path": "inset",
           "title": "Inset Panel",
           "type": "boolean"
-        },
-        {
-          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
         },
         {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
@@ -4217,20 +4189,6 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
-        },
-        {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
           "hidden": "<predicate>",
           "jsonType": "string",
@@ -4997,20 +4955,6 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
-        },
-        {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
           "hidden": "<predicate>",
           "jsonType": "string",
@@ -5175,20 +5119,6 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
-        },
-        {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
           "hidden": "<predicate>",
           "jsonType": "string",
@@ -5253,19 +5183,52 @@
           "type": "string"
         },
         {
-          "description": "A short line under every section heading, in the accent, centered under a centered heading. Leave blank for none.",
+          "description": "The line under every section heading, in the accent, centered under a centered heading. Twenty-three designs, ordered by how often law firms use them; a theme sets one and you can pick any other without changing the theme’s name. Leave blank for none.",
           "jsonType": "string",
           "options": {
-            "layout": "radio",
             "list": [
               "none",
               "line",
+              "hairline",
+              "slab",
               "double",
-              "hatched"
+              "fade",
+              "thickThin",
+              "thinThickThin",
+              "tapered",
+              "terminals",
+              "diamond",
+              "sectionMark",
+              "leadDot",
+              "leadDiamond",
+              "broken",
+              "flanking",
+              "vertical",
+              "corner",
+              "dotted",
+              "dashed",
+              "hatched",
+              "wave",
+              "zigzag",
+              "dinkus"
             ]
           },
           "path": "headingRule",
           "title": "Line Under Section Headings",
+          "type": "string"
+        },
+        {
+          "description": "How heavy the display headings are: section headings, the homepage headline and page titles. Regular needs a font that has one; where the font has only a bold or only a regular, that is what renders. Leave blank for Bold.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "bold",
+              "regular"
+            ]
+          },
+          "path": "headingWeight",
+          "title": "Heading Weight",
           "type": "string"
         },
         {
@@ -5313,18 +5276,41 @@
           "type": "string"
         },
         {
-          "description": "The shape of the edge where a homepage section that asks for \"the site’s edge\" meets the next one. Angled suits sharp-cornered themes; Straight suits soft ones. Sections that do not ask stay straight. Desktop and tablet only. Leave blank for Straight.",
+          "description": "The shape of the edge where one homepage section meets the next. It is drawn under the hero and wherever the page enters a dark or saturated section, and the section below gains the space it takes, so nothing looks scrunched. Interior pages never draw one. A theme sets a shape and you can pick any other without changing the theme’s name. Leave blank for Straight.",
           "jsonType": "string",
           "options": {
-            "layout": "radio",
             "list": [
               "straight",
-              "angled"
+              "angled",
+              "angledAlternating",
+              "arc",
+              "notch",
+              "arrow",
+              "wave",
+              "peak"
             ]
           },
           "path": "sectionJoin",
-          "title": "Section Edge",
+          "title": "Section Divider",
           "type": "string"
+        },
+        {
+          "description": "Small places that repeat the divider’s shape, so the page reads as one design. Needs a divider above. Buttons show it only on square-cornered themes, and a photo takes it only where the photo has no frame.",
+          "jsonType": "array",
+          "of": [
+            "string"
+          ],
+          "options": {
+            "list": [
+              "cards",
+              "buttons",
+              "photo",
+              "mark"
+            ]
+          },
+          "path": "dividerCarry",
+          "title": "Carry the Divider’s Shape",
+          "type": "array"
         },
         {
           "description": "Used in headers, footers, and sections with a light background. Typically your full-color or dark logo.",
@@ -7495,20 +7481,6 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
-        },
-        {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
           "hidden": "<predicate>",
           "jsonType": "string",
@@ -7616,20 +7588,6 @@
           "path": "inset",
           "title": "Inset Panel",
           "type": "boolean"
-        },
-        {
-          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
         },
         {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
@@ -9934,21 +9892,6 @@
           "type": "boolean"
         },
         {
-          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "site",
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "canvas[]<practiceAreaNavInline>.edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
-        },
-        {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
           "hidden": "<predicate>",
           "jsonType": "string",
@@ -10088,21 +10031,6 @@
           "type": "boolean"
         },
         {
-          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "site",
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "canvas[]<attorneySectionInline>.edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
-        },
-        {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
           "hidden": "<predicate>",
           "jsonType": "string",
@@ -10221,21 +10149,6 @@
           "path": "canvas[]<caseResultsSectionInline>.inset",
           "title": "Inset Panel",
           "type": "boolean"
-        },
-        {
-          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "site",
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "canvas[]<caseResultsSectionInline>.edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
         },
         {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
@@ -10382,21 +10295,6 @@
           "type": "boolean"
         },
         {
-          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "site",
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "canvas[]<badgesSectionInline>.edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
-        },
-        {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
           "hidden": "<predicate>",
           "jsonType": "string",
@@ -10487,21 +10385,6 @@
           "type": "boolean"
         },
         {
-          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "site",
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "canvas[]<testimonialsGridInline>.edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
-        },
-        {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
           "hidden": "<predicate>",
           "jsonType": "string",
@@ -10583,21 +10466,6 @@
           "path": "canvas[]<featuredTestimonialInline>.inset",
           "title": "Inset Panel",
           "type": "boolean"
-        },
-        {
-          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "site",
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "canvas[]<featuredTestimonialInline>.edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
         },
         {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
@@ -10703,21 +10571,6 @@
           "path": "canvas[]<videoSectionInline>.inset",
           "title": "Inset Panel",
           "type": "boolean"
-        },
-        {
-          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "site",
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "canvas[]<videoSectionInline>.edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
         },
         {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
@@ -11114,21 +10967,6 @@
           "type": "boolean"
         },
         {
-          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "site",
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "canvas[]<contentSectionInline>.edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
-        },
-        {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
           "hidden": "<predicate>",
           "jsonType": "string",
@@ -11267,21 +11105,6 @@
           "path": "canvas[]<reviewsSectionInline>.inset",
           "title": "Inset Panel",
           "type": "boolean"
-        },
-        {
-          "description": "The edge where this section meets the next one. \"The site’s edge\" takes the shape the theme sets in Design Settings (angled for sharp themes, straight for soft ones), so it changes with the theme; Straight and Angled are this section’s own. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "site",
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "canvas[]<reviewsSectionInline>.edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
         },
         {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
@@ -13832,20 +13655,6 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
-        },
-        {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
           "hidden": "<predicate>",
           "jsonType": "string",
@@ -14286,20 +14095,6 @@
           "path": "inset",
           "title": "Inset Panel",
           "type": "boolean"
-        },
-        {
-          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
         },
         {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
@@ -16598,20 +16393,6 @@
           "type": "boolean"
         },
         {
-          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
-        },
-        {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",
           "hidden": "<predicate>",
           "jsonType": "string",
@@ -17626,20 +17407,6 @@
           "path": "inset",
           "title": "Inset Panel",
           "type": "boolean"
-        },
-        {
-          "description": "The shape of the join where this section meets the next one. Desktop and tablet only: phones always render a straight edge. It draws nothing when this section has a background photo, because there is no solid color to cut.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "flat",
-              "angled"
-            ]
-          },
-          "path": "edgeBottom",
-          "title": "Bottom Edge",
-          "type": "string"
         },
         {
           "description": "Pull this inset panel up so it rises into the section above, tying the two together. The section above makes room for it, so its text is never covered. Desktop and tablet only: phones stack normally.",

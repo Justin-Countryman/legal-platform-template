@@ -1,4 +1,6 @@
 import { converter, formatHex, wcagContrast, parse, clampChroma } from 'culori'
+import {DIVIDER_DEPTH, MOTIF_PIECES, dividerPolygon, dividerShape} from './dividers'
+import {HEADING_LINES, headingLineVars} from './headingLines'
 
 // ─── Shadow RGB helper ────────────────────────────────────────────────────────
 // Converts a hex color to a space-separated R G B triplet string ("28 19 20").
@@ -817,7 +819,10 @@ export const MARKETING_SCALE_MAP: Record<string, MarketingScaleTokens> = {
 // 10), and `.heading-emphasis` turns synthesis off. There is no `bold`: no theme
 // chose it, and it re-weighted every section heading on the site.
 export const HEADING_EMPHASIS_STYLES = ['color', 'italic'] as const
-export const HEADING_RULES = ['none', 'line', 'double', 'hatched'] as const
+/** The heading line, widened to the library of Phase 16C (`[R-484]`, `[R-489]`); `line` is the Bar. */
+export const HEADING_RULES = HEADING_LINES
+/** A theme may set the display headings regular where its pairing has both faces (`[R-487]`). */
+export const HEADING_WEIGHTS = ['bold', 'regular'] as const
 export const HEADING_CASES = ['normal', 'upper'] as const
 
 export const HEADING_EMPHASIS_MAP: Record<string, {style: string; weight: string}> = {
@@ -881,11 +886,27 @@ export type DesignTokenSettings = {
   patternTexture?:       string | null
   headingEmphasisStyle?: string | null
   headingCase?:          string | null
+  sectionJoin?:          string | null
+  headingRule?:          string | null
+}
+
+/** The divider's shape and depth, and the motif its carried pieces repeat (Phase 16C).
+ *  A straight or unknown divider emits nothing, and nothing is drawn: every rule that
+ *  draws one reads these properties. Geometry, never color. */
+export function dividerVars(sectionJoin: string | null | undefined): string {
+  const shape = dividerShape(sectionJoin)
+  if (!shape) return ''
+  const m = MOTIF_PIECES[shape.motif]
+  return (
+    `--divider-above:${dividerPolygon(shape, 'above')};--divider-below:${dividerPolygon(shape, 'below')};` +
+    `--divider-depth:${DIVIDER_DEPTH[shape.depth]};` +
+    `--carry-corner:${m.corner};--carry-photo:${m.photo};--carry-mark:${m.mark};--carry-mark-w:${m.markWidth};`
+  )
 }
 
 export function buildDesignTokenCSS({
   uiRadius, buttonShape, tertiaryStyle, elevationStyle, motionTempo, marketingScale, taglineStyle, patternTexture,
-  headingEmphasisStyle, headingCase,
+  headingEmphasisStyle, headingCase, sectionJoin, headingRule,
 }: DesignTokenSettings = {}): string {
   const radius    = UI_RADIUS_MAP[uiRadius ?? '']            ?? UI_RADIUS_MAP.rounded
   const btn       = BUTTON_SHAPE_MAP[buttonShape ?? '']      ?? BUTTON_SHAPE_MAP.rounded
@@ -927,6 +948,8 @@ export function buildDesignTokenCSS({
     taglineVars +
     textureVars +
     headingVars +
+    dividerVars(sectionJoin) +
+    headingLineVars(headingRule) +
     marketingVars +
     `}`
   )

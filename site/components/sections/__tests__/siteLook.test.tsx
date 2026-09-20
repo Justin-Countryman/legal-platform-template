@@ -19,7 +19,7 @@ vi.mock('@/components/ui/ScrollReveal', () => ({
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {PageSections, type PageSectionData} from '../PageSections'
 import {SectionShell} from '../SectionShell'
-import {NO_SEAM, edgeOf, followSite, interiorLook, siteLookOf, walkFrame, type SiteLook} from '../sectionFrame'
+import {NO_SEAM, followSite, interiorLook, siteLookOf, walkFrame, type SiteLook} from '../sectionFrame'
 import {sectionSurface, visibleGround} from '@/lib/sectionSurface'
 import {resolveHovers} from '@/lib/siloHover'
 
@@ -53,21 +53,12 @@ describe('the site look from Design Settings', () => {
   })
 })
 
-describe('the site join ([R-479]: a section asks, the theme decides the shape)', () => {
-  it('a section that asks takes the theme shape; one that asks nothing stays straight; its own edge is its own', () => {
-    expect(edgeOf('site', look({sectionJoin: 'angled'}))).toBe('angled')
-    expect(edgeOf('site', look({sectionJoin: 'straight'}))).toBe('flat')
-    expect(edgeOf('site', null)).toBe('flat')
-    expect(edgeOf(undefined, look({sectionJoin: 'angled'}))).toBeNull()
-    expect(edgeOf('angled', look({sectionJoin: 'straight'}))).toBe('angled')
-    expect(edgeOf('flat', look({sectionJoin: 'angled'}))).toBe('flat')
-  })
-
-  it('the band below paints the wedge only where the band above asked and the theme angles', () => {
-    const members = [{appearance: {surface: 'light' as const, edgeBottom: 'site' as const}}, {appearance: {surface: 'dark' as const}}]
-    const walk = (site: SiteLook) => walkFrame(members, (m) => ({appearance: m.appearance, empty: false}), site)
-    expect(walk(look({sectionJoin: 'angled'}))[1].seam.previousEdge).toBe('angled')
-    expect(walk(look({sectionJoin: 'straight'}))[1].seam.previousEdge).toBe('flat')
+describe('the site look carries the divider and its pieces (Phase 16C)', () => {
+  it('reads the site’s divider shape, whatever it is', () => {
+    expect(siteLookOf({sectionJoin: 'peak'}).sectionJoin).toBe('peak')
+    expect(siteLookOf({sectionJoin: 'straight'}).sectionJoin).toBe('straight')
+    expect(siteLookOf({}).sectionJoin).toBe('straight')
+    expect(siteLookOf(null).sectionJoin).toBe('straight')
   })
 
   it('every band carries the site look', () => {
@@ -76,15 +67,9 @@ describe('the site join ([R-479]: a section asks, the theme decides the shape)',
     expect(out.map((o) => o.seam.site)).toEqual([l, l])
   })
 
-  it('a homepage section offers "the site’s edge" and the canvas draws it', () => {
-    const blocks = [
-      {_type: 'contentSectionInline', _key: 'a', layout: 'statement', heading: 'One', appearance: {edgeBottom: 'site'}},
-      {_type: 'contentSectionInline', _key: 'b', layout: 'statement', heading: 'Two', appearance: {surface: 'dark'}},
-    ] as HomepageBlock[]
-    const angled = render(<HomepageCanvas blocks={blocks} site={look({sectionJoin: 'angled'})} />).container
-    expect(angled.querySelectorAll('section')[1].className.split(' ')).toContain('before:bg-background')
-    const straight = render(<HomepageCanvas blocks={blocks} site={look({sectionJoin: 'straight'})} />).container
-    expect(straight.querySelectorAll('section')[1].className).not.toContain('before:bg-background')
+  it('an interior page keeps the frames and loses the divider and the texture', () => {
+    const l = look({imageFrame: 'framed', sectionJoin: 'peak', patternDark: true})
+    expect(interiorLook(l)).toEqual({...l, sectionJoin: 'straight', patternDark: false})
   })
 })
 
@@ -175,5 +160,62 @@ describe('every section heading carries the theme heading signature', () => {
     // renders its own <h2> without the class, turns this red.
     expect(h2s.length).toBeGreaterThanOrEqual(interior.length)
     expect(h2s.filter((h) => !h.className.split(' ').includes('section-heading')).map((h) => h.textContent)).toEqual([])
+  })
+})
+
+describe('every card root takes the carried corner (Phase 16C, [R-483])', () => {
+  // ADV-P16C-A censused the card roots: fifteen or more across thirteen files, not the
+  // seven the design listed, and a test that renders section types only misses the blog
+  // index, events, the video library, the sidebar and the footer's locations. The piece
+  // is drawn by one CSS rule on `[data-card]`, so the marker IS the coverage.
+  const t = {_id: 't', quote: 'Superb counsel.', name: 'A client'}
+  const cardSections = [
+    {_type: 'testimonialsGrid', _id: '1', heading: 'Clients', testimonials: [t, {...t, _id: 't2'}]},
+    {_type: 'caseResultsSection', _id: '2', heading: 'Results', caseResults: [{_id: 'r', amount: '$1M'}]},
+    {
+      _type: 'practiceAreaNav', _id: '3', heading: 'How we help', layout: 'spotlight',
+      items: [{_key: 'a', label: 'Family Law', href: '/family-law/'}, {_key: 'b', label: 'Probate', href: '/probate/'}],
+    },
+    {
+      _type: 'attorneySection', _id: '4', heading: 'Our people', layout: 'grid',
+      attorneys: [{_id: 'x', title: 'Jane Roe', slug: 'attorneys/jane'}],
+    },
+  ] as unknown as PageSectionData[]
+
+  it('marks every card the sections render, and no list row', () => {
+    const {container} = render(<PageSections sections={cardSections} />)
+    const cards = [...container.querySelectorAll('[data-card]')]
+    expect(cards.length).toBeGreaterThanOrEqual(5)
+    // Every marked element wears the card chrome: the marker cannot drift onto a row.
+    for (const card of cards) {
+      expect(card.className, card.textContent?.slice(0, 40)).toContain('rounded-ui')
+    }
+  })
+
+  it('a full-width list row is not a card, even beside the carousel cards the same layout renders', () => {
+    const rows = [{
+      _type: 'practiceAreaNav', _id: '9', heading: 'How we help', layout: 'inline',
+      items: [{_key: 'a', label: 'Family Law', href: '/family-law/'}, {_key: 'b', label: 'Probate', href: '/probate/'}],
+    }] as unknown as PageSectionData[]
+    const {container} = render(<PageSections sections={rows} />)
+    // The inline layout draws rows on desktop and a carousel of cards on phones: the
+    // cards are marked and the rows are not, which is the distinction the piece needs.
+    const rowEls = [...container.querySelectorAll('a')].filter((el) => el.className.includes('items-center') && el.className.includes('p-5'))
+    expect(rowEls.length).toBeGreaterThan(0)
+    for (const row of rowEls) expect(row.hasAttribute('data-card'), row.className).toBe(false)
+    expect(container.querySelectorAll('[data-card]').length).toBeGreaterThan(0)
+  })
+
+  it('a feature photo says which frame it has, so only a plain or slab photo is cut', () => {
+    const withPhoto = [{
+      _type: 'contentSection', _id: '1', layout: 'split', heading: 'About',
+      media: {kind: 'image', image: {asset: {_ref: 'image-abc-800x600-jpg'}, alt: 'The firm'}},
+    }] as unknown as PageSectionData[]
+    const plain = render(<PageSections sections={withPhoto} />).container
+    expect(plain.querySelector('[data-feature-photo="plain"]')).not.toBeNull()
+    const framed = render(<PageSections sections={withPhoto} site={look({imageFrame: 'framed'})} />).container
+    expect(framed.querySelector('[data-feature-photo]')).toBeNull()
+    const slab = render(<PageSections sections={withPhoto} site={look({imageFrame: 'slab'})} />).container
+    expect(slab.querySelector('[data-feature-photo="slab"]')).not.toBeNull()
   })
 })

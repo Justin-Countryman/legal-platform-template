@@ -4,8 +4,12 @@ import {describe, expect, it} from 'vitest'
 import {getPresetById} from '../../fonts/presets'
 import {matchCornerFamily} from '../corners'
 import {PALETTE_PRESETS} from '../palettes'
+import {CARRY_PIECES, DIVIDERS} from '../dividers'
+import {HEADING_LINES} from '../headingLines'
 import {
-  THEMES, THEME_DEFAULTS, THEME_FIELDS, isPlatformDefault, matchTheme, readThemeField, themePatch, usesCustomFonts,
+  PICK_DEFAULTS, SIGNATURE_HIGH, THEMES, THEME_DEFAULTS, THEME_FIELDS, THEME_PICKS, drawableWeight, isPlatformDefault,
+  matchTheme, readPick, readThemeField, signatureDifferences, signatureOf, swappedPicks, themePatch, updatePatch,
+  usesCustomFonts,
   type Theme, type ThemeDoc, type ThemeSettings,
 } from '../themes'
 
@@ -23,13 +27,44 @@ const optionsOf = (field: string) => designRows.find((r) => r.path === field)?.o
 const stored = (s: ThemeSettings): ThemeDoc => Object.fromEntries(Object.entries(s).filter(([, v]) => v !== null))
 
 describe('the themes', () => {
-  it('ships nine, Granite held for Phase 16C ([R-478])', () => {
+  it('ships nine, Granite held for Phase 16D ([R-478])', () => {
     expect(THEMES.map((t) => t.id)).toEqual(['canyon', 'graphite', 'walnut', 'dune', 'flint', 'marble', 'linen', 'valley', 'quartz'])
   })
 
-  it.each(THEMES.map((t) => [t.name, t] as [string, Theme]))('%s names every field, and nothing else', (_, theme) => {
+  it.each(THEMES.map((t) => [t.name, t] as [string, Theme]))('%s names every field, its picks and an identity', (_, theme) => {
     expect(Object.keys(theme.settings).sort()).toEqual([...THEME_FIELDS].sort())
+    expect(Object.keys(theme.picks).sort()).toEqual([...THEME_PICKS].sort())
     expect(theme.feel.length).toBeGreaterThan(10)
+    expect(theme.identity.sentence.length).toBeGreaterThan(20)
+    expect(theme.identity.recognizers.length).toBeGreaterThanOrEqual(2)
+    expect(theme.identity.recognizers.length).toBeLessThanOrEqual(3)
+  })
+
+  // Phase 16C ([R-482], [R-484], [R-485]): the divider and the heading line are picks,
+  // so they are held to their libraries, not to the matched settings.
+  it.each(THEMES.map((t) => [t.name, t] as [string, Theme]))('%s picks from the libraries, and the Studio offers each pick', (_, theme) => {
+    const {sectionJoin, dividerCarry, headingRule} = theme.picks
+    if (sectionJoin) {
+      expect(DIVIDERS).toContain(sectionJoin)
+      expect(optionsOf('sectionJoin')).toContain(sectionJoin)
+    }
+    if (headingRule) {
+      expect(HEADING_LINES).toContain(headingRule)
+      expect(optionsOf('headingRule')).toContain(headingRule)
+    }
+    for (const piece of dividerCarry) {
+      expect(CARRY_PIECES).toContain(piece)
+      expect(optionsOf('dividerCarry')).toContain(piece)
+    }
+    // A carried piece needs a shape to carry ([R-483]).
+    if (dividerCarry.length) expect(sectionJoin, `${theme.id} carries pieces with no divider`).not.toBeNull()
+  })
+
+  // [R-487]: three of the nine ship with a divider, matching what law firms do (19 of the
+  // 65 sites in the study, 29%). A default set nobody ruled is not a default set.
+  it('three themes ship with a divider, and the mark is off in every one ([R-487], [R-488])', () => {
+    expect(THEMES.filter((t) => t.picks.sectionJoin).map((t) => t.id)).toEqual(['graphite', 'marble', 'quartz'])
+    for (const theme of THEMES) expect(theme.picks.dividerCarry, theme.id).not.toContain('mark')
   })
 
   it.each(THEMES.map((t) => [t.name, t] as [string, Theme]))('%s writes only values the Studio offers', (_, theme) => {
@@ -66,20 +101,53 @@ describe('the themes', () => {
     }
   })
 
-  it('no two themes are the same, and each differs from every other in at least four things', () => {
+  // ─── Uniqueness is a test ([R-487], Phase 16C amendment 1) ──────────────────
+  //
+  // Measured on the MATCHED settings only, because a theme's name survives any pick
+  // being swapped ([R-485]), and on what a visitor can tell apart: the heading's voice
+  // (its face's class with the weight that face can draw), the case, the corner family
+  // (Soft and Round are one at a glance) and the surface device, plus seven lower
+  // dimensions. Two high and five in all is the closest pair that ships, so a tenth
+  // theme that crowds a ninth fails here rather than shipping.
+  it('every pair of themes differs in at least two of the four a visitor names first, and five in all', () => {
     for (const a of THEMES) {
       for (const b of THEMES) {
-        if (a === b) continue
-        const differences = THEME_FIELDS.filter((f) => a.settings[f] !== b.settings[f]).length
-        expect(differences, `${a.id} and ${b.id}`).toBeGreaterThanOrEqual(4)
+        if (a.id >= b.id) continue
+        const {high, all} = signatureDifferences(a, b)
+        expect(high.length, `${a.id} and ${b.id} (high: ${high.join(', ') || 'none'})`).toBeGreaterThanOrEqual(2)
+        expect(all.length, `${a.id} and ${b.id} (${all.join(', ')})`).toBeGreaterThanOrEqual(5)
       }
+    }
+  })
+
+  it('each theme’s recognisers belong to no other theme, and are things a visitor sees', () => {
+    for (const theme of THEMES) {
+      const others = THEMES.filter((t) => t !== theme)
+      const sig = signatureOf(theme)
+      const clash = others.find((other) => theme.identity.recognizers.every((d) => signatureOf(other)[d] === sig[d]))
+      expect(clash?.id, `${theme.id} shares its recognisers with ${clash?.id}`).toBeUndefined()
+      // At least one of them is a dimension a visitor names first.
+      expect(theme.identity.recognizers.some((d) => (SIGNATURE_HIGH as readonly string[]).includes(d)), theme.id).toBe(true)
+    }
+  })
+
+  // [R-487], amendment 24: a theme may only name a weight its heading face can draw.
+  it('names a weight its pairing can actually draw, and leaves the rest to the face', () => {
+    for (const theme of THEMES) {
+      const wanted = String(theme.settings.headingWeight)
+      const drawn = drawableWeight(theme.settings.fontPairingPreset as number, wanted)
+      // A theme that NAMES a weight must have a face that draws it. A theme that leaves
+      // the default takes whatever its face has: pairings 2 and 13 have no bold, and with
+      // font synthesis off they render their real regular (ADV-P16C-A measured the fake).
+      if (wanted !== THEME_DEFAULTS.headingWeight) expect(drawn, theme.id).toBe(wanted)
+      expect(['bold', 'regular']).toContain(drawn)
     }
   })
 })
 
 describe('matching by value ([R-477])', () => {
   it('names each theme from its own stored settings', () => {
-    for (const theme of THEMES) expect(matchTheme(stored(theme.settings))).toEqual({theme, current: true})
+    for (const theme of THEMES) expect(matchTheme(stored(theme.settings))).toMatchObject({theme, current: true})
   })
 
   it('reads an absent field as its default, so a theme that leaves a field unset still matches', () => {
@@ -110,16 +178,22 @@ describe('matching by value ([R-477])', () => {
     expect(isPlatformDefault(build)).toBe(true)
     expect(isPlatformDefault({})).toBe(true)
     expect(matchTheme(build)).toBeNull()
-    expect(isPlatformDefault({...build, headingRule: 'line'})).toBe(false)
+    expect(isPlatformDefault({...build, headingCase: 'upper'})).toBe(false)
+    // A pick is not a matched setting, so it does not make a site "Custom" ([R-485]).
+    expect(isPlatformDefault({...build, headingRule: 'leadDot', sectionJoin: 'arc'})).toBe(true)
   })
 
   it('names an earlier version of a theme, so a retune never reads as an edit', () => {
     const walnut = THEMES.find((t) => t.id === 'walnut')!
-    const retuned: Theme = {...walnut, settings: {...walnut.settings, motionTempo: 'balanced'}, previous: [walnut.settings]}
+    const retuned: Theme = {
+      ...walnut,
+      settings: {...walnut.settings, motionTempo: 'balanced'},
+      previous: [{settings: walnut.settings, picks: walnut.picks}],
+    }
     const original = [...THEMES]
     ;(THEMES as Theme[]).splice(THEMES.indexOf(walnut), 1, retuned)
     try {
-      expect(matchTheme(stored(walnut.settings))).toEqual({theme: retuned, current: false})
+      expect(matchTheme(stored(walnut.settings))).toMatchObject({theme: retuned, current: false})
     } finally {
       ;(THEMES as Theme[]).splice(0, THEMES.length, ...original)
     }
@@ -130,9 +204,45 @@ describe('the patch the Studio picker runs', () => {
   it('sets every value a theme names and unsets every field it leaves to the default, in one patch', () => {
     for (const theme of THEMES) {
       const {set, unset} = themePatch(theme)
-      expect([...Object.keys(set), ...unset].sort()).toEqual([...THEME_FIELDS].sort())
-      for (const f of unset) expect(theme.settings[f as keyof ThemeSettings]).toBeNull()
+      // The patch covers the matched settings AND the picks: picking a theme sets its
+      // defaults ([R-485]), and Python replays these same cases (presets.json).
+      expect([...Object.keys(set), ...unset].sort()).toEqual([...THEME_FIELDS, ...THEME_PICKS].sort())
+      for (const f of unset) {
+        if ((THEME_FIELDS as readonly string[]).includes(f)) expect(theme.settings[f as keyof ThemeSettings]).toBeNull()
+        else expect([null, PICK_DEFAULTS.dividerCarry]).toContainEqual(theme.picks[f as keyof typeof theme.picks])
+      }
     }
+  })
+
+  it('a swapped divider or heading line keeps the theme’s name, and the Studio says which was swapped ([R-485])', () => {
+    const graphite = THEMES.find((t) => t.id === 'graphite')!
+    const swappedDoc = {...stored(graphite.settings), ...graphite.picks, sectionJoin: 'arc'}
+    const match = matchTheme(swappedDoc)
+    expect(match).toMatchObject({theme: graphite, current: true})
+    expect(swappedPicks(swappedDoc, match!)).toEqual([{field: 'sectionJoin', site: 'arc', theme: 'angled'}])
+    // And a site wearing exactly the theme's picks has nothing to report.
+    expect(swappedPicks({...stored(graphite.settings), ...graphite.picks}, match!)).toEqual([])
+  })
+
+  it('applying a theme’s update keeps a pick the site swapped on purpose', () => {
+    const linen = THEMES.find((t) => t.id === 'linen')!
+    const old = linen.previous[0]
+    const site = {...old.settings, ...old.picks, sectionJoin: 'wave'} as ThemeDoc
+    const match = matchTheme(site)!
+    expect(match).toMatchObject({theme: linen, current: false})
+    const {set, unset} = updatePatch(site, match)
+    expect({...set, ...Object.fromEntries(unset.map((k) => [k, null]))}).toMatchObject({headingWeight: 'regular'})
+    expect('sectionJoin' in set).toBe(false)
+    expect(unset).not.toContain('sectionJoin')
+  })
+
+  it('reads a stored pick the way the site does: unknown, straight and none are no pick', () => {
+    expect(readPick({sectionJoin: 'arc'}, 'sectionJoin')).toBe('arc')
+    expect(readPick({sectionJoin: 'straight'}, 'sectionJoin')).toBeNull()
+    expect(readPick({sectionJoin: 'squiggle'}, 'sectionJoin')).toBeNull()
+    expect(readPick({headingRule: 'none'}, 'headingRule')).toBeNull()
+    expect(readPick({dividerCarry: ['cards', 'nonsense']}, 'dividerCarry')).toEqual(['cards'])
+    expect(readPick({}, 'dividerCarry')).toEqual([])
   })
 
   it('applied over any document, it leaves one the theme matches', () => {
@@ -165,6 +275,6 @@ describe('the patch the Studio picker runs', () => {
     expect(THEME_DEFAULTS.elevationStyle).toBe('0')
     expect(THEME_DEFAULTS.motionTempo).toBe('relaxed')
     expect(THEME_DEFAULTS.attorneyCardStyle).toBe('classic')
-    expect(THEME_DEFAULTS.sectionJoin).toBe('straight')
+    expect(PICK_DEFAULTS).toEqual({sectionJoin: null, dividerCarry: [], headingRule: null})
   })
 })

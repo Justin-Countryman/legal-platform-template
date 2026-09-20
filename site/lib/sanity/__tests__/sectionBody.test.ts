@@ -189,7 +189,8 @@ describe('SECTION_BODY: the inline member and the referenced document project th
 // THE BUG THIS EXISTS FOR, found on the fixture's served page and not by any
 // test: `"appearance"` is an EXPLICIT object projection, so a field added to
 // `appearanceFields.ts` does not appear in the query result until it is added
-// here too. Phase 13's `inset`, `edgeBottom` and `overlapPrevious` were built,
+// here too. Phase 13's `inset` and `overlapPrevious` were built (`edgeBottom` retired
+// with Phase 16C: a divider is placed by a rule, never asked for per section),
 // unit-tested, golden-tested, type-checked, merged AND propagated before anyone
 // noticed the query never carried them — because the unit tests pass props
 // straight into the components, the golden renders the components directly, and
@@ -199,7 +200,7 @@ describe('SECTION_BODY: the inline member and the referenced document project th
 // So this asserts the KEY SET, not just the values: a schema field with no
 // projection line is a red test from now on.
 
-const APPEARANCE_KEYS = ['surface', 'spacing', 'inset', 'edgeBottom', 'overlapPrevious', 'backgroundImage'] as const
+const APPEARANCE_KEYS = ['surface', 'spacing', 'inset', 'overlapPrevious', 'backgroundImage'] as const
 
 async function projectOne(fragment: string, doc: Record<string, unknown>, wrap: 'canvas' | 'sections') {
   // Mirrors the harness the rest of this file uses: the host document holds the
@@ -221,7 +222,6 @@ describe('the appearance fieldset in the projection', () => {
     surface: 'pattern',
     spacing: 'compact',
     inset: true,
-    edgeBottom: 'angled',
     overlapPrevious: 'large',
   }
 
@@ -233,7 +233,6 @@ describe('the appearance fieldset in the projection', () => {
     expect(got.surface).toBe('pattern')
     expect(got.spacing).toBe('compact')
     expect(got.inset).toBe(true)
-    expect(got.edgeBottom).toBe('angled')
     expect(got.overlapPrevious).toBe('large')
   })
 
@@ -243,7 +242,6 @@ describe('the appearance fieldset in the projection', () => {
     const got = out!.appearance as Record<string, unknown>
     expect(Object.keys(got).sort()).toEqual([...APPEARANCE_KEYS].sort())
     expect(got.inset).toBe(true)
-    expect(got.edgeBottom).toBe('angled')
     expect(got.overlapPrevious).toBe('large')
   })
 

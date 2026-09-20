@@ -812,25 +812,58 @@ h1, h2, h3, h4, h5, h6 {
   text-transform: var(--heading-case, none);
   letter-spacing: var(--heading-tracking, normal);
 }
-[data-heading-rule="line"] .section-heading::after,
-[data-heading-rule="double"] .section-heading::after,
-[data-heading-rule="hatched"] .section-heading::after {
+/* Phase 16C (`[R-484]`): every design but Flanking is a one-color SVG mask from
+   `headingLineVars`, painted in the decor role resolved on the heading. */
+[data-heading-rule]:not([data-heading-rule="none"]):not([data-heading-rule="flanking"]):not([data-heading-rule="vertical"]) .section-heading::after {
+  content: '';
+  display: block;
+  width: var(--heading-line-w);
+  height: var(--heading-line-h);
+  margin-top: 0.75rem;
+  background-color: --theme(--color-decor);
+  mask: var(--heading-line-mask) center / 100% 100% no-repeat;
+}
+/* Flanking: two short lines inside the heading's own padding from md (outside a wrapping
+   heading they scrolled the page sideways); a hairline under it below md. */
+@media (min-width: 768px) {
+  [data-heading-rule="flanking"] .text-center .section-heading {
+    padding-inline: 4.5rem;
+    background-image: linear-gradient(--theme(--color-decor), --theme(--color-decor)), linear-gradient(--theme(--color-decor), --theme(--color-decor));
+    background-size: 3rem 1px, 3rem 1px;
+    background-position: left center, right center;
+    background-repeat: no-repeat;
+  }
+  [data-heading-rule="flanking"] :not(.text-center) > .section-heading,
+  [data-heading-rule="flanking"] .section-heading:not(.text-center .section-heading) {
+    padding-inline-end: 4.5rem;
+    background-image: linear-gradient(--theme(--color-decor), --theme(--color-decor));
+    background-size: 3rem 1px;
+    background-position: right center;
+    background-repeat: no-repeat;
+  }
+}
+@media (max-width: 767.98px) {
+  [data-heading-rule="flanking"] .section-heading::after {
+    content: ''; display: block; width: 4.5rem; height: 1px; margin-top: 0.75rem; background-color: --theme(--color-decor);
+  }
+}
+/* The vertical rule: a bar at the heading's inline start, the height of the heading
+   (`[R-489]`); under a centred heading it draws the bar instead. */
+[data-heading-rule="vertical"] .section-heading {
+  border-inline-start: 3px solid --theme(--color-decor);
+  padding-inline-start: 0.875rem;
+}
+[data-heading-rule="vertical"] .text-center .section-heading {
+  border-inline-start: 0;
+  padding-inline-start: 0;
+}
+[data-heading-rule="vertical"] .text-center .section-heading::after {
   content: '';
   display: block;
   width: 3rem;
-  margin-top: 0.75rem;
-}
-[data-heading-rule="line"] .section-heading::after {
   height: 2px;
+  margin-top: 0.75rem;
   background-color: --theme(--color-decor);
-}
-[data-heading-rule="double"] .section-heading::after {
-  height: 5px;
-  border-block: 1px solid --theme(--color-decor);
-}
-[data-heading-rule="hatched"] .section-heading::after {
-  height: 6px;
-  background-image: repeating-linear-gradient(-45deg, --theme(--color-decor) 0 1px, transparent 1px 4px);
 }
 .text-center .section-heading::after { margin-inline: auto; }
 .section-heading:empty::after { display: none; }
@@ -839,7 +872,24 @@ h1, h2, h3, h4, h5, h6 {
    emphasis carried by color alone vanishes; italic is the one cue left. */
 @media (forced-colors: active) {
   .heading-emphasis { font-style: italic; }
+  /* Every line becomes one plain line in the system text color: a mask painted by a
+     background color is forced to the page color and vanishes (ADV-P16C-A). */
+  [data-heading-rule]:not([data-heading-rule="none"]) .section-heading::after {
+    mask: none; height: 0; background: none; border-top: 1px solid CanvasText;
+  }
 }
+@supports not (mask-image: none) {
+  [data-heading-rule]:not([data-heading-rule="none"]) .section-heading::after {
+    mask: none; height: 0; background: none; border-top: 1px solid --theme(--color-decor);
+  }
+}
+
+/* ─── Heading weight (Phase 16C) ─────────────────────────────────────────────── */
+/* No faked bold: a pairing without a bold face renders its real regular (pairings 2
+   and 13 inked 37% and 60% more than their real face, ADV-P16C-A). A theme may set the
+   display headings regular; unlayered, so it wins over the `font-bold` utility. */
+h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
+[data-heading-weight="regular"] :is(h1, .section-heading) { font-weight: 400; }
 
 /* ─── The section texture (Phase 16A) ───────────────────────────────────────── */
 /* What a band set to the Pattern surface wears, and nothing else on the site:
@@ -883,3 +933,94 @@ h1, h2, h3, h4, h5, h6 {
   border: 2px solid --theme(--color-decor);
   pointer-events: none;
 }
+/* ─── Section dividers (Phase 16C, `[R-481]`, `[R-482]`) ─────────────────────── */
+/* The shape, its depth and the motif arrive as custom properties from
+   `buildDesignTokenCSS` (`dividerVars`). A cut is drawn by the band below at its own
+   top, in the ground of the band above; a rise by the first band over the hero's
+   bottom, in its own ground. Each starts one pixel inside the join (a hairline seam
+   showed at fractional offsets). The band's content takes `mt-divider`, so it sits a
+   full top padding below the divider's deepest point. */
+@theme inline {
+  --spacing-divider: var(--divider-depth, 0px);
+}
+@utility divider-cut {
+  &::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: -1px;
+    height: calc(var(--divider-depth) + 1px);
+    clip-path: var(--divider-above);
+    pointer-events: none;
+  }
+}
+@utility divider-rise {
+  &::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: calc(100% - 1px);
+    height: calc(var(--divider-depth) + 1px);
+    clip-path: var(--divider-below);
+    pointer-events: none;
+  }
+}
+@utility divider-flip {
+  &::before { transform: scaleX(-1); }
+}
+@supports not (clip-path: polygon(0 0)) {
+  .divider-cut::before, .divider-rise::before { display: none; }
+}
+
+/* ─── The carried pieces (Phase 16C, `[R-483]`) ──────────────────────────────── */
+/* Cards: a small piece in the bottom corner, following the card's own radius. */
+[data-carry-cards] [data-card] { position: relative; }
+[data-carry-cards] [data-card]::after {
+  content: '';
+  position: absolute;
+  inset-inline-end: 0;
+  bottom: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: --theme(--color-decor);
+  clip-path: var(--carry-corner);
+  border-end-end-radius: var(--radius-ui);
+  pointer-events: none;
+}
+/* Buttons (Sharp and Crisp only; the layout withholds the attribute otherwise), in the
+   button's own text color, which is guaranteed on its fill. */
+[data-carry-buttons] [data-button-animatable="true"] { position: relative; }
+[data-carry-buttons] [data-button-animatable="true"]::after {
+  content: '';
+  position: absolute;
+  inset-inline-end: 0;
+  bottom: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: currentColor;
+  clip-path: var(--carry-corner);
+  pointer-events: none;
+}
+/* A plain feature photo loses one corner; a slab photo is cut on the image so the slab
+   shows through; a framed photo is never cut. */
+[data-carry-photo] [data-feature-photo="plain"] { clip-path: var(--carry-photo); }
+[data-carry-photo] [data-feature-photo="slab"] img { clip-path: var(--carry-photo); }
+/* The mark above a section heading on a dark or saturated ground: the divider's shape,
+   never the firm's mark (`[R-488]`), off in every theme's default. Shown through a property the dark and saturated blocks set and
+   a light island resets, so it follows the ground the heading sits on. */
+.bg-brand-dark, [data-ring-context="dark"], [data-ring-context="saturated"] { --carry-mark-display: block; }
+[data-ring-context="light"] { --carry-mark-display: none; }
+[data-carry-mark] .section-heading::before {
+  content: '';
+  display: var(--carry-mark-display, none);
+  width: var(--carry-mark-w);
+  height: 0.75rem;
+  margin-bottom: 0.75rem;
+  background-color: --theme(--color-decor);
+  mask: var(--carry-mark) center / contain no-repeat;
+}
+.text-center .section-heading::before { margin-inline: auto; }
+@media (forced-colors: active) {
+  [data-card]::after, [data-button-animatable="true"]::after, .section-heading::before { display: none; }
+}
+

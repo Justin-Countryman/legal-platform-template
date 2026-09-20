@@ -112,4 +112,7 @@ export type SkeletonProps = {
   // The resolved full-bleed Section Background, or null when none is set. Rendered
   // as the band's z-0 backdrop (with scrim) beneath the layout's content + media.
   sectionBackground?: ResolvedHeroSurface | null
+  /** Phase 16C: the first section rises into this hero's bottom, so a padded hero keeps
+   *  its own content clear of it by the divider's depth (`[R-481]`). */
+  edgeBelow?: boolean
 }

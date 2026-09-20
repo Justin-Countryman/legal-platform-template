@@ -89,7 +89,7 @@ export function CaseResultsSection({
           // A light card keeps light-surface text wherever the band is: an operator
           // can set this section dark or image, and without the light context the
           // card's text inherited the dark band's (measured 1.06:1, Phase 14).
-          <li key={r._id ?? i} data-ring-context="light" className="rounded-ui bg-muted p-6 shadow-card-rest md:p-8">
+          <li key={r._id ?? i} data-card="" data-ring-context="light" className="rounded-ui bg-muted p-6 shadow-card-rest md:p-8">
             {r.amount ? (
               // The result itself is the loudest thing in the card. h3, so it
               // sits under the section's single h2.

@@ -174,6 +174,7 @@ export function BlogIndexClient({
               {visible.map((post, index) => (
                 <li key={post.slug}>
                 <article
+                  data-card=""
                   className="flex h-full flex-col rounded-ui border border-border bg-background px-5 py-6 shadow-card-rest md:p-6"
                 >
 

@@ -235,7 +235,6 @@ export const SECTION_BODY = `
     "surface": surface,
     "spacing": spacing,
     "inset": inset,
-    "edgeBottom": edgeBottom,
     "overlapPrevious": overlapPrevious,
     "backgroundImage": sectionBackgroundImage ${IMAGE_FRAGMENT}
   },
@@ -873,6 +872,10 @@ export const DESIGN_TOKENS_QUERY = groq`
     sectionJoin,
     cardHover,
     attorneyCardStyle,
+    // Phase 16C: the divider's shape and the pieces that repeat it, the heading line's
+    // design and the display headings' weight.
+    dividerCarry,
+    headingWeight,
     "siteHeroBackgroundImage": siteHeroBackgroundImage{
       "src": asset->url,
       "alt": alt,

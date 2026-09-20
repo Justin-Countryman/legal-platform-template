@@ -15,12 +15,21 @@
 //
 // Usage: getPresetById(id) → FontPreset | undefined
 
+export const HEADING_VOICES = [
+  'display serif', 'old-style serif', 'transitional serif', 'text serif', 'soft serif', 'geometric sans', 'humanist sans',
+] as const
+export type HeadingVoice = (typeof HEADING_VOICES)[number]
+
 export interface FontPreset {
   id: number
   name: string
   heading: {
     family: string
     slug: string
+    /** What a visitor sees before reading a word, used to measure how far apart two themes
+     *  are (Phase 16C, `[R-487]`): two pairings in one voice are not a difference a visitor
+     *  can name. */
+    voice: HeadingVoice
     weights: string[]
     italic: boolean
     variable: boolean
@@ -55,6 +64,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Classical Authority',
     heading: {
       family: 'Playfair Display',
+      voice: 'display serif',
       slug: 'playfair-display',
       weights: ['400', '700'],
       italic: true,
@@ -86,6 +96,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Modern Counsel',
     heading: {
       family: 'DM Serif Display',
+      voice: 'display serif',
       slug: 'dm-serif-display',
       weights: ['400'],
       italic: true,
@@ -117,6 +128,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Editorial Authority',
     heading: {
       family: 'Fraunces',
+      voice: 'soft serif',
       slug: 'fraunces',
       weights: ['400', '700'],
       italic: true,
@@ -147,6 +159,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Corporate Clarity',
     heading: {
       family: 'Libre Baskerville',
+      voice: 'transitional serif',
       slug: 'libre-baskerville',
       weights: ['400', '700'],
       italic: true,
@@ -178,6 +191,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Humanist Trust',
     heading: {
       family: 'Lora',
+      voice: 'text serif',
       slug: 'lora',
       weights: ['400', '700'],
       italic: true,
@@ -211,6 +225,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Geometric Precision',
     heading: {
       family: 'Montserrat',
+      voice: 'geometric sans',
       slug: 'montserrat',
       weights: ['400', '700'],
       italic: false,
@@ -242,6 +257,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Neutral Professional',
     heading: {
       family: 'Merriweather',
+      voice: 'text serif',
       slug: 'merriweather',
       weights: ['400', '700'],
       italic: true,
@@ -273,6 +289,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Accessible Modern',
     heading: {
       family: 'Work Sans',
+      voice: 'humanist sans',
       slug: 'work-sans',
       weights: ['400', '600', '700'],
       italic: false,
@@ -303,6 +320,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Bold Advocate',
     heading: {
       family: 'Fraunces',
+      voice: 'soft serif',
       slug: 'fraunces',
       weights: ['700'],
       italic: false,
@@ -334,6 +352,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Traditional Fallback',
     heading: {
       family: 'Libre Baskerville',
+      voice: 'transitional serif',
       slug: 'libre-baskerville',
       weights: ['400', '700'],
       italic: true,
@@ -365,6 +384,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Heritage Old-Style',
     heading: {
       family: 'Sorts Mill Goudy',
+      voice: 'old-style serif',
       slug: 'sorts-mill-goudy',
       // Sorts Mill Goudy ships with Regular and Italic only on Google Fonts —
       // there is no native Bold weight. Headings render bold via faux-bold or
@@ -407,6 +427,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Modern Practice',
     heading: {
       family: 'Poppins',
+      voice: 'geometric sans',
       slug: 'poppins',
       weights: ['700'],
       italic: false,
@@ -435,6 +456,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Heritage Voice',
     heading: {
       family: 'Spectral',
+      voice: 'text serif',
       slug: 'spectral',
       weights: ['400', '700'],
       italic: true,
@@ -466,6 +488,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Stately Modern',
     heading: {
       family: 'Petrona',
+      voice: 'text serif',
       slug: 'petrona',
       weights: ['400', '700'],
       italic: false,
@@ -495,6 +518,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Editorial Statement',
     heading: {
       family: 'Fraunces',
+      voice: 'soft serif',
       slug: 'fraunces',
       weights: ['700'],
       italic: false,
@@ -522,6 +546,7 @@ export const FONT_PRESETS: FontPreset[] = [
     name: 'Sovereign Mono',
     heading: {
       family: 'Source Serif 4',
+      voice: 'transitional serif',
       slug: 'source-serif-4',
       weights: ['600'],
       italic: false,

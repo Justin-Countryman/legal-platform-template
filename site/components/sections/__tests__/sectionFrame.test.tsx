@@ -15,7 +15,9 @@ import {render} from '@testing-library/react'
 //     band (item 312);
 //   - the first SURVIVING band gets no ScrollReveal, which is the live
 //     first-block motion bug an empty section at index 0 caused;
-//   - an angled edge is painted by the NEXT band and cancels its seam;
+//   - a divider is placed by the rule (Phase 16C, `[R-481]`): a rise under the hero, a
+//     cut into every dark or saturated section, never into a photo band, and the band
+//     below gains the space the shape takes;
 //   - an inset band seams against another inset band whatever their surfaces.
 
 vi.mock('next/link', () => ({
@@ -166,38 +168,95 @@ describe('the first-block motion rule', () => {
   })
 })
 
-describe('the angled edge', () => {
-  it('is painted by the NEXT band, in the previous band’s ground color', () => {
-    const {container} = canvas([band('a', {surface: 'dark', edgeBottom: 'angled'}), band('b', {surface: 'light'})])
+describe('the divider, placed by the rule ([R-481], Phase 16C)', () => {
+  // The site look a shaped theme carries. `sectionJoin` is the shape; everything else
+  // here is what the walk needs to answer the rule.
+  const shaped = {imageFrame: null, sectionJoin: 'angled', patternDark: false, cardHover: null, attorneyCardStyle: null}
+  const straight = {...shaped, sectionJoin: 'straight'}
+  const withHero = (blocks: HomepageBlock[], site = shaped, hero: 'light' | 'tint' | 'dark' | 'image' | null = 'dark') =>
+    render(<HomepageCanvas blocks={blocks} site={site} hero={hero} napTokens={tokens} resultsDisclaimer="Past results do not guarantee a future outcome." />)
+
+  it('rises into the hero when the grounds differ, painted in the first band’s own ground', () => {
+    const {container} = withHero([band('a', {surface: 'light'}), band('b', {surface: 'light'})])
     const [first, second] = sectionsOf(container)
-    // The band that CHOSE the edge paints nothing itself.
-    expect(first.className).not.toContain('before:bg-')
-    // The band below paints it, in the band above's color.
-    expect(second.className).toContain('before:bg-brand-dark')
-    expect(second.className).toContain('md:before:top-0')
+    expect(first.className).toContain('divider-rise')
+    expect(first.className).toContain('before:bg-background')
+    // Only the first band meets the hero.
+    expect(second.className).not.toContain('divider-rise')
   })
 
-  it('cancels the seam it would otherwise have, because the wedge fills the join', () => {
-    const {container} = canvas([band('a', {surface: 'light', edgeBottom: 'angled'}), band('b', {surface: 'light'})])
-    expect(sectionsOf(container)[1].className).toContain(FULL)
+  it('draws nothing under the hero when the ground is the same, and tint counts as light', () => {
+    expect(sectionsOf(withHero([band('a', {surface: 'dark'})]).container)[0].className).not.toContain('divider-')
+    expect(sectionsOf(withHero([band('a', {surface: 'tint'})], shaped, 'light').container)[0].className).not.toContain('divider-')
   })
 
-  it('paints nothing over an image ground, and so cancels no seam', () => {
-    const {container} = canvas([band('a', {surface: 'image', edgeBottom: 'angled'}), band('b', {surface: 'image'})])
-    const second = sectionsOf(container)[1]
-    expect(second.className).not.toContain('before:bg-')
-    // Same ground, no edge painted, so the seam still applies.
-    expect(second.className).toContain(SEAM)
+  it('cuts wherever the page enters a dark or saturated section, in the ground above', () => {
+    const {container} = withHero([band('a', {surface: 'light'}), band('b', {surface: 'dark'}), band('c', {surface: 'light'})])
+    const [, second, third] = sectionsOf(container)
+    expect(second.className).toContain('divider-cut')
+    expect(second.className).toContain('before:bg-background')
+    // Leaving a dark section is not an entry.
+    expect(third.className).not.toContain('divider-')
   })
 
-  // Phase 16A: a Pattern band is the light ground wearing a faint texture, so its
-  // edge is cut in the light ground (the texture is not carried into the wedge),
-  // and a Pattern band beside a light one is a same-ground join.
-  it('a Pattern band cuts its edge in the light ground and seams with a light band', () => {
-    const edged = canvas([band('a', {surface: 'pattern', edgeBottom: 'angled'}), band('b', {surface: 'dark'})])
-    expect(sectionsOf(edged.container)[1].className).toContain('before:bg-background')
-    const joined = canvas([band('a', {surface: 'pattern'}), band('b', {surface: 'light'})])
-    expect(sectionsOf(joined.container)[1].className).toContain(SEAM)
+  it('counts a Pattern band on the dark ground as dark, and one on the light ground as light', () => {
+    const dark = withHero([band('a', {surface: 'light'}), band('b', {surface: 'pattern'})], {...shaped, patternDark: true})
+    expect(sectionsOf(dark.container)[1].className).toContain('divider-cut')
+    const light = withHero([band('a', {surface: 'light'}), band('b', {surface: 'pattern'})])
+    expect(sectionsOf(light.container)[1].className).not.toContain('divider-')
+  })
+
+  it('never cuts into a photo band, and never out of one', () => {
+    const into = withHero([band('a', {surface: 'light'}), band('b', {surface: 'image'})])
+    expect(sectionsOf(into.container)[1].className).not.toContain('divider-')
+    const outOf = withHero([band('a', {surface: 'image'}), band('b', {surface: 'dark'})])
+    expect(sectionsOf(outOf.container)[1].className).not.toContain('divider-')
+  })
+
+  it('gives the band its space back: the content clears the divider’s deepest point', () => {
+    const {container} = withHero([band('a', {surface: 'light'}), band('b', {surface: 'dark'})])
+    const inner = sectionsOf(container)[1].querySelector('div')
+    expect(inner?.className).toContain('mt-divider')
+    // A band with no divider keeps its own padding and nothing else.
+    const plain = sectionsOf(container)[0].querySelector('div')
+    expect(plain?.className).not.toContain('mt-divider')
+  })
+
+  it('draws nothing at all when the site’s divider is straight', () => {
+    const {container} = withHero([band('a', {surface: 'light'}), band('b', {surface: 'dark'})], straight)
+    for (const section of sectionsOf(container)) expect(section.className).not.toContain('divider-')
+  })
+
+  it('an inset first band takes none: the wedge would cross the panel', () => {
+    const {container} = withHero([band('a', {surface: 'dark', inset: true}), band('b', {surface: 'light'})])
+    expect(sectionsOf(container)[0].className).not.toContain('divider-')
+  })
+
+  it('alternates the mirror on every second divider, and only for the alternating shape', () => {
+    const blocks = [band('a', {surface: 'light'}), band('b', {surface: 'dark'}), band('c', {surface: 'light'}), band('d', {surface: 'dark'})]
+    const alt = withHero(blocks, {...shaped, sectionJoin: 'angledAlternating'})
+    // Three dividers here, not four: band c LEAVES the dark section, which is not an entry.
+    const drawn = sectionsOf(alt.container).map((s) => s.className.includes('divider-cut') || s.className.includes('divider-rise'))
+    expect(drawn).toEqual([true, true, false, true])
+    const flips = sectionsOf(alt.container).map((s) => s.className.includes('divider-flip'))
+    expect(flips).toEqual([false, true, false, false])
+    const plain = withHero(blocks)
+    expect(sectionsOf(plain.container).some((s) => s.className.includes('divider-flip'))).toBe(false)
+  })
+
+  it('an interior page draws none, whatever the site picked', () => {
+    const sections = [
+      {_type: 'contentSection', _key: 'a', layout: 'statement', heading: 'One', appearance: {surface: 'light'}},
+      {_type: 'contentSection', _key: 'b', layout: 'statement', heading: 'Two', appearance: {surface: 'dark'}},
+    ] as unknown as PageSectionData[]
+    const {container} = render(<PageSections sections={sections} site={shaped} napTokens={tokens} />)
+    for (const section of sectionsOf(container)) expect(section.className).not.toContain('divider-')
+  })
+
+  it('a stored edgeBottom is ignored: placement is a rule, not a section’s ask', () => {
+    const {container} = withHero([band('a', {surface: 'light', edgeBottom: 'angled'}), band('b', {surface: 'light'})], straight)
+    expect(sectionsOf(container)[1].className).not.toContain('divider-')
+    expect(sectionsOf(container)[1].className).not.toContain('before:bg-')
   })
 })
 

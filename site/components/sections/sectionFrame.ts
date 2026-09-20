@@ -1,7 +1,7 @@
 import {
   type SectionAppearance,
 } from '@/components/sections/SectionShell'
-import {type SectionEdge, type VisibleGround, edgeCancelsSeam, visibleGround} from '@/lib/sectionSurface'
+import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
 
 // ─── The seam walk ────────────────────────────────────────────────────────────
 //
@@ -59,8 +59,8 @@ export type Overlap = 'none' | 'small' | 'large'
 export type SiteLook = {
   /** The photo frame a feature photo takes when its section stores none. */
   imageFrame: string | null
-  /** The shape a section's edge takes when the section asks for the site's join. */
-  sectionJoin: 'straight' | 'angled'
+  /** The site's divider shape (Phase 16C, `[R-482]`); `straight` draws none. */
+  sectionJoin: string
   /** A Pattern band sits on the dark ground: only when the site chose a texture
    *  AND the dark ground; with no texture, Pattern renders as Light. */
   patternDark: boolean
@@ -75,15 +75,15 @@ export function siteLookOf(d: Record<string, unknown> | null | undefined): SiteL
   const s = (k: string) => (typeof d?.[k] === 'string' && d[k] !== '' ? (d[k] as string) : null)
   return {
     imageFrame: s('imageFrame'),
-    sectionJoin: s('sectionJoin') === 'angled' ? 'angled' : 'straight',
+    sectionJoin: s('sectionJoin') ?? 'straight',
     patternDark: s('patternGround') === 'dark' && s('patternTexture') !== null,
     cardHover: s('cardHover'),
     attorneyCardStyle: s('attorneyCardStyle'),
   }
 }
 
-/** Interior pages are always a clean ground and never draw a join (`[R-472]`):
- *  they keep the cards and frames, not the homepage's edges or texture. */
+/** Interior pages are always a clean ground and never draw a divider (`[R-472]`): they
+ *  keep the cards, frames and carried pieces, not the homepage's dividers or texture. */
 export function interiorLook(site: SiteLook | null | undefined): SiteLook | null {
   return site ? {...site, sectionJoin: 'straight', patternDark: false} : null
 }
@@ -99,12 +99,15 @@ export type SeamProps = {
   site: SiteLook | null
   seamTop: boolean
   previousGround: VisibleGround | null
-  previousEdge: SectionEdge | null
   /** The overlap of the NEXT band, so this band can keep its content clear of it. */
   nextOverlap: Overlap
+  /** The divider this band draws at its top (Phase 16C, `[R-481]`): a cut, painted in the
+   *  ground of the band above, or, under the hero, a rise painted in this band's own
+   *  ground, which is the only one that is knowable over a photo. */
+  divider?: {mode: 'cut'; from: VisibleGround; flip: boolean} | {mode: 'rise'; flip: boolean} | null
 }
 
-export const NO_SEAM: SeamProps = {site: null, seamTop: false, previousGround: null, previousEdge: null, nextOverlap: 'none'}
+export const NO_SEAM: SeamProps = {site: null, seamTop: false, previousGround: null, nextOverlap: 'none', divider: null}
 
 /** Overlap applies to an inset panel only (Phase 16A, `[R-475]`): a full-width band
  *  riding over the one above only hid that band's bottom, text included. */
@@ -129,10 +132,21 @@ export function walkFrame<M>(
   members: readonly M[],
   resolve: (member: M) => {appearance: SectionAppearance | null | undefined; empty: boolean},
   site: SiteLook | null = null,
+  hero: VisibleGround | null = null,
 ): Array<{member: M; index: number; seam: SeamProps}> {
+  // Where a divider goes (`[R-481]`, Phase 16C): under the hero, and wherever the page
+  // enters a strong ground — dark, a Pattern band on the dark ground included, or
+  // saturated. Never into a photo band: no site in the study cuts a shape into one
+  // (0 of 53 entries; ADV-P16C-B). Tint and light count as one ground, because a tint
+  // wedge on white is 1.04:1 and the band would gain its space for nothing.
+  const shaped = !!site && site.sectionJoin !== 'straight'
+  const alternates = site?.sectionJoin === 'angledAlternating'
+  const strong = (g: VisibleGround | null) => g === 'dark' || g === 'saturated'
+  const same = (a: VisibleGround | null, b: VisibleGround | null) =>
+    a === b || ((a === 'light' || a === 'tint') && (b === 'light' || b === 'tint'))
+  let placed = 0
   const out: Array<{member: M; index: number; seam: SeamProps}> = []
   let prevGround: VisibleGround | null = null
-  let prevEdge: SectionEdge | null = null
 
   members.forEach((member, index) => {
     const {appearance, empty} = resolve(member)
@@ -141,7 +155,7 @@ export function walkFrame<M>(
     if (empty) return
 
     const ground = visibleGround(appearance, site?.patternDark)
-    const edge = edgeOf(appearance?.edgeBottom, site)
+
     // An overlapping panel takes no top padding from `md`, so a seam would be
     // meaningless; `SectionShell` already resolves that, and asking for both
     // here would be a contradiction rather than a refinement.
@@ -152,11 +166,23 @@ export function walkFrame<M>(
         ? {...NO_SEAM, site}
         : {
             site,
-            seamTop: !overlapping && !edgeCancelsSeam(prevGround, prevEdge) && prevGround === ground,
+            seamTop: !overlapping && prevGround === ground,
             previousGround: prevGround,
-            previousEdge: prevEdge,
             nextOverlap: 'none',
           }
+
+    // An inset first band takes none: the wedge crossed an overlapping panel to two
+    // pixels above its text (ADV-P16C-A).
+    let divider: SeamProps['divider'] = null
+    if (shaped && out.length === 0 && hero && !appearance?.inset && ground !== 'image' && !same(hero, ground)) {
+      divider = {mode: 'rise', flip: alternates && placed % 2 === 1}
+    } else if (shaped && out.length > 0 && strong(ground) && !strong(prevGround) && prevGround && prevGround !== 'image') {
+      divider = {mode: 'cut', from: prevGround, flip: alternates && placed % 2 === 1}
+    }
+    if (divider) {
+      seam.divider = divider
+      placed++
+    }
 
     // The backward half: the band above an overlapping panel keeps the panel off
     // its content by growing its own bottom padding by the overlap.
@@ -167,16 +193,7 @@ export function walkFrame<M>(
 
     out.push({member, index, seam})
     prevGround = ground
-    prevEdge = edge
   })
 
   return out
-}
-
-/** The edge a band asked for. `site` takes the site's join shape (Phase 16B,
- *  `[R-479]`): the theme decides, angled or straight; a band that asks for nothing
- *  stays straight, and a stored `flat` or `angled` is the band's own. */
-export function edgeOf(stored: string | null | undefined, site: SiteLook | null | undefined): SectionEdge | null {
-  if (stored === 'site') return site?.sectionJoin === 'angled' ? 'angled' : 'flat'
-  return stored === 'flat' || stored === 'angled' ? stored : null
 }

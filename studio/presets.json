@@ -13,10 +13,9 @@
     "cardHover",
     "attorneyCardStyle",
     "headingEmphasisStyle",
-    "headingRule",
+    "headingWeight",
     "headingCase",
     "imageFrame",
-    "sectionJoin",
     "patternTexture",
     "patternGround"
   ],
@@ -33,18 +32,35 @@
     "cardHover": null,
     "attorneyCardStyle": "classic",
     "headingEmphasisStyle": "color",
-    "headingRule": "none",
+    "headingWeight": "bold",
     "headingCase": "normal",
     "imageFrame": "plain",
-    "sectionJoin": "straight",
     "patternTexture": null,
     "patternGround": "light"
+  },
+  "themePicks": [
+    "sectionJoin",
+    "dividerCarry",
+    "headingRule"
+  ],
+  "pickDefaults": {
+    "sectionJoin": null,
+    "dividerCarry": [],
+    "headingRule": null
   },
   "themes": [
     {
       "id": "canyon",
       "name": "Canyon",
       "feel": "deep and immersive: display serif, italic accents, dark bands",
+      "identity": {
+        "sentence": "Deep and immersive: a display serif at its own weight, italic accents, dark bands.",
+        "recognizers": [
+          "typeVoice",
+          "cornerFamily",
+          "emphasis"
+        ]
+      },
       "settings": {
         "fontPairingPreset": 2,
         "marketingScale": "md",
@@ -58,12 +74,16 @@
         "cardHover": "imageZoom",
         "attorneyCardStyle": "portrait",
         "headingEmphasisStyle": "italic",
-        "headingRule": "line",
+        "headingWeight": "bold",
         "headingCase": "normal",
         "imageFrame": "plain",
-        "sectionJoin": "straight",
         "patternTexture": null,
         "patternGround": "light"
+      },
+      "picks": {
+        "sectionJoin": null,
+        "dividerCarry": [],
+        "headingRule": "line"
       },
       "previous": [],
       "suggestedPalettes": [
@@ -76,6 +96,14 @@
       "id": "graphite",
       "name": "Graphite",
       "feel": "editorial and exact: sharp corners, framed photos, angled edges",
+      "identity": {
+        "sentence": "Editorial and exact: sharp corners, framed photos, a textured dark band, angled dividers.",
+        "recognizers": [
+          "typeVoice",
+          "cornerFamily",
+          "surfaceDevice"
+        ]
+      },
       "settings": {
         "fontPairingPreset": 4,
         "marketingScale": "md",
@@ -89,12 +117,18 @@
         "cardHover": "accentBorder",
         "attorneyCardStyle": "minimal",
         "headingEmphasisStyle": "italic",
-        "headingRule": "line",
+        "headingWeight": "bold",
         "headingCase": "normal",
         "imageFrame": "framed",
-        "sectionJoin": "angled",
         "patternTexture": "diagonalHatch",
         "patternGround": "dark"
+      },
+      "picks": {
+        "sectionJoin": "angled",
+        "dividerCarry": [
+          "cards"
+        ],
+        "headingRule": "line"
       },
       "previous": [],
       "suggestedPalettes": [
@@ -107,6 +141,14 @@
       "id": "walnut",
       "name": "Walnut",
       "feel": "heritage: old-style serif, italic last words, framed photos",
+      "identity": {
+        "sentence": "Heritage: an old-style serif, italic last words, framed photos, a diamond under each heading.",
+        "recognizers": [
+          "typeVoice",
+          "frame",
+          "kicker"
+        ]
+      },
       "settings": {
         "fontPairingPreset": 13,
         "marketingScale": "sm",
@@ -120,12 +162,16 @@
         "cardHover": "lift",
         "attorneyCardStyle": "classic",
         "headingEmphasisStyle": "italic",
-        "headingRule": "line",
+        "headingWeight": "bold",
         "headingCase": "normal",
         "imageFrame": "framed",
-        "sectionJoin": "straight",
         "patternTexture": null,
         "patternGround": "light"
+      },
+      "picks": {
+        "sectionJoin": null,
+        "dividerCarry": [],
+        "headingRule": "leadDiamond"
       },
       "previous": [],
       "suggestedPalettes": [
@@ -139,6 +185,14 @@
       "id": "dune",
       "name": "Dune",
       "feel": "soft and warm: rounded everything, pill buttons, a scallop texture",
+      "identity": {
+        "sentence": "Soft and warm: rounded everything, pill buttons, a scallop texture, dotted lines.",
+        "recognizers": [
+          "cornerFamily",
+          "surfaceDevice",
+          "typeVoice"
+        ]
+      },
       "settings": {
         "fontPairingPreset": 6,
         "marketingScale": "sm",
@@ -152,12 +206,16 @@
         "cardHover": "lift",
         "attorneyCardStyle": "portrait",
         "headingEmphasisStyle": "italic",
-        "headingRule": "line",
+        "headingWeight": "bold",
         "headingCase": "normal",
         "imageFrame": "plain",
-        "sectionJoin": "straight",
         "patternTexture": "scallop",
         "patternGround": "light"
+      },
+      "picks": {
+        "sectionJoin": null,
+        "dividerCarry": [],
+        "headingRule": "dotted"
       },
       "previous": [],
       "suggestedPalettes": [
@@ -170,6 +228,14 @@
       "id": "flint",
       "name": "Flint",
       "feel": "bold two-tone: heavy capitals, one phrase in the accent, angled edges",
+      "identity": {
+        "sentence": "Bold two-tone: heavy capitals, one phrase in the accent, a slab under each heading.",
+        "recognizers": [
+          "headingCase",
+          "cornerFamily",
+          "attorneyCards"
+        ]
+      },
       "settings": {
         "fontPairingPreset": 7,
         "marketingScale": "md",
@@ -183,12 +249,16 @@
         "cardHover": "imageZoom",
         "attorneyCardStyle": "spotlight",
         "headingEmphasisStyle": "color",
-        "headingRule": "none",
+        "headingWeight": "bold",
         "headingCase": "upper",
         "imageFrame": "plain",
-        "sectionJoin": "angled",
         "patternTexture": null,
         "patternGround": "light"
+      },
+      "picks": {
+        "sectionJoin": null,
+        "dividerCarry": [],
+        "headingRule": "slab"
       },
       "previous": [],
       "suggestedPalettes": [
@@ -201,6 +271,14 @@
       "id": "marble",
       "name": "Marble",
       "feel": "civic statement: capitals, a rule before every kicker, a fine lattice",
+      "identity": {
+        "sentence": "Civic statement: capitals, a rule before every kicker, a fine lattice, a peak under the hero.",
+        "recognizers": [
+          "headingCase",
+          "kicker",
+          "surfaceDevice"
+        ]
+      },
       "settings": {
         "fontPairingPreset": 1,
         "marketingScale": "md",
@@ -214,12 +292,18 @@
         "cardHover": "accentUnderline",
         "attorneyCardStyle": "classic",
         "headingEmphasisStyle": "italic",
-        "headingRule": "none",
+        "headingWeight": "bold",
         "headingCase": "upper",
         "imageFrame": "plain",
-        "sectionJoin": "angled",
         "patternTexture": "diamondLattice",
         "patternGround": "light"
+      },
+      "picks": {
+        "sectionJoin": "peak",
+        "dividerCarry": [
+          "cards"
+        ],
+        "headingRule": null
       },
       "previous": [],
       "suggestedPalettes": [
@@ -232,6 +316,14 @@
       "id": "linen",
       "name": "Linen",
       "feel": "stationery: a quiet serif, offset photo slabs, a pinstripe",
+      "identity": {
+        "sentence": "Stationery: a quiet serif at regular weight, photos on offset slabs, a pinstripe.",
+        "recognizers": [
+          "frame",
+          "surfaceDevice",
+          "scale"
+        ]
+      },
       "settings": {
         "fontPairingPreset": 15,
         "marketingScale": "default",
@@ -245,14 +337,44 @@
         "cardHover": "none",
         "attorneyCardStyle": "minimal",
         "headingEmphasisStyle": "italic",
-        "headingRule": "line",
+        "headingWeight": "regular",
         "headingCase": "normal",
         "imageFrame": "slab",
-        "sectionJoin": "straight",
         "patternTexture": "pinstripe",
         "patternGround": "light"
       },
-      "previous": [],
+      "picks": {
+        "sectionJoin": null,
+        "dividerCarry": [],
+        "headingRule": "line"
+      },
+      "previous": [
+        {
+          "settings": {
+            "fontPairingPreset": 15,
+            "marketingScale": "default",
+            "taglineStyle": "titlecase",
+            "uiRadius": "sharp",
+            "buttonShape": "square",
+            "buttonAnimation": "none",
+            "tertiaryStyle": "plain",
+            "elevationStyle": "0",
+            "motionTempo": "relaxed",
+            "cardHover": "none",
+            "attorneyCardStyle": "minimal",
+            "headingEmphasisStyle": "italic",
+            "headingCase": "normal",
+            "imageFrame": "slab",
+            "patternTexture": "pinstripe",
+            "patternGround": "light"
+          },
+          "picks": {
+            "sectionJoin": null,
+            "dividerCarry": [],
+            "headingRule": "line"
+          }
+        }
+      ],
       "suggestedPalettes": [
         "navy-brass",
         "burgundy-gold",
@@ -264,6 +386,14 @@
       "id": "valley",
       "name": "Valley",
       "feel": "place-led: an open serif, soft corners, rounded photos",
+      "identity": {
+        "sentence": "Place-led: an open serif at regular weight, soft corners, rounded photos.",
+        "recognizers": [
+          "typeVoice",
+          "cornerFamily",
+          "emphasis"
+        ]
+      },
       "settings": {
         "fontPairingPreset": 9,
         "marketingScale": "sm",
@@ -277,14 +407,44 @@
         "cardHover": "imageZoom",
         "attorneyCardStyle": "portrait",
         "headingEmphasisStyle": "color",
-        "headingRule": "line",
+        "headingWeight": "regular",
         "headingCase": "normal",
         "imageFrame": "plain",
-        "sectionJoin": "straight",
         "patternTexture": null,
         "patternGround": "light"
       },
-      "previous": [],
+      "picks": {
+        "sectionJoin": null,
+        "dividerCarry": [],
+        "headingRule": "line"
+      },
+      "previous": [
+        {
+          "settings": {
+            "fontPairingPreset": 9,
+            "marketingScale": "sm",
+            "taglineStyle": "titlecase",
+            "uiRadius": "soft",
+            "buttonShape": "stadium",
+            "buttonAnimation": "none",
+            "tertiaryStyle": "plain",
+            "elevationStyle": "1",
+            "motionTempo": "relaxed",
+            "cardHover": "imageZoom",
+            "attorneyCardStyle": "portrait",
+            "headingEmphasisStyle": "color",
+            "headingCase": "normal",
+            "imageFrame": "plain",
+            "patternTexture": null,
+            "patternGround": "light"
+          },
+          "picks": {
+            "sectionJoin": null,
+            "dividerCarry": [],
+            "headingRule": "line"
+          }
+        }
+      ],
       "suggestedPalettes": [
         "navy-brass",
         "navy-ice",
@@ -295,6 +455,14 @@
       "id": "quartz",
       "name": "Quartz",
       "feel": "modern clean: geometric capitals, pills, a scallop texture",
+      "identity": {
+        "sentence": "Modern clean: geometric capitals, pills, a scallop texture, a lead dot under each heading.",
+        "recognizers": [
+          "headingCase",
+          "cornerFamily",
+          "attorneyCards"
+        ]
+      },
       "settings": {
         "fontPairingPreset": 14,
         "marketingScale": "md",
@@ -308,12 +476,16 @@
         "cardHover": "lift",
         "attorneyCardStyle": "avatar",
         "headingEmphasisStyle": "color",
-        "headingRule": "line",
+        "headingWeight": "bold",
         "headingCase": "upper",
         "imageFrame": "plain",
-        "sectionJoin": "straight",
         "patternTexture": "scallop",
         "patternGround": "light"
+      },
+      "picks": {
+        "sectionJoin": "notch",
+        "dividerCarry": [],
+        "headingRule": "leadDot"
       },
       "previous": [],
       "suggestedPalettes": [
@@ -483,112 +655,2002 @@
       "name": "Classical Authority",
       "heading": "Playfair Display",
       "body": "Source Sans 3",
-      "headingItalic": true
+      "headingItalic": true,
+      "headingWeights": [
+        "400",
+        "700"
+      ],
+      "headingVoice": "display serif"
     },
     {
       "id": 2,
       "name": "Modern Counsel",
       "heading": "DM Serif Display",
       "body": "DM Sans",
-      "headingItalic": true
+      "headingItalic": true,
+      "headingWeights": [
+        "400"
+      ],
+      "headingVoice": "display serif"
     },
     {
       "id": 4,
       "name": "Editorial Authority",
       "heading": "Fraunces",
       "body": "Inter",
-      "headingItalic": true
+      "headingItalic": true,
+      "headingWeights": [
+        "400",
+        "700"
+      ],
+      "headingVoice": "soft serif"
     },
     {
       "id": 5,
       "name": "Corporate Clarity",
       "heading": "Libre Baskerville",
       "body": "Montserrat",
-      "headingItalic": true
+      "headingItalic": true,
+      "headingWeights": [
+        "400",
+        "700"
+      ],
+      "headingVoice": "transitional serif"
     },
     {
       "id": 6,
       "name": "Humanist Trust",
       "heading": "Lora",
       "body": "Work Sans",
-      "headingItalic": true
+      "headingItalic": true,
+      "headingWeights": [
+        "400",
+        "700"
+      ],
+      "headingVoice": "text serif"
     },
     {
       "id": 7,
       "name": "Geometric Precision",
       "heading": "Montserrat",
       "body": "Open Sans",
-      "headingItalic": false
+      "headingItalic": false,
+      "headingWeights": [
+        "400",
+        "700"
+      ],
+      "headingVoice": "geometric sans"
     },
     {
       "id": 9,
       "name": "Neutral Professional",
       "heading": "Merriweather",
       "body": "Open Sans",
-      "headingItalic": true
+      "headingItalic": true,
+      "headingWeights": [
+        "400",
+        "700"
+      ],
+      "headingVoice": "text serif"
     },
     {
       "id": 10,
       "name": "Accessible Modern",
       "heading": "Work Sans",
       "body": "Roboto",
-      "headingItalic": false
+      "headingItalic": false,
+      "headingWeights": [
+        "400",
+        "600",
+        "700"
+      ],
+      "headingVoice": "humanist sans"
     },
     {
       "id": 11,
       "name": "Bold Advocate",
       "heading": "Fraunces",
       "body": "Source Sans 3",
-      "headingItalic": false
+      "headingItalic": false,
+      "headingWeights": [
+        "700"
+      ],
+      "headingVoice": "soft serif"
     },
     {
       "id": 12,
       "name": "Traditional Fallback",
       "heading": "Libre Baskerville",
       "body": "Open Sans",
-      "headingItalic": true
+      "headingItalic": true,
+      "headingWeights": [
+        "400",
+        "700"
+      ],
+      "headingVoice": "transitional serif"
     },
     {
       "id": 13,
       "name": "Heritage Old-Style",
       "heading": "Sorts Mill Goudy",
       "body": "Open Sans",
-      "headingItalic": true
+      "headingItalic": true,
+      "headingWeights": [
+        "400"
+      ],
+      "headingVoice": "old-style serif"
     },
     {
       "id": 14,
       "name": "Modern Practice",
       "heading": "Poppins",
       "body": "Poppins",
-      "headingItalic": false
+      "headingItalic": false,
+      "headingWeights": [
+        "700"
+      ],
+      "headingVoice": "geometric sans"
     },
     {
       "id": 15,
       "name": "Heritage Voice",
       "heading": "Spectral",
       "body": "Open Sans",
-      "headingItalic": true
+      "headingItalic": true,
+      "headingWeights": [
+        "400",
+        "700"
+      ],
+      "headingVoice": "text serif"
     },
     {
       "id": 16,
       "name": "Stately Modern",
       "heading": "Petrona",
       "body": "Inter",
-      "headingItalic": false
+      "headingItalic": false,
+      "headingWeights": [
+        "400",
+        "700"
+      ],
+      "headingVoice": "text serif"
     },
     {
       "id": 17,
       "name": "Editorial Statement",
       "heading": "Fraunces",
       "body": "Fraunces",
-      "headingItalic": false
+      "headingItalic": false,
+      "headingWeights": [
+        "700"
+      ],
+      "headingVoice": "soft serif"
     },
     {
       "id": 18,
       "name": "Sovereign Mono",
       "heading": "Source Serif 4",
       "body": "Source Serif 4",
-      "headingItalic": false
+      "headingItalic": false,
+      "headingWeights": [
+        "600"
+      ],
+      "headingVoice": "transitional serif"
+    }
+  ],
+  "matchCases": [
+    {
+      "label": "the platform default: what the build writes",
+      "doc": {
+        "fontPairingPreset": 1
+      },
+      "match": null,
+      "platformDefault": true,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "nothing stored at all",
+      "doc": {},
+      "match": null,
+      "platformDefault": true,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "a site that has changed one matched setting",
+      "doc": {
+        "fontPairingPreset": 4,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "sharp",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "0",
+        "motionTempo": "snappy",
+        "cardHover": "accentBorder",
+        "attorneyCardStyle": "minimal",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "normal",
+        "imageFrame": "framed",
+        "patternTexture": "diagonalHatch",
+        "patternGround": "dark"
+      },
+      "match": null,
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "uploaded fonts with no pairing",
+      "doc": {
+        "fontPairingPreset": null,
+        "marketingScale": "sm",
+        "taglineStyle": "titlecase",
+        "uiRadius": "subtle",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "lift",
+        "attorneyCardStyle": "classic",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "normal",
+        "imageFrame": "framed",
+        "patternTexture": null,
+        "patternGround": "light",
+        "customFonts": {
+          "headingFont": {
+            "regular": {
+              "asset": {
+                "_ref": "file-abc"
+              }
+            }
+          }
+        }
+      },
+      "match": {
+        "id": "walnut",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "a dark texture ground with no texture",
+      "doc": {
+        "fontPairingPreset": 2,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "subtle",
+        "buttonShape": "square",
+        "buttonAnimation": "sweep",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "imageZoom",
+        "attorneyCardStyle": "portrait",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "normal",
+        "imageFrame": "plain",
+        "patternTexture": null,
+        "patternGround": "dark"
+      },
+      "match": {
+        "id": "canyon",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "canyon, as applied",
+      "doc": {
+        "fontPairingPreset": 2,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "subtle",
+        "buttonShape": "square",
+        "buttonAnimation": "sweep",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "imageZoom",
+        "attorneyCardStyle": "portrait",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "normal",
+        "imageFrame": "plain",
+        "patternTexture": null,
+        "patternGround": "light",
+        "sectionJoin": null,
+        "dividerCarry": [],
+        "headingRule": "line"
+      },
+      "match": {
+        "id": "canyon",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "canyon, with the divider swapped",
+      "doc": {
+        "fontPairingPreset": 2,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "subtle",
+        "buttonShape": "square",
+        "buttonAnimation": "sweep",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "imageZoom",
+        "attorneyCardStyle": "portrait",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "normal",
+        "imageFrame": "plain",
+        "patternTexture": null,
+        "patternGround": "light",
+        "sectionJoin": "wave"
+      },
+      "match": {
+        "id": "canyon",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "canyon, with the heading line swapped",
+      "doc": {
+        "fontPairingPreset": 2,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "subtle",
+        "buttonShape": "square",
+        "buttonAnimation": "sweep",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "imageZoom",
+        "attorneyCardStyle": "portrait",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "normal",
+        "imageFrame": "plain",
+        "patternTexture": null,
+        "patternGround": "light",
+        "headingRule": "hatched"
+      },
+      "match": {
+        "id": "canyon",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "graphite, as applied",
+      "doc": {
+        "fontPairingPreset": 4,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "sharp",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "0",
+        "motionTempo": "balanced",
+        "cardHover": "accentBorder",
+        "attorneyCardStyle": "minimal",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "normal",
+        "imageFrame": "framed",
+        "patternTexture": "diagonalHatch",
+        "patternGround": "dark",
+        "sectionJoin": "angled",
+        "dividerCarry": [
+          "cards"
+        ],
+        "headingRule": "line"
+      },
+      "match": {
+        "id": "graphite",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "graphite, with the divider swapped",
+      "doc": {
+        "fontPairingPreset": 4,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "sharp",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "0",
+        "motionTempo": "balanced",
+        "cardHover": "accentBorder",
+        "attorneyCardStyle": "minimal",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "normal",
+        "imageFrame": "framed",
+        "patternTexture": "diagonalHatch",
+        "patternGround": "dark",
+        "sectionJoin": "wave"
+      },
+      "match": {
+        "id": "graphite",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "graphite, with the heading line swapped",
+      "doc": {
+        "fontPairingPreset": 4,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "sharp",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "0",
+        "motionTempo": "balanced",
+        "cardHover": "accentBorder",
+        "attorneyCardStyle": "minimal",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "normal",
+        "imageFrame": "framed",
+        "patternTexture": "diagonalHatch",
+        "patternGround": "dark",
+        "headingRule": "hatched"
+      },
+      "match": {
+        "id": "graphite",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "walnut, as applied",
+      "doc": {
+        "fontPairingPreset": 13,
+        "marketingScale": "sm",
+        "taglineStyle": "titlecase",
+        "uiRadius": "subtle",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "lift",
+        "attorneyCardStyle": "classic",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "normal",
+        "imageFrame": "framed",
+        "patternTexture": null,
+        "patternGround": "light",
+        "sectionJoin": null,
+        "dividerCarry": [],
+        "headingRule": "leadDiamond"
+      },
+      "match": {
+        "id": "walnut",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "walnut, with the divider swapped",
+      "doc": {
+        "fontPairingPreset": 13,
+        "marketingScale": "sm",
+        "taglineStyle": "titlecase",
+        "uiRadius": "subtle",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "lift",
+        "attorneyCardStyle": "classic",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "normal",
+        "imageFrame": "framed",
+        "patternTexture": null,
+        "patternGround": "light",
+        "sectionJoin": "wave"
+      },
+      "match": {
+        "id": "walnut",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "walnut, with the heading line swapped",
+      "doc": {
+        "fontPairingPreset": 13,
+        "marketingScale": "sm",
+        "taglineStyle": "titlecase",
+        "uiRadius": "subtle",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "lift",
+        "attorneyCardStyle": "classic",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "normal",
+        "imageFrame": "framed",
+        "patternTexture": null,
+        "patternGround": "light",
+        "headingRule": "hatched"
+      },
+      "match": {
+        "id": "walnut",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "dune, as applied",
+      "doc": {
+        "fontPairingPreset": 6,
+        "marketingScale": "sm",
+        "taglineStyle": "plain",
+        "uiRadius": "soft",
+        "buttonShape": "pill",
+        "buttonAnimation": "lift",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "1",
+        "motionTempo": "relaxed",
+        "cardHover": "lift",
+        "attorneyCardStyle": "portrait",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "normal",
+        "imageFrame": "plain",
+        "patternTexture": "scallop",
+        "patternGround": "light",
+        "sectionJoin": null,
+        "dividerCarry": [],
+        "headingRule": "dotted"
+      },
+      "match": {
+        "id": "dune",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "dune, with the divider swapped",
+      "doc": {
+        "fontPairingPreset": 6,
+        "marketingScale": "sm",
+        "taglineStyle": "plain",
+        "uiRadius": "soft",
+        "buttonShape": "pill",
+        "buttonAnimation": "lift",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "1",
+        "motionTempo": "relaxed",
+        "cardHover": "lift",
+        "attorneyCardStyle": "portrait",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "normal",
+        "imageFrame": "plain",
+        "patternTexture": "scallop",
+        "patternGround": "light",
+        "sectionJoin": "wave"
+      },
+      "match": {
+        "id": "dune",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "dune, with the heading line swapped",
+      "doc": {
+        "fontPairingPreset": 6,
+        "marketingScale": "sm",
+        "taglineStyle": "plain",
+        "uiRadius": "soft",
+        "buttonShape": "pill",
+        "buttonAnimation": "lift",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "1",
+        "motionTempo": "relaxed",
+        "cardHover": "lift",
+        "attorneyCardStyle": "portrait",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "normal",
+        "imageFrame": "plain",
+        "patternTexture": "scallop",
+        "patternGround": "light",
+        "headingRule": "hatched"
+      },
+      "match": {
+        "id": "dune",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "flint, as applied",
+      "doc": {
+        "fontPairingPreset": 7,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "rounded",
+        "buttonShape": "rounded",
+        "buttonAnimation": "fill-center",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "2",
+        "motionTempo": "snappy",
+        "cardHover": "imageZoom",
+        "attorneyCardStyle": "spotlight",
+        "headingEmphasisStyle": "color",
+        "headingWeight": "bold",
+        "headingCase": "upper",
+        "imageFrame": "plain",
+        "patternTexture": null,
+        "patternGround": "light",
+        "sectionJoin": null,
+        "dividerCarry": [],
+        "headingRule": "slab"
+      },
+      "match": {
+        "id": "flint",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "flint, with the divider swapped",
+      "doc": {
+        "fontPairingPreset": 7,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "rounded",
+        "buttonShape": "rounded",
+        "buttonAnimation": "fill-center",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "2",
+        "motionTempo": "snappy",
+        "cardHover": "imageZoom",
+        "attorneyCardStyle": "spotlight",
+        "headingEmphasisStyle": "color",
+        "headingWeight": "bold",
+        "headingCase": "upper",
+        "imageFrame": "plain",
+        "patternTexture": null,
+        "patternGround": "light",
+        "sectionJoin": "wave"
+      },
+      "match": {
+        "id": "flint",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "flint, with the heading line swapped",
+      "doc": {
+        "fontPairingPreset": 7,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "rounded",
+        "buttonShape": "rounded",
+        "buttonAnimation": "fill-center",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "2",
+        "motionTempo": "snappy",
+        "cardHover": "imageZoom",
+        "attorneyCardStyle": "spotlight",
+        "headingEmphasisStyle": "color",
+        "headingWeight": "bold",
+        "headingCase": "upper",
+        "imageFrame": "plain",
+        "patternTexture": null,
+        "patternGround": "light",
+        "headingRule": "hatched"
+      },
+      "match": {
+        "id": "flint",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "marble, as applied",
+      "doc": {
+        "fontPairingPreset": 1,
+        "marketingScale": "md",
+        "taglineStyle": "lined",
+        "uiRadius": "sharp",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "accentUnderline",
+        "attorneyCardStyle": "classic",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "upper",
+        "imageFrame": "plain",
+        "patternTexture": "diamondLattice",
+        "patternGround": "light",
+        "sectionJoin": "peak",
+        "dividerCarry": [
+          "cards"
+        ],
+        "headingRule": null
+      },
+      "match": {
+        "id": "marble",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "marble, with the divider swapped",
+      "doc": {
+        "fontPairingPreset": 1,
+        "marketingScale": "md",
+        "taglineStyle": "lined",
+        "uiRadius": "sharp",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "accentUnderline",
+        "attorneyCardStyle": "classic",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "upper",
+        "imageFrame": "plain",
+        "patternTexture": "diamondLattice",
+        "patternGround": "light",
+        "sectionJoin": "wave"
+      },
+      "match": {
+        "id": "marble",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "marble, with the heading line swapped",
+      "doc": {
+        "fontPairingPreset": 1,
+        "marketingScale": "md",
+        "taglineStyle": "lined",
+        "uiRadius": "sharp",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "accentUnderline",
+        "attorneyCardStyle": "classic",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "bold",
+        "headingCase": "upper",
+        "imageFrame": "plain",
+        "patternTexture": "diamondLattice",
+        "patternGround": "light",
+        "headingRule": "hatched"
+      },
+      "match": {
+        "id": "marble",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "linen, as applied",
+      "doc": {
+        "fontPairingPreset": 15,
+        "marketingScale": "default",
+        "taglineStyle": "titlecase",
+        "uiRadius": "sharp",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "none",
+        "attorneyCardStyle": "minimal",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "regular",
+        "headingCase": "normal",
+        "imageFrame": "slab",
+        "patternTexture": "pinstripe",
+        "patternGround": "light",
+        "sectionJoin": null,
+        "dividerCarry": [],
+        "headingRule": "line"
+      },
+      "match": {
+        "id": "linen",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "linen, with the divider swapped",
+      "doc": {
+        "fontPairingPreset": 15,
+        "marketingScale": "default",
+        "taglineStyle": "titlecase",
+        "uiRadius": "sharp",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "none",
+        "attorneyCardStyle": "minimal",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "regular",
+        "headingCase": "normal",
+        "imageFrame": "slab",
+        "patternTexture": "pinstripe",
+        "patternGround": "light",
+        "sectionJoin": "wave"
+      },
+      "match": {
+        "id": "linen",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "linen, with the heading line swapped",
+      "doc": {
+        "fontPairingPreset": 15,
+        "marketingScale": "default",
+        "taglineStyle": "titlecase",
+        "uiRadius": "sharp",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "none",
+        "attorneyCardStyle": "minimal",
+        "headingEmphasisStyle": "italic",
+        "headingWeight": "regular",
+        "headingCase": "normal",
+        "imageFrame": "slab",
+        "patternTexture": "pinstripe",
+        "patternGround": "light",
+        "headingRule": "hatched"
+      },
+      "match": {
+        "id": "linen",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "linen, earlier version 1",
+      "doc": {
+        "fontPairingPreset": 15,
+        "marketingScale": "default",
+        "taglineStyle": "titlecase",
+        "uiRadius": "sharp",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "none",
+        "attorneyCardStyle": "minimal",
+        "headingEmphasisStyle": "italic",
+        "headingCase": "normal",
+        "imageFrame": "slab",
+        "patternTexture": "pinstripe",
+        "patternGround": "light"
+      },
+      "match": {
+        "id": "linen",
+        "current": false
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "valley, as applied",
+      "doc": {
+        "fontPairingPreset": 9,
+        "marketingScale": "sm",
+        "taglineStyle": "titlecase",
+        "uiRadius": "soft",
+        "buttonShape": "stadium",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "1",
+        "motionTempo": "relaxed",
+        "cardHover": "imageZoom",
+        "attorneyCardStyle": "portrait",
+        "headingEmphasisStyle": "color",
+        "headingWeight": "regular",
+        "headingCase": "normal",
+        "imageFrame": "plain",
+        "patternTexture": null,
+        "patternGround": "light",
+        "sectionJoin": null,
+        "dividerCarry": [],
+        "headingRule": "line"
+      },
+      "match": {
+        "id": "valley",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "valley, with the divider swapped",
+      "doc": {
+        "fontPairingPreset": 9,
+        "marketingScale": "sm",
+        "taglineStyle": "titlecase",
+        "uiRadius": "soft",
+        "buttonShape": "stadium",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "1",
+        "motionTempo": "relaxed",
+        "cardHover": "imageZoom",
+        "attorneyCardStyle": "portrait",
+        "headingEmphasisStyle": "color",
+        "headingWeight": "regular",
+        "headingCase": "normal",
+        "imageFrame": "plain",
+        "patternTexture": null,
+        "patternGround": "light",
+        "sectionJoin": "wave"
+      },
+      "match": {
+        "id": "valley",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "valley, with the heading line swapped",
+      "doc": {
+        "fontPairingPreset": 9,
+        "marketingScale": "sm",
+        "taglineStyle": "titlecase",
+        "uiRadius": "soft",
+        "buttonShape": "stadium",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "1",
+        "motionTempo": "relaxed",
+        "cardHover": "imageZoom",
+        "attorneyCardStyle": "portrait",
+        "headingEmphasisStyle": "color",
+        "headingWeight": "regular",
+        "headingCase": "normal",
+        "imageFrame": "plain",
+        "patternTexture": null,
+        "patternGround": "light",
+        "headingRule": "hatched"
+      },
+      "match": {
+        "id": "valley",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "valley, earlier version 1",
+      "doc": {
+        "fontPairingPreset": 9,
+        "marketingScale": "sm",
+        "taglineStyle": "titlecase",
+        "uiRadius": "soft",
+        "buttonShape": "stadium",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "1",
+        "motionTempo": "relaxed",
+        "cardHover": "imageZoom",
+        "attorneyCardStyle": "portrait",
+        "headingEmphasisStyle": "color",
+        "headingCase": "normal",
+        "imageFrame": "plain",
+        "patternTexture": null,
+        "patternGround": "light"
+      },
+      "match": {
+        "id": "valley",
+        "current": false
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "quartz, as applied",
+      "doc": {
+        "fontPairingPreset": 14,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "soft",
+        "buttonShape": "pill",
+        "buttonAnimation": "sweep",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "1",
+        "motionTempo": "balanced",
+        "cardHover": "lift",
+        "attorneyCardStyle": "avatar",
+        "headingEmphasisStyle": "color",
+        "headingWeight": "bold",
+        "headingCase": "upper",
+        "imageFrame": "plain",
+        "patternTexture": "scallop",
+        "patternGround": "light",
+        "sectionJoin": "notch",
+        "dividerCarry": [],
+        "headingRule": "leadDot"
+      },
+      "match": {
+        "id": "quartz",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "quartz, with the divider swapped",
+      "doc": {
+        "fontPairingPreset": 14,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "soft",
+        "buttonShape": "pill",
+        "buttonAnimation": "sweep",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "1",
+        "motionTempo": "balanced",
+        "cardHover": "lift",
+        "attorneyCardStyle": "avatar",
+        "headingEmphasisStyle": "color",
+        "headingWeight": "bold",
+        "headingCase": "upper",
+        "imageFrame": "plain",
+        "patternTexture": "scallop",
+        "patternGround": "light",
+        "sectionJoin": "wave"
+      },
+      "match": {
+        "id": "quartz",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "quartz, with the heading line swapped",
+      "doc": {
+        "fontPairingPreset": 14,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "soft",
+        "buttonShape": "pill",
+        "buttonAnimation": "sweep",
+        "tertiaryStyle": "plain",
+        "elevationStyle": "1",
+        "motionTempo": "balanced",
+        "cardHover": "lift",
+        "attorneyCardStyle": "avatar",
+        "headingEmphasisStyle": "color",
+        "headingWeight": "bold",
+        "headingCase": "upper",
+        "imageFrame": "plain",
+        "patternTexture": "scallop",
+        "patternGround": "light",
+        "headingRule": "hatched"
+      },
+      "match": {
+        "id": "quartz",
+        "current": true
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
     }
   ]
 }

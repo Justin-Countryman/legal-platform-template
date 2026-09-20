@@ -12,6 +12,7 @@ import {resolveResultsDisclaimer} from '@/lib/legal'
 import {type NapTokens} from '@/lib/tokens'
 import {type SectionAppearance} from '@/components/sections/SectionShell'
 import {walkFrame, type SeamProps, type SiteLook, NO_SEAM} from '@/components/sections/sectionFrame'
+import {type VisibleGround} from '@/lib/sectionSurface'
 import * as AttorneyFrame from '@/components/sections/AttorneySectionBlock'
 import * as BadgesFrame from '@/components/sections/BadgesSectionBlock'
 import * as CaseResultsFrame from '@/components/sections/CaseResultsSection'
@@ -175,7 +176,10 @@ export function HomepageCanvas({
   napTokens,
   resultsDisclaimer,
   site,
+  hero,
 }: {
+  /** The hero's bottom ground (`heroGround`), so the first band can rise into it (Phase 16C). */
+  hero?: VisibleGround | null
   blocks?: HomepageBlock[] | null
   napTokens?: NapTokens | null
   /** The site's look from Design Settings (`siteLookOf`), carried to every band on
@@ -189,7 +193,7 @@ export function HomepageCanvas({
 
   return (
     <>
-      {walkFrame(blocks, frameOf, site ?? null).map(({member, seam}, surviving) => {
+      {walkFrame(blocks, frameOf, site ?? null, hero ?? null).map(({member, seam}, surviving) => {
         const rendered = renderBlock(member, napTokens, resultsDisclaimer, seam)
         if (!rendered) return null
         // THE FIRST SURVIVING BAND, not the member at index 0. `i === 0` on the
@@ -206,4 +210,15 @@ export function HomepageCanvas({
       })}
     </>
   )
+}
+
+/** Whether the first visible band rises into the hero, so the hero can keep its own
+ *  content clear of it by the divider's depth (Phase 16C, `[R-481]`). The page runs the
+ *  same walk the canvas does; it is pure and cheap. */
+export function firstBandRises(
+  blocks: HomepageBlock[] | null | undefined,
+  site: SiteLook | null,
+  hero: VisibleGround | null,
+): boolean {
+  return walkFrame(blocks ?? [], frameOf, site, hero)[0]?.seam.divider?.mode === 'rise'
 }

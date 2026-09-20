@@ -2,9 +2,8 @@ import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import {
   sectionSurface, SECTION_SPACING, TIGHT_SPACING, DEFAULT_SECTION_SPACING,
-  type StoredSurface, type SectionSpacing, type StoredEdge,
+  type StoredSurface, type SectionSpacing,
   type ResolvedSectionSurface, type SectionSpacingSteps,
-  sectionEdgeClasses,
 } from '@/lib/sectionSurface'
 import {type SeamProps, NO_SEAM, overlapOf} from './sectionFrame'
 
@@ -40,9 +39,6 @@ export type SectionAppearance = {
   /** Render the band as a panel inside the container, with the page ground
    *  running past it on all four sides. The schema field is `inset`. */
   inset?: boolean | null
-  /** The bottom edge this band cuts into the band below it, or `site` for the
-   *  site's join shape. The band BELOW paints it; see `sectionEdgeClasses`. */
-  edgeBottom?: StoredEdge | null
   /** Pull this band up over the one above it. Desktop and up. */
   overlapPrevious?: 'none' | 'small' | 'large' | null
 }
@@ -58,6 +54,19 @@ export type SectionAppearance = {
 // WCAG 2.2's 2.4.11 holds by construction: the band above grows its bottom
 // padding by exactly the overlap (`bottomBeforeOverlap`, told by the walk), so
 // the panel rides over padding that band added for it, never over its content.
+// The paint of a divider (Phase 16C). A cut takes the ground of the band above; a rise
+// this band's own. Both live in a `.ts` map, where neither the class checker nor ESLint
+// looks, so `__tests__/sectionFrame.test.ts` resolves every class through Tailwind's own
+// design system, as the frame's classes already are.
+const DIVIDER_FROM: Record<string, string> = {
+  light: 'before:bg-background', tint: 'before:bg-hero-tint', muted: 'before:bg-muted',
+  dark: 'before:bg-brand-dark', saturated: 'before:bg-accent-fill',
+}
+const DIVIDER_OWN: Record<string, string> = {
+  'bg-background': 'before:bg-background', 'bg-hero-tint': 'before:bg-hero-tint', 'bg-muted': 'before:bg-muted',
+  'bg-brand-dark': 'before:bg-brand-dark', 'bg-accent-fill': 'before:bg-accent-fill',
+}
+
 const OVERLAP_CLASS: Record<'none' | 'small' | 'large', string> = {
   none:  '',
   small: 'md:-mt-12 md:relative md:z-10',
@@ -156,9 +165,11 @@ export function SectionShell({
       className={[
         'relative',
         gutter && 'px-[5%]',
-        // The band above's edge, painted by this band so it survives
-        // ScrollReveal's transform. Empty unless that band asked for one.
-        sectionEdgeClasses(seam.previousGround, seam.previousEdge),
+        // The divider, painted by this band so it survives ScrollReveal's transform
+        // (Phase 13 amendment 2). Empty unless the walk placed one here.
+        seam.divider?.mode === 'cut' && `divider-cut ${DIVIDER_FROM[seam.divider.from] ?? ''}`,
+        seam.divider?.mode === 'rise' && `divider-rise ${DIVIDER_OWN[resolved.surfaceClass] ?? ''}`,
+        seam.divider?.flip && 'divider-flip',
         OVERLAP_CLASS[overlap],
         // An inset band's own box is transparent; the panel inside carries the
         // surface. A normal band carries it here.
@@ -191,7 +202,7 @@ export function SectionShell({
       ) : (
         <>
           {texture}
-          <div className={[contained ? 'container relative' : 'relative', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
+          <div className={[contained ? 'container relative' : 'relative', seam.divider?.mode === 'cut' && 'mt-divider', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
         </>
       )}
     </Tag>

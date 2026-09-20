@@ -28,7 +28,7 @@ function resolveCtas(buttons: HomeHeroData['buttons'], tokens?: NapTokens | null
   return toCtaItems((buttons ?? []).map((b) => ({...b, title: resolveStr(b.title, tokens) ?? b.title})))
 }
 
-export function HomepageHero({data, napTokens}: {data: HomeHeroData; napTokens?: NapTokens | null}) {
+export function HomepageHero({data, napTokens, edgeBelow}: {data: HomeHeroData; napTokens?: NapTokens | null; edgeBelow?: boolean}) {
   const config = resolveHeroConfig(data)
   const Skeleton = SKELETONS[config.skeleton]
 
@@ -90,5 +90,5 @@ export function HomepageHero({data, napTokens}: {data: HomeHeroData; napTokens?:
     videoUrl: data.videoUrl,
   }
 
-  return <Skeleton config={config} content={content} surface={effectiveSurface} sectionBackground={sectionBackground} />
+  return <Skeleton config={config} content={content} surface={effectiveSurface} sectionBackground={sectionBackground} edgeBelow={edgeBelow} />
 }

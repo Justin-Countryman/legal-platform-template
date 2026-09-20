@@ -247,7 +247,7 @@ export function BadgesSectionBlock({
   if (data.layout === 'scrolling') {
     if (!data.badges || data.badges.length === 0) return null
     return (
-      <SectionShell appearance={resolveAppearance(data)} contained={false} gutter={false} className="overflow-hidden" seam={seam}>
+      <SectionShell appearance={resolveAppearance(data)} contained={false} gutter={false} seam={seam}>
         <ScrollingBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} />
       </SectionShell>
     )

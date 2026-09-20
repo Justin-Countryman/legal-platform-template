@@ -76,6 +76,8 @@ const DELETED_FIELDS: Array<[type: string, field: string]> = [
   ['designSettings', 'actionColor'],
   ['designSettings', 'accent1Color'],
   ['designSettings', 'accent2Color'],
+  // Phase 16C ([R-481]): a section's own bottom edge, on every type that had it.
+  ...PAIRS.flatMap(([doc, inline]) => [[doc, 'edgeBottom'], [inline, 'edgeBottom']] as Array<[string, string]>),
 ]
 
 // ─── 1. The schema compiles with two names per section and no duplicates ──────
@@ -285,7 +287,7 @@ const NO_SEED: Array<[type: string, field: string, why: string]> = [
 // fields since Phase 13, and `surface` and `spacing` since Phase 16A, which
 // removed the seed the original six sections carried (item 308).
 for (const [doc, inline] of PAIRS) {
-  for (const field of ['surface', 'spacing', 'inset', 'edgeBottom', 'overlapPrevious']) {
+  for (const field of ['surface', 'spacing', 'inset', 'overlapPrevious']) {
     NO_SEED.push([doc, field, 'an appearance field (item 308)'], [inline, field, 'an appearance field (item 308)'])
   }
 }
