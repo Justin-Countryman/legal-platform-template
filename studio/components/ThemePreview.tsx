@@ -4,7 +4,12 @@ import React from 'react'
 import {useDocumentOperation, useFormValue} from 'sanity'
 import {getPresetById} from '../../site/fonts/presets'
 import {BUTTON_SHAPE_MAP, UI_RADIUS_MAP} from '../../site/lib/designTokens'
-import {THEMES, isPlatformDefault, matchTheme, themePatch, usesCustomFonts, type Theme, type ThemeDoc} from '../../site/lib/themes'
+import {
+  THEMES, THEME_PICK_LABELS, isPlatformDefault, matchTheme, signatureOf, swappedPicks, themePatch, updatePatch,
+  usesCustomFonts, type Theme, type ThemeDoc,
+} from '../../site/lib/themes'
+import {DIVIDER_SHAPES} from '../../site/lib/dividers'
+import {HEADING_LINE_DESIGNS} from '../../site/lib/headingLines'
 
 // The Theme field (Phase 16B, [R-468], [R-469], [R-477]). It stores nothing
 // itself, like the palette and corner fields. It offers the themes and writes a
@@ -30,9 +35,7 @@ function Specimen({theme}: {theme: Theme}) {
       <span style={{fontFamily: 'Georgia, serif', fontSize: 15, fontWeight: 700, color: '#1f2937', textTransform: upper ? 'uppercase' : 'none', letterSpacing: upper ? '0.06em' : 'normal', lineHeight: 1.2}}>
         Trusted <span style={{color: ACCENT, fontStyle: s.headingEmphasisStyle === 'italic' ? 'italic' : 'normal', fontWeight: s.headingEmphasisStyle === 'italic' ? 400 : 700}}>counsel</span>
       </span>
-      {s.headingRule === 'line' && <span style={{display: 'block', width: 24, height: 2, background: ACCENT}} />}
-      {s.headingRule === 'double' && <span style={{display: 'block', width: 24, height: 5, borderTop: `1px solid ${ACCENT}`, borderBottom: `1px solid ${ACCENT}`}} />}
-      {s.headingRule === 'hatched' && <span style={{display: 'block', width: 24, height: 6, backgroundImage: `repeating-linear-gradient(-45deg, ${ACCENT} 0 1px, transparent 1px 4px)`}} />}
+      {theme.picks.headingRule && <span style={{display: 'block', width: 24, height: 2, background: ACCENT}} />}
       <span style={{display: 'flex', alignItems: 'flex-end', gap: 8}}>
         <span
           style={{
@@ -48,6 +51,23 @@ function Specimen({theme}: {theme: Theme}) {
   )
 }
 
+/** The two or three things a visitor recognises, in the Studio's words (`[R-487]`). */
+function recognizers(theme: Theme): string {
+  const sig = signatureOf(theme)
+  return theme.identity.recognizers.map((d) => sig[d].replace('frame/', '').replace('/', ' ')).join(' · ')
+}
+
+/** What a site has picked where it differs from the theme it matches (`[R-485]`). */
+function pickLabel(field: string, value: unknown): string {
+  if (field === 'dividerCarry') {
+    const list = (value as string[]) ?? []
+    return list.length ? list.join(', ') : 'none'
+  }
+  if (!value) return 'none'
+  if (field === 'sectionJoin') return DIVIDER_SHAPES[value as keyof typeof DIVIDER_SHAPES]?.label ?? String(value)
+  return HEADING_LINE_DESIGNS[value as keyof typeof HEADING_LINE_DESIGNS]?.label ?? String(value)
+}
+
 function ThemeButton({theme, active, onChoose}: {theme: Theme; active: boolean; onChoose: () => void}) {
   return (
     <button
@@ -61,7 +81,8 @@ function ThemeButton({theme, active, onChoose}: {theme: Theme; active: boolean; 
     >
       <Specimen theme={theme} />
       <span style={{fontSize: 12, fontWeight: 600, color: '#222'}}>{theme.name}</span>
-      <span style={{fontSize: 10, color: '#777'}}>{theme.feel}</span>
+      <span style={{fontSize: 10, color: '#777'}}>{theme.identity.sentence}</span>
+      <span style={{fontSize: 10, color: '#9a6a1f'}}>{recognizers(theme)}</span>
     </button>
   )
 }
@@ -79,14 +100,28 @@ export function ThemePreview() {
     const {set, unset} = themePatch(theme, doc)
     patch.execute([{set}, ...(unset.length ? [{unset}] : [])])
   }
+  // Applying a theme's update keeps a pick the site swapped on purpose (`[R-485]`).
+  const update = () => {
+    if (!match) return
+    const {set, unset} = updatePatch(doc, match)
+    patch.execute([{set}, ...(unset.length ? [{unset}] : [])])
+  }
+  const swapped = match ? swappedPicks(doc, match) : []
 
   return (
     <div style={{display: 'flex', flexDirection: 'column', gap: 12, padding: '12px 0'}}>
       <p style={label}>Theme · {status}</p>
+      {swapped.length > 0 && (
+        <p style={{fontSize: 11, color: '#555', margin: 0}}>
+          {swapped
+            .map((s) => `${THEME_PICK_LABELS[s.field]} · ${pickLabel(s.field, s.site)} (${match?.theme.name}’s is ${pickLabel(s.field, s.theme)})`)
+            .join('  —  ')}
+        </p>
+      )}
       {match && !match.current && (
         <div style={{padding: '8px 10px', background: '#f1f5f9', borderRadius: 4, fontSize: 11, color: '#334155', display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap'}}>
           <span>{match.theme.name} has been updated since it was applied here.</span>
-          <button type="button" onClick={() => choose(match.theme)} style={{fontSize: 11, padding: '3px 8px', borderRadius: 4, border: '1px solid #94a3b8', background: '#fff', cursor: 'pointer'}}>
+          <button type="button" onClick={update} style={{fontSize: 11, padding: '3px 8px', borderRadius: 4, border: '1px solid #94a3b8', background: '#fff', cursor: 'pointer'}}>
             Apply the current {match.theme.name}
           </button>
         </div>
@@ -102,8 +137,9 @@ export function ThemePreview() {
         ))}
       </div>
       <p style={{fontSize: 11, color: '#666', margin: 0}}>
-        A theme sets the fonts, corners, headings, photo frames, section edges, texture and card hover below. It never
-        changes your colors, and a look set on one section on purpose stays as it was set.
+        A theme sets the fonts, corners, headings, photo frames, texture and card hover below, and its own divider and
+        heading line. It never changes your colors, a look set on one section on purpose stays as it was set, and
+        swapping the divider or the heading line keeps the theme’s name.
       </p>
     </div>
   )

@@ -107,7 +107,7 @@ function VideoCard({video, featured}: {video: VideoCardData; featured?: boolean}
   if (!embedUrl) return null
 
   const trigger = featured ? (
-    <button type="button" className={CARD_CHROME} aria-label={`Play video: ${video.title}`}>
+    <button type="button" data-card="" className={CARD_CHROME} aria-label={`Play video: ${video.title}`}>
       <div className="grid gap-0 md:grid-cols-2 md:items-stretch">
         <Thumb video={video} featured />
         <div className="flex flex-col justify-center p-6 md:p-8">
@@ -120,7 +120,7 @@ function VideoCard({video, featured}: {video: VideoCardData; featured?: boolean}
       </div>
     </button>
   ) : (
-    <button type="button" className={CARD_CHROME} aria-label={`Play video: ${video.title}`}>
+    <button type="button" data-card="" className={CARD_CHROME} aria-label={`Play video: ${video.title}`}>
       <Thumb video={video} />
       <div className="p-5">
         <p className="font-heading font-semibold leading-snug text-foreground">{video.title}</p>

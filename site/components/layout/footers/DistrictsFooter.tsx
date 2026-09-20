@@ -103,7 +103,7 @@ export function DistrictsFooter({data}: Props) {
         {/* ── Location cards ────────────────────────────────────────────────── */}
         <ul role="list" aria-label="Office locations" className={`grid grid-cols-1 gap-6 py-12 ${colClass}`}>
           {locs.map((loc) => (
-            <li key={loc._id} className="flex flex-col gap-3 rounded-ui border border-border p-6">
+            <li key={loc._id} data-card="" className="flex flex-col gap-3 rounded-ui border border-border p-6">
               <div className="flex items-center gap-2">
                 <MdLocationOn className="shrink-0 text-action-text" aria-hidden="true" />
                 <h3 className="font-heading text-lg font-semibold text-foreground">

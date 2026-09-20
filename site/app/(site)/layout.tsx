@@ -5,6 +5,7 @@
 import {getSiteChrome} from '@/lib/sanity/fetchers'
 import {resolveTokenString, formatPhone} from '@/lib/tokens'
 import {buildDesignTokenCSS, buildColorCSS, buildFontCSS, resolveSidebarDesignSettings} from '@/lib/designTokens'
+import {dividerShape, readCarry} from '@/lib/dividers'
 import {HeroSchemeProvider} from '@/lib/heroSchemeContext'
 import {HeroSurfaceProvider} from '@/lib/heroSurfaceContext'
 import {DEFAULT_SCRIM_OPACITY, resolveHeroSurface, resolveMergedHeaderScheme} from '@/lib/heroSurface'
@@ -103,6 +104,8 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
     patternTexture:       designTokens?.patternTexture,
     headingEmphasisStyle: designTokens?.headingEmphasisStyle,
     headingCase:          designTokens?.headingCase,
+    sectionJoin:          designTokens?.sectionJoin,
+    headingRule:          designTokens?.headingRule,
   })
   const colorCSS = buildColorCSS({
     darkGround:  designTokens?.darkGround,
@@ -136,6 +139,15 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
   // (`data-image-frame`). globals.css reads both.
   const headingRule = designTokens?.headingRule ?? 'none'
   const imageFrame = designTokens?.imageFrame ?? 'plain'
+  // Phase 16C. The carried pieces repeat the divider's shape (`[R-483]`), so they are
+  // drawn only where the site's divider is shaped, and the button piece only where a
+  // button has a corner to take it (Sharp and Crisp): on Balanced it reads as a smudge,
+  // on a pill it falls outside the button (ADV-P16C-A). The heading weight rides the same
+  // wrapper, because the rule must beat the `font-bold` utility without moving 183
+  // headings in four goldens.
+  const carry = dividerShape(designTokens?.sectionJoin) ? readCarry(designTokens?.dividerCarry) : []
+  const cornered = designTokens?.buttonShape === 'square' && ['sharp', 'subtle'].includes(designTokens?.uiRadius ?? '')
+  const headingWeight = designTokens?.headingWeight === 'regular' ? 'regular' : undefined
 
   // Merged-header contrast guardrail: when heroMerge is on, the transparent
   // at-top header overlays the hero, so its text polarity must follow the
@@ -188,7 +200,17 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
       ))}
       <style dangerouslySetInnerHTML={{__html: tokenCSS + colorCSS + headerHeightSSR}} />
       {fontCSS && <style dangerouslySetInnerHTML={{__html: fontCSS}} />}
-      <div data-button-animation={buttonAnimation} data-heading-rule={headingRule} data-image-frame={imageFrame} className="relative">
+      <div
+        data-button-animation={buttonAnimation}
+        data-heading-rule={headingRule}
+        data-heading-weight={headingWeight}
+        data-image-frame={imageFrame}
+        data-carry-cards={carry.includes('cards') ? '' : undefined}
+        data-carry-buttons={carry.includes('buttons') && cornered ? '' : undefined}
+        data-carry-photo={carry.includes('photo') ? '' : undefined}
+        data-carry-mark={carry.includes('mark') ? '' : undefined}
+        className="relative"
+      >
       <MotionRoot>
       <Header
         data={{

@@ -336,9 +336,13 @@ function ContentMedia({data, ground, siteFrame}: {data: ContentSectionData; grou
   const cutout = media.kind === 'cutout'
   // No site default exists until Phase 16, so `inherit` resolves to plain.
   const context = cutout ? 'cutout' : 'contentMedia'
-  const treatment = treatmentClasses(resolveTreatment(data.imageTreatment, siteFrame, context, ground), context)
+  const resolved = resolveTreatment(data.imageTreatment, siteFrame, context, ground)
+  const treatment = treatmentClasses(resolved, context)
   return (
-    <div className={treatment.wrapper}>
+    // Phase 16C: a plain photo takes the carried corner; a slab photo is cut on the image
+    // so the slab shows through; a framed photo is never cut (the frame is the signature,
+    // and a clip would cut its border).
+    <div className={treatment.wrapper} data-feature-photo={context === 'contentMedia' && (resolved === 'plain' || resolved === 'slab') ? resolved : undefined}>
       <SanityImage
         image={media.image}
         mode="natural"

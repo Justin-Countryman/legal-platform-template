@@ -562,27 +562,6 @@
           },
           "optional": true
         },
-        "edgeBottom": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "site"
-              },
-              {
-                "type": "string",
-                "value": "flat"
-              },
-              {
-                "type": "string",
-                "value": "angled"
-              }
-            ]
-          },
-          "optional": true
-        },
         "overlapPrevious": {
           "type": "objectAttribute",
           "value": {
@@ -992,27 +971,6 @@
           },
           "optional": true
         },
-        "edgeBottom": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "site"
-              },
-              {
-                "type": "string",
-                "value": "flat"
-              },
-              {
-                "type": "string",
-                "value": "angled"
-              }
-            ]
-          },
-          "optional": true
-        },
         "overlapPrevious": {
           "type": "objectAttribute",
           "value": {
@@ -1214,27 +1172,6 @@
           },
           "optional": true
         },
-        "edgeBottom": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "site"
-              },
-              {
-                "type": "string",
-                "value": "flat"
-              },
-              {
-                "type": "string",
-                "value": "angled"
-              }
-            ]
-          },
-          "optional": true
-        },
         "overlapPrevious": {
           "type": "objectAttribute",
           "value": {
@@ -1428,27 +1365,6 @@
           },
           "optional": true
         },
-        "edgeBottom": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "site"
-              },
-              {
-                "type": "string",
-                "value": "flat"
-              },
-              {
-                "type": "string",
-                "value": "angled"
-              }
-            ]
-          },
-          "optional": true
-        },
         "overlapPrevious": {
           "type": "objectAttribute",
           "value": {
@@ -1630,27 +1546,6 @@
           "type": "objectAttribute",
           "value": {
             "type": "boolean"
-          },
-          "optional": true
-        },
-        "edgeBottom": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "site"
-              },
-              {
-                "type": "string",
-                "value": "flat"
-              },
-              {
-                "type": "string",
-                "value": "angled"
-              }
-            ]
           },
           "optional": true
         },
@@ -1885,27 +1780,6 @@
           },
           "optional": true
         },
-        "edgeBottom": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "site"
-              },
-              {
-                "type": "string",
-                "value": "flat"
-              },
-              {
-                "type": "string",
-                "value": "angled"
-              }
-            ]
-          },
-          "optional": true
-        },
         "overlapPrevious": {
           "type": "objectAttribute",
           "value": {
@@ -2118,27 +1992,6 @@
           "type": "objectAttribute",
           "value": {
             "type": "boolean"
-          },
-          "optional": true
-        },
-        "edgeBottom": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "site"
-              },
-              {
-                "type": "string",
-                "value": "flat"
-              },
-              {
-                "type": "string",
-                "value": "angled"
-              }
-            ]
           },
           "optional": true
         },
@@ -2420,27 +2273,6 @@
           "type": "objectAttribute",
           "value": {
             "type": "boolean"
-          },
-          "optional": true
-        },
-        "edgeBottom": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "site"
-              },
-              {
-                "type": "string",
-                "value": "flat"
-              },
-              {
-                "type": "string",
-                "value": "angled"
-              }
-            ]
           },
           "optional": true
         },
@@ -2788,27 +2620,6 @@
           "type": "objectAttribute",
           "value": {
             "type": "boolean"
-          },
-          "optional": true
-        },
-        "edgeBottom": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "site"
-              },
-              {
-                "type": "string",
-                "value": "flat"
-              },
-              {
-                "type": "string",
-                "value": "angled"
-              }
-            ]
           },
           "optional": true
         },
@@ -6561,23 +6372,6 @@
         },
         "optional": true
       },
-      "edgeBottom": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "flat"
-            },
-            {
-              "type": "string",
-              "value": "angled"
-            }
-          ]
-        },
-        "optional": true
-      },
       "overlapPrevious": {
         "type": "objectAttribute",
         "value": {
@@ -6784,23 +6578,6 @@
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
-        },
-        "optional": true
-      },
-      "edgeBottom": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "flat"
-            },
-            {
-              "type": "string",
-              "value": "angled"
-            }
-          ]
         },
         "optional": true
       },
@@ -7175,23 +6952,6 @@
         },
         "optional": true
       },
-      "edgeBottom": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "flat"
-            },
-            {
-              "type": "string",
-              "value": "angled"
-            }
-          ]
-        },
-        "optional": true
-      },
       "overlapPrevious": {
         "type": "objectAttribute",
         "value": {
@@ -7414,23 +7174,6 @@
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
-        },
-        "optional": true
-      },
-      "edgeBottom": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "flat"
-            },
-            {
-              "type": "string",
-              "value": "angled"
-            }
-          ]
         },
         "optional": true
       },
@@ -7663,23 +7406,6 @@
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
-        },
-        "optional": true
-      },
-      "edgeBottom": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "flat"
-            },
-            {
-              "type": "string",
-              "value": "angled"
-            }
-          ]
         },
         "optional": true
       },
@@ -7970,23 +7696,6 @@
         },
         "optional": true
       },
-      "edgeBottom": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "flat"
-            },
-            {
-              "type": "string",
-              "value": "angled"
-            }
-          ]
-        },
-        "optional": true
-      },
       "overlapPrevious": {
         "type": "objectAttribute",
         "value": {
@@ -8242,23 +7951,6 @@
         },
         "optional": true
       },
-      "edgeBottom": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "flat"
-            },
-            {
-              "type": "string",
-              "value": "angled"
-            }
-          ]
-        },
-        "optional": true
-      },
       "overlapPrevious": {
         "type": "objectAttribute",
         "value": {
@@ -8509,23 +8201,6 @@
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
-        },
-        "optional": true
-      },
-      "edgeBottom": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "flat"
-            },
-            {
-              "type": "string",
-              "value": "angled"
-            }
-          ]
         },
         "optional": true
       },
@@ -8816,23 +8491,6 @@
         },
         "optional": true
       },
-      "edgeBottom": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "flat"
-            },
-            {
-              "type": "string",
-              "value": "angled"
-            }
-          ]
-        },
-        "optional": true
-      },
       "overlapPrevious": {
         "type": "objectAttribute",
         "value": {
@@ -9017,23 +8675,6 @@
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
-        },
-        "optional": true
-      },
-      "edgeBottom": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "flat"
-            },
-            {
-              "type": "string",
-              "value": "angled"
-            }
-          ]
         },
         "optional": true
       },
@@ -9242,23 +8883,6 @@
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
-        },
-        "optional": true
-      },
-      "edgeBottom": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "flat"
-            },
-            {
-              "type": "string",
-              "value": "angled"
-            }
-          ]
         },
         "optional": true
       },
@@ -18404,11 +18028,108 @@
             },
             {
               "type": "string",
+              "value": "hairline"
+            },
+            {
+              "type": "string",
+              "value": "slab"
+            },
+            {
+              "type": "string",
               "value": "double"
             },
             {
               "type": "string",
+              "value": "fade"
+            },
+            {
+              "type": "string",
+              "value": "thickThin"
+            },
+            {
+              "type": "string",
+              "value": "thinThickThin"
+            },
+            {
+              "type": "string",
+              "value": "tapered"
+            },
+            {
+              "type": "string",
+              "value": "terminals"
+            },
+            {
+              "type": "string",
+              "value": "diamond"
+            },
+            {
+              "type": "string",
+              "value": "sectionMark"
+            },
+            {
+              "type": "string",
+              "value": "leadDot"
+            },
+            {
+              "type": "string",
+              "value": "leadDiamond"
+            },
+            {
+              "type": "string",
+              "value": "broken"
+            },
+            {
+              "type": "string",
+              "value": "flanking"
+            },
+            {
+              "type": "string",
+              "value": "vertical"
+            },
+            {
+              "type": "string",
+              "value": "corner"
+            },
+            {
+              "type": "string",
+              "value": "dotted"
+            },
+            {
+              "type": "string",
+              "value": "dashed"
+            },
+            {
+              "type": "string",
               "value": "hatched"
+            },
+            {
+              "type": "string",
+              "value": "wave"
+            },
+            {
+              "type": "string",
+              "value": "zigzag"
+            },
+            {
+              "type": "string",
+              "value": "dinkus"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "headingWeight": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "bold"
+            },
+            {
+              "type": "string",
+              "value": "regular"
             }
           ]
         },
@@ -18485,8 +18206,42 @@
             {
               "type": "string",
               "value": "angled"
+            },
+            {
+              "type": "string",
+              "value": "angledAlternating"
+            },
+            {
+              "type": "string",
+              "value": "arc"
+            },
+            {
+              "type": "string",
+              "value": "notch"
+            },
+            {
+              "type": "string",
+              "value": "arrow"
+            },
+            {
+              "type": "string",
+              "value": "wave"
+            },
+            {
+              "type": "string",
+              "value": "peak"
             }
           ]
+        },
+        "optional": true
+      },
+      "dividerCarry": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
         },
         "optional": true
       },

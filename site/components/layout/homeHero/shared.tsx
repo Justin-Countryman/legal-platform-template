@@ -95,7 +95,12 @@ export function HeroBand({
   className,
   style,
   children,
+  edgeBelow = false,
 }: {
+  /** A divider rises into this band's bottom (Phase 16C): a padded band grows by its
+   *  depth, so the hero's own content never sits under it. A flush band has a child
+   *  reaching the bottom edge, which is what the shape is meant to cut. */
+  edgeBelow?: boolean
   surface: ResolvedHeroSurface
   fullViewport: boolean
   /** Render the shared full-bleed background image + scrim (HeroBackdrop) behind the content. */
@@ -142,6 +147,7 @@ export function HeroBand({
         .join(' ')}
     >
       {children}
+      {edgeBelow && !flush && <div aria-hidden="true" className="h-divider shrink-0" />}
       {backdropNode ? backdropNode : showBackdrop && <HeroBackdrop surface={surface} />}
     </section>
   )

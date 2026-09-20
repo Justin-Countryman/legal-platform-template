@@ -30,8 +30,10 @@ export function SiloNav({ariaLabel, className, children}: {ariaLabel: string; cl
 /** Whole-tile link: the focus-ring contract + group + relative are always present.
  *  `dark` flips the ring-context (image tiles render white text over the scrim). */
 export function TileLink({
-  href, dark, className, children, press = 'scale',
+  href, dark, className, children, press = 'scale', card = true,
 }: {
+  /** A card takes the carried corner piece (Phase 16C); a full-width list row does not. */
+  card?: boolean
   href: string
   dark?: boolean
   className: string
@@ -50,6 +52,7 @@ export function TileLink({
       : 'transition-transform duration-ui-fast ease-gentle active:scale-95'
   return (
     <Link
+      data-card={card && press === 'scale' ? '' : undefined}
       href={href}
       data-ring-context={dark ? 'dark' : undefined}
       className={`group relative overflow-hidden ${pressClass} ${FOCUS} ${className}`}

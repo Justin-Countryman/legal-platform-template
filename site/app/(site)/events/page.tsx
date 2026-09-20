@@ -115,6 +115,7 @@ function EventCard({event, tokens}: {event: EventCard; tokens: NapTokens}) {
 
   return (
     <Link
+      data-card=""
       href={`/${event.slug}/`}
       aria-label={`${past ? 'Past event: ' : ''}${event.title}, ${dateLabel}`}
       className={[

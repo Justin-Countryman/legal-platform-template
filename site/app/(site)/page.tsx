@@ -15,6 +15,8 @@ export const revalidate = 3600
 import type {Metadata} from 'next'
 import {chromeGlobalCta, chromeHeader, chromeNap, getHomePage, getSiteChrome} from '@/lib/sanity/fetchers'
 import {siteLookOf} from '@/components/sections/sectionFrame'
+import {firstBandRises} from '@/components/layout/HomepageCanvas'
+import {heroGround} from '@/lib/heroGround'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
 import {HomepageHero} from '@/components/layout/homeHero'
@@ -177,11 +179,16 @@ export default async function HomePage() {
   // authored/migrated. An empty/unmigrated heroSettings.homepageHero falls through
   // to the minimal band below — the hard-cut safety net, never a crash.
   const hero: HomeHeroData | null = content?.heading && design ? {...design, ...content} : null
+  // Phase 16C: the first band rises into the hero when the site's divider is shaped and
+  // the grounds differ, so the hero makes room for it and the walk knows what it meets.
+  const site = siteLookOf((await getSiteChrome())?.designTokens)
+  const ground = heroGround(hero)
+  const edgeBelow = firstBandRises(home?.canvas, site, ground)
 
   return (
     <>
       {hero ? (
-        <HomepageHero data={hero} napTokens={tokens} />
+        <HomepageHero data={hero} napTokens={tokens} edgeBelow={edgeBelow} />
       ) : (
         // Fallback when the homepage hero hasn't been authored yet.
         //
@@ -211,7 +218,8 @@ export default async function HomePage() {
       )}
 
       <HomepageCanvas
-        site={siteLookOf((await getSiteChrome())?.designTokens)}
+        site={site}
+        hero={ground}
         blocks={home?.canvas}
         napTokens={tokens}
         resultsDisclaimer={home?.resultsDisclaimer}

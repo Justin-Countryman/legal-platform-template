@@ -164,7 +164,7 @@ export function SiloInline({items, ariaLabel, hoverEffects, showArrow, iconPosit
     <SiloNav ariaLabel={ariaLabel} className={ROW_GRID}>
       {items.map((item) => (
         <li key={item._key}>
-          <TileLink href={item.href ?? '#'} className={`flex items-center rounded-ui border border-border p-5 ${fx.container}`}>
+          <TileLink href={item.href ?? '#'} card={false} className={`flex items-center rounded-ui border border-border p-5 ${fx.container}`}>
             <TileFill />
             <TileGlow fx={fx} />
             <div className="relative z-10 flex w-full items-center gap-4">

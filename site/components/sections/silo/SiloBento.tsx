@@ -69,7 +69,7 @@ function BentoRow({
   showIcon: boolean
 }) {
   return (
-    <TileLink href={item.href ?? '#'} className={`flex h-full items-center gap-3 px-5 py-4 ${fx.container}`}>
+    <TileLink href={item.href ?? '#'} card={false} className={`flex h-full items-center gap-3 px-5 py-4 ${fx.container}`}>
       <TileGlow fx={fx} />
       <span className="relative z-10 flex w-full items-center gap-3">
         {showIcon && <TileIcon item={item} fx={fx} size="sm" />}

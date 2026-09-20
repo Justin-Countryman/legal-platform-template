@@ -154,7 +154,7 @@ function VideoMedia({content, surface, aspect}: {content: ResolvedHomeContent; s
   )
 }
 
-export function Split({config, content, surface, sectionBackground}: SkeletonProps) {
+export function Split({config, content, surface, sectionBackground, edgeBelow}: SkeletonProps) {
   const fullViewport = config.heightMode === 'fullViewport'
   const mediaLeft = config.mediaSide === 'left'
   const isOverlap = config.textTreatment === 'overlap'
@@ -225,7 +225,7 @@ export function Split({config, content, surface, sectionBackground}: SkeletonPro
     )
 
     return (
-      <HeroBand surface={surface} fullViewport={fullViewport} center backdropNode={sectionNode} imageBacked={imageBacked}>
+      <HeroBand edgeBelow={edgeBelow} surface={surface} fullViewport={fullViewport} center backdropNode={sectionNode} imageBacked={imageBacked}>
         <div className="container relative z-10">
           <div className="relative py-6 lg:py-12">
             {/* Image 60% on one side; card 48% on the other → a guaranteed ~8% overlap
@@ -259,7 +259,7 @@ export function Split({config, content, surface, sectionBackground}: SkeletonPro
     const im = surface.bgImage
     const fullAlign = config.contentAlign === 'center' ? 'center' : 'start'
     return (
-      <HeroBand surface={surface} fullViewport={fullViewport} flush backdropNode={sectionNode} imageBacked={imageBacked}>
+      <HeroBand edgeBelow={edgeBelow} surface={surface} fullViewport={fullViewport} flush backdropNode={sectionNode} imageBacked={imageBacked}>
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 lg:items-stretch">
           {/* Text column owns the header clearance + vertical padding (the band is flush). */}
           <div
@@ -288,7 +288,7 @@ export function Split({config, content, surface, sectionBackground}: SkeletonPro
 
   // ─── Inline — standard side-by-side split (contained panel) ─────────────────
   return (
-    <HeroBand surface={surface} fullViewport={fullViewport} center backdropNode={sectionNode} imageBacked={imageBacked}>
+    <HeroBand edgeBelow={edgeBelow} surface={surface} fullViewport={fullViewport} center backdropNode={sectionNode} imageBacked={imageBacked}>
       <div className="container relative z-10 grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <div className={mediaLeft ? 'lg:order-2' : ''}>{textBlock}</div>
         <div className={mediaLeft ? 'lg:order-1' : ''}>{media}</div>

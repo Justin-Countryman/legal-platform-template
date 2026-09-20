@@ -54,7 +54,7 @@ export function RelatedPosts({
         >
           {posts.map((post) => (
             <li key={post.slug}>
-              <article className="flex h-full flex-col rounded-ui border border-border bg-background px-5 py-6 shadow-card-rest">
+              <article data-card="" className="flex h-full flex-col rounded-ui border border-border bg-background px-5 py-6 shadow-card-rest">
                 <h3 className="font-heading text-lg font-bold leading-snug text-foreground">
                   <Link
                     href={`/${post.slug}/`}
