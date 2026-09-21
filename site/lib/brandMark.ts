@@ -60,19 +60,3 @@ export function ghostSource(firmName: string | null | undefined, on: boolean): G
   const text = firmInitials(firmName)
   return text ? {text} : null
 }
-
-// ─── The large quote mark (Phase 16D, `[R-494]`) ─────────────────────────────
-//
-// A MASK, not `content: '\201C'`: generated text is exposed in the accessibility
-// tree, and this is an ornament, not punctuation. `TestimonialCard`'s inline quotes
-// are punctuation and are replaced by this where the site draws the ornament, never
-// joined by it. Drawn at the size live law-firm sites draw it (a median of about
-// 133px across the nineteen that have one), not at the third of that the design first
-// proposed.
-
-const quoteSvg =
-  `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 96'>` +
-  `<path d='M0 96V54C0 24 16 4 44 0l6 14C32 19 22 30 22 44h22v52H0zm78 0V54C78 24 94 4 122 0l6 14c-18 5-28 16-28 30h22v52H78z'/>` +
-  `</svg>`
-
-export const QUOTE_GLYPH = `url("data:image/svg+xml,${encodeURIComponent(quoteSvg)}")`

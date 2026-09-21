@@ -261,7 +261,7 @@ export const designSettings = defineType({
     }),
 
     // ─── Drawn Elements (Phase 16D) ───────────────────────────────────────────
-    // Three things a theme draws inside a section. None carries an `initialValue`
+    // Two things a theme draws inside a section. Neither carries an `initialValue`
     // (item 308): a seed is folded into every build and could never be told from a
     // choice, so absent means off and a theme sets them.
     defineField({
@@ -286,21 +286,6 @@ export const designSettings = defineType({
       fieldset: 'drawnElements',
       description:
         'Opens a content section\u2019s body text with a large first letter. Skipped where the paragraph starts with a quotation mark, a bracket or a number, and on centred sections. Leave blank for none.',
-      options: {
-        list: [
-          {title: 'None', value: 'none'},
-          {title: 'On', value: 'on'},
-        ],
-        layout: 'radio',
-      },
-    }),
-    defineField({
-      name: 'quoteMark',
-      title: 'Large Quote Mark',
-      type: 'string',
-      fieldset: 'drawnElements',
-      description:
-        'Draws a large quotation mark above a pull quote and a testimonial, in place of the thin rule beside it. Leave blank for none.',
       options: {
         list: [
           {title: 'None', value: 'none'},

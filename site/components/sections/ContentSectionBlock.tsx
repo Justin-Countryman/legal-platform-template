@@ -196,7 +196,7 @@ export function ContentSectionBlock({
           ) : null
 
         const pullQuote = has(data.pullQuote?.text) ? (
-          <figure data-quote className="mt-8 border-l-2 border-decor pl-6">
+          <figure className="mt-8 border-l-2 border-decor pl-6">
             <blockquote className="font-heading text-xl text-foreground">{t(data.pullQuote?.text)}</blockquote>
             {has(data.pullQuote?.attribution) && (
               <figcaption className="mt-3 text-sm text-foreground-muted">{t(data.pullQuote?.attribution)}</figcaption>

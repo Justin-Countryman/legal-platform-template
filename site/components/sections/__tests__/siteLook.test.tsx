@@ -245,12 +245,4 @@ describe('the drawn elements (Phase 16D)', () => {
       .querySelector('[data-prose]')).toBeNull()
   })
 
-  it('every place a quote is set is marked, so one rule draws the ornament', () => {
-    const withQuote = [{
-      _type: 'contentSection', _id: '1', layout: 'split', heading: 'About',
-      body: [{_type: 'block', _key: 'b', children: [{_type: 'span', _key: 's', text: 'Wills and trusts.'}]}],
-      pullQuote: {text: 'Every plan should make sense.', attribution: 'The partners'},
-    }] as unknown as PageSectionData[]
-    expect(render(<PageSections sections={withQuote} />).container.querySelector('[data-quote]')).not.toBeNull()
-  })
 })
