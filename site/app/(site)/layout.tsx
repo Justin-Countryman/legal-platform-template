@@ -5,7 +5,6 @@
 import {getSiteChrome} from '@/lib/sanity/fetchers'
 import {resolveTokenString, formatPhone} from '@/lib/tokens'
 import {buildDesignTokenCSS, buildColorCSS, buildFontCSS, resolveSidebarDesignSettings} from '@/lib/designTokens'
-import {QUOTE_GLYPH} from '@/lib/brandMark'
 import {dividerShape, readCarry} from '@/lib/dividers'
 import {HeroSchemeProvider} from '@/lib/heroSchemeContext'
 import {HeroSurfaceProvider} from '@/lib/heroSurfaceContext'
@@ -149,17 +148,10 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
   const carry = dividerShape(designTokens?.sectionJoin) ? readCarry(designTokens?.dividerCarry) : []
   const cornered = designTokens?.buttonShape === 'square' && ['sharp', 'subtle'].includes(designTokens?.uiRadius ?? '')
   const headingWeight = designTokens?.headingWeight === 'regular' ? 'regular' : undefined
-  // Phase 16D. The two ornaments a theme can turn on inside a section ride the same
-  // wrapper the heading rule and the carried pieces already do, so their paint
-  // resolves ON the element and the dark, light-island and saturated swaps reach it.
-  // The ghost is not here: it is per band, so it rides the walk (`sectionFrame.ts`).
-  const ornaments = [
-    designTokens?.dropCap === 'on' ? 'dropCap' : null,
-    designTokens?.quoteMark === 'on' ? 'quoteMark' : null,
-  ].filter(Boolean).join(' ')
-  // The quote glyph is geometry, not color, so `:root` is safe (the alias trap of
-  // Phase 16B amendment 9 applies to colors only).
-  const ornamentCSS = ornaments.includes('quoteMark') ? `:root{--quote-glyph:${QUOTE_GLYPH};}` : ''
+  // Phase 16D. The drop cap rides the same wrapper the heading rule and the carried
+  // pieces already do. The ghost is not here: it is per band, so it rides the walk
+  // (`sectionFrame.ts`).
+  const ornaments = designTokens?.dropCap === 'on' ? 'dropCap' : ''
 
   // Merged-header contrast guardrail: when heroMerge is on, the transparent
   // at-top header overlays the hero, so its text polarity must follow the
@@ -210,7 +202,7 @@ export default async function SiteLayout({children}: {children: React.ReactNode}
           crossOrigin="anonymous"
         />
       ))}
-      <style dangerouslySetInnerHTML={{__html: tokenCSS + colorCSS + ornamentCSS + headerHeightSSR}} />
+      <style dangerouslySetInnerHTML={{__html: tokenCSS + colorCSS + headerHeightSSR}} />
       {fontCSS && <style dangerouslySetInnerHTML={{__html: fontCSS}} />}
       <div
         data-button-animation={buttonAnimation}

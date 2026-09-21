@@ -876,11 +876,9 @@ export const DESIGN_TOKENS_QUERY = groq`
     // design and the display headings' weight.
     dividerCarry,
     headingWeight,
-    // Phase 16D: the mark drawn large and quiet behind one band, and the two
-    // ornaments a theme can turn on inside a section.
+    // Phase 16D: the mark drawn large and quiet behind one band, and the drop cap.
     brandGhost,
     dropCap,
-    quoteMark,
     "siteHeroBackgroundImage": siteHeroBackgroundImage{
       "src": asset->url,
       "alt": alt,

@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest'
-import {firmInitials, ghostSource, QUOTE_GLYPH} from '../brandMark'
+import {firmInitials, ghostSource} from '../brandMark'
 import {proseTakesDropCap, firstProseCharacter} from '../dropCap'
 
 // Firm names are SHAPES, never a real firm: `[R-198]` keeps a client's name out of
@@ -37,16 +37,6 @@ describe('ghostSource', () => {
   })
   it('is null when the firm name yields no letters, rather than drawing an empty box', () => {
     expect(ghostSource('Law Firm', true)).toBeNull()
-  })
-})
-
-describe('the quote glyph', () => {
-  it('is an inline data URI, so nothing is fetched and CORS cannot refuse it', () => {
-    expect(QUOTE_GLYPH.startsWith('url("data:image/svg+xml,')).toBe(true)
-    expect(QUOTE_GLYPH).not.toMatch(/https?:/)
-  })
-  it('is one color, so a mask reads it as a silhouette', () => {
-    expect(decodeURIComponent(QUOTE_GLYPH)).not.toMatch(/fill=|stroke=/)
   })
 })
 

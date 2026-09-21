@@ -1067,32 +1067,3 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   color: --theme(--color-accent-text);
 }
 
-/* THE LARGE QUOTE MARK (`[R-494]`). A mask in the decor role, so nothing is
-   announced and the dark, light-island and saturated swaps all reach it. It REPLACES
-   the rule beside a quote rather than joining it: two decorations on one quote is the
-   busyness the study criticises. `@supports` and forced colors both remove it, or the
-   fallback is a solid block of the decor color. */
-[data-ornament~="quoteMark"] [data-quote]::before {
-  content: '';
-  display: block;
-  width: var(--quote-glyph-size, 7rem);
-  height: calc(var(--quote-glyph-size, 7rem) * 0.75);
-  margin-block-end: 0.5rem;
-  background-color: --theme(--color-decor);
-  -webkit-mask: var(--quote-glyph) left top / contain no-repeat;
-  mask: var(--quote-glyph) left top / contain no-repeat;
-  pointer-events: none;
-}
-[data-ornament~="quoteMark"] [data-quote] { border-inline-start: 0; padding-inline-start: 0; }
-/* Inside a card the ornament is half size, and the card's own inline quotation marks
-   are punctuation that the ornament replaces, so a card never shows two. */
-[data-ornament~="quoteMark"] [data-card] [data-quote] { --quote-glyph-size: 3.5rem; }
-[data-ornament~="quoteMark"] [data-quote] > p::before,
-[data-ornament~="quoteMark"] [data-quote] > p::after { content: none; }
-[data-ornament~="quoteMark"] .text-center [data-quote]::before { margin-inline: auto; }
-@supports not (mask-image: none) {
-  [data-ornament~="quoteMark"] [data-quote]::before { display: none; }
-}
-@media (forced-colors: active) {
-  [data-ornament~="quoteMark"] [data-quote]::before { display: none; }
-}

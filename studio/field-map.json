@@ -5341,20 +5341,6 @@
           "type": "string"
         },
         {
-          "description": "Draws a large quotation mark above a pull quote and a testimonial, in place of the thin rule beside it. Leave blank for none.",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "none",
-              "on"
-            ]
-          },
-          "path": "quoteMark",
-          "title": "Large Quote Mark",
-          "type": "string"
-        },
-        {
           "description": "Used in headers, footers, and sections with a light background. Typically your full-color or dark logo.",
           "jsonType": "object",
           "path": "logoOnLight",
