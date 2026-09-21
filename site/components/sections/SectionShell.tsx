@@ -153,6 +153,26 @@ export function SectionShell({
     />
   ) : null
 
+  // THE GHOST (Phase 16D, `[R-492]`). One decorative child beside the texture, in the
+  // same ink and at the same opacity, so `validateWcag`'s sweep covers the blend. The
+  // walk decides which band draws it, because no band can know it is the first.
+  // `-z-10` needs the band's `isolate`, which is why `isolate` now follows either
+  // layer and not the texture alone: with the texture's `isolate` and the ghost's
+  // rule mutually exclusive, the ghost's stacking context did not exist and the
+  // measured band pixel was the bare ground.
+  const ghostText = seam.ghost ? seam.site?.ghost?.text ?? null : null
+  const ghost = ghostText ? (
+    <div
+      aria-hidden="true"
+      data-decor-layer
+      className={`pointer-events-none absolute inset-0 -z-10 overflow-hidden ${resolved.ringContext === 'dark' ? 'section-texture-dark' : 'text-brand-dark opacity-4'}`}
+    >
+      <span className="decor-ghost absolute right-[6%] top-1/2 -translate-y-1/2 text-[30vw] md:text-[22vw] lg:text-[16rem]">
+        {ghostText}
+      </span>
+    </div>
+  ) : null
+
   return (
     <Tag
       data-ring-context={resolved.ringContext}
@@ -174,7 +194,7 @@ export function SectionShell({
         // An inset band's own box is transparent; the panel inside carries the
         // surface. A normal band carries it here.
         !isInset && resolved.surfaceClass,
-        resolved.textured && !isInset && 'isolate',
+        (resolved.textured || ghost) && !isInset && 'isolate',
         top,
         bottom,
         className,
@@ -202,6 +222,7 @@ export function SectionShell({
       ) : (
         <>
           {texture}
+          {ghost}
           <div className={[contained ? 'container relative' : 'relative', seam.divider?.mode === 'cut' && 'mt-divider', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
         </>
       )}

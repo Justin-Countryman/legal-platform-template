@@ -17,10 +17,7 @@
     "headingCase",
     "imageFrame",
     "patternTexture",
-    "patternGround",
-    "brandGhost",
-    "dropCap",
-    "quoteMark"
+    "patternGround"
   ],
   "themeDefaults": {
     "fontPairingPreset": null,
@@ -39,10 +36,7 @@
     "headingCase": "normal",
     "imageFrame": "plain",
     "patternTexture": null,
-    "patternGround": "light",
-    "brandGhost": "none",
-    "dropCap": "none",
-    "quoteMark": "none"
+    "patternGround": "light"
   },
   "themePicks": [
     "sectionJoin",
@@ -84,41 +78,14 @@
         "headingCase": "normal",
         "imageFrame": "plain",
         "patternTexture": null,
-        "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "on"
+        "patternGround": "light"
       },
       "picks": {
         "sectionJoin": null,
         "dividerCarry": [],
         "headingRule": "line"
       },
-      "previous": [
-        {
-          "settings": {
-            "fontPairingPreset": 2,
-            "marketingScale": "md",
-            "taglineStyle": "plain",
-            "uiRadius": "subtle",
-            "buttonShape": "square",
-            "buttonAnimation": "sweep",
-            "tertiaryStyle": "tracked",
-            "elevationStyle": "0",
-            "motionTempo": "relaxed",
-            "cardHover": "imageZoom",
-            "attorneyCardStyle": "portrait",
-            "headingEmphasisStyle": "italic",
-            "headingCase": "normal",
-            "imageFrame": "plain"
-          },
-          "picks": {
-            "sectionJoin": null,
-            "dividerCarry": [],
-            "headingRule": "line"
-          }
-        }
-      ],
+      "previous": [],
       "suggestedPalettes": [
         "black-gold",
         "burgundy-gold",
@@ -154,10 +121,7 @@
         "headingCase": "normal",
         "imageFrame": "framed",
         "patternTexture": "diagonalHatch",
-        "patternGround": "dark",
-        "brandGhost": "on",
-        "dropCap": "none",
-        "quoteMark": "on"
+        "patternGround": "dark"
       },
       "picks": {
         "sectionJoin": "angled",
@@ -166,35 +130,7 @@
         ],
         "headingRule": "line"
       },
-      "previous": [
-        {
-          "settings": {
-            "fontPairingPreset": 4,
-            "marketingScale": "md",
-            "taglineStyle": "plain",
-            "uiRadius": "sharp",
-            "buttonShape": "square",
-            "buttonAnimation": "none",
-            "tertiaryStyle": "tracked",
-            "elevationStyle": "0",
-            "motionTempo": "balanced",
-            "cardHover": "accentBorder",
-            "attorneyCardStyle": "minimal",
-            "headingEmphasisStyle": "italic",
-            "headingCase": "normal",
-            "imageFrame": "framed",
-            "patternTexture": "diagonalHatch",
-            "patternGround": "dark"
-          },
-          "picks": {
-            "sectionJoin": "angled",
-            "dividerCarry": [
-              "cards"
-            ],
-            "headingRule": "line"
-          }
-        }
-      ],
+      "previous": [],
       "suggestedPalettes": [
         "black-gold",
         "ink-lavender",
@@ -230,41 +166,14 @@
         "headingCase": "normal",
         "imageFrame": "framed",
         "patternTexture": null,
-        "patternGround": "light",
-        "brandGhost": "on",
-        "dropCap": "on",
-        "quoteMark": "none"
+        "patternGround": "light"
       },
       "picks": {
         "sectionJoin": null,
         "dividerCarry": [],
         "headingRule": "leadDiamond"
       },
-      "previous": [
-        {
-          "settings": {
-            "fontPairingPreset": 13,
-            "marketingScale": "sm",
-            "taglineStyle": "titlecase",
-            "uiRadius": "subtle",
-            "buttonShape": "square",
-            "buttonAnimation": "none",
-            "tertiaryStyle": "plain",
-            "elevationStyle": "0",
-            "motionTempo": "relaxed",
-            "cardHover": "lift",
-            "attorneyCardStyle": "classic",
-            "headingEmphasisStyle": "italic",
-            "headingCase": "normal",
-            "imageFrame": "framed"
-          },
-          "picks": {
-            "sectionJoin": null,
-            "dividerCarry": [],
-            "headingRule": "leadDiamond"
-          }
-        }
-      ],
+      "previous": [],
       "suggestedPalettes": [
         "navy-brass",
         "navy-ice",
@@ -301,10 +210,7 @@
         "headingCase": "normal",
         "imageFrame": "plain",
         "patternTexture": "scallop",
-        "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none"
+        "patternGround": "light"
       },
       "picks": {
         "sectionJoin": null,
@@ -347,10 +253,7 @@
         "headingCase": "upper",
         "imageFrame": "plain",
         "patternTexture": null,
-        "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none"
+        "patternGround": "light"
       },
       "picks": {
         "sectionJoin": null,
@@ -393,10 +296,7 @@
         "headingCase": "upper",
         "imageFrame": "plain",
         "patternTexture": "diamondLattice",
-        "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "on",
-        "quoteMark": "none"
+        "patternGround": "light"
       },
       "picks": {
         "sectionJoin": "peak",
@@ -405,35 +305,7 @@
         ],
         "headingRule": null
       },
-      "previous": [
-        {
-          "settings": {
-            "fontPairingPreset": 1,
-            "marketingScale": "md",
-            "taglineStyle": "lined",
-            "uiRadius": "sharp",
-            "buttonShape": "square",
-            "buttonAnimation": "none",
-            "tertiaryStyle": "tracked",
-            "elevationStyle": "0",
-            "motionTempo": "relaxed",
-            "cardHover": "accentUnderline",
-            "attorneyCardStyle": "classic",
-            "headingEmphasisStyle": "italic",
-            "headingCase": "upper",
-            "imageFrame": "plain",
-            "patternTexture": "diamondLattice",
-            "patternGround": "light"
-          },
-          "picks": {
-            "sectionJoin": "peak",
-            "dividerCarry": [
-              "cards"
-            ],
-            "headingRule": null
-          }
-        }
-      ],
+      "previous": [],
       "suggestedPalettes": [
         "forest-brass",
         "charcoal-coral",
@@ -469,10 +341,7 @@
         "headingCase": "normal",
         "imageFrame": "slab",
         "patternTexture": "pinstripe",
-        "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none"
+        "patternGround": "light"
       },
       "picks": {
         "sectionJoin": null,
@@ -542,10 +411,7 @@
         "headingCase": "normal",
         "imageFrame": "plain",
         "patternTexture": null,
-        "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none"
+        "patternGround": "light"
       },
       "picks": {
         "sectionJoin": null,
@@ -614,10 +480,7 @@
         "headingCase": "upper",
         "imageFrame": "plain",
         "patternTexture": "scallop",
-        "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none"
+        "patternGround": "light"
       },
       "picks": {
         "sectionJoin": "notch",
@@ -1001,9 +864,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -1036,9 +896,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -1067,10 +924,7 @@
         "headingCase": "normal",
         "imageFrame": "framed",
         "patternTexture": "diagonalHatch",
-        "patternGround": "dark",
-        "brandGhost": "on",
-        "dropCap": "none",
-        "quoteMark": "on"
+        "patternGround": "dark"
       },
       "match": null,
       "platformDefault": false,
@@ -1092,9 +946,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -1124,9 +975,6 @@
         "imageFrame": "framed",
         "patternTexture": null,
         "patternGround": "light",
-        "brandGhost": "on",
-        "dropCap": "on",
-        "quoteMark": "none",
         "customFonts": {
           "headingFont": {
             "regular": {
@@ -1158,9 +1006,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -1189,10 +1034,7 @@
         "headingCase": "normal",
         "imageFrame": "plain",
         "patternTexture": null,
-        "patternGround": "dark",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "on"
+        "patternGround": "dark"
       },
       "match": {
         "id": "canyon",
@@ -1217,9 +1059,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -1249,9 +1088,6 @@
         "imageFrame": "plain",
         "patternTexture": null,
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "on",
         "sectionJoin": null,
         "dividerCarry": [],
         "headingRule": "line"
@@ -1279,9 +1115,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -1311,9 +1144,6 @@
         "imageFrame": "plain",
         "patternTexture": null,
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "on",
         "sectionJoin": "wave"
       },
       "match": {
@@ -1339,9 +1169,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -1371,9 +1198,6 @@
         "imageFrame": "plain",
         "patternTexture": null,
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "on",
         "headingRule": "hatched"
       },
       "match": {
@@ -1399,62 +1223,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
-          "headingRule": "line"
-        },
-        "unset": [
-          "dividerCarry",
-          "patternTexture",
-          "sectionJoin"
-        ]
-      }
-    },
-    {
-      "label": "canyon, earlier version 1",
-      "doc": {
-        "fontPairingPreset": 2,
-        "marketingScale": "md",
-        "taglineStyle": "plain",
-        "uiRadius": "subtle",
-        "buttonShape": "square",
-        "buttonAnimation": "sweep",
-        "tertiaryStyle": "tracked",
-        "elevationStyle": "0",
-        "motionTempo": "relaxed",
-        "cardHover": "imageZoom",
-        "attorneyCardStyle": "portrait",
-        "headingEmphasisStyle": "italic",
-        "headingCase": "normal",
-        "imageFrame": "plain"
-      },
-      "match": {
-        "id": "canyon",
-        "current": false
-      },
-      "platformDefault": false,
-      "canyonPatch": {
-        "set": {
-          "fontPairingPreset": 2,
-          "marketingScale": "md",
-          "taglineStyle": "plain",
-          "uiRadius": "subtle",
-          "buttonShape": "square",
-          "buttonAnimation": "sweep",
-          "tertiaryStyle": "tracked",
-          "elevationStyle": "0",
-          "motionTempo": "relaxed",
-          "cardHover": "imageZoom",
-          "attorneyCardStyle": "portrait",
-          "headingEmphasisStyle": "italic",
-          "headingWeight": "bold",
-          "headingCase": "normal",
-          "imageFrame": "plain",
-          "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -1484,9 +1252,6 @@
         "imageFrame": "framed",
         "patternTexture": "diagonalHatch",
         "patternGround": "dark",
-        "brandGhost": "on",
-        "dropCap": "none",
-        "quoteMark": "on",
         "sectionJoin": "angled",
         "dividerCarry": [
           "cards"
@@ -1516,9 +1281,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -1548,9 +1310,6 @@
         "imageFrame": "framed",
         "patternTexture": "diagonalHatch",
         "patternGround": "dark",
-        "brandGhost": "on",
-        "dropCap": "none",
-        "quoteMark": "on",
         "sectionJoin": "wave"
       },
       "match": {
@@ -1576,9 +1335,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -1608,9 +1364,6 @@
         "imageFrame": "framed",
         "patternTexture": "diagonalHatch",
         "patternGround": "dark",
-        "brandGhost": "on",
-        "dropCap": "none",
-        "quoteMark": "on",
         "headingRule": "hatched"
       },
       "match": {
@@ -1636,64 +1389,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
-          "headingRule": "line"
-        },
-        "unset": [
-          "dividerCarry",
-          "patternTexture",
-          "sectionJoin"
-        ]
-      }
-    },
-    {
-      "label": "graphite, earlier version 1",
-      "doc": {
-        "fontPairingPreset": 4,
-        "marketingScale": "md",
-        "taglineStyle": "plain",
-        "uiRadius": "sharp",
-        "buttonShape": "square",
-        "buttonAnimation": "none",
-        "tertiaryStyle": "tracked",
-        "elevationStyle": "0",
-        "motionTempo": "balanced",
-        "cardHover": "accentBorder",
-        "attorneyCardStyle": "minimal",
-        "headingEmphasisStyle": "italic",
-        "headingCase": "normal",
-        "imageFrame": "framed",
-        "patternTexture": "diagonalHatch",
-        "patternGround": "dark"
-      },
-      "match": {
-        "id": "graphite",
-        "current": false
-      },
-      "platformDefault": false,
-      "canyonPatch": {
-        "set": {
-          "fontPairingPreset": 2,
-          "marketingScale": "md",
-          "taglineStyle": "plain",
-          "uiRadius": "subtle",
-          "buttonShape": "square",
-          "buttonAnimation": "sweep",
-          "tertiaryStyle": "tracked",
-          "elevationStyle": "0",
-          "motionTempo": "relaxed",
-          "cardHover": "imageZoom",
-          "attorneyCardStyle": "portrait",
-          "headingEmphasisStyle": "italic",
-          "headingWeight": "bold",
-          "headingCase": "normal",
-          "imageFrame": "plain",
-          "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -1723,9 +1418,6 @@
         "imageFrame": "framed",
         "patternTexture": null,
         "patternGround": "light",
-        "brandGhost": "on",
-        "dropCap": "on",
-        "quoteMark": "none",
         "sectionJoin": null,
         "dividerCarry": [],
         "headingRule": "leadDiamond"
@@ -1753,9 +1445,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -1785,9 +1474,6 @@
         "imageFrame": "framed",
         "patternTexture": null,
         "patternGround": "light",
-        "brandGhost": "on",
-        "dropCap": "on",
-        "quoteMark": "none",
         "sectionJoin": "wave"
       },
       "match": {
@@ -1813,9 +1499,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -1845,9 +1528,6 @@
         "imageFrame": "framed",
         "patternTexture": null,
         "patternGround": "light",
-        "brandGhost": "on",
-        "dropCap": "on",
-        "quoteMark": "none",
         "headingRule": "hatched"
       },
       "match": {
@@ -1873,62 +1553,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
-          "headingRule": "line"
-        },
-        "unset": [
-          "dividerCarry",
-          "patternTexture",
-          "sectionJoin"
-        ]
-      }
-    },
-    {
-      "label": "walnut, earlier version 1",
-      "doc": {
-        "fontPairingPreset": 13,
-        "marketingScale": "sm",
-        "taglineStyle": "titlecase",
-        "uiRadius": "subtle",
-        "buttonShape": "square",
-        "buttonAnimation": "none",
-        "tertiaryStyle": "plain",
-        "elevationStyle": "0",
-        "motionTempo": "relaxed",
-        "cardHover": "lift",
-        "attorneyCardStyle": "classic",
-        "headingEmphasisStyle": "italic",
-        "headingCase": "normal",
-        "imageFrame": "framed"
-      },
-      "match": {
-        "id": "walnut",
-        "current": false
-      },
-      "platformDefault": false,
-      "canyonPatch": {
-        "set": {
-          "fontPairingPreset": 2,
-          "marketingScale": "md",
-          "taglineStyle": "plain",
-          "uiRadius": "subtle",
-          "buttonShape": "square",
-          "buttonAnimation": "sweep",
-          "tertiaryStyle": "tracked",
-          "elevationStyle": "0",
-          "motionTempo": "relaxed",
-          "cardHover": "imageZoom",
-          "attorneyCardStyle": "portrait",
-          "headingEmphasisStyle": "italic",
-          "headingWeight": "bold",
-          "headingCase": "normal",
-          "imageFrame": "plain",
-          "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -1958,9 +1582,6 @@
         "imageFrame": "plain",
         "patternTexture": "scallop",
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none",
         "sectionJoin": null,
         "dividerCarry": [],
         "headingRule": "dotted"
@@ -1988,9 +1609,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -2020,9 +1638,6 @@
         "imageFrame": "plain",
         "patternTexture": "scallop",
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none",
         "sectionJoin": "wave"
       },
       "match": {
@@ -2048,9 +1663,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -2080,9 +1692,6 @@
         "imageFrame": "plain",
         "patternTexture": "scallop",
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none",
         "headingRule": "hatched"
       },
       "match": {
@@ -2108,9 +1717,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -2140,9 +1746,6 @@
         "imageFrame": "plain",
         "patternTexture": null,
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none",
         "sectionJoin": null,
         "dividerCarry": [],
         "headingRule": "slab"
@@ -2170,9 +1773,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -2202,9 +1802,6 @@
         "imageFrame": "plain",
         "patternTexture": null,
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none",
         "sectionJoin": "wave"
       },
       "match": {
@@ -2230,9 +1827,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -2262,9 +1856,6 @@
         "imageFrame": "plain",
         "patternTexture": null,
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none",
         "headingRule": "hatched"
       },
       "match": {
@@ -2290,9 +1881,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -2322,9 +1910,6 @@
         "imageFrame": "plain",
         "patternTexture": "diamondLattice",
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "on",
-        "quoteMark": "none",
         "sectionJoin": "peak",
         "dividerCarry": [
           "cards"
@@ -2354,9 +1939,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -2386,9 +1968,6 @@
         "imageFrame": "plain",
         "patternTexture": "diamondLattice",
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "on",
-        "quoteMark": "none",
         "sectionJoin": "wave"
       },
       "match": {
@@ -2414,9 +1993,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -2446,9 +2022,6 @@
         "imageFrame": "plain",
         "patternTexture": "diamondLattice",
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "on",
-        "quoteMark": "none",
         "headingRule": "hatched"
       },
       "match": {
@@ -2474,64 +2047,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
-          "headingRule": "line"
-        },
-        "unset": [
-          "dividerCarry",
-          "patternTexture",
-          "sectionJoin"
-        ]
-      }
-    },
-    {
-      "label": "marble, earlier version 1",
-      "doc": {
-        "fontPairingPreset": 1,
-        "marketingScale": "md",
-        "taglineStyle": "lined",
-        "uiRadius": "sharp",
-        "buttonShape": "square",
-        "buttonAnimation": "none",
-        "tertiaryStyle": "tracked",
-        "elevationStyle": "0",
-        "motionTempo": "relaxed",
-        "cardHover": "accentUnderline",
-        "attorneyCardStyle": "classic",
-        "headingEmphasisStyle": "italic",
-        "headingCase": "upper",
-        "imageFrame": "plain",
-        "patternTexture": "diamondLattice",
-        "patternGround": "light"
-      },
-      "match": {
-        "id": "marble",
-        "current": false
-      },
-      "platformDefault": false,
-      "canyonPatch": {
-        "set": {
-          "fontPairingPreset": 2,
-          "marketingScale": "md",
-          "taglineStyle": "plain",
-          "uiRadius": "subtle",
-          "buttonShape": "square",
-          "buttonAnimation": "sweep",
-          "tertiaryStyle": "tracked",
-          "elevationStyle": "0",
-          "motionTempo": "relaxed",
-          "cardHover": "imageZoom",
-          "attorneyCardStyle": "portrait",
-          "headingEmphasisStyle": "italic",
-          "headingWeight": "bold",
-          "headingCase": "normal",
-          "imageFrame": "plain",
-          "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -2561,9 +2076,6 @@
         "imageFrame": "slab",
         "patternTexture": "pinstripe",
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none",
         "sectionJoin": null,
         "dividerCarry": [],
         "headingRule": "line"
@@ -2591,9 +2103,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -2623,9 +2132,6 @@
         "imageFrame": "slab",
         "patternTexture": "pinstripe",
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none",
         "sectionJoin": "wave"
       },
       "match": {
@@ -2651,9 +2157,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -2683,9 +2186,6 @@
         "imageFrame": "slab",
         "patternTexture": "pinstripe",
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none",
         "headingRule": "hatched"
       },
       "match": {
@@ -2711,9 +2211,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -2766,9 +2263,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -2798,9 +2292,6 @@
         "imageFrame": "plain",
         "patternTexture": null,
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none",
         "sectionJoin": null,
         "dividerCarry": [],
         "headingRule": "line"
@@ -2828,9 +2319,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -2860,9 +2348,6 @@
         "imageFrame": "plain",
         "patternTexture": null,
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none",
         "sectionJoin": "wave"
       },
       "match": {
@@ -2888,9 +2373,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -2920,9 +2402,6 @@
         "imageFrame": "plain",
         "patternTexture": null,
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none",
         "headingRule": "hatched"
       },
       "match": {
@@ -2948,9 +2427,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -3003,9 +2479,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -3035,9 +2508,6 @@
         "imageFrame": "plain",
         "patternTexture": "scallop",
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none",
         "sectionJoin": "notch",
         "dividerCarry": [],
         "headingRule": "leadDot"
@@ -3065,9 +2535,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -3097,9 +2564,6 @@
         "imageFrame": "plain",
         "patternTexture": "scallop",
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none",
         "sectionJoin": "wave"
       },
       "match": {
@@ -3125,9 +2589,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [
@@ -3157,9 +2618,6 @@
         "imageFrame": "plain",
         "patternTexture": "scallop",
         "patternGround": "light",
-        "brandGhost": "none",
-        "dropCap": "none",
-        "quoteMark": "none",
         "headingRule": "hatched"
       },
       "match": {
@@ -3185,9 +2643,6 @@
           "headingCase": "normal",
           "imageFrame": "plain",
           "patternGround": "light",
-          "brandGhost": "none",
-          "dropCap": "none",
-          "quoteMark": "on",
           "headingRule": "line"
         },
         "unset": [

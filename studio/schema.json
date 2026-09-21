@@ -18245,6 +18245,57 @@
         },
         "optional": true
       },
+      "brandGhost": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "none"
+            },
+            {
+              "type": "string",
+              "value": "on"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "dropCap": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "none"
+            },
+            {
+              "type": "string",
+              "value": "on"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "quoteMark": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "none"
+            },
+            {
+              "type": "string",
+              "value": "on"
+            }
+          ]
+        },
+        "optional": true
+      },
       "logoOnLight": {
         "type": "objectAttribute",
         "value": {

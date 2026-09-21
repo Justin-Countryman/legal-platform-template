@@ -248,6 +248,9 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
   // hero's spacer, where neither checker looks.
   'divider-cut', 'divider-rise', 'divider-flip', 'mt-divider', 'h-divider',
   'before:bg-background', 'before:bg-hero-tint', 'before:bg-muted', 'before:bg-brand-dark', 'before:bg-accent-fill',
+  // Phase 16D: the ghost's own classes, which live in `SectionShell`'s JSX but whose
+  // utility is defined in `globals.css`, so the resolution test covers them too.
+  'decor-ghost', 'section-texture-dark', 'text-brand-dark', 'opacity-4',
 ]
   .join(' ')
   .split(/\s+/)

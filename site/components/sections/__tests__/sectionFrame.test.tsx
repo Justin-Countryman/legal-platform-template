@@ -1,3 +1,4 @@
+import {type SiteLook} from '@/components/sections/sectionFrame'
 import {describe, expect, it, vi} from 'vitest'
 import {forwardRef} from 'react'
 import {render} from '@testing-library/react'
@@ -343,5 +344,76 @@ describe('walkFrame, directly', () => {
     const out = walkFrame([{}, {}], () => ({appearance: undefined, empty: false}))
     expect(out[1].seam.seamTop).toBe(true)
     expect(out[1].seam.previousGround).toBe('light')
+  })
+})
+
+describe('the ghost, placed once per page (Phase 16D, `[R-492]`, `[R-495]`)', () => {
+  const ghosted: SiteLook = {
+    imageFrame: null, sectionJoin: 'straight', patternDark: false,
+    cardHover: null, attorneyCardStyle: null, ghost: {text: 'SO'},
+  }
+  const noGhost = {...ghosted, ghost: null}
+  const page = (blocks: HomepageBlock[], site = ghosted) =>
+    render(<HomepageCanvas blocks={blocks} site={site} hero="dark" napTokens={tokens} resultsDisclaimer="Past results do not guarantee a future outcome." />)
+  const layers = (c: HTMLElement) => Array.from(c.querySelectorAll('[data-decor-layer]'))
+
+  it('draws nothing when the site has not turned it on', () => {
+    expect(layers(page([band('a', {surface: 'dark'})], noGhost).container)).toHaveLength(0)
+  })
+
+  it('draws on exactly one band, however many are eligible', () => {
+    const {container} = page([
+      band('a', {surface: 'dark'}), band('b', {surface: 'dark'}),
+      band('c', {surface: 'light'}), band('d', {surface: 'dark'}),
+    ])
+    expect(layers(container)).toHaveLength(1)
+  })
+
+  it('prefers a dark band over an earlier light one', () => {
+    const {container} = page([band('a', {surface: 'light'}), band('b', {surface: 'dark'})])
+    const sections = sectionsOf(container)
+    expect(sections[0].querySelector('[data-decor-layer]')).toBeNull()
+    expect(sections[1].querySelector('[data-decor-layer]')).not.toBeNull()
+  })
+
+  it('falls back to the first eligible band when no band is dark', () => {
+    const {container} = page([band('a', {surface: 'light'}), band('b', {surface: 'tint'})])
+    expect(sectionsOf(container)[0].querySelector('[data-decor-layer]')).not.toBeNull()
+  })
+
+  it('never draws on a saturated or an image band: neither blend is swept', () => {
+    for (const surface of ['saturated', 'image'] as const) {
+      expect(layers(page([band('a', {surface})]).container)).toHaveLength(0)
+    }
+  })
+
+  it('never draws on a Pattern band, which already carries a decorative layer', () => {
+    expect(layers(page([band('a', {surface: 'pattern'})]).container)).toHaveLength(0)
+    // …and it takes the next band instead rather than giving up on the page.
+    const {container} = page([band('a', {surface: 'pattern'}), band('b', {surface: 'dark'})])
+    expect(sectionsOf(container)[1].querySelector('[data-decor-layer]')).not.toBeNull()
+  })
+
+  it('never draws on an inset panel, which is a card and not a ground', () => {
+    expect(layers(page([band('a', {surface: 'dark', inset: true})]).container)).toHaveLength(0)
+  })
+
+  it('carries the initials and is hidden from assistive technology', () => {
+    const [layer] = layers(page([band('a', {surface: 'dark'})]).container)
+    expect(layer.getAttribute('aria-hidden')).toBe('true')
+    expect(layer.textContent).toBe('SO')
+  })
+
+  it('takes the band’s own ink: the texture’s on-dark ink on dark, brand-dark on light', () => {
+    const [onDark] = layers(page([band('a', {surface: 'dark'})]).container)
+    expect(onDark.className).toContain('section-texture-dark')
+    const [onLight] = layers(page([band('a', {surface: 'light'})]).container)
+    expect(onLight.className).toContain('text-brand-dark')
+    expect(onLight.className).toContain('opacity-4')
+  })
+
+  it('gives its band the stacking context its -z-10 needs', () => {
+    const [section] = sectionsOf(page([band('a', {surface: 'dark'})]).container)
+    expect(section.className.split(' ')).toContain('isolate')
   })
 })

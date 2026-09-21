@@ -67,7 +67,7 @@ export function FeaturedTestimonialSection({
         )}
 
         {/* Quote */}
-        <blockquote className="border-l-4 border-decor pl-8 text-left">
+        <blockquote data-quote className="border-l-4 border-decor pl-8 text-left">
           <p className="text-xl font-medium leading-relaxed text-foreground md:text-2xl lg:text-3xl">
             {t.quote}
           </p>

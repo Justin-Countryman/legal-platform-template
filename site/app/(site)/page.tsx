@@ -14,6 +14,7 @@ export const revalidate = 3600
 
 import type {Metadata} from 'next'
 import {chromeGlobalCta, chromeHeader, chromeNap, getHomePage, getSiteChrome} from '@/lib/sanity/fetchers'
+import {ghostSource} from '@/lib/brandMark'
 import {siteLookOf} from '@/components/sections/sectionFrame'
 import {firstBandRises} from '@/components/layout/HomepageCanvas'
 import {heroGround} from '@/lib/heroGround'
@@ -181,7 +182,14 @@ export default async function HomePage() {
   const hero: HomeHeroData | null = content?.heading && design ? {...design, ...content} : null
   // Phase 16C: the first band rises into the hero when the site's divider is shaped and
   // the grounds differ, so the hero makes room for it and the walk knows what it meets.
-  const site = siteLookOf((await getSiteChrome())?.designTokens)
+  const chrome = await getSiteChrome()
+  // Phase 16D: the ghost's initials ride the site look, as the photo frame and the
+  // divider already do, so they reach every band through the walk and no section
+  // gains a prop. Derived from the firm's name, never stored (`[R-492]`).
+  const site = {
+    ...siteLookOf(chrome?.designTokens),
+    ghost: ghostSource(header?.siteSettings?.firmName, chrome?.designTokens?.brandGhost === 'on'),
+  }
   const ground = heroGround(hero)
   const edgeBelow = firstBandRises(home?.canvas, site, ground)
 

@@ -71,6 +71,11 @@ export const designSettings = defineType({
       title: 'Section Texture and Edges',
       options: {collapsible: true, collapsed: true},
     },
+    {
+      name: 'drawnElements',
+      title: 'Drawn Elements',
+      options: {collapsible: true, collapsed: true},
+    },
   ],
   fields: [
     // ─── The theme (Phase 16B, [R-468], [R-469], [R-477]) ─────────────────────
@@ -252,6 +257,56 @@ export const designSettings = defineType({
           {title: 'A feature photo\u2019s corner', value: 'photo'},
           {title: 'A mark above headings on dark sections', value: 'mark'},
         ],
+      },
+    }),
+
+    // ─── Drawn Elements (Phase 16D) ───────────────────────────────────────────
+    // Three things a theme draws inside a section. None carries an `initialValue`
+    // (item 308): a seed is folded into every build and could never be told from a
+    // choice, so absent means off and a theme sets them.
+    defineField({
+      name: 'brandGhost',
+      title: 'Ghosted Initials',
+      type: 'string',
+      fieldset: 'drawnElements',
+      description:
+        'Draws the firm\u2019s initials very large and very faint behind one homepage section, in the site\u2019s own heading font. It appears once per page, on a dark section where there is one, and never on interior pages. Leave blank for none.',
+      options: {
+        list: [
+          {title: 'None', value: 'none'},
+          {title: 'On \u2014 once per homepage', value: 'on'},
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
+      name: 'dropCap',
+      title: 'Drop Cap',
+      type: 'string',
+      fieldset: 'drawnElements',
+      description:
+        'Opens a content section\u2019s body text with a large first letter. Skipped where the paragraph starts with a quotation mark, a bracket or a number, and on centred sections. Leave blank for none.',
+      options: {
+        list: [
+          {title: 'None', value: 'none'},
+          {title: 'On', value: 'on'},
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
+      name: 'quoteMark',
+      title: 'Large Quote Mark',
+      type: 'string',
+      fieldset: 'drawnElements',
+      description:
+        'Draws a large quotation mark above a pull quote and a testimonial, in place of the thin rule beside it. Leave blank for none.',
+      options: {
+        list: [
+          {title: 'None', value: 'none'},
+          {title: 'On', value: 'on'},
+        ],
+        layout: 'radio',
       },
     }),
 

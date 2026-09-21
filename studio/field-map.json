@@ -5313,6 +5313,48 @@
           "type": "array"
         },
         {
+          "description": "Draws the firm’s initials very large and very faint behind one homepage section, in the site’s own heading font. It appears once per page, on a dark section where there is one, and never on interior pages. Leave blank for none.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "on"
+            ]
+          },
+          "path": "brandGhost",
+          "title": "Ghosted Initials",
+          "type": "string"
+        },
+        {
+          "description": "Opens a content section’s body text with a large first letter. Skipped where the paragraph starts with a quotation mark, a bracket or a number, and on centred sections. Leave blank for none.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "on"
+            ]
+          },
+          "path": "dropCap",
+          "title": "Drop Cap",
+          "type": "string"
+        },
+        {
+          "description": "Draws a large quotation mark above a pull quote and a testimonial, in place of the thin rule beside it. Leave blank for none.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "on"
+            ]
+          },
+          "path": "quoteMark",
+          "title": "Large Quote Mark",
+          "type": "string"
+        },
+        {
           "description": "Used in headers, footers, and sections with a light background. Typically your full-color or dark logo.",
           "jsonType": "object",
           "path": "logoOnLight",
