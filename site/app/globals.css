@@ -944,6 +944,10 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   --spacing-divider: var(--divider-depth, 0px);
 }
 @utility divider-cut {
+  /* Phase 16E: what this band's own cut takes out of its top, for the raised photo's
+     utility. At :root `--divider-depth` is the site's shape whether or not THIS band
+     draws a cut, so the per-band value has to be set by the class that draws one. */
+  --band-divider: var(--divider-depth, 0px);
   &::before {
     content: '';
     position: absolute;
@@ -970,6 +974,33 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 }
 @supports not (clip-path: polygon(0 0)) {
   .divider-cut::before, .divider-rise::before { display: none; }
+  /* No clip-path means no cut, so the band's content is not pushed down and the
+     raised photo must not compensate for a cut that is not drawn. */
+  .divider-cut { --band-divider: 0px; }
+}
+
+/* ─── The raised photo (Phase 16E, `[R-475]`) ────────────────────────────────── */
+/* A feature photo rises into the band above by EXACTLY `--photo-rise`, and the band
+   above grows its bottom padding by the same rem number, so the photo covers padding
+   that band added for it and never its content. The margin therefore has to cancel
+   everything between the band's top edge and the photo: the band's own top padding
+   (`--band-pt`, published by SectionShell from the spacing preset) and the space the
+   band's own divider took (`--band-divider`, set by `divider-cut` above). Written as
+   one utility rather than a Tailwind step because the divider's depth is
+   `clamp(1rem, 4.5vw, 4rem)` and no fixed step can follow it; this is how
+   `divider-cut` itself satisfies the no-arbitrary-values rule. */
+@theme inline {
+  --photo-rise: 4rem;
+}
+/* The band's own top padding, as a value the utility above can subtract. One utility
+   per spacing preset rather than four arbitrary-property classes ([R-463]): the presets
+   are a closed set, so these are real utilities and the class checker can see them. */
+@utility band-pt-compact  { --band-pt: 3rem;   @variant md { --band-pt: 4rem; } }
+@utility band-pt-normal   { --band-pt: 4rem;   @variant md { --band-pt: 6rem; } @variant lg { --band-pt: 7rem; } }
+@utility band-pt-spacious { --band-pt: 6rem;   @variant md { --band-pt: 8rem; } @variant lg { --band-pt: 10rem; } }
+@utility band-pt-tight    { --band-pt: 2.5rem; @variant md { --band-pt: 3rem; } }
+@utility photo-rise {
+  margin-top: calc(-1 * (var(--band-pt, 0px) + var(--band-divider, 0px) + var(--photo-rise)));
 }
 
 /* ─── The carried pieces (Phase 16C, `[R-483]`) ──────────────────────────────── */

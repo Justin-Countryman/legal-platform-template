@@ -67,10 +67,11 @@ const DIVIDER_OWN: Record<string, string> = {
   'bg-brand-dark': 'before:bg-brand-dark', 'bg-accent-fill': 'before:bg-accent-fill',
 }
 
-const OVERLAP_CLASS: Record<'none' | 'small' | 'large', string> = {
+const OVERLAP_CLASS: Record<'none' | 'small' | 'large' | 'photo', string> = {
   none:  '',
   small: 'md:-mt-12 md:relative md:z-10',
   large: 'md:-mt-24 md:relative md:z-10',
+  photo: '',
 }
 
 type SectionShellProps = {
@@ -120,7 +121,7 @@ export function SectionShell({
   // The three top-padding states are exclusive, most specific first. An
   // overlapping panel takes no top padding from `md`, because the negative margin
   // is measured against it; a seam halves it; otherwise it is the preset.
-  const top = overlap !== 'none' ? steps.topOverlap : seam.seamTop ? steps.seamTop : steps.top
+  const top = overlap === 'small' || overlap === 'large' ? steps.topOverlap : seam.seamTop ? steps.seamTop : steps.top
   // The band above an overlapping panel makes room for it.
   const bottom = seam.nextOverlap !== 'none' ? steps.bottomBeforeOverlap[seam.nextOverlap] : steps.bottom
 
@@ -191,6 +192,9 @@ export function SectionShell({
         seam.divider?.mode === 'rise' && `divider-rise ${DIVIDER_OWN[resolved.surfaceClass] ?? ''}`,
         seam.divider?.flip && 'divider-flip',
         OVERLAP_CLASS[overlap],
+        // Phase 16E: the band's own top padding, published so the raised photo's
+        // utility can cancel it. Only on a band that raises one.
+        seam.raisePhoto && steps.ptVar,
         // An inset band's own box is transparent; the panel inside carries the
         // surface. A normal band carries it here.
         !isInset && resolved.surfaceClass,

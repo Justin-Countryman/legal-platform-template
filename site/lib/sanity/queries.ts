@@ -879,6 +879,7 @@ export const DESIGN_TOKENS_QUERY = groq`
     // Phase 16D: the mark drawn large and quiet behind one band, and the drop cap.
     brandGhost,
     dropCap,
+    sectionOverlap,
     "siteHeroBackgroundImage": siteHeroBackgroundImage{
       "src": asset->url,
       "alt": alt,

@@ -108,7 +108,11 @@ export type SectionSpacingSteps = {
   /** Bottom padding of the band ABOVE an overlapping panel: the preset's own plus
    *  the overlap from `md`, so the panel covers only padding it added and never
    *  the band's content (Phase 16A, `[R-475]`). */
-  bottomBeforeOverlap: {small: string; large: string}
+  bottomBeforeOverlap: {small: string; large: string; photo: string}
+  /** The utility that publishes this preset's own top padding as `--band-pt`, so the
+   *  raised photo can cancel it at every breakpoint (Phase 16E). Put on a band that
+   *  raises a photo and on no other, so nothing else gains a class. */
+  ptVar: string
 }
 
 // Vertical rhythm presets. Horizontal padding (px-[5%]) is applied by the shell.
@@ -127,21 +131,24 @@ export const SECTION_SPACING: Record<SectionSpacing, SectionSpacingSteps> = {
     bottom:  'pb-12 md:pb-16',
     seamTop: 'pt-6 md:pt-8',
     topOverlap: 'pt-12 md:pt-0',
-    bottomBeforeOverlap: {small: 'pb-12 md:pb-28', large: 'pb-12 md:pb-40'},
+    bottomBeforeOverlap: {small: 'pb-12 md:pb-28', large: 'pb-12 md:pb-40', photo: 'pb-12 md:pb-32'},
+    ptVar: 'band-pt-compact',
   },
   normal: {
     top:     'pt-16 md:pt-24 lg:pt-28',
     bottom:  'pb-16 md:pb-24 lg:pb-28',
     seamTop: 'pt-8 md:pt-12 lg:pt-14',
     topOverlap: 'pt-16 md:pt-0',
-    bottomBeforeOverlap: {small: 'pb-16 md:pb-36 lg:pb-40', large: 'pb-16 md:pb-48 lg:pb-52'},
+    bottomBeforeOverlap: {small: 'pb-16 md:pb-36 lg:pb-40', large: 'pb-16 md:pb-48 lg:pb-52', photo: 'pb-16 md:pb-40 lg:pb-44'},
+    ptVar: 'band-pt-normal',
   },
   spacious: {
     top:     'pt-24 md:pt-32 lg:pt-40',
     bottom:  'pb-24 md:pb-32 lg:pb-40',
     seamTop: 'pt-12 md:pt-16 lg:pt-20',
     topOverlap: 'pt-24 md:pt-0',
-    bottomBeforeOverlap: {small: 'pb-24 md:pb-44 lg:pb-52', large: 'pb-24 md:pb-56 lg:pb-64'},
+    bottomBeforeOverlap: {small: 'pb-24 md:pb-44 lg:pb-52', large: 'pb-24 md:pb-56 lg:pb-64', photo: 'pb-24 md:pb-48 lg:pb-56'},
+    ptVar: 'band-pt-spacious',
   },
 }
 
@@ -154,7 +161,8 @@ export const TIGHT_SPACING: SectionSpacingSteps = {
   bottom:  'pb-10 md:pb-12',
   seamTop: 'pt-5 md:pt-6',
   topOverlap: 'pt-10 md:pt-0',
-  bottomBeforeOverlap: {small: 'pb-10 md:pb-24', large: 'pb-10 md:pb-36'},
+  bottomBeforeOverlap: {small: 'pb-10 md:pb-24', large: 'pb-10 md:pb-36', photo: 'pb-10 md:pb-28'},
+  ptVar: 'band-pt-tight',
 }
 
 export type ResolvedSectionSurface = {
@@ -242,6 +250,7 @@ export function visibleGround(
 export const ALL_FRAME_CLASSES: readonly string[] = [
   ...[...Object.values(SECTION_SPACING), TIGHT_SPACING].flatMap((s) => [
     s.top, s.bottom, s.seamTop, s.topOverlap, s.bottomBeforeOverlap.small, s.bottomBeforeOverlap.large,
+    s.bottomBeforeOverlap.photo, s.ptVar,
   ]),
   'bg-brand-dark', 'bg-hero-tint', 'bg-muted', 'bg-background', 'bg-accent-fill',
   // Phase 16C: the divider's own classes, which live in `SectionShell`'s maps and in the
@@ -251,6 +260,8 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
   // Phase 16D: the ghost's own classes, which live in `SectionShell`'s JSX but whose
   // utility is defined in `globals.css`, so the resolution test covers them too.
   'decor-ghost', 'section-texture-dark', 'text-brand-dark', 'opacity-4',
+  // Phase 16E: the raised photo's utility and its column alignment.
+  'md:photo-rise', 'md:self-start',
 ]
   .join(' ')
   .split(/\s+/)

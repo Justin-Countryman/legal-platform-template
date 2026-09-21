@@ -260,8 +260,8 @@ export const designSettings = defineType({
       },
     }),
 
-    // ─── Drawn Elements (Phase 16D) ───────────────────────────────────────────
-    // Two things a theme draws inside a section. Neither carries an `initialValue`
+    // ─── Drawn Elements (Phase 16D, Phase 16E) ────────────────────────────────
+    // Three things a theme draws. None carries an `initialValue`
     // (item 308): a seed is folded into every build and could never be told from a
     // choice, so absent means off and a theme sets them.
     defineField({
@@ -275,6 +275,21 @@ export const designSettings = defineType({
         list: [
           {title: 'None', value: 'none'},
           {title: 'On \u2014 once per homepage', value: 'on'},
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
+      name: 'sectionOverlap',
+      title: 'Overlap',
+      type: 'string',
+      fieldset: 'drawnElements',
+      description:
+        'Lets a section\u2019s photo cross the edge into the section above it, which ties the two together. Drawn once per homepage, on one section whose background differs from the one above it, and on desktop and tablet only \u2014 phones stack normally. The section above makes room for it, so none of its text is ever covered. Interior pages never do it. Leave blank for none. (To lift a whole panel instead, use Overlap the Section Above on that section.)',
+      options: {
+        list: [
+          {title: 'None', value: 'none'},
+          {title: 'A photo crosses the edge above it', value: 'photo'},
         ],
         layout: 'radio',
       },

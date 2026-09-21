@@ -5327,6 +5327,20 @@
           "type": "string"
         },
         {
+          "description": "Lets a section’s photo cross the edge into the section above it, which ties the two together. Drawn once per homepage, on one section whose background differs from the one above it, and on desktop and tablet only — phones stack normally. The section above makes room for it, so none of its text is ever covered. Interior pages never do it. Leave blank for none. (To lift a whole panel instead, use Overlap the Section Above on that section.)",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "photo"
+            ]
+          },
+          "path": "sectionOverlap",
+          "title": "Overlap",
+          "type": "string"
+        },
+        {
           "description": "Opens a content section’s body text with a large first letter. Skipped where the paragraph starts with a quotation mark, a bracket or a number, and on centred sections. Leave blank for none.",
           "jsonType": "string",
           "options": {

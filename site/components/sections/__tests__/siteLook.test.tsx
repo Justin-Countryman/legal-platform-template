@@ -27,14 +27,17 @@ import {resolveHovers} from '@/lib/siloHover'
 // every section through the walk's per-band object, and a section with a value of
 // its own keeps it. Rendered, not read from source.
 
-const LOOK: SiteLook = {imageFrame: null, sectionJoin: 'straight', patternDark: false, cardHover: null, attorneyCardStyle: null, ghost: null}
+const LOOK: SiteLook = {imageFrame: null, sectionJoin: 'straight', patternDark: false, cardHover: null, attorneyCardStyle: null, ghost: null, overlap: null}
 const look = (over: Partial<SiteLook>): SiteLook => ({...LOOK, ...over})
 
 describe('the site look from Design Settings', () => {
   it('reads each setting, and a dark ground only when a texture is set', () => {
     expect(siteLookOf({imageFrame: 'slab', sectionJoin: 'angled', cardHover: 'lift', attorneyCardStyle: 'minimal'})).toEqual(
-      {imageFrame: 'slab', sectionJoin: 'angled', patternDark: false, cardHover: 'lift', attorneyCardStyle: 'minimal', ghost: null},
+      {imageFrame: 'slab', sectionJoin: 'angled', patternDark: false, cardHover: 'lift', attorneyCardStyle: 'minimal', ghost: null, overlap: null},
     )
+    // Phase 16E: the site's overlap rides the same per-band object, so it reaches the
+    // walk without a prop on any section.
+    expect(siteLookOf({sectionOverlap: 'photo'}).overlap).toBe('photo')
     expect(siteLookOf({patternGround: 'dark'}).patternDark).toBe(false)
     expect(siteLookOf({patternGround: 'dark', patternTexture: 'scallop'}).patternDark).toBe(true)
     expect(siteLookOf(null)).toEqual(LOOK)
@@ -49,7 +52,7 @@ describe('the site look from Design Settings', () => {
 
   it('interior pages keep the cards and frames but never a join or a textured ground', () => {
     const l = look({sectionJoin: 'angled', patternDark: true, imageFrame: 'framed', attorneyCardStyle: 'avatar'})
-    expect(interiorLook(l)).toEqual({...l, sectionJoin: 'straight', patternDark: false, ghost: null})
+    expect(interiorLook(l)).toEqual({...l, sectionJoin: 'straight', patternDark: false, ghost: null, overlap: null})
   })
 })
 
@@ -69,7 +72,7 @@ describe('the site look carries the divider and its pieces (Phase 16C)', () => {
 
   it('an interior page keeps the frames and loses the divider and the texture', () => {
     const l = look({imageFrame: 'framed', sectionJoin: 'peak', patternDark: true})
-    expect(interiorLook(l)).toEqual({...l, sectionJoin: 'straight', patternDark: false, ghost: null})
+    expect(interiorLook(l)).toEqual({...l, sectionJoin: 'straight', patternDark: false, ghost: null, overlap: null})
   })
 })
 

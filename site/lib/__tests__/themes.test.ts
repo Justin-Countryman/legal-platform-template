@@ -299,11 +299,11 @@ describe('a site built at the last pin still matches its theme', () => {
     }
   })
 
-  it('names the two themes this phase retuned as earlier versions, and the rest as current', () => {
-    // Only the drop cap survived onto a theme (Justin, 2026-09-21): Canyon and Graphite
-    // were retuned earlier the same day and then returned to their pinned values, so
-    // they are current again and carry no earlier version.
-    const retuned = new Set(['walnut', 'marble'])
+  it('names the themes this phase retuned as earlier versions, and the rest as current', () => {
+    // At `bd74cdd` Walnut and Marble already carried the drop cap. Phase 16E puts the
+    // raised photo on Canyon, Marble and Graphite (`[R-500]`), so five of the nine no
+    // longer match their pinned settings and each carries an earlier version.
+    const retuned = new Set(['walnut', 'marble', 'canyon', 'graphite'])
     for (const old of pinned.themes) {
       const match = matchTheme(old.settings as ThemeDoc)
       expect(match?.current, old.id).toBe(!retuned.has(old.id))
