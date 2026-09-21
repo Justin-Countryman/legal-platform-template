@@ -286,27 +286,40 @@ describe('the patch the Studio picker runs', () => {
 // It cannot be `git show <sha>:studio/presets.json` in CI, because template CI clones
 // one commit deep. So the pin's presets are a committed fixture, and this is what
 // stops a theme change stranding every site that already wears it as "Custom".
-describe('a site built at the last pin still matches its theme', () => {
-  const pinned = JSON.parse(
-    readFileSync(resolve(__dirname, 'fixtures/presets-bd74cdd.json'), 'utf8'),
-  ) as {themes: {id: string; settings: Record<string, unknown>}[]}
+describe('a site built at an earlier pin still matches its theme', () => {
+  type Frozen = {themes: {id: string; settings: Record<string, unknown>}[]}
+  const frozen = (pin: string) =>
+    JSON.parse(readFileSync(resolve(__dirname, `fixtures/presets-${pin}.json`), 'utf8')) as Frozen
+  // One file per pin at which a matched value moved. `bd74cdd` is Phase 16C's;
+  // `22da44f` is Phase 16D's revision, and Phase 16E freezes it because it put the
+  // raised photo on three themes ([R-500]).
+  const PINS = ['bd74cdd', '22da44f'] as const
 
-  it('reads every theme at bd74cdd as that theme, current or earlier', () => {
+  it.each(PINS)('reads every theme at %s as that theme, current or earlier', (pin) => {
+    const pinned = frozen(pin)
     expect(pinned.themes).toHaveLength(THEMES.length)
     for (const old of pinned.themes) {
       const match = matchTheme(old.settings as ThemeDoc)
-      expect(match?.theme.id, `a site wearing ${old.id} at bd74cdd`).toBe(old.id)
+      expect(match?.theme.id, `a site wearing ${old.id} at ${pin}`).toBe(old.id)
     }
   })
 
-  it('names the themes this phase retuned as earlier versions, and the rest as current', () => {
-    // At `bd74cdd` Walnut and Marble already carried the drop cap. Phase 16E puts the
-    // raised photo on Canyon, Marble and Graphite (`[R-500]`), so five of the nine no
-    // longer match their pinned settings and each carries an earlier version.
-    const retuned = new Set(['walnut', 'marble', 'canyon', 'graphite'])
-    for (const old of pinned.themes) {
+  // Which themes have been retuned SINCE each pin, which is not the same set at both:
+  // Walnut took the drop cap in Phase 16D, so it is an earlier version as of `bd74cdd`
+  // and current as of `22da44f`; Canyon, Graphite and Marble take the raised photo in
+  // Phase 16E ([R-500]), so they are earlier versions as of both. The widened test
+  // found this the first time it ran, which is the reason to keep a file per pin
+  // rather than one for the newest.
+  const RETUNED_SINCE: Record<(typeof PINS)[number], Set<string>> = {
+    bd74cdd: new Set(['walnut', 'marble', 'canyon', 'graphite']),
+    '22da44f': new Set(['marble', 'canyon', 'graphite']),
+  }
+
+  it.each(PINS)('names the themes retuned since %s as earlier versions, and the rest as current', (pin) => {
+    const retuned = RETUNED_SINCE[pin]
+    for (const old of frozen(pin).themes) {
       const match = matchTheme(old.settings as ThemeDoc)
-      expect(match?.current, old.id).toBe(!retuned.has(old.id))
+      expect(match?.current, `${old.id} at ${pin}`).toBe(!retuned.has(old.id))
     }
   })
 })
