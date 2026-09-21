@@ -68,6 +68,9 @@ export type SiteLook = {
   cardHover: string | null
   /** The attorney card style a section with no style of its own takes. */
   attorneyCardStyle: string | null
+  /** The initials the ghost draws (Phase 16D, `[R-492]`), or null when the site
+   *  draws none. Derived from the firm's name, never stored. */
+  ghost?: {text: string} | null
 }
 
 /** The site look from the projected Design Settings (`DESIGN_TOKENS_QUERY`). */
@@ -79,13 +82,16 @@ export function siteLookOf(d: Record<string, unknown> | null | undefined): SiteL
     patternDark: s('patternGround') === 'dark' && s('patternTexture') !== null,
     cardHover: s('cardHover'),
     attorneyCardStyle: s('attorneyCardStyle'),
+    ghost: null,
   }
 }
 
 /** Interior pages are always a clean ground and never draw a divider (`[R-472]`): they
- *  keep the cards, frames and carried pieces, not the homepage's dividers or texture. */
+ *  keep the cards, frames and carried pieces, not the homepage's dividers, texture or
+ *  ghost. The drop cap and the quote mark DO reach them: they are the UI system's one
+ *  decision each, as the card style and the photo frame are (Phase 16B amendment 25). */
 export function interiorLook(site: SiteLook | null | undefined): SiteLook | null {
-  return site ? {...site, sectionJoin: 'straight', patternDark: false} : null
+  return site ? {...site, sectionJoin: 'straight', patternDark: false, ghost: null} : null
 }
 
 /** A section's own value where it has one; absent and `inherit` follow the site. */
@@ -105,9 +111,11 @@ export type SeamProps = {
    *  ground of the band above, or, under the hero, a rise painted in this band's own
    *  ground, which is the only one that is knowable over a photo. */
   divider?: {mode: 'cut'; from: VisibleGround; flip: boolean} | {mode: 'rise'; flip: boolean} | null
+  /** This band draws the ghost (Phase 16D). At most one band on a page does. */
+  ghost?: boolean
 }
 
-export const NO_SEAM: SeamProps = {site: null, seamTop: false, previousGround: null, nextOverlap: 'none', divider: null}
+export const NO_SEAM: SeamProps = {site: null, seamTop: false, previousGround: null, nextOverlap: 'none', divider: null, ghost: false}
 
 /** Overlap applies to an inset panel only (Phase 16A, `[R-475]`): a full-width band
  *  riding over the one above only hid that band's bottom, text included. */
@@ -194,6 +202,30 @@ export function walkFrame<M>(
     out.push({member, index, seam})
     prevGround = ground
   })
+
+  // THE GHOST goes on ONE band and no more (Phase 16D, `[R-492]`): the studied sites
+  // use a median of one per page and a maximum of four, and a rule that fired on every
+  // eligible band would draw ten on a client whose homepage runs ten dark sections.
+  //
+  // It prefers a DARK band, which is where the study's ghosts sit and where a large
+  // quiet mark reads; failing that, the first eligible band. Eligible is every ground
+  // whose blend with the texture ink `validateWcag` already sweeps — light, tint, muted
+  // and dark — and excludes:
+  //   saturated and image, where no swept pair exists (6 of 16 shipped palettes and
+  //     8.9% of 5,000 seeded ones fail AA on a saturated band, measured);
+  //   a Pattern band, because two decorative layers blend past the one the sweep covers;
+  //   an inset panel, which is a card, not a ground.
+  if (site?.ghost) {
+    const eligible = out.filter(({member}) => {
+      const a = resolve(member).appearance
+      const g = visibleGround(a, site.patternDark)
+      return g !== 'saturated' && g !== 'image' && a?.surface !== 'pattern' && !a?.inset
+    })
+    const host =
+      eligible.find(({member}) => visibleGround(resolve(member).appearance, site.patternDark) === 'dark') ??
+      eligible[0]
+    if (host) host.seam = {...host.seam, ghost: true}
+  }
 
   return out
 }

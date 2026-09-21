@@ -278,3 +278,32 @@ describe('the patch the Studio picker runs', () => {
     expect(PICK_DEFAULTS).toEqual({sectionJoin: null, dividerCarry: [], headingRule: null})
   })
 })
+
+// ─── Every theme at the last pin still reads as itself ───────────────────────
+//
+// Phase 16C designed this and built only the monorepo half: the template carried no
+// frozen copy and no reference to a pin (ADV-16D-C measured it; §16.5 amendment 27).
+// It cannot be `git show <sha>:studio/presets.json` in CI, because template CI clones
+// one commit deep. So the pin's presets are a committed fixture, and this is what
+// stops a theme change stranding every site that already wears it as "Custom".
+describe('a site built at the last pin still matches its theme', () => {
+  const pinned = JSON.parse(
+    readFileSync(resolve(__dirname, 'fixtures/presets-bd74cdd.json'), 'utf8'),
+  ) as {themes: {id: string; settings: Record<string, unknown>}[]}
+
+  it('reads every theme at bd74cdd as that theme, current or earlier', () => {
+    expect(pinned.themes).toHaveLength(THEMES.length)
+    for (const old of pinned.themes) {
+      const match = matchTheme(old.settings as ThemeDoc)
+      expect(match?.theme.id, `a site wearing ${old.id} at bd74cdd`).toBe(old.id)
+    }
+  })
+
+  it('names the four themes this phase retuned as earlier versions, and the rest as current', () => {
+    const retuned = new Set(['canyon', 'graphite', 'walnut', 'marble'])
+    for (const old of pinned.themes) {
+      const match = matchTheme(old.settings as ThemeDoc)
+      expect(match?.current, old.id).toBe(!retuned.has(old.id))
+    }
+  })
+})

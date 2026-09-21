@@ -1024,3 +1024,75 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   [data-card]::after, [data-button-animatable="true"]::after, .section-heading::before { display: none; }
 }
 
+
+/* ─── The drawn design elements (Phase 16D) ─────────────────────────────────── */
+
+/* THE GHOST (`[R-492]`, `[R-495]`). The firm's initials at page scale, very faint,
+   behind ONE band's content — real sites use a median of one per page, so the walk
+   places it once. It paints in exactly the ink and opacity the section texture uses,
+   so `validateWcag`'s existing sweep covers the blend: the light ground's entry IS
+   `brand-dark` at the texture's opacity, and the dark ground's is the ink and
+   opacity `textureOnDark` solved for this palette. The solve equalises a PERCEPTUAL
+   step (L* moves 2.40 to 3.42 across the fifteen presets, against an 8x spread in
+   the opacity itself), so a solid mark lands at the same tone on every palette.
+   It never draws on a saturated or an image ground, where no swept pair exists.
+   `data-decor-layer`, not `data-section-texture`: two tests read that attribute as
+   the identity of a textured band. */
+@utility decor-ghost {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+}
+@media (forced-colors: active) { [data-decor-layer] { display: none; } }
+@media print { [data-decor-layer] { display: none; } }
+
+/* THE DROP CAP (`[R-493]`). `::first-letter`, so nothing enters the DOM and a screen
+   reader reads the word whole, which is the method tested practitioner research
+   endorses over every alternative. `accent-text`, never `decor`: a drop cap is text,
+   and the raw accent is the one accent form `validateWcag` checks NON-blocking (it
+   measured 2.94:1 on one palette). `flow-root` contains the float, which otherwise
+   intrudes into whatever follows the paragraph. The component decides eligibility —
+   `::first-letter` takes a leading quote or bracket with the letter, and on a centred
+   layout a float detaches from its text. */
+[data-ornament~="dropCap"] [data-prose="cap"] > p:first-child { display: flow-root; }
+[data-ornament~="dropCap"] [data-prose="cap"] > p:first-child::first-letter {
+  float: inline-start;
+  font-family: var(--font-heading);
+  font-size: 3.25em;
+  line-height: 0.84;
+  padding-inline-end: 0.08em;
+  padding-block-start: 0.04em;
+  color: --theme(--color-accent-text);
+}
+
+/* THE LARGE QUOTE MARK (`[R-494]`). A mask in the decor role, so nothing is
+   announced and the dark, light-island and saturated swaps all reach it. It REPLACES
+   the rule beside a quote rather than joining it: two decorations on one quote is the
+   busyness the study criticises. `@supports` and forced colors both remove it, or the
+   fallback is a solid block of the decor color. */
+[data-ornament~="quoteMark"] [data-quote]::before {
+  content: '';
+  display: block;
+  width: var(--quote-glyph-size, 7rem);
+  height: calc(var(--quote-glyph-size, 7rem) * 0.75);
+  margin-block-end: 0.5rem;
+  background-color: --theme(--color-decor);
+  -webkit-mask: var(--quote-glyph) left top / contain no-repeat;
+  mask: var(--quote-glyph) left top / contain no-repeat;
+  pointer-events: none;
+}
+[data-ornament~="quoteMark"] [data-quote] { border-inline-start: 0; padding-inline-start: 0; }
+/* Inside a card the ornament is half size, and the card's own inline quotation marks
+   are punctuation that the ornament replaces, so a card never shows two. */
+[data-ornament~="quoteMark"] [data-card] [data-quote] { --quote-glyph-size: 3.5rem; }
+[data-ornament~="quoteMark"] [data-quote] > p::before,
+[data-ornament~="quoteMark"] [data-quote] > p::after { content: none; }
+[data-ornament~="quoteMark"] .text-center [data-quote]::before { margin-inline: auto; }
+@supports not (mask-image: none) {
+  [data-ornament~="quoteMark"] [data-quote]::before { display: none; }
+}
+@media (forced-colors: active) {
+  [data-ornament~="quoteMark"] [data-quote]::before { display: none; }
+}

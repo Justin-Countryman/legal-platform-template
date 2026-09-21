@@ -71,6 +71,14 @@ export const THEME_FIELDS = [
   'imageFrame',
   'patternTexture',
   'patternGround',
+  // Phase 16D, the drawn elements a theme turns on. Plain string fields, not one
+  // array: a matched array reads as its default in both `readThemeField` and
+  // `presets.py:read`, which both gate on `typeof value === 'string'`, so a site
+  // that changed one would still match the theme and `themePatch` would write an
+  // empty array into the dataset (measured, ADV-16D-A F12 and ADV-16D-C).
+  'brandGhost',
+  'dropCap',
+  'quoteMark',
 ] as const
 
 export type ThemeField = (typeof THEME_FIELDS)[number]
@@ -78,8 +86,8 @@ export type ThemeField = (typeof THEME_FIELDS)[number]
 /** What a visitor can tell apart at rest, derived from the settings (`[R-487]`). The
  *  first four are the ones a visitor names first, and a pair of themes must differ in at
  *  least two of them. */
-export const SIGNATURE_HIGH = ['typeVoice', 'headingCase', 'cornerFamily', 'surfaceDevice'] as const
-export const SIGNATURE_LOW = ['emphasis', 'kicker', 'frame', 'attorneyCards', 'texture', 'shadow', 'scale'] as const
+export const SIGNATURE_HIGH = ['typeVoice', 'headingCase', 'cornerFamily', 'surfaceDevice', 'ghost'] as const
+export const SIGNATURE_LOW = ['emphasis', 'kicker', 'frame', 'attorneyCards', 'texture', 'shadow', 'scale', 'ornaments'] as const
 export const SIGNATURE = [...SIGNATURE_HIGH, ...SIGNATURE_LOW] as const
 export type SignatureDimension = (typeof SIGNATURE)[number]
 
@@ -128,6 +136,8 @@ export const ATTORNEY_CARD_STYLES = ['classic', 'portrait', 'avatar', 'minimal',
 export const IMAGE_FRAMES = ['plain', 'framed', 'slab'] as const
 export const PATTERN_GROUNDS = ['light', 'dark'] as const
 export const BUTTON_ANIMATIONS = ['none', 'sweep', 'fill-center', 'inset', 'lift'] as const
+/** Phase 16D: each drawn element is off or on. Absent is off. */
+export const DRAWN_ELEMENT_STATES = ['none', 'on'] as const
 
 const OPTIONS: Record<Exclude<ThemeField, 'fontPairingPreset'>, readonly string[]> = {
   marketingScale: ['default', ...Object.keys(MARKETING_SCALE_MAP)],
@@ -146,6 +156,9 @@ const OPTIONS: Record<Exclude<ThemeField, 'fontPairingPreset'>, readonly string[
   imageFrame: IMAGE_FRAMES,
   patternTexture: SECTION_TEXTURES,
   patternGround: PATTERN_GROUNDS,
+  brandGhost: DRAWN_ELEMENT_STATES,
+  dropCap: DRAWN_ELEMENT_STATES,
+  quoteMark: DRAWN_ELEMENT_STATES,
 }
 
 /** What an ABSENT field renders: the default each reader falls back to. */
@@ -167,6 +180,9 @@ export const THEME_DEFAULTS: ThemeSettings = {
   imageFrame: 'plain',
   patternTexture: null,
   patternGround: 'light',
+  brandGhost: 'none',
+  dropCap: 'none',
+  quoteMark: 'none',
 }
 
 /** Studio labels for the fields, used where a difference is named. */
@@ -188,6 +204,9 @@ export const THEME_FIELD_LABELS: Record<ThemeField, string> = {
   imageFrame: 'Photo frame',
   patternTexture: 'Texture',
   patternGround: 'Texture ground',
+  brandGhost: 'Ghosted initials',
+  dropCap: 'Drop cap',
+  quoteMark: 'Quote mark',
 }
 
 /** Studio labels for the picks. */
@@ -212,9 +231,10 @@ export const THEMES: readonly Theme[] = [
       buttonAnimation: 'sweep', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed',
       cardHover: 'imageZoom', attorneyCardStyle: 'portrait',
       headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'plain',
+      quoteMark: 'on',
     }),
     picks: p({headingRule: 'line'}),
-    previous: [],
+    previous: [{settings: {fontPairingPreset: 2, marketingScale: 'md', taglineStyle: 'plain', uiRadius: 'subtle', buttonShape: 'square', buttonAnimation: 'sweep', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'imageZoom', attorneyCardStyle: 'portrait', headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'plain'}, picks: p({headingRule: 'line'})}],
     suggestedPalettes: ['black-gold', 'burgundy-gold', 'teal-mint'],
     evidence: ['kicker above and a short rule below every heading', 'italic accent phrase', 'cutout portraits in rounded panels'],
   },
@@ -230,9 +250,11 @@ export const THEMES: readonly Theme[] = [
       cardHover: 'accentBorder', attorneyCardStyle: 'minimal',
       headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'framed',
       patternTexture: 'diagonalHatch', patternGround: 'dark',
+      brandGhost: 'on',
+      quoteMark: 'on',
     }),
     picks: p({sectionJoin: 'angled', dividerCarry: ['cards'], headingRule: 'line'}),
-    previous: [],
+    previous: [{settings: {fontPairingPreset: 4, marketingScale: 'md', taglineStyle: 'plain', uiRadius: 'sharp', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'balanced', cardHover: 'accentBorder', attorneyCardStyle: 'minimal', headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'framed', patternTexture: 'diagonalHatch', patternGround: 'dark'}, picks: p({sectionJoin: 'angled', dividerCarry: ['cards'], headingRule: 'line'})}],
     suggestedPalettes: ['black-gold', 'ink-lavender', 'black-crimson'],
     evidence: ['two-line heading unit with a short rule', 'thin-framed boxes', 'diagonal cuts', 'textured bands'],
   },
@@ -247,9 +269,11 @@ export const THEMES: readonly Theme[] = [
       buttonAnimation: 'none', tertiaryStyle: 'plain', elevationStyle: '0', motionTempo: 'relaxed',
       cardHover: 'lift', attorneyCardStyle: 'classic',
       headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'framed',
+      brandGhost: 'on',
+      dropCap: 'on',
     }),
     picks: p({headingRule: 'leadDiamond'}),
-    previous: [],
+    previous: [{settings: {fontPairingPreset: 13, marketingScale: 'sm', taglineStyle: 'titlecase', uiRadius: 'subtle', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'plain', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'lift', attorneyCardStyle: 'classic', headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'framed'}, picks: p({headingRule: 'leadDiamond'})}],
     suggestedPalettes: ['navy-brass', 'navy-ice', 'black-gold', 'burgundy-gold'],
     evidence: ['serif headline with its last words in italic', 'thin outline buttons', 'ochre rule'],
   },
@@ -300,9 +324,10 @@ export const THEMES: readonly Theme[] = [
       cardHover: 'accentUnderline', attorneyCardStyle: 'classic',
       headingEmphasisStyle: 'italic', headingCase: 'upper', imageFrame: 'plain',
       patternTexture: 'diamondLattice', patternGround: 'light',
+      dropCap: 'on',
     }),
     picks: p({sectionJoin: 'peak', dividerCarry: ['cards']}),
-    previous: [],
+    previous: [{settings: {fontPairingPreset: 1, marketingScale: 'md', taglineStyle: 'lined', uiRadius: 'sharp', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'accentUnderline', attorneyCardStyle: 'classic', headingEmphasisStyle: 'italic', headingCase: 'upper', imageFrame: 'plain', patternTexture: 'diamondLattice', patternGround: 'light'}, picks: p({sectionJoin: 'peak', dividerCarry: ['cards']})}],
     suggestedPalettes: ['forest-brass', 'charcoal-coral', 'navy-orange'],
     evidence: ['a short gold rule then a spaced-caps kicker above every heading', 'square filled buttons', 'a damask ground'],
   },
@@ -422,6 +447,13 @@ export function signatureOf(theme: Theme): Record<SignatureDimension, string> {
     // Soft and Round are one family at a glance: a stadium and a pill read the same.
     cornerFamily: family === 'round' ? 'soft' : family,
     surfaceDevice: s.patternTexture ? texture : `frame/${s.imageFrame}`,
+    // Phase 16D. The ghost is its own HIGH dimension, appended, never folded into
+    // `surfaceDevice`: folded in, a theme that has both a texture and a ghost hid its
+    // ghost from the test while a theme with only a ghost had it counted, which is
+    // incoherent, and it produced a "measurement" that did not reproduce (§16.5
+    // amendments 7 and 20). The two ornaments are one LOW dimension together.
+    ghost: String(s.brandGhost),
+    ornaments: [s.dropCap === 'on' ? 'dropCap' : '', s.quoteMark === 'on' ? 'quoteMark' : ''].filter(Boolean).join('+') || 'none',
     emphasis: String(s.headingEmphasisStyle),
     kicker: String(s.taglineStyle),
     frame: String(s.imageFrame),

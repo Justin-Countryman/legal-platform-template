@@ -8,6 +8,7 @@ import {splitEmphasis} from '@/lib/headingEmphasis'
 import {resolveTreatment, treatmentClasses, type TreatmentGround} from '@/lib/imageTreatment'
 import {hasImage} from '@/lib/sanity/image'
 import {formatPhone, resolveTokenString, type NapTokens} from '@/lib/tokens'
+import {proseTakesDropCap} from '@/lib/dropCap'
 import {MarqueeRibbon} from './MarqueeRibbon'
 import {SectionShell, type SectionAppearance} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
@@ -170,8 +171,14 @@ export function ContentSectionBlock({
           />
         ) : null
 
+        // Phase 16D (`[R-493]`): whether this paragraph may take a drop cap.
+        // `::first-letter` cannot be told to skip punctuation — it takes a leading
+        // quotation mark, bracket or digit WITH the letter and draws both at 52px —
+        // and on a centred layout a float detaches from the text it opens. Both were
+        // rendered wrong before they were ruled out here.
+        const capOk = !center && proseTakesDropCap(data.body)
         const body = (data.body?.length ?? 0) > 0 ? (
-          <div className={layout === 'twoColumnText' ? 'text-foreground' : 'mt-6 text-foreground'}>
+          <div data-prose={capOk ? 'cap' : undefined} className={layout === 'twoColumnText' ? 'text-foreground' : 'mt-6 text-foreground'}>
             <BlockProse value={data.body} napTokens={napTokens} />
           </div>
         ) : null
@@ -189,7 +196,7 @@ export function ContentSectionBlock({
           ) : null
 
         const pullQuote = has(data.pullQuote?.text) ? (
-          <figure className="mt-8 border-l-2 border-decor pl-6">
+          <figure data-quote className="mt-8 border-l-2 border-decor pl-6">
             <blockquote className="font-heading text-xl text-foreground">{t(data.pullQuote?.text)}</blockquote>
             {has(data.pullQuote?.attribution) && (
               <figcaption className="mt-3 text-sm text-foreground-muted">{t(data.pullQuote?.attribution)}</figcaption>

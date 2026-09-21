@@ -27,13 +27,13 @@ import {resolveHovers} from '@/lib/siloHover'
 // every section through the walk's per-band object, and a section with a value of
 // its own keeps it. Rendered, not read from source.
 
-const LOOK: SiteLook = {imageFrame: null, sectionJoin: 'straight', patternDark: false, cardHover: null, attorneyCardStyle: null}
+const LOOK: SiteLook = {imageFrame: null, sectionJoin: 'straight', patternDark: false, cardHover: null, attorneyCardStyle: null, ghost: null}
 const look = (over: Partial<SiteLook>): SiteLook => ({...LOOK, ...over})
 
 describe('the site look from Design Settings', () => {
   it('reads each setting, and a dark ground only when a texture is set', () => {
     expect(siteLookOf({imageFrame: 'slab', sectionJoin: 'angled', cardHover: 'lift', attorneyCardStyle: 'minimal'})).toEqual(
-      {imageFrame: 'slab', sectionJoin: 'angled', patternDark: false, cardHover: 'lift', attorneyCardStyle: 'minimal'},
+      {imageFrame: 'slab', sectionJoin: 'angled', patternDark: false, cardHover: 'lift', attorneyCardStyle: 'minimal', ghost: null},
     )
     expect(siteLookOf({patternGround: 'dark'}).patternDark).toBe(false)
     expect(siteLookOf({patternGround: 'dark', patternTexture: 'scallop'}).patternDark).toBe(true)
@@ -49,7 +49,7 @@ describe('the site look from Design Settings', () => {
 
   it('interior pages keep the cards and frames but never a join or a textured ground', () => {
     const l = look({sectionJoin: 'angled', patternDark: true, imageFrame: 'framed', attorneyCardStyle: 'avatar'})
-    expect(interiorLook(l)).toEqual({...l, sectionJoin: 'straight', patternDark: false})
+    expect(interiorLook(l)).toEqual({...l, sectionJoin: 'straight', patternDark: false, ghost: null})
   })
 })
 
@@ -69,7 +69,7 @@ describe('the site look carries the divider and its pieces (Phase 16C)', () => {
 
   it('an interior page keeps the frames and loses the divider and the texture', () => {
     const l = look({imageFrame: 'framed', sectionJoin: 'peak', patternDark: true})
-    expect(interiorLook(l)).toEqual({...l, sectionJoin: 'straight', patternDark: false})
+    expect(interiorLook(l)).toEqual({...l, sectionJoin: 'straight', patternDark: false, ghost: null})
   })
 })
 
@@ -217,5 +217,40 @@ describe('every card root takes the carried corner (Phase 16C, [R-483])', () => 
     expect(framed.querySelector('[data-feature-photo]')).toBeNull()
     const slab = render(<PageSections sections={withPhoto} site={look({imageFrame: 'slab'})} />).container
     expect(slab.querySelector('[data-feature-photo="slab"]')).not.toBeNull()
+  })
+})
+
+describe('the drawn elements (Phase 16D)', () => {
+  it('an interior page never draws the ghost, and keeps the ornaments', () => {
+    // The ghost is a homepage device, as the divider and the texture are (`[R-472]`);
+    // the drop cap and the quote mark are the UI system's one decision each and do
+    // carry to interior pages, which is why they are not on `SiteLook` at all but on
+    // the layout wrapper.
+    const l = look({ghost: {text: 'SO'}})
+    expect(interiorLook(l)?.ghost).toBeNull()
+  })
+
+  it('a content section says whether its first paragraph may take a drop cap', () => {
+    const prose = (text: string, layout = 'split') => [{
+      _type: 'contentSection', _id: '1', layout, heading: 'About',
+      body: [{_type: 'block', _key: 'b', children: [{_type: 'span', _key: 's', text}]}],
+    }] as unknown as PageSectionData[]
+    expect(render(<PageSections sections={prose('Most families do not.')} />).container
+      .querySelector('[data-prose="cap"]')).not.toBeNull()
+    // A leading quotation mark would be drawn at 52px beside the letter.
+    expect(render(<PageSections sections={prose('“Most families do not.')} />).container
+      .querySelector('[data-prose]')).toBeNull()
+    // A centred layout floats the cap away from its text.
+    expect(render(<PageSections sections={prose('Most families do not.', 'statement')} />).container
+      .querySelector('[data-prose]')).toBeNull()
+  })
+
+  it('every place a quote is set is marked, so one rule draws the ornament', () => {
+    const withQuote = [{
+      _type: 'contentSection', _id: '1', layout: 'split', heading: 'About',
+      body: [{_type: 'block', _key: 'b', children: [{_type: 'span', _key: 's', text: 'Wills and trusts.'}]}],
+      pullQuote: {text: 'Every plan should make sense.', attribution: 'The partners'},
+    }] as unknown as PageSectionData[]
+    expect(render(<PageSections sections={withQuote} />).container.querySelector('[data-quote]')).not.toBeNull()
   })
 })
