@@ -1,6 +1,7 @@
 import {getPresetById, type HeadingVoice} from '../fonts/presets'
 import {matchCornerFamily} from './corners'
 import {DIVIDERS, CARRY_PIECES, type CarryPiece} from './dividers'
+import {OVERLAPS} from './overlaps'
 import {HEADING_LINES} from './headingLines'
 import {
   BUTTON_SHAPE_MAP, ELEVATION_STYLE_MAP, HEADING_CASES, HEADING_EMPHASIS_STYLES, HEADING_WEIGHTS, MARKETING_SCALE_MAP,
@@ -83,6 +84,11 @@ export const THEME_FIELDS = [
   // the one place it showed on his own site was a pull quote, not a testimonial.
   'brandGhost',
   'dropCap',
+  // Phase 16E, `[R-499]`, `[R-500]`: a feature photo crossing the seam into the band
+  // above. The whole-panel overlap is NOT here: it stays the per-section switch
+  // `[R-475]` was ruled on, because one unambiguous rising panel exists in the
+  // sixty-five studied homepages against eighteen sites rising a photo.
+  'sectionOverlap',
 ] as const
 
 export type ThemeField = (typeof THEME_FIELDS)[number]
@@ -91,7 +97,7 @@ export type ThemeField = (typeof THEME_FIELDS)[number]
  *  first four are the ones a visitor names first, and a pair of themes must differ in at
  *  least two of them. */
 export const SIGNATURE_HIGH = ['typeVoice', 'headingCase', 'cornerFamily', 'surfaceDevice', 'ghost'] as const
-export const SIGNATURE_LOW = ['emphasis', 'kicker', 'frame', 'attorneyCards', 'texture', 'shadow', 'scale', 'ornaments'] as const
+export const SIGNATURE_LOW = ['emphasis', 'kicker', 'frame', 'attorneyCards', 'texture', 'shadow', 'scale', 'ornaments', 'overlap'] as const
 export const SIGNATURE = [...SIGNATURE_HIGH, ...SIGNATURE_LOW] as const
 export type SignatureDimension = (typeof SIGNATURE)[number]
 
@@ -162,6 +168,7 @@ const OPTIONS: Record<Exclude<ThemeField, 'fontPairingPreset'>, readonly string[
   patternGround: PATTERN_GROUNDS,
   brandGhost: DRAWN_ELEMENT_STATES,
   dropCap: DRAWN_ELEMENT_STATES,
+  sectionOverlap: OVERLAPS,
 }
 
 /** What an ABSENT field renders: the default each reader falls back to. */
@@ -185,6 +192,7 @@ export const THEME_DEFAULTS: ThemeSettings = {
   patternGround: 'light',
   brandGhost: 'none',
   dropCap: 'none',
+  sectionOverlap: 'none',
 }
 
 /** Studio labels for the fields, used where a difference is named. */
@@ -208,6 +216,7 @@ export const THEME_FIELD_LABELS: Record<ThemeField, string> = {
   patternGround: 'Texture ground',
   brandGhost: 'Ghosted initials',
   dropCap: 'Drop cap',
+  sectionOverlap: 'Overlap',
 }
 
 /** Studio labels for the picks. */
@@ -232,9 +241,10 @@ export const THEMES: readonly Theme[] = [
       buttonAnimation: 'sweep', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed',
       cardHover: 'imageZoom', attorneyCardStyle: 'portrait',
       headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'plain',
+      sectionOverlap: 'photo',
     }),
     picks: p({headingRule: 'line'}),
-    previous: [],
+    previous: [{settings: {fontPairingPreset: 2, marketingScale: 'md', taglineStyle: 'plain', uiRadius: 'subtle', buttonShape: 'square', buttonAnimation: 'sweep', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'imageZoom', attorneyCardStyle: 'portrait', headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'plain'}, picks: p({headingRule: 'line'})}],
     suggestedPalettes: ['black-gold', 'burgundy-gold', 'teal-mint'],
     evidence: ['kicker above and a short rule below every heading', 'italic accent phrase', 'cutout portraits in rounded panels'],
   },
@@ -250,9 +260,10 @@ export const THEMES: readonly Theme[] = [
       cardHover: 'accentBorder', attorneyCardStyle: 'minimal',
       headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'framed',
       patternTexture: 'diagonalHatch', patternGround: 'dark',
+      sectionOverlap: 'photo',
     }),
     picks: p({sectionJoin: 'angled', dividerCarry: ['cards'], headingRule: 'line'}),
-    previous: [],
+    previous: [{settings: {fontPairingPreset: 4, marketingScale: 'md', taglineStyle: 'plain', uiRadius: 'sharp', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'balanced', cardHover: 'accentBorder', attorneyCardStyle: 'minimal', headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'framed', patternTexture: 'diagonalHatch', patternGround: 'dark'}, picks: p({sectionJoin: 'angled', dividerCarry: ['cards'], headingRule: 'line'})}],
     suggestedPalettes: ['black-gold', 'ink-lavender', 'black-crimson'],
     evidence: ['two-line heading unit with a short rule', 'thin-framed boxes', 'diagonal cuts', 'textured bands'],
   },
@@ -321,10 +332,10 @@ export const THEMES: readonly Theme[] = [
       cardHover: 'accentUnderline', attorneyCardStyle: 'classic',
       headingEmphasisStyle: 'italic', headingCase: 'upper', imageFrame: 'plain',
       patternTexture: 'diamondLattice', patternGround: 'light',
-      dropCap: 'on',
+      dropCap: 'on', sectionOverlap: 'photo',
     }),
     picks: p({sectionJoin: 'peak', dividerCarry: ['cards']}),
-    previous: [{settings: {fontPairingPreset: 1, marketingScale: 'md', taglineStyle: 'lined', uiRadius: 'sharp', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'accentUnderline', attorneyCardStyle: 'classic', headingEmphasisStyle: 'italic', headingCase: 'upper', imageFrame: 'plain', patternTexture: 'diamondLattice', patternGround: 'light'}, picks: p({sectionJoin: 'peak', dividerCarry: ['cards']})}],
+    previous: [{settings: {fontPairingPreset: 1, marketingScale: 'md', taglineStyle: 'lined', uiRadius: 'sharp', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'accentUnderline', attorneyCardStyle: 'classic', headingEmphasisStyle: 'italic', headingCase: 'upper', imageFrame: 'plain', patternTexture: 'diamondLattice', patternGround: 'light'}, picks: p({sectionJoin: 'peak', dividerCarry: ['cards']})}, {settings: {fontPairingPreset: 1, marketingScale: 'md', taglineStyle: 'lined', uiRadius: 'sharp', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'accentUnderline', attorneyCardStyle: 'classic', headingEmphasisStyle: 'italic', headingCase: 'upper', imageFrame: 'plain', patternTexture: 'diamondLattice', patternGround: 'light', dropCap: 'on'}, picks: p({sectionJoin: 'peak', dividerCarry: ['cards']})}],
     suggestedPalettes: ['forest-brass', 'charcoal-coral', 'navy-orange'],
     evidence: ['a short gold rule then a spaced-caps kicker above every heading', 'square filled buttons', 'a damask ground'],
   },
@@ -451,6 +462,12 @@ export function signatureOf(theme: Theme): Record<SignatureDimension, string> {
     // amendments 7 and 20). The drop cap is the LOW dimension beside it.
     ghost: String(s.brandGhost),
     ornaments: s.dropCap === 'on' ? 'dropCap' : 'none',
+    // Phase 16E: appended, never folded into another dimension, for the reason
+    // amendment 7 of 16D gives. It is a LOW dimension: it appears once on a page and
+    // only where a band has a photo, so it is not what a visitor names first. It
+    // cannot decide which themes take the device either — appending a dimension is
+    // monotone, so no assignment can fail the floor (measured over all 255).
+    overlap: String(s.sectionOverlap),
     emphasis: String(s.headingEmphasisStyle),
     kicker: String(s.taglineStyle),
     frame: String(s.imageFrame),

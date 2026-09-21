@@ -19,7 +19,8 @@
     "patternTexture",
     "patternGround",
     "brandGhost",
-    "dropCap"
+    "dropCap",
+    "sectionOverlap"
   ],
   "themeDefaults": {
     "fontPairingPreset": null,
@@ -40,7 +41,8 @@
     "patternTexture": null,
     "patternGround": "light",
     "brandGhost": "none",
-    "dropCap": "none"
+    "dropCap": "none",
+    "sectionOverlap": "none"
   },
   "themePicks": [
     "sectionJoin",
@@ -84,14 +86,39 @@
         "patternTexture": null,
         "patternGround": "light",
         "brandGhost": "none",
-        "dropCap": "none"
+        "dropCap": "none",
+        "sectionOverlap": "photo"
       },
       "picks": {
         "sectionJoin": null,
         "dividerCarry": [],
         "headingRule": "line"
       },
-      "previous": [],
+      "previous": [
+        {
+          "settings": {
+            "fontPairingPreset": 2,
+            "marketingScale": "md",
+            "taglineStyle": "plain",
+            "uiRadius": "subtle",
+            "buttonShape": "square",
+            "buttonAnimation": "sweep",
+            "tertiaryStyle": "tracked",
+            "elevationStyle": "0",
+            "motionTempo": "relaxed",
+            "cardHover": "imageZoom",
+            "attorneyCardStyle": "portrait",
+            "headingEmphasisStyle": "italic",
+            "headingCase": "normal",
+            "imageFrame": "plain"
+          },
+          "picks": {
+            "sectionJoin": null,
+            "dividerCarry": [],
+            "headingRule": "line"
+          }
+        }
+      ],
       "suggestedPalettes": [
         "black-gold",
         "burgundy-gold",
@@ -129,7 +156,8 @@
         "patternTexture": "diagonalHatch",
         "patternGround": "dark",
         "brandGhost": "none",
-        "dropCap": "none"
+        "dropCap": "none",
+        "sectionOverlap": "photo"
       },
       "picks": {
         "sectionJoin": "angled",
@@ -138,7 +166,35 @@
         ],
         "headingRule": "line"
       },
-      "previous": [],
+      "previous": [
+        {
+          "settings": {
+            "fontPairingPreset": 4,
+            "marketingScale": "md",
+            "taglineStyle": "plain",
+            "uiRadius": "sharp",
+            "buttonShape": "square",
+            "buttonAnimation": "none",
+            "tertiaryStyle": "tracked",
+            "elevationStyle": "0",
+            "motionTempo": "balanced",
+            "cardHover": "accentBorder",
+            "attorneyCardStyle": "minimal",
+            "headingEmphasisStyle": "italic",
+            "headingCase": "normal",
+            "imageFrame": "framed",
+            "patternTexture": "diagonalHatch",
+            "patternGround": "dark"
+          },
+          "picks": {
+            "sectionJoin": "angled",
+            "dividerCarry": [
+              "cards"
+            ],
+            "headingRule": "line"
+          }
+        }
+      ],
       "suggestedPalettes": [
         "black-gold",
         "ink-lavender",
@@ -176,7 +232,8 @@
         "patternTexture": null,
         "patternGround": "light",
         "brandGhost": "none",
-        "dropCap": "on"
+        "dropCap": "on",
+        "sectionOverlap": "none"
       },
       "picks": {
         "sectionJoin": null,
@@ -246,7 +303,8 @@
         "patternTexture": "scallop",
         "patternGround": "light",
         "brandGhost": "none",
-        "dropCap": "none"
+        "dropCap": "none",
+        "sectionOverlap": "none"
       },
       "picks": {
         "sectionJoin": null,
@@ -291,7 +349,8 @@
         "patternTexture": null,
         "patternGround": "light",
         "brandGhost": "none",
-        "dropCap": "none"
+        "dropCap": "none",
+        "sectionOverlap": "none"
       },
       "picks": {
         "sectionJoin": null,
@@ -336,7 +395,8 @@
         "patternTexture": "diamondLattice",
         "patternGround": "light",
         "brandGhost": "none",
-        "dropCap": "on"
+        "dropCap": "on",
+        "sectionOverlap": "photo"
       },
       "picks": {
         "sectionJoin": "peak",
@@ -364,6 +424,34 @@
             "imageFrame": "plain",
             "patternTexture": "diamondLattice",
             "patternGround": "light"
+          },
+          "picks": {
+            "sectionJoin": "peak",
+            "dividerCarry": [
+              "cards"
+            ],
+            "headingRule": null
+          }
+        },
+        {
+          "settings": {
+            "fontPairingPreset": 1,
+            "marketingScale": "md",
+            "taglineStyle": "lined",
+            "uiRadius": "sharp",
+            "buttonShape": "square",
+            "buttonAnimation": "none",
+            "tertiaryStyle": "tracked",
+            "elevationStyle": "0",
+            "motionTempo": "relaxed",
+            "cardHover": "accentUnderline",
+            "attorneyCardStyle": "classic",
+            "headingEmphasisStyle": "italic",
+            "headingCase": "upper",
+            "imageFrame": "plain",
+            "patternTexture": "diamondLattice",
+            "patternGround": "light",
+            "dropCap": "on"
           },
           "picks": {
             "sectionJoin": "peak",
@@ -411,7 +499,8 @@
         "patternTexture": "pinstripe",
         "patternGround": "light",
         "brandGhost": "none",
-        "dropCap": "none"
+        "dropCap": "none",
+        "sectionOverlap": "none"
       },
       "picks": {
         "sectionJoin": null,
@@ -483,7 +572,8 @@
         "patternTexture": null,
         "patternGround": "light",
         "brandGhost": "none",
-        "dropCap": "none"
+        "dropCap": "none",
+        "sectionOverlap": "none"
       },
       "picks": {
         "sectionJoin": null,
@@ -554,7 +644,8 @@
         "patternTexture": "scallop",
         "patternGround": "light",
         "brandGhost": "none",
-        "dropCap": "none"
+        "dropCap": "none",
+        "sectionOverlap": "none"
       },
       "picks": {
         "sectionJoin": "notch",
@@ -940,6 +1031,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -974,6 +1066,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1004,7 +1097,8 @@
         "patternTexture": "diagonalHatch",
         "patternGround": "dark",
         "brandGhost": "none",
-        "dropCap": "none"
+        "dropCap": "none",
+        "sectionOverlap": "photo"
       },
       "match": null,
       "platformDefault": false,
@@ -1028,6 +1122,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1059,6 +1154,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "on",
+        "sectionOverlap": "none",
         "customFonts": {
           "headingFont": {
             "regular": {
@@ -1092,6 +1188,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1122,7 +1219,8 @@
         "patternTexture": null,
         "patternGround": "dark",
         "brandGhost": "none",
-        "dropCap": "none"
+        "dropCap": "none",
+        "sectionOverlap": "photo"
       },
       "match": {
         "id": "canyon",
@@ -1149,6 +1247,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1180,6 +1279,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "photo",
         "sectionJoin": null,
         "dividerCarry": [],
         "headingRule": "line"
@@ -1209,6 +1309,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1240,6 +1341,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "photo",
         "sectionJoin": "wave"
       },
       "match": {
@@ -1267,6 +1369,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1298,6 +1401,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "photo",
         "headingRule": "hatched"
       },
       "match": {
@@ -1325,6 +1429,60 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "canyon, earlier version 1",
+      "doc": {
+        "fontPairingPreset": 2,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "subtle",
+        "buttonShape": "square",
+        "buttonAnimation": "sweep",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "imageZoom",
+        "attorneyCardStyle": "portrait",
+        "headingEmphasisStyle": "italic",
+        "headingCase": "normal",
+        "imageFrame": "plain"
+      },
+      "match": {
+        "id": "canyon",
+        "current": false
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "brandGhost": "none",
+          "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1356,6 +1514,7 @@
         "patternGround": "dark",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "photo",
         "sectionJoin": "angled",
         "dividerCarry": [
           "cards"
@@ -1387,6 +1546,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1418,6 +1578,7 @@
         "patternGround": "dark",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "photo",
         "sectionJoin": "wave"
       },
       "match": {
@@ -1445,6 +1606,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1476,6 +1638,7 @@
         "patternGround": "dark",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "photo",
         "headingRule": "hatched"
       },
       "match": {
@@ -1503,6 +1666,62 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "graphite, earlier version 1",
+      "doc": {
+        "fontPairingPreset": 4,
+        "marketingScale": "md",
+        "taglineStyle": "plain",
+        "uiRadius": "sharp",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "0",
+        "motionTempo": "balanced",
+        "cardHover": "accentBorder",
+        "attorneyCardStyle": "minimal",
+        "headingEmphasisStyle": "italic",
+        "headingCase": "normal",
+        "imageFrame": "framed",
+        "patternTexture": "diagonalHatch",
+        "patternGround": "dark"
+      },
+      "match": {
+        "id": "graphite",
+        "current": false
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "brandGhost": "none",
+          "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1534,6 +1753,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "on",
+        "sectionOverlap": "none",
         "sectionJoin": null,
         "dividerCarry": [],
         "headingRule": "leadDiamond"
@@ -1563,6 +1783,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1594,6 +1815,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "on",
+        "sectionOverlap": "none",
         "sectionJoin": "wave"
       },
       "match": {
@@ -1621,6 +1843,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1652,6 +1875,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "on",
+        "sectionOverlap": "none",
         "headingRule": "hatched"
       },
       "match": {
@@ -1679,6 +1903,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1731,6 +1956,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1762,6 +1988,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "none",
         "sectionJoin": null,
         "dividerCarry": [],
         "headingRule": "dotted"
@@ -1791,6 +2018,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1822,6 +2050,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "none",
         "sectionJoin": "wave"
       },
       "match": {
@@ -1849,6 +2078,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1880,6 +2110,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "none",
         "headingRule": "hatched"
       },
       "match": {
@@ -1907,6 +2138,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1938,6 +2170,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "none",
         "sectionJoin": null,
         "dividerCarry": [],
         "headingRule": "slab"
@@ -1967,6 +2200,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -1998,6 +2232,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "none",
         "sectionJoin": "wave"
       },
       "match": {
@@ -2025,6 +2260,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2056,6 +2292,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "none",
         "headingRule": "hatched"
       },
       "match": {
@@ -2083,6 +2320,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2114,6 +2352,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "on",
+        "sectionOverlap": "photo",
         "sectionJoin": "peak",
         "dividerCarry": [
           "cards"
@@ -2145,6 +2384,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2176,6 +2416,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "on",
+        "sectionOverlap": "photo",
         "sectionJoin": "wave"
       },
       "match": {
@@ -2203,6 +2444,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2234,6 +2476,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "on",
+        "sectionOverlap": "photo",
         "headingRule": "hatched"
       },
       "match": {
@@ -2261,6 +2504,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2315,6 +2559,63 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
+          "headingRule": "line"
+        },
+        "unset": [
+          "dividerCarry",
+          "patternTexture",
+          "sectionJoin"
+        ]
+      }
+    },
+    {
+      "label": "marble, earlier version 2",
+      "doc": {
+        "fontPairingPreset": 1,
+        "marketingScale": "md",
+        "taglineStyle": "lined",
+        "uiRadius": "sharp",
+        "buttonShape": "square",
+        "buttonAnimation": "none",
+        "tertiaryStyle": "tracked",
+        "elevationStyle": "0",
+        "motionTempo": "relaxed",
+        "cardHover": "accentUnderline",
+        "attorneyCardStyle": "classic",
+        "headingEmphasisStyle": "italic",
+        "headingCase": "upper",
+        "imageFrame": "plain",
+        "patternTexture": "diamondLattice",
+        "patternGround": "light",
+        "dropCap": "on"
+      },
+      "match": {
+        "id": "marble",
+        "current": false
+      },
+      "platformDefault": false,
+      "canyonPatch": {
+        "set": {
+          "fontPairingPreset": 2,
+          "marketingScale": "md",
+          "taglineStyle": "plain",
+          "uiRadius": "subtle",
+          "buttonShape": "square",
+          "buttonAnimation": "sweep",
+          "tertiaryStyle": "tracked",
+          "elevationStyle": "0",
+          "motionTempo": "relaxed",
+          "cardHover": "imageZoom",
+          "attorneyCardStyle": "portrait",
+          "headingEmphasisStyle": "italic",
+          "headingWeight": "bold",
+          "headingCase": "normal",
+          "imageFrame": "plain",
+          "patternGround": "light",
+          "brandGhost": "none",
+          "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2346,6 +2647,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "none",
         "sectionJoin": null,
         "dividerCarry": [],
         "headingRule": "line"
@@ -2375,6 +2677,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2406,6 +2709,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "none",
         "sectionJoin": "wave"
       },
       "match": {
@@ -2433,6 +2737,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2464,6 +2769,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "none",
         "headingRule": "hatched"
       },
       "match": {
@@ -2491,6 +2797,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2545,6 +2852,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2576,6 +2884,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "none",
         "sectionJoin": null,
         "dividerCarry": [],
         "headingRule": "line"
@@ -2605,6 +2914,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2636,6 +2946,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "none",
         "sectionJoin": "wave"
       },
       "match": {
@@ -2663,6 +2974,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2694,6 +3006,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "none",
         "headingRule": "hatched"
       },
       "match": {
@@ -2721,6 +3034,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2775,6 +3089,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2806,6 +3121,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "none",
         "sectionJoin": "notch",
         "dividerCarry": [],
         "headingRule": "leadDot"
@@ -2835,6 +3151,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2866,6 +3183,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "none",
         "sectionJoin": "wave"
       },
       "match": {
@@ -2893,6 +3211,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [
@@ -2924,6 +3243,7 @@
         "patternGround": "light",
         "brandGhost": "none",
         "dropCap": "none",
+        "sectionOverlap": "none",
         "headingRule": "hatched"
       },
       "match": {
@@ -2951,6 +3271,7 @@
           "patternGround": "light",
           "brandGhost": "none",
           "dropCap": "none",
+          "sectionOverlap": "photo",
           "headingRule": "line"
         },
         "unset": [

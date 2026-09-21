@@ -2,6 +2,7 @@ import {
   type SectionAppearance,
 } from '@/components/sections/SectionShell'
 import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
+import {raisesPhotos} from '@/lib/overlaps'
 
 // ─── The seam walk ────────────────────────────────────────────────────────────
 //
@@ -51,8 +52,15 @@ export type FrameResolver<T> = {
   isEmpty: (data: T) => boolean
 }
 
+/** Phase 16E: whether this member can raise a feature photo into the band above.
+ *  Only the content section answers true, and only for a `split` layout whose media
+ *  renders as an image or a cutout: a video is not raised, and a practice-area band
+ *  also has a `split` layout with a different DOM, so the walk asks the member's own
+ *  component rather than reading `layout`. */
+export type Raisable = {raisesPhoto?: boolean}
+
 /** How far an inset panel rides up over the band above it. */
-export type Overlap = 'none' | 'small' | 'large'
+export type Overlap = 'none' | 'small' | 'large' | 'photo'
 
 /** The site's look, from Design Settings, as the sections read it (Phase 16B,
  *  `[R-468]`). A theme writes these; a section with a value of its own keeps it. */
@@ -71,6 +79,10 @@ export type SiteLook = {
   /** The initials the ghost draws (Phase 16D, `[R-492]`), or null when the site
    *  draws none. Derived from the firm's name, never stored. */
   ghost?: {text: string} | null
+  /** The site's overlap (Phase 16E, `[R-499]`): `photo` raises one feature photo into
+   *  the band above. Optional, because a required member on `SiteLook` puts every test
+   *  literal that constructs one red for a field none of them cares about. */
+  overlap?: string | null
 }
 
 /** The site look from the projected Design Settings (`DESIGN_TOKENS_QUERY`). */
@@ -83,6 +95,7 @@ export function siteLookOf(d: Record<string, unknown> | null | undefined): SiteL
     cardHover: s('cardHover'),
     attorneyCardStyle: s('attorneyCardStyle'),
     ghost: null,
+    overlap: s('sectionOverlap'),
   }
 }
 
@@ -91,7 +104,7 @@ export function siteLookOf(d: Record<string, unknown> | null | undefined): SiteL
  *  ghost. The drop cap and the quote mark DO reach them: they are the UI system's one
  *  decision each, as the card style and the photo frame are (Phase 16B amendment 25). */
 export function interiorLook(site: SiteLook | null | undefined): SiteLook | null {
-  return site ? {...site, sectionJoin: 'straight', patternDark: false, ghost: null} : null
+  return site ? {...site, sectionJoin: 'straight', patternDark: false, ghost: null, overlap: null} : null
 }
 
 /** A section's own value where it has one; absent and `inherit` follow the site. */
@@ -113,9 +126,12 @@ export type SeamProps = {
   divider?: {mode: 'cut'; from: VisibleGround; flip: boolean} | {mode: 'rise'; flip: boolean} | null
   /** This band draws the ghost (Phase 16D). At most one band on a page does. */
   ghost?: boolean
+  /** This band raises its feature photo into the band above (Phase 16E). At most one
+   *  band on a page does. */
+  raisePhoto?: boolean
 }
 
-export const NO_SEAM: SeamProps = {site: null, seamTop: false, previousGround: null, nextOverlap: 'none', divider: null, ghost: false}
+export const NO_SEAM: SeamProps = {site: null, seamTop: false, previousGround: null, nextOverlap: 'none', divider: null, ghost: false, raisePhoto: false}
 
 /** Overlap applies to an inset panel only (Phase 16A, `[R-475]`): a full-width band
  *  riding over the one above only hid that band's bottom, text included. */
@@ -138,7 +154,7 @@ export function overlapOf(appearance: SectionAppearance | null | undefined): Ove
  */
 export function walkFrame<M>(
   members: readonly M[],
-  resolve: (member: M) => {appearance: SectionAppearance | null | undefined; empty: boolean},
+  resolve: (member: M) => {appearance: SectionAppearance | null | undefined; empty: boolean} & Raisable,
   site: SiteLook | null = null,
   hero: VisibleGround | null = null,
 ): Array<{member: M; index: number; seam: SeamProps}> {
@@ -225,6 +241,34 @@ export function walkFrame<M>(
       eligible.find(({member}) => visibleGround(resolve(member).appearance, site.patternDark) === 'dark') ??
       eligible[0]
     if (host) host.seam = {...host.seam, ghost: true}
+  }
+
+  // THE RAISED PHOTO (Phase 16E). One band per page, as the study's sites do: a median
+  // of one mid-page overlap and a maximum of two, against two to four eligible bands on
+  // an ordinary canvas. Eligible is a content section whose `split` media renders as a
+  // photo, that is not the first band (nothing above it), that is not an inset panel
+  // (the panel's own `overflow-hidden` cuts the photo dead flat, measured), and whose
+  // band above shows a different ground, where light and tint count as one exactly as
+  // the divider counts them.
+  if (site && raisesPhotos(site.overlap)) {
+    const eligible: number[] = []
+    for (let i = 1; i < out.length; i++) {
+      const r = resolve(out[i].member)
+      if (!r.raisesPhoto || r.appearance?.inset) continue
+      const g = visibleGround(r.appearance, site.patternDark)
+      const prev = visibleGround(resolve(out[i - 1].member).appearance, site.patternDark)
+      if (!same(g, prev)) eligible.push(i)
+    }
+    // NEAREST THE MIDDLE OF THE LIST, never the first: live, the first ground-change
+    // band holds 1 of 35 rising overlaps, and the median normalised position is 0.50
+    // with 18 of 35 in the middle third (ADV-16E-B). A tie takes the earlier band.
+    const mid = (out.length - 1) / 2
+    const pick = eligible.reduce<number | null>(
+      (best, i) => (best === null || Math.abs(i - mid) < Math.abs(best - mid) ? i : best), null)
+    if (pick !== null) {
+      out[pick].seam = {...out[pick].seam, raisePhoto: true}
+      out[pick - 1].seam = {...out[pick - 1].seam, nextOverlap: 'photo'}
+    }
   }
 
   return out

@@ -49,6 +49,14 @@ type Item = NonNullable<ContentSectionData['items']>[number]
 
 const has = (s?: string | null): s is string => Boolean(s && s.trim())
 
+/** Phase 16E: whether this band can raise its feature photo into the band above. A
+ *  `split` layout whose media is an image or a cutout; a video is never raised, and no
+ *  other layout puts a photo beside the text. */
+export function raisesPhoto(data: ContentSectionData): boolean {
+  const m = data.media
+  return layoutOf(data) === 'split' && !!m && m.kind !== 'video' && hasImage(m.image)
+}
+
 function layoutOf(data: ContentSectionData): Layout {
   const l = data.layout
   return l === 'twoColumnText' || l === 'statement' || l === 'ribbon' || l === 'statRow' ? l : 'split'
@@ -319,7 +327,14 @@ export function ContentSectionBlock({
             if (!hasMedia(data.media)) return <div className="mx-auto max-w-3xl">{text}</div>
             return (
               <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
-                <div className={data.mediaSide === 'left' ? 'md:order-first' : 'md:order-last'}>
+                <div className={[
+                  data.mediaSide === 'left' ? 'md:order-first' : 'md:order-last',
+                  // Phase 16E: the raised photo. `self-start` puts the column's margin box
+                  // at the row's top so the negative margin moves the border box by exactly
+                  // that amount; `photo-rise` cancels the band's own top padding and its
+                  // divider, so what is left is `--photo-rise` and nothing else.
+                  seam.raisePhoto ? 'md:self-start md:photo-rise' : '',
+                ].filter(Boolean).join(' ')}>
                   <ContentMedia data={data} ground={ground} siteFrame={seam.site?.imageFrame} />
                 </div>
                 {text}

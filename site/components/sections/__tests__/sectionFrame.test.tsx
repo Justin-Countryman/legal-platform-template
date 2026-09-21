@@ -306,6 +306,72 @@ describe('inset and overlap', () => {
   })
 })
 
+describe('the raised photo, placed by the rule (Phase 16E, `[R-499]`)', () => {
+  const raising = {imageFrame: null, sectionJoin: 'straight', patternDark: false, cardHover: null, attorneyCardStyle: null, overlap: 'photo'}
+  const off = {...raising, overlap: null}
+  // A split content band whose media renders. `mediaSide` is irrelevant to the rule.
+  const photoBand = (key: string, appearance?: Record<string, unknown>) =>
+    band(key, appearance, {layout: 'split', media: {kind: 'photo', image: {asset: {_ref: 'image-abc-800x600-jpg'}, alt: ''}}})
+  const videoBand = (key: string, appearance?: Record<string, unknown>) =>
+    band(key, appearance, {layout: 'split', media: {kind: 'video', video: {youTubeUrl: 'https://youtu.be/x'}}})
+  const homepage = (blocks: HomepageBlock[], site: SiteLook | Record<string, unknown> = raising) =>
+    render(<HomepageCanvas blocks={blocks} site={site as SiteLook} hero="dark" napTokens={tokens} resultsDisclaimer="Past results do not guarantee a future outcome." />)
+  const risenIn = (container: HTMLElement) =>
+    sectionsOf(container).findIndex((s) => s.querySelector('[class*="photo-rise"]'))
+
+  it('raises the photo when the band above shows a different ground', () => {
+    const {container} = homepage([band('a', {surface: 'light'}), photoBand('b', {surface: 'dark'})])
+    expect(risenIn(container)).toBe(1)
+    // The band above grows its bottom by the rise, which is what keeps its text clear.
+    expect(sectionsOf(container)[0].className).toContain(SECTION_SPACING.normal.bottomBeforeOverlap.photo.split(/\s+/)[1])
+  })
+
+  it('draws nothing when the site has not asked for it', () => {
+    expect(risenIn(homepage([band('a', {surface: 'light'}), photoBand('b', {surface: 'dark'})], off).container)).toBe(-1)
+  })
+
+  it('never raises the first band: there is nothing above it', () => {
+    expect(risenIn(homepage([photoBand('a', {surface: 'light'})]).container)).toBe(-1)
+  })
+
+  it('needs a change of visible ground, with light and tint counted as one', () => {
+    expect(risenIn(homepage([band('a', {surface: 'light'}), photoBand('b', {surface: 'light'})]).container)).toBe(-1)
+    expect(risenIn(homepage([band('a', {surface: 'tint'}), photoBand('b', {surface: 'light'})]).container)).toBe(-1)
+    expect(risenIn(homepage([band('a', {surface: 'muted'}), photoBand('b', {surface: 'light'})]).container)).toBe(1)
+  })
+
+  it('needs media that renders as a picture: a video is never raised', () => {
+    expect(risenIn(homepage([band('a', {surface: 'light'}), videoBand('b', {surface: 'dark'})]).container)).toBe(-1)
+    expect(risenIn(homepage([band('a', {surface: 'light'}), band('b', {surface: 'dark'}, {layout: 'split'})]).container)).toBe(-1)
+  })
+
+  it('never raises one inside an inset panel, whose own clipping cuts it flat', () => {
+    expect(risenIn(homepage([band('a', {surface: 'dark'}), photoBand('b', {surface: 'tint', inset: true})]).container)).toBe(-1)
+  })
+
+  it('raises ONE a page, nearest the middle of the list and never the first', () => {
+    // Three eligible bands. Live, the first ground-change band holds 1 of 35 rising
+    // overlaps and the median normalised position is 0.50 (ADV-16E-B).
+    const {container} = homepage([
+      band('a', {surface: 'light'}), photoBand('b', {surface: 'dark'}),
+      band('c', {surface: 'light'}), photoBand('d', {surface: 'dark'}),
+      band('e', {surface: 'light'}), photoBand('f', {surface: 'dark'}), band('g', {surface: 'light'}),
+    ])
+    expect(sectionsOf(container).filter((s) => s.querySelector('[class*="photo-rise"]'))).toHaveLength(1)
+    expect(risenIn(container)).toBe(3)
+  })
+
+  it('an interior page never raises one, whatever the site picked', () => {
+    const sections: PageSectionData[] = [
+      {_type: 'contentSection', _id: 'x', layout: 'statement', heading: 'One', appearance: {surface: 'light'}},
+      {_type: 'contentSection', _id: 'y', layout: 'split', heading: 'Two', appearance: {surface: 'dark'},
+       media: {kind: 'photo', image: {asset: {_ref: 'image-abc-800x600-jpg'}, alt: ''}}},
+    ] as unknown as PageSectionData[]
+    const {container} = render(<PageSections sections={sections} site={raising as SiteLook} napTokens={tokens} />)
+    expect(container.querySelector('[class*="photo-rise"]')).toBeNull()
+  })
+})
+
 describe('PageSections', () => {
   const page = (sections: PageSectionData[]) =>
     render(<PageSections sections={sections} napTokens={tokens} resultsDisclaimer="Past results do not guarantee a future outcome." />)

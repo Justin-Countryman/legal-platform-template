@@ -18262,6 +18262,23 @@
         },
         "optional": true
       },
+      "sectionOverlap": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "none"
+            },
+            {
+              "type": "string",
+              "value": "photo"
+            }
+          ]
+        },
+        "optional": true
+      },
       "dropCap": {
         "type": "objectAttribute",
         "value": {

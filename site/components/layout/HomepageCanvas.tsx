@@ -146,7 +146,7 @@ function renderBlock(
 // wrapper against the first-band rule (measured, Phase 15 challenge). Before
 // Phase 15 the six retired block types also fell here and did render; they are
 // deleted, so only an unknown type reaches `default` now.
-function frameOf(block: HomepageBlock): {appearance: SectionAppearance | null | undefined; empty: boolean} {
+function frameOf(block: HomepageBlock): {appearance: SectionAppearance | null | undefined; empty: boolean; raisesPhoto?: boolean} {
   switch (block._type) {
     case 'practiceAreaNavInline':
       return {appearance: PracticeAreaFrame.resolveAppearance(block), empty: PracticeAreaFrame.isEmpty(block)}
@@ -163,7 +163,7 @@ function frameOf(block: HomepageBlock): {appearance: SectionAppearance | null | 
     case 'caseResultsSectionInline':
       return {appearance: CaseResultsFrame.resolveAppearance(block), empty: CaseResultsFrame.isEmpty(block)}
     case 'contentSectionInline':
-      return {appearance: ContentFrame.resolveAppearance(block), empty: isContentSectionEmpty(block)}
+      return {appearance: ContentFrame.resolveAppearance(block), empty: isContentSectionEmpty(block), raisesPhoto: ContentFrame.raisesPhoto(block)}
     case 'reviewsSectionInline':
       return {appearance: ReviewsFrame.resolveAppearance(block), empty: ReviewsFrame.isEmpty(block)}
     default:
