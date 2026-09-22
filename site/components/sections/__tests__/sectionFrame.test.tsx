@@ -496,7 +496,7 @@ describe('the ghost, placed once per page (Phase 16D, `[R-492]`, `[R-495]`)', ()
 // forward pass, because it needs the band below, and because everything downstream reads
 // the ground. Placed after, the dark band below the panel still draws a divider cut in
 // the ground of the band above, and a white wedge 64px deep is painted across 72% of the
-// width in the middle of the block of colour.
+// width in the middle of the block of color.
 describe('an inset band adopts the run it is bracketed by', () => {
   const band = (surface: string, inset = false) => ({surface, inset})
   const walk = (bands: Array<{surface: string; inset?: boolean}>) =>
