@@ -273,6 +273,38 @@ const eslintConfig = [
     },
   },
 
+  // Phase 17A (monorepo WS-V1-PHASE17A-DESIGN §2.2): the preview address is the only
+  // importer of preview code. A live route that imported it could read the preview's
+  // cookie or sign its links; the build's check (`scripts/ci/check-preview-not-
+  // shipped.mjs`) proves nothing of it reaches a visitor, and this keeps the import
+  // from being written at all. A later block REPLACES a rule's options, so the fonts
+  // rule above is restated here.
+  {
+    files: ["**/*.{ts,tsx}"],
+    ignores: ["app/(preview)/**", "components/preview/**", "lib/preview/**", "**/__tests__/**"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "next/font/google",
+              message:
+                "next/font/google not allowed — the platform uses Sanity-driven fontPairingPreset (committed WOFF2 files in public/fonts/files/). See BI-PRINCIPLES.md → Performance / Fonts and skill-typography → CSS chain.",
+            },
+          ],
+          patterns: [
+            {
+              group: ["@/lib/preview", "@/lib/preview/*", "@/components/preview", "@/components/preview/*", "../preview/*", "./preview/*"],
+              message:
+                "Preview code is imported only by the preview address, app/(preview)/ (Phase 17A). A live route must never read the preview's cookie or sign its links.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+
   // ───────────────────────────────────────────────────────────────────────
   // Global ignores
   // ───────────────────────────────────────────────────────────────────────

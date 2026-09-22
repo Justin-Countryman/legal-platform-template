@@ -1954,3 +1954,13 @@ export const HOME_PAGE_QUERY = groq`{
   "metadata": ${HOME_METADATA_QUERY},
   "heroDesign": ${HOME_HERO_DESIGN_QUERY}
 }`
+
+// ─── The stored design settings, for the preview address only (Phase 17A) ─────
+// The preview computes what a style set or palette choice changes on the settings as
+// they are STORED, because the Studio's own functions read that shape (uploaded fonts
+// as asset references), and it carries the revision it read so Apply can write
+// against it (monorepo WS-V1-PHASE17A-DESIGN §2.3). It selects the document exactly
+// as the settings the layout reads do, so the plan is computed on what the site
+// renders; Apply refuses when that is not the singleton it writes. No live route
+// reads it.
+export const PREVIEW_STORED_DESIGN_QUERY = groq`*[_type == "designSettings"][0]`

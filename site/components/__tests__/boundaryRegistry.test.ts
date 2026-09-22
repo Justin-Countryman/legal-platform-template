@@ -47,6 +47,14 @@ type Row = {
 
 const REGISTRY: readonly Row[] = [
   {
+    // Phase 17A: the operator's switcher on the preview address, never a visitor's page.
+    file: 'preview/Switcher.tsx',
+    draws: 'the current choice in each row, and the edge of the share-link field',
+    marks: ['sw-active', 'aria-current', 'sw-input', '#8a8a8a'],
+    contract: '1.4.1 the current choice is a filled chip with inverted text and aria-current, not color alone; 1.4.11 3:1 for chip and field edges (#8a8a8a on #111 is 5.5:1); the bar is its own fixed ground outside the palette',
+    grounds: ['island'],
+  },
+  {
     file: 'ui/Input.tsx',
     draws: 'the edge of a text field, and its placeholder',
     marks: ['border-border-control', 'placeholder:text-foreground-subtle', 'data-ring-context="light"'],
