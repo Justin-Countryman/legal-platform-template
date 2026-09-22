@@ -18279,6 +18279,23 @@
         },
         "optional": true
       },
+      "sectionGradient": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "none"
+            },
+            {
+              "type": "string",
+              "value": "deep"
+            }
+          ]
+        },
+        "optional": true
+      },
       "dropCap": {
         "type": "objectAttribute",
         "value": {

@@ -880,6 +880,7 @@ export const DESIGN_TOKENS_QUERY = groq`
     brandGhost,
     dropCap,
     sectionOverlap,
+    sectionGradient,
     "siteHeroBackgroundImage": siteHeroBackgroundImage{
       "src": asset->url,
       "alt": alt,

@@ -6,6 +6,7 @@ import {
   type ResolvedSectionSurface, type SectionSpacingSteps,
 } from '@/lib/sectionSurface'
 import {type SeamProps, NO_SEAM, overlapOf} from './sectionFrame'
+import {fadesDark} from '@/lib/gradients'
 
 // ─── SectionShell ───────────────────────────────────────────────────────────────
 // The band wrapper every full-width section renders into. It owns the surface
@@ -136,6 +137,12 @@ export function SectionShell({
   // of the axes a theme fixes, so a panel follows its theme for free).
   const isInset = appearance?.inset === true
 
+  // Phase 16F. `seam.insetGround` is set only on an inset band the walk found bracketed
+  // by one strong ground; everywhere else this is null and nothing below changes.
+  const ADOPTED: Record<string, string> = {dark: 'bg-brand-dark', saturated: 'bg-accent-fill'}
+  const adoptedClass = isInset && seam.insetGround ? ADOPTED[seam.insetGround] ?? '' : ''
+  const paintsDark = isInset ? adoptedClass === 'bg-brand-dark' : resolved.surfaceClass === 'bg-brand-dark'
+
   // The site's section texture, on a Pattern band only (Phase 16A, `[R-472]`). One
   // decorative child, absolutely placed BEFORE the content container, which is
   // `relative` and so paints above it in tree order, exactly as the background
@@ -176,7 +183,7 @@ export function SectionShell({
 
   return (
     <Tag
-      data-ring-context={resolved.ringContext}
+      data-ring-context={isInset && seam.insetGround ? (seam.insetGround === 'dark' ? 'dark' : 'saturated') : resolved.ringContext}
       // Text on a photo: the action color and the focus ring resolve to the on-dark
       // body text color here (globals.css, the scrim block), because neither is
       // guaranteed 4.5:1 or 3:1 over the lightest photo pixel.
@@ -198,6 +205,16 @@ export function SectionShell({
         // An inset band's own box is transparent; the panel inside carries the
         // surface. A normal band carries it here.
         !isInset && resolved.surfaceClass,
+        // Phase 16F: an inset band inside a run of one strong ground paints that ground
+        // on its own <section>, so the panel sits ON the run instead of on the page's
+        // light ground. The walk decides it, because no band can see the one below it.
+        isInset && adoptedClass,
+        // Phase 16F: a dark band's ground fades into the palette's deep stop. Per band,
+        // and only where the band really paints the dark ground -- an image band paints
+        // a photo over it and a saturated band is the accent, and neither has a swept pair.
+        fadesDark(seam.site?.gradient) && paintsDark && !resolved.isImage && 'band-gradient',
+        fadesDark(seam.site?.gradient) && paintsDark && !resolved.isImage && `grad-i-${Math.min(seam.run?.index ?? 0, 7)}`,
+        fadesDark(seam.site?.gradient) && paintsDark && !resolved.isImage && `grad-n-${Math.min(seam.run?.length ?? 1, 8)}`,
         (resolved.textured || ghost) && !isInset && 'isolate',
         top,
         bottom,
@@ -213,7 +230,14 @@ export function SectionShell({
         </>
       )}
       {isInset ? (
-        <div className={['relative overflow-hidden rounded-ui px-[5%] py-12 md:py-16', resolved.textured && 'isolate', resolved.surfaceClass].filter(Boolean).join(' ')}>
+        <div
+          // The panel's own polarity. Required, not decorative: `.bg-brand-dark` on the
+          // <section> above is itself a cascade trigger (globals.css), so a light panel
+          // sitting on an adopted dark ground would resolve every text token, the focus
+          // ring, the border and the slab to their on-dark forms without this reset.
+          data-ring-context={adoptedClass ? resolved.ringContext ?? 'light' : undefined}
+          className={['relative overflow-hidden rounded-ui px-[5%] py-12 md:py-16', resolved.textured && 'isolate', resolved.surfaceClass].filter(Boolean).join(' ')}
+        >
           {showImage && (
             <>
               <SanityImage image={bg} mode="fill" alt="" sizes="100vw" />

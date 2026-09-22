@@ -40,7 +40,7 @@ vi.mock('@/components/ui/ScrollReveal', () => ({
 
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {PageSections, type PageSectionData} from '../PageSections'
-import {walkFrame, NO_SEAM} from '../sectionFrame'
+import {walkFrame, interiorLook, NO_SEAM} from '../sectionFrame'
 import {SECTION_SPACING} from '@/lib/sectionSurface'
 
 const tokens = {firmName: 'Acme Law', firmNameShort: 'Acme', primaryPhone: null, primaryTollFree: null}
@@ -398,7 +398,10 @@ describe('walkFrame, directly', () => {
     const out = walkFrame([{n: 0}, {n: 1}, {n: 2}], (m) => ({appearance: {surface: 'light'}, empty: m.n === 0}))
     expect(out).toHaveLength(2)
     expect(out[0].index).toBe(1)
-    expect(out[0].seam).toEqual(NO_SEAM)
+    // NO_SEAM plus the run it is in (Phase 16F): both survivors are `light`, so they are
+    // one run of two and this is its first band. The EMPTY member is not in it, which is
+    // the same reason the walk exists at all.
+    expect(out[0].seam).toEqual({...NO_SEAM, run: {index: 0, length: 2}})
     expect(out[1].seam.seamTop).toBe(true)
   })
 
@@ -481,5 +484,85 @@ describe('the ghost, placed once per page (Phase 16D, `[R-492]`, `[R-495]`)', ()
   it('gives its band the stacking context its -z-10 needs', () => {
     const [section] = sectionsOf(page([band('a', {surface: 'dark'})]).container)
     expect(section.className.split(' ')).toContain('isolate')
+  })
+})
+
+// ─── The adopted panel and the run (Phase 16F, `[R-501]`, `[R-502]`) ───────────
+//
+// An inset band's `visibleGround` is `light` unconditionally, because the page ground
+// runs around its panel on all four sides. Inside a run of dark bands that is wrong and
+// a visitor sees it: on the fixture it put 683px of white between two navy bands. So a
+// band bracketed above AND below by one strong ground adopts it -- decided BEFORE the
+// forward pass, because it needs the band below, and because everything downstream reads
+// the ground. Placed after, the dark band below the panel still draws a divider cut in
+// the ground of the band above, and a white wedge 64px deep is painted across 72% of the
+// width in the middle of the block of colour.
+describe('an inset band adopts the run it is bracketed by', () => {
+  const band = (surface: string, inset = false) => ({surface, inset})
+  const walk = (bands: Array<{surface: string; inset?: boolean}>) =>
+    walkFrame(bands, (m) => ({appearance: m as never, empty: false}))
+
+  it('adopts a dark ground when the bands above and below both show it', () => {
+    const out = walk([band('dark'), band('tint', true), band('dark')])
+    expect(out[1].seam.insetGround).toBe('dark')
+    // and the run is then one block of three, which is what the gradient slices
+    expect(out.map((o) => o.seam.run)).toEqual([
+      {index: 0, length: 3}, {index: 1, length: 3}, {index: 2, length: 3},
+    ])
+  })
+
+  it('adopts a saturated ground the same way', () => {
+    const out = walk([band('saturated'), band('light', true), band('saturated')])
+    expect(out[1].seam.insetGround).toBe('saturated')
+  })
+
+  it('does NOT adopt a light or tint run, because a panel there already sits on light', () => {
+    for (const g of ['light', 'tint', 'muted']) {
+      const out = walk([band(g), band('tint', true), band(g)])
+      expect(out[1].seam.insetGround, g).toBeNull()
+    }
+  })
+
+  it('does NOT adopt when the bands above and below differ', () => {
+    const out = walk([band('dark'), band('tint', true), band('light')])
+    expect(out[1].seam.insetGround).toBeNull()
+    expect(out[1].seam.run).toEqual({index: 0, length: 2})
+  })
+
+  it('never adopts as the first or the last band, because one side has nothing', () => {
+    expect(walk([band('tint', true), band('dark')])[0].seam.insetGround).toBeNull()
+    expect(walk([band('dark'), band('tint', true)])[1].seam.insetGround).toBeNull()
+  })
+
+  it('leaves a band that is not inset alone', () => {
+    const out = walk([band('dark'), band('tint'), band('dark')])
+    expect(out[1].seam.insetGround).toBeNull()
+  })
+
+  it('makes the adopted band a same-ground join, so the padding halves at both seams', () => {
+    const out = walk([band('dark'), band('tint', true), band('dark')])
+    expect(out[1].seam.seamTop).toBe(true)
+    expect(out[2].seam.seamTop).toBe(true)
+  })
+
+  it('stops the band below drawing a divider INTO the run it is already inside', () => {
+    const site = {imageFrame: null, sectionJoin: 'angled', patternDark: false, cardHover: null,
+      attorneyCardStyle: null, ghost: null, overlap: null, gradient: null}
+    const out = walkFrame([band('light'), band('dark'), band('tint', true), band('dark')],
+      (m) => ({appearance: m as never, empty: false}), site, 'light')
+    // the page enters dark once, at band 1, and not again at band 3
+    expect(out[1].seam.divider?.mode).toBe('cut')
+    expect(out[3].seam.divider ?? null).toBeNull()
+  })
+
+  it('numbers a run of one, which is the whole ramp and is the market\u2019s device', () => {
+    const out = walk([band('light'), band('dark'), band('light')])
+    expect(out[1].seam.run).toEqual({index: 0, length: 1})
+  })
+
+  it('an interior page adopts nothing, because it has no run and no gradient', () => {
+    const site = {imageFrame: 'framed', sectionJoin: 'angled', patternDark: true, cardHover: null,
+      attorneyCardStyle: null, ghost: {text: 'AB'}, overlap: 'photo', gradient: 'deep'}
+    expect(interiorLook(site)).toMatchObject({gradient: null, overlap: null, ghost: null, sectionJoin: 'straight'})
   })
 })

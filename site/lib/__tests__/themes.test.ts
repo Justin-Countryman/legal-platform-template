@@ -27,8 +27,8 @@ const optionsOf = (field: string) => designRows.find((r) => r.path === field)?.o
 const stored = (s: ThemeSettings): ThemeDoc => Object.fromEntries(Object.entries(s).filter(([, v]) => v !== null))
 
 describe('the themes', () => {
-  it('ships nine, Granite held for Phase 16D ([R-478])', () => {
-    expect(THEMES.map((t) => t.id)).toEqual(['canyon', 'graphite', 'walnut', 'dune', 'flint', 'marble', 'linen', 'valley', 'quartz'])
+  it('ships ten, Granite returned with its gradient ([R-478], [R-504])', () => {
+    expect(THEMES.map((t) => t.id)).toEqual(['canyon', 'graphite', 'walnut', 'dune', 'flint', 'marble', 'linen', 'valley', 'granite', 'quartz'])
   })
 
   it.each(THEMES.map((t) => [t.name, t] as [string, Theme]))('%s names every field, its picks and an identity', (_, theme) => {
@@ -291,13 +291,18 @@ describe('a site built at an earlier pin still matches its theme', () => {
   const frozen = (pin: string) =>
     JSON.parse(readFileSync(resolve(__dirname, `fixtures/presets-${pin}.json`), 'utf8')) as Frozen
   // One file per pin at which a matched value moved. `bd74cdd` is Phase 16C's;
-  // `22da44f` is Phase 16D's revision, and Phase 16E freezes it because it put the
-  // raised photo on three themes ([R-500]).
-  const PINS = ['bd74cdd', '22da44f'] as const
+  // `22da44f` is Phase 16D's revision, frozen by 16E because it put the raised photo on
+  // three themes ([R-500]); `3979e37` is 16E's, frozen by 16F because it is the first
+  // pin before the roster grew — a TENTH theme is the first thing in this workstream
+  // that could take another theme's name at a pin, and this is what proves none does.
+  const PINS = ['bd74cdd', '22da44f', '3979e37'] as const
 
   it.each(PINS)('reads every theme at %s as that theme, current or earlier', (pin) => {
     const pinned = frozen(pin)
-    expect(pinned.themes).toHaveLength(THEMES.length)
+    // A pin holds the roster AS IT WAS, which is not today's length once a theme is
+    // added. What must hold is that every theme frozen there still reads as itself.
+    expect(pinned.themes.length).toBeLessThanOrEqual(THEMES.length)
+    expect(new Set(pinned.themes.map((t) => t.id)).size).toBe(pinned.themes.length)
     for (const old of pinned.themes) {
       const match = matchTheme(old.settings as ThemeDoc)
       expect(match?.theme.id, `a site wearing ${old.id} at ${pin}`).toBe(old.id)
@@ -310,9 +315,12 @@ describe('a site built at an earlier pin still matches its theme', () => {
   // Phase 16E ([R-500]), so they are earlier versions as of both. The widened test
   // found this the first time it ran, which is the reason to keep a file per pin
   // rather than one for the newest.
+  // Phase 16F retunes CANYON only: it takes the gradient ([R-502], [R-504]). Granite is
+  // new, so it appears in no frozen file and cannot be retuned.
   const RETUNED_SINCE: Record<(typeof PINS)[number], Set<string>> = {
     bd74cdd: new Set(['walnut', 'marble', 'canyon', 'graphite']),
     '22da44f': new Set(['marble', 'canyon', 'graphite']),
+    '3979e37': new Set(['canyon']),
   }
 
   it.each(PINS)('names the themes retuned since %s as earlier versions, and the rest as current', (pin) => {
