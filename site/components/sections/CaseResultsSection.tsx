@@ -44,10 +44,20 @@ export function resolveAppearance(data: CaseResultsSectionData) {
   return data.appearance
 }
 
+/** The results this section draws: a result with no amount and no caption has
+ *  nothing to show, and a dangling reference projects as null. The render, `isEmpty`
+ *  and the grey box all read this one filter (Phase 17A), so the walk never counts a
+ *  band the page does not draw. */
+export function visibleResults(data: CaseResultsSectionData) {
+  return (data.caseResults ?? []).filter(
+    (r): r is NonNullable<typeof r> => r != null && Boolean(r.amount || r.caption),
+  )
+}
+
 /** True when this section renders nothing, so the walk skips it and it never
  *  becomes the "previous band" for the one after it (item 312). */
 export function isEmpty(data: CaseResultsSectionData): boolean {
-  return (data.caseResults ?? []).filter((r) => r !== null).length === 0
+  return visibleResults(data).length === 0
 }
 
 export function CaseResultsSection({
@@ -62,8 +72,7 @@ export function CaseResultsSection({
   napTokens?: NapTokens | null
   seam?: SeamProps
 }) {
-  // A result with no amount and no caption has nothing to show.
-  const results = (data.caseResults ?? []).filter((r) => r.amount || r.caption)
+  const results = visibleResults(data)
 
   // No results means no results are being published, so there is nothing to
   // disclaim and the section renders nothing at all. This is the ONLY branch in

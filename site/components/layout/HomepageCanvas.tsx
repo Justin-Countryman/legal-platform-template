@@ -146,7 +146,10 @@ function renderBlock(
 // wrapper against the first-band rule (measured, Phase 15 challenge). Before
 // Phase 15 the six retired block types also fell here and did render; they are
 // deleted, so only an unknown type reaches `default` now.
-function frameOf(block: HomepageBlock): {appearance: SectionAppearance | null | undefined; empty: boolean; raisesPhoto?: boolean} {
+//
+// Exported for the grey box (Phase 17A), which must draw exactly the bands this walk
+// keeps: one answer to "will this band render", read by both.
+export function frameOf(block: HomepageBlock): {appearance: SectionAppearance | null | undefined; empty: boolean; raisesPhoto?: boolean} {
   switch (block._type) {
     case 'practiceAreaNavInline':
       return {appearance: PracticeAreaFrame.resolveAppearance(block), empty: PracticeAreaFrame.isEmpty(block)}

@@ -65,10 +65,16 @@ export function resolveAppearance(data: PracticeAreaNavBlockData) {
   return data.appearance
 }
 
+/** The areas this section draws: an item with no link is not drawn. The render,
+ *  `isEmpty` and the grey box all read this one filter (Phase 17A). */
+export function visibleItems(data: PracticeAreaNavBlockData): SiloNavItem[] {
+  return (data.items ?? []).filter((i): i is SiloNavItem => !!i?.href)
+}
+
 /** True when this section renders nothing, so the walk skips it and it never
  *  becomes the "previous band" for the one after it (item 312). */
 export function isEmpty(data: PracticeAreaNavBlockData): boolean {
-  return (data.items ?? []).filter((i) => i !== null).length === 0
+  return visibleItems(data).length === 0
 }
 
 export function PracticeAreaNavBlock({
@@ -80,7 +86,7 @@ export function PracticeAreaNavBlock({
   napTokens?: NapTokens | null
   seam?: SeamProps
 }) {
-  const items = (data.items ?? []).filter((i): i is SiloNavItem => !!i?.href)
+  const items = visibleItems(data)
   if (items.length === 0) return null
 
   const tagline = resolveTokenString(data.tagline, napTokens)
