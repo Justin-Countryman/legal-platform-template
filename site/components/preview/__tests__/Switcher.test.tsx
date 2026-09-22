@@ -72,10 +72,12 @@ describe('Switcher, the operator', () => {
     const wearing = {...stored, ...planPreview(stored, choices).set}
     const c = draw(operator, wearing, {styleSet: 'site', palette: 'site', view: 'design'}, [
       {_type: 'attorneySectionInline', _key: 'a', cardStyle: 'portrait'},
+      {_type: 'contentSectionInline', _key: 'b', imageTreatment: 'framed'},
+      {_type: 'contentSectionInline', _key: 'c', imageTreatment: 'slab'},
     ])
     expect(c.textContent).toContain('As the site is: Graphite')
     expect(c.textContent).toContain('As the site is: Navy & Brass')
-    expect(c.textContent).toContain('Attorneys (card style)')
+    expect(c.textContent).toContain('Attorneys (card style), Content section (photo frame) ×2')
   })
 })
 

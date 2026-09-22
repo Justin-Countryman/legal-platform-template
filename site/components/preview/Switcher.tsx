@@ -41,6 +41,13 @@ function names(plan: PreviewPlan): string {
 
 const date = (seconds: number) => new Date(seconds * 1000).toISOString().slice(0, 10)
 
+/** "Content section (photo frame) ×2, Attorneys (card style)": one entry per kind. */
+function keptLine(keep: {section: string; what: string}[]): string {
+  const counts = new Map<string, number>()
+  for (const k of keep) counts.set(`${k.section} (${k.what})`, (counts.get(`${k.section} (${k.what})`) ?? 0) + 1)
+  return [...counts].map(([label, n]) => (n > 1 ? `${label} ×${n}` : label)).join(', ')
+}
+
 function Choice({href, active, children}: {href: string; active: boolean; children: React.ReactNode}) {
   return (
     <Link href={href} prefetch={false} scroll={false} className={active ? 'sw-choice sw-active' : 'sw-choice'} aria-current={active ? 'true' : undefined}>
@@ -80,7 +87,9 @@ export function Switcher({grant, choices, plan, canvas, origin}: Props) {
   return (
     <aside className="sw" aria-label="Design preview">
       <style dangerouslySetInnerHTML={{__html: SWITCHER_CSS}} />
-      <details open>
+      {/* Closed at first so the page is visible; opened once, it stays open across
+          switches, because React does not manage the attribute and the element is kept. */}
+      <details>
         <summary className="sw-line"><strong>Preview, nothing is live:</strong> {names(plan)}</summary>
         <div className="sw-row">
           <span className="sw-head">View</span>
@@ -110,7 +119,7 @@ export function Switcher({grant, choices, plan, canvas, origin}: Props) {
           <span className="sw-choice sw-inert" aria-disabled="true">{ROW_THEME_NOTE}</span>
         </div>
         {keep.length > 0 && (
-          <p className="sw-note">Kept as set on the section, whatever the style set: {keep.map((k) => `${k.section} (${k.what})`).join(', ')}.</p>
+          <p className="sw-note">Kept as set on the section, whatever the style set: {keptLine(keep)}.</p>
         )}
         <p className="sw-note">Links on this page open the live site. Interior pages are not previewed.</p>
         {shareUrl && (
