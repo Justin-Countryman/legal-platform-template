@@ -2,6 +2,7 @@ import {headers} from 'next/headers'
 import {notFound, redirect} from 'next/navigation'
 import {SiteShell} from '@/components/layout/SiteShell'
 import {Switcher} from '@/components/preview/Switcher'
+import {analyticsOff} from '@/lib/preview/analytics'
 import {loadPreview} from '@/lib/preview/load'
 
 // ─── The preview address ──────────────────────────────────────────────────────
@@ -24,15 +25,6 @@ import {loadPreview} from '@/lib/preview/load'
 export const dynamic = 'force-dynamic'
 
 type Params = Promise<{styleSet: string; palette: string; view: string}>
-
-/** The operator's Google Analytics ids, found in the scripts the root layout runs,
- *  switched off before those scripts load, so preview visits are not counted as the
- *  firm's traffic. Tag Manager and other vendors cannot be switched off this way;
- *  the design record says so (§2.5). */
-function analyticsOff(scripts: unknown): string {
-  const ids = typeof scripts === 'string' ? [...new Set(scripts.match(/\bG-[A-Z0-9]{4,}\b/g) ?? [])] : []
-  return ids.map((id) => `window['ga-disable-${id}']=true;`).join('')
-}
 
 export default async function PreviewLayout({children, params}: {children: React.ReactNode; params: Params}) {
   const {styleSet, palette, view} = await params
