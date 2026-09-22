@@ -295,6 +295,24 @@ export const designSettings = defineType({
       },
     }),
     defineField({
+      name: 'sectionGradient',
+      title: 'Gradient',
+      type: 'string',
+      fieldset: 'drawnElements',
+      description:
+        'Fades a dark section\u2019s background from the brand dark into a deeper shade that picks up the accent color. '
+        + 'Where several dark sections run together they share one continuous fade, with no line between them. '
+        + 'Homepage only, on dark sections only \u2014 never on light, tint, accent-filled or photo sections, and never on '
+        + 'interior pages. On a near-black brand color there is little room to fade and the effect is slight. Leave blank for none.',
+      options: {
+        list: [
+          {title: 'None', value: 'none'},
+          {title: 'A deep fade down the dark sections', value: 'deep'},
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
       name: 'dropCap',
       title: 'Drop Cap',
       type: 'string',

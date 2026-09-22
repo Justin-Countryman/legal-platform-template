@@ -1003,6 +1003,55 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   margin-top: calc(-1 * (var(--band-pt, 0px) + var(--band-divider, 0px) + var(--photo-rise)));
 }
 
+/* ─── The gradient on a dark band (Phase 16F) ────────────────────────────────── */
+/* The ground fades from the brand dark into the deep stop the engine derived for
+   this palette. PER BAND, restarting at each one, which is what every studied site
+   that draws a gradient does. `background-image`, so the solid `background-color`
+   under it is what a browser that cannot parse the interpolation keyword paints --
+   and the AA guarantee is the solid ground's in that case, unchanged. Measured
+   through this repo's own PostCSS: an `in oklab` gradient passes through verbatim
+   with no fallback and no @supports, where a `color-mix()` background-color is
+   rewritten to a static fallback (the Lightning CSS trap). `oklab` and not sRGB
+   because sRGB interpolation between two hues passes through a grey middle. */
+/* ONE ramp per RUN, sliced per band, so the fade is continuous across a run of dark
+   bands and is the whole ramp on a dark band that stands alone (a run of one -- which
+   is the market's case: live, gradient bands are 63 one-band to 1 spanning).
+   The slice is done with color-stop POSITIONS outside 0-100%, which the browser
+   extrapolates: band i of n shows the ramp between i/n and (i+1)/n when its stops sit
+   at -i*100% and (n-i)*100%. So no color is computed per band and no `color-mix()`
+   is needed -- which matters, because Lightning CSS rewrites a `color-mix()` to a
+   static fallback and an @supports rule (measured through this repo's own PostCSS),
+   while an `in oklab` gradient passes through verbatim. */
+@utility band-gradient {
+  background-image: linear-gradient(in oklab,
+    var(--color-brand-dark) calc(var(--grad-i, 0) * -100%),
+    var(--color-gradient-stop) calc((var(--grad-n, 1) - var(--grad-i, 0)) * 100%));
+}
+/* The band's position in its run, as real utilities rather than arbitrary values
+   ([R-463]). A run is capped at eight bands; beyond that a band restarts the ramp,
+   which is the per-band device and not a defect. */
+@utility grad-i-0 { --grad-i: 0; }
+@utility grad-i-1 { --grad-i: 1; }
+@utility grad-i-2 { --grad-i: 2; }
+@utility grad-i-3 { --grad-i: 3; }
+@utility grad-i-4 { --grad-i: 4; }
+@utility grad-i-5 { --grad-i: 5; }
+@utility grad-i-6 { --grad-i: 6; }
+@utility grad-i-7 { --grad-i: 7; }
+@utility grad-n-1 { --grad-n: 1; }
+@utility grad-n-2 { --grad-n: 2; }
+@utility grad-n-3 { --grad-n: 3; }
+@utility grad-n-4 { --grad-n: 4; }
+@utility grad-n-5 { --grad-n: 5; }
+@utility grad-n-6 { --grad-n: 6; }
+@utility grad-n-7 { --grad-n: 7; }
+@utility grad-n-8 { --grad-n: 8; }
+/* A gradient is a GROUND, not decoration, so it cannot be display:none'd the way
+   [data-section-texture] and [data-decor-layer] are -- removing it must leave a
+   ground behind. Dropping the image alone does exactly that. */
+@media (forced-colors: active) { .band-gradient { background-image: none; } }
+@media print { .band-gradient { background-image: none; } }
+
 /* ─── The carried pieces (Phase 16C, `[R-483]`) ──────────────────────────────── */
 /* Cards: a small piece in the bottom corner, following the card's own radius. */
 [data-carry-cards] [data-card] { position: relative; }

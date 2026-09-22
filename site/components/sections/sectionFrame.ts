@@ -83,6 +83,9 @@ export type SiteLook = {
    *  the band above. Optional, because a required member on `SiteLook` puts every test
    *  literal that constructs one red for a field none of them cares about. */
   overlap?: string | null
+  /** The site's gradient (Phase 16F): `deep` fades a dark band's ground into the
+   *  deep stop the engine derived. Optional, which is the 16D trap. */
+  gradient?: string | null
 }
 
 /** The site look from the projected Design Settings (`DESIGN_TOKENS_QUERY`). */
@@ -96,6 +99,7 @@ export function siteLookOf(d: Record<string, unknown> | null | undefined): SiteL
     attorneyCardStyle: s('attorneyCardStyle'),
     ghost: null,
     overlap: s('sectionOverlap'),
+    gradient: s('sectionGradient'),
   }
 }
 
@@ -104,7 +108,7 @@ export function siteLookOf(d: Record<string, unknown> | null | undefined): SiteL
  *  ghost. The drop cap and the quote mark DO reach them: they are the UI system's one
  *  decision each, as the card style and the photo frame are (Phase 16B amendment 25). */
 export function interiorLook(site: SiteLook | null | undefined): SiteLook | null {
-  return site ? {...site, sectionJoin: 'straight', patternDark: false, ghost: null, overlap: null} : null
+  return site ? {...site, sectionJoin: 'straight', patternDark: false, ghost: null, overlap: null, gradient: null} : null
 }
 
 /** A section's own value where it has one; absent and `inherit` follow the site. */
@@ -129,15 +133,30 @@ export type SeamProps = {
   /** This band raises its feature photo into the band above (Phase 16E). At most one
    *  band on a page does. */
   raisePhoto?: boolean
+  /** The ground an INSET band's own `<section>` paints (Phase 16F). Normally an inset
+   *  band paints nothing and the page's light ground runs around its panel; where the
+   *  band above and the band below both show one strong ground, the panel sits ON that
+   *  ground instead, so the run reads as one block of color. Null everywhere else. */
+  insetGround?: VisibleGround | null
+  /** This band's place in its run of one visible ground (Phase 16F): `index` from 0 and
+   *  `length` the run's size, so a gradient can be sliced across the run. A band that
+   *  stands alone is a run of one and takes the whole ramp, which is the per-band device
+   *  the field study and the live census both record. */
+  run?: {index: number; length: number}
 }
 
-export const NO_SEAM: SeamProps = {site: null, seamTop: false, previousGround: null, nextOverlap: 'none', divider: null, ghost: false, raisePhoto: false}
+export const NO_SEAM: SeamProps = {site: null, seamTop: false, previousGround: null, nextOverlap: 'none', divider: null, ghost: false, raisePhoto: false, insetGround: null}
 
 /** Overlap applies to an inset panel only (Phase 16A, `[R-475]`): a full-width band
  *  riding over the one above only hid that band's bottom, text included. */
 export function overlapOf(appearance: SectionAppearance | null | undefined): Overlap {
   return appearance?.inset ? (appearance.overlapPrevious ?? 'none') : 'none'
 }
+
+/** Which grounds an inset panel may sit on. Dark and saturated only: those are the
+ *  two the page ground contrasts with, and they are the two a panel reads as a figure
+ *  against. A panel on a light run is invisible -- it already sits on light. */
+const HOSTS: readonly VisibleGround[] = ['dark', 'saturated']
 
 /**
  * Walk a list of members, dropping the ones that render nothing, and compute the
@@ -172,13 +191,41 @@ export function walkFrame<M>(
   const out: Array<{member: M; index: number; seam: SeamProps}> = []
   let prevGround: VisibleGround | null = null
 
+  // ─── The adoption pass (Phase 16F) ──────────────────────────────────────────
+  // An inset band's `visibleGround` is `light` unconditionally, because the page
+  // ground runs around its panel on all four sides. That is right on a light page
+  // and wrong inside a run of dark bands: measured on the fixture, it puts 683px of
+  // white between two navy bands with a near-white panel floating on it.
+  //
+  // So BEFORE the walk numbers anything, an inset band bracketed above and below by
+  // one strong ground adopts it. It has to be decided here rather than inside the
+  // loop, because it needs the band BELOW and the forward walk does not have it --
+  // and because everything downstream reads the ground: the seam, the divider (which
+  // would otherwise cut a light wedge into an already-dark band), the ghost and the
+  // raised photo.
+  const survivors = members.map((m, index) => ({m, index, ...resolve(m)})).filter((r) => !r.empty)
+  const raw = survivors.map((r) => visibleGround(r.appearance, site?.patternDark))
+  const adopted: (VisibleGround | null)[] = survivors.map((r, i) => {
+    if (!r.appearance?.inset) return null
+    if (i === 0 || i === survivors.length - 1) return null
+    const above = raw[i - 1]
+    const below = raw[i + 1]
+    return above === below && HOSTS.includes(above) ? above : null
+  })
+  const groundAt = new Map<number, VisibleGround>()
+  const adoptAt = new Map<number, VisibleGround>()
+  survivors.forEach((r, i) => {
+    groundAt.set(r.index, adopted[i] ?? raw[i])
+    if (adopted[i]) adoptAt.set(r.index, adopted[i]!)
+  })
+
   members.forEach((member, index) => {
     const {appearance, empty} = resolve(member)
     // An invisible band leaves the previous ground untouched, so the band after
     // it seams against the last band anyone can actually see.
     if (empty) return
 
-    const ground = visibleGround(appearance, site?.patternDark)
+    const ground = groundAt.get(index) ?? visibleGround(appearance, site?.patternDark)
 
     // An overlapping panel takes no top padding from `md`, so a seam would be
     // meaningless; `SectionShell` already resolves that, and asking for both
@@ -187,12 +234,13 @@ export function walkFrame<M>(
 
     const seam: SeamProps =
       out.length === 0
-        ? {...NO_SEAM, site}
+        ? {...NO_SEAM, site, insetGround: adoptAt.get(index) ?? null}
         : {
             site,
             seamTop: !overlapping && prevGround === ground,
             previousGround: prevGround,
             nextOverlap: 'none',
+            insetGround: adoptAt.get(index) ?? null,
           }
 
     // An inset first band takes none: the wedge crossed an overlapping panel to two
@@ -234,7 +282,7 @@ export function walkFrame<M>(
   if (site?.ghost) {
     const eligible = out.filter(({member}) => {
       const a = resolve(member).appearance
-      const g = visibleGround(a, site.patternDark)
+      const g = groundAt.get(out.find((o) => o.member === member)!.index) ?? visibleGround(a, site.patternDark)
       return g !== 'saturated' && g !== 'image' && a?.surface !== 'pattern' && !a?.inset
     })
     const host =
@@ -255,8 +303,8 @@ export function walkFrame<M>(
     for (let i = 1; i < out.length; i++) {
       const r = resolve(out[i].member)
       if (!r.raisesPhoto || r.appearance?.inset) continue
-      const g = visibleGround(r.appearance, site.patternDark)
-      const prev = visibleGround(resolve(out[i - 1].member).appearance, site.patternDark)
+      const g = groundAt.get(out[i].index) ?? visibleGround(r.appearance, site.patternDark)
+      const prev = groundAt.get(out[i - 1].index) ?? visibleGround(resolve(out[i - 1].member).appearance, site.patternDark)
       if (!same(g, prev)) eligible.push(i)
     }
     // NEAREST THE MIDDLE OF THE LIST, never the first: live, the first ground-change
@@ -268,6 +316,21 @@ export function walkFrame<M>(
     if (pick !== null) {
       out[pick].seam = {...out[pick].seam, raisePhoto: true}
       out[pick - 1].seam = {...out[pick - 1].seam, nextOverlap: 'photo'}
+    }
+  }
+
+  // ─── The run pass (Phase 16F) ───────────────────────────────────────────────
+  // Number each maximal stretch of survivors sharing one visible ground, AFTER the
+  // adoption pass, so an adopted inset band is inside its run rather than breaking it.
+  {
+    let start = 0
+    for (let i = 1; i <= out.length; i++) {
+      const same2 = i < out.length && groundAt.get(out[i].index) === groundAt.get(out[start].index)
+      if (!same2) {
+        const length = i - start
+        for (let k = start; k < i; k++) out[k].seam = {...out[k].seam, run: {index: k - start, length}}
+        start = i
+      }
     }
   }
 

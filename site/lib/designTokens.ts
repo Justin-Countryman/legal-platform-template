@@ -1,4 +1,4 @@
-import { converter, formatHex, wcagContrast, parse, clampChroma } from 'culori'
+import { converter, formatHex, wcagContrast, parse, clampChroma, differenceCiede2000 } from 'culori'
 import {DIVIDER_DEPTH, MOTIF_PIECES, dividerPolygon, dividerShape} from './dividers'
 import {HEADING_LINES, headingLineVars} from './headingLines'
 
@@ -472,6 +472,10 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
     tokens['--color-foreground-on-dark'], tokens['--color-foreground-muted-on-dark'],
     tokens['--color-foreground-subtle-on-dark'], tokens['--color-accent-on-dark'], tokens['--color-action-text-on-dark'],
   ])
+  tokens['--color-gradient-stop'] = gradientStopOn(brandDark, background, accent, [
+    tokens['--color-foreground-on-dark'], tokens['--color-foreground-muted-on-dark'],
+    tokens['--color-foreground-subtle-on-dark'], tokens['--color-accent-on-dark'], tokens['--color-action-text-on-dark'],
+  ])
   tokens['--color-texture-ink-on-dark'] = texture.ink
   tokens['--section-texture-opacity-on-dark'] = String(texture.opacity)
 
@@ -497,7 +501,56 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
 // Measured on the placeholder and the fifteen presets: black on all sixteen,
 // opacity 0.084 to 0.676, every on-dark pair raised.
 const toLab = converter('lab')
+const toOklab = converter('oklab')
+const deltaE = differenceCiede2000()
 const lightness = (hex: string) => (toLab(hex) as unknown as {l: number}).l
+
+/** The deep stop a dark band fades into (Phase 16F). Shaped exactly like
+ *  `textureOnDark`: an ink over the dark ground at the alpha that moves CIE L* by
+ *  the same perceptual step the light texture moves it. The ink is the ACCENT's hue
+ *  and chroma at a lightness derived from the GROUND, never a fixed near-black -- a
+ *  fixed one saturates at alpha 1 on a near-black ground and the fade falls short. */
+export const GRADIENT_DEPTH_DE = 10
+
+export function gradientStopOn(dark: string, _lightGround: string, accent: string, onDarkText: string[], targetDe = GRADIENT_DEPTH_DE): string {
+  // The DEPTH is a perceptual distance, not the light texture's lightness step. Binding
+  // it to the texture was this design's first shape and it produced a fade nobody can
+  // see: measured end to end, DeltaE2000 1.7 to 4.2 across a 2,450px run, with the hue
+  // moving under 3 degrees on 13 of 16 palettes (ADV-16F-A). A texture is a 4%-opacity
+  // hairline; a ground fading across a whole band is not the same size of move.
+  const d = parseOklch(dark)
+  const a = parseOklch(accent)
+  const solve = (ink: string) => {
+    let lo = 0, hi = 1
+    for (let i = 0; i < 30; i++) {
+      const mid = (lo + hi) / 2
+      if (deltaE(dark, blendOver(dark, ink, mid)) < targetDe) lo = mid
+      else hi = mid
+    }
+    return Math.round(hi * 1000) / 1000
+  }
+  // The ink is the accent's hue and chroma carried toward black, at a lightness derived
+  // from the GROUND and never fixed: an absolute near-black ink goes LIGHTER than a
+  // near-black ground on 27 of 11,156 swept inputs and lowers contrast (ADV-16F-A).
+  const ink = toHex(d.l * 0.55, a.c, a.h)
+  let alpha = solve(ink)
+  // The AA loop must test the RAMP, not the stop. `textureOnDark`'s loop tests one
+  // blended color because a texture IS one color; a gradient is every color between
+  // two, and WCAG F83 measures text against the lowest-contrast part of what is behind
+  // it. Measured: with the loop testing only the stop, 3 of 7,052 swept palettes fail
+  // AA at an INTERIOR point while both endpoints pass (worst 4.49:1 on the ramp
+  // against 4.50:1 on the stop, reproduced by accent #2d00f4).
+  const holds = (a: number) => {
+    const stop = blendOver(dark, ink, a)
+    for (let i = 0; i <= 100; i++) {
+      const at = mixOklab(dark, stop, i / 100)
+      if (onDarkText.some((c) => contrast(c, at) < 4.5)) return false
+    }
+    return true
+  }
+  while (alpha > 0 && !holds(alpha)) alpha = Math.round((alpha - 0.005) * 1000) / 1000
+  return blendOver(dark, ink, Math.max(0, alpha))
+}
 
 export function textureOnDark(dark: string, lightGround: string, onDarkText: string[]): {ink: string; opacity: number} {
   const target = lightness(lightGround) - lightness(blendOver(lightGround, dark, SECTION_TEXTURE_OPACITY))
@@ -535,6 +588,15 @@ export type WcagResult = {
   passes: boolean
   /** True for a WCAG 2.2 AA requirement the engine guarantees; false for a design warning. */
   blocking: boolean
+}
+
+/** Two colors mixed in OKLab at `t`, which is what `linear-gradient(in oklab, ...)`
+ *  interpolates. Used to sample the ramp, never to emit a color. */
+function mixOklab(a0: string, b0: string, t: number): string {
+  type Lab = {l: number; a: number; b: number}
+  const a = toOklab(a0) as unknown as Lab
+  const b = toOklab(b0) as unknown as Lab
+  return formatHex({mode: 'oklab', l: a.l + (b.l - a.l) * t, a: a.a + (b.a - a.a) * t, b: a.b + (b.b - a.b) * t})
 }
 
 /** `ink` at `alpha` over `ground`, composited per channel in gamma-encoded sRGB, as
@@ -587,6 +649,23 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
   check('foreground-subtle-on-dark on section-texture-dark', t['--color-foreground-subtle-on-dark'], darkTexture, 4.5)
   check('accent-on-dark on section-texture-dark',            t['--color-accent-on-dark'],            darkTexture, 4.5)
   check('action-text-on-dark on section-texture-dark',       t['--color-action-text-on-dark'],       darkTexture, 4.5)
+  // Phase 16F: the deep stop a dark band fades into, and the ramp between. WCAG F83
+  // measures text against the lowest-contrast part of what is behind it, which for a
+  // gradient is a POINT: the interior minimum can fall below both endpoints, measured.
+  const stop = t['--color-gradient-stop']
+  const onDarkTiers: Array<[string, string]> = [
+    ['foreground-on-dark', t['--color-foreground-on-dark']],
+    ['foreground-muted-on-dark', t['--color-foreground-muted-on-dark']],
+    ['foreground-subtle-on-dark', t['--color-foreground-subtle-on-dark']],
+    ['accent-on-dark', t['--color-accent-on-dark']],
+    ['action-text-on-dark', t['--color-action-text-on-dark']],
+  ]
+  for (const [name, fg] of onDarkTiers) check(`${name} on gradient-stop`, fg, stop, 4.5)
+  for (const [name, fg] of onDarkTiers) {
+    let worst = Infinity
+    for (let i = 1; i < 100; i++) worst = Math.min(worst, contrast(fg, mixOklab(dark, stop, i / 100)))
+    results.push({pair: `${name} on the gradient ramp`, ratio: Math.round(worst * 100) / 100, min: 4.5, passes: worst >= 4.5, blocking: true})
+  }
   check('white on brand-dark',                    '#ffffff',                           dark, 7)
   check('foreground-on-dark on brand-dark',       t['--color-foreground-on-dark'],     dark, 4.5)
   check('foreground-muted-on-dark on brand-dark', t['--color-foreground-muted-on-dark'], dark, 4.5)

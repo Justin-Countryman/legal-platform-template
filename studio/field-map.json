@@ -5341,6 +5341,20 @@
           "type": "string"
         },
         {
+          "description": "Fades a dark section’s background from the brand dark into a deeper shade that picks up the accent color. Where several dark sections run together they share one continuous fade, with no line between them. Homepage only, on dark sections only — never on light, tint, accent-filled or photo sections, and never on interior pages. On a near-black brand color there is little room to fade and the effect is slight. Leave blank for none.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "none",
+              "deep"
+            ]
+          },
+          "path": "sectionGradient",
+          "title": "Gradient",
+          "type": "string"
+        },
+        {
           "description": "Opens a content section’s body text with a large first letter. Skipped where the paragraph starts with a quotation mark, a bracket or a number, and on centred sections. Leave blank for none.",
           "jsonType": "string",
           "options": {

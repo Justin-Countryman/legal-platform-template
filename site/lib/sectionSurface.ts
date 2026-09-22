@@ -262,6 +262,15 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
   'decor-ghost', 'section-texture-dark', 'text-brand-dark', 'opacity-4',
   // Phase 16E: the raised photo's utility and its column alignment.
   'md:photo-rise', 'md:self-start',
+  // Phase 16F: the gradient on a dark band, and the band's place in its run.
+  'band-gradient',
+  // WRITTEN OUT, not generated. Tailwind's own scanner looks for candidate STRINGS in
+  // source; a class built from a template literal in the shell is invisible to it and
+  // the utility is never emitted (measured: 0 occurrences in the served stylesheet).
+  // These literals are what makes the utilities exist at all, as well as what the
+  // resolution test reads.
+  'grad-i-0', 'grad-i-1', 'grad-i-2', 'grad-i-3', 'grad-i-4', 'grad-i-5', 'grad-i-6', 'grad-i-7',
+  'grad-n-1', 'grad-n-2', 'grad-n-3', 'grad-n-4', 'grad-n-5', 'grad-n-6', 'grad-n-7', 'grad-n-8',
 ]
   .join(' ')
   .split(/\s+/)

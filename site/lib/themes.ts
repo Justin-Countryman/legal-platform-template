@@ -2,6 +2,7 @@ import {getPresetById, type HeadingVoice} from '../fonts/presets'
 import {matchCornerFamily} from './corners'
 import {DIVIDERS, CARRY_PIECES, type CarryPiece} from './dividers'
 import {OVERLAPS} from './overlaps'
+import {SECTION_GRADIENTS} from './gradients'
 import {HEADING_LINES} from './headingLines'
 import {
   BUTTON_SHAPE_MAP, ELEVATION_STYLE_MAP, HEADING_CASES, HEADING_EMPHASIS_STYLES, HEADING_WEIGHTS, MARKETING_SCALE_MAP,
@@ -89,6 +90,8 @@ export const THEME_FIELDS = [
   // `[R-475]` was ruled on, because one unambiguous rising panel exists in the
   // sixty-five studied homepages against eighteen sites rising a photo.
   'sectionOverlap',
+  // Phase 16F: a dark band's ground fades into a deeper shade carrying the accent's hue.
+  'sectionGradient',
 ] as const
 
 export type ThemeField = (typeof THEME_FIELDS)[number]
@@ -97,7 +100,7 @@ export type ThemeField = (typeof THEME_FIELDS)[number]
  *  first four are the ones a visitor names first, and a pair of themes must differ in at
  *  least two of them. */
 export const SIGNATURE_HIGH = ['typeVoice', 'headingCase', 'cornerFamily', 'surfaceDevice', 'ghost'] as const
-export const SIGNATURE_LOW = ['emphasis', 'kicker', 'frame', 'attorneyCards', 'texture', 'shadow', 'scale', 'ornaments', 'overlap'] as const
+export const SIGNATURE_LOW = ['emphasis', 'kicker', 'frame', 'attorneyCards', 'texture', 'shadow', 'scale', 'ornaments', 'overlap', 'gradient'] as const
 export const SIGNATURE = [...SIGNATURE_HIGH, ...SIGNATURE_LOW] as const
 export type SignatureDimension = (typeof SIGNATURE)[number]
 
@@ -169,6 +172,7 @@ const OPTIONS: Record<Exclude<ThemeField, 'fontPairingPreset'>, readonly string[
   brandGhost: DRAWN_ELEMENT_STATES,
   dropCap: DRAWN_ELEMENT_STATES,
   sectionOverlap: OVERLAPS,
+  sectionGradient: SECTION_GRADIENTS,
 }
 
 /** What an ABSENT field renders: the default each reader falls back to. */
@@ -193,6 +197,7 @@ export const THEME_DEFAULTS: ThemeSettings = {
   brandGhost: 'none',
   dropCap: 'none',
   sectionOverlap: 'none',
+  sectionGradient: 'none',
 }
 
 /** Studio labels for the fields, used where a difference is named. */
@@ -217,6 +222,7 @@ export const THEME_FIELD_LABELS: Record<ThemeField, string> = {
   brandGhost: 'Ghosted initials',
   dropCap: 'Drop cap',
   sectionOverlap: 'Overlap',
+  sectionGradient: 'Gradient',
 }
 
 /** Studio labels for the picks. */
@@ -241,10 +247,10 @@ export const THEMES: readonly Theme[] = [
       buttonAnimation: 'sweep', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed',
       cardHover: 'imageZoom', attorneyCardStyle: 'portrait',
       headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'plain',
-      sectionOverlap: 'photo',
+      sectionOverlap: 'photo', sectionGradient: 'deep',
     }),
     picks: p({headingRule: 'line'}),
-    previous: [{settings: {fontPairingPreset: 2, marketingScale: 'md', taglineStyle: 'plain', uiRadius: 'subtle', buttonShape: 'square', buttonAnimation: 'sweep', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'imageZoom', attorneyCardStyle: 'portrait', headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'plain'}, picks: p({headingRule: 'line'})}],
+    previous: [{settings: {fontPairingPreset: 2, marketingScale: 'md', taglineStyle: 'plain', uiRadius: 'subtle', buttonShape: 'square', buttonAnimation: 'sweep', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'imageZoom', attorneyCardStyle: 'portrait', headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'plain'}, picks: p({headingRule: 'line'})}, {settings: {fontPairingPreset: 2, marketingScale: 'md', taglineStyle: 'plain', uiRadius: 'subtle', buttonShape: 'square', buttonAnimation: 'sweep', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'imageZoom', attorneyCardStyle: 'portrait', headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'plain', sectionOverlap: 'photo'}, picks: p({headingRule: 'line'})}],
     suggestedPalettes: ['black-gold', 'burgundy-gold', 'teal-mint'],
     evidence: ['kicker above and a short rule below every heading', 'italic accent phrase', 'cutout portraits in rounded panels'],
   },
@@ -375,6 +381,24 @@ export const THEMES: readonly Theme[] = [
     evidence: ['headlines over a short mustard rule', 'rounded inset panels', 'local photography'],
   },
   {
+    id: 'granite', name: 'Granite', feel: 'corporate navy: uppercase sans, framed photos, a deep fade on the dark bands',
+    identity: {
+      sentence: "Corporate navy: uppercase headings with one phrase in the accent, gold hairline frames, and dark bands that fade into a deeper shade.",
+      recognizers: ['headingCase', 'typeVoice', 'gradient'],
+    },
+    settings: t({
+      fontPairingPreset: 5, marketingScale: 'sm', taglineStyle: 'plain', uiRadius: 'subtle', buttonShape: 'square',
+      buttonAnimation: 'none', tertiaryStyle: 'plain', elevationStyle: '1', motionTempo: 'balanced',
+      cardHover: 'accentBorder', attorneyCardStyle: 'classic',
+      headingEmphasisStyle: 'color', headingCase: 'upper', imageFrame: 'framed',
+      sectionGradient: 'deep',
+    }),
+    picks: p({headingRule: 'line'}),
+    previous: [],
+    suggestedPalettes: ['navy-brass', 'navy-ice', 'navy-orange', 'navy-brick'],
+    evidence: ['navy all-caps sans headings with a gold second line', 'gold hairline boxes framing cards and photos', 'a dark-to-oxblood gradient fading between bands'],
+  },
+  {
     id: 'quartz', name: 'Quartz', feel: 'modern clean: geometric capitals, pills, a scallop texture',
     identity: {
       sentence: "Modern clean: geometric capitals, pills, a scallop texture, a lead dot under each heading.",
@@ -468,6 +492,9 @@ export function signatureOf(theme: Theme): Record<SignatureDimension, string> {
     // cannot decide which themes take the device either — appending a dimension is
     // monotone, so no assignment can fail the floor (measured over all 255).
     overlap: String(s.sectionOverlap),
+    // Phase 16F: appended, never folded, for 16D amendment 7's reason. LOW: it is a
+    // ground treatment on the dark bands only, not what a visitor names first.
+    gradient: String(s.sectionGradient),
     emphasis: String(s.headingEmphasisStyle),
     kicker: String(s.taglineStyle),
     frame: String(s.imageFrame),
