@@ -17,7 +17,14 @@ import {join} from 'node:path'
 // the defect is a string in the markup, not a behaviour: what has to stay true
 // is that these three phrases are not in the file at all. A render test would
 // pass the day someone moved the copy into a constant.
-const ROUTE = readFileSync(join(__dirname, '..', '(site)', 'page.tsx'), 'utf8')
+//
+// Since Phase 17A the band is drawn by `components/layout/HomeBody.tsx`, the
+// homepage's body moved out of the route so the preview address can draw it too;
+// the route and the body are read together, so the copy is refused in either.
+const ROUTE = [
+  readFileSync(join(__dirname, '..', '(site)', 'page.tsx'), 'utf8'),
+  readFileSync(join(__dirname, '..', '..', 'components', 'layout', 'HomeBody.tsx'), 'utf8'),
+].join('\n')
 
 describe('the unauthored-homepage fallback band', () => {
   it('does not instruct the reader to configure a CMS', () => {

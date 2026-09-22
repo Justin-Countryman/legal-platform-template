@@ -1,0 +1,316 @@
+// ─── The site shell ───────────────────────────────────────────────────────────
+//
+// Everything the site layout draws around a page: the design CSS built from Design
+// Settings, the wrapper that carries the site look's data attributes, the header,
+// the providers and the footer. It was the body of `app/(site)/layout.tsx` until
+// Phase 17A, which moved it here unchanged so a second caller can hand it a
+// different chrome: the preview address (`app/(preview)/site-preview/`) renders the
+// same shell over a chrome whose design settings carry the operator's choices,
+// without a write (monorepo WS-V1-PHASE17A-DESIGN §2.2). The live layout passes the
+// chrome it fetched and nothing else, so a live page is what it was; the build's
+// check compares the prerendered pages before and after the move.
+
+import {type getSiteChrome} from '@/lib/sanity/fetchers'
+import {resolveTokenString, formatPhone} from '@/lib/tokens'
+import {buildDesignTokenCSS, buildColorCSS, buildFontCSS, resolveSidebarDesignSettings} from '@/lib/designTokens'
+import {dividerShape, readCarry} from '@/lib/dividers'
+import {HeroSchemeProvider} from '@/lib/heroSchemeContext'
+import {HeroSurfaceProvider} from '@/lib/heroSurfaceContext'
+import {DEFAULT_SCRIM_OPACITY, resolveHeroSurface, resolveMergedHeaderScheme} from '@/lib/heroSurface'
+import {SidebarDesignSettingsProvider} from '@/lib/sidebarDesignSettingsContext'
+import {OfficeHoursProvider} from '@/components/location/OfficeHoursContext'
+import {resolvefonts, buildFontPreloads} from '@/fonts/loader'
+import {Header, type NavItem, type NavChild} from '@/components/layout/Header'
+import {Footer} from '@/components/layout/Footer'
+import {BackToTop} from '@/components/ui/BackToTop'
+import {MotionRoot} from '@/components/ui/MotionRoot'
+
+// ─── Practice area ordering ────────────────────────────────────────────────────
+// GROQ returns a flat ordered array of {_id, label, href, parentRef?} for
+// navItemPracticeAreas so we can preserve the practiceAreaOrder sequence.
+// This function groups them back into the {label, href, children?} shape the
+// Header component expects, honouring both parent and child order.
+
+type FlatPracticeAreaItem = {
+  _id: string
+  label: string
+  href: string
+  parentRef?: string | null
+}
+
+function groupPracticeAreaNav(flat: FlatPracticeAreaItem[]): NavChild[] {
+  const parents = flat.filter((i) => !i.parentRef)
+  return parents.map((parent) => ({
+    label: parent.label,
+    href: parent.href,
+    children: flat
+      .filter((i) => i.parentRef === parent._id)
+      .map((c) => ({label: c.label, href: c.href})),
+  }))
+}
+
+function buildNavItems(rawItems: unknown[]): NavItem[] {
+  if (!Array.isArray(rawItems)) return []
+  return rawItems.map((item: unknown) => {
+    const i = item as Record<string, unknown>
+    // Belt-and-suspenders null filter on nav children — paired with GROQ
+    // post-projection [defined(_id)] on attorneyOrder/practiceAreaOrder
+    // (see queries.ts HEADER_QUERY navItemAttorneys/navItemPracticeAreas).
+    if (Array.isArray(i.children)) {
+      i.children = i.children.filter((c: unknown) => c !== null)
+    }
+    if (i._type === 'navItemPracticeAreas' && Array.isArray(i.children)) {
+      return {
+        ...i,
+        children: groupPracticeAreaNav(i.children as FlatPracticeAreaItem[]),
+      } as NavItem
+    }
+    return i as NavItem
+  })
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+
+/** The chrome the shell draws from: `getSiteChrome()`'s answer, or a preview's copy of it. */
+export type SiteChrome = Awaited<ReturnType<typeof getSiteChrome>>
+
+export function SiteShell({chrome: given, children}: {chrome: SiteChrome; children: React.ReactNode}) {
+  const chrome = given ?? {}
+  const {header: headerData, footer: footerData, designTokens, heroSettings} = chrome
+
+  // Site-level internal-hero defaults now come from Hero Settings, with a
+  // transitional fallback to the legacy designSettings fields (removed once the
+  // migration runs). scrimStyle + section background are new (Hero Settings only).
+  const heroSite = {
+    scheme: (heroSettings?.scheme ?? designTokens?.internalHeroBackground) === 'light' ? ('light' as const) : ('dark' as const),
+    bgImage: heroSettings?.backgroundImage ?? designTokens?.siteHeroBackgroundImage ?? null,
+    foreground: heroSettings?.foregroundImage ?? designTokens?.siteHeroForegroundImage ?? null,
+    scrimOpacity:
+      typeof heroSettings?.scrimOpacity === 'number'
+        ? heroSettings.scrimOpacity
+        : typeof designTokens?.heroScrimOpacity === 'number'
+          ? designTokens.heroScrimOpacity
+          : DEFAULT_SCRIM_OPACITY,
+    scrimStyle: heroSettings?.scrimStyle === 'gradient' ? ('gradient' as const) : ('flat' as const),
+    // Gradient color + direction (gradient style only). Default 'auto' = derived.
+    scrimColor: heroSettings?.scrimColor ?? ('auto' as const),
+    scrimDirection: heroSettings?.scrimDirection ?? ('auto' as const),
+    sectionBg: heroSettings?.sectionBackgroundImage ?? null,
+    // Site-wide default internal-hero CTA buttons (Hero Settings only — no
+    // designSettings fallback; this is new in Phase 2).
+    defaultButtons: heroSettings?.defaultButtons ?? [],
+  }
+
+  const tokenCSS = buildDesignTokenCSS({
+    uiRadius:             designTokens?.uiRadius,
+    buttonShape:          designTokens?.buttonShape,
+    tertiaryStyle:        designTokens?.tertiaryStyle,
+    elevationStyle:       designTokens?.elevationStyle,
+    motionTempo:          designTokens?.motionTempo,
+    marketingScale:       designTokens?.marketingScale,
+    taglineStyle:         designTokens?.taglineStyle,
+    patternTexture:       designTokens?.patternTexture,
+    headingEmphasisStyle: designTokens?.headingEmphasisStyle,
+    headingCase:          designTokens?.headingCase,
+    sectionJoin:          designTokens?.sectionJoin,
+    headingRule:          designTokens?.headingRule,
+  })
+  const colorCSS = buildColorCSS({
+    darkGround:  designTokens?.darkGround,
+    lightGround: designTokens?.lightGround,
+    accent:      designTokens?.accent,
+    action:      designTokens?.action,
+  })
+  const {heading: resolvedHeading, body: resolvedBody} = resolvefonts(
+    designTokens?.fontPairingPreset,
+    designTokens?.headingFont,
+    designTokens?.bodyFont,
+  )
+  const fontCSS = buildFontCSS(resolvedHeading, resolvedBody)
+
+  const napTokens = {
+    firmName: headerData?.siteSettings?.firmName,
+    firmNameShort: headerData?.siteSettings?.firmNameShort,
+    primaryPhone: formatPhone(headerData?.siteSettings?.phone) || null,
+    primaryTollFree: formatPhone(headerData?.siteSettings?.tollFreePhone) || null,
+  }
+
+  // Button hover animation is driven by a data-attribute on a top-level wrapper
+  // — animation rules in globals.css scope to `[data-button-animation="<mode>"]
+  // [data-button-animatable="true"]`. The attribute lives on a div inside this
+  // layout (rather than <html>, which is rendered by the root layout that
+  // doesn't fetch designSettings) so the GROQ call isn't duplicated.
+  const buttonAnimation = designTokens?.buttonAnimation ?? 'none'
+  // The same wrapper carries two theme settings whose paint must resolve on the
+  // element it decorates, not at :root (Phase 16B): the rule under section headings
+  // (`data-heading-rule`) and the site's photo frame on attorney photos
+  // (`data-image-frame`). globals.css reads both.
+  const headingRule = designTokens?.headingRule ?? 'none'
+  const imageFrame = designTokens?.imageFrame ?? 'plain'
+  // Phase 16C. The carried pieces repeat the divider's shape (`[R-483]`), so they are
+  // drawn only where the site's divider is shaped, and the button piece only where a
+  // button has a corner to take it (Sharp and Crisp): on Balanced it reads as a smudge,
+  // on a pill it falls outside the button (ADV-P16C-A). The heading weight rides the same
+  // wrapper, because the rule must beat the `font-bold` utility without moving 183
+  // headings in four goldens.
+  const carry = dividerShape(designTokens?.sectionJoin) ? readCarry(designTokens?.dividerCarry) : []
+  const cornered = designTokens?.buttonShape === 'square' && ['sharp', 'subtle'].includes(designTokens?.uiRadius ?? '')
+  const headingWeight = designTokens?.headingWeight === 'regular' ? 'regular' : undefined
+  // Phase 16D. The drop cap rides the same wrapper the heading rule and the carried
+  // pieces already do. The ghost is not here: it is per band, so it rides the walk
+  // (`sectionFrame.ts`).
+  const ornaments = designTokens?.dropCap === 'on' ? 'dropCap' : ''
+
+  // Merged-header contrast guardrail: when heroMerge is on, the transparent
+  // at-top header overlays the hero, so its text polarity must follow the
+  // EFFECTIVE site hero scheme (dark hero / any hero image ⇒ white text; light
+  // hero ⇒ dark text) rather than the independent mainNavigation default. The
+  // image⇒dark rule comes through resolveHeroSurface().isDark. Solid header
+  // schemes (no overlay) and heroMerge-off are left untouched.
+  const siteHeroSurface = resolveHeroSurface({
+    scheme: heroSite.scheme,
+    bgImage: heroSite.bgImage,
+    foreground: heroSite.foreground,
+    scrimOpacity: heroSite.scrimOpacity,
+    scrimStyle: heroSite.scrimStyle,
+    scrimColor: heroSite.scrimColor,
+    scrimDirection: heroSite.scrimDirection,
+    sectionBg: heroSite.sectionBg,
+  })
+  const mergedDefaultScheme = resolveMergedHeaderScheme(
+    headerData?.mainNavigation?.defaultScheme ?? 'light',
+    headerData?.mainNavigation?.heroMerge ?? false,
+    siteHeroSurface.isDark,
+  )
+
+  // Preload regular-weight heading + body fonts so the browser fetches them in
+  // parallel with parsing the inline @font-face <style> below. See
+  // buildFontPreloads() in fonts/loader.ts for the dedupe and selection rules.
+  const fontPreloads = buildFontPreloads(resolvedHeading, resolvedBody)
+
+  // CLS guard: when heroMerge is off, the header sits in normal flow and the hero
+  // adds NO header-height padding — useHeaderHeight sets --header-height to 0 after
+  // hydration. Pin it to 0 at SSR too, so the hero's
+  // calc(var(--header-height, 8rem) + …) doesn't render with the 8rem placeholder
+  // and then jump up ~128px once JS runs (this was the 0.134 CLS on internal pages).
+  // heroMerge-on keeps the 8rem fallback (the header overlaps; useHeaderHeight then
+  // refines --header-height to the measured value).
+  const heroMerge = headerData?.mainNavigation?.heroMerge ?? false
+  const headerHeightSSR = heroMerge ? '' : ':root{--header-height:0px;}'
+
+  return (
+    <>
+      {fontPreloads.map(({key, href}) => (
+        <link
+          key={key}
+          rel="preload"
+          href={href}
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+      ))}
+      <style dangerouslySetInnerHTML={{__html: tokenCSS + colorCSS + headerHeightSSR}} />
+      {fontCSS && <style dangerouslySetInnerHTML={{__html: fontCSS}} />}
+      <div
+        data-button-animation={buttonAnimation}
+        data-heading-rule={headingRule}
+        data-heading-weight={headingWeight}
+        data-image-frame={imageFrame}
+        data-ornament={ornaments || undefined}
+        data-carry-cards={carry.includes('cards') ? '' : undefined}
+        data-carry-buttons={carry.includes('buttons') && cornered ? '' : undefined}
+        data-carry-photo={carry.includes('photo') ? '' : undefined}
+        data-carry-mark={carry.includes('mark') ? '' : undefined}
+        className="relative"
+      >
+      <MotionRoot>
+      <Header
+        data={{
+          firmName: headerData?.siteSettings?.firmName,
+          logoOnLight: headerData?.designSettings?.logoOnLight ?? null,
+          logoOnDark: headerData?.designSettings?.logoOnDark ?? null,
+          logoMarkOnLight: headerData?.designSettings?.logoMarkOnLight ?? null,
+          logoMarkOnDark: headerData?.designSettings?.logoMarkOnDark ?? null,
+          phone: formatPhone(headerData?.siteSettings?.phone) || null,
+          tollFreePhone: formatPhone(headerData?.siteSettings?.tollFreePhone) || null,
+          headerLayout: headerData?.mainNavigation?.headerLayout ?? 'apex',
+          mobileLayout: headerData?.mainNavigation?.mobileLayout ?? 'standard',
+          heroMerge: headerData?.mainNavigation?.heroMerge ?? false,
+          sticky: headerData?.mainNavigation?.sticky ?? true,
+          stickyHideSupplementary: headerData?.mainNavigation?.stickyHideSupplementary ?? true,
+          compactStyle: headerData?.mainNavigation?.compactStyle ?? 'docked',
+          defaultScheme: mergedDefaultScheme,
+          scrolledScheme: headerData?.mainNavigation?.scrolledScheme ?? 'light',
+          topBarDesktop: headerData?.mainNavigation?.topBarDesktop ?? false,
+          topBarMobile: headerData?.mainNavigation?.topBarMobile ?? false,
+          topBarPinSide: headerData?.mainNavigation?.topBarPinSide ?? 'none',
+          topBarLeft: resolveTokenString(headerData?.mainNavigation?.topBarLeft, napTokens) || null,
+          topBarRight: resolveTokenString(headerData?.mainNavigation?.topBarRight, napTokens) || null,
+          topBarStyle: headerData?.mainNavigation?.topBarStyle ?? 'primary',
+          headerPhone: formatPhone(resolveTokenString(headerData?.mainNavigation?.headerPhone, napTokens)) || null,
+          headerPhone2: formatPhone(resolveTokenString(headerData?.mainNavigation?.headerPhone2, napTokens)) || null,
+          headerPhoneTagline: headerData?.mainNavigation?.headerPhoneTagline,
+          headerCtaLabel: headerData?.mainNavigation?.headerCtaLabel,
+          headerCtaUrl: headerData?.mainNavigation?.headerCtaUrl,
+          headerCtaLabel2: headerData?.mainNavigation?.headerCtaLabel2,
+          headerCtaUrl2: headerData?.mainNavigation?.headerCtaUrl2,
+          navItems: buildNavItems(headerData?.mainNavigation?.navItems ?? []),
+        }}
+      />
+      <HeroSchemeProvider scheme={heroSite.scheme}>
+        <HeroSurfaceProvider
+          value={{
+            bgImage: heroSite.bgImage,
+            foreground: heroSite.foreground,
+            scrimOpacity: heroSite.scrimOpacity,
+            scrimStyle: heroSite.scrimStyle,
+            scrimColor: heroSite.scrimColor,
+            scrimDirection: heroSite.scrimDirection,
+            sectionBg: heroSite.sectionBg,
+            defaultButtons: heroSite.defaultButtons,
+          }}
+        >
+          <SidebarDesignSettingsProvider value={resolveSidebarDesignSettings(designTokens)}>
+            <main id="main-content" tabIndex={-1} className="outline-none">
+              <OfficeHoursProvider value={footerData?.siteSettings?.address?.hours ?? null}>
+                {children}
+              </OfficeHoursProvider>
+            </main>
+          </SidebarDesignSettingsProvider>
+        </HeroSurfaceProvider>
+      </HeroSchemeProvider>
+      {footerData?.designSettings?.showBackToTop === true && <BackToTop />}
+      <Footer
+        data={{
+          firmName: footerData?.siteSettings?.firmName,
+          footerScheme: footerData?.footerSettings?.footerScheme ?? 'dark',
+          logo: footerData?.designSettings?.logoOnDark ?? null,
+          logoLight: footerData?.designSettings?.logoOnLight ?? null,
+          address: footerData?.siteSettings?.address,
+          ctaText: resolveTokenString(footerData?.footerSettings?.ctaText, napTokens) || null,
+          ctaUrl: footerData?.footerSettings?.ctaUrl,
+          actionButton1Label: resolveTokenString(footerData?.footerSettings?.actionButton1Label, napTokens) || null,
+          actionButton1Url: footerData?.footerSettings?.actionButton1Url,
+          actionButton2Label: resolveTokenString(footerData?.footerSettings?.actionButton2Label, napTokens) || null,
+          actionButton2Url: footerData?.footerSettings?.actionButton2Url,
+          column1: footerData?.footerSettings?.column1,
+          column2: footerData?.footerSettings?.column2,
+          facebookUrl: footerData?.footerSettings?.facebookUrl,
+          instagramUrl: footerData?.footerSettings?.instagramUrl,
+          twitterUrl: footerData?.footerSettings?.twitterUrl,
+          linkedInUrl: footerData?.footerSettings?.linkedInUrl,
+          youTubeUrl: footerData?.footerSettings?.youTubeUrl,
+          privacyPolicyUrl: footerData?.siteSettings?.privacyPolicyUrl,
+          disclaimerUrl: footerData?.siteSettings?.disclaimerUrl,
+          cookiesUrl: footerData?.siteSettings?.cookiesUrl,
+          footerLayout: footerData?.footerSettings?.footerLayout,
+          formEmbed: footerData?.footerSettings?.formEmbed,
+          locations: footerData?.locations,
+        }}
+      />
+      </MotionRoot>
+      </div>
+    </>
+  )
+}
