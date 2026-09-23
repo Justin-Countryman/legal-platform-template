@@ -2,7 +2,7 @@ import {
   type SectionAppearance,
 } from '@/components/sections/SectionShell'
 import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
-import {raisesPhotos} from '@/lib/overlaps'
+import {flowOf, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts} from '@/lib/flows'
 
 // ─── The seam walk ────────────────────────────────────────────────────────────
 //
@@ -38,9 +38,25 @@ import {raisesPhotos} from '@/lib/overlaps'
 //
 // The shape is deliberately the one `resultsDisclaimer` already uses: a value
 // resolved by the dispatcher and handed down as a prop. The site's own look
-// (Phase 16B: the photo frame, the join shape, the texture's ground, the card
-// hover and style a theme sets) rides the same per-band object, so it reaches
-// every section and `SectionShell` without a new prop on any of them.
+// (Phase 16B: the photo frame, the card hover and style a style set sets) and
+// the THEME (Phase 17B: the flow of the page, `lib/flows.ts`) ride the same
+// per-band object, so they reach every section and `SectionShell` without a new
+// prop on any of them.
+//
+// ─── Phase 17B: the ground pass, before everything ────────────────────────────
+//
+// Until Phase 17B no line of this walk decided a band's GROUND: `visibleGround` read
+// the stored surface and an absent one was light, so a fresh build was one run of
+// light bands after a dark hero whatever it wore (the audit's central finding). The
+// theme fills that gap: `assignGrounds` runs FIRST, over the survivors, and fills
+// every band that stores no surface from the theme's budget, its ranked hosts and
+// its rhythm, then paints it (the dark ground, the texture, a photo, the fill). A
+// band with a stored surface is never assigned; an inset band is never assigned a
+// surface either and counts as light to the rhythm (a dark panel on the page ground
+// broke the alternation, measured, ADV-17B-A F8). The walk then runs as it always
+// did over the assigned grounds, with its inputs read from the theme instead of the
+// style set's six retired fields: the divider's shape and placement, the carry, the
+// ghost, the raised photo, the gradient, the run's cap.
 
 /** What a section component must export so the walk can see it.
  *
@@ -50,6 +66,31 @@ import {raisesPhotos} from '@/lib/overlaps'
 export type FrameResolver<T> = {
   resolveAppearance: (data: T) => SectionAppearance | null | undefined
   isEmpty: (data: T) => boolean
+}
+
+/** What the ground pass reads about a member, beside its resolved appearance (Phase 17B).
+ *  `stored` is read from the RAW member, because four resolvers answer `light` for an
+ *  absent surface and so cannot be the source of "stored" (ADV-17B-A F9). */
+export type FlowInputs = {
+  /** The member stores a surface of its own. */
+  stored?: boolean
+  /** The composer's role, or the type and layout (`hostOf`). */
+  host?: Host | null
+  /** The member carries its own background photo, for the `photo` paint. */
+  photo?: boolean
+  /** The member is a content section, the one type that offers the saturated fill. */
+  content?: boolean
+}
+
+/** What the ground pass assigned to a band, or nothing where the band's own surface
+ *  stands. `ground` is set only where the pass filled it; `texture` may be true on a
+ *  stored dark band too (a treatment on the operator's dark, as the gradient is under
+ *  `[R-502]`); `inset` is the `panel` paint filling an absent inset. Texture is never
+ *  the surface value, so a stored `pattern` keeps its one meaning under every theme. */
+export type Paint = {
+  ground?: 'light' | 'tint' | 'dark' | 'saturated' | 'image'
+  texture: boolean
+  inset?: boolean
 }
 
 /** Phase 16E: whether this member can raise a feature photo into the band above.
@@ -63,29 +104,27 @@ export type Raisable = {raisesPhoto?: boolean}
 export type Overlap = 'none' | 'small' | 'large' | 'photo'
 
 /** The site's look, from Design Settings, as the sections read it (Phase 16B,
- *  `[R-468]`). A theme writes these; a section with a value of its own keeps it. */
+ *  `[R-468]`): what the style set writes and a section with a value of its own keeps,
+ *  plus the THEME (Phase 17B), which the walk reads for every page-level device. */
 export type SiteLook = {
   /** The photo frame a feature photo takes when its section stores none. */
   imageFrame: string | null
-  /** The site's divider shape (Phase 16C, `[R-482]`); `straight` draws none. */
-  sectionJoin: string
-  /** A Pattern band sits on the dark ground: only when the site chose a texture
-   *  AND the dark ground; with no texture, Pattern renders as Light. */
-  patternDark: boolean
   /** The practice-area hover a section with no hover of its own takes. */
   cardHover: string | null
   /** The attorney card style a section with no style of its own takes. */
   attorneyCardStyle: string | null
-  /** The initials the ghost draws (Phase 16D, `[R-492]`), or null when the site
-   *  draws none. Derived from the firm's name, never stored. */
+  /** The theme: the flow of the page (`lib/flows.ts`, `[R-509]`). The stored `flow`, the
+   *  compat bridge over the six retired fields, or the platform default; null on an
+   *  interior page, which takes no page-level device (`[R-472]`). Optional, because a
+   *  required member on `SiteLook` puts every test literal that constructs one red. */
+  flow?: FlowRules | null
+  /** The style set's texture kind, which the theme's `pattern` paint needs (ADV-17B-A F20). */
+  patternTexture?: string | null
+  /** The palette passes the saturated gate, so a theme may paint the accent fill. */
+  saturated?: boolean
+  /** The initials the ghost draws (Phase 16D, `[R-492]`), or null when the theme draws
+   *  none. Derived from the firm's name, never stored; set by `HomeBody`. */
   ghost?: {text: string} | null
-  /** The site's overlap (Phase 16E, `[R-499]`): `photo` raises one feature photo into
-   *  the band above. Optional, because a required member on `SiteLook` puts every test
-   *  literal that constructs one red for a field none of them cares about. */
-  overlap?: string | null
-  /** The site's gradient (Phase 16F): `deep` fades a dark band's ground into the
-   *  deep stop the engine derived. Optional, which is the 16D trap. */
-  gradient?: string | null
 }
 
 /** The site look from the projected Design Settings (`DESIGN_TOKENS_QUERY`). */
@@ -93,22 +132,22 @@ export function siteLookOf(d: Record<string, unknown> | null | undefined): SiteL
   const s = (k: string) => (typeof d?.[k] === 'string' && d[k] !== '' ? (d[k] as string) : null)
   return {
     imageFrame: s('imageFrame'),
-    sectionJoin: s('sectionJoin') ?? 'straight',
-    patternDark: s('patternGround') === 'dark' && s('patternTexture') !== null,
     cardHover: s('cardHover'),
     attorneyCardStyle: s('attorneyCardStyle'),
+    flow: flowOf(d),
+    patternTexture: s('patternTexture'),
+    saturated: saturatedFillOk(d),
     ghost: null,
-    overlap: s('sectionOverlap'),
-    gradient: s('sectionGradient'),
   }
 }
 
 /** Interior pages are always a clean ground and never draw a divider (`[R-472]`): they
- *  keep the cards, frames and carried pieces, not the homepage's dividers, texture or
- *  ghost. The drop cap and the quote mark DO reach them: they are the UI system's one
- *  decision each, as the card style and the photo frame are (Phase 16B amendment 25). */
+ *  keep the cards, frames and carried pieces, not the homepage's grounds, dividers,
+ *  texture, ghost, raised photo or gradient, which are all the theme's; so an interior
+ *  page carries no theme. The carried pieces DO reach them (`[R-483]`), painted by the
+ *  site wrapper, as the drop cap does: they are the UI system's one decision each. */
 export function interiorLook(site: SiteLook | null | undefined): SiteLook | null {
-  return site ? {...site, sectionJoin: 'straight', patternDark: false, ghost: null, overlap: null, gradient: null} : null
+  return site ? {...site, flow: null, ghost: null} : null
 }
 
 /** A section's own value where it has one; absent and `inherit` follow the site. */
@@ -141,8 +180,16 @@ export type SeamProps = {
   /** This band's place in its run of one visible ground (Phase 16F): `index` from 0 and
    *  `length` the run's size, so a gradient can be sliced across the run. A band that
    *  stands alone is a run of one and takes the whole ramp, which is the per-band device
-   *  the field study and the live census both record. */
+   *  the field study and the live census both record. A run longer than eight starts a
+   *  new run at the ninth band (Phase 17B), and a theme whose paint restarts the ramp
+   *  per band numbers every band as a run of one. */
   run?: {index: number; length: number}
+  /** What the theme's ground pass assigned this band (Phase 17B), or null where the
+   *  band's own stored surface stands. The shell reads the ground and the texture. */
+  paint?: Paint | null
+  /** This band draws the theme's hairline at its top (Phase 17B): a decorative 1px line
+   *  at a change of ground or at every join, as the theme says. */
+  hairline?: boolean
 }
 
 export const NO_SEAM: SeamProps = {site: null, seamTop: false, previousGround: null, nextOverlap: 'none', divider: null, ghost: false, raisePhoto: false, insetGround: null}
@@ -173,17 +220,21 @@ const HOSTS: readonly VisibleGround[] = ['dark', 'saturated']
  */
 export function walkFrame<M>(
   members: readonly M[],
-  resolve: (member: M) => {appearance: SectionAppearance | null | undefined; empty: boolean} & Raisable,
+  resolve: (member: M) => {appearance: SectionAppearance | null | undefined; empty: boolean} & Raisable & FlowInputs,
   site: SiteLook | null = null,
   hero: VisibleGround | null = null,
 ): Array<{member: M; index: number; seam: SeamProps}> {
-  // Where a divider goes (`[R-481]`, Phase 16C): under the hero, and wherever the page
-  // enters a strong ground — dark, a Pattern band on the dark ground included, or
-  // saturated. Never into a photo band: no site in the study cuts a shape into one
-  // (0 of 53 entries; ADV-P16C-B). Tint and light count as one ground, because a tint
-  // wedge on white is 1.04:1 and the band would gain its space for nothing.
-  const shaped = !!site && site.sectionJoin !== 'straight'
-  const alternates = site?.sectionJoin === 'angledAlternating'
+  // The theme (Phase 17B). Null on an interior page, where no page-level device fires.
+  const flow = site?.flow ?? null
+  // Where a divider goes: the theme's placement (`flow.divider.at`). `intoDark` is
+  // `[R-481]`'s law: under the hero, and wherever the page enters a strong ground — dark
+  // or saturated. `everyChange` fires at every change of ground. Never into a photo
+  // band, or out of one: no site in the study cuts a shape into one (0 of 53 entries;
+  // ADV-P16C-B). Tint and light count as one ground, because a tint wedge on white is
+  // 1.04:1 and the band would gain its space for nothing.
+  const shaped = !!flow && flow.divider.shape !== 'straight' && flow.divider.at !== 'none'
+  const alternates = flow?.divider.shape === 'angledAlternating'
+  const everyChange = flow?.divider.at === 'everyChange'
   const strong = (g: VisibleGround | null) => g === 'dark' || g === 'saturated'
   const same = (a: VisibleGround | null, b: VisibleGround | null) =>
     a === b || ((a === 'light' || a === 'tint') && (b === 'light' || b === 'tint'))
@@ -204,9 +255,17 @@ export function walkFrame<M>(
   // would otherwise cut a light wedge into an already-dark band), the ghost and the
   // raised photo.
   const survivors = members.map((m, index) => ({m, index, ...resolve(m)})).filter((r) => !r.empty)
-  const raw = survivors.map((r) => visibleGround(r.appearance, site?.patternDark))
+  // ─── The ground pass (Phase 17B) ────────────────────────────────────────────
+  // Before the adoption pass, because adoption reads the grounds, and the theme is what
+  // decides a ground where none is stored.
+  const paints = flow ? assignGrounds(survivors, flow, site) : survivors.map(() => null)
+  const paintAt = new Map<number, Paint | null>()
+  survivors.forEach((r, i) => paintAt.set(r.index, paints[i]))
+  const isInset = (r: {appearance: SectionAppearance | null | undefined}, paint: Paint | null) =>
+    !!r.appearance?.inset || !!paint?.inset
+  const raw = survivors.map((r, i) => (isInset(r, paints[i]) ? 'light' : paints[i]?.ground ?? visibleGround(r.appearance)))
   const adopted: (VisibleGround | null)[] = survivors.map((r, i) => {
-    if (!r.appearance?.inset) return null
+    if (!isInset(r, paints[i])) return null
     if (i === 0 || i === survivors.length - 1) return null
     const above = raw[i - 1]
     const below = raw[i + 1]
@@ -225,7 +284,8 @@ export function walkFrame<M>(
     // it seams against the last band anyone can actually see.
     if (empty) return
 
-    const ground = groundAt.get(index) ?? visibleGround(appearance, site?.patternDark)
+    const paint = paintAt.get(index) ?? null
+    const ground = groundAt.get(index) ?? visibleGround(appearance)
 
     // An overlapping panel takes no top padding from `md`, so a seam would be
     // meaningless; `SectionShell` already resolves that, and asking for both
@@ -234,26 +294,35 @@ export function walkFrame<M>(
 
     const seam: SeamProps =
       out.length === 0
-        ? {...NO_SEAM, site, insetGround: adoptAt.get(index) ?? null}
+        ? {...NO_SEAM, site, insetGround: adoptAt.get(index) ?? null, paint}
         : {
             site,
             seamTop: !overlapping && prevGround === ground,
             previousGround: prevGround,
             nextOverlap: 'none',
             insetGround: adoptAt.get(index) ?? null,
+            paint,
           }
 
     // An inset first band takes none: the wedge crossed an overlapping panel to two
     // pixels above its text (ADV-P16C-A).
     let divider: SeamProps['divider'] = null
-    if (shaped && out.length === 0 && hero && !appearance?.inset && ground !== 'image' && !same(hero, ground)) {
+    const inset = isInset({appearance}, paint)
+    if (shaped && out.length === 0 && hero && !inset && ground !== 'image' && !same(hero, ground)) {
       divider = {mode: 'rise', flip: alternates && placed % 2 === 1}
-    } else if (shaped && out.length > 0 && strong(ground) && !strong(prevGround) && prevGround && prevGround !== 'image') {
+    } else if (shaped && out.length > 0 && prevGround && prevGround !== 'image' && ground !== 'image'
+      && (everyChange ? !same(prevGround, ground) : strong(ground) && !strong(prevGround))) {
       divider = {mode: 'cut', from: prevGround, flip: alternates && placed % 2 === 1}
     }
     if (divider) {
       seam.divider = divider
       placed++
+    }
+    // The hairline (Phase 17B): a decorative line at the top of a band, at a change of
+    // ground or at every join, as the theme says. Never on the first band, whose top is
+    // the hero's seam.
+    if (flow && out.length > 0 && (flow.divider.hairline === 'everyBand' || (flow.divider.hairline === 'atChange' && !same(prevGround, ground)))) {
+      seam.hairline = true
     }
 
     // The backward half: the band above an overlapping panel keeps the panel off
@@ -279,14 +348,16 @@ export function walkFrame<M>(
   //     8.9% of 5,000 seeded ones fail AA on a saturated band, measured);
   //   a Pattern band, because two decorative layers blend past the one the sweep covers;
   //   an inset panel, which is a card, not a ground.
-  if (site?.ghost) {
-    const eligible = out.filter(({member}) => {
+  // Since Phase 17B the theme says whether the ghost draws (`flow.ghost`), and the site
+  // look carries the initials it draws.
+  if (site?.ghost && flow?.ghost === 'once') {
+    const eligible = out.filter(({member, seam}) => {
       const a = resolve(member).appearance
-      const g = groundAt.get(out.find((o) => o.member === member)!.index) ?? visibleGround(a, site.patternDark)
-      return g !== 'saturated' && g !== 'image' && a?.surface !== 'pattern' && !a?.inset
+      const g = groundAt.get(out.find((o) => o.member === member)!.index) ?? visibleGround(a)
+      return g !== 'saturated' && g !== 'image' && a?.surface !== 'pattern' && !seam.paint?.texture && !isInset({appearance: a}, seam.paint ?? null)
     })
     const host =
-      eligible.find(({member}) => visibleGround(resolve(member).appearance, site.patternDark) === 'dark') ??
+      eligible.find(({index}) => groundAt.get(index) === 'dark') ??
       eligible[0]
     if (host) host.seam = {...host.seam, ghost: true}
   }
@@ -298,13 +369,13 @@ export function walkFrame<M>(
   // (the panel's own `overflow-hidden` cuts the photo dead flat, measured), and whose
   // band above shows a different ground, where light and tint count as one exactly as
   // the divider counts them.
-  if (site && raisesPhotos(site.overlap)) {
+  if (flow?.overlap === 'photo') {
     const eligible: number[] = []
     for (let i = 1; i < out.length; i++) {
       const r = resolve(out[i].member)
-      if (!r.raisesPhoto || r.appearance?.inset) continue
-      const g = groundAt.get(out[i].index) ?? visibleGround(r.appearance, site.patternDark)
-      const prev = groundAt.get(out[i - 1].index) ?? visibleGround(resolve(out[i - 1].member).appearance, site.patternDark)
+      if (!r.raisesPhoto || isInset(r, out[i].seam.paint ?? null)) continue
+      const g = groundAt.get(out[i].index) ?? visibleGround(r.appearance)
+      const prev = groundAt.get(out[i - 1].index) ?? visibleGround(resolve(out[i - 1].member).appearance)
       if (!same(g, prev)) eligible.push(i)
     }
     // NEAREST THE MIDDLE OF THE LIST, never the first: live, the first ground-change
@@ -322,17 +393,161 @@ export function walkFrame<M>(
   // ─── The run pass (Phase 16F) ───────────────────────────────────────────────
   // Number each maximal stretch of survivors sharing one visible ground, AFTER the
   // adoption pass, so an adopted inset band is inside its run rather than breaking it.
+  // Phase 17B: the slice is capped at eight, so a longer run starts a new run at the
+  // ninth band instead of repeating its last slice (ADV-17B-A F14 measured six flat
+  // bands on a thirteen-band run); and a theme whose paint restarts the ramp on every
+  // band (`gradientPerBand`, the all-dark page's seam) numbers every band as a run of
+  // one.
+  const RUN_CAP = 8
+  const perBand = flow?.dark.paint === 'gradientPerBand'
   {
     let start = 0
     for (let i = 1; i <= out.length; i++) {
       const same2 = i < out.length && groundAt.get(out[i].index) === groundAt.get(out[start].index)
       if (!same2) {
-        const length = i - start
-        for (let k = start; k < i; k++) out[k].seam = {...out[k].seam, run: {index: k - start, length}}
+        if (perBand) {
+          for (let k = start; k < i; k++) out[k].seam = {...out[k].seam, run: {index: 0, length: 1}}
+        } else {
+          for (let chunk = start; chunk < i; chunk += RUN_CAP) {
+            const length = Math.min(RUN_CAP, i - chunk)
+            for (let k = chunk; k < chunk + length; k++) out[k].seam = {...out[k].seam, run: {index: k - chunk, length}}
+          }
+        }
         start = i
       }
     }
   }
 
   return out
+}
+
+// ─── The ground pass (Phase 17B, record §2.3) ─────────────────────────────────
+//
+// One paint per survivor, or null where the band's own surface stands. The theme
+// fills only bands that store no surface and are not inset panels; everything else
+// is counted, never repainted. The count: the budget is taken against ALL survivors,
+// stored dark bands included, so the page's darkness matches the step. Candidates
+// are the fillable bands whose host the theme names, in the theme's order. The
+// rhythm decides which candidates go dark; the paint decides what a dark band and a
+// light band draw, each gated by the data it needs and falling back to the plain
+// ground.
+
+type Survivor = {appearance: SectionAppearance | null | undefined} & FlowInputs
+
+export function assignGrounds(
+  survivors: readonly Survivor[],
+  flow: FlowRules,
+  site: Pick<SiteLook, 'patternTexture' | 'saturated'> | null = null,
+): (Paint | null)[] {
+  const n = survivors.length
+  const strongOf = (a: SectionAppearance | null | undefined) => {
+    const g = visibleGround(a)
+    return g === 'dark' || g === 'saturated' || g === 'image'
+  }
+  const stored = survivors.map((r) => r.stored ?? !!r.appearance?.surface)
+  const inset = survivors.map((r) => !!r.appearance?.inset)
+  const fixed = survivors.map((_, i) => stored[i] || inset[i])
+  // What counts as dark before the pass: a stored strong ground, and an inset band
+  // bracketed by two of them, which `[R-501]` will adopt.
+  const dark = survivors.map((r, i) => stored[i] && !inset[i] && strongOf(r.appearance))
+  survivors.forEach((_, i) => {
+    if (inset[i] && i > 0 && i < n - 1 && dark[i - 1] && dark[i + 1]) dark[i] = true
+  })
+  let remaining = Math.max(0, darkBudget(flow.dark.budget, n) - dark.filter(Boolean).length)
+  const rank = (i: number) => flow.dark.hosts.indexOf(survivors[i].host as Host)
+  const candidates = survivors.map((_, i) => i).filter((i) => !fixed[i] && rank(i) >= 0)
+    .sort((a, b) => rank(a) - rank(b) || a - b)
+  const isCandidate = new Set(candidates)
+  const runLeft = (i: number) => { let k = 0; while (i - k - 1 >= 0 && dark[i - k - 1]) k++; return k }
+  const runRight = (i: number) => { let k = 0; while (i + k + 1 < n && dark[i + k + 1]) k++; return k }
+  const take = (i: number) => { dark[i] = true; remaining-- }
+
+  switch (flow.dark.rhythm) {
+    case 'bookends':
+      break
+    case 'alternate':
+      for (const c of candidates) {
+        if (remaining <= 0) break
+        if (dark[c] || (c > 0 && dark[c - 1]) || (c < n - 1 && dark[c + 1])) continue
+        take(c)
+      }
+      break
+    case 'pairs':
+      for (const c of candidates) {
+        if (remaining <= 0) break
+        if (dark[c] || runLeft(c) + 1 + runRight(c) > 2) continue
+        take(c)
+      }
+      break
+    case 'runs':
+      for (const c of candidates) {
+        if (remaining <= 0) break
+        if (dark[c]) continue
+        take(c)
+        // Extend to the neighbours before the next candidate: below first, then above,
+        // alternating, as far as fillable hosts run and the budget allows.
+        let below = c + 1
+        let above = c - 1
+        while (remaining > 0) {
+          const canBelow = below < n && !dark[below] && isCandidate.has(below)
+          const canAbove = above >= 0 && !dark[above] && isCandidate.has(above)
+          if (!canBelow && !canAbove) break
+          if (canBelow) { take(below); below++ }
+          if (remaining > 0 && canAbove) { take(above); above-- }
+        }
+      }
+      break
+  }
+
+  const texture = !!site?.patternTexture
+  const paints: (Paint | null)[] = survivors.map((r, i) => {
+    if (fixed[i]) {
+      // A stored dark band takes the theme's texture as a treatment (record §2.8); an
+      // inset, image or saturated band does not.
+      const textured = flow.dark.paint === 'pattern' && texture && stored[i] && !inset[i] && visibleGround(r.appearance) === 'dark'
+      return textured ? {texture: true} : null
+    }
+    if (dark[i]) {
+      switch (flow.dark.paint) {
+        case 'photo': return {ground: r.photo ? 'image' : 'dark', texture: false}
+        case 'pattern': return {ground: 'dark', texture}
+        case 'saturated': return {ground: site?.saturated && r.content ? 'saturated' : 'dark', texture: false}
+        default: return {ground: 'dark', texture: false}
+      }
+    }
+    return null
+  })
+  // Light bands: the theme's light paint, over every fillable band the rhythm left light.
+  let wash = 0
+  survivors.forEach((r, i) => {
+    if (fixed[i]) { wash = 0; return }
+    if (dark[i]) { wash = 0; return }
+    switch (flow.light.paint) {
+      case 'washes':
+        paints[i] = {ground: wash % 2 === 1 ? 'tint' : 'light', texture: false}
+        wash++
+        break
+      case 'pattern':
+        paints[i] = {ground: 'light', texture}
+        break
+      case 'panel':
+        paints[i] = i > 0 && i < n - 1 && dark[i - 1] && dark[i + 1]
+          ? {ground: 'light', texture: false, inset: true}
+          : {ground: 'light', texture: false}
+        break
+      default:
+        paints[i] = {ground: 'light', texture: false}
+    }
+  })
+  return paints
+}
+
+/** What the canvas and the site hold, for a theme's needs (`unmetNeeds`). */
+export function canvasFacts(survivors: readonly Survivor[], site: SiteLook | null | undefined): CanvasFacts {
+  return {
+    hosts: [...new Set(survivors.map((r) => r.host).filter((h): h is Host => !!h))],
+    photos: survivors.filter((r) => r.photo).length,
+    texture: !!site?.patternTexture,
+    initials: !!site?.ghost?.text,
+  }
 }

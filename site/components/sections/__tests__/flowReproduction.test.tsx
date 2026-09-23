@@ -66,9 +66,12 @@ const GRAPHITE_STORED: Record<string, unknown> = {
   sectionJoin: 'angled', dividerCarry: ['cards'], headingRule: 'line',
 }
 
-/** The look the homepage builds from the projected settings: what `HomeBody` does. */
+/** The look the homepage builds from the projected settings: what `HomeBody` does. At
+ *  a164ce0 the ghost read `brandGhost`; since the engine it reads the theme's answer,
+ *  which the bridge takes from the same stored field. */
 function lookOf(designTokens: Record<string, unknown>): SiteLook {
-  return {...siteLookOf(designTokens), ghost: ghostSource(FIRM, designTokens.brandGhost === 'on')}
+  const look = siteLookOf(designTokens)
+  return {...look, ghost: ghostSource(FIRM, look.flow?.ghost === 'once')}
 }
 
 function stubCanvas(): HomepageBlock[] {

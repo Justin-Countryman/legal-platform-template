@@ -1028,8 +1028,9 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
     var(--color-gradient-stop) calc((var(--grad-n, 1) - var(--grad-i, 0)) * 100%));
 }
 /* The band's position in its run, as real utilities rather than arbitrary values
-   ([R-463]). A run is capped at eight bands; beyond that a band restarts the ramp,
-   which is the per-band device and not a defect. */
+   ([R-463]). A run is capped at eight bands: the walk starts a new run at the ninth
+   (Phase 17B; before that a longer run repeated its last slice, measured as six flat
+   bands on a thirteen-band run, ADV-17B-A F14). */
 @utility grad-i-0 { --grad-i: 0; }
 @utility grad-i-1 { --grad-i: 1; }
 @utility grad-i-2 { --grad-i: 2; }
@@ -1127,6 +1128,27 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 }
 @media (forced-colors: active) { [data-decor-layer] { display: none; } }
 @media print { [data-decor-layer] { display: none; } }
+
+/* THE HAIRLINE (Phase 17B). A theme may draw a 1px line at the top of a band, at
+   every change of ground or at every join: it is what the all-dark study sites use
+   for rhythm in place of a second flat shade (the coder's words: band separation by
+   hairline boxes rather than by color changes). `::after`, because the divider owns `::before` on the
+   same band. Decorative, in `--color-border`, which the token engine leaves unswept
+   on purpose (`designTokens.ts`, "the divider color is decorative"); it resolves to
+   the on-dark border inside a dark band through the cascade. In forced colors it
+   falls to the system's own text color like every decorative rule. */
+@utility hairline-top {
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background-color: var(--color-border);
+    pointer-events: none;
+  }
+}
+@media (forced-colors: active) { .hairline-top::after { background-color: CanvasText; } }
 
 /* THE DROP CAP (`[R-493]`). `::first-letter`, so nothing enters the DOM and a screen
    reader reads the word whole, which is the method tested practitioner research

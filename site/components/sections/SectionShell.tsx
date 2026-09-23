@@ -6,7 +6,7 @@ import {
   type ResolvedSectionSurface, type SectionSpacingSteps,
 } from '@/lib/sectionSurface'
 import {type SeamProps, NO_SEAM, overlapOf} from './sectionFrame'
-import {fadesDark} from '@/lib/gradients'
+import {fadesUnder} from '@/lib/flows'
 
 // ─── SectionShell ───────────────────────────────────────────────────────────────
 // The band wrapper every full-width section renders into. It owns the surface
@@ -113,7 +113,14 @@ export function SectionShell({
   children,
   ...aria
 }: SectionShellProps) {
-  const resolved = sectionSurface(appearance?.surface, seam.site?.patternDark)
+  // Phase 17B: the theme's ground pass assigned this band a ground where it stored
+  // none (`seam.paint`), and the ground it assigned wins over what the component's own
+  // resolver answers, because four resolvers answer `light` for an absent surface. A
+  // stored surface is never assigned, so a stored value always stands. The texture is a
+  // flag on the paint, never the surface value, so a stored Pattern band keeps its one
+  // meaning and a theme can texture the dark bands beside it.
+  const resolved = sectionSurface(seam.paint?.ground ?? appearance?.surface)
+  const textured = resolved.textured || !!seam.paint?.texture
   const steps: SectionSpacingSteps = tight
     ? TIGHT_SPACING
     : SECTION_SPACING[appearance?.spacing ?? DEFAULT_SECTION_SPACING]
@@ -135,7 +142,9 @@ export function SectionShell({
   // itself paints nothing. `rounded-ui` is the operator's own radius (Justin,
   // 2026-09-16: no new `--radius-ui-lg` token, because `uiRadius` is already one
   // of the axes a theme fixes, so a panel follows its theme for free).
-  const isInset = appearance?.inset === true
+  // Phase 17B: a theme's `panel` paint fills an absent inset on a light band inside a
+  // dark run, so `[R-501]` puts the panel on the run.
+  const isInset = appearance?.inset === true || seam.paint?.inset === true
 
   // Phase 16F. `seam.insetGround` is set only on an inset band the walk found bracketed
   // by one strong ground; everywhere else this is null and nothing below changes.
@@ -153,7 +162,7 @@ export function SectionShell({
   // `isolate` band keeps it under the angled edge this band paints for the band
   // above, which it otherwise striped. `data-section-texture` is what the
   // forced-colors and print rules remove.
-  const texture = resolved.textured ? (
+  const texture = textured ? (
     <div
       aria-hidden="true"
       data-section-texture
@@ -212,10 +221,13 @@ export function SectionShell({
         // Phase 16F: a dark band's ground fades into the palette's deep stop. Per band,
         // and only where the band really paints the dark ground -- an image band paints
         // a photo over it and a saturated band is the accent, and neither has a swept pair.
-        fadesDark(seam.site?.gradient) && paintsDark && !resolved.isImage && 'band-gradient',
-        fadesDark(seam.site?.gradient) && paintsDark && !resolved.isImage && `grad-i-${Math.min(seam.run?.index ?? 0, 7)}`,
-        fadesDark(seam.site?.gradient) && paintsDark && !resolved.isImage && `grad-n-${Math.min(seam.run?.length ?? 1, 8)}`,
-        (resolved.textured || ghost) && !isInset && 'isolate',
+        // Since Phase 17B the theme says whether it fades (`dark.paint`, `lib/flows.ts`).
+        fadesUnder(seam.site?.flow) && paintsDark && !resolved.isImage && 'band-gradient',
+        fadesUnder(seam.site?.flow) && paintsDark && !resolved.isImage && `grad-i-${Math.min(seam.run?.index ?? 0, 7)}`,
+        fadesUnder(seam.site?.flow) && paintsDark && !resolved.isImage && `grad-n-${Math.min(seam.run?.length ?? 1, 8)}`,
+        // Phase 17B: the theme's hairline, a decorative line at the top of this band.
+        seam.hairline && 'hairline-top',
+        (textured || ghost) && !isInset && 'isolate',
         top,
         bottom,
         className,
@@ -236,7 +248,7 @@ export function SectionShell({
           // sitting on an adopted dark ground would resolve every text token, the focus
           // ring, the border and the slab to their on-dark forms without this reset.
           data-ring-context={adoptedClass ? resolved.ringContext ?? 'light' : undefined}
-          className={['relative overflow-hidden rounded-ui px-[5%] py-12 md:py-16', resolved.textured && 'isolate', resolved.surfaceClass].filter(Boolean).join(' ')}
+          className={['relative overflow-hidden rounded-ui px-[5%] py-12 md:py-16', textured && 'isolate', resolved.surfaceClass].filter(Boolean).join(' ')}
         >
           {showImage && (
             <>

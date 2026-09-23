@@ -23,7 +23,9 @@
 //   image   — a background image + dark scrim + white text (immersive).
 //   pattern — the light ground wearing the site's section texture, which the band
 //             paints itself (Phase 16A). Offered on homepage sections only; nothing
-//             else on the site, and no interior page, ever shows a texture.
+//             else on the site, and no interior page, ever shows a texture. ONE
+//             meaning under every theme since Phase 17B: the texture a theme puts on
+//             a dark band is a paint flag on the band's seam, never the surface value.
 //
 //   saturated — the accent as a full-width fill (`bg-accent-fill`), text in
 //             `accent-fg` through the `[data-ring-context="saturated"]` block,
@@ -179,7 +181,7 @@ export type ResolvedSectionSurface = {
   isImage: boolean
 }
 
-export function sectionSurface(surface: StoredSurface | null | undefined, patternDark = false): ResolvedSectionSurface {
+export function sectionSurface(surface: StoredSurface | null | undefined): ResolvedSectionSurface {
   switch (surface) {
     case 'dark':
       return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: false, textured: false}
@@ -199,10 +201,11 @@ export function sectionSurface(surface: StoredSurface | null | undefined, patter
     // showed through; that layer is gone (Phase 16A, `[R-472]`: no site-wide
     // background, interior pages always clean). With no `patternTexture` set the
     // texture is `none` and the band looks exactly like `light`.
-    // A theme may put its texture on the dark ground (Phase 16B, `[R-479]`): the band
-    // is then a dark band in every respect, and its texture is drawn darker still.
+    // Until Phase 17B a style set could flip this band onto the dark ground
+    // (`patternGround`, `[R-479]`); the texture on a dark band is the theme's paint
+    // now (`lib/flows.ts`), carried on the seam, and a stored Pattern band is always
+    // the light ground with the texture.
     case 'pattern':
-      if (patternDark) return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: false, textured: true}
       return {surfaceClass: 'bg-background', ringContext: undefined, buttonContext: 'light', isImage: false, textured: true}
     case 'light':
     default:
@@ -219,7 +222,6 @@ export function sectionSurface(surface: StoredSurface | null | undefined, patter
  *  a light band as one ground. */
 export function visibleGround(
   appearance: {surface?: StoredSurface | null; inset?: boolean | null} | null | undefined,
-  patternDark = false,
 ): VisibleGround {
   if (appearance?.inset) return 'light'
   switch (appearance?.surface) {
@@ -233,7 +235,7 @@ export function visibleGround(
     // and painted a hero-tint wedge beside a muted band (Phase 14 challenge).
     case 'muted':
     case 'accent':  return 'muted'
-    case 'pattern': return patternDark ? 'dark' : 'light'
+    case 'pattern': return 'light'
     case 'light':
     default:        return 'light'
   }
@@ -264,6 +266,8 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
   'md:photo-rise', 'md:self-start',
   // Phase 16F: the gradient on a dark band, and the band's place in its run.
   'band-gradient',
+  // Phase 17B: the theme's hairline at the top of a band, defined in `globals.css`.
+  'hairline-top',
   // WRITTEN OUT, not generated. Tailwind's own scanner looks for candidate STRINGS in
   // source; a class built from a template literal in the shell is invisible to it and
   // the utility is never emitted (measured: 0 occurrences in the served stylesheet).
