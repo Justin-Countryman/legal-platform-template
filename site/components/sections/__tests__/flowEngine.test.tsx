@@ -1,7 +1,7 @@
 import {describe, expect, it, vi} from 'vitest'
 import {forwardRef} from 'react'
 import {render} from '@testing-library/react'
-import {readFileSync} from 'node:fs'
+import {existsSync, readFileSync} from 'node:fs'
 import {resolve} from 'node:path'
 
 // ─── The ground pass (Phase 17B, record §2.3, §5) ─────────────────────────────
@@ -272,18 +272,24 @@ describe('the all-dark page', () => {
 // the record's §2.4 table is derived from it, never by hand.
 describe('the decision golden', () => {
   const FIRM = 'Example Law Firm'
-  function stubCanvas(): HomepageBlock[] {
-    const lines = readFileSync(resolve(__dirname, '../../../scripts/ci/fixture.ndjson'), 'utf8').split('\n').filter(Boolean)
+  // The CI stub's canvas, or null on a client tree: the press prunes `scripts/ci`,
+  // so the golden (which holds the stub's rows) runs on the template checkout and
+  // is skipped, by name, on a propagated client (`[R-175]`).
+  const STUB_PATH = resolve(__dirname, '../../../scripts/ci/fixture.ndjson')
+  function stubCanvas(): HomepageBlock[] | null {
+    if (!existsSync(STUB_PATH)) return null
+    const lines = readFileSync(STUB_PATH, 'utf8').split('\n').filter(Boolean)
     return lines.map((l) => JSON.parse(l)).find((d) => d._type === 'homePage').canvas
   }
+  const STUB = stubCanvas()
   const canvases: Array<[string, HomepageBlock[], 'dark' | 'light']> = [
-    ['stub', stubCanvas(), 'light'],
+    ...(STUB ? [['stub', STUB, 'light'] as [string, HomepageBlock[], 'light']] : []),
     ['migrated', migrated as unknown as HomepageBlock[], 'dark'],
     ['planted', planted as unknown as HomepageBlock[], 'dark'],
   ]
   const themes: FlowRules[] = [...FLOWS, siteLookOf({sectionJoin: 'angled', dividerCarry: ['cards'], patternTexture: 'diagonalHatch', patternGround: 'dark', sectionOverlap: 'photo', brandGhost: 'none'}).flow!]
 
-  it('records every theme’s decisions on every canvas', async () => {
+  it.skipIf(STUB === null)('records every theme’s decisions on every canvas (skipped on a client tree: the CI stub canvas is pruned by the press)', async () => {
     const golden: Record<string, unknown> = {}
     for (const [name, blocks, hero] of canvases) {
       for (const flow of themes) {
