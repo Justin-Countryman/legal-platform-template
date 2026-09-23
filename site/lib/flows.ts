@@ -2,6 +2,7 @@ import {converter, differenceCiede2000} from 'culori'
 import {DIVIDERS, type Divider, type CarryPiece, dividerShape, readCarry} from './dividers'
 import {readOverlap, type SectionOverlap} from './overlaps'
 import {parseHexInput, resolvePalette, type ColorInputs} from './designTokens'
+import type {VisibleGround} from './sectionSurface'
 
 // ─── Themes: the flow of the page (Phase 17B) ─────────────────────────────────
 //
@@ -33,8 +34,8 @@ import {parseHexInput, resolvePalette, type ColorInputs} from './designTokens'
 // dark) is a property of a theme FAMILY, and a family ships only the steps the eye
 // has passed on real canvases through the switcher (`[R-509]`); it is never a fourth
 // click. The roster below is generated from the families, so nothing is duplicated
-// by hand and the step is never buried in a label. Three families ship here; the
-// rest of the twelve in the vision's §3 arrive at the eye's pace, a few a session.
+// by hand and the step is never buried in a label. Six families ship here; the rest
+// of the twelve in the vision's §3 arrive at the eye's pace, a few a session.
 //
 // THE VOCABULARY IS CLOSED. A rule it cannot say is a new word plus one engine clause,
 // never a special case in a theme: that is the discipline the divider library set.
@@ -66,6 +67,14 @@ export const CLOSES = ['dark', 'saturated', 'muted'] as const
 export const LIGHT_PAINTS = ['plain', 'washes', 'pattern', 'panel'] as const
 export const DIVIDER_ATS = ['intoDark', 'everyChange', 'none'] as const
 export const HAIRLINES = ['none', 'atChange', 'everyBand'] as const
+/** The hairline's ink (Phase 17B session 5, `[R-524]`): the border token, or the accent. The
+ *  border measured 4 to 7 levels in 255 against a dark ground, a line nobody sees at arm's
+ *  length; the accent is what the study's dark pages draw at a seam. Decorative either way. */
+export const HAIRLINE_INKS = ['border', 'accent'] as const
+/** The room around a band the theme fills (Phase 17B session 5, `[R-525]`): the normal preset,
+ *  or the spacious one. A stored spacing and a section's own default (the ribbon's compact)
+ *  win; interior pages never take it. */
+export const SPACINGS = ['normal', 'spacious'] as const
 export const GHOSTS = ['none', 'once'] as const
 /** The header's and the footer's ground (Phase 17B session 4, `[R-518]`): light or dark, never
  *  transparent or glass. A transparent header needs `heroMerge` and a hero behind it, and its
@@ -73,7 +82,9 @@ export const GHOSTS = ['none', 'once'] as const
  *  differ, ADV-17B4-A); glass pairs with the floating compact style. Both stay the operator's. */
 export const CHROME_SCHEMES = ['light', 'dark'] as const
 export type ChromeScheme = (typeof CHROME_SCHEMES)[number]
-export const NEEDS = ['photos', 'texture', 'initials', ...HOSTS] as const
+/** `ribbons`: the theme fills two ribbons on this page (read from the pass, so two adjacent or a
+ *  stored one do not count); `darkHero`: the hero is dark or a photo (Phase 17B session 5). */
+export const NEEDS = ['photos', 'texture', 'initials', 'ribbons', 'darkHero', ...HOSTS] as const
 export type Need = (typeof NEEDS)[number]
 
 export type FlowRules = {
@@ -118,7 +129,11 @@ export type FlowRules = {
     carry: readonly CarryPiece[]
     /** A decorative 1px line at a join: never; at every change of ground; at every join. */
     hairline: (typeof HAIRLINES)[number]
+    /** The line's ink: the border token or the accent. */
+    hairlineInk: (typeof HAIRLINE_INKS)[number]
   }
+  /** The room around each band the theme fills: the normal preset or the spacious one. */
+  spacing: (typeof SPACINGS)[number]
   /** Placement as before: once, the first dark band, else the first eligible (`[R-492]`). */
   ghost: (typeof GHOSTS)[number]
   /** Placement as before: once, nearest the middle, at a change of visible ground (`[R-499]`). */
@@ -194,7 +209,7 @@ export function darkBudget(budget: FlowRules['dark']['budget'], n: number): numb
   }
 }
 
-const NO_DIVIDER: FlowRules['divider'] = {shape: 'straight', at: 'none', carry: [], hairline: 'none'}
+const NO_DIVIDER: FlowRules['divider'] = {shape: 'straight', at: 'none', carry: [], hairline: 'none', hairlineInk: 'border'}
 
 // ─── The families ─────────────────────────────────────────────────────────────
 //
@@ -208,8 +223,8 @@ const NO_DIVIDER: FlowRules['divider'] = {shape: 'straight', at: 'none', carry: 
 // record canvases at 1440 and 390. Alternating at mostly dark did NOT pass: on the
 // adversarial canvas `pairs` stops at four of seven bands (0.57, a balanced curve, not
 // the step's 0.71 to 0.78) and the step differs from balanced by one band; on the
-// planning and multi-practice canvases it read as mostly dark. The fix is a rule, not
-// a value, and is the next session's.
+// planning and multi-practice canvases it read as mostly dark. Session 5 found no rule
+// that keeps the alternation reaches the step, and retired it (`[R-523]`, below).
 
 export const FAMILIES: readonly FlowFamily[] = [
   {
@@ -219,7 +234,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', close: 'dark'},
       light: {paint: 'plain'},
-      divider: NO_DIVIDER,
+      divider: NO_DIVIDER, spacing: 'normal',
       ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME[step],
     }),
   },
@@ -227,15 +242,21 @@ export const FAMILIES: readonly FlowFamily[] = [
     id: 'alternating', name: 'Alternating',
     sentence: 'Dark, light, dark, light, with hard edges: the classic law site.',
     // The study shows it at three steps (light 7, balanced 4, dark 2 sites); at mostly
-    // light it would be Quiet, so the family ships balanced and mostly dark. Its rhythm
-    // is `pairs` at both steps: the family's name is the alternation, and `runs` at
-    // mostly dark gathered four dark bands in a row on the composer's six roles
-    // (ADV-17B-2 F12). The step table's `runs` is the starting rhythm, not a law.
-    steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: ['balanced'],
+    // light it would be Quiet. It ships balanced only, and its rhythm is `pairs`.
+    //
+    // DARK-LED PAGES ARE RUNS, NOT ALTERNATION (Phase 17B session 5, `[R-523]`). The
+    // mostly-dark step shipped in session 2 and failed the eye in session 3; session 5
+    // retired it: an alternation darkens at most two bands in three where the step asks
+    // for three in four; bands the step never darkens cut the page into shorter
+    // stretches; on the fixture's thirteen bands no rule that forbids three dark in a row
+    // gets past 7 of 13 (exhaustive); and on the planning canvas at 390 the step measured
+    // lighter by page height than this family's balanced step. Dark-led pages gather
+    // their dark bands into runs, which is Cut blocks' rhythm.
+    steps: ['balanced'], defaultStep: 'balanced', passed: ['balanced'],
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: 'pairs', paint: 'plain', close: 'dark'},
       light: {paint: 'plain'},
-      divider: NO_DIVIDER,
+      divider: NO_DIVIDER, spacing: 'normal',
       ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME[step],
     }),
   },
@@ -247,8 +268,55 @@ export const FAMILIES: readonly FlowFamily[] = [
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'pattern', close: 'dark'},
       light: {paint: 'plain'},
-      divider: {shape: 'peak', at: 'intoDark', carry: ['cards'], hairline: 'none'},
+      divider: {shape: 'peak', at: 'intoDark', carry: ['cards'], hairline: 'none', hairlineInk: 'border'}, spacing: 'normal',
       ghost: 'none', overlap: 'photo', needs: ['texture'], chrome: STEP_CHROME[step],
+    }),
+  },
+  // ─── Phase 17B session 5 (record WS-V1-PHASE17B5-DESIGN §2) ─────────────────
+  {
+    id: 'typeOnBlack', name: 'Type on black',
+    sentence: 'All dark and no photographs: a thin accent line at every join.',
+    // The study: elbazelbazlaw, seven dark bands and a red line at each seam; dustincompton's
+    // sand bars at every seam. The all-dark step's rhythm devices are photos, per-band ramps
+    // and lines, never a second flat shade (17B §0.5); this family is the lines. Its line is
+    // the accent (`[R-524]`): the border token cannot be seen on a dark ground. It wants a
+    // dark or photo hero, which the composer writes and a theme cannot reach.
+    steps: ['allDark'], defaultStep: 'allDark', passed: [],
+    rules: (step) => ({
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', close: 'dark'},
+      light: {paint: 'plain'},
+      divider: {shape: 'straight', at: 'none', carry: [], hairline: 'everyBand', hairlineInk: 'accent'}, spacing: 'normal',
+      ghost: 'none', overlap: 'none', needs: ['darkHero'], chrome: STEP_CHROME[step],
+    }),
+  },
+  {
+    id: 'editorial', name: 'Editorial',
+    sentence: 'Light and airy top to bottom: room around every section, a faint texture, a rule at every join.',
+    // The study: duparlaw, connieyilaw and eternalaw, light with a texture on their light
+    // bands, rules between sections, coded airy, a light close and footer. Space is what
+    // tells it from Quiet (`[R-525]`); the initials ghost is not drawn (no light page in the
+    // study draws initials; the evidenced large mark is the logo, backlog 350).
+    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: [],
+    rules: (step) => ({
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', close: 'muted'},
+      light: {paint: 'pattern'},
+      divider: {shape: 'straight', at: 'none', carry: [], hairline: 'everyBand', hairlineInk: 'border'}, spacing: 'spacious',
+      ghost: 'none', overlap: 'none', needs: ['texture'], chrome: {header: 'light', footer: 'light'},
+    }),
+  },
+  {
+    id: 'ribbonRhythm', name: 'Ribbon rhythm',
+    sentence: 'A light page punctuated by strips of the accent color.',
+    // The study: bdgfirm, alecharsheyattorney and emilytylerlaw band for band, a saturated
+    // ribbon after the hero and one before the close on a light page; deliamillerattorney and
+    // fahlawgroup too. It needs two ribbons the pass can fill; the composer writes none yet,
+    // which is the story's to fix (backlog 364), not this family's.
+    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: [],
+    rules: (step) => ({
+      dark: {budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', close: 'dark'},
+      light: {paint: 'plain'},
+      divider: NO_DIVIDER, spacing: 'normal',
+      ghost: 'none', overlap: 'none', needs: ['ribbons'], chrome: STEP_CHROME[step],
     }),
   },
 ]
@@ -273,6 +341,13 @@ export const FLOWS: readonly FlowRules[] = FAMILIES.flatMap((f) =>
 /** The family a roster theme belongs to. */
 export function familyOf(flow: Pick<FlowRules, 'family'> | null | undefined): FlowFamily | null {
   return flow ? FAMILIES.find((f) => f.id === flow.family) ?? null : null
+}
+
+/** Steps that shipped and left the roster, with the entry that retired them. A client grant
+ *  that names one enters the preview as the site is (`lib/preview/plan.ts`, `grantFlow`); a
+ *  stored one is an unknown id and renders the default. */
+export const RETIRED_FLOWS: Readonly<Record<string, string>> = {
+  'alternating.mostlyDark': '[R-523]',
 }
 
 /** What an absent `flow` renders, on every client. Pinned equal to `presets.json`'s
@@ -325,7 +400,8 @@ export function bridgeOf(d: Record<string, unknown>): FlowRules {
     sentence: 'The page as the six retired fields stored it, until Apply writes a theme.',
     dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: d.sectionGradient === 'deep' ? 'gradient' : 'plain', close: 'muted'},
     light: {paint: 'plain'},
-    divider: {shape, at: 'intoDark', carry: readCarry(d.dividerCarry), hairline: 'none'},
+    divider: {shape, at: 'intoDark', carry: readCarry(d.dividerCarry), hairline: 'none', hairlineInk: 'border'},
+    spacing: 'normal',
     ghost: d.brandGhost === 'on' ? 'once' : 'none',
     overlap: readOverlap(d.sectionOverlap),
     needs: [],
@@ -381,6 +457,10 @@ export function hostOf(member: {_type?: string; _key?: string; layout?: string |
 export type CanvasFacts = {
   /** The hosts the canvas carries. */
   hosts: readonly Host[]
+  /** The hero's ground as the walk meets it (`heroGround`); absent reads as not dark. */
+  hero?: VisibleGround | null
+  /** The ribbons this theme's pass fills on the canvas (`canvasFacts` runs the pass). */
+  ribbonsFilled?: number
   /** Bands that carry their own background photo. */
   photos: number
   /** The style set names a texture. */
@@ -398,6 +478,18 @@ export function impliedNeeds(rules: Pick<FlowRules, 'dark' | 'light' | 'ghost'>)
   return out
 }
 
+/** What a need asks for, in the words the switcher prints. */
+export function needLabel(need: Need): string {
+  switch (need) {
+    case 'photos': return 'two sections with their own photo'
+    case 'texture': return 'a style set with a texture'
+    case 'initials': return 'initials from the firm\u2019s name'
+    case 'ribbons': return 'two ribbon sections the theme can fill'
+    case 'darkHero': return 'a dark or photo hero'
+    default: return `a ${need} section`
+  }
+}
+
 /** The needs a canvas and site leave unmet. A photo theme needs two photo bands to be
  *  itself; a host need is one band of that host. */
 export function unmetNeeds(flow: FlowRules, facts: CanvasFacts): Need[] {
@@ -405,6 +497,8 @@ export function unmetNeeds(flow: FlowRules, facts: CanvasFacts): Need[] {
     if (need === 'photos') return facts.photos < 2
     if (need === 'texture') return !facts.texture
     if (need === 'initials') return !facts.initials
+    if (need === 'ribbons') return (facts.ribbonsFilled ?? 0) < 2
+    if (need === 'darkHero') return !(facts.hero === 'dark' || facts.hero === 'image')
     return !facts.hosts.includes(need)
   })
 }

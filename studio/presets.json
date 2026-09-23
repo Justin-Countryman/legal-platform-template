@@ -2409,8 +2409,7 @@
       "name": "Alternating",
       "sentence": "Dark, light, dark, light, with hard edges: the classic law site.",
       "steps": [
-        "balanced",
-        "mostlyDark"
+        "balanced"
       ],
       "defaultStep": "balanced",
       "passed": [
@@ -2430,6 +2429,36 @@
         "balanced",
         "mostlyDark"
       ]
+    },
+    {
+      "id": "typeOnBlack",
+      "name": "Type on black",
+      "sentence": "All dark and no photographs: a thin accent line at every join.",
+      "steps": [
+        "allDark"
+      ],
+      "defaultStep": "allDark",
+      "passed": []
+    },
+    {
+      "id": "editorial",
+      "name": "Editorial",
+      "sentence": "Light and airy top to bottom: room around every section, a faint texture, a rule at every join.",
+      "steps": [
+        "mostlyLight"
+      ],
+      "defaultStep": "mostlyLight",
+      "passed": []
+    },
+    {
+      "id": "ribbonRhythm",
+      "name": "Ribbon rhythm",
+      "sentence": "A light page punctuated by strips of the accent color.",
+      "steps": [
+        "mostlyLight"
+      ],
+      "defaultStep": "mostlyLight",
+      "passed": []
     }
   ],
   "flows": [
@@ -2448,8 +2477,10 @@
         "shape": "straight",
         "at": "none",
         "carry": [],
-        "hairline": "none"
+        "hairline": "none",
+        "hairlineInk": "border"
       },
+      "spacing": "normal",
       "ghost": "none",
       "overlap": "none",
       "needs": [],
@@ -2487,8 +2518,10 @@
         "shape": "straight",
         "at": "none",
         "carry": [],
-        "hairline": "none"
+        "hairline": "none",
+        "hairlineInk": "border"
       },
+      "spacing": "normal",
       "ghost": "none",
       "overlap": "none",
       "needs": [],
@@ -2497,52 +2530,11 @@
         "footer": "dark"
       },
       "id": "alternating.balanced",
-      "name": "Alternating, balanced",
+      "name": "Alternating",
       "sentence": "Dark, light, dark, light, with hard edges: the classic law site.",
       "family": "alternating",
       "step": "balanced",
       "passed": true
-    },
-    {
-      "dark": {
-        "budget": "threeQuarters",
-        "hosts": [
-          "ribbon",
-          "narrative",
-          "areas",
-          "testimonials",
-          "statement",
-          "attorneys",
-          "caseResults",
-          "split",
-          "badges"
-        ],
-        "rhythm": "pairs",
-        "paint": "plain",
-        "close": "dark"
-      },
-      "light": {
-        "paint": "plain"
-      },
-      "divider": {
-        "shape": "straight",
-        "at": "none",
-        "carry": [],
-        "hairline": "none"
-      },
-      "ghost": "none",
-      "overlap": "none",
-      "needs": [],
-      "chrome": {
-        "header": "dark",
-        "footer": "dark"
-      },
-      "id": "alternating.mostlyDark",
-      "name": "Alternating, mostly dark",
-      "sentence": "Dark, light, dark, light, with hard edges: the classic law site.",
-      "family": "alternating",
-      "step": "mostlyDark",
-      "passed": false
     },
     {
       "dark": {
@@ -2569,8 +2561,10 @@
         "carry": [
           "cards"
         ],
-        "hairline": "none"
+        "hairline": "none",
+        "hairlineInk": "border"
       },
+      "spacing": "normal",
       "ghost": "none",
       "overlap": "photo",
       "needs": [
@@ -2614,8 +2608,10 @@
         "carry": [
           "cards"
         ],
-        "hairline": "none"
+        "hairline": "none",
+        "hairlineInk": "border"
       },
+      "spacing": "normal",
       "ghost": "none",
       "overlap": "photo",
       "needs": [
@@ -2631,6 +2627,127 @@
       "family": "cutBlocks",
       "step": "mostlyDark",
       "passed": true
+    },
+    {
+      "dark": {
+        "budget": "all",
+        "hosts": [
+          "ribbon",
+          "testimonials",
+          "attorneys",
+          "caseResults",
+          "areas",
+          "split",
+          "narrative",
+          "differentiators",
+          "statement",
+          "statRow",
+          "badges",
+          "video",
+          "reviews"
+        ],
+        "rhythm": "runs",
+        "paint": "plain",
+        "close": "dark"
+      },
+      "light": {
+        "paint": "plain"
+      },
+      "divider": {
+        "shape": "straight",
+        "at": "none",
+        "carry": [],
+        "hairline": "everyBand",
+        "hairlineInk": "accent"
+      },
+      "spacing": "normal",
+      "ghost": "none",
+      "overlap": "none",
+      "needs": [
+        "darkHero"
+      ],
+      "chrome": {
+        "header": "dark",
+        "footer": "dark"
+      },
+      "id": "typeOnBlack.allDark",
+      "name": "Type on black",
+      "sentence": "All dark and no photographs: a thin accent line at every join.",
+      "family": "typeOnBlack",
+      "step": "allDark",
+      "passed": false
+    },
+    {
+      "dark": {
+        "budget": "none",
+        "hosts": [],
+        "rhythm": "bookends",
+        "paint": "plain",
+        "close": "muted"
+      },
+      "light": {
+        "paint": "pattern"
+      },
+      "divider": {
+        "shape": "straight",
+        "at": "none",
+        "carry": [],
+        "hairline": "everyBand",
+        "hairlineInk": "border"
+      },
+      "spacing": "spacious",
+      "ghost": "none",
+      "overlap": "none",
+      "needs": [
+        "texture"
+      ],
+      "chrome": {
+        "header": "light",
+        "footer": "light"
+      },
+      "id": "editorial.mostlyLight",
+      "name": "Editorial",
+      "sentence": "Light and airy top to bottom: room around every section, a faint texture, a rule at every join.",
+      "family": "editorial",
+      "step": "mostlyLight",
+      "passed": false
+    },
+    {
+      "dark": {
+        "budget": "all",
+        "hosts": [
+          "ribbon"
+        ],
+        "rhythm": "alternate",
+        "paint": "saturated",
+        "close": "dark"
+      },
+      "light": {
+        "paint": "plain"
+      },
+      "divider": {
+        "shape": "straight",
+        "at": "none",
+        "carry": [],
+        "hairline": "none",
+        "hairlineInk": "border"
+      },
+      "spacing": "normal",
+      "ghost": "none",
+      "overlap": "none",
+      "needs": [
+        "ribbons"
+      ],
+      "chrome": {
+        "header": "light",
+        "footer": "dark"
+      },
+      "id": "ribbonRhythm.mostlyLight",
+      "name": "Ribbon rhythm",
+      "sentence": "A light page punctuated by strips of the accent color.",
+      "family": "ribbonRhythm",
+      "step": "mostlyLight",
+      "passed": false
     }
   ],
   "defaultFlow": "quiet.mostlyLight",

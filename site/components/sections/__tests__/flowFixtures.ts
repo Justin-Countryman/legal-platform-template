@@ -15,6 +15,7 @@ export function themed(over: {
   overlap?: FlowRules['overlap']
   dark?: Partial<FlowRules['dark']>
   light?: Partial<FlowRules['light']>
+  spacing?: FlowRules['spacing']
 }): FlowRules {
   return {
     ...QUIET,
@@ -23,6 +24,7 @@ export function themed(over: {
     overlap: over.overlap ?? QUIET.overlap,
     dark: {...QUIET.dark, ...over.dark},
     light: {...QUIET.light, ...over.light},
+    spacing: over.spacing ?? QUIET.spacing,
   }
 }
 

@@ -123,7 +123,9 @@ export function SectionShell({
   const textured = resolved.textured || !!seam.paint?.texture
   const steps: SectionSpacingSteps = tight
     ? TIGHT_SPACING
-    : SECTION_SPACING[appearance?.spacing ?? DEFAULT_SECTION_SPACING]
+    // A stored spacing, then a section's own (the ribbon's compact rides `appearance`), then
+    // the theme's room around a band it filled (Phase 17B session 5, `seam.paint.spacing`).
+    : SECTION_SPACING[appearance?.spacing ?? seam.paint?.spacing ?? DEFAULT_SECTION_SPACING]
 
   const overlap = overlapOf(appearance)
   // The three top-padding states are exclusive, most specific first. An
@@ -225,8 +227,10 @@ export function SectionShell({
         fadesUnder(seam.site?.flow) && paintsDark && !resolved.isImage && 'band-gradient',
         fadesUnder(seam.site?.flow) && paintsDark && !resolved.isImage && `grad-i-${Math.min(seam.run?.index ?? 0, 7)}`,
         fadesUnder(seam.site?.flow) && paintsDark && !resolved.isImage && `grad-n-${Math.min(seam.run?.length ?? 1, 8)}`,
-        // Phase 17B: the theme's hairline, a decorative line at the top of this band.
+        // Phase 17B: the theme's hairline, a decorative line at the top of this band; in the
+        // accent where the theme says so (session 5, `[R-524]`).
         seam.hairline && 'hairline-top',
+        seam.hairline && seam.site?.flow?.divider.hairlineInk === 'accent' && 'hairline-accent',
         (textured || ghost) && !isInset && 'isolate',
         top,
         bottom,

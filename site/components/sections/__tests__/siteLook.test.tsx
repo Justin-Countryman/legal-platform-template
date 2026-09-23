@@ -45,7 +45,7 @@ describe('the site look from Design Settings', () => {
     // The six retired fields, stored by a client built before the pin: the bridge.
     const bridged = siteLookOf({sectionJoin: 'angled', dividerCarry: ['cards'], sectionOverlap: 'photo', brandGhost: 'on', sectionGradient: 'deep'}).flow!
     expect(bridged.id).toBe('stored.bridge')
-    expect(bridged.divider).toEqual({shape: 'angled', at: 'intoDark', carry: ['cards'], hairline: 'none'})
+    expect(bridged.divider).toEqual({shape: 'angled', at: 'intoDark', carry: ['cards'], hairline: 'none', hairlineInk: 'border'})
     expect(bridged.overlap).toBe('photo')
     expect(bridged.ghost).toBe('once')
     expect(bridged.dark).toMatchObject({budget: 'none', hosts: [], rhythm: 'bookends', paint: 'gradient', close: 'muted'})

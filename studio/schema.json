@@ -18011,15 +18011,23 @@
             },
             {
               "type": "string",
-              "value": "alternating.mostlyDark"
-            },
-            {
-              "type": "string",
               "value": "cutBlocks.balanced"
             },
             {
               "type": "string",
               "value": "cutBlocks.mostlyDark"
+            },
+            {
+              "type": "string",
+              "value": "typeOnBlack.allDark"
+            },
+            {
+              "type": "string",
+              "value": "editorial.mostlyLight"
+            },
+            {
+              "type": "string",
+              "value": "ribbonRhythm.mostlyLight"
             }
           ]
         },

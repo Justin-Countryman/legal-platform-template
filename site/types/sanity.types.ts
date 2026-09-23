@@ -2804,9 +2804,11 @@ export type DesignSettings = {
   flow?:
     | "quiet.mostlyLight"
     | "alternating.balanced"
-    | "alternating.mostlyDark"
     | "cutBlocks.balanced"
-    | "cutBlocks.mostlyDark";
+    | "cutBlocks.mostlyDark"
+    | "typeOnBlack.allDark"
+    | "editorial.mostlyLight"
+    | "ribbonRhythm.mostlyLight";
   headingEmphasisStyle?: "color" | "italic";
   headingRule?:
     | "none"
@@ -4124,10 +4126,12 @@ export type DESIGN_TOKENS_QUERY_RESULT = {
     "diagonalHatch" | "diamondLattice" | "pinstripe" | "scallop" | null;
   flow:
     | "alternating.balanced"
-    | "alternating.mostlyDark"
     | "cutBlocks.balanced"
     | "cutBlocks.mostlyDark"
+    | "editorial.mostlyLight"
     | "quiet.mostlyLight"
+    | "ribbonRhythm.mostlyLight"
+    | "typeOnBlack.allDark"
     | null;
   patternGround: "dark" | "light" | null;
   headingEmphasisStyle: "color" | "italic" | null;
@@ -19455,10 +19459,12 @@ export type SITE_CHROME_QUERY_RESULT = {
       "diagonalHatch" | "diamondLattice" | "pinstripe" | "scallop" | null;
     flow:
       | "alternating.balanced"
-      | "alternating.mostlyDark"
       | "cutBlocks.balanced"
       | "cutBlocks.mostlyDark"
+      | "editorial.mostlyLight"
       | "quiet.mostlyLight"
+      | "ribbonRhythm.mostlyLight"
+      | "typeOnBlack.allDark"
       | null;
     patternGround: "dark" | "light" | null;
     headingEmphasisStyle: "color" | "italic" | null;
@@ -20635,10 +20641,12 @@ export type PREVIEW_STORED_DESIGN_QUERY_RESULT = {
   themePreview?: string;
   flow?:
     | "alternating.balanced"
-    | "alternating.mostlyDark"
     | "cutBlocks.balanced"
     | "cutBlocks.mostlyDark"
-    | "quiet.mostlyLight";
+    | "editorial.mostlyLight"
+    | "quiet.mostlyLight"
+    | "ribbonRhythm.mostlyLight"
+    | "typeOnBlack.allDark";
   headingEmphasisStyle?: "color" | "italic";
   headingRule?:
     | "broken"

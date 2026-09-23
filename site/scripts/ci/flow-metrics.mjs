@@ -59,6 +59,8 @@ const CANVASES = [
   ['adversarial-mostly-dark', 'scripts/ci/record-adversarial-mostly-dark.ndjson'],
   ['planning-mostly-light', 'scripts/ci/record-planning-mostly-light.ndjson'],
   ['multi-practice-balanced', 'scripts/ci/record-multi-practice-balanced.ndjson'],
+  // Phase 17B session 5: two ribbons bracketing a light page, where Ribbon rhythm can be itself.
+  ['ribbons-mostly-light', 'scripts/ci/record-ribbons-mostly-light.ndjson'],
 ]
 const WIDTHS = [
   ['1440', {viewport: {width: 1440, height: 900}}],

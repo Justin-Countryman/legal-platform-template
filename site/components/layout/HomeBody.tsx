@@ -37,18 +37,25 @@ type HomeData = {
 /** The homepage's `getHomePage()` answer: the page, its metadata and the hero's design half. */
 export type HomePageData = Awaited<ReturnType<typeof getHomePage>>
 
+/** The homepage hero as `HomeBody` renders it: content with a heading over an authored
+ *  design, else none. The preview's switcher reads its ground the same way (Phase 17B session 5). */
+export function homeHeroOf(all: HomePageData | null | undefined): HomeHeroData | null {
+  const home = (all?.page ?? null) as HomeData | null
+  const design = (all?.heroDesign ?? null) as HomeHeroDesign | null
+  const content = home?.hero
+  return content?.heading && design ? {...design, ...content} : null
+}
+
 export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData}) {
   const header = chrome?.header ?? null
   const tokens = (chrome?.nap ?? null) as NapTokens
   const globalCtaData = (chrome?.globalCta ?? null) as HomepageCtaData | null
   const home = (all?.page ?? null) as HomeData | null
-  const design = (all?.heroDesign ?? null) as HomeHeroDesign | null
   const siteSettings = header?.siteSettings
-  const content = home?.hero
   // Render the hero only when content has a heading AND the design is
   // authored/migrated. An empty/unmigrated heroSettings.homepageHero falls through
   // to the minimal band below — the hard-cut safety net, never a crash.
-  const hero: HomeHeroData | null = content?.heading && design ? {...design, ...content} : null
+  const hero = homeHeroOf(all)
   // Phase 16C: the first band rises into the hero when the theme's divider is shaped and
   // the grounds differ, so the hero makes room for it and the walk knows what it meets.
   // Phase 16D: the ghost's initials ride the site look, as the photo frame and the

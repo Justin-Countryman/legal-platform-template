@@ -18,7 +18,8 @@ type Doc = Record<string, unknown> & {_id: string; _type: string}
 type Ref = {_ref?: string}
 
 export const CI_DIR = resolve(__dirname, '../../../scripts/ci')
-export const RECORD_CANVASES = ['record-adversarial-mostly-dark.ndjson', 'record-planning-mostly-light.ndjson', 'record-multi-practice-balanced.ndjson'] as const
+// Phase 17B session 5: the ribbon evidence canvas, for a family whose need the other three do not meet.
+export const RECORD_CANVASES = ['record-adversarial-mostly-dark.ndjson', 'record-planning-mostly-light.ndjson', 'record-multi-practice-balanced.ndjson', 'record-ribbons-mostly-light.ndjson'] as const
 
 export function stubDataset(file: string): Doc[] | null {
   const p = resolve(CI_DIR, file)

@@ -1,6 +1,6 @@
 import {THEMES, matchTheme, themePatch, updatePatch, type Theme, type ThemeDoc, type ThemeMatch} from '@/lib/themes'
 import {PALETTE_PRESETS, matchPreset, presetInputs, type PalettePreset} from '@/lib/palettes'
-import {FLOWS, HIDDEN_FIELDS, flowById, flowOf, type FlowRules} from '@/lib/flows'
+import {FLOWS, HIDDEN_FIELDS, RETIRED_FLOWS, flowById, flowOf, type FlowRules} from '@/lib/flows'
 import {parseHexInput, type ColorInputs} from '@/lib/designTokens'
 import {isResolvedTreatment} from '@/lib/imageTreatment'
 import {SILO_HOVER_EFFECTS} from '@/lib/siloHover'
@@ -47,6 +47,14 @@ export function parseChoices(styleSet: string, palette: string, flow: string, vi
   const f = flow === AS_THE_SITE_IS || FLOWS.some((x) => x.id === flow)
   const v = view === 'design' || view === 'grey'
   return s && p && f && v ? {styleSet, palette, flow, view: view as PreviewView} : null
+}
+
+/** A client grant's theme, read against today's roster: an absent one (a link minted before the
+ *  theme row, session 3) and a retired one (Phase 17B session 5 retired Alternating at mostly
+ *  dark, `[R-523]`) read as the site is, so a 14-day link minted before still enters. Any other
+ *  unknown id stays itself and is refused, as before. */
+export function grantFlow(flow: string | null | undefined): string {
+  return flow == null || flow in RETIRED_FLOWS ? AS_THE_SITE_IS : flow
 }
 
 export function previewPath(c: PreviewChoices): string {

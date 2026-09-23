@@ -2,8 +2,8 @@ import {describe, expect, it} from 'vitest'
 import {readFileSync} from 'node:fs'
 import {resolve} from 'node:path'
 import {
-  CLOSES, DARKNESS, DARK_BUDGETS, DARK_PAINTS, DARK_RHYTHMS, DEFAULT_FLOW, DIVIDER_ATS, FAMILIES, FLOWS, GHOSTS, HAIRLINES, HIDDEN_FIELDS,
-  HOSTS, LIGHT_PAINTS, NEEDS, STEP_HOSTS, bridgeOf, closeSurface, darkBudget, flowById, flowOf, hostOf, impliedNeeds, saturatedFillOk,
+  CLOSES, DARKNESS, DARK_BUDGETS, DARK_PAINTS, DARK_RHYTHMS, DEFAULT_FLOW, DIVIDER_ATS, FAMILIES, FLOWS, GHOSTS, HAIRLINES, HAIRLINE_INKS, HIDDEN_FIELDS,
+  HOSTS, LIGHT_PAINTS, NEEDS, SPACINGS, STEP_HOSTS, bridgeOf, closeSurface, darkBudget, flowById, flowOf, hostOf, impliedNeeds, needLabel, saturatedFillOk,
   storesHiddenFields, unmetNeeds, CHROME_SCHEMES, STEP_CHROME, chromeSchemes, darkHeaderReady,
 } from '../flows'
 import {DIVIDERS, CARRY_PIECES} from '../dividers'
@@ -40,9 +40,11 @@ describe('the families and the roster', () => {
     }
   })
 
-  it('the eye pass of 2026-09-23 passed four of the five steps; Alternating at mostly dark waits on a rule', () => {
+  it('the passed steps are the eye pass verdicts: session 3 passed four; session 5 retired Alternating at mostly dark ([R-523])', () => {
     expect(FLOWS.filter((f) => f.passed).map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark'])
-    expect(flowById('alternating.mostlyDark')!.passed).toBe(false)
+    // Dark-led pages are runs, not alternation: the step left the roster, it is not merely unpassed.
+    expect(flowById('alternating.mostlyDark')).toBeNull()
+    expect(FAMILIES.find((f) => f.id === 'alternating')!.steps).toEqual(['balanced'])
   })
 
   it('generates one theme per family per step, with unique ids of the form family.step', () => {
@@ -56,9 +58,31 @@ describe('the families and the roster', () => {
     }
   })
 
-  it('ships the three families of session 2: Quiet, Alternating and Cut blocks', () => {
-    expect(FAMILIES.map((f) => f.id)).toEqual(['quiet', 'alternating', 'cutBlocks'])
-    expect(FLOWS.map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'alternating.mostlyDark', 'cutBlocks.balanced', 'cutBlocks.mostlyDark'])
+  it('ships the three families of session 2 and the three of session 5, one step each for the new ones', () => {
+    expect(FAMILIES.map((f) => f.id)).toEqual(['quiet', 'alternating', 'cutBlocks', 'typeOnBlack', 'editorial', 'ribbonRhythm'])
+    expect(FLOWS.map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
+      'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight'])
+  })
+
+  it('session 5’s families are the record’s §2.2 to §2.4, written out', () => {
+    const tob = flowById('typeOnBlack.allDark')!
+    expect(tob.dark).toMatchObject({budget: 'all', rhythm: 'runs', paint: 'plain', close: 'dark'})
+    expect(tob.dark.hosts).toEqual(HOSTS)
+    expect(tob.divider).toMatchObject({shape: 'straight', at: 'none', hairline: 'everyBand', hairlineInk: 'accent'})
+    expect(tob.needs).toEqual(['darkHero'])
+    const ed = flowById('editorial.mostlyLight')!
+    expect(ed.dark).toMatchObject({budget: 'none', rhythm: 'bookends', close: 'muted'})
+    expect(ed.light.paint).toBe('pattern')
+    expect(ed.spacing).toBe('spacious')
+    expect(ed.ghost).toBe('none')
+    expect(ed.divider).toMatchObject({hairline: 'everyBand', hairlineInk: 'border'})
+    expect(ed.chrome).toEqual({header: 'light', footer: 'light'})
+    const rr = flowById('ribbonRhythm.mostlyLight')!
+    expect(rr.dark).toMatchObject({budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', close: 'dark'})
+    expect(rr.needs).toEqual(['ribbons'])
+    // Only Editorial takes the room; only Type on black inks its line in the accent.
+    expect(FLOWS.filter((f) => f.spacing === 'spacious').map((f) => f.id)).toEqual(['editorial.mostlyLight'])
+    expect(FLOWS.filter((f) => f.divider.hairlineInk === 'accent').map((f) => f.id)).toEqual(['typeOnBlack.allDark'])
   })
 
   it.each(FLOWS.map((f) => [f.id, f] as const))('%s names every vocabulary field with a legal value', (_, flow) => {
@@ -73,6 +97,10 @@ describe('the families and the roster', () => {
     expect(DIVIDER_ATS).toContain(flow.divider.at)
     for (const c of flow.divider.carry) expect(CARRY_PIECES).toContain(c)
     expect(HAIRLINES).toContain(flow.divider.hairline)
+    expect(HAIRLINE_INKS).toContain(flow.divider.hairlineInk)
+    expect(SPACINGS).toContain(flow.spacing)
+    // An accent ink draws nothing without a line to draw.
+    if (flow.divider.hairlineInk === 'accent') expect(flow.divider.hairline).not.toBe('none')
     expect(GHOSTS).toContain(flow.ghost)
     expect(OVERLAPS).toContain(flow.overlap)
     for (const n of flow.needs) expect(NEEDS).toContain(n)
@@ -153,8 +181,11 @@ describe('hosts', () => {
 
 describe('the compat bridge, for one pin', () => {
   it('a stored flow wins; else the six retired fields bridge; else the platform default', () => {
-    expect(flowOf({flow: 'alternating.mostlyDark', sectionJoin: 'peak'}).id).toBe('alternating.mostlyDark')
+    expect(flowOf({flow: 'cutBlocks.mostlyDark', sectionJoin: 'peak'}).id).toBe('cutBlocks.mostlyDark')
     expect(flowOf({flow: 'not-a-theme', sectionJoin: 'peak'}).id).toBe('stored.bridge')
+    // A retired step is an unknown id: no client stores it (the table never wrote it), and one
+    // that did would render the default, never a missing theme ([R-523]).
+    expect(flowOf({flow: 'alternating.mostlyDark'}).id).toBe(DEFAULT_FLOW)
     expect(flowOf({}).id).toBe(DEFAULT_FLOW)
     expect(flowOf(null).id).toBe(DEFAULT_FLOW)
     expect(flowOf({fontPairingPreset: 4, headingRule: 'line'}).id).toBe(DEFAULT_FLOW)
@@ -178,7 +209,8 @@ describe('the compat bridge, for one pin', () => {
   it('reads each field the way the site read it, and darkens nothing', () => {
     const b = bridgeOf({sectionJoin: 'angled', dividerCarry: ['cards', 'nonsense'], patternGround: 'dark', patternTexture: 'diagonalHatch',
       brandGhost: 'on', sectionOverlap: 'photo', sectionGradient: 'deep'})
-    expect(b.divider).toEqual({shape: 'angled', at: 'intoDark', carry: ['cards'], hairline: 'none'})
+    expect(b.divider).toEqual({shape: 'angled', at: 'intoDark', carry: ['cards'], hairline: 'none', hairlineInk: 'border'})
+    expect(b.spacing).toBe('normal')
     expect(b.ghost).toBe('once')
     expect(b.overlap).toBe('photo')
     expect(b.dark).toEqual({budget: 'none', hosts: [], rhythm: 'bookends', paint: 'gradient', close: 'muted'})
@@ -207,6 +239,22 @@ describe('needs and gates', () => {
     expect(unmetNeeds(photo, {hosts: ['ribbon'], photos: 2, texture: true, initials: true})).toEqual([])
     expect(unmetNeeds(flowById('cutBlocks.balanced')!, {hosts: [], photos: 0, texture: false, initials: false})).toEqual(['texture'])
     expect(unmetNeeds(flowById('cutBlocks.balanced')!, {hosts: [], photos: 0, texture: true, initials: false})).toEqual([])
+  })
+
+  it('two ribbons the pass fills, and a dark or photo hero (Phase 17B session 5)', () => {
+    const none = {hosts: [], photos: 0, texture: false, initials: false} as const
+    const rr = flowById('ribbonRhythm.mostlyLight')!
+    expect(unmetNeeds(rr, {...none, hosts: ['ribbon'], ribbonsFilled: 1})).toEqual(['ribbons'])
+    expect(unmetNeeds(rr, {...none, hosts: ['ribbon'], ribbonsFilled: 2})).toEqual([])
+    expect(unmetNeeds(rr, none)).toEqual(['ribbons'])
+    const tob = flowById('typeOnBlack.allDark')!
+    expect(unmetNeeds(tob, {...none, hero: 'dark'})).toEqual([])
+    // A photo hero is what the walk calls `image` (`heroGround`), and it is a dark hero here.
+    expect(unmetNeeds(tob, {...none, hero: 'image'})).toEqual([])
+    for (const hero of ['light', 'tint', null, undefined] as const) expect(unmetNeeds(tob, {...none, hero}), String(hero)).toEqual(['darkHero'])
+    // The switcher prints needs in words, never an id.
+    for (const n of NEEDS) expect(needLabel(n)).not.toMatch(/^[a-z]+[A-Z]/)
+    expect(needLabel('darkHero')).toBe('a dark or photo hero')
   })
 
   it('the saturated fill is gated on the palette: every shipped preset passes, the grey placeholder does not', () => {
@@ -260,7 +308,9 @@ describe('the header and the footer (Phase 17B session 4, [R-518])', () => {
       mostlyDark: {header: 'dark', footer: 'dark'},
       allDark: {header: 'dark', footer: 'dark'},
     })
-    for (const f of FLOWS) expect(f.chrome).toEqual(STEP_CHROME[f.step])
+    // Every family takes its step's chrome but one that names its own: Editorial's light footer,
+    // from its evidence sites (session 5 record §2.4).
+    for (const f of FLOWS) expect(f.chrome, f.id).toEqual(f.family === 'editorial' ? {header: 'light', footer: 'light'} : STEP_CHROME[f.step])
   })
 
   it('the bridge and the platform default give what every client renders today: a light header, a dark footer', () => {

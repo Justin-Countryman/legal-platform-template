@@ -63,18 +63,20 @@ describe('Switcher, the operator', () => {
   })
 
   it('a two-step family shows its steps on a second line with the chosen one active, and a step the eye has not passed says so', () => {
-    const c = draw(operator, stored, {...choices, flow: 'alternating.mostlyDark'})
-    const family = FAMILIES.find((f) => f.id === 'alternating')!
-    expect(c.textContent).toContain('Step: Alternating')
-    const steps = [...c.querySelectorAll('a')].filter((a) => a.getAttribute('href')?.includes('/alternating.'))
+    const c = draw(operator, stored, {...choices, flow: 'cutBlocks.mostlyDark'})
+    expect(c.textContent).toContain('Step: Cut blocks')
+    const steps = [...c.querySelectorAll('a')].filter((a) => a.getAttribute('href')?.includes('/cutBlocks.'))
     expect(steps.map((a) => a.getAttribute('href'))).toEqual(expect.arrayContaining([
-      '/site-preview/graphite/navy-brass/alternating.balanced/design',
-      '/site-preview/graphite/navy-brass/alternating.mostlyDark/design',
+      '/site-preview/graphite/navy-brass/cutBlocks.balanced/design',
+      '/site-preview/graphite/navy-brass/cutBlocks.mostlyDark/design',
     ]))
     const active = steps.find((a) => a.getAttribute('aria-current') === 'true')!
-    expect(active.getAttribute('href')).toBe('/site-preview/graphite/navy-brass/alternating.mostlyDark/design')
-    const unjudged = family.steps.filter((s) => !family.passed.includes(s))
-    expect((c.textContent!.match(/\(not yet judged\)/g) ?? []).length).toBe(unjudged.length)
+    expect(active.getAttribute('href')).toBe('/site-preview/graphite/navy-brass/cutBlocks.mostlyDark/design')
+    // Every step not yet passed says so once: on the step line of a two-step family, on the
+    // family's own button where it has one step (Phase 17B session 5).
+    const unjudged = FAMILIES.filter((f) => f.steps.length === 1 && !f.passed.includes(f.defaultStep)).length
+      + FAMILIES.filter((f) => f.id === 'cutBlocks').flatMap((f) => f.steps.filter((s) => !f.passed.includes(s))).length
+    expect((c.textContent!.match(/\(not yet judged\)/g) ?? []).length).toBe(unjudged)
     // A one-step family shows no step line.
     expect(draw(operator, stored, {...choices, flow: 'quiet.mostlyLight'}).textContent).not.toContain('Step: Quiet')
   })
@@ -82,8 +84,8 @@ describe('Switcher, the operator', () => {
   it('names the needs the page or site lacks for the shown theme, and marks a family whose default step needs them', () => {
     // No style set texture: Cut blocks needs one.
     const bare = draw(operator, stored, {...choices, styleSet: 'site', flow: 'cutBlocks.balanced'})
-    expect(bare.textContent).toContain('Needs this page lacks: texture; it renders without them.')
-    expect(bare.textContent).toContain('Needs texture this page lacks.')
+    expect(bare.textContent).toContain('Needs this page lacks: a style set with a texture; it renders without them.')
+    expect(bare.textContent).toContain('Needs a style set with a texture this page lacks.')
     // With the previewed style set naming a texture, the need is met.
     const met = draw(operator, stored, {...choices, styleSet: 'site', flow: 'cutBlocks.balanced'}, [], chromeWithTexture)
     expect(met.textContent).not.toContain('Needs this page lacks')
@@ -116,7 +118,7 @@ describe('Switcher, the operator', () => {
     const payload = verifyToken(apply.split('?t=')[1], SECRET) as Record<string, unknown>
     const plan = planPreview(legacy, c)
     expect(payload).toMatchObject({kind: 'apply', slug: 'example-firm', rev: 'rev-9', set: plan.set, unset: plan.unset,
-      flow: {id: 'alternating.balanced', name: 'Alternating, balanced'}})
+      flow: {id: 'alternating.balanced', name: 'Alternating'}})
     expect(plan.set.flow).toBe('alternating.balanced')
     expect(plan.unset).toEqual(['sectionJoin', 'brandGhost'])
     expect(payload).not.toHaveProperty('role')
@@ -168,7 +170,7 @@ describe('Switcher, the client', () => {
   it('shows one line: the three choices, that nothing is live, and when it ends; no roster, no Apply, no share link', () => {
     const c = draw(client, stored, {...choices, flow: 'alternating.balanced'})
     expect(c.textContent).toContain('Preview, not live yet')
-    expect(c.textContent).toContain('Graphite, Navy & Brass, Alternating, balanced')
+    expect(c.textContent).toContain('Graphite, Navy & Brass, Alternating')
     expect(c.textContent).toContain('Links on this page open the live site')
     expect(c.textContent).not.toContain(ROW_THEME_HEAD)
     expect(c.querySelectorAll('a')).toHaveLength(0)

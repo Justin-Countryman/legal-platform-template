@@ -55,4 +55,11 @@ describe('GET /site-preview/enter', () => {
     vi.stubEnv('SITE_PREVIEW_SECRET', '')
     expect((await enter(signToken({v: 1, role: 'operator', exp: now() + 600}, SECRET)!)).status).toBe(404)
   })
+
+  it('a link minted before a step was retired enters as the site is ([R-523])', async () => {
+    const retired = signToken({v: 1, role: 'client', exp: now() + 600, styleSet: 'graphite', palette: 'site', flow: 'alternating.mostlyDark', view: 'design'}, SECRET)!
+    const res = await enter(retired)
+    expect(res.status).toBe(303)
+    expect(new URL(res.headers.get('location')!).pathname).toBe('/site-preview/graphite/site/site/design')
+  })
 })

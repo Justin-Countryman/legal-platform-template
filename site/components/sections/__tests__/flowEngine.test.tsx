@@ -33,6 +33,9 @@ import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, chromeSchemes, flow
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {ghostSource} from '@/lib/brandMark'
 import {LOOK, themed} from './flowFixtures'
+
+/** Quiet with the room it never takes, for the case that nothing sets `spacing` by default. */
+const QUIET_ROOM = themed({})
 import {RECORD_CANVASES, stubCanvas} from './stubCanvases'
 import planted from './fixtures/fixture-shaped-canvas.json'
 import migrated from '@/components/layout/__tests__/fixtures/migrated-canvas.json'
@@ -129,14 +132,70 @@ describe('the budget and the rhythm', () => {
     expect(out[0]).toBe('light')
   })
 
-  it('Alternating at mostly dark keeps its pairs, so it still alternates on the composer’s six roles (ADV-17B-2 F12)', () => {
-    const flow = flowById('alternating.mostlyDark')!
-    expect(flow.dark.rhythm).toBe('pairs')
-    const out = grounds(six.map((h) => b(h)), flow)
-    // No run of three, and the budget (6 - 2 = 4) is a ceiling the pairs need not reach.
-    expect(out.join(' ')).not.toContain('dark dark dark')
-    expect(out.filter((g) => g === 'dark').length).toBeLessThanOrEqual(4)
-    expect(out.filter((g) => g === 'dark').length).toBeGreaterThanOrEqual(3)
+  it('Alternating ships balanced only: dark-led pages are runs, not alternation ([R-523])', () => {
+    // Session 5 measured the ceiling: no rule that forbids three dark in a row gets past 7 of 13
+    // on the fixture's shape, where the mostly-dark budget is 9. Runs reach it (Cut blocks).
+    expect(flowById('alternating.mostlyDark')).toBeNull()
+    const thirteen = ['areas', 'areas', 'differentiators', 'attorneys', 'split', 'narrative', 'statement', 'ribbon', 'statRow', 'statement', 'statement', 'split', 'split'] as Host[]
+    const bands = thirteen.map((h, i) => (i === 0 ? b(h, {surface: 'light'}) : i === 5 ? b(h, {inset: true}) : b(h)))
+    const runs = grounds(bands, flowById('cutBlocks.mostlyDark')!, {patternTexture: 'diagonalHatch'})
+    expect(runs.filter((g) => g === 'dark').length).toBeGreaterThanOrEqual(8)
+  })
+})
+
+describe('the words of session 5: the room, the accent line, the needs read from the pass', () => {
+  it('spacious goes on the bands the theme fills; a stored surface keeps its own room', () => {
+    const flow = themed({dark: {budget: 'third', hosts: ['ribbon'], rhythm: 'pairs'}, spacing: 'spacious'})
+    const paints = assignGrounds([b('ribbon'), b('split'), b('split', {surface: 'tint'})].map(resolveBand), flow)
+    expect(paints.map((p) => p?.spacing ?? null)).toEqual(['spacious', 'spacious', null])
+    expect(assignGrounds([b('split')].map(resolveBand), QUIET_ROOM)[0]?.spacing).toBeUndefined()
+  })
+
+  it('the shell puts the room below a stored spacing and a section’s own: a ribbon stays compact', () => {
+    const flow = themed({spacing: 'spacious'})
+    const blocks = [
+      {_type: 'contentSectionInline', _key: 's', layout: 'statement', heading: 'Spacious'},
+      {_type: 'contentSectionInline', _key: 'r', layout: 'ribbon', heading: 'Compact'},
+      {_type: 'contentSectionInline', _key: 'n', layout: 'statement', heading: 'Stored', appearance: {spacing: 'normal'}},
+    ] as unknown as HomepageBlock[]
+    const sections = [...render(<HomepageCanvas blocks={blocks} site={{...LOOK, flow}} hero="dark" />).container.querySelectorAll('section')]
+    const cls = (i: number) => sections[i].className.split(' ')
+    expect(cls(0)).toEqual(expect.arrayContaining(['pt-24', 'md:pt-32', 'lg:pt-40']))
+    expect(cls(1)).toEqual(expect.arrayContaining(['pb-12', 'md:pb-16']))
+    expect(cls(1)).not.toContain('lg:pb-40')
+    expect(cls(2)).toEqual(expect.arrayContaining(['pb-16', 'md:pb-24', 'lg:pb-28']))
+  })
+
+  it('the accent line: every join after the first carries the hairline and its accent ink; the border ink carries the hairline alone', () => {
+    const blocks = ['a', 'b', 'c'].map((k) => ({_type: 'contentSectionInline', _key: k, layout: 'statement', heading: k})) as unknown as HomepageBlock[]
+    const classes = (flow: FlowRules) => [...render(<HomepageCanvas blocks={blocks} site={{...LOOK, flow}} hero="dark" />).container.querySelectorAll('section')].map((s) => s.className.split(' '))
+    const accent = classes(themed({divider: {hairline: 'everyBand', hairlineInk: 'accent'}}))
+    expect(accent.map((c) => c.includes('hairline-top') && c.includes('hairline-accent'))).toEqual([false, true, true])
+    const border = classes(themed({divider: {hairline: 'everyBand', hairlineInk: 'border'}}))
+    expect(border.map((c) => c.includes('hairline-top'))).toEqual([false, true, true])
+    expect(border.flat()).not.toContain('hairline-accent')
+  })
+
+  it('ribbons are counted as the pass fills them: two apart count, two adjacent or a stored one do not', () => {
+    const rr = flowById('ribbonRhythm.mostlyLight')!
+    const facts = (bands: Band[]) => canvasFacts(bands.map(resolveBand), {...LOOK, flow: rr, saturated: true})
+    expect(facts([b('ribbon', null, {content: true}), b('split'), b('ribbon', null, {content: true})]).ribbonsFilled).toBe(2)
+    expect(unmetNeeds(rr, facts([b('ribbon', null, {content: true}), b('split'), b('ribbon', null, {content: true})]))).toEqual([])
+    expect(facts([b('ribbon', null, {content: true}), b('ribbon', null, {content: true}), b('split')]).ribbonsFilled).toBe(1)
+    expect(facts([b('ribbon', {surface: 'light'}), b('split'), b('ribbon', null, {content: true})]).ribbonsFilled).toBe(1)
+    // A palette the fill refuses: the ribbons fall to the dark ground and are still the theme's strips.
+    expect(canvasFacts([b('ribbon', null, {content: true}), b('split'), b('ribbon', null, {content: true})].map(resolveBand), {...LOOK, flow: rr, saturated: false}).ribbonsFilled).toBe(2)
+    // Facts are read under the theme asked about, not the site's own.
+    expect(canvasFacts([b('ribbon'), b('split'), b('ribbon')].map(resolveBand), LOOK, null, rr).ribbonsFilled).toBe(2)
+  })
+
+  it('the hero reaches the facts, so a theme that wants a dark hero can say so', () => {
+    const tob = flowById('typeOnBlack.allDark')!
+    const survivors = [b('split')].map(resolveBand)
+    expect(unmetNeeds(tob, canvasFacts(survivors, LOOK, 'dark'))).toEqual([])
+    expect(unmetNeeds(tob, canvasFacts(survivors, LOOK, 'image'))).toEqual([])
+    expect(unmetNeeds(tob, canvasFacts(survivors, LOOK, 'tint'))).toEqual(['darkHero'])
+    expect(unmetNeeds(tob, canvasFacts(survivors, LOOK))).toEqual(['darkHero'])
   })
 })
 
@@ -298,7 +357,7 @@ describe('the decision golden', () => {
         const survivors = blocks.map(frameOf).filter((r) => !r.empty)
         const out = walkFrame(blocks, frameOf, site, hero)
         golden[`${name} / ${flow.id}`] = {
-          unmetNeeds: unmetNeeds(flow, canvasFacts(survivors, site)),
+          unmetNeeds: unmetNeeds(flow, canvasFacts(survivors, site, hero)),
           // Phase 17B session 4 (`[R-518]`): the header and footer the theme gives when Header
           // Settings and Footer Settings store none, with both logos uploaded. Site-wide, so
           // the same on every canvas; recorded per canvas so the golden reads as the page.
@@ -316,6 +375,8 @@ describe('the decision golden', () => {
             ghost: !!seam.ghost,
             raisePhoto: !!seam.raisePhoto,
             run: seam.run ?? null,
+            // Phase 17B session 5: the theme's room, recorded only where it moved a band.
+            ...(seam.paint?.spacing ? {spacing: seam.paint.spacing} : {}),
           })),
         }
       }
