@@ -6,6 +6,7 @@ import {CornerPreview} from '../../components/CornerPreview'
 import {ThemePreview} from '../../components/ThemePreview'
 import {HeadingLinePicker} from '../../components/HeadingLinePicker'
 import {DividerPicker} from '../../components/DividerPicker'
+import {FLOWS, DEFAULT_FLOW} from '../../../site/lib/flows'
 
 // Design Settings
 // Visual identity: logos, colors, typography, UI style
@@ -90,12 +91,32 @@ export const designSettings = defineType({
     // can tell it from a choice (item 308, [R-450]). Absent is the default render.
     defineField({
       name: 'themePreview',
-      title: 'Theme',
+      title: 'Style set',
       type: 'string',
       fieldset: 'theme',
       readOnly: true,
       components: {input: ThemePreview},
-      description: 'Choose a theme to set the fonts, corners, headings, photo frames, section edges, texture and hover together. It never changes your colors, and a look set on one section on purpose stays as it was set.',
+      description: 'Choose a style set to set the fonts, corners, headings, photo frames, texture and hover together. It never changes your colors, and a look set on one section on purpose stays as it was set. The flow of the page (which sections go dark, the shape of the breaks, what sits on the backgrounds) is the Theme below.',
+    }),
+    // ─── The theme: the flow of the page (Phase 17B, [R-505], [R-509], [R-514]) ──
+    // ONE STORED ID, `<family>.<step>`, read by the site at render: a theme is a rule
+    // set resolved over whatever canvas the page has (`site/lib/flows.ts`), so there
+    // are no values to match it by, unlike a style set or a palette. NO
+    // `initialValue` (item 308): absent renders the platform default, `DEFAULT_FLOW`,
+    // on every client, built or propagated; the build writes a pick with a reason
+    // (`[R-511]`) and Apply writes what the preview showed. The Studio label reads
+    // "Theme" while the code says `flow` (`[R-514]`, item 357).
+    defineField({
+      name: 'flow',
+      title: 'Theme',
+      type: 'string',
+      fieldset: 'theme',
+      description:
+        'How the homepage flows: which sections go dark and how many, where the backgrounds merge and break, the shape of the breaks, and what sits on the backgrounds. A section with its own Surface keeps it; the theme fills the rest. Leave blank for the platform default (' + DEFAULT_FLOW + ').',
+      options: {
+        list: FLOWS.map((f) => ({title: `${f.name} \u2014 ${f.sentence}`, value: f.id})),
+        layout: 'radio',
+      },
     }),
 
     // ─── Headings (Phase 16B) ─────────────────────────────────────────────────
@@ -207,12 +228,20 @@ export const designSettings = defineType({
         layout: 'radio',
       },
     }),
+    // ─── Retired to the theme layer (Phase 17B, [R-510], [R-513]) ─────────────────
+    // The six fields below are HIDDEN for one pin and read by nothing but the compat
+    // bridge (`flowOf` in site/lib/flows.ts): a client that still stores them renders
+    // exactly what it did until Apply writes `flow` and clears them. They are deleted
+    // at the next pin, once `retired_settings` reads zero on every client (the Phase 14
+    // and 15 shape for the five color fields). A style set neither writes nor matches
+    // them (`lib/themes.ts`).
     defineField({
       name: 'patternGround',
       title: 'Texture Ground',
       type: 'string',
       fieldset: 'patternTexture',
-      description: 'Which background a Pattern section sits on. Dark draws the texture darker than the dark background, so text on it stays at least as readable. Needs a texture above; leave blank for Light.',
+      hidden: true,
+      description: 'Retired: the theme decides the texture\u2019s ground (Phase 17B).',
       options: {
         list: [
           {title: 'Light', value: 'light'},
@@ -226,9 +255,9 @@ export const designSettings = defineType({
       title: 'Section Divider',
       type: 'string',
       fieldset: 'patternTexture',
+      hidden: true,
       components: {input: DividerPicker},
-      description:
-        'The shape of the edge where one homepage section meets the next. It is drawn under the hero and wherever the page enters a dark or saturated section, and the section below gains the space it takes, so nothing looks scrunched. Interior pages never draw one. A theme sets a shape and you can pick any other without changing the theme\u2019s name. Leave blank for Straight.',
+      description: 'Retired: the theme picks the divider\u2019s shape (Phase 17B, [R-513]).',
       options: {
         list: [
           {title: 'Straight \u2014 no shape', value: 'straight'},
@@ -248,8 +277,8 @@ export const designSettings = defineType({
       type: 'array',
       of: [{type: 'string'}],
       fieldset: 'patternTexture',
-      description:
-        'Small places that repeat the divider\u2019s shape, so the page reads as one design. Needs a divider above. Buttons show it only on square-cornered themes, and a photo takes it only where the photo has no frame.',
+      hidden: true,
+      description: 'Retired: the theme carries its divider\u2019s shape (Phase 17B).',
       options: {
         list: [
           {title: 'Card corners', value: 'cards'},
@@ -261,16 +290,17 @@ export const designSettings = defineType({
     }),
 
     // ─── Drawn Elements (Phase 16D, Phase 16E) ────────────────────────────────
-    // Three things a theme draws. None carries an `initialValue`
-    // (item 308): a seed is folded into every build and could never be told from a
-    // choice, so absent means off and a theme sets them.
+    // None carries an `initialValue` (item 308): a seed is folded into every build and
+    // could never be told from a choice, so absent means off. Since Phase 17B only the
+    // drop cap is a style set's; the ghost, the overlap and the gradient are the
+    // theme's and are hidden here for one pin (see above).
     defineField({
       name: 'brandGhost',
       title: 'Ghosted Initials',
       type: 'string',
       fieldset: 'drawnElements',
-      description:
-        'Draws the firm\u2019s initials very large and very faint behind one homepage section, in the site\u2019s own heading font. It appears once per page, on a dark section where there is one, and never on interior pages. Leave blank for none.',
+      hidden: true,
+      description: 'Retired: the theme places the ghost (Phase 17B).',
       options: {
         list: [
           {title: 'None', value: 'none'},
@@ -284,8 +314,8 @@ export const designSettings = defineType({
       title: 'Overlap',
       type: 'string',
       fieldset: 'drawnElements',
-      description:
-        'Lets a section\u2019s photo cross the edge into the section above it, which ties the two together. Drawn once per homepage, on one section whose background differs from the one above it, and on desktop and tablet only \u2014 phones stack normally. The section above makes room for it, so none of its text is ever covered. Interior pages never do it. Leave blank for none. (To lift a whole panel instead, use Overlap the Section Above on that section.)',
+      hidden: true,
+      description: 'Retired: the theme places the raised photo (Phase 17B). To lift a whole panel, use Overlap the Section Above on that section.',
       options: {
         list: [
           {title: 'None', value: 'none'},
@@ -299,11 +329,8 @@ export const designSettings = defineType({
       title: 'Gradient',
       type: 'string',
       fieldset: 'drawnElements',
-      description:
-        'Fades a dark section\u2019s background from the brand dark into a deeper shade that picks up the accent color. '
-        + 'Where several dark sections run together they share one continuous fade, with no line between them. '
-        + 'Homepage only, on dark sections only \u2014 never on light, tint, accent-filled or photo sections, and never on '
-        + 'interior pages. On a near-black brand color there is little room to fade and the effect is slight. Leave blank for none.',
+      hidden: true,
+      description: 'Retired: the theme draws the gradient (Phase 17B).',
       options: {
         list: [
           {title: 'None', value: 'none'},

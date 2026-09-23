@@ -862,8 +862,16 @@ export const DESIGN_TOKENS_QUERY = groq`
     // make the template blank-slate guard flag older field names once the
     // generated types are regenerated, which surfaces on CI rather than before.
     patternTexture,
-    // The theme settings (Phase 16B): a theme in the Studio writes them with the
-    // fields above. The site never reads which theme it is.
+    // The theme: the flow of the page (Phase 17B). One stored id the site reads at
+    // render; absent renders the platform default. The only stored design choice the
+    // site reads by name.
+    flow,
+    // The style set's settings (Phase 16B): a style set in the Studio writes them with
+    // the fields above. The site never reads which style set it is.
+    // patternGround, sectionJoin, dividerCarry, brandGhost, sectionOverlap and
+    // sectionGradient are retired to the theme layer (Phase 17B) and hidden for one
+    // pin: the compat bridge reads them from here so a client that stores them
+    // renders as before until Apply writes the theme.
     patternGround,
     headingEmphasisStyle,
     headingRule,

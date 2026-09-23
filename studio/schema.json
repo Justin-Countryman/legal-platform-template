@@ -17996,6 +17996,35 @@
         },
         "optional": true
       },
+      "flow": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "quiet.mostlyLight"
+            },
+            {
+              "type": "string",
+              "value": "alternating.balanced"
+            },
+            {
+              "type": "string",
+              "value": "alternating.mostlyDark"
+            },
+            {
+              "type": "string",
+              "value": "cutBlocks.balanced"
+            },
+            {
+              "type": "string",
+              "value": "cutBlocks.mostlyDark"
+            }
+          ]
+        },
+        "optional": true
+      },
       "headingEmphasisStyle": {
         "type": "objectAttribute",
         "value": {

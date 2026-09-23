@@ -7,6 +7,7 @@ import {
   type ThemeDoc,
 } from '../themes'
 import {PREVIEW_TOKEN_VECTOR, signToken} from '../preview/session'
+import {DARKNESS, DEFAULT_FLOW, FAMILIES, FLOWS, HIDDEN_FIELDS, HOSTS} from '../flows'
 
 // studio/presets.json (Phase 16B amendment 4, widened in 16C): the themes with their
 // picks, the corner families, the palettes and the font pairings as data, for the readers
@@ -51,12 +52,13 @@ function cases() {
       fontPairingPreset: null,
       customFonts: {headingFont: {regular: {asset: {_ref: 'file-abc'}}}},
     })),
-    matchCase('a dark texture ground with no texture', doc({...THEMES[0].settings, patternGround: 'dark'})),
+    // Phase 17B: a document that still stores the six hidden fields matches as before.
+    matchCase('the six hidden fields stored beside a theme', doc({...THEMES[1].settings, sectionJoin: 'angled', dividerCarry: ['cards'],
+      patternGround: 'dark', brandGhost: 'on', sectionOverlap: 'photo', sectionGradient: 'deep'})),
   ]
   for (const theme of THEMES) {
     out.push(matchCase(`${theme.id}, as applied`, doc({...theme.settings, ...theme.picks})))
-    // A swapped divider or line keeps the theme's name ([R-485]).
-    out.push(matchCase(`${theme.id}, with the divider swapped`, doc({...theme.settings, sectionJoin: 'wave'})))
+    // A swapped heading line keeps the theme's name ([R-485]).
     out.push(matchCase(`${theme.id}, with the heading line swapped`, doc({...theme.settings, headingRule: 'hatched'})))
     for (const [i, version] of theme.previous.entries()) {
       out.push(matchCase(`${theme.id}, earlier version ${i + 1}`, doc({...version.settings})))
@@ -103,6 +105,16 @@ function presets() {
       ...PREVIEW_TOKEN_VECTOR,
       token: signToken(PREVIEW_TOKEN_VECTOR.payload, PREVIEW_TOKEN_VECTOR.secret),
     },
+    // Phase 17B: the theme roster (`lib/flows.ts`), flattened, and its families, so the
+    // build's picker and Apply's allow-list read the same ids the site renders; the
+    // default an absent `flow` renders, pinned equal in both suites; the six fields
+    // hidden for one pin, which Apply may clear and never set.
+    darkness: DARKNESS,
+    hosts: HOSTS,
+    families: FAMILIES.map((f) => ({id: f.id, name: f.name, sentence: f.sentence, steps: f.steps, defaultStep: f.defaultStep})),
+    flows: FLOWS,
+    defaultFlow: DEFAULT_FLOW,
+    hiddenFields: HIDDEN_FIELDS,
   }
 }
 
