@@ -2438,7 +2438,9 @@
         "allDark"
       ],
       "defaultStep": "allDark",
-      "passed": []
+      "passed": [
+        "allDark"
+      ]
     },
     {
       "id": "editorial",
@@ -2448,7 +2450,9 @@
         "mostlyLight"
       ],
       "defaultStep": "mostlyLight",
-      "passed": []
+      "passed": [
+        "mostlyLight"
+      ]
     },
     {
       "id": "ribbonRhythm",
@@ -2458,7 +2462,9 @@
         "mostlyLight"
       ],
       "defaultStep": "mostlyLight",
-      "passed": []
+      "passed": [
+        "mostlyLight"
+      ]
     }
   ],
   "flows": [
@@ -2675,7 +2681,7 @@
       "sentence": "All dark and no photographs: a thin accent line at every join.",
       "family": "typeOnBlack",
       "step": "allDark",
-      "passed": false
+      "passed": true
     },
     {
       "dark": {
@@ -2710,7 +2716,7 @@
       "sentence": "Light and airy top to bottom: room around every section, a faint texture, a rule at every join.",
       "family": "editorial",
       "step": "mostlyLight",
-      "passed": false
+      "passed": true
     },
     {
       "dark": {
@@ -2747,7 +2753,7 @@
       "sentence": "A light page punctuated by strips of the accent color.",
       "family": "ribbonRhythm",
       "step": "mostlyLight",
-      "passed": false
+      "passed": true
     }
   ],
   "defaultFlow": "quiet.mostlyLight",

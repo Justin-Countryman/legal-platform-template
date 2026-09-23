@@ -225,6 +225,12 @@ const NO_DIVIDER: FlowRules['divider'] = {shape: 'straight', at: 'none', carry: 
 // the step's 0.71 to 0.78) and the step differs from balanced by one band; on the
 // planning and multi-practice canvases it read as mostly dark. Session 5 found no rule
 // that keeps the alternation reaches the step, and retired it (`[R-523]`, below).
+//
+// THE EYE PASS OF SESSION 5 (record WS-V1-PHASE17B5-DESIGN §9, captures beside it): Type
+// on black, Editorial and Ribbon rhythm passed on the three record canvases and the
+// ribbon evidence canvas at 1440 and 390. Type on black and Ribbon rhythm are itself where
+// their need is met (a dark or photo hero; two ribbons the pass fills) and the switcher
+// names the need where it is not.
 
 export const FAMILIES: readonly FlowFamily[] = [
   {
@@ -281,7 +287,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // and lines, never a second flat shade (17B §0.5); this family is the lines. Its line is
     // the accent (`[R-524]`): the border token cannot be seen on a dark ground. It wants a
     // dark or photo hero, which the composer writes and a theme cannot reach.
-    steps: ['allDark'], defaultStep: 'allDark', passed: [],
+    steps: ['allDark'], defaultStep: 'allDark', passed: ['allDark'],
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', close: 'dark'},
       light: {paint: 'plain'},
@@ -296,7 +302,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // bands, rules between sections, coded airy, a light close and footer. Space is what
     // tells it from Quiet (`[R-525]`); the initials ghost is not drawn (no light page in the
     // study draws initials; the evidenced large mark is the logo, backlog 350).
-    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: [],
+    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', close: 'muted'},
       light: {paint: 'pattern'},
@@ -311,7 +317,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // ribbon after the hero and one before the close on a light page; deliamillerattorney and
     // fahlawgroup too. It needs two ribbons the pass can fill; the composer writes none yet,
     // which is the story's to fix (backlog 364), not this family's.
-    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: [],
+    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
     rules: (step) => ({
       dark: {budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', close: 'dark'},
       light: {paint: 'plain'},
