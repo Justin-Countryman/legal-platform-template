@@ -8,7 +8,6 @@ import {
   THEMES, THEME_PICK_LABELS, isPlatformDefault, matchTheme, signatureOf, swappedPicks, themePatch, updatePatch,
   usesCustomFonts, type Theme, type ThemeDoc,
 } from '../../site/lib/themes'
-import {DIVIDER_SHAPES} from '../../site/lib/dividers'
 import {HEADING_LINE_DESIGNS} from '../../site/lib/headingLines'
 
 // The Theme field (Phase 16B, [R-468], [R-469], [R-477]). It stores nothing
@@ -57,14 +56,10 @@ function recognizers(theme: Theme): string {
   return theme.identity.recognizers.map((d) => sig[d].replace('frame/', '').replace('/', ' ')).join(' · ')
 }
 
-/** What a site has picked where it differs from the theme it matches (`[R-485]`). */
-function pickLabel(field: string, value: unknown): string {
-  if (field === 'dividerCarry') {
-    const list = (value as string[]) ?? []
-    return list.length ? list.join(', ') : 'none'
-  }
+/** What a site has picked where it differs from the theme it matches (`[R-485]`): the
+ *  heading line, the one pick since Phase 17B moved the divider to the theme layer. */
+function pickLabel(value: unknown): string {
   if (!value) return 'none'
-  if (field === 'sectionJoin') return DIVIDER_SHAPES[value as keyof typeof DIVIDER_SHAPES]?.label ?? String(value)
   return HEADING_LINE_DESIGNS[value as keyof typeof HEADING_LINE_DESIGNS]?.label ?? String(value)
 }
 
@@ -114,7 +109,7 @@ export function ThemePreview() {
       {swapped.length > 0 && (
         <p style={{fontSize: 11, color: '#555', margin: 0}}>
           {swapped
-            .map((s) => `${THEME_PICK_LABELS[s.field]} · ${pickLabel(s.field, s.site)} (${match?.theme.name}’s is ${pickLabel(s.field, s.theme)})`)
+            .map((s) => `${THEME_PICK_LABELS[s.field]} · ${pickLabel(s.site)} (${match?.theme.name}’s is ${pickLabel(s.theme)})`)
             .join('  —  ')}
         </p>
       )}

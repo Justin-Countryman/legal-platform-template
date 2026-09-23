@@ -13,7 +13,8 @@
 import {type getSiteChrome} from '@/lib/sanity/fetchers'
 import {resolveTokenString, formatPhone} from '@/lib/tokens'
 import {buildDesignTokenCSS, buildColorCSS, buildFontCSS, resolveSidebarDesignSettings} from '@/lib/designTokens'
-import {dividerShape, readCarry} from '@/lib/dividers'
+import {dividerShape} from '@/lib/dividers'
+import {flowOf} from '@/lib/flows'
 import {HeroSchemeProvider} from '@/lib/heroSchemeContext'
 import {HeroSurfaceProvider} from '@/lib/heroSurfaceContext'
 import {DEFAULT_SCRIM_OPACITY, resolveHeroSurface, resolveMergedHeaderScheme} from '@/lib/heroSurface'
@@ -101,6 +102,11 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
     defaultButtons: heroSettings?.defaultButtons ?? [],
   }
 
+  // Phase 17B: the theme (the flow of the page, `lib/flows.ts`) owns the divider's
+  // shape and the pieces that carry it. Read once here from the stored `flow`, the
+  // compat bridge over the six retired fields, or the platform default; the walk reads
+  // the same theme through the site look (`HomeBody`).
+  const flow = flowOf(designTokens)
   const tokenCSS = buildDesignTokenCSS({
     uiRadius:             designTokens?.uiRadius,
     buttonShape:          designTokens?.buttonShape,
@@ -112,7 +118,7 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
     patternTexture:       designTokens?.patternTexture,
     headingEmphasisStyle: designTokens?.headingEmphasisStyle,
     headingCase:          designTokens?.headingCase,
-    sectionJoin:          designTokens?.sectionJoin,
+    sectionJoin:          flow.divider.shape,
     headingRule:          designTokens?.headingRule,
   })
   const colorCSS = buildColorCSS({
@@ -148,12 +154,12 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
   const headingRule = designTokens?.headingRule ?? 'none'
   const imageFrame = designTokens?.imageFrame ?? 'plain'
   // Phase 16C. The carried pieces repeat the divider's shape (`[R-483]`), so they are
-  // drawn only where the site's divider is shaped, and the button piece only where a
+  // drawn only where the theme's divider is shaped, and the button piece only where a
   // button has a corner to take it (Sharp and Crisp): on Balanced it reads as a smudge,
   // on a pill it falls outside the button (ADV-P16C-A). The heading weight rides the same
   // wrapper, because the rule must beat the `font-bold` utility without moving 183
-  // headings in four goldens.
-  const carry = dividerShape(designTokens?.sectionJoin) ? readCarry(designTokens?.dividerCarry) : []
+  // headings in four goldens. Site-wide, interior pages included (Phase 17B, record §2.9).
+  const carry = dividerShape(flow.divider.shape) ? flow.divider.carry : []
   const cornered = designTokens?.buttonShape === 'square' && ['sharp', 'subtle'].includes(designTokens?.uiRadius ?? '')
   const headingWeight = designTokens?.headingWeight === 'regular' ? 'regular' : undefined
   // Phase 16D. The drop cap rides the same wrapper the heading rule and the carried

@@ -22,25 +22,36 @@ import {SectionShell} from '../SectionShell'
 import {NO_SEAM, followSite, interiorLook, siteLookOf, walkFrame, type SiteLook} from '../sectionFrame'
 import {sectionSurface, visibleGround} from '@/lib/sectionSurface'
 import {resolveHovers} from '@/lib/siloHover'
+import {DEFAULT_FLOW, type FlowRules} from '@/lib/flows'
+import {LOOK, themed} from './flowFixtures'
 
-// The site's look (Phase 16B, [R-468], [R-479]): the settings a theme writes reach
+// The site's look (Phase 16B, [R-468], [R-479]): the settings a style set writes reach
 // every section through the walk's per-band object, and a section with a value of
-// its own keeps it. Rendered, not read from source.
+// its own keeps it. Rendered, not read from source. Since Phase 17B the look also
+// carries the THEME (`flow`, `lib/flows.ts`), which owns every page-level device.
 
-const LOOK: SiteLook = {imageFrame: null, sectionJoin: 'straight', patternDark: false, cardHover: null, attorneyCardStyle: null, ghost: null, overlap: null, gradient: null}
 const look = (over: Partial<SiteLook>): SiteLook => ({...LOOK, ...over})
 
 describe('the site look from Design Settings', () => {
-  it('reads each setting, and a dark ground only when a texture is set', () => {
-    expect(siteLookOf({imageFrame: 'slab', sectionJoin: 'angled', cardHover: 'lift', attorneyCardStyle: 'minimal'})).toEqual(
-      {imageFrame: 'slab', sectionJoin: 'angled', patternDark: false, cardHover: 'lift', attorneyCardStyle: 'minimal', ghost: null, overlap: null, gradient: null},
+  it('reads each setting, and the theme: stored, bridged from the six retired fields, or the default', () => {
+    expect(siteLookOf({imageFrame: 'slab', cardHover: 'lift', attorneyCardStyle: 'minimal', patternTexture: 'scallop'})).toMatchObject(
+      {imageFrame: 'slab', cardHover: 'lift', attorneyCardStyle: 'minimal', patternTexture: 'scallop', ghost: null},
     )
-    // Phase 16E: the site's overlap rides the same per-band object, so it reaches the
-    // walk without a prop on any section.
-    expect(siteLookOf({sectionOverlap: 'photo'}).overlap).toBe('photo')
-    expect(siteLookOf({patternGround: 'dark'}).patternDark).toBe(false)
-    expect(siteLookOf({patternGround: 'dark', patternTexture: 'scallop'}).patternDark).toBe(true)
-    expect(siteLookOf(null)).toEqual(LOOK)
+    expect(siteLookOf(null)).toMatchObject({...LOOK, saturated: false})
+    // Nothing stored renders the platform default.
+    expect(siteLookOf({}).flow?.id).toBe(DEFAULT_FLOW)
+    // A stored theme.
+    expect(siteLookOf({flow: 'alternating.balanced'}).flow?.id).toBe('alternating.balanced')
+    // The six retired fields, stored by a client built before the pin: the bridge.
+    const bridged = siteLookOf({sectionJoin: 'angled', dividerCarry: ['cards'], sectionOverlap: 'photo', brandGhost: 'on', sectionGradient: 'deep'}).flow!
+    expect(bridged.id).toBe('stored.bridge')
+    expect(bridged.divider).toEqual({shape: 'angled', at: 'intoDark', carry: ['cards'], hairline: 'none'})
+    expect(bridged.overlap).toBe('photo')
+    expect(bridged.ghost).toBe('once')
+    expect(bridged.dark).toMatchObject({budget: 'none', hosts: [], rhythm: 'bookends', paint: 'gradient', close: 'muted'})
+    // The palette's saturated gate: the grey placeholder fails it, a shipped preset passes.
+    expect(siteLookOf({}).saturated).toBe(false)
+    expect(siteLookOf({darkGround: '#1c2b4a', lightGround: '#f5eedc', accent: '#b8893a'}).saturated).toBe(true)
   })
 
   it('a section value wins; absent and inherit follow the site', () => {
@@ -50,50 +61,52 @@ describe('the site look from Design Settings', () => {
     expect(followSite(null, null)).toBeNull()
   })
 
-  it('interior pages keep the cards and frames but never a join or a textured ground', () => {
-    const l = look({sectionJoin: 'angled', patternDark: true, imageFrame: 'framed', attorneyCardStyle: 'avatar'})
-    expect(interiorLook(l)).toEqual({...l, sectionJoin: 'straight', patternDark: false, ghost: null, overlap: null, gradient: null})
+  it('interior pages keep the cards and frames but carry no theme', () => {
+    const l = look({imageFrame: 'framed', attorneyCardStyle: 'avatar', ghost: {text: 'AB'}})
+    expect(interiorLook(l)).toEqual({...l, flow: null, ghost: null})
   })
 })
 
-describe('the site look carries the divider and its pieces (Phase 16C)', () => {
-  it('reads the site’s divider shape, whatever it is', () => {
-    expect(siteLookOf({sectionJoin: 'peak'}).sectionJoin).toBe('peak')
-    expect(siteLookOf({sectionJoin: 'straight'}).sectionJoin).toBe('straight')
-    expect(siteLookOf({}).sectionJoin).toBe('straight')
-    expect(siteLookOf(null).sectionJoin).toBe('straight')
-  })
-
+describe('the site look carries the theme (Phase 17B)', () => {
   it('every band carries the site look', () => {
     const l = look({imageFrame: 'framed'})
     const out = walkFrame([{}, {}], () => ({appearance: {}, empty: false}), l)
     expect(out.map((o) => o.seam.site)).toEqual([l, l])
   })
 
-  it('an interior page keeps the frames and loses the divider and the texture', () => {
-    const l = look({imageFrame: 'framed', sectionJoin: 'peak', patternDark: true})
-    expect(interiorLook(l)).toEqual({...l, sectionJoin: 'straight', patternDark: false, ghost: null, overlap: null, gradient: null})
+  it('a stored Pattern band is the light ground with the texture under every theme', () => {
+    expect(sectionSurface('pattern')).toMatchObject({surfaceClass: 'bg-background', ringContext: undefined, textured: true})
+    expect(visibleGround({surface: 'pattern'})).toBe('light')
   })
 })
 
-describe('the texture on a dark section ([R-479])', () => {
-  it('a Pattern band sits on the dark ground when the site says so', () => {
-    expect(sectionSurface('pattern', true)).toMatchObject({surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', textured: true})
-    expect(sectionSurface('pattern')).toMatchObject({surfaceClass: 'bg-background', textured: true})
-    expect(visibleGround({surface: 'pattern'}, true)).toBe('dark')
-    expect(visibleGround({surface: 'pattern'})).toBe('light')
-  })
+describe('the texture on a dark section ([R-479]; the theme\u2019s paint since 17B)', () => {
+  const textured: FlowRules = themed({dark: {paint: 'pattern'}})
 
-  it('draws the texture with the derived dark ink under the edge, and the light one at the tested ceiling', () => {
-    const dark = render(<SectionShell appearance={{surface: 'pattern'}} seam={{...NO_SEAM, site: look({patternDark: true})}}>x</SectionShell>).container
+  it('a stored dark band takes the theme’s texture as a treatment, drawn with the derived dark ink', () => {
+    const site = look({flow: textured, patternTexture: 'diagonalHatch'})
+    const dark = render(<SectionShell appearance={{surface: 'dark'}} seam={{...NO_SEAM, site, paint: {texture: true}}}>x</SectionShell>).container
     const band = dark.querySelector('section')!
     const layer = dark.querySelector('[data-section-texture]')!
     expect(band.getAttribute('data-ring-context')).toBe('dark')
     expect(band.className.split(' ')).toEqual(expect.arrayContaining(['bg-brand-dark', 'isolate']))
     expect(layer.className.split(' ')).toEqual(expect.arrayContaining(['section-texture', 'section-texture-dark', '-z-10']))
     expect(layer.className.split(' ')).not.toContain('opacity-4')
-    const light = render(<SectionShell appearance={{surface: 'pattern'}}>x</SectionShell>).container
+    // And a stored dark band with no paint flag draws none.
+    const plain = render(<SectionShell appearance={{surface: 'dark'}} seam={{...NO_SEAM, site}}>x</SectionShell>).container
+    expect(plain.querySelector('[data-section-texture]')).toBeNull()
+  })
+
+  it('a stored Pattern band draws the light texture at the tested ceiling, whatever the theme', () => {
+    const light = render(<SectionShell appearance={{surface: 'pattern'}} seam={{...NO_SEAM, site: look({flow: textured, patternTexture: 'scallop'})}}>x</SectionShell>).container
+    expect(light.querySelector('section')!.className.split(' ')).toContain('bg-background')
     expect(light.querySelector('[data-section-texture]')!.className.split(' ')).toEqual(expect.arrayContaining(['text-brand-dark', 'opacity-4', '-z-10']))
+  })
+
+  it('the ground the pass assigned wins over a resolver that answers light for an absent surface', () => {
+    const assigned = render(<SectionShell appearance={{surface: 'light'}} seam={{...NO_SEAM, site: look({}), paint: {ground: 'dark', texture: false}}}>x</SectionShell>).container
+    expect(assigned.querySelector('section')!.className.split(' ')).toContain('bg-brand-dark')
+    expect(assigned.querySelector('section')!.getAttribute('data-ring-context')).toBe('dark')
   })
 })
 

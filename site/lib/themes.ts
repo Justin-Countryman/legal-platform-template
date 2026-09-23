@@ -1,8 +1,5 @@
 import {getPresetById, type HeadingVoice} from '../fonts/presets'
 import {matchCornerFamily} from './corners'
-import {DIVIDERS, CARRY_PIECES, type CarryPiece} from './dividers'
-import {OVERLAPS} from './overlaps'
-import {SECTION_GRADIENTS} from './gradients'
 import {HEADING_LINES} from './headingLines'
 import {
   BUTTON_SHAPE_MAP, ELEVATION_STYLE_MAP, HEADING_CASES, HEADING_EMPHASIS_STYLES, HEADING_WEIGHTS, MARKETING_SCALE_MAP,
@@ -52,6 +49,19 @@ import {
 // lower ones. Every pair of themes differs in at least two high and five in all, and
 // each theme's recognisers belong to no other theme. A tenth theme that crowds a
 // ninth fails the test rather than shipping.
+//
+// ─── Phase 17B: a theme here is a STYLE SET, and the page devices left it ─────
+//
+// Justin, 2026-09-22 (`[R-505]`, `[R-509]`, `[R-510]`): what this file calls a theme
+// is the atoms and molecules that repeat inside every section, a style set; a THEME
+// is the flow of the page, and lives in `lib/flows.ts` as a stored id plus a rule
+// set. The six page-level fields a style set used to write are the theme's now:
+// the divider's shape and its carried pieces (the two picks), the texture's ground,
+// the ghost, the overlap and the gradient (four matched fields). A style set has 17
+// matched fields and ONE pick, the heading line, and its patch writes 18 keys. The
+// six stay in the schema hidden for one pin, read by nothing but the compat bridge
+// (`flowOf`), and the Studio shows them nowhere. The word "theme" in the code below
+// keeps its old meaning until item 357 is ruled (`[R-514]`).
 
 export const THEME_FIELDS = [
   // The UI system
@@ -71,27 +81,21 @@ export const THEME_FIELDS = [
   'headingWeight',
   'headingCase',
   'imageFrame',
+  // The texture KIND stays a style-set atom (moving it breaks the uniqueness floor,
+  // measured 1 high and 3 in all); its GROUND is the theme's paint since Phase 17B.
   'patternTexture',
-  'patternGround',
-  // Phase 16D, the drawn elements a theme can turn on. Plain string fields, not one
+  // Phase 16D, the drawn element a theme can turn on. A plain string field, not one
   // array: a matched array reads as its default in both `readThemeField` and
   // `presets.py:read`, which both gate on `typeof value === 'string'`, so a site
   // that changed one would still match the theme and `themePatch` would write an
   // empty array into the dataset (measured, ADV-16D-A F12 and ADV-16D-C).
   //
-  // Justin, 2026-09-21, the same day: only the divider and the drop cap ship ON in a
-  // theme; the ghost stays an option no theme sets, and the large quote mark was
-  // deleted outright because a testimonial already carries small quotation marks and
-  // the one place it showed on his own site was a pull quote, not a testimonial.
-  'brandGhost',
+  // Justin, 2026-09-21: only the divider and the drop cap ship ON in a theme, and
+  // since Phase 17B the divider is the theme's (`[R-513]`), so the drop cap is the
+  // one drawn element a style set still turns on (`[R-497]`, amended by `[R-510]`).
+  // The ghost (16D), the overlap (16E, `[R-499]`, `[R-500]`) and the gradient (16F,
+  // `[R-502]`) are theme devices now and are matched by no style set.
   'dropCap',
-  // Phase 16E, `[R-499]`, `[R-500]`: a feature photo crossing the seam into the band
-  // above. The whole-panel overlap is NOT here: it stays the per-section switch
-  // `[R-475]` was ruled on, because one unambiguous rising panel exists in the
-  // sixty-five studied homepages against eighteen sites rising a photo.
-  'sectionOverlap',
-  // Phase 16F: a dark band's ground fades into a deeper shade carrying the accent's hue.
-  'sectionGradient',
 ] as const
 
 export type ThemeField = (typeof THEME_FIELDS)[number]
@@ -99,25 +103,22 @@ export type ThemeField = (typeof THEME_FIELDS)[number]
 /** What a visitor can tell apart at rest, derived from the settings (`[R-487]`). The
  *  first four are the ones a visitor names first, and a pair of themes must differ in at
  *  least two of them. */
-export const SIGNATURE_HIGH = ['typeVoice', 'headingCase', 'cornerFamily', 'surfaceDevice', 'ghost'] as const
-export const SIGNATURE_LOW = ['emphasis', 'kicker', 'frame', 'attorneyCards', 'texture', 'shadow', 'scale', 'ornaments', 'overlap', 'gradient'] as const
+export const SIGNATURE_HIGH = ['typeVoice', 'headingCase', 'cornerFamily', 'surfaceDevice'] as const
+export const SIGNATURE_LOW = ['emphasis', 'kicker', 'frame', 'attorneyCards', 'texture', 'shadow', 'scale', 'ornaments'] as const
 export const SIGNATURE = [...SIGNATURE_HIGH, ...SIGNATURE_LOW] as const
 export type SignatureDimension = (typeof SIGNATURE)[number]
 
-/** The libraries a theme suggests but is not matched by (`[R-485]`): picking a theme
- *  sets them, swapping one keeps the theme's name, and the Studio says which was
- *  swapped. Stored beside the settings, and never compared. */
-export const THEME_PICKS = ['sectionJoin', 'dividerCarry', 'headingRule'] as const
+/** The library a theme suggests but is not matched by (`[R-485]`): picking a theme
+ *  sets it, swapping it keeps the theme's name, and the Studio says it was swapped.
+ *  Stored beside the settings, and never compared. One pick since Phase 17B: the
+ *  divider and its carried pieces are the theme's (`[R-513]`). */
+export const THEME_PICKS = ['headingRule'] as const
 export type ThemePickField = (typeof THEME_PICKS)[number]
 export type ThemePicks = {
-  /** The divider's shape (`lib/dividers.ts`); `null` leaves it straight. */
-  sectionJoin: string | null
-  /** Which small places repeat that shape; empty carries none. */
-  dividerCarry: readonly CarryPiece[]
   /** The line under section headings (`lib/headingLines.ts`); `null` draws none. */
   headingRule: string | null
 }
-export const PICK_DEFAULTS: ThemePicks = {sectionJoin: null, dividerCarry: [], headingRule: null}
+export const PICK_DEFAULTS: ThemePicks = {headingRule: null}
 export type ThemeValue = string | number | null
 export type ThemeSettings = Record<ThemeField, ThemeValue>
 
@@ -147,9 +148,8 @@ export type Theme = {
 export const CARD_HOVERS = ['imageZoom', 'lift', 'glow', 'accentBorder', 'accentUnderline', 'none'] as const
 export const ATTORNEY_CARD_STYLES = ['classic', 'portrait', 'avatar', 'minimal', 'spotlight'] as const
 export const IMAGE_FRAMES = ['plain', 'framed', 'slab'] as const
-export const PATTERN_GROUNDS = ['light', 'dark'] as const
 export const BUTTON_ANIMATIONS = ['none', 'sweep', 'fill-center', 'inset', 'lift'] as const
-/** Phase 16D: each drawn element is off or on. Absent is off. */
+/** Phase 16D: the drawn element is off or on. Absent is off. */
 export const DRAWN_ELEMENT_STATES = ['none', 'on'] as const
 
 const OPTIONS: Record<Exclude<ThemeField, 'fontPairingPreset'>, readonly string[]> = {
@@ -168,11 +168,7 @@ const OPTIONS: Record<Exclude<ThemeField, 'fontPairingPreset'>, readonly string[
   headingCase: HEADING_CASES,
   imageFrame: IMAGE_FRAMES,
   patternTexture: SECTION_TEXTURES,
-  patternGround: PATTERN_GROUNDS,
-  brandGhost: DRAWN_ELEMENT_STATES,
   dropCap: DRAWN_ELEMENT_STATES,
-  sectionOverlap: OVERLAPS,
-  sectionGradient: SECTION_GRADIENTS,
 }
 
 /** What an ABSENT field renders: the default each reader falls back to. */
@@ -193,11 +189,7 @@ export const THEME_DEFAULTS: ThemeSettings = {
   headingCase: 'normal',
   imageFrame: 'plain',
   patternTexture: null,
-  patternGround: 'light',
-  brandGhost: 'none',
   dropCap: 'none',
-  sectionOverlap: 'none',
-  sectionGradient: 'none',
 }
 
 /** Studio labels for the fields, used where a difference is named. */
@@ -218,17 +210,11 @@ export const THEME_FIELD_LABELS: Record<ThemeField, string> = {
   headingCase: 'Heading capitals',
   imageFrame: 'Photo frame',
   patternTexture: 'Texture',
-  patternGround: 'Texture ground',
-  brandGhost: 'Ghosted initials',
   dropCap: 'Drop cap',
-  sectionOverlap: 'Overlap',
-  sectionGradient: 'Gradient',
 }
 
 /** Studio labels for the picks. */
 export const THEME_PICK_LABELS: Record<ThemePickField, string> = {
-  sectionJoin: 'Divider',
-  dividerCarry: 'Carried through',
   headingRule: 'Heading line',
 }
 
@@ -247,10 +233,11 @@ export const THEMES: readonly Theme[] = [
       buttonAnimation: 'sweep', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed',
       cardHover: 'imageZoom', attorneyCardStyle: 'portrait',
       headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'plain',
-      sectionOverlap: 'photo', sectionGradient: 'deep',
     }),
     picks: p({headingRule: 'line'}),
-    previous: [{settings: {fontPairingPreset: 2, marketingScale: 'md', taglineStyle: 'plain', uiRadius: 'subtle', buttonShape: 'square', buttonAnimation: 'sweep', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'imageZoom', attorneyCardStyle: 'portrait', headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'plain'}, picks: p({headingRule: 'line'})}, {settings: {fontPairingPreset: 2, marketingScale: 'md', taglineStyle: 'plain', uiRadius: 'subtle', buttonShape: 'square', buttonAnimation: 'sweep', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'imageZoom', attorneyCardStyle: 'portrait', headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'plain', sectionOverlap: 'photo'}, picks: p({headingRule: 'line'})}],
+    // Phase 17B: both earlier versions differed from today only by the overlap and the
+    // gradient, which left the matched set; pruned, so no version equals the current.
+    previous: [],
     suggestedPalettes: ['black-gold', 'burgundy-gold', 'teal-mint'],
     evidence: ['kicker above and a short rule below every heading', 'italic accent phrase', 'cutout portraits in rounded panels'],
   },
@@ -265,11 +252,11 @@ export const THEMES: readonly Theme[] = [
       buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'balanced',
       cardHover: 'accentBorder', attorneyCardStyle: 'minimal',
       headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'framed',
-      patternTexture: 'diagonalHatch', patternGround: 'dark',
-      sectionOverlap: 'photo',
+      patternTexture: 'diagonalHatch',
     }),
-    picks: p({sectionJoin: 'angled', dividerCarry: ['cards'], headingRule: 'line'}),
-    previous: [{settings: {fontPairingPreset: 4, marketingScale: 'md', taglineStyle: 'plain', uiRadius: 'sharp', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'balanced', cardHover: 'accentBorder', attorneyCardStyle: 'minimal', headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'framed', patternTexture: 'diagonalHatch', patternGround: 'dark'}, picks: p({sectionJoin: 'angled', dividerCarry: ['cards'], headingRule: 'line'})}],
+    picks: p({headingRule: 'line'}),
+    // Phase 17B: the one earlier version differed only by the overlap; pruned.
+    previous: [],
     suggestedPalettes: ['black-gold', 'ink-lavender', 'black-crimson'],
     evidence: ['two-line heading unit with a short rule', 'thin-framed boxes', 'diagonal cuts', 'textured bands'],
   },
@@ -302,7 +289,7 @@ export const THEMES: readonly Theme[] = [
       buttonAnimation: 'lift', tertiaryStyle: 'plain', elevationStyle: '1', motionTempo: 'relaxed',
       cardHover: 'lift', attorneyCardStyle: 'portrait',
       headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'plain',
-      patternTexture: 'scallop', patternGround: 'light',
+      patternTexture: 'scallop',
     }),
     picks: p({headingRule: 'dotted'}),
     previous: [],
@@ -337,11 +324,13 @@ export const THEMES: readonly Theme[] = [
       buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed',
       cardHover: 'accentUnderline', attorneyCardStyle: 'classic',
       headingEmphasisStyle: 'italic', headingCase: 'upper', imageFrame: 'plain',
-      patternTexture: 'diamondLattice', patternGround: 'light',
-      dropCap: 'on', sectionOverlap: 'photo',
+      patternTexture: 'diamondLattice',
+      dropCap: 'on',
     }),
-    picks: p({sectionJoin: 'peak', dividerCarry: ['cards']}),
-    previous: [{settings: {fontPairingPreset: 1, marketingScale: 'md', taglineStyle: 'lined', uiRadius: 'sharp', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'accentUnderline', attorneyCardStyle: 'classic', headingEmphasisStyle: 'italic', headingCase: 'upper', imageFrame: 'plain', patternTexture: 'diamondLattice', patternGround: 'light'}, picks: p({sectionJoin: 'peak', dividerCarry: ['cards']})}, {settings: {fontPairingPreset: 1, marketingScale: 'md', taglineStyle: 'lined', uiRadius: 'sharp', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'accentUnderline', attorneyCardStyle: 'classic', headingEmphasisStyle: 'italic', headingCase: 'upper', imageFrame: 'plain', patternTexture: 'diamondLattice', patternGround: 'light', dropCap: 'on'}, picks: p({sectionJoin: 'peak', dividerCarry: ['cards']})}],
+    picks: p({}),
+    // Phase 17B: the second earlier version differed only by the overlap; pruned. The
+    // first (before the drop cap, 16D) stands.
+    previous: [{settings: {fontPairingPreset: 1, marketingScale: 'md', taglineStyle: 'lined', uiRadius: 'sharp', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'accentUnderline', attorneyCardStyle: 'classic', headingEmphasisStyle: 'italic', headingCase: 'upper', imageFrame: 'plain', patternTexture: 'diamondLattice'}, picks: p({})}],
     suggestedPalettes: ['forest-brass', 'charcoal-coral', 'navy-orange'],
     evidence: ['a short gold rule then a spaced-caps kicker above every heading', 'square filled buttons', 'a damask ground'],
   },
@@ -356,10 +345,10 @@ export const THEMES: readonly Theme[] = [
       buttonAnimation: 'none', tertiaryStyle: 'plain', elevationStyle: '0', motionTempo: 'relaxed',
       cardHover: 'none', attorneyCardStyle: 'minimal',
       headingWeight: 'regular', headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'slab',
-      patternTexture: 'pinstripe', patternGround: 'light',
+      patternTexture: 'pinstripe',
     }),
     picks: p({headingRule: 'line'}),
-    previous: [{settings: {fontPairingPreset: 15, marketingScale: "default", taglineStyle: "titlecase", uiRadius: "sharp", buttonShape: "square", buttonAnimation: "none", tertiaryStyle: "plain", elevationStyle: "0", motionTempo: "relaxed", cardHover: "none", attorneyCardStyle: "minimal", headingEmphasisStyle: "italic", headingCase: "normal", imageFrame: "slab", patternTexture: "pinstripe", patternGround: "light"}, picks: p({sectionJoin: null, headingRule: "line"})}],
+    previous: [{settings: {fontPairingPreset: 15, marketingScale: "default", taglineStyle: "titlecase", uiRadius: "sharp", buttonShape: "square", buttonAnimation: "none", tertiaryStyle: "plain", elevationStyle: "0", motionTempo: "relaxed", cardHover: "none", attorneyCardStyle: "minimal", headingEmphasisStyle: "italic", headingCase: "normal", imageFrame: "slab", patternTexture: "pinstripe"}, picks: p({headingRule: "line"})}],
     suggestedPalettes: ['navy-brass', 'burgundy-gold', 'black-crimson', 'slate-cream'],
     evidence: ['a gold italic second line over a short dash', 'photos offset on flat slabs', 'pinstripe and diamond textures'],
   },
@@ -376,22 +365,24 @@ export const THEMES: readonly Theme[] = [
       headingWeight: 'regular', headingEmphasisStyle: 'color', headingCase: 'normal', imageFrame: 'plain',
     }),
     picks: p({headingRule: 'line'}),
-    previous: [{settings: {fontPairingPreset: 9, marketingScale: "sm", taglineStyle: "titlecase", uiRadius: "soft", buttonShape: "stadium", buttonAnimation: "none", tertiaryStyle: "plain", elevationStyle: "1", motionTempo: "relaxed", cardHover: "imageZoom", attorneyCardStyle: "portrait", headingEmphasisStyle: "color", headingCase: "normal", imageFrame: "plain", patternTexture: null, patternGround: "light"}, picks: p({sectionJoin: null, headingRule: "line"})}],
+    previous: [{settings: {fontPairingPreset: 9, marketingScale: "sm", taglineStyle: "titlecase", uiRadius: "soft", buttonShape: "stadium", buttonAnimation: "none", tertiaryStyle: "plain", elevationStyle: "1", motionTempo: "relaxed", cardHover: "imageZoom", attorneyCardStyle: "portrait", headingEmphasisStyle: "color", headingCase: "normal", imageFrame: "plain", patternTexture: null}, picks: p({headingRule: "line"})}],
     suggestedPalettes: ['navy-brass', 'navy-ice', 'forest-brass'],
     evidence: ['headlines over a short mustard rule', 'rounded inset panels', 'local photography'],
   },
   {
-    id: 'granite', name: 'Granite', feel: 'corporate navy: uppercase sans, framed photos, a deep fade on the dark bands',
+    id: 'granite', name: 'Granite', feel: 'corporate navy: uppercase sans, framed photos',
+    // Phase 17B: the gradient that named Granite (`[R-504]`) is a theme device now, so
+    // its recogniser and sentence lose it. Its values are unchanged; re-identifying it
+    // is the roster pass's (item 354, `[R-510]`).
     identity: {
-      sentence: "Corporate navy: uppercase headings with one phrase in the accent, gold hairline frames, and dark bands that fade into a deeper shade.",
-      recognizers: ['headingCase', 'typeVoice', 'gradient'],
+      sentence: "Corporate navy: uppercase headings with one phrase in the accent, gold hairline frames.",
+      recognizers: ['headingCase', 'typeVoice', 'frame'],
     },
     settings: t({
       fontPairingPreset: 5, marketingScale: 'sm', taglineStyle: 'plain', uiRadius: 'subtle', buttonShape: 'square',
       buttonAnimation: 'none', tertiaryStyle: 'plain', elevationStyle: '1', motionTempo: 'balanced',
       cardHover: 'accentBorder', attorneyCardStyle: 'classic',
       headingEmphasisStyle: 'color', headingCase: 'upper', imageFrame: 'framed',
-      sectionGradient: 'deep',
     }),
     picks: p({headingRule: 'line'}),
     previous: [],
@@ -409,9 +400,9 @@ export const THEMES: readonly Theme[] = [
       buttonAnimation: 'sweep', tertiaryStyle: 'plain', elevationStyle: '1', motionTempo: 'balanced',
       cardHover: 'lift', attorneyCardStyle: 'avatar',
       headingEmphasisStyle: 'color', headingCase: 'upper', imageFrame: 'plain',
-      patternTexture: 'scallop', patternGround: 'light',
+      patternTexture: 'scallop',
     }),
-    picks: p({sectionJoin: 'notch', headingRule: 'leadDot'}),
+    picks: p({headingRule: 'leadDot'}),
     previous: [],
     suggestedPalettes: ['teal-mint', 'slate-cream', 'navy-rose'],
     evidence: ['a heavy caps line whose last words turn to the accent', 'a short rule beneath', 'everything a pill'],
@@ -438,14 +429,13 @@ export function usesCustomFonts(doc: ThemeDoc): boolean {
 }
 
 /** A stored value read the way the site reads it: absent, empty or unknown is the
- *  default it renders; a dark texture ground with no texture reads as light; and a
- *  weight the heading face cannot draw reads as the one it does (Phase 16C: with font
- *  synthesis off, "bold" on a 400-only pairing renders regular, so a site that never
- *  chose a weight still matches a theme that names the real one). */
+ *  default it renders, and a weight the heading face cannot draw reads as the one it
+ *  does (Phase 16C: with font synthesis off, "bold" on a 400-only pairing renders
+ *  regular, so a site that never chose a weight still matches a theme that names the
+ *  real one). */
 export function readThemeField(doc: ThemeDoc, field: ThemeField): ThemeValue {
   const v = doc[field]
   if (field === 'fontPairingPreset') return getPresetById(Number(v)) ? Number(v) : null
-  if (field === 'patternGround' && readThemeField(doc, 'patternTexture') === null) return THEME_DEFAULTS.patternGround
   const value = typeof v === 'string' && OPTIONS[field].includes(v) ? v : THEME_DEFAULTS[field]
   if (field === 'headingWeight') return drawableWeight(readThemeField(doc, 'fontPairingPreset') as number | null, value as string)
   return value
@@ -472,29 +462,18 @@ export function signatureOf(theme: Theme): Record<SignatureDimension, string> {
   const voice: HeadingVoice | 'system' = preset?.heading.voice ?? 'system'
   const weight = drawableWeight(s.fontPairingPreset as number | null, String(s.headingWeight))
   const family = matchCornerFamily(String(s.uiRadius), String(s.buttonShape))?.id ?? 'custom'
-  const texture = s.patternTexture ? `${s.patternTexture}/${s.patternGround}` : 'none'
+  // Phase 17B: the texture's kind alone; its ground is the theme's paint.
+  const texture = s.patternTexture ? String(s.patternTexture) : 'none'
   return {
     typeVoice: `${voice}/${weight}`,
     headingCase: String(s.headingCase),
     // Soft and Round are one family at a glance: a stadium and a pill read the same.
     cornerFamily: family === 'round' ? 'soft' : family,
     surfaceDevice: s.patternTexture ? texture : `frame/${s.imageFrame}`,
-    // Phase 16D. The ghost is its own HIGH dimension, appended, never folded into
-    // `surfaceDevice`: folded in, a theme that has both a texture and a ghost hid its
-    // ghost from the test while a theme with only a ghost had it counted, which is
-    // incoherent, and it produced a "measurement" that did not reproduce (§16.5
-    // amendments 7 and 20). The drop cap is the LOW dimension beside it.
-    ghost: String(s.brandGhost),
+    // Phase 16D: the drop cap is a LOW dimension. The ghost, the overlap and the gradient
+    // were dimensions here until Phase 17B moved them to the theme layer; the floor is
+    // unchanged at 2 high and 5 in all without them (measured, ADV-17B-A F18, -C F5).
     ornaments: s.dropCap === 'on' ? 'dropCap' : 'none',
-    // Phase 16E: appended, never folded into another dimension, for the reason
-    // amendment 7 of 16D gives. It is a LOW dimension: it appears once on a page and
-    // only where a band has a photo, so it is not what a visitor names first. It
-    // cannot decide which themes take the device either — appending a dimension is
-    // monotone, so no assignment can fail the floor (measured over all 255).
-    overlap: String(s.sectionOverlap),
-    // Phase 16F: appended, never folded, for 16D amendment 7's reason. LOW: it is a
-    // ground treatment on the dark bands only, not what a visitor names first.
-    gradient: String(s.sectionGradient),
     emphasis: String(s.headingEmphasisStyle),
     kicker: String(s.taglineStyle),
     frame: String(s.imageFrame),
@@ -547,21 +526,17 @@ export function swappedPicks(doc: ThemeDoc, match: ThemeMatch): {field: ThemePic
   for (const field of THEME_PICKS) {
     const site = readPick(doc, field)
     const mine = theirs[field]
-    const same = field === 'dividerCarry'
-      ? (site as string[]).join() === (mine as readonly string[]).join()
-      : (site ?? null) === (mine ?? null)
-    if (!same) out.push({field, site, theme: mine})
+    if ((site ?? null) !== (mine ?? null)) out.push({field, site, theme: mine})
   }
   return out
 }
 
-/** A stored pick, read the way the site reads it: unknown values, `straight` and `none`
- *  all read as "none picked". */
-export function readPick(doc: ThemeDoc, field: ThemePickField): string | null | readonly CarryPiece[] {
+/** A stored pick, read the way the site reads it: an unknown value and `none` both
+ *  read as "none picked". */
+export function readPick(doc: ThemeDoc, field: ThemePickField): string | null {
   const v = (doc as Record<string, unknown>)[field]
-  if (field === 'dividerCarry') return Array.isArray(v) ? CARRY_PIECES.filter((piece) => (v as unknown[]).includes(piece)) : []
-  const options: readonly string[] = field === 'sectionJoin' ? DIVIDERS : HEADING_LINES
-  return typeof v === 'string' && options.includes(v) && v !== 'straight' && v !== 'none' ? v : null
+  const options: readonly string[] = HEADING_LINES
+  return typeof v === 'string' && options.includes(v) && v !== 'none' ? v : null
 }
 
 /** True when the settings are what the build writes and nobody has chosen a
@@ -591,9 +566,9 @@ export function themePatch(
   }
   for (const field of THEME_PICKS) {
     if (keepPicks.includes(field)) continue
-    const value: string | null | readonly CarryPiece[] = theme.picks[field]
-    if (value === null || (Array.isArray(value) && value.length === 0)) unset.push(field)
-    else set[field] = Array.isArray(value) ? [...value] : (value as string)
+    const value = theme.picks[field]
+    if (value === null) unset.push(field)
+    else set[field] = value
   }
   return {set, unset}
 }

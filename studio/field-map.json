@@ -5161,10 +5161,27 @@
     "designSettings": {
       "fields": [
         {
-          "description": "Choose a theme to set the fonts, corners, headings, photo frames, section edges, texture and hover together. It never changes your colors, and a look set on one section on purpose stays as it was set.",
+          "description": "Choose a style set to set the fonts, corners, headings, photo frames, texture and hover together. It never changes your colors, and a look set on one section on purpose stays as it was set. The flow of the page (which sections go dark, the shape of the breaks, what sits on the backgrounds) is the Theme below.",
           "jsonType": "string",
           "path": "themePreview",
           "readOnly": true,
+          "title": "Style set",
+          "type": "string"
+        },
+        {
+          "description": "How the homepage flows: which sections go dark and how many, where the backgrounds merge and break, the shape of the breaks, and what sits on the backgrounds. A section with its own Surface keeps it; the theme fills the rest. Leave blank for the platform default (quiet.mostlyLight).",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "quiet.mostlyLight",
+              "alternating.balanced",
+              "alternating.mostlyDark",
+              "cutBlocks.balanced",
+              "cutBlocks.mostlyDark"
+            ]
+          },
+          "path": "flow",
           "title": "Theme",
           "type": "string"
         },
@@ -5262,7 +5279,8 @@
           "type": "string"
         },
         {
-          "description": "Which background a Pattern section sits on. Dark draws the texture darker than the dark background, so text on it stays at least as readable. Needs a texture above; leave blank for Light.",
+          "description": "Retired: the theme decides the texture’s ground (Phase 17B).",
+          "hidden": true,
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5276,7 +5294,8 @@
           "type": "string"
         },
         {
-          "description": "The shape of the edge where one homepage section meets the next. It is drawn under the hero and wherever the page enters a dark or saturated section, and the section below gains the space it takes, so nothing looks scrunched. Interior pages never draw one. A theme sets a shape and you can pick any other without changing the theme’s name. Leave blank for Straight.",
+          "description": "Retired: the theme picks the divider’s shape (Phase 17B, [R-513]).",
+          "hidden": true,
           "jsonType": "string",
           "options": {
             "list": [
@@ -5295,7 +5314,8 @@
           "type": "string"
         },
         {
-          "description": "Small places that repeat the divider’s shape, so the page reads as one design. Needs a divider above. Buttons show it only on square-cornered themes, and a photo takes it only where the photo has no frame.",
+          "description": "Retired: the theme carries its divider’s shape (Phase 17B).",
+          "hidden": true,
           "jsonType": "array",
           "of": [
             "string"
@@ -5313,7 +5333,8 @@
           "type": "array"
         },
         {
-          "description": "Draws the firm’s initials very large and very faint behind one homepage section, in the site’s own heading font. It appears once per page, on a dark section where there is one, and never on interior pages. Leave blank for none.",
+          "description": "Retired: the theme places the ghost (Phase 17B).",
+          "hidden": true,
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5327,7 +5348,8 @@
           "type": "string"
         },
         {
-          "description": "Lets a section’s photo cross the edge into the section above it, which ties the two together. Drawn once per homepage, on one section whose background differs from the one above it, and on desktop and tablet only — phones stack normally. The section above makes room for it, so none of its text is ever covered. Interior pages never do it. Leave blank for none. (To lift a whole panel instead, use Overlap the Section Above on that section.)",
+          "description": "Retired: the theme places the raised photo (Phase 17B). To lift a whole panel, use Overlap the Section Above on that section.",
+          "hidden": true,
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -5341,7 +5363,8 @@
           "type": "string"
         },
         {
-          "description": "Fades a dark section’s background from the brand dark into a deeper shade that picks up the accent color. Where several dark sections run together they share one continuous fade, with no line between them. Homepage only, on dark sections only — never on light, tint, accent-filled or photo sections, and never on interior pages. On a near-black brand color there is little room to fade and the effect is slight. Leave blank for none.",
+          "description": "Retired: the theme draws the gradient (Phase 17B).",
+          "hidden": true,
           "jsonType": "string",
           "options": {
             "layout": "radio",

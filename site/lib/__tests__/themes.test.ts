@@ -4,7 +4,6 @@ import {describe, expect, it} from 'vitest'
 import {getPresetById} from '../../fonts/presets'
 import {matchCornerFamily} from '../corners'
 import {PALETTE_PRESETS} from '../palettes'
-import {CARRY_PIECES, DIVIDERS} from '../dividers'
 import {HEADING_LINES} from '../headingLines'
 import {
   PICK_DEFAULTS, SIGNATURE_HIGH, THEMES, THEME_DEFAULTS, THEME_FIELDS, THEME_PICKS, drawableWeight, isPlatformDefault,
@@ -18,16 +17,22 @@ import {
 // hold the nine to the schema the Studio actually offers (the generated field map,
 // an artifact, not the source), to the corner families, to the fonts, and to the
 // matching and the patch the Studio picker runs.
+//
+// Phase 17B ([R-510], [R-513]): a theme here is a STYLE SET. The six page-level
+// fields (the divider and its carry, the texture's ground, the ghost, the overlap,
+// the gradient) are the flow layer's (`lib/flows.ts`) and are hidden in the schema
+// for one pin: a style set neither writes nor is matched by them, and the tests
+// below hold that too.
 
 const fieldMap = JSON.parse(readFileSync(resolve(__dirname, '../../../studio/field-map.json'), 'utf8'))
-const designRows: Array<{path: string; options?: {list?: Array<string | number>}; initialValue?: unknown}> = fieldMap.types.designSettings.fields
+const designRows: Array<{path: string; options?: {list?: Array<string | number>}; initialValue?: unknown; hidden?: boolean | string}> = fieldMap.types.designSettings.fields
 const optionsOf = (field: string) => designRows.find((r) => r.path === field)?.options?.list
 
 // A stored document equal to a theme's settings, the way the picker writes it.
 const stored = (s: ThemeSettings): ThemeDoc => Object.fromEntries(Object.entries(s).filter(([, v]) => v !== null))
 
 describe('the themes', () => {
-  it('ships ten, Granite returned with its gradient ([R-478], [R-504])', () => {
+  it('ships ten, Granite among them ([R-478], [R-504])', () => {
     expect(THEMES.map((t) => t.id)).toEqual(['canyon', 'graphite', 'walnut', 'dune', 'flint', 'marble', 'linen', 'valley', 'granite', 'quartz'])
   })
 
@@ -40,31 +45,52 @@ describe('the themes', () => {
     expect(theme.identity.recognizers.length).toBeLessThanOrEqual(3)
   })
 
-  // Phase 16C ([R-482], [R-484], [R-485]): the divider and the heading line are picks,
-  // so they are held to their libraries, not to the matched settings.
-  it.each(THEMES.map((t) => [t.name, t] as [string, Theme]))('%s picks from the libraries, and the Studio offers each pick', (_, theme) => {
-    const {sectionJoin, dividerCarry, headingRule} = theme.picks
-    if (sectionJoin) {
-      expect(DIVIDERS).toContain(sectionJoin)
-      expect(optionsOf('sectionJoin')).toContain(sectionJoin)
-    }
+  // Phase 16C ([R-484], [R-485]): the heading line is a pick, so it is held to its
+  // library, not to the matched settings. The divider was a pick too until Phase 17B
+  // made it the theme's ([R-513]).
+  it.each(THEMES.map((t) => [t.name, t] as [string, Theme]))('%s picks from the library, and the Studio offers the pick', (_, theme) => {
+    const {headingRule} = theme.picks
     if (headingRule) {
       expect(HEADING_LINES).toContain(headingRule)
       expect(optionsOf('headingRule')).toContain(headingRule)
     }
-    for (const piece of dividerCarry) {
-      expect(CARRY_PIECES).toContain(piece)
-      expect(optionsOf('dividerCarry')).toContain(piece)
-    }
-    // A carried piece needs a shape to carry ([R-483]).
-    if (dividerCarry.length) expect(sectionJoin, `${theme.id} carries pieces with no divider`).not.toBeNull()
   })
 
-  // [R-487]: three of the nine ship with a divider, matching what law firms do (19 of the
-  // 65 sites in the study, 29%). A default set nobody ruled is not a default set.
-  it('three themes ship with a divider, and the mark is off in every one ([R-487], [R-488])', () => {
-    expect(THEMES.filter((t) => t.picks.sectionJoin).map((t) => t.id)).toEqual(['graphite', 'marble', 'quartz'])
-    for (const theme of THEMES) expect(theme.picks.dividerCarry, theme.id).not.toContain('mark')
+  // Phase 17B ([R-510]): 17 matched fields and one pick; the six page-level fields are
+  // the flow layer's, hidden in the schema, and no style set names or writes them.
+  it('has 17 matched fields and one pick, and names none of the six the theme layer took', () => {
+    expect(THEME_FIELDS).toHaveLength(17)
+    expect(THEME_PICKS).toEqual(['headingRule'])
+    const moved = ['sectionJoin', 'dividerCarry', 'patternGround', 'brandGhost', 'sectionOverlap', 'sectionGradient']
+    for (const field of moved) {
+      expect(THEME_FIELDS).not.toContain(field)
+      expect(THEME_PICKS).not.toContain(field)
+      expect(designRows.find((r) => r.path === field)?.hidden, `${field} is hidden at this pin`).toBe(true)
+      for (const theme of THEMES) {
+        expect(theme.settings, `${theme.id}.settings`).not.toHaveProperty(field)
+        expect(theme.picks, `${theme.id}.picks`).not.toHaveProperty(field)
+        const {set, unset} = themePatch(theme)
+        expect(set, `${theme.id} writes ${field}`).not.toHaveProperty(field)
+        expect(unset, `${theme.id} clears ${field}`).not.toContain(field)
+      }
+    }
+    // The whole patch is 18 keys (17 matched fields and the one pick), 16 on a site with
+    // its own uploaded fonts.
+    for (const theme of THEMES) {
+      const {set, unset} = themePatch(theme)
+      expect(Object.keys(set).length + unset.length, theme.id).toBe(18)
+    }
+  })
+
+  // A `previous` entry that equals the current settings would name a version that is
+  // not one: four became duplicates when the six left (ADV-17B-C F1) and were pruned.
+  it('no earlier version of a theme equals its current settings', () => {
+    for (const theme of THEMES) {
+      for (const [i, version] of theme.previous.entries()) {
+        const asCurrent = {...THEME_DEFAULTS, ...version.settings}
+        expect(THEME_FIELDS.every((f) => asCurrent[f] === theme.settings[f]), `${theme.id} previous ${i + 1} equals current`).toBe(false)
+      }
+    }
   })
 
   it.each(THEMES.map((t) => [t.name, t] as [string, Theme]))('%s writes only values the Studio offers', (_, theme) => {
@@ -97,7 +123,7 @@ describe('the themes', () => {
     const ids = new Set(PALETTE_PRESETS.map((p) => p.id))
     for (const theme of THEMES) {
       for (const id of theme.suggestedPalettes) expect(ids.has(id), `${theme.id} suggests ${id}`).toBe(true)
-      expect(Object.keys(theme.settings).some((k) => /color|ground$|accent|action/i.test(k) && k !== 'patternGround')).toBe(false)
+      expect(Object.keys(theme.settings).some((k) => /color|ground$|accent|action/i.test(k))).toBe(false)
     }
   })
 
@@ -159,11 +185,20 @@ describe('matching by value ([R-477])', () => {
     expect(matchTheme({...stored(canyon.settings), patternTexture: ''})?.theme.id).toBe('canyon')
   })
 
-  it('reads what the site reads: an unknown value is the default, a dark ground with no texture is light', () => {
+  it('reads what the site reads: an unknown value is the default', () => {
     expect(readThemeField({elevationStyle: '9'}, 'elevationStyle')).toBe('0')
     expect(readThemeField({fontPairingPreset: 3}, 'fontPairingPreset')).toBeNull()
-    expect(readThemeField({patternGround: 'dark'}, 'patternGround')).toBe('light')
-    expect(readThemeField({patternGround: 'dark', patternTexture: 'scallop'}, 'patternGround')).toBe('dark')
+  })
+
+  // Phase 17B: a document that still stores the six (every client built before the pin
+  // does) matches its style set exactly as before; the match never reads them.
+  it('ignores the six hidden fields a stored document still carries', () => {
+    const graphite = THEMES.find((t) => t.id === 'graphite')!
+    const legacy: ThemeDoc = {...stored(graphite.settings), ...graphite.picks, ...({sectionJoin: 'angled', dividerCarry: ['cards'], patternGround: 'dark',
+      brandGhost: 'on', sectionOverlap: 'photo', sectionGradient: 'deep'} as Record<string, unknown>)}
+    expect(matchTheme(legacy)).toMatchObject({theme: graphite, current: true})
+    expect(swappedPicks(legacy, matchTheme(legacy)!)).toEqual([])
+    expect(isPlatformDefault({fontPairingPreset: 1, ...({sectionJoin: 'peak', sectionGradient: 'deep'} as Record<string, unknown>)})).toBe(true)
   })
 
   it('says Custom after one change, and names nothing it is not', () => {
@@ -180,7 +215,7 @@ describe('matching by value ([R-477])', () => {
     expect(matchTheme(build)).toBeNull()
     expect(isPlatformDefault({...build, headingCase: 'upper'})).toBe(false)
     // A pick is not a matched setting, so it does not make a site "Custom" ([R-485]).
-    expect(isPlatformDefault({...build, headingRule: 'leadDot', sectionJoin: 'arc'})).toBe(true)
+    expect(isPlatformDefault({...build, headingRule: 'leadDot'})).toBe(true)
   })
 
   it('names an earlier version of a theme, so a retune never reads as an edit', () => {
@@ -209,40 +244,38 @@ describe('the patch the Studio picker runs', () => {
       expect([...Object.keys(set), ...unset].sort()).toEqual([...THEME_FIELDS, ...THEME_PICKS].sort())
       for (const f of unset) {
         if ((THEME_FIELDS as readonly string[]).includes(f)) expect(theme.settings[f as keyof ThemeSettings]).toBeNull()
-        else expect([null, PICK_DEFAULTS.dividerCarry]).toContainEqual(theme.picks[f as keyof typeof theme.picks])
+        else expect(theme.picks[f as keyof typeof theme.picks]).toBeNull()
       }
     }
   })
 
-  it('a swapped divider or heading line keeps the theme’s name, and the Studio says which was swapped ([R-485])', () => {
+  it('a swapped heading line keeps the theme’s name, and the Studio says it was swapped ([R-485])', () => {
     const graphite = THEMES.find((t) => t.id === 'graphite')!
-    const swappedDoc = {...stored(graphite.settings), ...graphite.picks, sectionJoin: 'arc'}
+    const swappedDoc = {...stored(graphite.settings), ...graphite.picks, headingRule: 'hatched'}
     const match = matchTheme(swappedDoc)
     expect(match).toMatchObject({theme: graphite, current: true})
-    expect(swappedPicks(swappedDoc, match!)).toEqual([{field: 'sectionJoin', site: 'arc', theme: 'angled'}])
-    // And a site wearing exactly the theme's picks has nothing to report.
+    expect(swappedPicks(swappedDoc, match!)).toEqual([{field: 'headingRule', site: 'hatched', theme: 'line'}])
+    // And a site wearing exactly the theme's pick has nothing to report.
     expect(swappedPicks({...stored(graphite.settings), ...graphite.picks}, match!)).toEqual([])
   })
 
   it('applying a theme’s update keeps a pick the site swapped on purpose', () => {
     const linen = THEMES.find((t) => t.id === 'linen')!
     const old = linen.previous[0]
-    const site = {...old.settings, ...old.picks, sectionJoin: 'wave'} as ThemeDoc
+    const site = {...old.settings, ...old.picks, headingRule: 'hatched'} as ThemeDoc
     const match = matchTheme(site)!
     expect(match).toMatchObject({theme: linen, current: false})
     const {set, unset} = updatePatch(site, match)
     expect({...set, ...Object.fromEntries(unset.map((k) => [k, null]))}).toMatchObject({headingWeight: 'regular'})
-    expect('sectionJoin' in set).toBe(false)
-    expect(unset).not.toContain('sectionJoin')
+    expect('headingRule' in set).toBe(false)
+    expect(unset).not.toContain('headingRule')
   })
 
-  it('reads a stored pick the way the site does: unknown, straight and none are no pick', () => {
-    expect(readPick({sectionJoin: 'arc'}, 'sectionJoin')).toBe('arc')
-    expect(readPick({sectionJoin: 'straight'}, 'sectionJoin')).toBeNull()
-    expect(readPick({sectionJoin: 'squiggle'}, 'sectionJoin')).toBeNull()
+  it('reads a stored pick the way the site does: unknown and none are no pick', () => {
+    expect(readPick({headingRule: 'hatched'}, 'headingRule')).toBe('hatched')
     expect(readPick({headingRule: 'none'}, 'headingRule')).toBeNull()
-    expect(readPick({dividerCarry: ['cards', 'nonsense']}, 'dividerCarry')).toEqual(['cards'])
-    expect(readPick({}, 'dividerCarry')).toEqual([])
+    expect(readPick({headingRule: 'squiggle'}, 'headingRule')).toBeNull()
+    expect(readPick({}, 'headingRule')).toBeNull()
   })
 
   it('applied over any document, it leaves one the theme matches', () => {
@@ -275,7 +308,7 @@ describe('the patch the Studio picker runs', () => {
     expect(THEME_DEFAULTS.elevationStyle).toBe('0')
     expect(THEME_DEFAULTS.motionTempo).toBe('relaxed')
     expect(THEME_DEFAULTS.attorneyCardStyle).toBe('classic')
-    expect(PICK_DEFAULTS).toEqual({sectionJoin: null, dividerCarry: [], headingRule: null})
+    expect(PICK_DEFAULTS).toEqual({headingRule: null})
   })
 })
 
@@ -295,7 +328,9 @@ describe('a site built at an earlier pin still matches its theme', () => {
   // three themes ([R-500]); `3979e37` is 16E's, frozen by 16F because it is the first
   // pin before the roster grew — a TENTH theme is the first thing in this workstream
   // that could take another theme's name at a pin, and this is what proves none does.
-  const PINS = ['bd74cdd', '22da44f', '3979e37'] as const
+  // `a164ce0` is 17A's, frozen by 17B before four matched fields and two picks left
+  // the style sets ([R-510]): a frozen file carries the six, and the match ignores them.
+  const PINS = ['bd74cdd', '22da44f', '3979e37', 'a164ce0'] as const
 
   it.each(PINS)('reads every theme at %s as that theme, current or earlier', (pin) => {
     const pinned = frozen(pin)
@@ -309,18 +344,19 @@ describe('a site built at an earlier pin still matches its theme', () => {
     }
   })
 
-  // Which themes have been retuned SINCE each pin, which is not the same set at both:
-  // Walnut took the drop cap in Phase 16D, so it is an earlier version as of `bd74cdd`
-  // and current as of `22da44f`; Canyon, Graphite and Marble take the raised photo in
-  // Phase 16E ([R-500]), so they are earlier versions as of both. The widened test
-  // found this the first time it ran, which is the reason to keep a file per pin
-  // rather than one for the newest.
-  // Phase 16F retunes CANYON only: it takes the gradient ([R-502], [R-504]). Granite is
-  // new, so it appears in no frozen file and cannot be retuned.
+  // Which themes have been retuned SINCE each pin, which is not the same set at each:
+  // Walnut and Marble took the drop cap in Phase 16D, so they are earlier versions as
+  // of `bd74cdd` and current as of `22da44f`. Canyon, Graphite and Marble took the
+  // raised photo in 16E and Canyon the gradient in 16F, but those fields left the
+  // matched set in Phase 17B ([R-510]), so a site frozen before them reads as CURRENT
+  // again: the retune was in a field a style set no longer owns. Measured on the four
+  // frozen files when the six left (four `previous` entries became duplicates and were
+  // pruned). Granite is new at `a164ce0` and cannot be retuned.
   const RETUNED_SINCE: Record<(typeof PINS)[number], Set<string>> = {
-    bd74cdd: new Set(['walnut', 'marble', 'canyon', 'graphite']),
-    '22da44f': new Set(['marble', 'canyon', 'graphite']),
-    '3979e37': new Set(['canyon']),
+    bd74cdd: new Set(['walnut', 'marble']),
+    '22da44f': new Set<string>(),
+    '3979e37': new Set<string>(),
+    a164ce0: new Set<string>(),
   }
 
   it.each(PINS)('names the themes retuned since %s as earlier versions, and the rest as current', (pin) => {

@@ -1,4 +1,5 @@
 import {type SiteLook} from '@/components/sections/sectionFrame'
+import {LOOK, themed} from './flowFixtures'
 import {describe, expect, it, vi} from 'vitest'
 import {forwardRef} from 'react'
 import {render} from '@testing-library/react'
@@ -20,6 +21,11 @@ import {render} from '@testing-library/react'
 //     cut into every dark or saturated section, never into a photo band, and the band
 //     below gains the space the shape takes;
 //   - an inset band seams against another inset band whatever their surfaces.
+//
+// Phase 17B: every page-level input the walk reads comes from the THEME on the site
+// look (`site.flow`, `lib/flows.ts`), never from the style set's retired fields. The
+// cases below build a theme from Quiet with the one rule under test changed; the
+// ground pass itself is `flowEngine.test.tsx`.
 
 vi.mock('next/link', () => ({
   // eslint-disable-next-line react/display-name
@@ -169,11 +175,11 @@ describe('the first-block motion rule', () => {
   })
 })
 
-describe('the divider, placed by the rule ([R-481], Phase 16C)', () => {
-  // The site look a shaped theme carries. `sectionJoin` is the shape; everything else
-  // here is what the walk needs to answer the rule.
-  const shaped = {imageFrame: null, sectionJoin: 'angled', patternDark: false, cardHover: null, attorneyCardStyle: null}
-  const straight = {...shaped, sectionJoin: 'straight'}
+describe('the divider, placed by the rule ([R-481], Phase 16C; the theme\u2019s since 17B)', () => {
+  // The site look a shaped theme carries: the divider's shape and placement are the
+  // theme's (`[R-513]`); everything else here is what the walk needs to answer the rule.
+  const shaped: SiteLook = {...LOOK, flow: themed({divider: {shape: 'angled', at: 'intoDark'}})}
+  const straight: SiteLook = {...LOOK, flow: themed({divider: {shape: 'straight', at: 'intoDark'}})}
   const withHero = (blocks: HomepageBlock[], site = shaped, hero: 'light' | 'tint' | 'dark' | 'image' | null = 'dark') =>
     render(<HomepageCanvas blocks={blocks} site={site} hero={hero} napTokens={tokens} resultsDisclaimer="Past results do not guarantee a future outcome." />)
 
@@ -200,11 +206,32 @@ describe('the divider, placed by the rule ([R-481], Phase 16C)', () => {
     expect(third.className).not.toContain('divider-')
   })
 
-  it('counts a Pattern band on the dark ground as dark, and one on the light ground as light', () => {
-    const dark = withHero([band('a', {surface: 'light'}), band('b', {surface: 'pattern'})], {...shaped, patternDark: true})
-    expect(sectionsOf(dark.container)[1].className).toContain('divider-cut')
+  it('counts a stored Pattern band as the light ground under every theme (Phase 17B, amendment 5)', () => {
+    // Until 17B a style set could flip a Pattern band onto the dark ground; the texture
+    // on a dark band is a paint flag on the seam now, and a stored Pattern band is light.
     const light = withHero([band('a', {surface: 'light'}), band('b', {surface: 'pattern'})])
     expect(sectionsOf(light.container)[1].className).not.toContain('divider-')
+    expect(sectionsOf(light.container)[1].className.split(' ')).toContain('bg-background')
+  })
+
+  it('at every change of ground, the theme cuts out of a dark section too, and never at a wash', () => {
+    const every: SiteLook = {...LOOK, flow: themed({divider: {shape: 'angled', at: 'everyChange'}})}
+    const {container} = withHero([band('a', {surface: 'light'}), band('b', {surface: 'dark'}), band('c', {surface: 'tint'}), band('d', {surface: 'light'})], every)
+    const [first, second, third, fourth] = sectionsOf(container)
+    expect(first.className).toContain('divider-rise')
+    expect(second.className).toContain('divider-cut')
+    expect(second.className).toContain('before:bg-background')
+    // Leaving dark for tint is a change: the cut is painted in the dark ground above.
+    expect(third.className).toContain('divider-cut')
+    expect(third.className).toContain('before:bg-brand-dark')
+    // Tint to light is a wash, one ground to the rule: no divider.
+    expect(fourth.className).not.toContain('divider-')
+  })
+
+  it('draws none anywhere when the theme places none, whatever shape it names', () => {
+    const none: SiteLook = {...LOOK, flow: themed({divider: {shape: 'angled', at: 'none'}})}
+    const {container} = withHero([band('a', {surface: 'light'}), band('b', {surface: 'dark'})], none)
+    for (const section of sectionsOf(container)) expect(section.className).not.toContain('divider-')
   })
 
   it('never cuts into a photo band, and never out of one', () => {
@@ -235,7 +262,7 @@ describe('the divider, placed by the rule ([R-481], Phase 16C)', () => {
 
   it('alternates the mirror on every second divider, and only for the alternating shape', () => {
     const blocks = [band('a', {surface: 'light'}), band('b', {surface: 'dark'}), band('c', {surface: 'light'}), band('d', {surface: 'dark'})]
-    const alt = withHero(blocks, {...shaped, sectionJoin: 'angledAlternating'})
+    const alt = withHero(blocks, {...LOOK, flow: themed({divider: {shape: 'angledAlternating', at: 'intoDark'}})})
     // Three dividers here, not four: band c LEAVES the dark section, which is not an entry.
     const drawn = sectionsOf(alt.container).map((s) => s.className.includes('divider-cut') || s.className.includes('divider-rise'))
     expect(drawn).toEqual([true, true, false, true])
@@ -306,9 +333,9 @@ describe('inset and overlap', () => {
   })
 })
 
-describe('the raised photo, placed by the rule (Phase 16E, `[R-499]`)', () => {
-  const raising = {imageFrame: null, sectionJoin: 'straight', patternDark: false, cardHover: null, attorneyCardStyle: null, overlap: 'photo'}
-  const off = {...raising, overlap: null}
+describe('the raised photo, placed by the rule (Phase 16E, `[R-499]`; the theme\u2019s since 17B)', () => {
+  const raising: SiteLook = {...LOOK, flow: themed({overlap: 'photo'})}
+  const off: SiteLook = {...LOOK, flow: themed({overlap: 'none'})}
   // A split content band whose media renders. `mediaSide` is irrelevant to the rule.
   const photoBand = (key: string, appearance?: Record<string, unknown>) =>
     band(key, appearance, {layout: 'split', media: {kind: 'photo', image: {asset: {_ref: 'image-abc-800x600-jpg'}, alt: ''}}})
@@ -326,7 +353,7 @@ describe('the raised photo, placed by the rule (Phase 16E, `[R-499]`)', () => {
     expect(sectionsOf(container)[0].className).toContain(SECTION_SPACING.normal.bottomBeforeOverlap.photo.split(/\s+/)[1])
   })
 
-  it('draws nothing when the site has not asked for it', () => {
+  it('draws nothing when the theme has not asked for it', () => {
     expect(risenIn(homepage([band('a', {surface: 'light'}), photoBand('b', {surface: 'dark'})], off).container)).toBe(-1)
   })
 
@@ -401,7 +428,7 @@ describe('walkFrame, directly', () => {
     // NO_SEAM plus the run it is in (Phase 16F): both survivors are `light`, so they are
     // one run of two and this is its first band. The EMPTY member is not in it, which is
     // the same reason the walk exists at all.
-    expect(out[0].seam).toEqual({...NO_SEAM, run: {index: 0, length: 2}})
+    expect(out[0].seam).toEqual({...NO_SEAM, paint: null, run: {index: 0, length: 2}})
     expect(out[1].seam.seamTop).toBe(true)
   })
 
@@ -416,18 +443,20 @@ describe('walkFrame, directly', () => {
   })
 })
 
-describe('the ghost, placed once per page (Phase 16D, `[R-492]`, `[R-495]`)', () => {
-  const ghosted: SiteLook = {
-    imageFrame: null, sectionJoin: 'straight', patternDark: false,
-    cardHover: null, attorneyCardStyle: null, ghost: {text: 'SO'},
-  }
-  const noGhost = {...ghosted, ghost: null}
+describe('the ghost, placed once per page (Phase 16D, `[R-492]`, `[R-495]`; the theme\u2019s since 17B)', () => {
+  const ghosted: SiteLook = {...LOOK, flow: themed({ghost: 'once'}), ghost: {text: 'SO'}}
+  const noGhost: SiteLook = {...ghosted, ghost: null}
+  // The initials exist but the theme draws no ghost: nothing draws. `HomeBody` never
+  // builds this look, because it derives the initials from the theme's answer; the walk
+  // reads both anyway.
+  const offTheme: SiteLook = {...ghosted, flow: themed({ghost: 'none'})}
   const page = (blocks: HomepageBlock[], site = ghosted) =>
     render(<HomepageCanvas blocks={blocks} site={site} hero="dark" napTokens={tokens} resultsDisclaimer="Past results do not guarantee a future outcome." />)
   const layers = (c: HTMLElement) => Array.from(c.querySelectorAll('[data-decor-layer]'))
 
-  it('draws nothing when the site has not turned it on', () => {
+  it('draws nothing when the site has no initials, or the theme has not turned it on', () => {
     expect(layers(page([band('a', {surface: 'dark'})], noGhost).container)).toHaveLength(0)
+    expect(layers(page([band('a', {surface: 'dark'})], offTheme).container)).toHaveLength(0)
   })
 
   it('draws on exactly one band, however many are eligible', () => {
@@ -546,8 +575,7 @@ describe('an inset band adopts the run it is bracketed by', () => {
   })
 
   it('stops the band below drawing a divider INTO the run it is already inside', () => {
-    const site = {imageFrame: null, sectionJoin: 'angled', patternDark: false, cardHover: null,
-      attorneyCardStyle: null, ghost: null, overlap: null, gradient: null}
+    const site: SiteLook = {...LOOK, flow: themed({divider: {shape: 'angled', at: 'intoDark'}})}
     const out = walkFrame([band('light'), band('dark'), band('tint', true), band('dark')],
       (m) => ({appearance: m as never, empty: false}), site, 'light')
     // the page enters dark once, at band 1, and not again at band 3
@@ -560,9 +588,16 @@ describe('an inset band adopts the run it is bracketed by', () => {
     expect(out[1].seam.run).toEqual({index: 0, length: 1})
   })
 
-  it('an interior page adopts nothing, because it has no run and no gradient', () => {
-    const site = {imageFrame: 'framed', sectionJoin: 'angled', patternDark: true, cardHover: null,
-      attorneyCardStyle: null, ghost: {text: 'AB'}, overlap: 'photo', gradient: 'deep'}
-    expect(interiorLook(site)).toMatchObject({gradient: null, overlap: null, ghost: null, sectionJoin: 'straight'})
+  it('an interior page carries no theme, so it has no run device, no divider, no ghost', () => {
+    const site: SiteLook = {...LOOK, imageFrame: 'framed', flow: themed({divider: {shape: 'angled', at: 'intoDark'}, ghost: 'once', overlap: 'photo'}), ghost: {text: 'AB'}}
+    expect(interiorLook(site)).toMatchObject({flow: null, ghost: null, imageFrame: 'framed'})
+  })
+
+  it('a run of nine or more starts a new run at the ninth band (Phase 17B)', () => {
+    const out = walk(Array.from({length: 10}, () => band('dark')))
+    expect(out.map((o) => o.seam.run)).toEqual([
+      ...Array.from({length: 8}, (_, i) => ({index: i, length: 8})),
+      {index: 0, length: 2}, {index: 1, length: 2},
+    ])
   })
 })

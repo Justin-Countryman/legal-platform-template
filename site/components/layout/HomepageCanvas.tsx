@@ -11,8 +11,10 @@ import {ReviewsSectionBlock, type ReviewsSectionBlockData} from '@/components/se
 import {resolveResultsDisclaimer} from '@/lib/legal'
 import {type NapTokens} from '@/lib/tokens'
 import {type SectionAppearance} from '@/components/sections/SectionShell'
-import {walkFrame, type SeamProps, type SiteLook, NO_SEAM} from '@/components/sections/sectionFrame'
+import {walkFrame, type SeamProps, type SiteLook, type FlowInputs, NO_SEAM} from '@/components/sections/sectionFrame'
 import {type VisibleGround} from '@/lib/sectionSurface'
+import {hostOf} from '@/lib/flows'
+import {hasImage} from '@/lib/sanity/image'
 import * as AttorneyFrame from '@/components/sections/AttorneySectionBlock'
 import * as BadgesFrame from '@/components/sections/BadgesSectionBlock'
 import * as CaseResultsFrame from '@/components/sections/CaseResultsSection'
@@ -149,7 +151,24 @@ function renderBlock(
 //
 // Exported for the grey box (Phase 17A), which must draw exactly the bands this walk
 // keeps: one answer to "will this band render", read by both.
-export function frameOf(block: HomepageBlock): {appearance: SectionAppearance | null | undefined; empty: boolean; raisesPhoto?: boolean} {
+//
+// Phase 17B: what the theme's ground pass reads, beside the resolved appearance, from
+// the RAW member: whether it stores a surface (four resolvers answer `light` for an
+// absent one, so the resolver cannot say), its host (the composer's role from its key,
+// else its type and layout), its own background photo, and whether it is a content
+// section (the one type that offers the saturated fill).
+export function frameOf(block: HomepageBlock): {appearance: SectionAppearance | null | undefined; empty: boolean; raisesPhoto?: boolean} & FlowInputs {
+  const inputs: FlowInputs = {
+    stored: !!block.appearance?.surface,
+    host: hostOf(block),
+    photo: hasImage(block.appearance?.backgroundImage),
+    content: block._type === 'contentSectionInline',
+  }
+  const frame = frameInputs(block)
+  return {...frame, ...inputs}
+}
+
+function frameInputs(block: HomepageBlock): {appearance: SectionAppearance | null | undefined; empty: boolean; raisesPhoto?: boolean} {
   switch (block._type) {
     case 'practiceAreaNavInline':
       return {appearance: PracticeAreaFrame.resolveAppearance(block), empty: PracticeAreaFrame.isEmpty(block)}

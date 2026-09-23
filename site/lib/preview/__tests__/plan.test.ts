@@ -20,9 +20,8 @@ const uploads: StoredDesign = {
   customFonts: {headingFont: {regular: {asset: {_ref: 'file-heading'}}}},
 }
 const graphite = THEMES.find((t) => t.id === 'graphite')!
-const marble = THEMES.find((t) => t.id === 'marble')!
 const wearsGraphite: StoredDesign = {...applied(plain, planPreview(plain, {styleSet: 'graphite', palette: 'site'}))}
-const swapped: StoredDesign = {...wearsGraphite, sectionJoin: 'arc'}
+const swapped: StoredDesign = {...wearsGraphite, headingRule: 'hatched'}
 
 describe('planPreview', () => {
   it('on a plain site, a style set is exactly its own patch', () => {
@@ -59,12 +58,12 @@ describe('planPreview', () => {
     expect(planPreview(wearsGraphite, {styleSet: 'graphite', palette: 'site'})).toMatchObject({set: {}, unset: []})
     expect(planPreview(swapped, {styleSet: 'graphite', palette: 'site'})).toMatchObject({set: {}, unset: []})
     // Another style set replaces the pick with its own.
-    expect(planPreview(swapped, {styleSet: 'marble', palette: 'site'}).set.sectionJoin).toBe(marble.picks.sectionJoin)
+    expect(planPreview(swapped, {styleSet: 'marble', palette: 'site'}).unset).toContain('headingRule')
   })
 
   it('touches only style-set, pick and color fields', () => {
     const allowed = new Set([
-      ...Object.keys(graphite.settings), 'sectionJoin', 'dividerCarry', 'headingRule',
+      ...Object.keys(graphite.settings), 'headingRule',
       'darkGround', 'lightGround', 'accent', 'action',
     ])
     for (const theme of THEMES) {

@@ -36,7 +36,7 @@ import {join} from 'node:path'
 const SENTINELS = [
   'site-preview',
   'lp-preview',
-  'themes arrive in Phase 17B',
+  'until the theme row arrives',
   'Client preview link',
   'Preview, nothing is live',
   'gb-label',
@@ -156,7 +156,7 @@ if (base) {
   const asIs = await get('/site-preview/site/site/design', cookie(operator))
   const op = await get(path, cookie(operator))
   check(op.res.status === 200, `the operator's preview answered ${op.res.status}`)
-  check(op.body.includes('themes arrive in Phase 17B'), 'the operator\'s preview has no switcher')
+  check(op.body.includes('until the theme row arrives'), 'the operator\'s preview has no switcher')
   check(op.body.includes('Fixture areas'), 'the operator\'s preview has no homepage')
   check(op.body.includes('data-image-frame="framed"') && !asIs.body.includes('data-image-frame="framed"'), 'Graphite\'s photo frame did not reach the preview')
   const rootCss = (b) => (b.match(/:root\{[^<]*/) ?? [''])[0]

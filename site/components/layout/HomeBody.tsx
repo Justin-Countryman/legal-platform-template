@@ -3,6 +3,7 @@ import {ghostSource} from '@/lib/brandMark'
 import {siteLookOf} from '@/components/sections/sectionFrame'
 import {firstBandRises} from '@/components/layout/HomepageCanvas'
 import {heroGround} from '@/lib/heroGround'
+import {closeSurface} from '@/lib/flows'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
 import {HomepageHero} from '@/components/layout/homeHero'
@@ -48,14 +49,17 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
   // authored/migrated. An empty/unmigrated heroSettings.homepageHero falls through
   // to the minimal band below — the hard-cut safety net, never a crash.
   const hero: HomeHeroData | null = content?.heading && design ? {...design, ...content} : null
-  // Phase 16C: the first band rises into the hero when the site's divider is shaped and
+  // Phase 16C: the first band rises into the hero when the theme's divider is shaped and
   // the grounds differ, so the hero makes room for it and the walk knows what it meets.
   // Phase 16D: the ghost's initials ride the site look, as the photo frame and the
   // divider already do, so they reach every band through the walk and no section
   // gains a prop. Derived from the firm's name, never stored (`[R-492]`).
+  // Phase 17B: the theme (`look.flow`, from the stored `flow`, the compat bridge or the
+  // platform default) says whether the ghost draws and what ground the close takes.
+  const look = siteLookOf(chrome?.designTokens)
   const site = {
-    ...siteLookOf(chrome?.designTokens),
-    ghost: ghostSource(header?.siteSettings?.firmName, chrome?.designTokens?.brandGhost === 'on'),
+    ...look,
+    ghost: ghostSource(header?.siteSettings?.firmName, look.flow?.ghost === 'once'),
   }
   const ground = heroGround(hero)
   const edgeBelow = firstBandRises(home?.canvas, site, ground)
@@ -101,9 +105,10 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
       />
 
       {/* Beat 9. Bookend, after the canvas and before the footer. `hideCtaForm`
-          is now live; it gated nothing before this. */}
+          is now live; it gated nothing before this. Its ground is the theme's
+          (Phase 17B, `dark.close`), with the saturated fill gated on the palette. */}
       {!home?.hideCtaForm && (
-        <HomepageCta data={globalCtaData} override={home?.ctaOverride} />
+        <HomepageCta data={globalCtaData} override={home?.ctaOverride} surface={closeSurface(look.flow, !!look.saturated)} />
       )}
     </>
   )

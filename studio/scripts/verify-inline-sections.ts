@@ -307,6 +307,9 @@ for (const [doc, inline] of [['attorneySection', 'attorneySectionInline'], ['pra
 for (const field of ['patternGround', 'headingEmphasisStyle', 'headingRule', 'headingCase', 'imageFrame', 'sectionJoin', 'cardHover', 'attorneyCardStyle', 'patternTexture']) {
   NO_SEED.push(['designSettings', field, 'a theme field (Phase 16B)'])
 }
+// Phase 17B: the theme's stored id. A seed would make "nobody chose" mean two things,
+// frozen on a fresh build and floating on a propagated one (ADV-17B-C F8).
+NO_SEED.push(['designSettings', 'flow', 'the theme id (Phase 17B)'])
 for (const [type, field, why] of NO_SEED) {
   if (!schema.get(type)) continue
   if (initial(type, field) !== undefined) {
