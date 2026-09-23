@@ -207,7 +207,7 @@ export const mainNavigation = defineType({
       title: 'Top Bar — Right Content',
       type: 'string',
       fieldset: 'topBar',
-      description: 'Text shown on the right side of the top bar — e.g. "Call (612) 825-3567 for a free consultation". Desktop only — hidden on mobile.',
+      description: 'Text shown on the right side of the top bar — e.g. "Call: (612) 825-3567". Mention a free consultation only if the firm offers them. Desktop only — hidden on mobile.',
       components: {input: TokenStringInput},
     },
     {
@@ -233,8 +233,10 @@ export const mainNavigation = defineType({
       title: 'Phone Tagline',
       type: 'string',
       fieldset: 'phone',
-      description: 'Text shown before the phone number — e.g. "Call for a free consultation"',
-      initialValue: 'Call for a free consultation',
+      // No initialValue (monorepo item 362, [R-522]): the build folds a seed into every firm's
+      // header, and this one claimed free consultations for all of them. The build composes the
+      // line from the firm's record.
+      description: 'Text shown before the phone number — e.g. "Speak with an attorney today". Mention a free consultation only if the firm offers them.',
     },
     {
       name: 'headerPhone',
@@ -259,8 +261,9 @@ export const mainNavigation = defineType({
       title: 'Button 1 — Label',
       type: 'string',
       fieldset: 'ctaButtons',
-      description: 'e.g. "Free Consultation"',
-      initialValue: 'Free Consultation',
+      // No initialValue (monorepo item 362, [R-522]): the build composes the label from the
+      // firm's record; a seed claimed free consultations for every firm.
+      description: 'e.g. "Speak With an Attorney". Mention a free consultation only if the firm offers them.',
     },
     {
       name: 'headerCtaUrl',

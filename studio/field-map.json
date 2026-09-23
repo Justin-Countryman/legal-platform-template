@@ -7711,8 +7711,7 @@
     "footerSettings": {
       "fields": [
         {
-          "description": "Headline shown in the footer contact section — e.g. \"Schedule a Free Consultation\"",
-          "initialValue": "Schedule a Free Consultation",
+          "description": "Headline shown in the footer contact section — e.g. \"Speak With an Attorney Today\". Mention a free consultation only if the firm offers them.",
           "jsonType": "string",
           "path": "ctaText",
           "required": "warning",
@@ -7932,7 +7931,6 @@
       ],
       "initialDocument": {
         "_type": "footerSettings",
-        "ctaText": "Schedule a Free Consultation",
         "ctaUrl": "/",
         "footerLayout": "anchor",
         "footerScheme": "dark"
@@ -12749,7 +12747,7 @@
           "type": "string"
         },
         {
-          "description": "Text shown on the right side of the top bar — e.g. \"Call (612) 825-3567 for a free consultation\". Desktop only — hidden on mobile.",
+          "description": "Text shown on the right side of the top bar — e.g. \"Call: (612) 825-3567\". Mention a free consultation only if the firm offers them. Desktop only — hidden on mobile.",
           "jsonType": "string",
           "path": "topBarRight",
           "title": "Top Bar — Right Content",
@@ -12772,8 +12770,7 @@
           "type": "string"
         },
         {
-          "description": "Text shown before the phone number — e.g. \"Call for a free consultation\"",
-          "initialValue": "Call for a free consultation",
+          "description": "Text shown before the phone number — e.g. \"Speak with an attorney today\". Mention a free consultation only if the firm offers them.",
           "jsonType": "string",
           "path": "headerPhoneTagline",
           "title": "Phone Tagline",
@@ -12794,8 +12791,7 @@
           "type": "string"
         },
         {
-          "description": "e.g. \"Free Consultation\"",
-          "initialValue": "Free Consultation",
+          "description": "e.g. \"Speak With an Attorney\". Mention a free consultation only if the firm offers them.",
           "jsonType": "string",
           "path": "headerCtaLabel",
           "title": "Button 1 — Label",
@@ -12937,10 +12933,8 @@
         "_type": "mainNavigation",
         "compactStyle": "docked",
         "defaultScheme": "light",
-        "headerCtaLabel": "Free Consultation",
         "headerCtaUrl": "/contact/",
         "headerLayout": "apex",
-        "headerPhoneTagline": "Call for a free consultation",
         "heroMerge": false,
         "mobileLayout": "standard",
         "scrolledScheme": "light",

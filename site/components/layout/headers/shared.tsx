@@ -457,7 +457,7 @@ export function CtaButtons({data, className = '', context = 'light'}: CtaProps) 
   // are owned by Button via the dark-context cascade — no ringClass plumbing.
   const items: CtaItem[] = []
   if (headerCtaUrl) {
-    items.push({label: headerCtaLabel ?? 'Free Consultation', url: headerCtaUrl, variant: 'primary'})
+    items.push({label: headerCtaLabel ?? 'Speak With an Attorney', url: headerCtaUrl, variant: 'primary'})
   }
   if (headerCtaUrl2) {
     items.push({label: headerCtaLabel2 ?? 'Learn More', url: headerCtaUrl2, variant: 'secondary'})
