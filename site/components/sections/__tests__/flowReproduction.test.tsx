@@ -1,7 +1,7 @@
 import {describe, expect, it, vi} from 'vitest'
 import {forwardRef} from 'react'
 import {render} from '@testing-library/react'
-import {readFileSync} from 'node:fs'
+import {existsSync, readFileSync} from 'node:fs'
 import {resolve} from 'node:path'
 
 // ─── The reproduction gate (Phase 17B, monorepo WS-V1-PHASE17B-DESIGN §5) ─────
@@ -74,16 +74,22 @@ function lookOf(designTokens: Record<string, unknown>): SiteLook {
   return {...look, ghost: ghostSource(FIRM, look.flow?.ghost === 'once')}
 }
 
-function stubCanvas(): HomepageBlock[] {
-  const lines = readFileSync(resolve(__dirname, '../../../scripts/ci/fixture.ndjson'), 'utf8').split('\n').filter(Boolean)
+/** The CI stub's canvas, or null on a client tree: the press prunes `scripts/ci` from
+ *  what a client ships, so its cases run on the template checkout and are skipped,
+ *  by name, on a propagated client (`[R-175]`: an absent-by-configuration skip says why). */
+const STUB_PATH = resolve(__dirname, '../../../scripts/ci/fixture.ndjson')
+function stubCanvas(): HomepageBlock[] | null {
+  if (!existsSync(STUB_PATH)) return null
+  const lines = readFileSync(STUB_PATH, 'utf8').split('\n').filter(Boolean)
   const home = lines.map((l) => JSON.parse(l)).find((d) => d._type === 'homePage')
   return home.canvas as HomepageBlock[]
 }
+const STUB = stubCanvas()
 
 const CANVASES: Array<[name: string, blocks: HomepageBlock[], hero: VisibleGround]> = [
   ['planted', planted as unknown as HomepageBlock[], 'dark'],
   ['migrated', migrated as unknown as HomepageBlock[], 'dark'],
-  ['stub', stubCanvas(), 'light'],
+  ...(STUB ? [['stub', STUB, 'light'] as [string, HomepageBlock[], VisibleGround]] : []),
 ]
 const LOOKS: Array<[name: string, designTokens: Record<string, unknown>]> = [
   ['graphite', GRAPHITE_STORED],
@@ -107,6 +113,7 @@ function decisions(blocks: HomepageBlock[], site: SiteLook, hero: VisibleGround)
 }
 
 describe('the compat bridge reproduces the a164ce0 walk and canvas byte for byte', () => {
+  if (STUB === null) it.skip('the CI stub canvas: absent on a client tree (the press prunes scripts/ci); its cases ran on the template checkout', () => {})
   for (const [canvasName, blocks, hero] of CANVASES) {
     for (const [lookName, designTokens] of LOOKS) {
       it(`${canvasName} canvas, ${lookName} stored: the walk`, async () => {
