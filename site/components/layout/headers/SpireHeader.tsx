@@ -150,7 +150,7 @@ export function SpireHeader({data}: Props) {
                         size="compact"
                         href={headerCtaUrl}
                       >
-                        {headerCtaLabel ?? 'Free Consultation'}
+                        {headerCtaLabel ?? 'Speak With an Attorney'}
                       </Button>
                     )}
                     {headerCtaUrl2 && (
@@ -198,7 +198,7 @@ export function SpireHeader({data}: Props) {
                       size="compact"
                       href={headerCtaUrl}
                     >
-                      {headerCtaLabel ?? 'Free Consultation'}
+                      {headerCtaLabel ?? 'Speak With an Attorney'}
                     </Button>
                   </div>
                 )}

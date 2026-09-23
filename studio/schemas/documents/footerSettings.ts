@@ -21,9 +21,10 @@ export const footerSettings = defineType({
       title: 'Contact CTA Text',
       type: 'string',
       fieldset: 'cta',
-      description: 'Headline shown in the footer contact section — e.g. "Schedule a Free Consultation"',
+      // No initialValue (monorepo item 362, [R-522]): the build composes the headline from the
+      // firm's record; a seed claimed free consultations for every firm.
+      description: 'Headline shown in the footer contact section — e.g. "Speak With an Attorney Today". Mention a free consultation only if the firm offers them.',
       components: {input: TokenStringInput},
-      initialValue: 'Schedule a Free Consultation',
       validation: (Rule) => Rule.required().warning(),
     },
     {

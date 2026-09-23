@@ -24,9 +24,10 @@
  * resolver ever changes what it returns, or the walk misses a default, this
  * is red on the branch that did it, not on a client dataset later.
  *
- * It also pins two invariants the platform repo relies on: every `buildTime`
- * row ends with the sentence and only those rows carry it; and every
- * singleton in the map declares a document type the schema has.
+ * It also pins three invariants the platform repo relies on: every `buildTime`
+ * row ends with the sentence and only those rows carry it; every
+ * singleton in the map declares a document type the schema has; and no seed
+ * claims a free consultation (monorepo item 362, [R-522]).
  *
  * Exits non-zero on any failure. Detected by: itself (CI studio-build job).
  */
@@ -158,6 +159,23 @@ if (stable(buildTimeRows) !== stable(['siteSettings.hideFromSearch'])) {
   fail(`build-time fields are ${JSON.stringify(buildTimeRows)}; the census says exactly siteSettings.hideFromSearch. Adding one is a next.config.ts/generateStaticParams read, recorded in the design outcome, then this list.`)
 } else {
   console.log('PASS  build-time fields: exactly siteSettings.hideFromSearch')
+}
+
+// No seed may claim a free consultation (monorepo item 362, [R-522]). The build folds
+// these rows into every document it creates, so a seed is written for every firm, and
+// whether a firm offers free consultations is a fact of its own record: the build says it
+// from a Yes and nothing else may. The phone line's seed put it in every firm's header.
+// The pattern is the monorepo's `FREE_CONSULTATION_CLAIM` (`content_recipes.py`).
+const CLAIM = /\b(?:free|complimentary|no[\s-]cost)\s+(?:initial\s+)?(?:consult\w*|case\s+(?:evaluation|review))/i
+const claims = typeNames.flatMap((n) =>
+  map.types[n].fields
+    .filter((r) => r.initialValue !== undefined && CLAIM.test(JSON.stringify(r.initialValue)))
+    .map((r) => `${n}.${r.path}`),
+)
+if (claims.length) {
+  fail(`seed(s) claiming a free consultation: ${claims.join(', ')}; the build writes the claim only for a firm whose record says Yes`)
+} else {
+  console.log('PASS  no seed claims a free consultation')
 }
 
 for (const [type, id] of Object.entries(map.singletons)) {
