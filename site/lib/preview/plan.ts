@@ -27,9 +27,12 @@ import {type PreviewView} from './session'
 //
 // Phase 17B session 3 (WS-V1-PHASE17B-DESIGN §2.10): the third row. A theme IS stored
 // by name (`designSettings.flow`, `[R-509]`), so its block is one key: a chosen theme
-// that differs from the stored one sets `flow`, and clears every retired field the
-// document still stores (the six the compat bridge reads, `[R-510]`), so Apply cleans a
-// stored client with the choice. "As the site is" contributes nothing.
+// that differs from the stored one sets `flow`; and ANY chosen theme clears every
+// retired field the document still stores (the six the compat bridge reads,
+// `[R-510]`), so Apply cleans a stored client with the choice, and choosing the theme
+// the site already stores is the one operator action that reaches zero on a document
+// still carrying the six (ADV-17B-3 F3; the deletion pin waits for zero on every
+// client). "As the site is" contributes nothing.
 
 /** The row value that leaves a choice as the site has it. */
 export const AS_THE_SITE_IS = 'site'
@@ -100,8 +103,8 @@ export function planPreview(stored: StoredDesign | null | undefined, choices: Pi
   }
 
   const flow = flowById(choices.flow)
-  if (flow && doc.flow !== flow.id) {
-    set.flow = flow.id
+  if (flow) {
+    if (doc.flow !== flow.id) set.flow = flow.id
     for (const field of HIDDEN_FIELDS) if (present(doc[field]) && !unset.includes(field)) unset.push(field)
   }
 

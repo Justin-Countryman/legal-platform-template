@@ -123,6 +123,13 @@ describe('planPreview', () => {
     expect(planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'site'}).wears.flow.id).toBe('cutBlocks.mostlyDark')
   })
 
+  it('choosing the theme the site already stores still clears the six it carries, so an operator can reach zero (ADV-17B-3 F3)', () => {
+    const stored: StoredDesign = {...plain, flow: 'quiet.mostlyLight', sectionJoin: 'angled', brandGhost: 'on', sectionGradient: 'deep'}
+    const plan = planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'quiet.mostlyLight'})
+    expect(plan.set).toEqual({})
+    expect(plan.unset).toEqual(['sectionJoin', 'brandGhost', 'sectionGradient'])
+  })
+
   it('a style set and a theme chosen together write the style set’s 18 keys and the theme’s one, and the six retired fields are cleared once', () => {
     const legacy: StoredDesign = {...plain, sectionJoin: 'angled', sectionOverlap: 'photo'}
     const plan = planPreview(legacy, {styleSet: 'graphite', palette: 'site', flow: 'quiet.mostlyLight'})

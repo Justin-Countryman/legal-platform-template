@@ -167,6 +167,12 @@ try {
           try { res = await page.goto(url, {waitUntil: 'load', timeout: 60_000}) } catch (e) { if (attempt === 1) throw e }
         }
         if (!res || res.status() !== 200) { fail(`${key}: ${url} answered ${res?.status()}`); continue }
+        // `goto` reports the final status after a redirect (ADV-17B-3 F4): the page measured
+        // must be the address asked for, and must say it wears the theme asked for.
+        if (page.url() !== url) { fail(`${key}: landed on ${page.url()}, not ${url}`); continue }
+        const flowName = presets.flows.find((f) => f.id === flow)?.name
+        const bar = await page.evaluate(() => document.querySelector('.sw summary')?.textContent ?? '')
+        if (!flowName || !bar.includes(flowName)) { fail(`${key}: the page's bar reads "${bar}", not the theme "${flowName}"`); continue }
         await page.evaluate(() => document.fonts.ready)
         // The switcher is the operator's bar, not the page: hidden for the measure and the eye.
         await page.addStyleTag({content: '.sw{display:none !important}'})
@@ -212,7 +218,7 @@ if (UPDATE) {
     if (m.bands.length !== g.bands.length) { fail(`${key}: ${m.bands.length} bands vs golden ${g.bands.length}`); continue }
     m.bands.forEach((b, i) => {
       const gb = g.bands[i]
-      for (const f of ['ring', 'scrim', 'bg', 'ink', 'texture', 'ghost', 'pt', 'pb']) {
+      for (const f of ['heading', 'ring', 'scrim', 'bg', 'ink', 'texture', 'ghost', 'pt', 'pb']) {
         if (JSON.stringify(b[f]) !== JSON.stringify(gb[f])) fail(`${key}: band ${i} (${b.heading}) ${f} ${JSON.stringify(b[f])} vs golden ${JSON.stringify(gb[f])}`)
       }
       if (JSON.stringify(b.classes) !== JSON.stringify(gb.classes)) fail(`${key}: band ${i} classes ${b.classes.join(' ')} vs golden ${gb.classes.join(' ')}`)

@@ -128,13 +128,20 @@ if (base) {
 
   // No cookie: nothing of the page, no query, however it is asked.
   const path = '/site-preview/graphite/navy-brass/site/design'
-  const tree = encodeURIComponent(JSON.stringify(['', {children: ['(preview)', {children: ['site-preview', {children: [['styleSet', 'graphite', 'd'], {children: [['palette', 'navy-brass', 'd'], {children: [['flow', 'site', 'd'], {children: [['view', 'design', 'd'], {children: ['__PAGE__', {}]}]}]}]}]}]}]}, null, null, true]))
+  // The router state tree in Next's own schema (`server/app-render/types.js`: a dynamic
+  // segment is `[name, value, type, siblings|null]`, the fifth slot a number). ADV-17B-3 F1
+  // measured the earlier shape (3-tuples, a trailing `true`) answering 500 "could not be
+  // parsed" before any route code ran, so the case passed without exercising the path it
+  // names; a 500 is now a failure of this proof.
+  const seg = (name, value) => [name, value, 'd', null]
+  const tree = encodeURIComponent(JSON.stringify(['', {children: ['(preview)', {children: ['site-preview', {children: [seg('styleSet', 'graphite'), {children: [seg('palette', 'navy-brass'), {children: [seg('flow', 'site'), {children: [seg('view', 'design'), {children: ['__PAGE__', {}]}]}]}]}]}]}]}, null, null, 1]))
   for (const [label, headers, suffix] of [
     ['as HTML', {}, ''],
     ['as a router request', {RSC: '1'}, ''],
     ['with a forged router header', {RSC: '1', 'Next-Router-State-Tree': tree}, '?x=1'],
   ]) {
     const r = await get(path + suffix, headers)
+    check(r.res.status !== 500, `no cookie ${label}: the server answered 500, so this case proves nothing (the router state tree is not in Next's schema?)`)
     // The requested path itself may echo back in a 404's payload; the page's content,
     // the switcher and the grey box must not.
     const leaked = ['Fixture areas', ...SENTINELS.filter((s) => s !== 'site-preview')].filter((s) => r.body.includes(s))
