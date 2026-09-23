@@ -4,7 +4,7 @@ import {resolve} from 'node:path'
 import {
   CLOSES, DARKNESS, DARK_BUDGETS, DARK_PAINTS, DARK_RHYTHMS, DEFAULT_FLOW, DIVIDER_ATS, FAMILIES, FLOWS, GHOSTS, HAIRLINES, HIDDEN_FIELDS,
   HOSTS, LIGHT_PAINTS, NEEDS, STEP_HOSTS, bridgeOf, closeSurface, darkBudget, flowById, flowOf, hostOf, impliedNeeds, saturatedFillOk,
-  storesHiddenFields, unmetNeeds,
+  storesHiddenFields, unmetNeeds, CHROME_SCHEMES, STEP_CHROME, chromeSchemes, darkHeaderReady,
 } from '../flows'
 import {DIVIDERS, CARRY_PIECES} from '../dividers'
 import {OVERLAPS} from '../overlaps'
@@ -237,5 +237,66 @@ describe('the move (Phase 17B, [R-510])', () => {
     const flowRow = designRows.find((r) => r.path === 'flow') as {initialValue?: unknown} | undefined
     expect(flowRow).toBeDefined()
     expect(flowRow?.initialValue).toBeUndefined()
+  })
+})
+
+describe('the header and the footer (Phase 17B session 4, [R-518])', () => {
+  const byId = (id: string) => FLOWS.find((f) => f.id === id)!
+  const LIGHT_LOGO = {src: '/on-light.png'}
+  const DARK_LOGO = {src: '/on-dark.png'}
+
+  it('every theme names a header and a footer from the closed vocabulary, light or dark only, never transparent or glass', () => {
+    for (const f of FLOWS) {
+      expect(CHROME_SCHEMES).toContain(f.chrome.header)
+      expect(CHROME_SCHEMES).toContain(f.chrome.footer)
+    }
+    expect([...CHROME_SCHEMES]).toEqual(['light', 'dark'])
+  })
+
+  it('the step decides: the lighter steps keep the white bar and dark footer; the darker steps darken the bar', () => {
+    expect(STEP_CHROME).toEqual({
+      mostlyLight: {header: 'light', footer: 'dark'},
+      balanced: {header: 'light', footer: 'dark'},
+      mostlyDark: {header: 'dark', footer: 'dark'},
+      allDark: {header: 'dark', footer: 'dark'},
+    })
+    for (const f of FLOWS) expect(f.chrome).toEqual(STEP_CHROME[f.step])
+  })
+
+  it('the bridge and the platform default give what every client renders today: a light header, a dark footer', () => {
+    expect(bridgeOf({sectionJoin: 'angled'}).chrome).toEqual({header: 'light', footer: 'dark'})
+    expect(flowOf(null).chrome).toEqual({header: 'light', footer: 'dark'})
+    expect(flowById(DEFAULT_FLOW)!.chrome).toEqual({header: 'light', footer: 'dark'})
+  })
+
+  it('a stored scheme wins, per field; the theme fills what is absent', () => {
+    const dark = byId('cutBlocks.mostlyDark')
+    const logos = {onLight: LIGHT_LOGO, onDark: DARK_LOGO}
+    expect(chromeSchemes(dark, null, null, logos)).toEqual({top: 'dark', scrolled: 'dark', footer: 'dark', darkLogoMissing: false})
+    expect(chromeSchemes(dark, {defaultScheme: 'light'}, null, logos)).toMatchObject({top: 'light', scrolled: 'dark'})
+    expect(chromeSchemes(dark, {scrolledScheme: 'glass'}, {footerScheme: 'light'}, logos)).toMatchObject({top: 'dark', scrolled: 'glass', footer: 'light'})
+    const quiet = byId('quiet.mostlyLight')
+    expect(chromeSchemes(quiet, {defaultScheme: 'transparent-dark'}, null, logos)).toMatchObject({top: 'transparent-dark', scrolled: 'light'})
+    // An unknown stored footer value is not a scheme: the theme's.
+    expect(chromeSchemes(quiet, null, {footerScheme: 'blue'}, logos).footer).toBe('dark')
+  })
+
+  it('the theme never yields a transparent value, merged header or not', () => {
+    for (const f of FLOWS) {
+      const s = chromeSchemes(f, {}, {}, null)
+      expect(s.top.startsWith('transparent')).toBe(false)
+      expect(s.scrolled.startsWith('transparent')).toBe(false)
+    }
+  })
+
+  it('a dark header needs the logo for dark grounds: the light logo without the dark one keeps the header light and says so', () => {
+    const dark = byId('cutBlocks.mostlyDark')
+    expect(darkHeaderReady({onLight: LIGHT_LOGO, onDark: null})).toBe(false)
+    expect(darkHeaderReady({onLight: LIGHT_LOGO, onDark: DARK_LOGO})).toBe(true)
+    // No logo at all prints the firm's name, which reads on either ground.
+    expect(darkHeaderReady({onLight: null, onDark: null})).toBe(true)
+    expect(chromeSchemes(dark, null, null, {onLight: LIGHT_LOGO, onDark: null})).toEqual({top: 'light', scrolled: 'light', footer: 'dark', darkLogoMissing: true})
+    // A stored dark header is the operator's: it stands, logo or not.
+    expect(chromeSchemes(dark, {defaultScheme: 'dark'}, null, {onLight: LIGHT_LOGO, onDark: null}).top).toBe('dark')
   })
 })

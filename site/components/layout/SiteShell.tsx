@@ -14,7 +14,7 @@ import {type getSiteChrome} from '@/lib/sanity/fetchers'
 import {resolveTokenString, formatPhone} from '@/lib/tokens'
 import {buildDesignTokenCSS, buildColorCSS, buildFontCSS, resolveSidebarDesignSettings} from '@/lib/designTokens'
 import {dividerShape} from '@/lib/dividers'
-import {flowOf} from '@/lib/flows'
+import {chromeSchemes, flowOf} from '@/lib/flows'
 import {HeroSchemeProvider} from '@/lib/heroSchemeContext'
 import {HeroSurfaceProvider} from '@/lib/heroSurfaceContext'
 import {DEFAULT_SCRIM_OPACITY, resolveHeroSurface, resolveMergedHeaderScheme} from '@/lib/heroSurface'
@@ -183,8 +183,15 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
     scrimDirection: heroSite.scrimDirection,
     sectionBg: heroSite.sectionBg,
   })
+  // Phase 17B session 4 (`[R-518]`): the header's and the footer's schemes are the theme's where
+  // Header Settings and Footer Settings store none; a stored scheme wins, per field. The theme
+  // never yields a transparent top, so the merge guardrail above still acts only on a stored one.
+  const schemes = chromeSchemes(flow, headerData?.mainNavigation, footerData?.footerSettings, {
+    onLight: headerData?.designSettings?.logoOnLight,
+    onDark: headerData?.designSettings?.logoOnDark,
+  })
   const mergedDefaultScheme = resolveMergedHeaderScheme(
-    headerData?.mainNavigation?.defaultScheme ?? 'light',
+    schemes.top,
     headerData?.mainNavigation?.heroMerge ?? false,
     siteHeroSurface.isDark,
   )
@@ -247,7 +254,7 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
           stickyHideSupplementary: headerData?.mainNavigation?.stickyHideSupplementary ?? true,
           compactStyle: headerData?.mainNavigation?.compactStyle ?? 'docked',
           defaultScheme: mergedDefaultScheme,
-          scrolledScheme: headerData?.mainNavigation?.scrolledScheme ?? 'light',
+          scrolledScheme: schemes.scrolled,
           topBarDesktop: headerData?.mainNavigation?.topBarDesktop ?? false,
           topBarMobile: headerData?.mainNavigation?.topBarMobile ?? false,
           topBarPinSide: headerData?.mainNavigation?.topBarPinSide ?? 'none',
@@ -290,7 +297,7 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
       <Footer
         data={{
           firmName: footerData?.siteSettings?.firmName,
-          footerScheme: footerData?.footerSettings?.footerScheme ?? 'dark',
+          footerScheme: schemes.footer,
           logo: footerData?.designSettings?.logoOnDark ?? null,
           logoLight: footerData?.designSettings?.logoOnLight ?? null,
           address: footerData?.siteSettings?.address,
