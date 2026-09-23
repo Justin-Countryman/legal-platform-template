@@ -40,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Phase 17B: the flow metrics golden's screenshots, uploaded as CI artifacts, never committed
+flow-captures/
