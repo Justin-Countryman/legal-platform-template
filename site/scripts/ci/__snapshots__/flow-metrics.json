@@ -1,5 +1,13 @@
 {
   "stub / quiet.mostlyLight / 1440": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -75,9 +83,22 @@
         "pb": 64,
         "headingLines": 0
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "stub / alternating.balanced / 1440": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -153,9 +174,22 @@
         "pb": 64,
         "headingLines": 0
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "stub / alternating.mostlyDark / 1440": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -231,9 +265,22 @@
         "pb": 64,
         "headingLines": 0
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   },
   "stub / cutBlocks.balanced / 1440": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -310,9 +357,22 @@
         "pb": 64,
         "headingLines": 0
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "stub / cutBlocks.mostlyDark / 1440": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -390,9 +450,22 @@
         "pb": 64,
         "headingLines": 0
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   },
   "stub / quiet.mostlyLight / 390": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -468,9 +541,22 @@
         "pb": 48,
         "headingLines": 0
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "stub / alternating.balanced / 390": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -546,9 +632,22 @@
         "pb": 48,
         "headingLines": 0
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "stub / alternating.mostlyDark / 390": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -624,9 +723,22 @@
         "pb": 48,
         "headingLines": 0
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   },
   "stub / cutBlocks.balanced / 390": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -703,9 +815,22 @@
         "pb": 48,
         "headingLines": 0
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "stub / cutBlocks.mostlyDark / 390": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -783,9 +908,22 @@
         "pb": 48,
         "headingLines": 0
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   },
   "adversarial-mostly-dark / quiet.mostlyLight / 1440": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -953,9 +1091,22 @@
         "pb": 112,
         "headingLines": 2
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "adversarial-mostly-dark / alternating.balanced / 1440": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -1123,9 +1274,22 @@
         "pb": 112,
         "headingLines": 2
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "adversarial-mostly-dark / alternating.mostlyDark / 1440": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -1293,9 +1457,22 @@
         "pb": 112,
         "headingLines": 2
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   },
   "adversarial-mostly-dark / cutBlocks.balanced / 1440": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -1464,9 +1641,22 @@
         "pb": 112,
         "headingLines": 2
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "adversarial-mostly-dark / cutBlocks.mostlyDark / 1440": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -1635,9 +1825,22 @@
         "pb": 112,
         "headingLines": 2
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   },
   "adversarial-mostly-dark / quiet.mostlyLight / 390": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -1805,9 +2008,22 @@
         "pb": 64,
         "headingLines": 1
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "adversarial-mostly-dark / alternating.balanced / 390": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -1975,9 +2191,22 @@
         "pb": 64,
         "headingLines": 1
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "adversarial-mostly-dark / alternating.mostlyDark / 390": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -2145,9 +2374,22 @@
         "pb": 64,
         "headingLines": 1
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   },
   "adversarial-mostly-dark / cutBlocks.balanced / 390": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -2316,9 +2558,22 @@
         "pb": 64,
         "headingLines": 1
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "adversarial-mostly-dark / cutBlocks.mostlyDark / 390": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -2487,9 +2742,22 @@
         "pb": 64,
         "headingLines": 1
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   },
   "planning-mostly-light / quiet.mostlyLight / 1440": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -2657,9 +2925,22 @@
         "pb": 112,
         "headingLines": 2
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "planning-mostly-light / alternating.balanced / 1440": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -2827,9 +3108,22 @@
         "pb": 112,
         "headingLines": 2
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "planning-mostly-light / alternating.mostlyDark / 1440": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -2997,9 +3291,22 @@
         "pb": 112,
         "headingLines": 2
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   },
   "planning-mostly-light / cutBlocks.balanced / 1440": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -3169,9 +3476,22 @@
         "pb": 112,
         "headingLines": 2
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "planning-mostly-light / cutBlocks.mostlyDark / 1440": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -3341,9 +3661,22 @@
         "pb": 112,
         "headingLines": 2
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   },
   "planning-mostly-light / quiet.mostlyLight / 390": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -3511,9 +3844,22 @@
         "pb": 64,
         "headingLines": 1
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "planning-mostly-light / alternating.balanced / 390": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -3681,9 +4027,22 @@
         "pb": 64,
         "headingLines": 1
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "planning-mostly-light / alternating.mostlyDark / 390": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -3851,9 +4210,22 @@
         "pb": 64,
         "headingLines": 1
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   },
   "planning-mostly-light / cutBlocks.balanced / 390": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -4023,9 +4395,22 @@
         "pb": 64,
         "headingLines": 1
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "planning-mostly-light / cutBlocks.mostlyDark / 390": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -4195,9 +4580,22 @@
         "pb": 64,
         "headingLines": 1
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   },
   "multi-practice-balanced / quiet.mostlyLight / 1440": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -4401,9 +4799,22 @@
         "pb": 112,
         "headingLines": 2
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "multi-practice-balanced / alternating.balanced / 1440": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -4607,9 +5018,22 @@
         "pb": 112,
         "headingLines": 2
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "multi-practice-balanced / alternating.mostlyDark / 1440": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -4813,9 +5237,22 @@
         "pb": 112,
         "headingLines": 2
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   },
   "multi-practice-balanced / cutBlocks.balanced / 1440": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -5021,9 +5458,22 @@
         "pb": 112,
         "headingLines": 2
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "multi-practice-balanced / cutBlocks.mostlyDark / 1440": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
@@ -5229,9 +5679,22 @@
         "pb": 112,
         "headingLines": 2
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   },
   "multi-practice-balanced / quiet.mostlyLight / 390": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -5435,9 +5898,22 @@
         "pb": 64,
         "headingLines": 1
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "multi-practice-balanced / alternating.balanced / 390": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -5641,9 +6117,22 @@
         "pb": 64,
         "headingLines": 1
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "multi-practice-balanced / alternating.mostlyDark / 390": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -5847,9 +6336,22 @@
         "pb": 64,
         "headingLines": 1
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   },
   "multi-practice-balanced / cutBlocks.balanced / 390": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -6055,9 +6557,22 @@
         "pb": 64,
         "headingLines": 1
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)",
+      "rule": false
+    }
   },
   "multi-practice-balanced / cutBlocks.mostlyDark / 390": {
+    "header": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
@@ -6263,6 +6778,11 @@
         "pb": 64,
         "headingLines": 1
       }
-    ]
+    ],
+    "headerScrolled": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)",
+      "rule": true
+    }
   }
 }
