@@ -44,7 +44,7 @@ export function RidgeHeader({data}: Props) {
   const items              = navItems ?? []
   const hideSupplementary  = scrolled && !!stickyHideSupplementary
   const floatingActive     = compactStyle === 'float' && scrolled
-  const mobileBg           = mobileRowBg(scheme, floatingActive)
+  const mobileBg           = mobileRowBg(scheme)
   const dataRingContext    = isDarkSurfaceScheme(scheme) ? 'dark' : undefined
 
   function closeMenu() { setMenuOpen(false) }

@@ -54,7 +54,7 @@ export function MesaHeader({data}: Props) {
   const displayPhone2     = secondPhone(displayPhone, headerPhone2)
   const hideSupplementary = scrolled && !!stickyHideSupplementary
   const floatingActive    = compactStyle === 'float' && scrolled
-  const mobileBg          = mobileRowBg(scheme, floatingActive)
+  const mobileBg          = mobileRowBg(scheme)
   const dataRingContext   = isDarkSurfaceScheme(scheme) ? 'dark' : undefined
   const buttonContext     = isDarkSurfaceScheme(scheme) ? 'dark' as const : 'light' as const
 

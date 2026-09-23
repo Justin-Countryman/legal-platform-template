@@ -267,17 +267,19 @@ export function schemeBg(scheme: string, scrolled: boolean, floating = false): s
   return isDarkSurface(scheme) ? `${bg} shadow-elevation-md hairline-bottom` : `${bg} shadow-elevation-md`
 }
 
-const TRANSPARENT_HEADER = new Set(['transparent-dark', 'transparent-light'])
-
-// The mobile row's own ground. The row sits inside the header, so it paints nothing and shows
-// the header's ground, except where the header's own ground is see-through: a stored
-// transparent top (heroMerge), which the row turns solid because a phone shows no hero behind
-// it, and the floating pill, whose outer header is transparent. Until Phase 17B session 4 it
-// always painted the AT-TOP scheme, so after scrolling it kept that ground while its logo and
-// the header's ring context followed the scrolled one: a light top over a dark scroll measured
-// 1.16:1 (ADV-17B4-A).
-export function mobileRowBg(scheme: string, floatingActive: boolean): string {
-  return TRANSPARENT_HEADER.has(scheme) || floatingActive ? schemeBg(solidScheme(scheme), false) : ''
+// The mobile row's own ground: the SOLID form of the state the header is in. A phone shows no
+// hero behind a transparent header and wants no blur behind a glass one, so the row turns both
+// solid in their own polarity (glass reads as light, glass-dark as dark), which is what it did
+// before at the top. Until Phase 17B session 4 it painted the AT-TOP scheme in both states, so
+// after scrolling it kept that ground while its logo and the header's ring context followed the
+// scrolled one: a light top over a dark scroll measured 1.16:1 (ADV-17B4-A). Painting the current
+// state's solid form fixes that and leaves every same-polarity header as it was, pixel for pixel
+// (ADV-17B4-2 measured the first fix, which let a glass header show through, changing live bars).
+const MOBILE_SOLID: Record<string, string> = {
+  'transparent-dark': 'dark', 'transparent-light': 'light', 'glass-dark': 'dark', glass: 'light',
+}
+export function mobileRowBg(scheme: string): string {
+  return schemeBg(MOBILE_SOLID[scheme] ?? scheme, false)
 }
 
 /** The second number, unless it is the first again: a firm with only a toll-free number

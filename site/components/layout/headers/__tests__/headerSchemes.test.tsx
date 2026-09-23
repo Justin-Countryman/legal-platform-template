@@ -3,10 +3,11 @@ import {act, render} from '@testing-library/react'
 
 // Phase 17B session 4 (monorepo WS-V1-PHASE17B4-DESIGN §2.4): the seven layouts share three
 // fixes, held here by rendering every layout at the top and scrolled.
-//   1. The mobile row paints its own ground only when the header's own ground is see-through
-//      (a stored transparent top, the floating pill); otherwise it shows the header's. It used
-//      to paint the AT-TOP scheme after scrolling while its logo and the header's ring context
-//      followed the scrolled one (a light top over a dark scroll measured 1.16:1, ADV-17B4-A).
+//   1. The mobile row paints the SOLID form of the state the header is in (a transparent or
+//      glass scheme turned solid in its own polarity). It used to paint the AT-TOP scheme after
+//      scrolling while its logo and the header's ring context followed the scrolled one (a light
+//      top over a dark scroll measured 1.16:1, ADV-17B4-A); every same-polarity header, glass
+//      included, renders as it did (ADV-17B4-2).
 //   2. A docked dark header, scrolled, draws a rule on its bottom edge.
 //   3. A second number equal to the first is not printed.
 
@@ -66,19 +67,26 @@ afterEach(() => { vi.unstubAllGlobals(); setScroll(0) })
 
 describe('the mobile row follows the state the header is in (Phase 17B session 4)', () => {
   for (const layout of LAYOUTS) {
-    it(`${layout}: a light top over a dark scroll, scrolled: the row shows the header's dark ground, its logo and ring context agree`, () => {
+    it(`${layout}: a light top over a dark scroll, scrolled: the row paints the dark ground, and its logo and ring context agree`, () => {
       const {header, row, logos} = renderHeader({...BASE, headerLayout: layout, defaultScheme: 'light', scrolledScheme: 'dark'}, true)
       expect(classes(header)).toContain('bg-brand-dark')
       expect(header.getAttribute('data-ring-context')).toBe('dark')
-      expect(grounds(row)).toEqual([])
+      expect(grounds(row)).toEqual(['bg-brand-dark'])
       expect(logos).toEqual(['/on-dark.png'])
     })
 
-    it(`${layout}: a dark top over a light scroll, at the top: the row shows the dark ground with the dark-ground logo`, () => {
-      const {header, row, logos} = renderHeader({...BASE, headerLayout: layout, defaultScheme: 'dark', scrolledScheme: 'light'}, false)
-      expect(classes(header)).toContain('bg-brand-dark')
-      expect(grounds(row)).toEqual([])
-      expect(logos).toEqual(['/on-dark.png'])
+    it(`${layout}: a dark top over a light scroll: dark at the top, light when scrolled, the logo following`, () => {
+      const top = renderHeader({...BASE, headerLayout: layout, defaultScheme: 'dark', scrolledScheme: 'light'}, false)
+      expect(grounds(top.row)).toEqual(['bg-brand-dark'])
+      expect(top.logos).toEqual(['/on-dark.png'])
+      const scrolled = renderHeader({...BASE, headerLayout: layout, defaultScheme: 'dark', scrolledScheme: 'light'}, true)
+      expect(grounds(scrolled.row)).toEqual(['bg-background'])
+      expect(scrolled.logos).toEqual(['/on-light.png'])
+    })
+
+    it(`${layout}: a glass scroll of the top's polarity paints the row solid, as it always did`, () => {
+      expect(grounds(renderHeader({...BASE, headerLayout: layout, defaultScheme: 'dark', scrolledScheme: 'glass-dark'}, true).row)).toEqual(['bg-brand-dark'])
+      expect(grounds(renderHeader({...BASE, headerLayout: layout, defaultScheme: 'light', scrolledScheme: 'glass'}, true).row)).toEqual(['bg-background'])
     })
 
     it(`${layout}: a stored transparent top (merged over the hero): the row turns it solid, as before`, () => {
@@ -87,10 +95,10 @@ describe('the mobile row follows the state the header is in (Phase 17B session 4
       expect(grounds(row)).toEqual(['bg-brand-dark'])
     })
 
-    it(`${layout}: the floating pill, scrolled: the outer header is see-through, so the row paints the scrolled ground`, () => {
+    it(`${layout}: the floating pill, scrolled: the outer header is see-through, and the row paints the scrolled scheme solid`, () => {
       const {header, row} = renderHeader({...BASE, headerLayout: layout, compactStyle: 'float', defaultScheme: 'light', scrolledScheme: 'glass-dark'}, true)
       expect(classes(header)).toContain('bg-transparent')
-      expect(grounds(row)).toEqual(['bg-scrim/80'])
+      expect(grounds(row)).toEqual(['bg-brand-dark'])
     })
 
     it(`${layout}: a docked dark header draws the bottom rule when scrolled, a light one does not, and neither at the top`, () => {
@@ -116,12 +124,13 @@ describe('the helpers', () => {
     expect(secondPhone('(763) 555-0100', null)).toBeNull()
   })
 
-  it('mobileRowBg paints only a see-through header, solid', () => {
-    expect(mobileRowBg('light', false)).toBe('')
-    expect(mobileRowBg('dark', false)).toBe('')
-    expect(mobileRowBg('transparent-light', false)).toBe('bg-background')
-    expect(mobileRowBg('transparent-dark', false)).toBe('bg-brand-dark')
-    expect(mobileRowBg('glass', true)).toBe('bg-background/90 backdrop-blur-md')
+  it('mobileRowBg is the solid form of the scheme the header is in', () => {
+    expect(mobileRowBg('light')).toBe('bg-background')
+    expect(mobileRowBg('dark')).toBe('bg-brand-dark')
+    expect(mobileRowBg('transparent-light')).toBe('bg-background')
+    expect(mobileRowBg('transparent-dark')).toBe('bg-brand-dark')
+    expect(mobileRowBg('glass')).toBe('bg-background')
+    expect(mobileRowBg('glass-dark')).toBe('bg-brand-dark')
   })
 
   it('schemeBg adds the rule to a docked dark scroll only', () => {
