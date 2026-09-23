@@ -132,6 +132,30 @@ export function FooterNavList({
   )
 }
 
+/** The footer's navigation as a row of its own, for the multi-office layouts (Districts,
+ *  Switchboard), which drew none until Phase 17B session 4 (`[R-520]`): the practice areas in
+ *  Zite's order (`[R-202]`; the query fills `column1` live) and the site's pages, the two lists
+ *  Anchor draws, under one landmark. Nothing when both are empty. */
+export function FooterNavRow({
+  column1,
+  column2,
+}: {
+  column1?: {label: string; href: string | null}[] | null
+  column2?: {label: string; href: string | null}[] | null
+}) {
+  const col1 = (column1 ?? []).filter((l): l is FooterLink => !!l.href)
+  const col2 = (column2 ?? []).filter((l): l is FooterLink => !!l.href)
+  if (col1.length === 0 && col2.length === 0) return null
+  return (
+    <FooterNavRegion className="border-t border-border py-10">
+      <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-3">
+        <FooterNavList label="Practice areas" links={col1} className="md:col-span-2 sm:columns-2 sm:gap-x-8" liClassName="break-inside-avoid py-1.5 text-sm" />
+        <FooterNavList label="Site navigation" links={col2} />
+      </div>
+    </FooterNavRegion>
+  )
+}
+
 // ─── Office Details link label ────────────────────────────────────────────────
 //
 // Every footer layout renders an "Office Location" link next to its address

@@ -16,7 +16,7 @@ import {MdPhone, MdLocationOn, MdDirections} from 'react-icons/md'
 import {Button} from '@/components/ui/Button'
 import {
   SocialIcons, ActionButtons, EmergencyContact, AppointmentNote, OfficeHours,
-  cityLine, officeLocationLabel, footerSurface, footerLogo,
+  cityLine, officeLocationLabel, footerSurface, footerLogo, FooterNavRow,
 } from './shared'
 import {formatPhone} from '@/lib/tokens'
 import type {FooterData, FooterLocation} from '../Footer'
@@ -220,6 +220,9 @@ export function SwitchboardFooter({data}: Props) {
             </div>
           ))}
         </div>
+
+        {/* ── Navigation (Phase 17B session 4, `[R-520]`) ─────────────────────── */}
+        <FooterNavRow column1={data.column1} column2={data.column2} />
 
         {/* ── Bottom bar ────────────────────────────────────────────────────── */}
         <div className="flex flex-col gap-6 border-t border-border py-6 text-xs text-foreground-subtle md:flex-row md:items-center md:justify-between">

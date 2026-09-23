@@ -1,6 +1,6 @@
 // Layout: Districts — flagship multi-location footer.
 // Premium structure shared with Ledger (which wears a minimal personality):
-//   Brand + CTA band → location cards → nav/sitemap → bottom bar.
+//   Brand + CTA band → location cards → nav/sitemap (drawn since Phase 17B session 4) → bottom bar.
 // Each location is a bordered card (equal height; office-link pinned to the
 // bottom) showing the essentials — full office hours live on the location page,
 // not here. Dark or light via footerSettings.footerScheme.
@@ -12,7 +12,7 @@ import {MdLocationOn, MdPhone} from 'react-icons/md'
 import {Button} from '@/components/ui/Button'
 import {
   SocialIcons, ActionButtons, EmergencyContact, AppointmentNote,
-  cityLine, officeLocationLabel, footerSurface, footerLogo,
+  cityLine, officeLocationLabel, footerSurface, footerLogo, FooterNavRow,
 } from './shared'
 import {formatPhone} from '@/lib/tokens'
 import type {FooterData, FooterLocation} from '../Footer'
@@ -149,6 +149,9 @@ export function DistrictsFooter({data}: Props) {
             </li>
           ))}
         </ul>
+
+        {/* ── Navigation (Phase 17B session 4, `[R-520]`) ─────────────────────── */}
+        <FooterNavRow column1={data.column1} column2={data.column2} />
 
         {/* ── Bottom bar ────────────────────────────────────────────────────── */}
         <div className="flex flex-col gap-6 border-t border-border py-6 text-xs text-foreground-subtle md:flex-row md:items-center md:justify-between">
