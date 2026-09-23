@@ -92,8 +92,21 @@ describe('GreyBox', () => {
     const text = draw({canvas: []}).textContent ?? ''
     expect(text).toContain('Beat 9 · Closing call to action')
     expect(text).toContain('Talk to us')
-    expect(text).toContain('Site header · 3 navigation items')
-    expect(text).toContain('Site footer')
+    // Nothing stored: the layouts the site renders by default (Phase 17B session 4).
+    expect(text).toContain('Site header · Apex on desktop, Standard on phones · 3 navigation items')
+    expect(text).toContain('Site footer · Anchor')
+  })
+
+  it('labels the header and footer with the layouts the build picked, and the offices the footer shows', () => {
+    const picked = {
+      ...(chrome as object),
+      header: {siteSettings: {firmName: 'Example Firm'}, mainNavigation: {navItems: [{}], headerLayout: 'ridge', mobileLayout: 'bar-bottom'}},
+      footer: {footerSettings: {footerLayout: 'districts'}, locations: [{_id: 'a'}, {_id: 'b'}]},
+    } as never
+    const c = render(<GreyBox chrome={picked} home={home({canvas: []})} />).container
+    const text = c.textContent ?? ''
+    expect(text).toContain('Site header · Ridge on desktop, Action bar on phones · 1 navigation item')
+    expect(text).toContain('Site footer · Districts · 2 offices')
   })
 
   it('matches its golden on the fixture client\'s canvas', async () => {

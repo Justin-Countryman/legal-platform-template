@@ -9,7 +9,7 @@ vi.mock('next/link', () => ({
   ),
 }))
 
-import {Switcher, ROW_THEME_HEAD, allDarkHeaderNote} from '../Switcher'
+import {Switcher, ROW_THEME_HEAD, CHROME_NOTE_HEAD, chromeNote} from '../Switcher'
 import {THEMES} from '@/lib/themes'
 import {PALETTE_PRESETS} from '@/lib/palettes'
 import {FAMILIES, FLOWS, flowId} from '@/lib/flows'
@@ -148,13 +148,19 @@ describe('Switcher, the operator', () => {
     expect(c.textContent).toContain('Step: Cut blocks')
   })
 
-  it('the all-dark note names the header’s own scheme unless the header merges into the hero', () => {
-    expect(allDarkHeaderNote({step: 'allDark'}, {defaultScheme: 'light', heroMerge: false})).toBe('All dark: the header keeps its own scheme (light), which the theme does not set; change it in Main Navigation.')
-    expect(allDarkHeaderNote({step: 'allDark'}, {defaultScheme: 'dark', heroMerge: true})).toBeNull()
-    expect(allDarkHeaderNote({step: 'mostlyDark'}, {defaultScheme: 'light', heroMerge: false})).toBeNull()
-    expect(allDarkHeaderNote(null, null)).toBeNull()
-    // No shipped family is all dark, so the note renders on no roster theme today.
-    expect(FLOWS.some((f) => f.step === 'allDark')).toBe(false)
+  it('the chrome note says what the theme gives the header and footer, and names what is stored (Phase 17B session 4)', () => {
+    const dark = FLOWS.find((f) => f.id === 'cutBlocks.mostlyDark')!
+    const light = FLOWS.find((f) => f.id === 'quiet.mostlyLight')!
+    expect(chromeNote(dark, null)).toBe(`${CHROME_NOTE_HEAD}: a dark header and a dark footer.`)
+    expect(chromeNote(light, null)).toBe(`${CHROME_NOTE_HEAD}: a light header and a dark footer.`)
+    // A stored scheme wins, per field, and the note names it.
+    const stored = chromeNote(dark, {header: {mainNavigation: {scrolledScheme: 'glass'}}, footer: {footerSettings: {footerScheme: 'light'}}})
+    expect(stored).toContain('a dark, glass when scrolled header and a light footer')
+    expect(stored).toContain('Stored, so no theme reaches them: the header when scrolled (glass), the footer (light)')
+    // The light logo without the dark one keeps a dark theme's header light, and says why.
+    const noDarkLogo = chromeNote(dark, {header: {designSettings: {logoOnLight: {src: 'x'}, logoOnDark: null}}})
+    expect(noDarkLogo).toContain('a light header')
+    expect(noDarkLogo).toContain('needs the logo for dark grounds')
   })
 })
 

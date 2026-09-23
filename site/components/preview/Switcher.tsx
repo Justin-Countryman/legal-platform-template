@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import {THEMES} from '@/lib/themes'
 import {PALETTE_PRESETS} from '@/lib/palettes'
-import {DARKNESS_LABELS, FAMILIES, familyOf, flowById, flowId, unmetNeeds, type FlowRules} from '@/lib/flows'
+import {DARKNESS_LABELS, FAMILIES, chromeSchemes, familyOf, flowById, flowId, unmetNeeds, type FlowRules} from '@/lib/flows'
 import {ghostSource} from '@/lib/brandMark'
 import {canvasFacts, siteLookOf} from '@/components/sections/sectionFrame'
 import {frameOf, type HomepageBlock} from '@/components/layout/HomepageCanvas'
@@ -33,8 +33,9 @@ import {AS_THE_SITE_IS, ownGrounds, ownLooks, previewPath, type PreviewChoices, 
 // clicks. A step the eye has not passed says so (`[R-517]`): the build's table cannot
 // write it, but the eye pass runs through this row, so it is listed. Beside the row:
 // the needs the theme has that this page or site cannot meet (it renders without
-// them), how many bands keep a surface of their own that no theme reaches, and, for an
-// all-dark theme, that the header keeps its own scheme (record §2.3).
+// them), how many bands keep a surface of their own that no theme reaches, and the header
+// and footer the theme gives (Phase 17B session 4, `[R-518]`), naming a scheme stored on
+// Header Settings or Footer Settings, which wins until it is cleared.
 
 /** The row's head, and the bundle sentinel `scripts/ci/check-preview-not-shipped.mjs`
  *  searches for: a value only this row emits. */
@@ -69,12 +70,35 @@ function keptLine(keep: {section: string; what: string}[]): string {
   return [...counts].map(([label, n]) => (n > 1 ? `${label} ×${n}` : label)).join(', ')
 }
 
-/** What an all-dark theme cannot reach: the header follows the hero only under
- *  `heroMerge`; otherwise its polarity is Main Navigation's own, and a light bar over a
- *  dark page is what the visitor gets (record §2.3, ADV-17B-A F13). */
-export function allDarkHeaderNote(flow: Pick<FlowRules, 'step'> | null | undefined, mainNavigation: {defaultScheme?: string | null; heroMerge?: boolean | null} | null | undefined): string | null {
-  if (flow?.step !== 'allDark' || mainNavigation?.heroMerge) return null
-  return `All dark: the header keeps its own scheme (${mainNavigation?.defaultScheme ?? 'light'}), which the theme does not set; change it in Main Navigation.`
+/** The note's head, and a bundle sentinel (`scripts/ci/check-preview-not-shipped.mjs`). */
+export const CHROME_NOTE_HEAD = 'Header and footer on this page'
+
+type StoredChrome = {
+  header?: {
+    mainNavigation?: {defaultScheme?: string | null; scrolledScheme?: string | null} | null
+    designSettings?: {logoOnLight?: unknown; logoOnDark?: unknown} | null
+  } | null
+  footer?: {footerSettings?: {footerScheme?: string | null} | null} | null
+} | null | undefined
+
+/** The header and footer the page shows, and why: the theme's, or a scheme stored on Header
+ *  Settings or Footer Settings, which wins until it is cleared (Phase 17B session 4, `[R-518]`).
+ *  It replaces 17B's all-dark note: the theme now sets the header. */
+export function chromeNote(flow: Pick<FlowRules, 'chrome'>, chrome: StoredChrome): string {
+  const nav = chrome?.header?.mainNavigation
+  const foot = chrome?.footer?.footerSettings
+  const logos = chrome?.header?.designSettings
+  const s = chromeSchemes(flow, nav, foot, {onLight: logos?.logoOnLight, onDark: logos?.logoOnDark})
+  const header = s.top === s.scrolled ? s.top : `${s.top}, ${s.scrolled} when scrolled`
+  const kept = [
+    nav?.defaultScheme && `the header's top (${nav.defaultScheme})`,
+    nav?.scrolledScheme && `the header when scrolled (${nav.scrolledScheme})`,
+    foot?.footerScheme && `the footer (${foot.footerScheme})`,
+  ].filter(Boolean)
+  let out = `${CHROME_NOTE_HEAD}: a ${header} header and a ${s.footer} footer.`
+  if (kept.length > 0) out += ` Stored, so no theme reaches them: ${kept.join(', ')}; clear them in Header Settings and Footer Settings to hand them to the theme.`
+  if (s.darkLogoMissing) out += ' The theme wants a dark header, which needs the logo for dark grounds; it stays light until one is uploaded.'
+  return out
 }
 
 function Choice({href, active, className, children}: {href: string; active: boolean; className?: string; children: React.ReactNode}) {
@@ -127,7 +151,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin}: Props) 
   const facts = canvasFacts(survivors, {...look, ghost: ghostSource(chrome?.header?.siteSettings?.firmName, true)})
   const unmet = unmetNeeds(shown, facts)
   const lacks = (f: FlowRules | null) => (f ? unmetNeeds(f, facts) : [])
-  const headerNote = allDarkHeaderNote(shown, chrome?.header?.mainNavigation)
+  const headerNote = chromeNote(shown, chrome)
 
   return (
     <aside className="sw" aria-label="Design preview">
@@ -187,8 +211,8 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin}: Props) 
           Theme: {shown.name}. {shown.sentence}
           {unmet.length > 0 && ` Needs this page lacks: ${unmet.join(', ')}; it renders without them.`}
           {grounds.length > 0 && ` ${grounds.length} ${grounds.length === 1 ? 'section keeps' : 'sections keep'} their own ground, whatever the theme: ${keptLine(grounds)}.`}
-          {headerNote && ` ${headerNote}`}
         </p>
+        <p className="sw-note">{headerNote}</p>
         {keep.length > 0 && (
           <p className="sw-note">Kept as set on the section, whatever the style set: {keptLine(keep)}.</p>
         )}

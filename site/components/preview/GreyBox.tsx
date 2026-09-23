@@ -251,6 +251,20 @@ function ContentSkeleton({m, tokens, disclaimer}: {m: Member; tokens: NapTokens 
   return <div className="gb-cols2">{copy}<Slot wide>{what}</Slot></div>
 }
 
+// The header's and footer's layouts, named as Header Settings and Footer Settings name them
+// (Phase 17B session 4, `[R-518]`): the build picks them from the firm's data, and the story the
+// client approves includes them. The code default where nothing is stored, as the site renders.
+const HEADER_LAYOUTS: Record<string, string> = {
+  ridge: 'Ridge', apex: 'Apex', ledge: 'Ledge', spire: 'Spire', mesa: 'Mesa', prism: 'Prism', crest: 'Crest',
+}
+const MOBILE_LAYOUTS: Record<string, string> = {
+  standard: 'Standard', 'bar-top': 'Action bar above the logo', 'bar-bottom': 'Action bar', 'phone-split': 'Phone split', 'logo-split': 'Logo split',
+}
+const FOOTER_LAYOUTS: Record<string, string> = {
+  anchor: 'Anchor', crest: 'Crest', pillar: 'Pillar', meridian: 'Meridian', districts: 'Districts', switchboard: 'Switchboard', ledger: 'Switchboard', beacon: 'Beacon',
+}
+const layoutName = (names: Record<string, string>, value: unknown, fallback: string) => names[text(value)] ?? names[fallback]
+
 export function GreyBox({chrome, home}: {chrome: SiteChrome; home: HomePageData}) {
   const tokens = (chrome?.nap ?? null) as NapTokens | null
   const page = (home?.page ?? null) as Record<string, unknown> | null
@@ -264,11 +278,15 @@ export function GreyBox({chrome, home}: {chrome: SiteChrome; home: HomePageData}
   }
   const firmName = text(chrome?.header?.siteSettings?.firmName)
   const navCount = list(chrome?.header?.mainNavigation?.navItems).length
+  const desktop = layoutName(HEADER_LAYOUTS, chrome?.header?.mainNavigation?.headerLayout, 'apex')
+  const mobile = layoutName(MOBILE_LAYOUTS, chrome?.header?.mainNavigation?.mobileLayout, 'standard')
+  const footer = layoutName(FOOTER_LAYOUTS, chrome?.footer?.footerSettings?.footerLayout, 'anchor')
+  const offices = list(chrome?.footer?.locations).length
 
   return (
     <div className="gb" data-grey-box="">
       <style dangerouslySetInnerHTML={{__html: GREY_CSS}} />
-      <section className="gb-band gb-chrome"><Label>Site header · {navCount} navigation {navCount === 1 ? 'item' : 'items'}</Label></section>
+      <section className="gb-band gb-chrome"><Label>Site header · {desktop} on desktop, {mobile} on phones · {navCount} navigation {navCount === 1 ? 'item' : 'items'}</Label></section>
 
       <section className="gb-band">
         {text(hero?.heading) && heroDesign ? (
@@ -325,7 +343,7 @@ export function GreyBox({chrome, home}: {chrome: SiteChrome; home: HomePageData}
         </section>
       )}
 
-      <section className="gb-band gb-chrome"><Label>Site footer</Label></section>
+      <section className="gb-band gb-chrome"><Label>Site footer · {footer}{offices > 0 ? ` · ${offices} ${offices === 1 ? 'office' : 'offices'}` : ''}</Label></section>
     </div>
   )
 }

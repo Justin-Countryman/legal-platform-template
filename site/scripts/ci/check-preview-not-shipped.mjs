@@ -41,6 +41,7 @@ const SENTINELS = [
   'site-preview',
   'lp-preview',
   'Theme, the flow of the page',
+  'Header and footer on this page',
   'Client preview link',
   'Preview, nothing is live',
   'gb-label',
