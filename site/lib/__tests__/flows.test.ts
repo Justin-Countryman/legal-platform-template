@@ -295,6 +295,9 @@ describe('the header and the footer (Phase 17B session 4, [R-518])', () => {
     expect(darkHeaderReady({onLight: LIGHT_LOGO, onDark: DARK_LOGO})).toBe(true)
     // No logo at all prints the firm's name, which reads on either ground.
     expect(darkHeaderReady({onLight: null, onDark: null})).toBe(true)
+    // A logo field with alt text and no image is no logo (the query answers {src: null}).
+    expect(darkHeaderReady({onLight: LIGHT_LOGO, onDark: {src: null}})).toBe(false)
+    expect(darkHeaderReady({onLight: {src: null}, onDark: null})).toBe(true)
     expect(chromeSchemes(dark, null, null, {onLight: LIGHT_LOGO, onDark: null})).toEqual({top: 'light', scrolled: 'light', footer: 'dark', darkLogoMissing: true})
     // A stored dark header is the operator's: it stands, logo or not.
     expect(chromeSchemes(dark, {defaultScheme: 'dark'}, null, {onLight: LIGHT_LOGO, onDark: null}).top).toBe('dark')

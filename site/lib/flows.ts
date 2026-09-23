@@ -459,9 +459,14 @@ type StoredHeader = {defaultScheme?: string | null; scrolledScheme?: string | nu
 type StoredFooter = {footerScheme?: string | null} | null | undefined
 export type SiteLogos = {onLight?: unknown; onDark?: unknown} | null | undefined
 
+/** A logo the header can draw: one with an image. The query answers `{src: null, alt}` for a
+ *  logo field holding alt text and no image (ADV-17B4-2), which is no logo. */
+const drawable = (logo: unknown): boolean =>
+  !!logo && (typeof logo !== 'object' || !!(logo as {src?: unknown}).src)
+
 /** The theme's header can go dark on this site without losing its logo. */
 export function darkHeaderReady(logos: SiteLogos): boolean {
-  return !(logos?.onLight && !logos?.onDark)
+  return !(drawable(logos?.onLight) && !drawable(logos?.onDark))
 }
 
 /** The header's scheme at the top and when scrolled, and the footer's, as the site renders them. */

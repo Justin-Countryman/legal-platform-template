@@ -78,5 +78,8 @@ describe('the site shell draws the theme’s header and footer (Phase 17B sessio
     const s = shell(chrome({flow: 'cutBlocks.mostlyDark'}, {}, {}, {logoOnLight: LOGO('/on-light.png'), logoOnDark: null as never}))
     expect(s.header.dark).toBe(false)
     expect(s.footer.dark).toBe(true)
+    // The query answers {src: null} for a logo field holding only alt text: no image, no logo.
+    const altOnly = shell(chrome({flow: 'cutBlocks.mostlyDark'}, {}, {}, {logoOnLight: LOGO('/on-light.png'), logoOnDark: {src: null, alt: 'Test Firm'} as never}))
+    expect(altOnly.header.dark).toBe(false)
   })
 })
