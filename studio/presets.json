@@ -2400,7 +2400,9 @@
         "mostlyLight"
       ],
       "defaultStep": "mostlyLight",
-      "passed": []
+      "passed": [
+        "mostlyLight"
+      ]
     },
     {
       "id": "alternating",
@@ -2411,7 +2413,9 @@
         "mostlyDark"
       ],
       "defaultStep": "balanced",
-      "passed": []
+      "passed": [
+        "balanced"
+      ]
     },
     {
       "id": "cutBlocks",
@@ -2422,7 +2426,10 @@
         "mostlyDark"
       ],
       "defaultStep": "balanced",
-      "passed": []
+      "passed": [
+        "balanced",
+        "mostlyDark"
+      ]
     }
   ],
   "flows": [
@@ -2451,7 +2458,7 @@
       "sentence": "A dark hero, then light all the way down, and one dark band to close.",
       "family": "quiet",
       "step": "mostlyLight",
-      "passed": false
+      "passed": true
     },
     {
       "dark": {
@@ -2486,7 +2493,7 @@
       "sentence": "Dark, light, dark, light, with hard edges: the classic law site.",
       "family": "alternating",
       "step": "balanced",
-      "passed": false
+      "passed": true
     },
     {
       "dark": {
@@ -2562,7 +2569,7 @@
       "sentence": "Navy blocks cut into the page with a peak, each carrying the texture.",
       "family": "cutBlocks",
       "step": "balanced",
-      "passed": false
+      "passed": true
     },
     {
       "dark": {
@@ -2603,7 +2610,7 @@
       "sentence": "Navy blocks cut into the page with a peak, each carrying the texture.",
       "family": "cutBlocks",
       "step": "mostlyDark",
-      "passed": false
+      "passed": true
     }
   ],
   "defaultFlow": "quiet.mostlyLight",

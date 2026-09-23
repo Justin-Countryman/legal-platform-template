@@ -181,12 +181,20 @@ const NO_DIVIDER: FlowRules['divider'] = {shape: 'straight', at: 'none', carry: 
 // switcher on three canvases at 1440 and 390 (`[R-506]`, `[R-517]`; Phase 17B session
 // 3 and after). A step that fails is not marked passed, and the build's table cannot
 // write it; `passed` moves only with a verdict in the phase record.
+//
+// THE EYE PASS OF 2026-09-23 (Phase 17B session 3, record §9.2, captures beside it):
+// Quiet, Alternating at balanced, and Cut blocks at both steps passed on the three
+// record canvases at 1440 and 390. Alternating at mostly dark did NOT pass: on the
+// adversarial canvas `pairs` stops at four of seven bands (0.57, a balanced curve, not
+// the step's 0.71 to 0.78) and the step differs from balanced by one band; on the
+// planning and multi-practice canvases it read as mostly dark. The fix is a rule, not
+// a value, and is the next session's.
 
 export const FAMILIES: readonly FlowFamily[] = [
   {
     id: 'quiet', name: 'Quiet',
     sentence: 'A dark hero, then light all the way down, and one dark band to close.',
-    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: [],
+    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', close: 'dark'},
       light: {paint: 'plain'},
@@ -202,7 +210,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // is `pairs` at both steps: the family's name is the alternation, and `runs` at
     // mostly dark gathered four dark bands in a row on the composer's six roles
     // (ADV-17B-2 F12). The step table's `runs` is the starting rhythm, not a law.
-    steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: [],
+    steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: ['balanced'],
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: 'pairs', paint: 'plain', close: 'dark'},
       light: {paint: 'plain'},
@@ -214,7 +222,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     id: 'cutBlocks', name: 'Cut blocks',
     sentence: 'Navy blocks cut into the page with a peak, each carrying the texture.',
     // The study: dark 5, balanced 2.
-    steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: [],
+    steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: ['balanced', 'mostlyDark'],
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'pattern', close: 'dark'},
       light: {paint: 'plain'},

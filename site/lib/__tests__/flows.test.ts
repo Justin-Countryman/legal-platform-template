@@ -40,6 +40,11 @@ describe('the families and the roster', () => {
     }
   })
 
+  it('the eye pass of 2026-09-23 passed four of the five steps; Alternating at mostly dark waits on a rule', () => {
+    expect(FLOWS.filter((f) => f.passed).map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark'])
+    expect(flowById('alternating.mostlyDark')!.passed).toBe(false)
+  })
+
   it('generates one theme per family per step, with unique ids of the form family.step', () => {
     const ids = FLOWS.map((f) => f.id)
     expect(new Set(ids).size).toBe(ids.length)
