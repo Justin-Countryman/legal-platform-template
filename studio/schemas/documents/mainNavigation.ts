@@ -77,7 +77,9 @@ export const mainNavigation = defineType({
       title: 'Default Color Scheme',
       type: 'string',
       fieldset: 'layout',
-      description: 'Header appearance on page load before the user scrolls',
+      // No initialValue (Phase 17B session 4, `[R-518]`): the theme decides the header's scheme,
+      // and a seed would be stored on every build and read as a choice (item 308).
+      description: 'Header appearance on page load, before the visitor scrolls. Leave it clear and the theme decides (Design Settings, Theme); set it only to override the theme, and clear it to hand it back.',
       options: {
         list: [
           {title: 'Light — white background, dark text and logo', value: 'light'},
@@ -87,7 +89,6 @@ export const mainNavigation = defineType({
         ],
         layout: 'radio',
       },
-      initialValue: 'light',
     },
     {
       name: 'heroMerge',
@@ -116,7 +117,8 @@ export const mainNavigation = defineType({
       title: 'Scroll Color Scheme',
       type: 'string',
       fieldset: 'layout',
-      description: 'Header appearance after the user scrolls past the trigger point. Only applies when Sticky is enabled.',
+      // No initialValue (Phase 17B session 4, `[R-518]`): the theme decides it with the top.
+      description: 'Header appearance after the visitor scrolls past the trigger point. Only applies when Sticky is enabled. Leave it clear and it follows the theme with the top; set it only to override the theme.',
       hidden: ({document}) => !document?.sticky && !document?.heroMerge,
       options: {
         list: [
@@ -127,7 +129,6 @@ export const mainNavigation = defineType({
         ],
         layout: 'radio',
       },
-      initialValue: 'light',
     },
     {
       name: 'stickyHideSupplementary',

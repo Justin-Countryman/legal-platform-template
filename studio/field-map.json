@@ -7751,8 +7751,7 @@
           "type": "string"
         },
         {
-          "description": "Dark (brand background, light text) or Light (neutral background, dark text). Applies to every footer layout.",
-          "initialValue": "dark",
+          "description": "Dark (brand background, light text) or Light (neutral background, dark text), for every footer layout. Leave it clear and the theme decides (Design Settings, Theme); set it only to override the theme, and clear it to hand it back.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -7934,8 +7933,7 @@
         "_type": "footerSettings",
         "ctaText": "Schedule a Free Consultation",
         "ctaUrl": "/",
-        "footerLayout": "anchor",
-        "footerScheme": "dark"
+        "footerLayout": "anchor"
       },
       "kind": "document",
       "singletonId": "footerSettings",
@@ -12634,8 +12632,7 @@
           "type": "string"
         },
         {
-          "description": "Header appearance on page load before the user scrolls",
-          "initialValue": "light",
+          "description": "Header appearance on page load, before the visitor scrolls. Leave it clear and the theme decides (Design Settings, Theme); set it only to override the theme, and clear it to hand it back.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -12667,9 +12664,8 @@
           "type": "boolean"
         },
         {
-          "description": "Header appearance after the user scrolls past the trigger point. Only applies when Sticky is enabled.",
+          "description": "Header appearance after the visitor scrolls past the trigger point. Only applies when Sticky is enabled. Leave it clear and it follows the theme with the top; set it only to override the theme.",
           "hidden": "<predicate>",
-          "initialValue": "light",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -12936,14 +12932,12 @@
       "initialDocument": {
         "_type": "mainNavigation",
         "compactStyle": "docked",
-        "defaultScheme": "light",
         "headerCtaLabel": "Free Consultation",
         "headerCtaUrl": "/contact/",
         "headerLayout": "apex",
         "headerPhoneTagline": "Call for a free consultation",
         "heroMerge": false,
         "mobileLayout": "standard",
-        "scrolledScheme": "light",
         "sticky": true,
         "stickyHideSupplementary": true,
         "topBarDesktop": false,
