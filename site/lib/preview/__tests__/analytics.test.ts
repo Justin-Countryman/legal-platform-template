@@ -7,7 +7,7 @@ import {analyticsOff} from '../analytics'
 
 describe('analyticsOff', () => {
   it('switches off every GA4 id in the operator\'s snippet, once each', () => {
-    const snippet = `<script async src="https://www.googletagmanager.com/gtag/js?id=G-ABC123XYZ"></script>
+    const snippet = `<script async src="https://tags.example/gtag/js?id=G-ABC123XYZ"></script>
       <script>gtag('config', 'G-ABC123XYZ'); gtag('config', 'G-SECOND99');</script>`
     expect(analyticsOff(snippet)).toBe("window['ga-disable-G-ABC123XYZ']=true;window['ga-disable-G-SECOND99']=true;")
   })
