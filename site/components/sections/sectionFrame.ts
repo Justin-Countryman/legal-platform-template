@@ -448,19 +448,39 @@ export function assignGrounds(
   const inset = survivors.map((r) => !!r.appearance?.inset)
   const fixed = survivors.map((_, i) => stored[i] || inset[i])
   // What counts as dark before the pass: a stored strong ground, and an inset band
-  // bracketed by two of them, which `[R-501]` will adopt.
+  // bracketed by two of them, which `[R-501]` will adopt. An inset the pass BRACKETS by
+  // darkening its neighbours adopts too, so the rhythm must see it: `promote` marks it
+  // after every take and counts it against the budget, and the run lengths read
+  // through an inset to the band beyond it (ADV-17B-2 F1: without this, `pairs` and
+  // `alternate` both produced three visible dark bands in a row through adoption).
   const dark = survivors.map((r, i) => stored[i] && !inset[i] && strongOf(r.appearance))
-  survivors.forEach((_, i) => {
-    if (inset[i] && i > 0 && i < n - 1 && dark[i - 1] && dark[i + 1]) dark[i] = true
-  })
-  let remaining = Math.max(0, darkBudget(flow.dark.budget, n) - dark.filter(Boolean).length)
+  const promote = () => {
+    survivors.forEach((_, i) => {
+      if (inset[i] && !dark[i] && i > 0 && i < n - 1 && dark[i - 1] && dark[i + 1]) { dark[i] = true; remaining-- }
+    })
+  }
+  let remaining = 0
+  promote()
+  remaining = Math.max(0, darkBudget(flow.dark.budget, n) - dark.filter(Boolean).length)
   const rank = (i: number) => flow.dark.hosts.indexOf(survivors[i].host as Host)
   const candidates = survivors.map((_, i) => i).filter((i) => !fixed[i] && rank(i) >= 0)
     .sort((a, b) => rank(a) - rank(b) || a - b)
   const isCandidate = new Set(candidates)
-  const runLeft = (i: number) => { let k = 0; while (i - k - 1 >= 0 && dark[i - k - 1]) k++; return k }
-  const runRight = (i: number) => { let k = 0; while (i + k + 1 < n && dark[i + k + 1]) k++; return k }
-  const take = (i: number) => { dark[i] = true; remaining-- }
+  // The visible dark run on one side of `i` once `i` is dark: a dark band counts, and an
+  // inset counts when the band beyond it is dark, because it would then adopt.
+  const runFrom = (i: number, step: -1 | 1) => {
+    let k = 0
+    let j = i + step
+    while (j >= 0 && j < n) {
+      if (dark[j]) { k++; j += step; continue }
+      if (inset[j] && j + step >= 0 && j + step < n && dark[j + step]) { k++; j += step; continue }
+      break
+    }
+    return k
+  }
+  const runLeft = (i: number) => runFrom(i, -1)
+  const runRight = (i: number) => runFrom(i, 1)
+  const take = (i: number) => { dark[i] = true; remaining--; promote() }
 
   switch (flow.dark.rhythm) {
     case 'bookends':
@@ -468,7 +488,7 @@ export function assignGrounds(
     case 'alternate':
       for (const c of candidates) {
         if (remaining <= 0) break
-        if (dark[c] || (c > 0 && dark[c - 1]) || (c < n - 1 && dark[c + 1])) continue
+        if (dark[c] || runLeft(c) > 0 || runRight(c) > 0) continue
         take(c)
       }
       break
@@ -485,7 +505,9 @@ export function assignGrounds(
         if (dark[c]) continue
         take(c)
         // Extend to the neighbours before the next candidate: below first, then above,
-        // alternating, as far as fillable hosts run and the budget allows.
+        // alternating, as far as fillable hosts run and the budget allows. A stored dark
+        // neighbour ends the extension on that side; the visible run continues past it,
+        // but the pass never reaches through a band it did not fill.
         let below = c + 1
         let above = c - 1
         while (remaining > 0) {

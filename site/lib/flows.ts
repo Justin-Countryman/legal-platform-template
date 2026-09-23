@@ -159,7 +159,9 @@ export function darkBudget(budget: FlowRules['dark']['budget'], n: number): numb
   switch (budget) {
     case 'none': return 0
     case 'third': return Math.ceil(n / 3)
-    case 'threeQuarters': return Math.max(0, n - Math.ceil(n / 4))
+    // Never below the balanced budget: on a one-band page `n - ceil(n/4)` is 0 while a
+    // third is 1, and a darker step must not darken less (ADV-17B-2 F10).
+    case 'threeQuarters': return Math.max(Math.ceil(n / 3), n - Math.ceil(n / 4))
     case 'all': return n
   }
 }
@@ -188,10 +190,13 @@ export const FAMILIES: readonly FlowFamily[] = [
     id: 'alternating', name: 'Alternating',
     sentence: 'Dark, light, dark, light, with hard edges: the classic law site.',
     // The study shows it at three steps (light 7, balanced 4, dark 2 sites); at mostly
-    // light it would be Quiet, so the family ships balanced and mostly dark.
+    // light it would be Quiet, so the family ships balanced and mostly dark. Its rhythm
+    // is `pairs` at both steps: the family's name is the alternation, and `runs` at
+    // mostly dark gathered four dark bands in a row on the composer's six roles
+    // (ADV-17B-2 F12). The step table's `runs` is the starting rhythm, not a law.
     steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced',
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', close: 'dark'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: 'pairs', paint: 'plain', close: 'dark'},
       light: {paint: 'plain'},
       divider: NO_DIVIDER,
       ghost: 'none', overlap: 'none', needs: [],
@@ -253,6 +258,16 @@ export function flowById(id: unknown): FlowRules | null {
 // a stored `dark` band; a theme's `pattern` paint textures every dark band, which would
 // change a stored client's page. A stored `pattern` band keeps its one meaning (the
 // light ground with the texture) under every theme (amendment 5).
+//
+// THREE STORED SHAPES THE BRIDGE DOES NOT REPRODUCE, named so nobody reads them as a
+// regression (ADV-17B-2 F2). None is on a live client; the reproduction goldens cover
+// the live client's shape. (a) A stored `pattern` band under `patternGround: 'dark'`
+// with a texture rendered on the dark ground at a164ce0 and renders on the light
+// ground now, which is amendment 5. (b) Nine or more bands on one ground under
+// `sectionGradient: 'deep'` repeated the last slice from the ninth band on; the ninth
+// starts a new run now (record §2.3). (c) An unknown `sectionJoin` value emitted the
+// divider classes with empty geometry at a164ce0 and draws nothing now, which is what
+// it always looked like.
 
 export const HIDDEN_FIELDS = ['sectionJoin', 'dividerCarry', 'patternGround', 'brandGhost', 'sectionOverlap', 'sectionGradient'] as const
 

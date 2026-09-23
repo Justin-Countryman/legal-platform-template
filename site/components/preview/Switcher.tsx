@@ -22,7 +22,11 @@ import {AS_THE_SITE_IS, ownLooks, previewPath, type PreviewChoices, type Preview
 // A CLIENT sees one line, the choices they were sent and when the link ends: never
 // the roster (`[R-507]`). The role is inside the signed cookie, so it cannot be edited.
 
-const ROW_THEME_NOTE = 'Not yet: themes arrive in Phase 17B'
+// Phase 17B session 2: the engine is built and the site renders the stored theme (or the
+// six retired fields, or the platform default); the ROW that switches it is session 3's.
+// Until then a style-set switch leaves the stored divider, ghost, overlap and gradient as
+// they are, because a style set no longer writes them. The string is a bundle sentinel.
+const ROW_THEME_NOTE = 'As the site stores it, until the theme row arrives (Phase 17B session 3)'
 
 type Props = {
   grant: PreviewGrant

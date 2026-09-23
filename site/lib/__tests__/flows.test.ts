@@ -92,6 +92,12 @@ describe('the families and the roster', () => {
     expect(STEP_HOSTS.allDark).toEqual(HOSTS)
     expect([13, 6, 1].map((n) => darkBudget('third', n))).toEqual([5, 2, 1])
     expect([13, 6, 4].map((n) => darkBudget('threeQuarters', n))).toEqual([9, 4, 3])
+    // A darker step never darkens less than a lighter one, on a page of any size (ADV-17B-2 F10).
+    for (let n = 1; n <= 20; n++) {
+      expect(darkBudget('threeQuarters', n), `n=${n}`).toBeGreaterThanOrEqual(darkBudget('third', n))
+      expect(darkBudget('all', n)).toBeGreaterThanOrEqual(darkBudget('threeQuarters', n))
+    }
+    expect(darkBudget('threeQuarters', 1)).toBe(1)
     expect(darkBudget('none', 13)).toBe(0)
     expect(darkBudget('all', 13)).toBe(13)
   })

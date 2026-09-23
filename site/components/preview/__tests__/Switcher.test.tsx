@@ -44,7 +44,7 @@ describe('Switcher, the operator', () => {
   it('shows the theme row as not built, and it links nowhere', () => {
     const c = draw(operator)
     const inert = [...c.querySelectorAll('.sw-inert')].map((el) => el.textContent)
-    expect(inert).toContain('Not yet: themes arrive in Phase 17B')
+    expect(inert).toContain('As the site stores it, until the theme row arrives (Phase 17B session 3)')
   })
 
   it('signs a client share link bound to the current choices', () => {

@@ -31,7 +31,7 @@ import {HomepageCanvas, frameOf, type HomepageBlock} from '@/components/layout/H
 import {PageSections, type PageSectionData} from '../PageSections'
 import {assignGrounds, canvasFacts, walkFrame, siteLookOf, type SiteLook} from '../sectionFrame'
 import {type SectionAppearance} from '../SectionShell'
-import {FLOWS, flowById, unmetNeeds, type FlowRules, type Host} from '@/lib/flows'
+import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, flowById, unmetNeeds, type FlowRules, type Host} from '@/lib/flows'
 import {ghostSource} from '@/lib/brandMark'
 import {LOOK, themed} from './flowFixtures'
 import planted from './fixtures/fixture-shaped-canvas.json'
@@ -84,6 +84,29 @@ describe('the budget and the rhythm', () => {
     }
   })
 
+  it('an inset the rhythm would bracket adopts, so pairs and alternate see it as dark (ADV-17B-2 F1)', () => {
+    // Read the VISIBLE ground, adoption included, not the pass's paint: the walk's adoption
+    // pass paints an inset bracketed by two dark bands on the dark ground ([R-501]).
+    const visible = (bands: Band[], flow: FlowRules) =>
+      walkFrame(bands, resolveBand, {...LOOK, flow}, 'dark').map((o) =>
+        o.seam.insetGround ?? (o.member.appearance?.inset ? 'light' : o.seam.paint?.ground ?? o.member.appearance?.surface ?? 'light'))
+    const pairs = themed({dark: {budget: 'all', hosts: ['ribbon'], rhythm: 'pairs'}})
+    // candidate | stored inset | stored dark: taking the candidate would make three.
+    expect(visible([b('ribbon'), b('split', {inset: true, surface: 'light'}), b('ribbon', {surface: 'dark'})], pairs)).toEqual(['light', 'light', 'dark'])
+    const alternate = themed({dark: {budget: 'all', hosts: ['ribbon'], rhythm: 'alternate'}})
+    // stored dark | stored inset | candidate: the inset would adopt, so the candidate stays light.
+    expect(visible([b('ribbon', {surface: 'dark'}), b('split', {inset: true, surface: 'tint'}), b('ribbon')], alternate)).toEqual(['dark', 'light', 'light'])
+    // candidate | inset | candidate: the second candidate would bracket the inset.
+    expect(visible([b('ribbon'), b('split', {inset: true}), b('ribbon')], alternate)).toEqual(['dark', 'light', 'light'])
+    // And under pairs the two candidates around an inset are a run of three, so one is refused.
+    expect(visible([b('ribbon'), b('split', {inset: true}), b('ribbon')], pairs)).toEqual(['dark', 'light', 'light'])
+    // A promoted inset counts against the budget: budget 2, one candidate taken, the
+    // inset beside a stored dark band adopts and spends the second.
+    const budget = themed({dark: {budget: 'third', hosts: ['ribbon'], rhythm: 'pairs'}})
+    const out = visible([b('ribbon', {surface: 'dark'}), b('split', {inset: true}), b('ribbon'), b('split'), b('split'), b('ribbon')], budget)
+    expect(out.filter((g) => g === 'dark')).toHaveLength(2)
+  })
+
   it('counts stored dark bands against the budget, so the page’s darkness matches the step', () => {
     const flow = themed({dark: {budget: 'third', hosts: ['ribbon', 'split'], rhythm: 'pairs'}})
     // Six bands, budget 2, two stored dark: nothing left to fill.
@@ -97,13 +120,23 @@ describe('the budget and the rhythm', () => {
   })
 
   it('three quarters at mostly dark, in runs, leaves the weakest hosts light', () => {
-    const flow = flowById('alternating.mostlyDark')!
+    const flow = themed({dark: {budget: 'threeQuarters', hosts: STEP_HOSTS.mostlyDark, rhythm: 'runs'}})
     const bands = [b('differentiators'), b('caseResults'), b('areas'), b('narrative'), b('attorneys'), b('badges'), b('split'), b('statement')]
     // Budget 8 - 2 = 6; the ribbon-less list ranks narrative, areas, statement, attorneys,
     // caseResults, split, badges; runs gather around each.
     const out = grounds(bands, flow)
     expect(out.filter((g) => g === 'dark')).toHaveLength(6)
     expect(out[0]).toBe('light')
+  })
+
+  it('Alternating at mostly dark keeps its pairs, so it still alternates on the composer’s six roles (ADV-17B-2 F12)', () => {
+    const flow = flowById('alternating.mostlyDark')!
+    expect(flow.dark.rhythm).toBe('pairs')
+    const out = grounds(six.map((h) => b(h)), flow)
+    // No run of three, and the budget (6 - 2 = 4) is a ceiling the pairs need not reach.
+    expect(out.join(' ')).not.toContain('dark dark dark')
+    expect(out.filter((g) => g === 'dark').length).toBeLessThanOrEqual(4)
+    expect(out.filter((g) => g === 'dark').length).toBeGreaterThanOrEqual(3)
   })
 })
 
@@ -115,11 +148,14 @@ describe('precedence: the operator’s band stands', () => {
     expect(out.map((o) => o.seam.previousGround)).toEqual([null, 'tint', 'light'])
   })
 
-  it('a stored inset band is never assigned a surface and counts as light to the rhythm', () => {
+  it('a stored inset band is never assigned a surface; the rhythm sees it as the band it would adopt', () => {
     const flow = themed({dark: {budget: 'all', hosts: ['ribbon'], rhythm: 'alternate'}})
-    const out = grounds([b('ribbon'), b('ribbon', {inset: true}), b('ribbon')], flow)
-    // The panel between two candidates is light, so both neighbours may go dark.
-    expect(out).toEqual(['dark', 'stored?', 'dark'])
+    const out = walkFrame([b('ribbon'), b('ribbon', {inset: true}), b('ribbon')], resolveBand, {...LOOK, flow}, 'dark')
+    expect(out[1].seam.paint).toBeNull()
+    // Darkening both neighbours would bracket the panel and `[R-501]` would paint it dark:
+    // three in a row under a rhythm that forbids two, so the second candidate stays light.
+    expect(out.map((o) => o.seam.paint?.ground ?? null)).toEqual(['dark', null, 'light'])
+    expect(out[1].seam.insetGround).toBeNull()
   })
 
   it('an absent surface is always filled: light where the theme darkens nothing', () => {
@@ -274,6 +310,64 @@ describe('the decision golden', () => {
       }
     }
     await expect(JSON.stringify(golden, null, 2) + '\n').toMatchFileSnapshot('./__snapshots__/flow-decisions.json')
+  })
+
+  it('every ground the engine can assign is one the color guarantee sweeps (record §2.13)', () => {
+    // The design adds no ground: light, tint, dark, saturated and image are the swept set
+    // (`validateWcag`'s light tiers, the dark ground and its blends, accent-fg on the fill,
+    // the scrim carve-out). `pattern` is never a paint value (texture is a flag) and `muted`
+    // is the close's own, so the dial cannot produce a pair `colorGuarantee.test.ts` misses.
+    // Held over the VOCABULARY, not the shipped themes (ADV-17B-2 F4): every dark paint by
+    // every light paint, on a list that offers a photo, a content section, a texture and a
+    // palette that passes the saturated gate, so every paint's ground is reached.
+    const swept = new Set(['light', 'tint', 'dark', 'saturated', 'image'])
+    const seen = new Set<string>()
+    const list: Band[] = [b('ribbon', null, {photo: true, content: true}), b('split'), b('split', null, {content: true}), b('ribbon'), b('split'), b('ribbon')]
+    for (const paint of DARK_PAINTS) {
+      for (const light of LIGHT_PAINTS) {
+        const flow = themed({dark: {budget: 'third', hosts: ['ribbon'], rhythm: 'pairs', paint}, light: {paint: light}})
+        for (const p of assignGrounds(list.map(resolveBand), flow, {patternTexture: 'diagonalHatch', saturated: true})) {
+          if (p?.ground) seen.add(p.ground)
+        }
+      }
+    }
+    for (const g of seen) expect(swept.has(g), g).toBe(true)
+    expect([...seen].sort()).toEqual(['dark', 'image', 'light', 'saturated', 'tint'])
+  })
+
+  it('every theme renders every homepage member type, no throw, and no <img> where a photo paint fell back', () => {
+    const t = {_id: 't', quote: 'Superb counsel.', name: 'A client'}
+    const everyType = [
+      ...(planted as unknown as HomepageBlock[]).slice(0, 5),
+      {_type: 'testimonialsGridInline', _key: 'tg', heading: 'Clients', testimonials: [t]},
+      {_type: 'featuredTestimonialInline', _key: 'ft', heading: 'A client', testimonial: t},
+      {_type: 'videoSectionInline', _key: 'v', heading: 'Videos', videos: [{_id: 'v1', title: 'Intro', youTubeUrl: 'https://www.youtube.com/watch?v=abc123xyz00', description: 'A video.', videoType: 'educational'}]},
+      {_type: 'caseResultsSectionInline', _key: 'cr', heading: 'Results', caseResults: [{_id: 'r', amount: '$1M'}]},
+      {_type: 'badgesSectionInline', _key: 'bd', heading: 'Awards', badges: [{src: 'https://cdn.example.com/a.png', alt: 'A', width: 120, height: 60}]},
+      {_type: 'reviewsSectionInline', _key: 'rv', heading: 'Reviews', reviewsEmbed: '<div>embed</div>'},
+    ] as unknown as HomepageBlock[]
+    const photoTheme = themed({dark: {budget: 'all', hosts: [...HOSTS], rhythm: 'runs', paint: 'photo'}})
+    for (const flow of [...themes, photoTheme]) {
+      const site: SiteLook = {...LOOK, flow, patternTexture: 'diagonalHatch', saturated: true, ghost: {text: 'EL'}}
+      const {container} = render(<HomepageCanvas blocks={everyType} site={site} hero="dark" napTokens={{firmName: 'Example Law Firm', firmNameShort: 'Example', primaryPhone: null, primaryTollFree: null}} resultsDisclaimer="Past results do not guarantee a future outcome." />)
+      expect(container.querySelectorAll('section').length, flow.id).toBeGreaterThanOrEqual(9)
+    }
+    // No member carries a background photo, so the photo paint fell back to the dark ground on
+    // every band and drew no photo of its own: the same images as under Quiet (a feature photo
+    // and the badges' logos), and no scrim anywhere.
+    const under = (flow: FlowRules) => render(<HomepageCanvas blocks={everyType} site={{...LOOK, flow}} hero="dark" />).container
+    expect(under(photoTheme).querySelectorAll('section img').length).toBe(under(flowById('quiet.mostlyLight')!).querySelectorAll('section img').length)
+    expect(under(photoTheme).querySelector('[data-scrim]')).toBeNull()
+  })
+
+  it('a stored Pattern band under a dark texture ground rendered dark at a164ce0 and renders light under the bridge (amendment 5, ADV-17B-2 F2a)', () => {
+    // The one stored shape the bridge does not reproduce; no live client stores one.
+    const site = siteLookOf({sectionJoin: 'angled', patternTexture: 'diagonalHatch', patternGround: 'dark'})
+    const {container} = render(<HomepageCanvas blocks={[{_type: 'contentSectionInline', _key: 'p', layout: 'statement', heading: 'Hi', appearance: {surface: 'pattern'}} as unknown as HomepageBlock]} site={site} hero="dark" />)
+    const band = container.querySelector('section')!
+    expect(band.className.split(' ')).toContain('bg-background')
+    expect(band.getAttribute('data-ring-context')).toBeNull()
+    expect(band.querySelector('[data-section-texture]')).not.toBeNull()
   })
 
   it('the pass fills exactly the bands that store no surface and are not inset', () => {
