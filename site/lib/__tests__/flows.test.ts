@@ -30,6 +30,16 @@ describe('the families and the roster', () => {
     }
   })
 
+  it('a family passes only steps it ships, and each roster entry carries its family’s verdict ([R-517])', () => {
+    for (const f of FAMILIES) {
+      for (const s of f.passed) expect(f.steps, `${f.id} passed a step it does not ship`).toContain(s)
+    }
+    for (const flow of FLOWS) {
+      const family = FAMILIES.find((f) => f.id === flow.family)!
+      expect(flow.passed).toBe(family.passed.includes(flow.step))
+    }
+  })
+
   it('generates one theme per family per step, with unique ids of the form family.step', () => {
     const ids = FLOWS.map((f) => f.id)
     expect(new Set(ids).size).toBe(ids.length)

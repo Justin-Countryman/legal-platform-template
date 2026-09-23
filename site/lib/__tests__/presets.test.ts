@@ -111,7 +111,7 @@ function presets() {
     // hidden for one pin, which Apply may clear and never set.
     darkness: DARKNESS,
     hosts: HOSTS,
-    families: FAMILIES.map((f) => ({id: f.id, name: f.name, sentence: f.sentence, steps: f.steps, defaultStep: f.defaultStep})),
+    families: FAMILIES.map((f) => ({id: f.id, name: f.name, sentence: f.sentence, steps: f.steps, defaultStep: f.defaultStep, passed: f.passed})),
     flows: FLOWS,
     defaultFlow: DEFAULT_FLOW,
     hiddenFields: HIDDEN_FIELDS,
