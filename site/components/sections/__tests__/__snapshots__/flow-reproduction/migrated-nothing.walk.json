@@ -1,0 +1,47 @@
+[
+  {
+    "key": "hp-siloNavBlock",
+    "index": 0,
+    "seamTop": false,
+    "previousGround": null,
+    "nextOverlap": "none",
+    "divider": null,
+    "ghost": false,
+    "raisePhoto": false,
+    "insetGround": null,
+    "run": {
+      "index": 0,
+      "length": 3
+    }
+  },
+  {
+    "key": "hp-differentiatorBlock",
+    "index": 1,
+    "seamTop": true,
+    "previousGround": "light",
+    "nextOverlap": "none",
+    "divider": null,
+    "ghost": false,
+    "raisePhoto": false,
+    "insetGround": null,
+    "run": {
+      "index": 1,
+      "length": 3
+    }
+  },
+  {
+    "key": "hp-attorneyHighlightBlock",
+    "index": 2,
+    "seamTop": true,
+    "previousGround": "light",
+    "nextOverlap": "none",
+    "divider": null,
+    "ghost": false,
+    "raisePhoto": false,
+    "insetGround": null,
+    "run": {
+      "index": 2,
+      "length": 3
+    }
+  }
+]

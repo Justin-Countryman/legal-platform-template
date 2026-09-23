@@ -1,0 +1,469 @@
+[
+  {
+    "_type": "practiceAreaNavInline",
+    "_key": "439bf06b7029",
+    "heading": "How we can help",
+    "layout": "split",
+    "mode": "manual",
+    "items": [
+      {
+        "_key": "pa-family",
+        "label": "Family Law",
+        "href": "/family-law/",
+        "description": "Divorce, custody and support, handled with care.",
+        "featured": false
+      },
+      {
+        "_key": "pa-estate",
+        "label": "Estate Planning",
+        "href": "/estate-planning/",
+        "description": "Wills, trusts and powers of attorney.",
+        "featured": false
+      },
+      {
+        "_key": "pa-business",
+        "label": "Business Law",
+        "href": "/business-law/",
+        "description": "Formation, contracts and disputes.",
+        "featured": false
+      }
+    ],
+    "appearance": {
+      "surface": "light",
+      "spacing": "normal",
+      "inset": null,
+      "edgeBottom": null,
+      "overlapPrevious": null,
+      "backgroundImage": null
+    }
+  },
+  {
+    "_type": "practiceAreaNavInline",
+    "_key": "hp-siloNavBlock",
+    "heading": "Areas of Law",
+    "layout": "tile",
+    "sectionLayout": "centered",
+    "gridMode": "equal",
+    "mobileDisplay": "stacked",
+    "showArrow": true,
+    "iconPosition": "auto",
+    "mode": "allTopLevel",
+    "items": [
+      {
+        "_key": "pa-family",
+        "label": "Family Law",
+        "href": "/family-law/",
+        "description": "Divorce, custody and support, handled with care.",
+        "featured": false
+      },
+      {
+        "_key": "pa-estate",
+        "label": "Estate Planning",
+        "href": "/estate-planning/",
+        "description": "Wills, trusts and powers of attorney.",
+        "featured": false
+      },
+      {
+        "_key": "pa-business",
+        "label": "Business Law",
+        "href": "/business-law/",
+        "description": "Formation, contracts and disputes.",
+        "featured": false
+      }
+    ],
+    "appearance": {
+      "surface": null,
+      "spacing": null,
+      "inset": null,
+      "edgeBottom": null,
+      "overlapPrevious": null,
+      "backgroundImage": null
+    }
+  },
+  {
+    "_type": "contentSectionInline",
+    "_key": "hp-differentiatorBlock",
+    "heading": "Why work with us",
+    "layout": "twoColumnText",
+    "appearance": {
+      "surface": null,
+      "spacing": null,
+      "inset": null,
+      "edgeBottom": null,
+      "overlapPrevious": null,
+      "backgroundImage": null
+    },
+    "items": [
+      {
+        "_key": "d1",
+        "title": "Evening appointments",
+        "body": "day and evening availability."
+      },
+      {
+        "_key": "d2",
+        "title": "Flat fees on planning",
+        "body": "a price agreed before the work starts."
+      },
+      {
+        "_key": "d3",
+        "title": "One attorney, start to finish",
+        "body": "the person you meet is the person who handles the matter."
+      },
+      {
+        "_key": "d4",
+        "title": "Plain language",
+        "body": "every document explained before it is signed."
+      }
+    ]
+  },
+  {
+    "_type": "attorneySectionInline",
+    "_key": "hp-attorneyHighlightBlock",
+    "heading": "Our Attorneys",
+    "layout": "grid",
+    "mode": "all",
+    "attorneys": [
+      {
+        "_id": "attorneyPage-attorneys-avery-cole",
+        "title": "Avery Cole",
+        "slug": "attorneys/avery-cole",
+        "h1": null,
+        "jobTitle": "Attorney",
+        "bio": null,
+        "photo": null
+      },
+      {
+        "_id": "attorneyPage-attorneys-blair-moss",
+        "title": "Blair Moss",
+        "slug": "attorneys/blair-moss",
+        "h1": null,
+        "jobTitle": "Attorney",
+        "bio": null,
+        "photo": null
+      }
+    ],
+    "appearance": {
+      "surface": null,
+      "spacing": null,
+      "inset": null,
+      "edgeBottom": null,
+      "overlapPrevious": null,
+      "backgroundImage": null
+    }
+  },
+  {
+    "_type": "contentSectionInline",
+    "_key": "p11-t1-split",
+    "heading": "A firm built around the client",
+    "layout": "split",
+    "body": [
+      {
+        "_type": "block",
+        "_key": "b1",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "b1s",
+            "text": "We take fewer matters so each one gets an attorney's full attention.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "media": {
+      "kind": "photo",
+      "image": {
+        "asset": {
+          "_ref": "image-a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0-1200x800-jpg"
+        },
+        "alt": "The office lobby"
+      }
+    },
+    "imageTreatment": "framed",
+    "pullQuote": {
+      "text": "They explained every step.",
+      "attribution": "A client"
+    },
+    "items": [
+      {
+        "_key": "s1",
+        "title": "Local",
+        "body": "One office, one county."
+      },
+      {
+        "_key": "s2",
+        "title": "Direct",
+        "body": "Calls returned the same day."
+      }
+    ],
+    "buttons": [
+      {
+        "_type": "ctaButton",
+        "_key": "b1",
+        "title": "Meet the firm",
+        "url": "/about/",
+        "variant": "primary"
+      }
+    ],
+    "appearance": {
+      "surface": "dark",
+      "spacing": "normal",
+      "inset": null,
+      "edgeBottom": null,
+      "overlapPrevious": null,
+      "backgroundImage": null
+    }
+  },
+  {
+    "_type": "contentSectionInline",
+    "_key": "p11-t2-twocol",
+    "heading": "What to expect at a first meeting",
+    "layout": "twoColumnText",
+    "body": [
+      {
+        "_type": "block",
+        "_key": "b2",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "b2s",
+            "text": "Bring what you have; we will tell you what matters.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "appearance": {
+      "surface": "tint",
+      "spacing": null,
+      "inset": true,
+      "edgeBottom": null,
+      "overlapPrevious": null,
+      "backgroundImage": null
+    }
+  },
+  {
+    "_type": "contentSectionInline",
+    "_key": "p11-t3-statement",
+    "heading": "Serious counsel for serious decisions",
+    "layout": "statement",
+    "body": [
+      {
+        "_type": "block",
+        "_key": "b3",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "b3s",
+            "text": "We prepare every case as if it will be tried.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "buttons": [
+      {
+        "_type": "ctaButton",
+        "_key": "b3a",
+        "title": "Call the office",
+        "url": "/contact/",
+        "variant": "primary"
+      },
+      {
+        "_type": "ctaButton",
+        "_key": "b3b",
+        "title": "Read our results",
+        "url": "/case-results/",
+        "variant": "secondary"
+      }
+    ],
+    "appearance": {
+      "surface": "dark",
+      "spacing": "normal",
+      "inset": null,
+      "edgeBottom": null,
+      "overlapPrevious": null,
+      "backgroundImage": null
+    }
+  },
+  {
+    "_type": "contentSectionInline",
+    "_key": "p11-t4-ribbon",
+    "heading": "Serving families across the county since 1998",
+    "layout": "ribbon",
+    "appearance": {
+      "surface": "dark",
+      "spacing": null,
+      "inset": null,
+      "edgeBottom": null,
+      "overlapPrevious": null,
+      "backgroundImage": null
+    }
+  },
+  {
+    "_type": "contentSectionInline",
+    "_key": "p11-t5-stats",
+    "heading": "By the numbers",
+    "layout": "statRow",
+    "headingEmphasis": "numbers",
+    "items": [
+      {
+        "_key": "n1",
+        "title": "25",
+        "body": "years in practice"
+      },
+      {
+        "_key": "n2",
+        "title": "3",
+        "body": "attorneys"
+      },
+      {
+        "_key": "n3",
+        "title": "1",
+        "body": "office"
+      }
+    ],
+    "appearance": {
+      "surface": "light",
+      "spacing": "normal",
+      "inset": null,
+      "edgeBottom": null,
+      "overlapPrevious": "large",
+      "backgroundImage": null
+    }
+  },
+  {
+    "_type": "contentSectionInline",
+    "_key": "p11-t6-emphasis-case",
+    "heading": "Every matter handled by an attorney",
+    "layout": "statement",
+    "appearance": {
+      "surface": "tint",
+      "spacing": "normal",
+      "inset": null,
+      "edgeBottom": null,
+      "overlapPrevious": null,
+      "backgroundImage": null
+    }
+  },
+  {
+    "_type": "contentSectionInline",
+    "_key": "p11-t7-token-emphasis",
+    "heading": "Trusted in the county",
+    "layout": "statement",
+    "appearance": {
+      "surface": "light",
+      "spacing": "normal",
+      "inset": null,
+      "edgeBottom": null,
+      "overlapPrevious": null,
+      "backgroundImage": null
+    }
+  },
+  {
+    "_type": "contentSectionInline",
+    "_key": "p11-t8-proof-slab",
+    "heading": "Results that matter",
+    "layout": "split",
+    "body": [
+      {
+        "_type": "block",
+        "_key": "b8",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "b8s",
+            "text": "Outcomes depend on the facts of each case.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "media": {
+      "kind": "photo",
+      "image": {
+        "asset": {
+          "_ref": "image-b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1-1200x800-jpg"
+        },
+        "alt": "The courthouse steps"
+      }
+    },
+    "imageTreatment": "slab",
+    "proof": {
+      "number": "25 years",
+      "caption": "serving the county"
+    },
+    "appearance": {
+      "surface": "light",
+      "spacing": "normal",
+      "inset": null,
+      "edgeBottom": null,
+      "overlapPrevious": null,
+      "backgroundImage": null
+    }
+  },
+  {
+    "_type": "contentSectionInline",
+    "_key": "p11-t9-empty-statement",
+    "layout": "statement",
+    "appearance": {
+      "surface": "dark",
+      "spacing": "normal",
+      "inset": null,
+      "edgeBottom": null,
+      "overlapPrevious": null,
+      "backgroundImage": null
+    }
+  },
+  {
+    "_type": "contentSectionInline",
+    "_key": "p11-t10-split-no-media",
+    "heading": "Planning ahead",
+    "layout": "split",
+    "body": [
+      {
+        "_type": "block",
+        "_key": "b10",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "b10s",
+            "text": "A plan made now saves a family later.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "appearance": {
+      "surface": "tint",
+      "spacing": "normal",
+      "inset": null,
+      "edgeBottom": null,
+      "overlapPrevious": null,
+      "backgroundImage": null
+    }
+  },
+  {
+    "_type": "contentSectionInline",
+    "_key": "3c9da45712e7",
+    "layout": "split",
+    "appearance": {
+      "surface": "light",
+      "spacing": "normal",
+      "inset": null,
+      "edgeBottom": null,
+      "overlapPrevious": null,
+      "backgroundImage": null
+    }
+  }
+]
