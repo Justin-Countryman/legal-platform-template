@@ -9,7 +9,7 @@ vi.mock('next/link', () => ({
   ),
 }))
 
-import {Switcher, ROW_THEME_HEAD, CHROME_NOTE_HEAD, chromeNote} from '../Switcher'
+import {Switcher, ROW_THEME_HEAD, CHROME_NOTE_HEAD, chromeNote, familyLabel} from '../Switcher'
 import {THEMES} from '@/lib/themes'
 import {PALETTE_PRESETS} from '@/lib/palettes'
 import {FAMILIES, FLOWS, flowId} from '@/lib/flows'
@@ -33,8 +33,8 @@ const chromeWithTexture = {designTokens: {patternTexture: 'diagonalHatch'}, head
 beforeEach(() => vi.stubEnv('SITE_PREVIEW_SECRET', SECRET))
 afterEach(() => vi.unstubAllEnvs())
 
-const draw = (grant: PreviewGrant, doc = stored, c = choices, canvas: unknown = [], chrome: SiteChrome | null = null) =>
-  render(<Switcher grant={grant} choices={c} plan={planPreview(doc, c)} canvas={canvas} chrome={chrome} origin="https://example.com" />).container
+const draw = (grant: PreviewGrant, doc = stored, c = choices, canvas: unknown = [], chrome: SiteChrome | null = null, hero: 'dark' | 'image' | 'tint' | 'light' | null = null) =>
+  render(<Switcher grant={grant} choices={c} plan={planPreview(doc, c)} canvas={canvas} chrome={chrome} origin="https://example.com" hero={hero} />).container
 
 const hrefs = (el: Element) => [...el.querySelectorAll('a')].map((a) => a.getAttribute('href') ?? '')
 
@@ -90,6 +90,19 @@ describe('Switcher, the operator', () => {
     const met = draw(operator, stored, {...choices, styleSet: 'site', flow: 'cutBlocks.balanced'}, [], chromeWithTexture)
     expect(met.textContent).not.toContain('Needs this page lacks')
     expect(met.textContent).not.toContain('Needs texture')
+  })
+
+  it('a one-step family whose step the eye has not passed says so on its own button (Phase 17B session 5)', () => {
+    expect(familyLabel({name: 'Planted', steps: ['mostlyLight'], passed: [], defaultStep: 'mostlyLight'})).toBe('Planted (not yet judged)')
+    expect(familyLabel({name: 'Planted', steps: ['mostlyLight'], passed: ['mostlyLight'], defaultStep: 'mostlyLight'})).toBe('Planted')
+    // A two-step family carries the mark on its step line instead.
+    expect(familyLabel({name: 'Planted', steps: ['balanced', 'mostlyDark'], passed: [], defaultStep: 'balanced'})).toBe('Planted')
+  })
+
+  it('reads the hero it is handed: a theme that wants a dark hero is met by a dark or photo one', () => {
+    const tob = {...choices, flow: 'typeOnBlack.allDark'}
+    for (const hero of ['dark', 'image'] as const) expect(draw(operator, stored, tob, [], null, hero).textContent, hero).not.toContain('a dark or photo hero')
+    for (const hero of ['tint', 'light', null] as const) expect(draw(operator, stored, tob, [], null, hero).textContent, String(hero)).toContain('Needs this page lacks: a dark or photo hero')
   })
 
   it('counts the bands that keep their own ground, whatever the theme', () => {

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import {THEMES} from '@/lib/themes'
 import {PALETTE_PRESETS} from '@/lib/palettes'
-import {DARKNESS_LABELS, FAMILIES, chromeSchemes, familyOf, flowById, flowId, needLabel, unmetNeeds, type FlowRules} from '@/lib/flows'
+import {DARKNESS_LABELS, FAMILIES, chromeSchemes, familyOf, flowById, flowId, needLabel, unmetNeeds, type FlowFamily, type FlowRules} from '@/lib/flows'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {ghostSource} from '@/lib/brandMark'
 import {canvasFacts, siteLookOf} from '@/components/sections/sectionFrame'
@@ -105,6 +105,13 @@ export function chromeNote(flow: Pick<FlowRules, 'chrome'>, chrome: StoredChrome
   return out
 }
 
+/** A family's button label: its name, and, for a family with one step the eye has not passed,
+ *  that it is not yet judged (Phase 17B session 5: the step line that carries the mark only
+ *  appears for a family with two steps). */
+export function familyLabel(f: Pick<FlowFamily, 'name' | 'steps' | 'passed' | 'defaultStep'>): string {
+  return f.steps.length === 1 && !f.passed.includes(f.defaultStep) ? `${f.name} (not yet judged)` : f.name
+}
+
 function Choice({href, active, className, children}: {href: string; active: boolean; className?: string; children: React.ReactNode}) {
   const classes = ['sw-choice', active && 'sw-active', className].filter(Boolean).join(' ')
   return (
@@ -196,7 +203,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
             const missing = lacks(first)
             return (
               <Choice key={f.id} href={at({flow: flowId(f.id, f.defaultStep)})} active={choices.flow !== AS_THE_SITE_IS && family?.id === f.id} className="sw-family">
-                <strong>{f.name}{f.steps.length === 1 && !f.passed.includes(f.defaultStep) ? ' (not yet judged)' : ''}</strong>
+                <strong>{familyLabel(f)}</strong>
                 <span className="sw-sentence">{f.sentence}{missing.length > 0 && ` Needs ${missing.join(', ')} this page lacks.`}</span>
               </Choice>
             )

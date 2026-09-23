@@ -108,7 +108,7 @@ function measure() {
   const bands = [...main.querySelectorAll('section')].filter((s) => !s.parentElement.closest('section'))
   const origin = bands[0] ? bands[0].getBoundingClientRect().top : 0
   const px = (v) => Math.round(parseFloat(v) || 0)
-  const keep = (cls) => /^(divider-|hairline-top$|band-gradient$|grad-[in]-|bg-)/.test(cls)
+  const keep = (cls) => /^(divider-|hairline-top$|hairline-accent$|band-gradient$|grad-[in]-|bg-)/.test(cls)
   // Phase 17B session 4 (`[R-518]`): the site header and footer, whose schemes the theme now
   // sets. The ground at 390 is the header's own: the mobile row shows it and paints none.
   const chromeOf = (el) => (el ? {ring: el.getAttribute('data-ring-context'), bg: getComputedStyle(el).backgroundColor} : null)
@@ -184,6 +184,15 @@ try {
         const flowName = presets.flows.find((f) => f.id === flow)?.name
         const bar = await page.evaluate(() => document.querySelector('.sw summary')?.textContent ?? '')
         if (!flowName || !bar.includes(flowName)) { fail(`${key}: the page's bar reads "${bar}", not the theme "${flowName}"`); continue }
+        // The hero reaches the switcher (Phase 17B session 5, ADV-17B5-2 F2b): a theme that wants a
+        // dark hero names the need exactly where this canvas's hero is not dark.
+        if (flow === 'typeOnBlack.allDark') {
+          const note = await page.evaluate(() => document.querySelector('.sw')?.textContent ?? '')
+          const docs = readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))
+          const heroDark = !!docs.find((d) => d._type === 'homePage')?.hero?.heading
+            && docs.find((d) => d._type === 'heroSettings')?.homepageHero?.schemeOverride === 'dark'
+          if (note.includes('a dark or photo hero') === heroDark) fail(`${key}: the switcher ${heroDark ? 'names' : 'does not name'} the dark-hero need under a ${heroDark ? 'dark' : 'light'} hero`)
+        }
         await page.evaluate(() => document.fonts.ready)
         // The switcher is the operator's bar, not the page: hidden for the measure and the eye.
         await page.addStyleTag({content: '.sw{display:none !important}'})

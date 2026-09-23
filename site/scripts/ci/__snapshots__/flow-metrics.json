@@ -432,6 +432,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -451,6 +452,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -1090,6 +1092,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -1109,6 +1112,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -2117,6 +2121,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -2136,6 +2141,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -2155,6 +2161,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -2174,6 +2181,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -2193,6 +2201,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -2212,6 +2221,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -3426,6 +3436,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -3445,6 +3456,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -3464,6 +3476,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -3483,6 +3496,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -3502,6 +3516,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -3521,6 +3536,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -4737,6 +4753,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -4756,6 +4773,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -4775,6 +4793,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -4794,6 +4813,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -4813,6 +4833,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -4832,6 +4853,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -6048,6 +6070,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -6067,6 +6090,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -6086,6 +6110,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -6105,6 +6130,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -6124,6 +6150,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -6143,6 +6170,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -7503,6 +7531,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -7522,6 +7551,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -7541,6 +7571,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -7560,6 +7591,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -7579,6 +7611,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -7598,6 +7631,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -7617,6 +7651,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -7636,6 +7671,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -9070,6 +9106,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -9089,6 +9126,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -9108,6 +9146,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -9127,6 +9166,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -9146,6 +9186,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -9165,6 +9206,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -9184,6 +9226,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -9203,6 +9246,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -10492,6 +10536,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -10511,6 +10556,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -10530,6 +10576,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -10549,6 +10596,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -10568,6 +10616,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -10587,6 +10636,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -11802,6 +11852,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -11821,6 +11872,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -11840,6 +11892,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -11859,6 +11912,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -11878,6 +11932,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
@@ -11897,6 +11952,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "hairline-accent",
           "hairline-top"
         ],
         "texture": false,
