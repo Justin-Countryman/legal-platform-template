@@ -150,9 +150,13 @@ const SKIP_DIRS = new Set([
 // allowlisting the whole npm ecosystem to protect nothing.
 const SKIP_FILES = new Set(['package-lock.json', 'yarn.lock', 'pnpm-lock.yaml'])
 
+// `.ndjson` since Phase 17B session 3: the stub datasets under `site/scripts/ci/`
+// (the CI fixture and the record-composed canvases) are copy a served page renders,
+// and the guard did not read them (ADV-17B-C F11 planted a study domain in one and it
+// passed). `site/scripts/ci/__tests__/blank-guard-scans-ndjson.test.ts` holds it.
 const SCANNED_EXT = new Set([
   '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs',
-  '.json', '.css', '.yml', '.yaml', '.md', '.html', '.txt', '.env',
+  '.json', '.ndjson', '.css', '.yml', '.yaml', '.md', '.html', '.txt', '.env',
 ])
 
 // TLDs a firm's site plausibly uses. Deliberately NOT "any dotted token": bare

@@ -1,18 +1,23 @@
 import Link from 'next/link'
 import {THEMES} from '@/lib/themes'
 import {PALETTE_PRESETS} from '@/lib/palettes'
+import {DARKNESS_LABELS, FAMILIES, familyOf, flowById, flowId, unmetNeeds, type FlowRules} from '@/lib/flows'
+import {ghostSource} from '@/lib/brandMark'
+import {canvasFacts, siteLookOf} from '@/components/sections/sectionFrame'
+import {frameOf, type HomepageBlock} from '@/components/layout/HomepageCanvas'
+import {type SiteChrome} from '@/components/layout/SiteShell'
 import {
   APPLY_LINK_SECONDS, CLIENT_LINK_SECONDS, nowSeconds, signToken, type PreviewGrant,
 } from '@/lib/preview/session'
-import {AS_THE_SITE_IS, ownLooks, previewPath, type PreviewChoices, type PreviewPlan} from '@/lib/preview/plan'
+import {AS_THE_SITE_IS, ownGrounds, ownLooks, previewPath, type PreviewChoices, type PreviewPlan} from '@/lib/preview/plan'
 
 // ─── The switcher ─────────────────────────────────────────────────────────────
 //
 // Phase 17A (monorepo WS-V1-PHASE17A-DESIGN §2.5, `[R-507]`). Three rows of buttons
-// on the preview page: style set, palette, and a theme row that is not built yet.
-// Every button is a link to another preview address: the choices ARE the address, so
-// a switch changes no state, writes nothing and cannot be triggered from another
-// site; the page re-renders with the choice read from the URL.
+// on the preview page: style set, palette and theme. Every button is a link to
+// another preview address: the choices ARE the address, so a switch changes no
+// state, writes nothing and cannot be triggered from another site; the page
+// re-renders with the choice read from the URL.
 //
 // A server component with no browser code of its own: `next/link` is the framework's
 // and already on every page. It is rendered only by the preview layout, after the
@@ -21,18 +26,29 @@ import {AS_THE_SITE_IS, ownLooks, previewPath, type PreviewChoices, type Preview
 //
 // A CLIENT sees one line, the choices they were sent and when the link ends: never
 // the roster (`[R-507]`). The role is inside the signed cookie, so it cannot be edited.
+//
+// THE THEME ROW (Phase 17B session 3, record §2.10, `[R-509]`). One button per family,
+// with its name and its sentence; a family with more than one step shows its steps on a
+// second line with the family's default preselected, so the meeting is still three
+// clicks. A step the eye has not passed says so (`[R-517]`): the build's table cannot
+// write it, but the eye pass runs through this row, so it is listed. Beside the row:
+// the needs the theme has that this page or site cannot meet (it renders without
+// them), how many bands keep a surface of their own that no theme reaches, and, for an
+// all-dark theme, that the header keeps its own scheme (record §2.3).
 
-// Phase 17B session 2: the engine is built and the site renders the stored theme (or the
-// six retired fields, or the platform default); the ROW that switches it is session 3's.
-// Until then a style-set switch leaves the stored divider, ghost, overlap and gradient as
-// they are, because a style set no longer writes them. The string is a bundle sentinel.
-const ROW_THEME_NOTE = 'As the site stores it, until the theme row arrives (Phase 17B session 3)'
+/** The row's head, and the bundle sentinel `scripts/ci/check-preview-not-shipped.mjs`
+ *  searches for: a value only this row emits. */
+export const ROW_THEME_HEAD = 'Theme, the flow of the page'
 
 type Props = {
   grant: PreviewGrant
   choices: PreviewChoices
   plan: PreviewPlan
   canvas: unknown
+  /** The chrome the page is drawn from, with the plan applied: what the theme's needs
+   *  are read against (the style set's texture, the firm's initials), and the header
+   *  an all-dark theme cannot reach. */
+  chrome?: SiteChrome | null
   /** This site's own origin, from the request, for the share link. */
   origin: string
 }
@@ -40,7 +56,8 @@ type Props = {
 function names(plan: PreviewPlan): string {
   const s = plan.styleSet?.name ?? (plan.wears.styleSet ? `${plan.wears.styleSet.theme.name} (as the site is)` : 'the site\'s own style')
   const p = plan.palette?.name ?? (plan.wears.palette ? `${plan.wears.palette.name} (as the site is)` : 'the site\'s own colors')
-  return `${s}, ${p}`
+  const f = plan.flow?.name ?? `${plan.wears.flow.name} (as the site is)`
+  return `${s}, ${p}, ${f}`
 }
 
 const date = (seconds: number) => new Date(seconds * 1000).toISOString().slice(0, 10)
@@ -52,15 +69,24 @@ function keptLine(keep: {section: string; what: string}[]): string {
   return [...counts].map(([label, n]) => (n > 1 ? `${label} ×${n}` : label)).join(', ')
 }
 
-function Choice({href, active, children}: {href: string; active: boolean; children: React.ReactNode}) {
+/** What an all-dark theme cannot reach: the header follows the hero only under
+ *  `heroMerge`; otherwise its polarity is Main Navigation's own, and a light bar over a
+ *  dark page is what the visitor gets (record §2.3, ADV-17B-A F13). */
+export function allDarkHeaderNote(flow: Pick<FlowRules, 'step'> | null | undefined, mainNavigation: {defaultScheme?: string | null; heroMerge?: boolean | null} | null | undefined): string | null {
+  if (flow?.step !== 'allDark' || mainNavigation?.heroMerge) return null
+  return `All dark: the header keeps its own scheme (${mainNavigation?.defaultScheme ?? 'light'}), which the theme does not set; change it in Main Navigation.`
+}
+
+function Choice({href, active, className, children}: {href: string; active: boolean; className?: string; children: React.ReactNode}) {
+  const classes = ['sw-choice', active && 'sw-active', className].filter(Boolean).join(' ')
   return (
-    <Link href={href} prefetch={false} scroll={false} className={active ? 'sw-choice sw-active' : 'sw-choice'} aria-current={active ? 'true' : undefined}>
+    <Link href={href} prefetch={false} scroll={false} className={classes} aria-current={active ? 'true' : undefined}>
       {children}
     </Link>
   )
 }
 
-export function Switcher({grant, choices, plan, canvas, origin}: Props) {
+export function Switcher({grant, choices, plan, canvas, chrome, origin}: Props) {
   const now = nowSeconds()
   const at = (c: Partial<PreviewChoices>) => previewPath({...choices, ...c})
 
@@ -82,11 +108,26 @@ export function Switcher({grant, choices, plan, canvas, origin}: Props) {
         set: plan.set, unset: plan.unset,
         styleSet: plan.styleSet ? {id: plan.styleSet.id, name: plan.styleSet.name} : null,
         palette: plan.palette ? {id: plan.palette.id, name: plan.palette.name} : null,
+        flow: plan.flow ? {id: plan.flow.id, name: plan.flow.name} : null,
       })
     : null
-  const keep = ownLooks(Array.isArray(canvas) ? canvas : [])
+  const blocks = (Array.isArray(canvas) ? canvas : []) as HomepageBlock[]
+  const keep = ownLooks(blocks)
+  const grounds = ownGrounds(blocks)
   const wearsStyle = plan.wears.styleSet ? plan.wears.styleSet.theme.name : 'Custom'
   const wearsPalette = plan.wears.palette ? plan.wears.palette.name : 'Custom'
+
+  // The theme the page shows: the chosen one, else what the site renders. Its needs are
+  // read against this page and the previewed site (the style set's texture, the firm's
+  // initials), as the engine reads them.
+  const shown: FlowRules = plan.flow ?? plan.wears.flow
+  const family = familyOf(shown)
+  const survivors = blocks.map(frameOf).filter((r) => !r.empty)
+  const look = siteLookOf(chrome?.designTokens)
+  const facts = canvasFacts(survivors, {...look, ghost: ghostSource(chrome?.header?.siteSettings?.firmName, true)})
+  const unmet = unmetNeeds(shown, facts)
+  const lacks = (f: FlowRules | null) => (f ? unmetNeeds(f, facts) : [])
+  const headerNote = allDarkHeaderNote(shown, chrome?.header?.mainNavigation)
 
   return (
     <aside className="sw" aria-label="Design preview">
@@ -119,9 +160,35 @@ export function Switcher({grant, choices, plan, canvas, origin}: Props) {
           ))}
         </div>
         <div className="sw-row">
-          <span className="sw-head">Theme</span>
-          <span className="sw-choice sw-inert" aria-disabled="true">{ROW_THEME_NOTE}</span>
+          <span className="sw-head">{ROW_THEME_HEAD}</span>
+          <Choice href={at({flow: AS_THE_SITE_IS})} active={choices.flow === AS_THE_SITE_IS}>As the site is: {plan.wears.flow.name}</Choice>
+          {FAMILIES.map((f) => {
+            const first = flowById(flowId(f.id, f.defaultStep))
+            const missing = lacks(first)
+            return (
+              <Choice key={f.id} href={at({flow: flowId(f.id, f.defaultStep)})} active={choices.flow !== AS_THE_SITE_IS && family?.id === f.id} className="sw-family">
+                <strong>{f.name}</strong>
+                <span className="sw-sentence">{f.sentence}{missing.length > 0 && ` Needs ${missing.join(', ')} this page lacks.`}</span>
+              </Choice>
+            )
+          })}
         </div>
+        {family && family.steps.length > 1 && (
+          <div className="sw-row">
+            <span className="sw-head">Step: {family.name}</span>
+            {family.steps.map((s) => (
+              <Choice key={s} href={at({flow: flowId(family.id, s)})} active={shown.step === s}>
+                {DARKNESS_LABELS[s]}{family.passed.includes(s) ? '' : ' (not yet judged)'}
+              </Choice>
+            ))}
+          </div>
+        )}
+        <p className="sw-note">
+          Theme: {shown.name}. {shown.sentence}
+          {unmet.length > 0 && ` Needs this page lacks: ${unmet.join(', ')}; it renders without them.`}
+          {grounds.length > 0 && ` ${grounds.length} ${grounds.length === 1 ? 'section keeps' : 'sections keep'} their own ground, whatever the theme: ${keptLine(grounds)}.`}
+          {headerNote && ` ${headerNote}`}
+        </p>
         {keep.length > 0 && (
           <p className="sw-note">Kept as set on the section, whatever the style set: {keptLine(keep)}.</p>
         )}
@@ -154,7 +221,10 @@ const SWITCHER_CSS = `
 .sw-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 0}
 .sw-head{font-size:12px;color:#aaa;min-width:72px}
 .sw-choice,.sw-action{display:inline-flex;align-items:center;gap:4px;border:1px solid #8a8a8a;border-radius:4px;padding:4px 8px;color:#f5f5f5;text-decoration:none;font-size:13px;background:transparent}
+.sw-family{flex-direction:column;align-items:flex-start;gap:0;max-width:30ch}
+.sw-sentence{font-size:11px;line-height:1.3;color:#bbb}
 .sw-active{background:#f5f5f5;color:#111;border-color:#f5f5f5}
+.sw-active .sw-sentence{color:#444}
 .sw-inert{color:#888;border-style:dashed;cursor:default}
 .sw-action{background:#2e7d32;border-color:#2e7d32;font-weight:600}
 .sw-swatch{display:inline-block;width:10px;height:10px;border-radius:2px;border:1px solid rgba(255,255,255,.4)}

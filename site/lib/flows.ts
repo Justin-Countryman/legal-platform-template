@@ -77,6 +77,10 @@ export type FlowRules = {
   sentence: string
   family: string
   step: Darkness
+  /** The eye has passed this step on the three canvases at 1440 and 390 through the
+   *  switcher (`[R-517]`, Phase 17B session 3). The build's practice table writes only a
+   *  passed step; the switcher lists every step, because the eye pass runs through it. */
+  passed: boolean
   dark: {
     /** The mid-page dark budget: none; a third of the survivors; three quarters; all. */
     budget: (typeof DARK_BUDGETS)[number]
@@ -122,11 +126,14 @@ export type FlowFamily = {
   id: string
   name: string
   sentence: string
-  /** The steps the eye has passed; one for Quiet, Type on black, Soft wash, Editorial. */
+  /** The steps the family ships; one for Quiet, Type on black, Soft wash, Editorial. */
   steps: readonly Darkness[]
   defaultStep: Darkness
+  /** The steps among them the eye has passed (`[R-517]`): set only by an eye pass recorded
+   *  in the phase record with its captures, never when a step is added. */
+  passed: readonly Darkness[]
   /** One rule family, parameterised by the step. */
-  rules: (step: Darkness) => Omit<FlowRules, 'id' | 'name' | 'sentence' | 'family' | 'step'>
+  rules: (step: Darkness) => Omit<FlowRules, 'id' | 'name' | 'sentence' | 'family' | 'step' | 'passed'>
 }
 
 // ─── The darkness dial's rule, from the evidence (record §2.5) ────────────────
@@ -171,14 +178,23 @@ const NO_DIVIDER: FlowRules['divider'] = {shape: 'straight', at: 'none', carry: 
 // ─── The families ─────────────────────────────────────────────────────────────
 //
 // Values are provisional until each step passes the arm's-length test through the
-// switcher on three canvases at 1440 and 390 (`[R-506]`; Phase 17B sessions 4 and
-// after). A step that fails is not shipped.
+// switcher on three canvases at 1440 and 390 (`[R-506]`, `[R-517]`; Phase 17B session
+// 3 and after). A step that fails is not marked passed, and the build's table cannot
+// write it; `passed` moves only with a verdict in the phase record.
+//
+// THE EYE PASS OF 2026-09-23 (Phase 17B session 3, record §9.2, captures beside it):
+// Quiet, Alternating at balanced, and Cut blocks at both steps passed on the three
+// record canvases at 1440 and 390. Alternating at mostly dark did NOT pass: on the
+// adversarial canvas `pairs` stops at four of seven bands (0.57, a balanced curve, not
+// the step's 0.71 to 0.78) and the step differs from balanced by one band; on the
+// planning and multi-practice canvases it read as mostly dark. The fix is a rule, not
+// a value, and is the next session's.
 
 export const FAMILIES: readonly FlowFamily[] = [
   {
     id: 'quiet', name: 'Quiet',
     sentence: 'A dark hero, then light all the way down, and one dark band to close.',
-    steps: ['mostlyLight'], defaultStep: 'mostlyLight',
+    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', close: 'dark'},
       light: {paint: 'plain'},
@@ -194,7 +210,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // is `pairs` at both steps: the family's name is the alternation, and `runs` at
     // mostly dark gathered four dark bands in a row on the composer's six roles
     // (ADV-17B-2 F12). The step table's `runs` is the starting rhythm, not a law.
-    steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced',
+    steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: ['balanced'],
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: 'pairs', paint: 'plain', close: 'dark'},
       light: {paint: 'plain'},
@@ -206,7 +222,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     id: 'cutBlocks', name: 'Cut blocks',
     sentence: 'Navy blocks cut into the page with a peak, each carrying the texture.',
     // The study: dark 5, balanced 2.
-    steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced',
+    steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: ['balanced', 'mostlyDark'],
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'pattern', close: 'dark'},
       light: {paint: 'plain'},
@@ -229,8 +245,14 @@ export const FLOWS: readonly FlowRules[] = FAMILIES.flatMap((f) =>
     sentence: f.sentence,
     family: f.id,
     step,
+    passed: f.passed.includes(step),
   })),
 )
+
+/** The family a roster theme belongs to. */
+export function familyOf(flow: Pick<FlowRules, 'family'> | null | undefined): FlowFamily | null {
+  return flow ? FAMILIES.find((f) => f.id === flow.family) ?? null : null
+}
 
 /** What an absent `flow` renders, on every client. Pinned equal to `presets.json`'s
  *  `defaultFlow` by both suites. */
@@ -278,7 +300,7 @@ export function storesHiddenFields(d: Record<string, unknown> | null | undefined
 export function bridgeOf(d: Record<string, unknown>): FlowRules {
   const shape = dividerShape(d.sectionJoin as string) ? (d.sectionJoin as Divider) : 'straight'
   return {
-    id: 'stored.bridge', name: 'As stored', family: 'stored', step: 'mostlyLight',
+    id: 'stored.bridge', name: 'As stored', family: 'stored', step: 'mostlyLight', passed: false,
     sentence: 'The page as the six retired fields stored it, until Apply writes a theme.',
     dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: d.sectionGradient === 'deep' ? 'gradient' : 'plain', close: 'muted'},
     light: {paint: 'plain'},

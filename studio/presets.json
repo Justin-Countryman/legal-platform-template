@@ -2399,7 +2399,10 @@
       "steps": [
         "mostlyLight"
       ],
-      "defaultStep": "mostlyLight"
+      "defaultStep": "mostlyLight",
+      "passed": [
+        "mostlyLight"
+      ]
     },
     {
       "id": "alternating",
@@ -2409,7 +2412,10 @@
         "balanced",
         "mostlyDark"
       ],
-      "defaultStep": "balanced"
+      "defaultStep": "balanced",
+      "passed": [
+        "balanced"
+      ]
     },
     {
       "id": "cutBlocks",
@@ -2419,7 +2425,11 @@
         "balanced",
         "mostlyDark"
       ],
-      "defaultStep": "balanced"
+      "defaultStep": "balanced",
+      "passed": [
+        "balanced",
+        "mostlyDark"
+      ]
     }
   ],
   "flows": [
@@ -2447,7 +2457,8 @@
       "name": "Quiet",
       "sentence": "A dark hero, then light all the way down, and one dark band to close.",
       "family": "quiet",
-      "step": "mostlyLight"
+      "step": "mostlyLight",
+      "passed": true
     },
     {
       "dark": {
@@ -2481,7 +2492,8 @@
       "name": "Alternating, balanced",
       "sentence": "Dark, light, dark, light, with hard edges: the classic law site.",
       "family": "alternating",
-      "step": "balanced"
+      "step": "balanced",
+      "passed": true
     },
     {
       "dark": {
@@ -2517,7 +2529,8 @@
       "name": "Alternating, mostly dark",
       "sentence": "Dark, light, dark, light, with hard edges: the classic law site.",
       "family": "alternating",
-      "step": "mostlyDark"
+      "step": "mostlyDark",
+      "passed": false
     },
     {
       "dark": {
@@ -2555,7 +2568,8 @@
       "name": "Cut blocks, balanced",
       "sentence": "Navy blocks cut into the page with a peak, each carrying the texture.",
       "family": "cutBlocks",
-      "step": "balanced"
+      "step": "balanced",
+      "passed": true
     },
     {
       "dark": {
@@ -2595,7 +2609,8 @@
       "name": "Cut blocks, mostly dark",
       "sentence": "Navy blocks cut into the page with a peak, each carrying the texture.",
       "family": "cutBlocks",
-      "step": "mostlyDark"
+      "step": "mostlyDark",
+      "passed": true
     }
   ],
   "defaultFlow": "quiet.mostlyLight",

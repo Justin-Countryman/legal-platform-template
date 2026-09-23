@@ -1,0 +1,6268 @@
+{
+  "stub / quiet.mostlyLight / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 1459,
+    "bands": [
+      {
+        "i": 0,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 192,
+        "pt": 96,
+        "pb": 96,
+        "headingLines": 0
+      },
+      {
+        "i": 1,
+        "heading": "Fixture areas",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 192,
+        "height": 518,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 2,
+        "heading": "Fixture numbers",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 710,
+        "height": 408,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1118,
+        "height": 124,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 0
+      }
+    ]
+  },
+  "stub / alternating.balanced / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 1491,
+    "bands": [
+      {
+        "i": 0,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 192,
+        "pt": 96,
+        "pb": 96,
+        "headingLines": 0
+      },
+      {
+        "i": 1,
+        "heading": "Fixture areas",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 192,
+        "height": 518,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 2,
+        "heading": "Fixture numbers",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 710,
+        "height": 408,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1118,
+        "height": 156,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 0
+      }
+    ]
+  },
+  "stub / alternating.mostlyDark / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 1547,
+    "bands": [
+      {
+        "i": 0,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 192,
+        "pt": 96,
+        "pb": 96,
+        "headingLines": 0
+      },
+      {
+        "i": 1,
+        "heading": "Fixture areas",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 192,
+        "height": 518,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 2,
+        "heading": "Fixture numbers",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 710,
+        "height": 464,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1174,
+        "height": 156,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 0
+      }
+    ]
+  },
+  "stub / cutBlocks.balanced / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 1555,
+    "bands": [
+      {
+        "i": 0,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 192,
+        "pt": 96,
+        "pb": 96,
+        "headingLines": 0
+      },
+      {
+        "i": 1,
+        "heading": "Fixture areas",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 192,
+        "height": 518,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 2,
+        "heading": "Fixture numbers",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 710,
+        "height": 408,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1118,
+        "height": 220,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 0
+      }
+    ]
+  },
+  "stub / cutBlocks.mostlyDark / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 1611,
+    "bands": [
+      {
+        "i": 0,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 192,
+        "pt": 96,
+        "pb": 96,
+        "headingLines": 0
+      },
+      {
+        "i": 1,
+        "heading": "Fixture areas",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-rise"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 192,
+        "height": 518,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 2,
+        "heading": "Fixture numbers",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 710,
+        "height": 464,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1174,
+        "height": 220,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 0
+      }
+    ]
+  },
+  "stub / quiet.mostlyLight / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 1319,
+    "bands": [
+      {
+        "i": 0,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 192,
+        "pt": 96,
+        "pb": 96,
+        "headingLines": 0
+      },
+      {
+        "i": 1,
+        "heading": "Fixture areas",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 192,
+        "height": 418,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 2,
+        "heading": "Fixture numbers",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 610,
+        "height": 328,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 938,
+        "height": 100,
+        "pt": 24,
+        "pb": 48,
+        "headingLines": 0
+      }
+    ]
+  },
+  "stub / alternating.balanced / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 1343,
+    "bands": [
+      {
+        "i": 0,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 192,
+        "pt": 96,
+        "pb": 96,
+        "headingLines": 0
+      },
+      {
+        "i": 1,
+        "heading": "Fixture areas",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 192,
+        "height": 418,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 2,
+        "heading": "Fixture numbers",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 610,
+        "height": 328,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 938,
+        "height": 124,
+        "pt": 48,
+        "pb": 48,
+        "headingLines": 0
+      }
+    ]
+  },
+  "stub / alternating.mostlyDark / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 1375,
+    "bands": [
+      {
+        "i": 0,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 192,
+        "pt": 96,
+        "pb": 96,
+        "headingLines": 0
+      },
+      {
+        "i": 1,
+        "heading": "Fixture areas",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 192,
+        "height": 418,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 2,
+        "heading": "Fixture numbers",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 610,
+        "height": 360,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 970,
+        "height": 124,
+        "pt": 48,
+        "pb": 48,
+        "headingLines": 0
+      }
+    ]
+  },
+  "stub / cutBlocks.balanced / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 1361,
+    "bands": [
+      {
+        "i": 0,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 192,
+        "pt": 96,
+        "pb": 96,
+        "headingLines": 0
+      },
+      {
+        "i": 1,
+        "heading": "Fixture areas",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 192,
+        "height": 418,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 2,
+        "heading": "Fixture numbers",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 610,
+        "height": 328,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 938,
+        "height": 142,
+        "pt": 48,
+        "pb": 48,
+        "headingLines": 0
+      }
+    ]
+  },
+  "stub / cutBlocks.mostlyDark / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 1393,
+    "bands": [
+      {
+        "i": 0,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 192,
+        "pt": 96,
+        "pb": 96,
+        "headingLines": 0
+      },
+      {
+        "i": 1,
+        "heading": "Fixture areas",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-rise"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 192,
+        "height": 418,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 2,
+        "heading": "Fixture numbers",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 610,
+        "height": 360,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 970,
+        "height": 142,
+        "pt": 48,
+        "pb": 48,
+        "headingLines": 0
+      }
+    ]
+  },
+  "adversarial-mostly-dark / quiet.mostlyLight / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 4343,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 683,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 683,
+        "height": 156,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 839,
+        "height": 571,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1409,
+        "height": 426,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 4,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1835,
+        "height": 511,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 5,
+        "heading": "What clients say",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2346,
+        "height": 363,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2709,
+        "height": 332,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3041,
+        "height": 511,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3552,
+        "height": 498,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      }
+    ]
+  },
+  "adversarial-mostly-dark / alternating.balanced / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 4511,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 683,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 683,
+        "height": 156,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 839,
+        "height": 571,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1409,
+        "height": 482,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 4,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1891,
+        "height": 511,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 5,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2402,
+        "height": 419,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2821,
+        "height": 388,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3209,
+        "height": 511,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3720,
+        "height": 498,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      }
+    ]
+  },
+  "adversarial-mostly-dark / alternating.mostlyDark / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 4511,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 683,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 683,
+        "height": 156,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 839,
+        "height": 571,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1409,
+        "height": 482,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 4,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1891,
+        "height": 511,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 5,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2402,
+        "height": 419,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2821,
+        "height": 332,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3153,
+        "height": 567,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3720,
+        "height": 498,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      }
+    ]
+  },
+  "adversarial-mostly-dark / cutBlocks.balanced / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 4575,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 683,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 683,
+        "height": 156,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 839,
+        "height": 571,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1409,
+        "height": 482,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 4,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1891,
+        "height": 511,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 5,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 2402,
+        "height": 483,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2885,
+        "height": 388,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3273,
+        "height": 511,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3784,
+        "height": 498,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      }
+    ]
+  },
+  "adversarial-mostly-dark / cutBlocks.mostlyDark / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 4519,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 683,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 683,
+        "height": 156,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 839,
+        "height": 571,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1409,
+        "height": 482,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 4,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1891,
+        "height": 511,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 5,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 2402,
+        "height": 483,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 2885,
+        "height": 332,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "A firm built around the people it serves",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3217,
+        "height": 511,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3728,
+        "height": 498,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      }
+    ]
+  },
+  "adversarial-mostly-dark / quiet.mostlyLight / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 4191,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 422,
+        "pt": 32,
+        "pb": 48,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 422,
+        "height": 152,
+        "pt": 48,
+        "pb": 48,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 574,
+        "height": 795,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1369,
+        "height": 680,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2049,
+        "height": 407,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 5,
+        "heading": "What clients say",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2456,
+        "height": 303,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2759,
+        "height": 384,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3143,
+        "height": 407,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3550,
+        "height": 304,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      }
+    ]
+  },
+  "adversarial-mostly-dark / alternating.balanced / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 4287,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 422,
+        "pt": 32,
+        "pb": 48,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 422,
+        "height": 152,
+        "pt": 48,
+        "pb": 48,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 574,
+        "height": 795,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1369,
+        "height": 712,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2081,
+        "height": 407,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 5,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2488,
+        "height": 335,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2823,
+        "height": 416,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3239,
+        "height": 407,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3646,
+        "height": 304,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      }
+    ]
+  },
+  "adversarial-mostly-dark / alternating.mostlyDark / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 4287,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 422,
+        "pt": 32,
+        "pb": 48,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 422,
+        "height": 152,
+        "pt": 48,
+        "pb": 48,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 574,
+        "height": 795,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1369,
+        "height": 712,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2081,
+        "height": 407,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 5,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2488,
+        "height": 335,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2823,
+        "height": 384,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3207,
+        "height": 439,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3646,
+        "height": 304,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      }
+    ]
+  },
+  "adversarial-mostly-dark / cutBlocks.balanced / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 4305,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 422,
+        "pt": 32,
+        "pb": 48,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 422,
+        "height": 152,
+        "pt": 48,
+        "pb": 48,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 574,
+        "height": 795,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1369,
+        "height": 712,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2081,
+        "height": 407,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 5,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 2488,
+        "height": 353,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2840,
+        "height": 416,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3257,
+        "height": 407,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3663,
+        "height": 304,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      }
+    ]
+  },
+  "adversarial-mostly-dark / cutBlocks.mostlyDark / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 4273,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 422,
+        "pt": 32,
+        "pb": 48,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 422,
+        "height": 152,
+        "pt": 48,
+        "pb": 48,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 574,
+        "height": 795,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1369,
+        "height": 712,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "A firm built around the people it serves",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2081,
+        "height": 407,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 5,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 2488,
+        "height": 353,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 2840,
+        "height": 384,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "A firm built around the people it serves",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3225,
+        "height": 407,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3631,
+        "height": 304,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      }
+    ]
+  },
+  "planning-mostly-light / quiet.mostlyLight / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 4618,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 683,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 683,
+        "height": 156,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 839,
+        "height": 332,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "How we can help",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1171,
+        "height": 682,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1853,
+        "height": 884,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2737,
+        "height": 426,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3163,
+        "height": 332,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3495,
+        "height": 332,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3827,
+        "height": 498,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      }
+    ]
+  },
+  "planning-mostly-light / alternating.balanced / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 4786,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 683,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 683,
+        "height": 156,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 839,
+        "height": 388,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1227,
+        "height": 738,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1965,
+        "height": 884,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2849,
+        "height": 482,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3331,
+        "height": 332,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3663,
+        "height": 332,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3995,
+        "height": 498,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      }
+    ]
+  },
+  "planning-mostly-light / alternating.mostlyDark / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 4842,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 683,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 683,
+        "height": 156,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "About the firm",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 839,
+        "height": 332,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "How we can help",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1171,
+        "height": 738,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1909,
+        "height": 940,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2849,
+        "height": 482,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3331,
+        "height": 388,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "About the firm",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3719,
+        "height": 332,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4051,
+        "height": 498,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      }
+    ]
+  },
+  "planning-mostly-light / cutBlocks.balanced / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 4914,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 747,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-rise"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 747,
+        "height": 156,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 903,
+        "height": 388,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1291,
+        "height": 802,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 2093,
+        "height": 884,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2977,
+        "height": 482,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3459,
+        "height": 332,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3791,
+        "height": 332,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4123,
+        "height": 498,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      }
+    ]
+  },
+  "planning-mostly-light / cutBlocks.mostlyDark / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 4914,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 747,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-rise"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 747,
+        "height": 156,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "About the firm",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 903,
+        "height": 332,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1235,
+        "height": 682,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1917,
+        "height": 884,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2801,
+        "height": 482,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3283,
+        "height": 452,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3735,
+        "height": 388,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4123,
+        "height": 498,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      }
+    ]
+  },
+  "planning-mostly-light / quiet.mostlyLight / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 6391,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 422,
+        "pt": 32,
+        "pb": 48,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 422,
+        "height": 152,
+        "pt": 48,
+        "pb": 48,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 574,
+        "height": 384,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "How we can help",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 958,
+        "height": 1466,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2424,
+        "height": 1877,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4300,
+        "height": 680,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4981,
+        "height": 384,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5365,
+        "height": 384,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5749,
+        "height": 304,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      }
+    ]
+  },
+  "planning-mostly-light / alternating.balanced / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 6487,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 422,
+        "pt": 32,
+        "pb": 48,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 422,
+        "height": 152,
+        "pt": 48,
+        "pb": 48,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 574,
+        "height": 416,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 990,
+        "height": 1498,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2488,
+        "height": 1877,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4364,
+        "height": 712,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5077,
+        "height": 384,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5461,
+        "height": 384,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5845,
+        "height": 304,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      }
+    ]
+  },
+  "planning-mostly-light / alternating.mostlyDark / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 6519,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 422,
+        "pt": 32,
+        "pb": 48,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 422,
+        "height": 152,
+        "pt": 48,
+        "pb": 48,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "About the firm",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 574,
+        "height": 384,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "How we can help",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 958,
+        "height": 1498,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2456,
+        "height": 1909,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4364,
+        "height": 712,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5077,
+        "height": 416,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "About the firm",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5493,
+        "height": 384,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5877,
+        "height": 304,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      }
+    ]
+  },
+  "planning-mostly-light / cutBlocks.balanced / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 6522,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 439,
+        "pt": 32,
+        "pb": 48,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-rise"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 439,
+        "height": 152,
+        "pt": 48,
+        "pb": 48,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 591,
+        "height": 416,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1007,
+        "height": 1516,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 2523,
+        "height": 1877,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4399,
+        "height": 712,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5112,
+        "height": 384,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5496,
+        "height": 384,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5881,
+        "height": 304,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      }
+    ]
+  },
+  "planning-mostly-light / cutBlocks.mostlyDark / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 6522,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 439,
+        "pt": 32,
+        "pb": 48,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": null,
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-rise"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 439,
+        "height": 152,
+        "pt": 48,
+        "pb": 48,
+        "headingLines": 0
+      },
+      {
+        "i": 2,
+        "heading": "About the firm",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 591,
+        "height": 384,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 975,
+        "height": 1466,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 2441,
+        "height": 1877,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4318,
+        "height": 712,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "About the firm",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 5030,
+        "height": 434,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 7,
+        "heading": "About the firm",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5464,
+        "height": 416,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 8,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5881,
+        "height": 304,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      }
+    ]
+  },
+  "multi-practice-balanced / quiet.mostlyLight / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 6837,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 683,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 683,
+        "height": 573,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1256,
+        "height": 682,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1938,
+        "height": 426,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2364,
+        "height": 884,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Our attorneys",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3248,
+        "height": 884,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4132,
+        "height": 517,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 7,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4649,
+        "height": 517,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 8,
+        "heading": "What clients say",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5166,
+        "height": 363,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 9,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5529,
+        "height": 517,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 10,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 6046,
+        "height": 498,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      }
+    ]
+  },
+  "multi-practice-balanced / alternating.balanced / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 7061,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 683,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 683,
+        "height": 573,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1256,
+        "height": 682,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1938,
+        "height": 426,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2364,
+        "height": 940,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3304,
+        "height": 884,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4188,
+        "height": 573,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 7,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4761,
+        "height": 517,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 8,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5278,
+        "height": 419,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 9,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5697,
+        "height": 573,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 10,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 6270,
+        "height": 498,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      }
+    ]
+  },
+  "multi-practice-balanced / alternating.mostlyDark / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 7173,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 683,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 683,
+        "height": 573,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1256,
+        "height": 682,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1938,
+        "height": 482,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2420,
+        "height": 940,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Our attorneys",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3360,
+        "height": 940,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4300,
+        "height": 573,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 7,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4873,
+        "height": 573,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 8,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5446,
+        "height": 419,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 9,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5865,
+        "height": 517,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 10,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 6382,
+        "height": 498,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      }
+    ]
+  },
+  "multi-practice-balanced / cutBlocks.balanced / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 7189,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 683,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 683,
+        "height": 573,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1256,
+        "height": 682,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1938,
+        "height": 426,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 2364,
+        "height": 1004,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3368,
+        "height": 884,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4252,
+        "height": 573,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 7,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4825,
+        "height": 517,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 8,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 5342,
+        "height": 483,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 9,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 5825,
+        "height": 573,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 10,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 6398,
+        "height": 498,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      }
+    ]
+  },
+  "multi-practice-balanced / cutBlocks.mostlyDark / 1440": {
+    "innerWidth": 1440,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 7077,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 747,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-rise"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 747,
+        "height": 573,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1320,
+        "height": 682,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2002,
+        "height": 482,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2484,
+        "height": 884,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Our attorneys",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3368,
+        "height": 884,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 4252,
+        "height": 637,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 7,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 4889,
+        "height": 517,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 8,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 5406,
+        "height": 363,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 1
+      },
+      {
+        "i": 9,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 5769,
+        "height": 517,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3
+      },
+      {
+        "i": 10,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 6286,
+        "height": 498,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2
+      }
+    ]
+  },
+  "multi-practice-balanced / quiet.mostlyLight / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 8693,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 422,
+        "pt": 32,
+        "pb": 48,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 422,
+        "height": 381,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 803,
+        "height": 1466,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2269,
+        "height": 680,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2949,
+        "height": 1877,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Our attorneys",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4825,
+        "height": 1877,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 6702,
+        "height": 349,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 7,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 7051,
+        "height": 349,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 8,
+        "heading": "What clients say",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 7400,
+        "height": 303,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 9,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 7703,
+        "height": 349,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 10,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 8052,
+        "height": 304,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      }
+    ]
+  },
+  "multi-practice-balanced / alternating.balanced / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 8821,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 422,
+        "pt": 32,
+        "pb": 48,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 422,
+        "height": 381,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 803,
+        "height": 1466,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2269,
+        "height": 680,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2949,
+        "height": 1909,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4857,
+        "height": 1877,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 6734,
+        "height": 381,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 7,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 7115,
+        "height": 349,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 8,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 7464,
+        "height": 335,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 9,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 7799,
+        "height": 381,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 10,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 8180,
+        "height": 304,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      }
+    ]
+  },
+  "multi-practice-balanced / alternating.mostlyDark / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 8885,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 422,
+        "pt": 32,
+        "pb": 48,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 422,
+        "height": 381,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 803,
+        "height": 1466,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2269,
+        "height": 712,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2981,
+        "height": 1909,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Our attorneys",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4889,
+        "height": 1909,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 6798,
+        "height": 381,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 7,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 7179,
+        "height": 381,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 8,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 7560,
+        "height": 335,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 9,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 7895,
+        "height": 349,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 10,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 8244,
+        "height": 304,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      }
+    ]
+  },
+  "multi-practice-balanced / cutBlocks.balanced / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 8856,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 422,
+        "pt": 32,
+        "pb": 48,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 422,
+        "height": 381,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 803,
+        "height": 1466,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2269,
+        "height": 680,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 2949,
+        "height": 1926,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Our attorneys",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 4875,
+        "height": 1877,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 6751,
+        "height": 381,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 7,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 7132,
+        "height": 349,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 8,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 7482,
+        "height": 353,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 9,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 7834,
+        "height": 381,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 10,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 8215,
+        "height": 304,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      }
+    ]
+  },
+  "multi-practice-balanced / cutBlocks.mostlyDark / 390": {
+    "innerWidth": 390,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 8792,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(240, 233, 215)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-hero-tint"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 439,
+        "pt": 32,
+        "pb": 48,
+        "headingLines": 2
+      },
+      {
+        "i": 1,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-rise"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 439,
+        "height": 381,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 2,
+        "heading": "How we can help",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 820,
+        "height": 1466,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 3,
+        "heading": "Why work with us",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2286,
+        "height": 712,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 4,
+        "heading": "Our attorneys",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2998,
+        "height": 1877,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 5,
+        "heading": "Our attorneys",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4875,
+        "height": 1877,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 1
+      },
+      {
+        "i": 6,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 6751,
+        "height": 399,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 7,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 7150,
+        "height": 349,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 8,
+        "heading": "What clients say",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 7499,
+        "height": 303,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 2
+      },
+      {
+        "i": 9,
+        "heading": "Serious counsel for the decisions that shape a f",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 7802,
+        "height": 349,
+        "pt": 32,
+        "pb": 64,
+        "headingLines": 3
+      },
+      {
+        "i": 10,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 8151,
+        "height": 304,
+        "pt": 64,
+        "pb": 64,
+        "headingLines": 1
+      }
+    ]
+  }
+}

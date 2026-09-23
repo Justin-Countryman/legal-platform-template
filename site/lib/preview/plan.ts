@@ -1,5 +1,6 @@
 import {THEMES, matchTheme, themePatch, updatePatch, type Theme, type ThemeDoc, type ThemeMatch} from '@/lib/themes'
 import {PALETTE_PRESETS, matchPreset, presetInputs, type PalettePreset} from '@/lib/palettes'
+import {FLOWS, HIDDEN_FIELDS, flowById, flowOf, type FlowRules} from '@/lib/flows'
 import {parseHexInput, type ColorInputs} from '@/lib/designTokens'
 import {isResolvedTreatment} from '@/lib/imageTreatment'
 import {SILO_HOVER_EFFECTS} from '@/lib/siloHover'
@@ -23,23 +24,33 @@ import {type PreviewView} from './session'
 // only what changes, and only for a row the operator changed. Choosing the style set
 // the site already wears keeps any divider or heading line swapped on purpose
 // (`updatePatch`, `[R-485]`).
+//
+// Phase 17B session 3 (WS-V1-PHASE17B-DESIGN §2.10): the third row. A theme IS stored
+// by name (`designSettings.flow`, `[R-509]`), so its block is one key: a chosen theme
+// that differs from the stored one sets `flow`; and ANY chosen theme clears every
+// retired field the document still stores (the six the compat bridge reads,
+// `[R-510]`), so Apply cleans a stored client with the choice, and choosing the theme
+// the site already stores is the one operator action that reaches zero on a document
+// still carrying the six (ADV-17B-3 F3; the deletion pin waits for zero on every
+// client). "As the site is" contributes nothing.
 
 /** The row value that leaves a choice as the site has it. */
 export const AS_THE_SITE_IS = 'site'
 export const COLOR_ROLES = ['darkGround', 'lightGround', 'accent', 'action'] as const
 
-export type PreviewChoices = {styleSet: string; palette: string; view: PreviewView}
+export type PreviewChoices = {styleSet: string; palette: string; flow: string; view: PreviewView}
 
 /** The choices from the preview address, or null when any part is not one. */
-export function parseChoices(styleSet: string, palette: string, view: string): PreviewChoices | null {
+export function parseChoices(styleSet: string, palette: string, flow: string, view: string): PreviewChoices | null {
   const s = styleSet === AS_THE_SITE_IS || THEMES.some((t) => t.id === styleSet)
   const p = palette === AS_THE_SITE_IS || PALETTE_PRESETS.some((x) => x.id === palette)
+  const f = flow === AS_THE_SITE_IS || FLOWS.some((x) => x.id === flow)
   const v = view === 'design' || view === 'grey'
-  return s && p && v ? {styleSet, palette, view: view as PreviewView} : null
+  return s && p && f && v ? {styleSet, palette, flow, view: view as PreviewView} : null
 }
 
 export function previewPath(c: PreviewChoices): string {
-  return `/site-preview/${c.styleSet}/${c.palette}/${c.view}`
+  return `/site-preview/${c.styleSet}/${c.palette}/${c.flow}/${c.view}`
 }
 
 /** Design Settings as stored, with the revision the plan was computed on. */
@@ -50,21 +61,24 @@ export type PreviewPlan = {
   set: Record<string, string | number | string[]>
   /** Fields to clear. */
   unset: string[]
-  /** The chosen style set and palette; null is "as the site is". */
+  /** The chosen style set, palette and theme; null is "as the site is". */
   styleSet: Theme | null
   palette: PalettePreset | null
+  flow: FlowRules | null
   /** The stored revision the plan was computed on; Apply writes against it. */
   rev: string | null
-  /** What the stored settings wear now, named as the Studio names them. */
-  wears: {styleSet: ThemeMatch | null; palette: PalettePreset | null}
+  /** What the stored settings wear now, named as the Studio names them. The theme is
+   *  what the site renders: the stored id, the bridge over the retired fields, or the
+   *  platform default (`flowOf`). */
+  wears: {styleSet: ThemeMatch | null; palette: PalettePreset | null; flow: FlowRules}
 }
 
 const present = (v: unknown) => v !== undefined && v !== null
 const same = (a: unknown, b: unknown) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null)
 
-export function planPreview(stored: StoredDesign | null | undefined, choices: Pick<PreviewChoices, 'styleSet' | 'palette'>): PreviewPlan {
+export function planPreview(stored: StoredDesign | null | undefined, choices: Pick<PreviewChoices, 'styleSet' | 'palette' | 'flow'>): PreviewPlan {
   const doc: StoredDesign = stored ?? {}
-  const wears = {styleSet: matchTheme(doc), palette: matchPreset(doc)}
+  const wears = {styleSet: matchTheme(doc), palette: matchPreset(doc), flow: flowOf(doc)}
   const set: PreviewPlan['set'] = {}
   const unset: string[] = []
 
@@ -88,7 +102,13 @@ export function planPreview(stored: StoredDesign | null | undefined, choices: Pi
     }
   }
 
-  return {set, unset, styleSet: theme, palette, rev: typeof doc._rev === 'string' ? doc._rev : null, wears}
+  const flow = flowById(choices.flow)
+  if (flow) {
+    if (doc.flow !== flow.id) set.flow = flow.id
+    for (const field of HIDDEN_FIELDS) if (present(doc[field]) && !unset.includes(field)) unset.push(field)
+  }
+
+  return {set, unset, styleSet: theme, palette, flow, rev: typeof doc._rev === 'string' ? doc._rev : null, wears}
 }
 
 /** The chrome with the plan applied to the settings the layout and the page read. The
@@ -128,6 +148,35 @@ export function ownLooks(canvas: readonly CanvasMember[] | null | undefined): Ow
     if (m._type === 'contentSectionInline' && isResolvedTreatment(m.imageTreatment)) {
       out.push({key, section: 'Content section', what: 'photo frame'})
     }
+  }
+  return out
+}
+
+// ─── Bands that keep their own ground ─────────────────────────────────────────
+//
+// Phase 17B: the theme's ground pass fills only a band that stores no surface and is
+// not an inset panel; a stored surface always stands and an inset is never assigned
+// (record §2.8, amendments 5). The switcher counts them, so an operator looking at a
+// hand-set canvas knows which bands a theme cannot reach. Read from the projected
+// member, where the appearance fieldset is `appearance: {surface, inset, ...}`.
+
+export type OwnGround = {key: string; section: string; what: 'surface' | 'inset'}
+
+const SECTION_NAMES: Record<string, string> = {
+  practiceAreaNavInline: 'Areas of law', attorneySectionInline: 'Attorneys', badgesSectionInline: 'Badges',
+  testimonialsGridInline: 'Testimonials', featuredTestimonialInline: 'Testimonial', videoSectionInline: 'Video',
+  caseResultsSectionInline: 'Case results', contentSectionInline: 'Content section', reviewsSectionInline: 'Reviews',
+}
+
+export function ownGrounds(canvas: readonly CanvasMember[] | null | undefined): OwnGround[] {
+  const out: OwnGround[] = []
+  for (const m of canvas ?? []) {
+    if (!m || typeof m !== 'object') continue
+    const key = String(m._key ?? '')
+    const section = SECTION_NAMES[m._type ?? ''] ?? 'Section'
+    const a = (m.appearance ?? null) as {surface?: unknown; inset?: unknown} | null
+    if (typeof a?.surface === 'string' && a.surface) out.push({key, section, what: 'surface'})
+    else if (a?.inset === true) out.push({key, section, what: 'inset'})
   }
   return out
 }

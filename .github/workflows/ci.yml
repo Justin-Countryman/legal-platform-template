@@ -584,6 +584,29 @@ jobs:
       - name: The preview reaches no visitor (built and served)
         working-directory: site
         run: bash scripts/ci/check-preview.sh
+      # Phase 17B session 3 (monorepo WS-V1-PHASE17B-DESIGN §2.11 point 4): every roster
+      # theme on every stub canvas, served from the build above at 1440 and at a true 390
+      # (device emulation; `innerWidth` asserted), measured per band and compared to the
+      # committed metrics golden; the screenshots are artifacts for the eye, never compared.
+      - name: Cache the Playwright browser
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('site/package-lock.json') }}
+      - name: Install the Playwright browser
+        working-directory: site
+        run: npx playwright install --with-deps chromium
+      - name: The flow metrics golden at 1440 and 390 (built and served)
+        working-directory: site
+        run: node scripts/ci/flow-metrics.mjs --out flow-captures
+      - name: Upload the captures for the eye
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: flow-captures
+          path: site/flow-captures
+          retention-days: 14
+          if-no-files-found: ignore
 
   studio-build:
     name: "Studio: sanity build"

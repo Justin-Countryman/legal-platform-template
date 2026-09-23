@@ -65,6 +65,16 @@ describe('asGrant', () => {
     expect(asGrant({...client, view: 'print'})).toBeNull()
   })
 
+  it('carries the theme when a link names one, and a client link minted before the theme row (no flow) is still a grant', () => {
+    // Phase 17B session 3: `flow` is optional, read as "as the site is" when absent, so a
+    // 14-day client link minted at the old pin outlives the fourth segment.
+    expect(asGrant({...client, flow: 'alternating.balanced'})).toEqual({...client, flow: 'alternating.balanced'})
+    expect(asGrant(client)).toEqual(client)
+    expect(asGrant(client)?.flow).toBeUndefined()
+    expect(asGrant({...client, flow: 7})).toBeNull()
+    expect(asGrant({...client, flow: ''})).toBeNull()
+  })
+
   it('refuses an unknown role, version or a missing expiry', () => {
     expect(asGrant({...operator, role: 'admin'})).toBeNull()
     expect(asGrant({...operator, v: 2})).toBeNull()
