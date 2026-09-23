@@ -20,6 +20,7 @@ import {extractClassCandidates} from '../lib/class-candidates.mjs'
 import {
   collectClassSites,
   findUnknown,
+  namesToCheck,
   readPlainCssClasses,
 } from '../check-unknown-utility-classes.mjs'
 
@@ -140,8 +141,16 @@ describe('the canonical template is green', () => {
   it('has no unknown utility class in app/, components/ or lib/', () => {
     const {sites, parseFailures} = collectClassSites(SITE_ROOT)
     expect(parseFailures).toEqual([])
-    expect(findUnknown([...sites.keys()], designSystem, plainCss)).toEqual([])
+    expect(findUnknown(namesToCheck(sites), designSystem, plainCss)).toEqual([])
   }, 60_000)
+
+  it('exempts the preview\'s scoped classes only where every use is inside the preview (Phase 17A)', () => {
+    const inside = new Map([['gb-band', ['components/preview/GreyBox.tsx:1']], ['sw-row', ['app/(preview)/x/layout.tsx:2']]])
+    expect(namesToCheck(inside)).toEqual([])
+    const leaked = new Map([['gb-band', ['components/preview/GreyBox.tsx:1', 'components/layout/HomeBody.tsx:9']]])
+    expect(namesToCheck(leaked)).toEqual(['gb-band'])
+    expect(namesToCheck(new Map([['bg-muted', ['components/preview/GreyBox.tsx:1']]]))).toEqual(['bg-muted'])
+  })
 
   it('is green because it checked real work, not because it found nothing to check', () => {
     const {sites} = collectClassSites(SITE_ROOT)

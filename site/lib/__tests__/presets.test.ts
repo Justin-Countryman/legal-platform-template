@@ -6,6 +6,7 @@ import {
   PICK_DEFAULTS, THEMES, THEME_DEFAULTS, THEME_FIELDS, THEME_PICKS, isPlatformDefault, matchTheme, themePatch,
   type ThemeDoc,
 } from '../themes'
+import {PREVIEW_TOKEN_VECTOR, signToken} from '../preview/session'
 
 // studio/presets.json (Phase 16B amendment 4, widened in 16C): the themes with their
 // picks, the corner families, the palettes and the font pairings as data, for the readers
@@ -95,6 +96,13 @@ function presets() {
       headingVoice: f.heading.voice,
     })),
     matchCases: cases(),
+    // Phase 17A: the preview's signed-link format, as one fixed case. The Site Builder
+    // App mints the operator's link and `apply_design.py` verifies an Apply link in
+    // Python; `test_presets.py` signs this payload and must produce this token.
+    previewTokenVector: {
+      ...PREVIEW_TOKEN_VECTOR,
+      token: signToken(PREVIEW_TOKEN_VECTOR.payload, PREVIEW_TOKEN_VECTOR.secret),
+    },
   }
 }
 

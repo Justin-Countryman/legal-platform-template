@@ -3676,5 +3676,18 @@
         ]
       }
     }
-  ]
+  ],
+  "previewTokenVector": {
+    "secret": "vector-secret-not-a-real-one",
+    "payload": {
+      "v": 1,
+      "role": "operator",
+      "exp": 1893456000,
+      "apply": {
+        "origin": "http://127.0.0.1:8787",
+        "slug": "example-firm"
+      }
+    },
+    "token": "eyJ2IjoxLCJyb2xlIjoib3BlcmF0b3IiLCJleHAiOjE4OTM0NTYwMDAsImFwcGx5Ijp7Im9yaWdpbiI6Imh0dHA6Ly8xMjcuMC4wLjE6ODc4NyIsInNsdWciOiJleGFtcGxlLWZpcm0ifX0.PPn4cQrlE0bRlbGOqxVq9YEjf6vuh5r_1UV9r0ckoZE"
+  }
 }

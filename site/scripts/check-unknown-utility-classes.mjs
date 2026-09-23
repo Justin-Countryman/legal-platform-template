@@ -91,6 +91,20 @@ const NON_TAILWIND_CLASSES = new Map([
 // `group/name` and `peer/name` are the named-group forms of the markers above.
 const NAMED_MARKER = /^(group|peer)\//
 
+// The preview address's own classes (Phase 17A, monorepo WS-V1-PHASE17A-DESIGN §2.4,
+// §2.5): the grey box (`gb-*`) and the switcher (`sw-*`) draw in fixed greys from a
+// stylesheet scoped inside each component, on purpose NOT in globals.css, which every
+// visitor downloads. Exempt only where EVERY use is inside the preview's own files, so
+// one of these names typed on a live page still fails the run.
+const PREVIEW_SCOPED = /^(gb|sw)(-[a-z0-9]+)*$/
+const PREVIEW_FILES = /^(components\/preview|app\/\(preview\))\//
+const previewScoped = (name, where) => PREVIEW_SCOPED.test(name) && where.every((site) => PREVIEW_FILES.test(site))
+
+/** The class names to check: every collected name but the preview's own scoped ones. */
+export function namesToCheck(sites) {
+  return [...sites.keys()].filter((name) => !previewScoped(name, sites.get(name) ?? []))
+}
+
 // ─── Collect ────────────────────────────────────────────────────────────────
 
 function collectSourceFiles(root) {
@@ -209,7 +223,7 @@ async function main() {
   const {sites, skipped, parseFailures} = collectClassSites(SITE_ROOT)
   const designSystem = await loadDesignSystem(SITE_ROOT)
   const plainCssClasses = readPlainCssClasses(SITE_ROOT)
-  const unknown = findUnknown([...sites.keys()], designSystem, plainCssClasses)
+  const unknown = findUnknown(namesToCheck(sites), designSystem, plainCssClasses)
 
   const scanned = sites.size
 
