@@ -21,7 +21,7 @@ describe('GET /site-preview/enter', () => {
     const token = signToken({v: 1, role: 'operator', exp: now() + 600}, SECRET)!
     const res = await enter(token)
     expect(res.status).toBe(303)
-    expect(new URL(res.headers.get('location')!).pathname).toBe('/site-preview/site/site/design')
+    expect(new URL(res.headers.get('location')!).pathname).toBe('/site-preview/site/site/site/design')
     const cookie = res.headers.get('set-cookie') ?? ''
     expect(cookie).toContain(`lp-preview=${token}`)
     for (const part of ['HttpOnly', 'Secure', 'SameSite=lax', 'Path=/site-preview']) expect(cookie).toContain(part)
@@ -29,17 +29,25 @@ describe('GET /site-preview/enter', () => {
     expect(res.headers.get('x-robots-tag')).toContain('noindex')
   })
 
-  it('sends a client to the choices the link was sent with', async () => {
+  it('sends a client to the choices the link was sent with, the theme included', async () => {
+    const token = signToken({v: 1, role: 'client', exp: now() + 600, styleSet: 'marble', palette: 'black-gold', flow: 'cutBlocks.balanced', view: 'grey'}, SECRET)!
+    const res = await enter(token)
+    expect(new URL(res.headers.get('location')!).pathname).toBe('/site-preview/marble/black-gold/cutBlocks.balanced/grey')
+  })
+
+  it('a client link minted before the theme row (no flow in the grant) enters as the site is', async () => {
     const token = signToken({v: 1, role: 'client', exp: now() + 600, styleSet: 'marble', palette: 'black-gold', view: 'grey'}, SECRET)!
     const res = await enter(token)
-    expect(new URL(res.headers.get('location')!).pathname).toBe('/site-preview/marble/black-gold/grey')
+    expect(res.status).toBe(303)
+    expect(new URL(res.headers.get('location')!).pathname).toBe('/site-preview/marble/black-gold/site/grey')
   })
 
   it('refuses no link, a bad one, an expired one, an unknown choice, and every link when there is no secret', async () => {
     const expired = signToken({v: 1, role: 'operator', exp: now() - 1}, SECRET)!
     const unknown = signToken({v: 1, role: 'client', exp: now() + 600, styleSet: 'nope', palette: 'site', view: 'design'}, SECRET)!
+    const unknownTheme = signToken({v: 1, role: 'client', exp: now() + 600, styleSet: 'site', palette: 'site', flow: 'nope', view: 'design'}, SECRET)!
     const other = signToken({v: 1, role: 'operator', exp: now() + 600}, 'another-secret')!
-    for (const t of [null, 'nope', expired, unknown, other]) {
+    for (const t of [null, 'nope', expired, unknown, unknownTheme, other]) {
       const res = await enter(t)
       expect(res.status).toBe(404)
       expect(res.headers.get('set-cookie')).toBeNull()

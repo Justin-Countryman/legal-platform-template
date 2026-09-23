@@ -5,7 +5,7 @@ import {PREVIEW_STORED_DESIGN_QUERY} from '@/lib/sanity/queries'
 import {type SiteChrome} from '@/components/layout/SiteShell'
 import {type HomePageData} from '@/components/layout/HomeBody'
 import {getPreviewSession, type PreviewGrant} from './session'
-import {parseChoices, planPreview, previewPath, withPreview, type PreviewChoices, type PreviewPlan, type StoredDesign} from './plan'
+import {AS_THE_SITE_IS, parseChoices, planPreview, previewPath, withPreview, type PreviewChoices, type PreviewPlan, type StoredDesign} from './plan'
 
 // ─── One read of the preview, shared by its layout, its page and the switcher ──
 //
@@ -32,16 +32,17 @@ export type PreviewState =
       home: HomePageData
     }
 
-export const loadPreview = cache(async (styleSet: string, palette: string, view: string): Promise<PreviewState> => {
+export const loadPreview = cache(async (styleSet: string, palette: string, flow: string, view: string): Promise<PreviewState> => {
   const session = await getPreviewSession()
   if (session.state === 'none') return {kind: 'none'}
   if (session.state === 'ended') return {kind: 'ended'}
   const {grant} = session
 
-  const asked = parseChoices(styleSet, palette, view)
+  const asked = parseChoices(styleSet, palette, flow, view)
   let choices = asked
   if (grant.role === 'client') {
-    choices = parseChoices(grant.styleSet ?? '', grant.palette ?? '', grant.view ?? '')
+    // A client link minted before the theme row carries no `flow`: read as the site is.
+    choices = parseChoices(grant.styleSet ?? '', grant.palette ?? '', grant.flow ?? AS_THE_SITE_IS, grant.view ?? '')
     if (choices && (!asked || previewPath(asked) !== previewPath(choices))) {
       return {kind: 'redirect', path: previewPath(choices)}
     }

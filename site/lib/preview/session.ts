@@ -50,6 +50,10 @@ export type PreviewGrant = {
   exp: number
   styleSet?: string
   palette?: string
+  /** The theme's id (Phase 17B session 3). Absent on a link minted before the fourth
+   *  address segment existed, and read as `site` then, so a 14-day client link outlives
+   *  the route (record §2.10, amendment 16). */
+  flow?: string
   view?: PreviewView
   apply?: ApplyTarget
 }
@@ -102,6 +106,10 @@ export function asGrant(payload: unknown): PreviewGrant | null {
     if (!isText(p.palette)) return null
     grant.palette = p.palette
   }
+  if (p.flow !== undefined) {
+    if (!isText(p.flow)) return null
+    grant.flow = p.flow
+  }
   if (p.view !== undefined) {
     if (!isView(p.view)) return null
     grant.view = p.view
@@ -112,7 +120,8 @@ export function asGrant(payload: unknown): PreviewGrant | null {
     if (p.role !== 'operator' || !a || !isText(a.origin) || !isText(a.slug)) return null
     grant.apply = {origin: a.origin, slug: a.slug}
   }
-  // A client's view is bound to the choices it was sent, so it must carry them.
+  // A client's view is bound to the choices it was sent, so it must carry them. The
+  // theme is optional: a link minted before the fourth segment carries none.
   if (p.role === 'client' && (!grant.styleSet || !grant.palette || !grant.view)) return null
   return grant
 }

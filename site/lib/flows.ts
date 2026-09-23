@@ -133,7 +133,7 @@ export type FlowFamily = {
    *  in the phase record with its captures, never when a step is added. */
   passed: readonly Darkness[]
   /** One rule family, parameterised by the step. */
-  rules: (step: Darkness) => Omit<FlowRules, 'id' | 'name' | 'sentence' | 'family' | 'step'>
+  rules: (step: Darkness) => Omit<FlowRules, 'id' | 'name' | 'sentence' | 'family' | 'step' | 'passed'>
 }
 
 // ─── The darkness dial's rule, from the evidence (record §2.5) ────────────────

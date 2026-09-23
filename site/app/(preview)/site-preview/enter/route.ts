@@ -21,7 +21,8 @@ export async function GET(request: NextRequest) {
   if (!token || !grant || !isLive(grant, now)) {
     return new NextResponse('Not found', {status: 404, headers: HEADERS})
   }
-  const choices = parseChoices(grant.styleSet ?? 'site', grant.palette ?? 'site', grant.view ?? 'design')
+  // A grant without `flow` (a link minted before the fourth segment) enters as the site is.
+  const choices = parseChoices(grant.styleSet ?? 'site', grant.palette ?? 'site', grant.flow ?? 'site', grant.view ?? 'design')
   if (!choices) return new NextResponse('Not found', {status: 404, headers: HEADERS})
 
   const response = NextResponse.redirect(new URL(previewPath(choices), request.url), {status: 303, headers: HEADERS})

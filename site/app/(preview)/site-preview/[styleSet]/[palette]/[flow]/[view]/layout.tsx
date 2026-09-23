@@ -8,10 +8,12 @@ import {loadPreview} from '@/lib/preview/load'
 // ─── The preview address ──────────────────────────────────────────────────────
 //
 // Phase 17A (monorepo WS-V1-PHASE17A-DESIGN §2.1, `[R-507]`). The homepage, drawn with
-// the style set and palette in this address instead of the stored ones, and nothing
-// written: `/site-preview/<style set>/<palette>/<view>`, where `site` in a slot means
-// "as the site is" and the view is `design` or `grey`. It is the live site's own
-// shell (`SiteShell`) and homepage (`HomeBody`) over a chrome carrying the choice.
+// the style set, palette and theme in this address instead of the stored ones, and
+// nothing written: `/site-preview/<style set>/<palette>/<theme>/<view>`, where `site`
+// in a slot means "as the site is" and the view is `design` or `grey`. It is the live
+// site's own shell (`SiteShell`) and homepage (`HomeBody`) over a chrome carrying the
+// choice. The theme slot is Phase 17B session 3's (record §2.10); the three-segment
+// address it replaced redirects here for one pin (`../page.tsx`).
 //
 // A layout receives its segments' params, so the choices reach the CSS the shell
 // builds, which a query string never could. Rendered per request, behind a signed
@@ -24,11 +26,11 @@ import {loadPreview} from '@/lib/preview/load'
 
 export const dynamic = 'force-dynamic'
 
-type Params = Promise<{styleSet: string; palette: string; view: string}>
+type Params = Promise<{styleSet: string; palette: string; flow: string; view: string}>
 
 export default async function PreviewLayout({children, params}: {children: React.ReactNode; params: Params}) {
-  const {styleSet, palette, view} = await params
-  const state = await loadPreview(styleSet, palette, view)
+  const {styleSet, palette, flow, view} = await params
+  const state = await loadPreview(styleSet, palette, flow, view)
   if (state.kind === 'none') notFound()
   if (state.kind === 'redirect') redirect(state.path)
   if (state.kind === 'ended') {
@@ -44,7 +46,7 @@ export default async function PreviewLayout({children, params}: {children: React
   const proto = h.get('x-forwarded-proto') ?? (host.startsWith('localhost') || host.startsWith('127.0.0.1') ? 'http' : 'https')
   const off = analyticsOff(state.liveChrome?.scripts)
   const switcher = (
-    <Switcher grant={state.grant} choices={state.choices} plan={state.plan} canvas={state.home?.page?.canvas} origin={`${proto}://${host}`} />
+    <Switcher grant={state.grant} choices={state.choices} plan={state.plan} canvas={state.home?.page?.canvas} chrome={state.chrome} origin={`${proto}://${host}`} />
   )
 
   return (
