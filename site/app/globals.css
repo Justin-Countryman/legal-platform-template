@@ -1149,6 +1149,21 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   }
 }
 @media (forced-colors: active) { .hairline-top::after { background-color: CanvasText; } }
+/* The rule under a docked dark header when scrolled (Phase 17B session 4): the header's shadow
+   is invisible on a dark band. On the header's own `::after`; the header is sticky or fixed
+   whenever it can be scrolled, so the rule sits at its bottom edge and takes no height. */
+@utility hairline-bottom {
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background-color: var(--color-border);
+    pointer-events: none;
+  }
+}
+@media (forced-colors: active) { .hairline-bottom::after { background-color: CanvasText; } }
 
 /* THE DROP CAP (`[R-493]`). `::first-letter`, so nothing enters the DOM and a screen
    reader reads the word whole, which is the method tested practitioner research

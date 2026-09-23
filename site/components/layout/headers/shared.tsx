@@ -260,7 +260,32 @@ export function resolveScheme(
 export function schemeBg(scheme: string, scrolled: boolean, floating = false): string {
   const bg = BG[scheme] ?? BG.light
   if (!scrolled) return bg
-  return floating ? bg : `${bg} shadow-elevation-md`
+  if (floating) return bg
+  // A dark bar's shadow is dark on dark: over a dark band its edge measured two RGB levels
+  // (Phase 17B session 4, ADV-17B4-A), so a docked dark header draws a one-pixel rule in the
+  // dark border token, on an `::after`, which moves nothing.
+  return isDarkSurface(scheme) ? `${bg} shadow-elevation-md hairline-bottom` : `${bg} shadow-elevation-md`
+}
+
+const TRANSPARENT_HEADER = new Set(['transparent-dark', 'transparent-light'])
+
+// The mobile row's own ground. The row sits inside the header, so it paints nothing and shows
+// the header's ground, except where the header's own ground is see-through: a stored
+// transparent top (heroMerge), which the row turns solid because a phone shows no hero behind
+// it, and the floating pill, whose outer header is transparent. Until Phase 17B session 4 it
+// always painted the AT-TOP scheme, so after scrolling it kept that ground while its logo and
+// the header's ring context followed the scrolled one: a light top over a dark scroll measured
+// 1.16:1 (ADV-17B4-A).
+export function mobileRowBg(scheme: string, floatingActive: boolean): string {
+  return TRANSPARENT_HEADER.has(scheme) || floatingActive ? schemeBg(solidScheme(scheme), false) : ''
+}
+
+/** The second number, unless it is the first again: a firm with only a toll-free number
+ *  resolves the primary slot to nothing, falls back to the toll-free, and would print it twice. */
+export function secondPhone(first: string | null | undefined, second: string | null | undefined): string | null {
+  if (!second) return null
+  const digits = (s: string) => s.replace(/\D/g, '')
+  return first && digits(first) === digits(second) ? null : second
 }
 
 export function isDarkSurface(scheme: string): boolean {
@@ -1060,7 +1085,7 @@ export function MobileDrawer({data, isOpen, items, onClose, triggerRef}: MobileD
   // which MotionConfig's positional gate does not cover.
   const mc = useMotionConfig()
   const phone    = data.headerPhone || data.tollFreePhone || data.phone
-  const phone2   = data.headerPhone2 || null
+  const phone2   = secondPhone(phone, data.headerPhone2)
   const drawerRef    = useRef<HTMLDivElement>(null)
   const hasMountedRef = useRef(false)
   const pathname     = usePathname() ?? ''
