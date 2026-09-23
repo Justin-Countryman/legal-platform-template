@@ -4,7 +4,7 @@ import {render} from '@testing-library/react'
 
 vi.mock('next/link', () => ({
   // eslint-disable-next-line react/display-name
-  default: forwardRef<HTMLAnchorElement, {href: string; children: React.ReactNode; className?: string; 'aria-current'?: string}>(
+  default: forwardRef<HTMLAnchorElement, {href: string; children: React.ReactNode; className?: string; 'aria-current'?: 'true'}>(
     ({href, children, className, ...rest}, ref) => <a ref={ref} href={href} className={className} aria-current={rest['aria-current']}>{children}</a>,
   ),
 }))

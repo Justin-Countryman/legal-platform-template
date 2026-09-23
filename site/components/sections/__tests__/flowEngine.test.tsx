@@ -1,8 +1,6 @@
 import {describe, expect, it, vi} from 'vitest'
 import {forwardRef} from 'react'
 import {render} from '@testing-library/react'
-import {existsSync, readFileSync} from 'node:fs'
-import {resolve} from 'node:path'
 
 // ─── The ground pass (Phase 17B, record §2.3, §5) ─────────────────────────────
 //
@@ -32,8 +30,10 @@ import {PageSections, type PageSectionData} from '../PageSections'
 import {assignGrounds, canvasFacts, walkFrame, siteLookOf, type SiteLook} from '../sectionFrame'
 import {type SectionAppearance} from '../SectionShell'
 import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, flowById, unmetNeeds, type FlowRules, type Host} from '@/lib/flows'
+import {type VisibleGround} from '@/lib/sectionSurface'
 import {ghostSource} from '@/lib/brandMark'
 import {LOOK, themed} from './flowFixtures'
+import {RECORD_CANVASES, stubCanvas} from './stubCanvases'
 import planted from './fixtures/fixture-shaped-canvas.json'
 import migrated from '@/components/layout/__tests__/fixtures/migrated-canvas.json'
 
@@ -269,27 +269,28 @@ describe('the all-dark page', () => {
 //
 // Every theme on every fixture canvas: what the engine decides per band, and what
 // the theme lacks on that canvas. Regenerated only on purpose and read in review;
-// the record's §2.4 table is derived from it, never by hand.
+// the record's §2.4 table is derived from it, never by hand. Since Phase 17B session
+// 3 the canvases include the three record-composed ones under `scripts/ci/` (an
+// adversarial mostly-dark page, a planning-family mostly-light page, a multi-practice
+// balanced page), read with their references resolved as the homepage query resolves
+// them (`stubCanvases.ts`), so the golden's rows are the served page's bands.
 describe('the decision golden', () => {
   const FIRM = 'Example Law Firm'
-  // The CI stub's canvas, or null on a client tree: the press prunes `scripts/ci`,
-  // so the golden (which holds the stub's rows) runs on the template checkout and
-  // is skipped, by name, on a propagated client (`[R-175]`).
-  const STUB_PATH = resolve(__dirname, '../../../scripts/ci/fixture.ndjson')
-  function stubCanvas(): HomepageBlock[] | null {
-    if (!existsSync(STUB_PATH)) return null
-    const lines = readFileSync(STUB_PATH, 'utf8').split('\n').filter(Boolean)
-    return lines.map((l) => JSON.parse(l)).find((d) => d._type === 'homePage').canvas
-  }
-  const STUB = stubCanvas()
-  const canvases: Array<[string, HomepageBlock[], 'dark' | 'light']> = [
-    ...(STUB ? [['stub', STUB, 'light'] as [string, HomepageBlock[], 'light']] : []),
+  // The stub datasets, or null on a client tree: the press prunes `scripts/ci`, so
+  // the golden (which holds their rows) runs on the template checkout and is skipped,
+  // by name, on a propagated client (`[R-175]`).
+  const STUB = stubCanvas('fixture.ndjson')
+  const RECORDS = RECORD_CANVASES.map((f) => [f.replace(/^record-|\.ndjson$/g, ''), stubCanvas(f)] as const)
+  const ciPresent = STUB !== null && RECORDS.every(([, c]) => c !== null)
+  const canvases: Array<[string, HomepageBlock[], VisibleGround]> = [
+    ...(ciPresent ? [['stub', STUB!.blocks, STUB!.hero] as [string, HomepageBlock[], VisibleGround]] : []),
     ['migrated', migrated as unknown as HomepageBlock[], 'dark'],
     ['planted', planted as unknown as HomepageBlock[], 'dark'],
+    ...(ciPresent ? RECORDS.map(([name, c]) => [name, c!.blocks, c!.hero] as [string, HomepageBlock[], VisibleGround]) : []),
   ]
   const themes: FlowRules[] = [...FLOWS, siteLookOf({sectionJoin: 'angled', dividerCarry: ['cards'], patternTexture: 'diagonalHatch', patternGround: 'dark', sectionOverlap: 'photo', brandGhost: 'none'}).flow!]
 
-  it.skipIf(STUB === null)('records every theme’s decisions on every canvas (skipped on a client tree: the CI stub canvas is pruned by the press)', async () => {
+  it.skipIf(!ciPresent)('records every theme’s decisions on every canvas (skipped on a client tree: the stub datasets are pruned by the press)', async () => {
     const golden: Record<string, unknown> = {}
     for (const [name, blocks, hero] of canvases) {
       for (const flow of themes) {
