@@ -64,7 +64,8 @@ export const footerSettings = defineType({
       title: 'Footer Color Scheme',
       type: 'string',
       fieldset: 'layout',
-      description: 'Dark (brand background, light text) or Light (neutral background, dark text). Applies to every footer layout.',
+      // No initialValue (Phase 17B session 4, `[R-518]`): the theme decides the footer's scheme.
+      description: 'Dark (brand background, light text) or Light (neutral background, dark text), for every footer layout. Leave it clear and the theme decides (Design Settings, Theme); set it only to override the theme, and clear it to hand it back.',
       options: {
         list: [
           {title: 'Dark', value: 'dark'},
@@ -72,7 +73,6 @@ export const footerSettings = defineType({
         ],
         layout: 'radio',
       },
-      initialValue: 'dark',
     },
 
     // ─── Form ─────────────────────────────────────────────────────────────────

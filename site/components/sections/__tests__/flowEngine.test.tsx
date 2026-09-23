@@ -29,7 +29,7 @@ import {HomepageCanvas, frameOf, type HomepageBlock} from '@/components/layout/H
 import {PageSections, type PageSectionData} from '../PageSections'
 import {assignGrounds, canvasFacts, walkFrame, siteLookOf, type SiteLook} from '../sectionFrame'
 import {type SectionAppearance} from '../SectionShell'
-import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, flowById, unmetNeeds, type FlowRules, type Host} from '@/lib/flows'
+import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, chromeSchemes, flowById, unmetNeeds, type FlowRules, type Host} from '@/lib/flows'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {ghostSource} from '@/lib/brandMark'
 import {LOOK, themed} from './flowFixtures'
@@ -299,6 +299,10 @@ describe('the decision golden', () => {
         const out = walkFrame(blocks, frameOf, site, hero)
         golden[`${name} / ${flow.id}`] = {
           unmetNeeds: unmetNeeds(flow, canvasFacts(survivors, site)),
+          // Phase 17B session 4 (`[R-518]`): the header and footer the theme gives when Header
+          // Settings and Footer Settings store none, with both logos uploaded. Site-wide, so
+          // the same on every canvas; recorded per canvas so the golden reads as the page.
+          chrome: chromeSchemes(flow, null, null, {onLight: true, onDark: true}),
           bands: out.map(({member, seam}) => ({
             key: member._key,
             host: hostOf(member),

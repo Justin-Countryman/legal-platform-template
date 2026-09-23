@@ -67,6 +67,12 @@ export const LIGHT_PAINTS = ['plain', 'washes', 'pattern', 'panel'] as const
 export const DIVIDER_ATS = ['intoDark', 'everyChange', 'none'] as const
 export const HAIRLINES = ['none', 'atChange', 'everyBand'] as const
 export const GHOSTS = ['none', 'once'] as const
+/** The header's and the footer's ground (Phase 17B session 4, `[R-518]`): light or dark, never
+ *  transparent or glass. A transparent header needs `heroMerge` and a hero behind it, and its
+ *  polarity follows the internal hero, not the homepage's (measured unreadable at 1.02:1 when they
+ *  differ, ADV-17B4-A); glass pairs with the floating compact style. Both stay the operator's. */
+export const CHROME_SCHEMES = ['light', 'dark'] as const
+export type ChromeScheme = (typeof CHROME_SCHEMES)[number]
 export const NEEDS = ['photos', 'texture', 'initials', ...HOSTS] as const
 export type Need = (typeof NEEDS)[number]
 
@@ -120,6 +126,10 @@ export type FlowRules = {
   /** What the canvas and the site must hold for the theme to look like itself. The switcher
    *  names an unmet need; the build's picker never picks a theme whose needs are unmet. */
   needs: readonly Need[]
+  /** The header (at the top and when scrolled: one polarity, so the logo never swaps on scroll)
+   *  and the footer, site-wide, every page. A scheme stored on Header Settings or Footer
+   *  Settings wins, per field (`chromeSchemes`, `[R-518]`). */
+  chrome: {header: ChromeScheme; footer: ChromeScheme}
 }
 
 export type FlowFamily = {
@@ -157,6 +167,17 @@ export const STEP_HOSTS: Record<Darkness, readonly Host[]> = {
   // mostly-dark pages: areas 73%; what stays light is a split or a contained panel.
   mostlyDark: ['ribbon', 'narrative', 'areas', 'testimonials', 'statement', 'attorneys', 'caseResults', 'split', 'badges'],
   allDark: HOSTS,
+}
+/** The header and footer per step (Phase 17B session 4, record §2.2): the lighter steps keep the
+ *  white bar and dark footer every client wears today; the darker steps darken the bar, which
+ *  reads as one block with a dark hero. The study coded the footer (a dark one on 20 of 20
+ *  mostly-dark pages, light-leaning on mostly-light ones) and never the header, so the header's
+ *  values rest on the rule and the eye pass; a family may name its own. */
+export const STEP_CHROME: Record<Darkness, FlowRules['chrome']> = {
+  mostlyLight: {header: 'light', footer: 'dark'},
+  balanced: {header: 'light', footer: 'dark'},
+  mostlyDark: {header: 'dark', footer: 'dark'},
+  allDark: {header: 'dark', footer: 'dark'},
 }
 
 /** The dark budget as a count of the survivors: `third` is `ceil(n/3)`, which sits on
@@ -199,7 +220,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', close: 'dark'},
       light: {paint: 'plain'},
       divider: NO_DIVIDER,
-      ghost: 'none', overlap: 'none', needs: [],
+      ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME[step],
     }),
   },
   {
@@ -215,7 +236,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: 'pairs', paint: 'plain', close: 'dark'},
       light: {paint: 'plain'},
       divider: NO_DIVIDER,
-      ghost: 'none', overlap: 'none', needs: [],
+      ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME[step],
     }),
   },
   {
@@ -227,7 +248,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'pattern', close: 'dark'},
       light: {paint: 'plain'},
       divider: {shape: 'peak', at: 'intoDark', carry: ['cards'], hairline: 'none'},
-      ghost: 'none', overlap: 'photo', needs: ['texture'],
+      ghost: 'none', overlap: 'photo', needs: ['texture'], chrome: STEP_CHROME[step],
     }),
   },
 ]
@@ -308,6 +329,7 @@ export function bridgeOf(d: Record<string, unknown>): FlowRules {
     ghost: d.brandGhost === 'on' ? 'once' : 'none',
     overlap: readOverlap(d.sectionOverlap),
     needs: [],
+    chrome: STEP_CHROME.mostlyLight,
   }
 }
 
@@ -416,6 +438,53 @@ export function saturatedFillOk(inputs: ColorInputs | Record<string, unknown> | 
 export function closeSurface(flow: FlowRules | null | undefined, saturatedOk: boolean): 'dark' | 'saturated' | 'muted' {
   const close = flow?.dark.close ?? 'muted'
   return close === 'saturated' && !saturatedOk ? 'dark' : close
+}
+
+// ─── The header and the footer (Phase 17B session 4, `[R-518]`, record §2.3) ───
+//
+// The shell draws the header and footer on every page, so their schemes are site-wide, like
+// the carry. Read here, on the server, by `SiteShell` alone: the client `Header` receives the
+// resolved strings, as it always has, and nothing in the header or footer imports this module
+// (an ESLint rule holds it). A stored scheme wins, per field; the theme fills what is absent;
+// the theme never yields a transparent value, so `heroMerge` with nothing stored gets the
+// theme's solid bar fixed over the hero, and only a STORED transparent top is flipped to the
+// hero's polarity downstream (`resolveMergedHeaderScheme`, unchanged).
+//
+// A dark header needs the logo made for dark grounds: without it `HeaderLogo` prints the firm's
+// name as text (measured, ADV-17B4-A). Where the site has the light logo and not the dark one,
+// the theme's dark header renders light and the switcher says why. A site with no logo prints
+// the name on either ground, so nothing falls back.
+
+type StoredHeader = {defaultScheme?: string | null; scrolledScheme?: string | null} | null | undefined
+type StoredFooter = {footerScheme?: string | null} | null | undefined
+export type SiteLogos = {onLight?: unknown; onDark?: unknown} | null | undefined
+
+/** A logo the header can draw: one with an image. The query answers `{src: null, alt}` for a
+ *  logo field holding alt text and no image (ADV-17B4-2), which is no logo. */
+const drawable = (logo: unknown): boolean =>
+  !!logo && (typeof logo !== 'object' || !!(logo as {src?: unknown}).src)
+
+/** The theme's header can go dark on this site without losing its logo. */
+export function darkHeaderReady(logos: SiteLogos): boolean {
+  return !(drawable(logos?.onLight) && !drawable(logos?.onDark))
+}
+
+/** The header's scheme at the top and when scrolled, and the footer's, as the site renders them. */
+export function chromeSchemes(
+  flow: Pick<FlowRules, 'chrome'>,
+  header: StoredHeader,
+  footer: StoredFooter,
+  logos: SiteLogos,
+): {top: string; scrolled: string; footer: ChromeScheme; darkLogoMissing: boolean} {
+  const wantsDark = flow.chrome.header === 'dark'
+  const themeHeader: ChromeScheme = wantsDark && !darkHeaderReady(logos) ? 'light' : flow.chrome.header
+  const storedFooter = footer?.footerScheme
+  return {
+    top: header?.defaultScheme || themeHeader,
+    scrolled: header?.scrolledScheme || themeHeader,
+    footer: storedFooter === 'light' || storedFooter === 'dark' ? storedFooter : flow.chrome.footer,
+    darkLogoMissing: wantsDark && !darkHeaderReady(logos),
+  }
 }
 
 /** Every shape a theme may name, for the tests and the Studio. */

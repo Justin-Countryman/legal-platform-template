@@ -10,10 +10,10 @@
 import {useRef, useState} from 'react'
 import {
   useScrolled, useHeaderFits, useHeaderHeight, useScrollLock,
-  resolveScheme, schemeBg, solidScheme, headerPositionClass,
+  resolveScheme, schemeBg, mobileRowBg, headerPositionClass,
   HEADER_TEXT, HEADER_HOVER_TEXT, HEADER_MUTED_TEXT, HEADER_SUBTLE_TEXT,
   isDarkSurfaceScheme,
-  HeaderLogo, TopBar, CtaButtons, NavLinks, MobileDrawer, MobileHeaderRow,
+  secondPhone, HeaderLogo, TopBar, CtaButtons, NavLinks, MobileDrawer, MobileHeaderRow,
   type HeaderData,
 } from './shared'
 
@@ -50,11 +50,10 @@ export function ApexHeader({data}: Props) {
   const items     = navItems ?? []
 
   const displayPhone      = headerPhone || tollFreePhone || phone
-  const displayPhone2     = headerPhone2 || null
+  const displayPhone2     = secondPhone(displayPhone, headerPhone2)
   const hideSupplementary = scrolled && !!stickyHideSupplementary
   const floatingActive    = compactStyle === 'float' && scrolled
-  const mobileSolid       = solidScheme(defaultScheme)
-  const mobileBg          = schemeBg(mobileSolid, false)
+  const mobileBg          = mobileRowBg(scheme)
   const dataRingContext   = isDarkSurfaceScheme(scheme) ? 'dark' : undefined
 
   function closeMenu() { setMenuOpen(false) }

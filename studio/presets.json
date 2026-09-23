@@ -2453,6 +2453,10 @@
       "ghost": "none",
       "overlap": "none",
       "needs": [],
+      "chrome": {
+        "header": "light",
+        "footer": "dark"
+      },
       "id": "quiet.mostlyLight",
       "name": "Quiet",
       "sentence": "A dark hero, then light all the way down, and one dark band to close.",
@@ -2488,6 +2492,10 @@
       "ghost": "none",
       "overlap": "none",
       "needs": [],
+      "chrome": {
+        "header": "light",
+        "footer": "dark"
+      },
       "id": "alternating.balanced",
       "name": "Alternating, balanced",
       "sentence": "Dark, light, dark, light, with hard edges: the classic law site.",
@@ -2525,6 +2533,10 @@
       "ghost": "none",
       "overlap": "none",
       "needs": [],
+      "chrome": {
+        "header": "dark",
+        "footer": "dark"
+      },
       "id": "alternating.mostlyDark",
       "name": "Alternating, mostly dark",
       "sentence": "Dark, light, dark, light, with hard edges: the classic law site.",
@@ -2564,6 +2576,10 @@
       "needs": [
         "texture"
       ],
+      "chrome": {
+        "header": "light",
+        "footer": "dark"
+      },
       "id": "cutBlocks.balanced",
       "name": "Cut blocks, balanced",
       "sentence": "Navy blocks cut into the page with a peak, each carrying the texture.",
@@ -2605,6 +2621,10 @@
       "needs": [
         "texture"
       ],
+      "chrome": {
+        "header": "dark",
+        "footer": "dark"
+      },
       "id": "cutBlocks.mostlyDark",
       "name": "Cut blocks, mostly dark",
       "sentence": "Navy blocks cut into the page with a peak, each carrying the texture.",

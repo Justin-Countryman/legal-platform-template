@@ -305,6 +305,47 @@ const eslintConfig = [
     },
   },
 
+  // Phase 17B session 4 (monorepo WS-V1-PHASE17B4-DESIGN §2.5): the header is a client
+  // component, and the theme's rules (`lib/flows.ts`, which pulls the color engine) are read
+  // on the server by the site shell, which hands the header and footer resolved strings. This
+  // keeps the rules out of their client graph. It restates the two rules above, because a
+  // later block replaces a rule's options.
+  {
+    files: [
+      "components/layout/Header.tsx",
+      "components/layout/headers/**/*.{ts,tsx}",
+      "components/layout/Footer.tsx",
+      "components/layout/footers/**/*.{ts,tsx}",
+    ],
+    ignores: ["**/__tests__/**"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "next/font/google",
+              message:
+                "next/font/google not allowed — the platform uses Sanity-driven fontPairingPreset (committed WOFF2 files in public/fonts/files/). See BI-PRINCIPLES.md → Performance / Fonts and skill-typography → CSS chain.",
+            },
+          ],
+          patterns: [
+            {
+              group: ["@/lib/preview", "@/lib/preview/*", "@/components/preview", "@/components/preview/*", "../preview/*", "./preview/*"],
+              message:
+                "Preview code is imported only by the preview address, app/(preview)/ (Phase 17A). A live route must never read the preview's cookie or sign its links.",
+            },
+            {
+              group: ["@/lib/flows", "**/lib/flows"],
+              message:
+                "The theme's rules are read on the server by SiteShell, which passes the header and footer resolved schemes (Phase 17B session 4). Importing them here puts the color engine in the visitor's bundle.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+
   // ───────────────────────────────────────────────────────────────────────
   // Global ignores
   // ───────────────────────────────────────────────────────────────────────

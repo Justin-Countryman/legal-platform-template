@@ -107,7 +107,16 @@ function measure() {
   const origin = bands[0] ? bands[0].getBoundingClientRect().top : 0
   const px = (v) => Math.round(parseFloat(v) || 0)
   const keep = (cls) => /^(divider-|hairline-top$|band-gradient$|grad-[in]-|bg-)/.test(cls)
+  // Phase 17B session 4 (`[R-518]`): the site header and footer, whose schemes the theme now
+  // sets. The ground at 390 is the header's own: the mobile row shows it and paints none.
+  const chromeOf = (el) => (el ? {ring: el.getAttribute('data-ring-context'), bg: getComputedStyle(el).backgroundColor} : null)
+  // The mobile row, the header's first child, paints its own ground (ADV-17B4-2: the header's
+  // alone did not see a change on phones).
+  const header = document.querySelector('header')
   return {
+    header: chromeOf(header),
+    headerRow: header?.firstElementChild ? getComputedStyle(header.firstElementChild).backgroundColor : null,
+    footer: chromeOf(document.querySelector('footer[aria-labelledby="footer-heading"]')),
     innerWidth: window.innerWidth,
     clientWidth: document.documentElement.clientWidth,
     scrollWidth: document.documentElement.scrollWidth,
@@ -191,6 +200,19 @@ try {
         if (m.scrollWidth > m.clientWidth) fail(`${key}: horizontal scroll: scrollWidth ${m.scrollWidth} over ${m.clientWidth}`)
         if (width === '390') for (const b of m.bands) if (b.headingLines > 4) fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at 390: ${b.heading}`)
         await page.screenshot({path: resolve(OUT, `${canvas}--${flow}--${width}.jpg`), fullPage: true, type: 'jpeg', quality: 60})
+        // The header scrolled (Phase 17B session 4): prerendered HTML only ever holds the state
+        // at the top, so this is the one check that sees the scrolled bar, its ground and its rule.
+        m.headerScrolled = await page.evaluate(async () => {
+          window.scrollTo(0, 800)
+          window.dispatchEvent(new Event('scroll'))
+          await new Promise((r) => setTimeout(r, 450))
+          await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
+          const el = document.querySelector('header')
+          const out = el ? {ring: el.getAttribute('data-ring-context'), bg: getComputedStyle(el).backgroundColor, rule: el.classList.contains('hairline-bottom'),
+            row: el.firstElementChild ? getComputedStyle(el.firstElementChild).backgroundColor : null} : null
+          window.scrollTo(0, 0)
+          return out
+        })
       }
       await context.close()
     }
@@ -215,6 +237,9 @@ if (UPDATE) {
     const g = golden[key]
     if (!g) { fail(`${key}: measured, not in the golden`); continue }
     for (const f of ['innerWidth', 'clientWidth']) if (m[f] !== g[f]) fail(`${key}: ${f} ${m[f]} vs golden ${g[f]}`)
+    for (const f of ['header', 'headerRow', 'footer', 'headerScrolled']) {
+      if (JSON.stringify(m[f]) !== JSON.stringify(g[f])) fail(`${key}: ${f} ${JSON.stringify(m[f])} vs golden ${JSON.stringify(g[f])}`)
+    }
     if (m.bands.length !== g.bands.length) { fail(`${key}: ${m.bands.length} bands vs golden ${g.bands.length}`); continue }
     m.bands.forEach((b, i) => {
       const gb = g.bands[i]

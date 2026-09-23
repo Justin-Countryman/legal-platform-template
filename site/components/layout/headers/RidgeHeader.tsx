@@ -8,7 +8,7 @@
 import {useRef, useState} from 'react'
 import {
   useScrolled, useHeaderFits, useHeaderHeight, useScrollLock,
-  resolveScheme, schemeBg, solidScheme, headerPositionClass,
+  resolveScheme, schemeBg, mobileRowBg, headerPositionClass,
   HEADER_TEXT, HEADER_HOVER_TEXT,
   isDarkSurfaceScheme,
   HeaderLogo, TopBar, CtaButtons, NavLinks, MobileDrawer, MobileHeaderRow,
@@ -44,8 +44,7 @@ export function RidgeHeader({data}: Props) {
   const items              = navItems ?? []
   const hideSupplementary  = scrolled && !!stickyHideSupplementary
   const floatingActive     = compactStyle === 'float' && scrolled
-  const mobileSolid        = solidScheme(defaultScheme)
-  const mobileBg           = schemeBg(mobileSolid, false)
+  const mobileBg           = mobileRowBg(scheme)
   const dataRingContext    = isDarkSurfaceScheme(scheme) ? 'dark' : undefined
 
   function closeMenu() { setMenuOpen(false) }
