@@ -91,6 +91,9 @@ export type Paint = {
   ground?: 'light' | 'tint' | 'dark' | 'saturated' | 'image'
   texture: boolean
   inset?: boolean
+  /** The theme's room around a band it filled (`flow.spacing`, Phase 17B session 5). Only
+   *  `spacious` is carried; the shell reads it below a stored spacing and a section's own. */
+  spacing?: 'spacious'
 }
 
 /** Phase 16E: whether this member can raise a feature photo into the band above.
@@ -561,15 +564,30 @@ export function assignGrounds(
         paints[i] = {ground: 'light', texture: false}
     }
   })
+  // The room around the bands the theme filled (Phase 17B session 5, `[R-525]`): a band
+  // whose own surface stands keeps its own room, as it keeps everything else.
+  if (flow.spacing === 'spacious') {
+    paints.forEach((p, i) => { if (p?.ground && !fixed[i]) paints[i] = {...p, spacing: 'spacious'} })
+  }
   return paints
 }
 
-/** What the canvas and the site hold, for a theme's needs (`unmetNeeds`). */
-export function canvasFacts(survivors: readonly Survivor[], site: SiteLook | null | undefined): CanvasFacts {
+/** What the canvas and the site hold, for a theme's needs (`unmetNeeds`). The ribbons are
+ *  the ones `flow`'s own pass fills (default: the site look's theme), so two adjacent
+ *  ribbons, or a ribbon that stores its own surface, do not count as two (ADV-17B5-B). */
+export function canvasFacts(
+  survivors: readonly Survivor[],
+  site: SiteLook | null | undefined,
+  hero: VisibleGround | null = null,
+  flow: FlowRules | null | undefined = site?.flow,
+): CanvasFacts {
+  const paints = flow ? assignGrounds(survivors, flow, site ?? null) : []
   return {
     hosts: [...new Set(survivors.map((r) => r.host).filter((h): h is Host => !!h))],
     photos: survivors.filter((r) => r.photo).length,
     texture: !!site?.patternTexture,
     initials: !!site?.ghost?.text,
+    hero,
+    ribbonsFilled: survivors.filter((r, i) => r.host === 'ribbon' && (paints[i]?.ground === 'saturated' || paints[i]?.ground === 'dark')).length,
   }
 }

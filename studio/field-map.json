@@ -5176,9 +5176,11 @@
             "list": [
               "quiet.mostlyLight",
               "alternating.balanced",
-              "alternating.mostlyDark",
               "cutBlocks.balanced",
-              "cutBlocks.mostlyDark"
+              "cutBlocks.mostlyDark",
+              "typeOnBlack.allDark",
+              "editorial.mostlyLight",
+              "ribbonRhythm.mostlyLight"
             ]
           },
           "path": "flow",

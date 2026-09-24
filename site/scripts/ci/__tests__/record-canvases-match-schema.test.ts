@@ -12,7 +12,8 @@ import {describe, expect, it} from 'vitest'
 
 const CI = path.resolve(__dirname, '..')
 const SCHEMA = path.resolve(__dirname, '../../../../studio/schema.json')
-const FILES = ['record-adversarial-mostly-dark.ndjson', 'record-planning-mostly-light.ndjson', 'record-multi-practice-balanced.ndjson']
+// Phase 17B session 5 adds the ribbon evidence canvas: two ribbons bracketing a light page.
+const FILES = ['record-adversarial-mostly-dark.ndjson', 'record-planning-mostly-light.ndjson', 'record-multi-practice-balanced.ndjson', 'record-ribbons-mostly-light.ndjson']
 
 type SchemaType = {name: string; type: string; attributes?: Record<string, unknown>}
 type Doc = Record<string, unknown> & {_id: string; _type: string}
@@ -48,8 +49,13 @@ describe.skipIf(!present)('scripts/ci/record-*.ndjson agree with studio/schema.j
     expect(new Set(home.canvas.map((m) => m._key)).size).toBe(home.canvas.length)
   })
 
-  it('the three canvases differ in what the eye is meant to see: the hero and the bands', () => {
+  it('the canvases differ in what the eye is meant to see: the hero and the bands', () => {
     const heroes = FILES.map((f) => (read(f).find((d) => d._type === 'heroSettings') as unknown as {homepageHero: {schemeOverride: string}}).homepageHero.schemeOverride)
-    expect(heroes).toEqual(['dark', 'light', 'light'])
+    expect(heroes).toEqual(['dark', 'light', 'light', 'dark'])
+    // The ribbon canvas carries what the others lack: a ribbon after the hero and one before the close.
+    const ribbons = (f: string) => ((read(f).find((d) => d._type === 'homePage') as unknown as {canvas: Array<{layout?: string}>}).canvas)
+      .map((m, i, all) => (m.layout === 'ribbon' ? i - all.length : null)).filter((x) => x !== null)
+    expect(ribbons('record-ribbons-mostly-light.ndjson')).toEqual([-7, -1])
+    for (const f of FILES.slice(0, 3)) expect(ribbons(f).length, f).toBeLessThan(2)
   })
 })

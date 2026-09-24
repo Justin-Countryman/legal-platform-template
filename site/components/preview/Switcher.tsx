@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import {THEMES} from '@/lib/themes'
 import {PALETTE_PRESETS} from '@/lib/palettes'
-import {DARKNESS_LABELS, FAMILIES, chromeSchemes, familyOf, flowById, flowId, unmetNeeds, type FlowRules} from '@/lib/flows'
+import {DARKNESS_LABELS, FAMILIES, chromeSchemes, familyOf, flowById, flowId, needLabel, unmetNeeds, type FlowFamily, type FlowRules} from '@/lib/flows'
+import {type VisibleGround} from '@/lib/sectionSurface'
 import {ghostSource} from '@/lib/brandMark'
 import {canvasFacts, siteLookOf} from '@/components/sections/sectionFrame'
 import {frameOf, type HomepageBlock} from '@/components/layout/HomepageCanvas'
@@ -52,6 +53,9 @@ type Props = {
   chrome?: SiteChrome | null
   /** This site's own origin, from the request, for the share link. */
   origin: string
+  /** The homepage hero's ground as the walk meets it, for a theme that wants a dark hero
+   *  (Phase 17B session 5). */
+  hero?: VisibleGround | null
 }
 
 function names(plan: PreviewPlan): string {
@@ -101,6 +105,13 @@ export function chromeNote(flow: Pick<FlowRules, 'chrome'>, chrome: StoredChrome
   return out
 }
 
+/** A family's button label: its name, and, for a family with one step the eye has not passed,
+ *  that it is not yet judged (Phase 17B session 5: the step line that carries the mark only
+ *  appears for a family with two steps). */
+export function familyLabel(f: Pick<FlowFamily, 'name' | 'steps' | 'passed' | 'defaultStep'>): string {
+  return f.steps.length === 1 && !f.passed.includes(f.defaultStep) ? `${f.name} (not yet judged)` : f.name
+}
+
 function Choice({href, active, className, children}: {href: string; active: boolean; className?: string; children: React.ReactNode}) {
   const classes = ['sw-choice', active && 'sw-active', className].filter(Boolean).join(' ')
   return (
@@ -110,7 +121,7 @@ function Choice({href, active, className, children}: {href: string; active: bool
   )
 }
 
-export function Switcher({grant, choices, plan, canvas, chrome, origin}: Props) {
+export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = null}: Props) {
   const now = nowSeconds()
   const at = (c: Partial<PreviewChoices>) => previewPath({...choices, ...c})
 
@@ -148,9 +159,10 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin}: Props) 
   const family = familyOf(shown)
   const survivors = blocks.map(frameOf).filter((r) => !r.empty)
   const look = siteLookOf(chrome?.designTokens)
-  const facts = canvasFacts(survivors, {...look, ghost: ghostSource(chrome?.header?.siteSettings?.firmName, true)})
-  const unmet = unmetNeeds(shown, facts)
-  const lacks = (f: FlowRules | null) => (f ? unmetNeeds(f, facts) : [])
+  const site = {...look, ghost: ghostSource(chrome?.header?.siteSettings?.firmName, true)}
+  // Facts per theme: the ribbons a theme fills are read from that theme's own pass.
+  const lacks = (f: FlowRules | null) => (f ? unmetNeeds(f, canvasFacts(survivors, site, hero, f)).map(needLabel) : [])
+  const unmet = lacks(shown)
   const headerNote = chromeNote(shown, chrome)
 
   return (
@@ -191,7 +203,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin}: Props) 
             const missing = lacks(first)
             return (
               <Choice key={f.id} href={at({flow: flowId(f.id, f.defaultStep)})} active={choices.flow !== AS_THE_SITE_IS && family?.id === f.id} className="sw-family">
-                <strong>{f.name}</strong>
+                <strong>{familyLabel(f)}</strong>
                 <span className="sw-sentence">{f.sentence}{missing.length > 0 && ` Needs ${missing.join(', ')} this page lacks.`}</span>
               </Choice>
             )

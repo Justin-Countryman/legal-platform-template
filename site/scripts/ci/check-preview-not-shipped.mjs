@@ -100,6 +100,8 @@ if (base) {
   const client = sign({v: 1, role: 'client', exp: now + 3600, styleSet: 'graphite', palette: 'navy-brass', flow: 'site', view: 'design'})
   // A client link minted before the theme row existed carries no `flow`.
   const oldPinClient = sign({v: 1, role: 'client', exp: now + 3600, styleSet: 'graphite', palette: 'navy-brass', view: 'grey'})
+  // A client link minted before Phase 17B session 5 retired a step it names (`[R-523]`).
+  const retiredClient = sign({v: 1, role: 'client', exp: now + 3600, styleSet: 'graphite', palette: 'navy-brass', flow: 'alternating.mostlyDark', view: 'design'})
   const expired = sign({v: 1, role: 'operator', exp: now - 1})
   const forged = `${operator.split('.')[0]}.${createHmac('sha256', 'not-the-secret').update(operator.split('.')[0]).digest('base64url')}`
 
@@ -197,7 +199,10 @@ if (base) {
   check(quiet.res.status === 200 && alternating.res.status === 200, `a theme address answered ${quiet.res.status} and ${alternating.res.status}`)
   check(darkBands(alternating.body) > darkBands(quiet.body), `Alternating at balanced drew ${darkBands(alternating.body)} dark band(s) against Quiet's ${darkBands(quiet.body)}`)
   check(alternating.body.includes('/#/design?t='), 'a theme choice offers no Apply link')
-  check(alternating.body.includes('not yet judged') || alternating.body.includes('Step: Alternating'), 'the theme row shows no step line for a two-step family')
+  // Cut blocks is the two-step family since session 5 retired Alternating's second step.
+  const cut = await get('/site-preview/site/site/cutBlocks.balanced/design', cookie(operator))
+  // Server-rendered text carries a comment marker between the literal and the name.
+  check(cut.res.status === 200 && /Step: (?:<!-- -->)?Cut blocks/.test(cut.body), 'the theme row shows no step line for a two-step family')
   const unknownTheme = await get('/site-preview/site/site/no-such-theme/design', cookie(operator))
   check(unknownTheme.res.status === 404, `an unknown theme answered ${unknownTheme.res.status}`)
 
@@ -211,6 +216,14 @@ if (base) {
   // A client link minted at the old pin enters, as the site is for the theme.
   const oldEnter = await get(`/site-preview/enter?t=${oldPinClient}`)
   check(oldEnter.res.status === 303 && oldEnter.res.headers.get('location')?.endsWith('/site-preview/graphite/navy-brass/site/grey'), `an old-pin client link answered ${oldEnter.res.status} to ${oldEnter.res.headers.get('location')}`)
+  // A client link naming a retired step enters as the site is, and the page it lands on
+  // answers for that client (the page's own session read maps the step too, not only the
+  // entry route: ADV-17B5-2 F2c).
+  const retiredEnter = await get(`/site-preview/enter?t=${retiredClient}`)
+  const retiredTo = retiredEnter.res.headers.get('location') ?? ''
+  check(retiredEnter.res.status === 303 && retiredTo.endsWith('/site-preview/graphite/navy-brass/site/design'), `a retired-step client link answered ${retiredEnter.res.status} to ${retiredTo}`)
+  const retiredPage = await get(new URL(retiredTo, base).pathname, cookie(retiredClient))
+  check(retiredPage.res.status === 200 && retiredPage.body.includes('Preview, not live yet'), `a retired-step client's page answered ${retiredPage.res.status}`)
 
   // The grey box.
   const grey = await get('/site-preview/site/site/site/grey', cookie(operator))

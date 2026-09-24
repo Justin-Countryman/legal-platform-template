@@ -1144,9 +1144,15 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
     inset-inline: 0;
     top: 0;
     height: 1px;
-    background-color: var(--color-border);
+    background-color: var(--hairline-ink, var(--color-border));
     pointer-events: none;
   }
+}
+/* The hairline in the accent (Phase 17B session 5, `[R-524]`): the border token measured 4 to 7
+   levels in 255 against a dark ground, which nobody sees at arm's length; the study's dark pages
+   draw their seam line in the accent. Decorative, like the border ink: no text sits on it. */
+@utility hairline-accent {
+  --hairline-ink: var(--color-accent);
 }
 @media (forced-colors: active) { .hairline-top::after { background-color: CanvasText; } }
 /* The rule under a docked dark header when scrolled (Phase 17B session 4): the header's shadow

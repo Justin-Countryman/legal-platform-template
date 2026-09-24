@@ -2,7 +2,7 @@ import {describe, it, expect} from 'vitest'
 import {THEMES, matchTheme, themePatch} from '@/lib/themes'
 import {PALETTE_PRESETS, matchPreset} from '@/lib/palettes'
 import {DEFAULT_FLOW, FLOWS, HIDDEN_FIELDS} from '@/lib/flows'
-import {parseChoices, planPreview, withPreview, ownLooks, ownGrounds, previewPath, type PreviewPlan, type StoredDesign} from '../plan'
+import {AS_THE_SITE_IS, grantFlow, parseChoices, planPreview, withPreview, ownLooks, ownGrounds, previewPath, type PreviewPlan, type StoredDesign} from '../plan'
 
 // What a preview choice changes (Phase 17A, monorepo WS-V1-PHASE17A-DESIGN §2.3).
 // The preview renders this plan and Apply writes it, so "shown equals applied"
@@ -195,5 +195,17 @@ describe('ownLooks', () => {
       {_type: 'contentSectionInline', _key: 'f', imageTreatment: 'inherit'},
     ])
     expect(looks.map((l) => l.key)).toEqual(['a', 'c', 'e'])
+  })
+})
+
+describe('grantFlow (Phase 17B session 5, [R-523])', () => {
+  it('reads an absent or retired theme as the site is, and leaves every other id to the address check', () => {
+    expect(grantFlow(undefined)).toBe(AS_THE_SITE_IS)
+    expect(grantFlow(null)).toBe(AS_THE_SITE_IS)
+    expect(grantFlow('alternating.mostlyDark')).toBe(AS_THE_SITE_IS)
+    expect(grantFlow('cutBlocks.mostlyDark')).toBe('cutBlocks.mostlyDark')
+    // An id no pin ever shipped is not rescued: the address refuses it, as before.
+    expect(grantFlow('nope')).toBe('nope')
+    expect(parseChoices('site', 'site', grantFlow('nope'), 'design')).toBeNull()
   })
 })
