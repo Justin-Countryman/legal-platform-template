@@ -31,7 +31,7 @@ import {getImageProps} from 'next/image'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomeBody} from '@/components/layout/HomeBody'
 import {walkFrame, photoWindows, interiorLook, type SiteLook} from '../sectionFrame'
-import {type SectionAppearance} from '../SectionShell'
+import {SectionShell, type SectionAppearance} from '../SectionShell'
 import {HOSTS, flowById, type Host} from '@/lib/flows'
 import type {HeroPhoto} from '@/lib/heroGround'
 import {LOOK, themed} from './flowFixtures'
@@ -73,6 +73,12 @@ describe('where the photograph goes', () => {
     const out = walk([b('areas'), b('narrative'), b('split', own), b('narrative'), b('areas')])
     expect(out.map((o) => o.seam.paint?.ground ?? 'own')).toEqual(['dark', 'dark', 'own', 'dark', 'dark'])
     expect(out[2].seam.paint).toBeNull()
+  })
+
+  it('an operator’s inset Image panel counts as a photograph beside too (ADV-17B6-2 F3)', () => {
+    const panel: SectionAppearance = {surface: 'image', inset: true}
+    expect(walk([b('areas'), b('narrative'), b('split', panel), b('narrative'), b('areas')]).map((o) => o.seam.paint?.ground ?? 'own'))
+      .toEqual(['dark', 'dark', 'own', 'dark', 'dark'])
   })
 
   it('never strands an inset between two strong grounds: both its neighbours stay dark, and it adopts the run ([R-501])', () => {
@@ -142,6 +148,20 @@ describe('the window, as the shell draws it', () => {
     const plain = render(<HomepageCanvas blocks={CANVAS} site={{...LOOK, flow: SCRIMS, heroPhoto: null}} hero="image" />).container
     expect(plain.querySelector('[data-photo-window]')).toBeNull()
     expect(plain.querySelector('[data-scrim]')).toBeNull()
+  })
+
+  it('an inset Image panel carries the photo band’s mark itself, so its own dark ground cannot undo it (ADV-17B6-2 F1)', () => {
+    const {container} = render(
+      <SectionShell appearance={{surface: 'image', inset: true, backgroundImage: {asset: {_ref: 'image-abc-1200x800-jpg'}}}}>
+        <p>A panel</p>
+      </SectionShell>,
+    )
+    const panel = container.querySelector('section > div')!
+    expect(panel.className.split(' ')).toContain('bg-brand-dark')
+    expect(panel.getAttribute('data-scrim')).toBe('true')
+    // A panel with no photograph is not a photo band.
+    const plain = render(<SectionShell appearance={{surface: 'dark', inset: true}}><p>A panel</p></SectionShell>).container
+    expect(plain.querySelector('section > div')!.getAttribute('data-scrim')).toBeNull()
   })
 
   it('the photo bands’ stars and dots read the scrim values, through `data-scrim` (the cascade block, `[R-533]`)', () => {

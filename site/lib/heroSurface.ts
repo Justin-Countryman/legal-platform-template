@@ -110,6 +110,11 @@ export type ResolvedHeroSurface = {
 
 export const DEFAULT_SCRIM_OPACITY = 80
 
+/** The `sizes` the homepage hero's backdrop photograph is served at, read by the Overlay hero and by
+ *  every window of it the Photo scrims theme draws (`SectionShell`, Phase 17B session 6), so both
+ *  resolve one candidate and the page downloads it once. The loader and the quality are the defaults. */
+export const HERO_BACKDROP_SIZES = '100vw'
+
 const clampScrim = (n: number): number => Math.max(0, Math.min(100, n))
 
 // One cascade for both images: page upload (custom) > page none > site > none.

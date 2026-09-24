@@ -795,6 +795,11 @@ h1, h2, h3, h4, h5, h6 {
   --color-border-control:    var(--color-border-control-on-scrim);
   --color-action-state-cue:  var(--color-action-state-cue-on-scrim);
 }
+/* No image on a photo band renders brighter than the white the scrim's proof assumes (an HDR
+   photograph otherwise can, where the browser supports extended range). */
+[data-scrim="true"] img {
+  dynamic-range-limit: standard;
+}
 
 /* ─── Heading unit ──────────────────────────────────────────────────────────── */
 /* The emphasis span inside a heading (Phase 11; components/ui/HeadingUnit.tsx).

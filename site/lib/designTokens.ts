@@ -416,7 +416,10 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
     const candidate = neutralAt(darkIn, l, 0.06, 0.010)
     if (contrast(candidate, brandDark) >= 3 && contrast(candidate, photoFloor) >= 3) { borderControlOnScrim = candidate; break }
   }
-  const actionStateCueOnScrim = contrast(action, photoFloor) >= 3 ? 'transparent' : inverse['color-foreground-on-dark']
+  // The active dot is told by its action fill or by its ring; today's on-dark ring stays wherever
+  // either already reaches 3:1 over the photograph (ADV-17B6-2 F2), else the ring is the body text.
+  const cueShown = contrast(action, photoFloor) >= 3 || (actionStateCueOnDark !== 'transparent' && contrast(actionStateCueOnDark, photoFloor) >= 3)
+  const actionStateCueOnScrim = cueShown ? actionStateCueOnDark : inverse['color-foreground-on-dark']
 
   const tokens: Record<string, string> = {
     '--color-background':               background,

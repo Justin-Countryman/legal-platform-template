@@ -613,7 +613,9 @@ export function assignGrounds(
     const photoAt = (i: number): boolean => {
       if (i < 0) return true
       if (i >= n) return closePhoto
-      return paints[i]?.ground === 'image' || (stored[i] && !inset[i] && visibleGround(survivors[i].appearance) === 'image')
+      // An operator's photograph counts whether its band is full width or an inset panel
+      // (`visibleGround` answers light for an inset, so the surface is read directly; ADV-17B6-2 F3).
+      return paints[i]?.ground === 'image' || (stored[i] && survivors[i].appearance?.surface === 'image')
     }
     const bracketsInset = (i: number) =>
       (i - 1 >= 0 && inset[i - 1] && strongAt(i - 2)) || (i + 1 < n && inset[i + 1] && strongAt(i + 2))

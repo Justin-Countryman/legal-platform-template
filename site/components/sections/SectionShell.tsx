@@ -8,6 +8,7 @@ import {
 } from '@/lib/sectionSurface'
 import {type SeamProps, NO_SEAM, overlapOf} from './sectionFrame'
 import {fadesUnder} from '@/lib/flows'
+import {HERO_BACKDROP_SIZES} from '@/lib/heroSurface'
 
 // ─── SectionShell ───────────────────────────────────────────────────────────────
 // The band wrapper every full-width section renders into. It owns the surface
@@ -278,6 +279,10 @@ export function SectionShell({
           // sitting on an adopted dark ground would resolve every text token, the focus
           // ring, the border and the slab to their on-dark forms without this reset.
           data-ring-context={adoptedClass ? resolved.ringContext ?? 'light' : undefined}
+          // A photo inside the panel: the panel's own `bg-brand-dark` re-triggers the dark cascade
+          // block, which would undo the section's photo-band values, so the panel carries the photo
+          // band's mark itself (Phase 17B session 6, ADV-17B6-2 F1, `[R-533]`).
+          data-scrim={showImage ? 'true' : undefined}
           className={['relative overflow-hidden rounded-ui px-[5%] py-12 md:py-16', textured && 'isolate', resolved.surfaceClass].filter(Boolean).join(' ')}
         >
           {showImage && (
@@ -300,10 +305,10 @@ export function SectionShell({
   )
 }
 
-/** The hero's photograph as the hero's own `next/image` resolves it (`sizes="100vw"`, the default
+/** The hero's photograph as the hero's own `next/image` resolves it (`HERO_BACKDROP_SIZES`, the default
  *  loader and quality), without its `fill` style, which the window's utility replaces. */
 function photoWindowProps(src: string) {
-  const {props} = getImageProps({src, alt: '', fill: true, sizes: '100vw', loading: 'eager'})
+  const {props} = getImageProps({src, alt: '', fill: true, sizes: HERO_BACKDROP_SIZES, loading: 'eager'})
   const {style: _style, ...rest} = props
   void _style
   return rest

@@ -112,7 +112,7 @@ export const designSettings = defineType({
       type: 'string',
       fieldset: 'theme',
       description:
-        'How the homepage flows: which sections go dark and how many, where the backgrounds merge and break, the shape of the breaks, and what sits on the backgrounds. A section with its own Surface keeps it; the theme fills the rest. Leave blank for the platform default (' + DEFAULT_FLOW + ').',
+        'How the homepage flows: which sections go dark and how many, where the backgrounds merge and break, the shape of the breaks, and what sits on the backgrounds. A section with its own Surface keeps it; the theme fills the rest. Photo scrims shows the hero photograph only once it is approved by choosing the theme in the design preview. Leave blank for the platform default (' + DEFAULT_FLOW + ').',
       options: {
         list: FLOWS.map((f) => ({title: `${f.name} \u2014 ${f.sentence}`, value: f.id})),
         layout: 'radio',
