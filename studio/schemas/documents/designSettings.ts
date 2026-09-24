@@ -122,13 +122,15 @@ export const designSettings = defineType({
     // asset id. Apply writes it beside that theme and clears it with any other; the site draws the
     // theme's photo sections only while the live hero photograph is this one, so a photograph
     // replaced later shows nowhere until it is approved in the preview. Hidden and read-only: it
-    // is set by approving, never by hand. No `initialValue` (item 308).
+    // is set by approving, never by hand. No `initialValue` (item 308). Hidden by a PREDICATE,
+    // not a literal `true`: the field map records a literal as a retired field kept for one pin
+    // (the six the compat bridge reads), and this field is live.
     defineField({
       name: 'flowPhoto',
       title: 'Theme photograph (set by Apply)',
       type: 'string',
       fieldset: 'theme',
-      hidden: true,
+      hidden: () => true,
       readOnly: true,
     }),
 

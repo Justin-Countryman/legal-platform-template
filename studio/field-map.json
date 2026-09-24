@@ -5189,7 +5189,7 @@
           "type": "string"
         },
         {
-          "hidden": true,
+          "hidden": "<predicate>",
           "jsonType": "string",
           "path": "flowPhoto",
           "readOnly": true,
