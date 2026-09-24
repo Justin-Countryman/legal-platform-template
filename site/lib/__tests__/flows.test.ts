@@ -4,7 +4,7 @@ import {resolve} from 'node:path'
 import {
   CLOSES, DARKNESS, DARK_BUDGETS, DARK_PAINTS, DARK_RHYTHMS, DEFAULT_FLOW, DIVIDER_ATS, FAMILIES, FLOWS, GHOSTS, HAIRLINES, HAIRLINE_INKS, HIDDEN_FIELDS,
   HOSTS, LIGHT_PAINTS, NEEDS, SPACINGS, STEP_HOSTS, bridgeOf, closeSurface, darkBudget, flowById, flowOf, hostOf, impliedNeeds, needLabel, saturatedFillOk,
-  storesHiddenFields, unmetNeeds, CHROME_SCHEMES, STEP_CHROME, chromeSchemes, darkHeaderReady,
+  storesHiddenFields, unmetNeeds, CHROME_SCHEMES, STEP_CHROME, chromeSchemes, darkHeaderReady, drawsHeroPhoto, familyOf,
 } from '../flows'
 import {DIVIDERS, CARRY_PIECES} from '../dividers'
 import {OVERLAPS} from '../overlaps'
@@ -40,7 +40,7 @@ describe('the families and the roster', () => {
     }
   })
 
-  it('the passed steps are the eye pass verdicts: session 3 passed four; session 5 passed three and retired Alternating at mostly dark ([R-523])', () => {
+  it('the passed steps are the eye pass verdicts: session 3 passed four; session 5 passed three and retired Alternating at mostly dark ([R-523]); session 6’s Photo scrims waits for its eye pass', () => {
     expect(FLOWS.filter((f) => f.passed).map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
       'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight'])
     // Dark-led pages are runs, not alternation: the step left the roster, it is not merely unpassed.
@@ -59,10 +59,34 @@ describe('the families and the roster', () => {
     }
   })
 
-  it('ships the three families of session 2 and the three of session 5, one step each for the new ones', () => {
-    expect(FAMILIES.map((f) => f.id)).toEqual(['quiet', 'alternating', 'cutBlocks', 'typeOnBlack', 'editorial', 'ribbonRhythm'])
+  it('ships the three families of session 2, the three of session 5 and Photo scrims of session 6, one step each for the new ones', () => {
+    expect(FAMILIES.map((f) => f.id)).toEqual(['quiet', 'alternating', 'cutBlocks', 'typeOnBlack', 'editorial', 'ribbonRhythm', 'photoScrims'])
     expect(FLOWS.map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
-      'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight'])
+      'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark'])
+  })
+
+  it('Photo scrims is the session 6 record’s §2.9, written out: mostly dark only, the hero’s photograph, the photo close', () => {
+    const ps = flowById('photoScrims.mostlyDark')!
+    expect(ps.dark).toMatchObject({budget: 'threeQuarters', rhythm: 'runs', paint: 'heroPhoto', close: 'photo'})
+    expect(ps.dark.hosts).toEqual(STEP_HOSTS.mostlyDark)
+    expect(ps.divider).toMatchObject({shape: 'straight', at: 'none', hairline: 'none'})
+    expect(ps).toMatchObject({ghost: 'none', overlap: 'none', spacing: 'normal', needs: ['heroPhoto'], chrome: {header: 'dark', footer: 'dark'}})
+    expect(familyOf(ps)!.steps).toEqual(['mostlyDark'])
+    expect(drawsHeroPhoto(ps)).toBe(true)
+    // It is the only theme that draws the hero's photograph, and no other theme's close is a photo.
+    expect(FLOWS.filter(drawsHeroPhoto).map((f) => f.id)).toEqual(['photoScrims.mostlyDark'])
+    expect(needLabel('heroPhoto')).toBe('a landscape hero photograph of a place, approved with this theme')
+  })
+
+  it('the photograph’s need is met only by an approved photograph, and the photo close falls back to dark without one', () => {
+    const ps = flowById('photoScrims.mostlyDark')!
+    const facts = {hosts: [], photos: 0, texture: false, initials: false}
+    expect(unmetNeeds(ps, facts)).toEqual(['heroPhoto'])
+    expect(unmetNeeds(ps, {...facts, heroPhoto: true})).toEqual([])
+    expect(closeSurface(ps, true, false)).toBe('dark')
+    expect(closeSurface(ps, true, true)).toBe('photo')
+    // No other theme's close asks for the photograph.
+    for (const f of FLOWS.filter((x) => x.dark.close !== 'photo')) expect(closeSurface(f, true, true)).not.toBe('photo')
   })
 
   it('session 5’s families are the record’s §2.2 to §2.4, written out', () => {

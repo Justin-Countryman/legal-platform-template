@@ -15,6 +15,7 @@ import {
   retoneFill,
   validateWcag,
   textureOnDark,
+  SCRIM_OPACITY,
 } from '../designTokens'
 import {PALETTE_PRESETS, matchPreset, presetInputs} from '../palettes'
 
@@ -641,5 +642,32 @@ describe('the texture on a dark band (Phase 16B, [R-479])', () => {
       const t = resolvePalette(c.inputs).tokens
       expect(t['--color-slab']).toBe(t['--color-brand-dark'])
     }
+  })
+
+  it('a photo band’s two scrim values move only a palette that failed, and every photo pair is blocking ([R-533])', () => {
+    // The lightest point of a photo band: the scrim at its 80% over pure white.
+    const blend = (ink: string, a: number) => {
+      const k = parseInt(ink.slice(1), 16)
+      const ch = (v: number) => Math.round(255 * (1 - a) + v * a)
+      return '#' + [k >> 16, (k >> 8) & 255, k & 255].map(ch).map((v) => v.toString(16).padStart(2, '0')).join('')
+    }
+    let moved = 0
+    const inputs = [{}, {darkGround: '#13294b', accent: '#c9a227'}, {darkGround: '#121212', action: '#b3202b'}, {darkGround: '#1f4d3a', lightGround: '#f5eedc', accent: '#ff6f61'}]
+    for (const input of inputs) {
+      const p = resolvePalette(input).tokens
+      const floor = blend(p['--color-scrim'], SCRIM_OPACITY)
+      if (ratio(p['--color-border-control-on-dark'], floor) >= 3) expect(p['--color-border-control-on-scrim']).toBe(p['--color-border-control-on-dark'])
+      else { moved++; expect(ratio(p['--color-border-control-on-scrim'], floor)).toBeGreaterThanOrEqual(3) }
+      expect(p['--color-action-state-cue-on-scrim']).toBe(ratio(p['--color-action'], floor) >= 3 ? 'transparent' : p['--color-foreground-on-dark'])
+      const pairs = validateWcag(resolvePalette(input)).filter((r) => r.pair.includes('the photo floor'))
+      expect(pairs.map((r) => r.pair)).toEqual(expect.arrayContaining([
+        'foreground-on-dark on the photo floor', 'foreground-muted-on-dark on the photo floor', 'foreground-subtle-on-dark on the photo floor',
+        'accent-on-dark on the photo floor', 'star-outline-on-dark on the photo floor', 'star-fill on the photo floor',
+        'border-control-on-scrim on the photo floor', 'the active state (action fill or cue) on the photo floor',
+      ]))
+      expect(pairs.every((r) => r.blocking && r.passes)).toBe(true)
+    }
+    // The placeholder's border fails over a photograph today (1.8:1), so the fix is not vacuous.
+    expect(moved).toBeGreaterThan(0)
   })
 })

@@ -36,6 +36,10 @@ export type HeroImage = {
   // Sanity hotspot focal point (0–1). Used as object-position when the foreground
   // card crops the photo to its aspect, so faces aren't cut.
   hotspot?: {x: number; y: number} | null
+  // The asset's opacity and id (Phase 17B session 6): a cutout or a logo with transparency is not
+  // a ground, and the Photo scrims theme draws only the photograph it was approved with.
+  isOpaque?: boolean | null
+  assetId?: string | null
 } | null
 
 // CSS object-position string from a Sanity hotspot (0–1 → percentage), so an

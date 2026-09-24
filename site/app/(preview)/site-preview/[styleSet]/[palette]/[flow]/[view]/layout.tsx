@@ -5,7 +5,7 @@ import {Switcher} from '@/components/preview/Switcher'
 import {analyticsOff} from '@/lib/preview/analytics'
 import {loadPreview} from '@/lib/preview/load'
 import {homeHeroOf} from '@/components/layout/HomeBody'
-import {heroGround} from '@/lib/heroGround'
+import {heroGround, heroPhotoOf} from '@/lib/heroGround'
 
 // ─── The preview address ──────────────────────────────────────────────────────
 //
@@ -48,7 +48,7 @@ export default async function PreviewLayout({children, params}: {children: React
   const proto = h.get('x-forwarded-proto') ?? (host.startsWith('localhost') || host.startsWith('127.0.0.1') ? 'http' : 'https')
   const off = analyticsOff(state.liveChrome?.scripts)
   const switcher = (
-    <Switcher grant={state.grant} choices={state.choices} plan={state.plan} canvas={state.home?.page?.canvas} chrome={state.chrome} origin={`${proto}://${host}`} hero={heroGround(homeHeroOf(state.home))} />
+    <Switcher grant={state.grant} choices={state.choices} plan={state.plan} canvas={state.home?.page?.canvas} chrome={state.chrome} origin={`${proto}://${host}`} hero={heroGround(homeHeroOf(state.home))} heroPhoto={heroPhotoOf(homeHeroOf(state.home))} />
   )
 
   return (

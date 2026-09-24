@@ -794,7 +794,9 @@ export const HOME_HERO_DESIGN_FRAGMENT = groq`{
     "fit": fit,
     "hotspot": hotspot{x, y},
     "width": asset->metadata.dimensions.width,
-    "height": asset->metadata.dimensions.height
+    "height": asset->metadata.dimensions.height,
+    "isOpaque": asset->metadata.isOpaque,
+    "assetId": asset->_id
   },
   "foregroundImage": foregroundImage{
     "src": asset->url,
@@ -866,6 +868,9 @@ export const DESIGN_TOKENS_QUERY = groq`
     // render; absent renders the platform default. The only stored design choice the
     // site reads by name.
     flow,
+    // The hero photograph the Photo scrims theme was approved with (Phase 17B session 6):
+    // its photo sections draw only while the live hero photograph is this one.
+    flowPhoto,
     // The style set's settings (Phase 16B): a style set in the Studio writes them with
     // the fields above. The site never reads which style set it is.
     // patternGround, sectionJoin, dividerCarry, brandGhost, sectionOverlap and

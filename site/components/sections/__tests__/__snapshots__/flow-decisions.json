@@ -451,6 +451,70 @@
       }
     ]
   },
+  "stub / photoScrims.mostlyDark": {
+    "unmetNeeds": [
+      "heroPhoto"
+    ],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "fx-inline",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "fx-content-stats",
+        "host": "statRow",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "fx-content-ribbon",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      }
+    ]
+  },
   "stub / stored.bridge": {
     "unmetNeeds": [],
     "chrome": {
@@ -959,6 +1023,70 @@
         "run": {
           "index": 2,
           "length": 3
+        }
+      }
+    ]
+  },
+  "migrated / photoScrims.mostlyDark": {
+    "unmetNeeds": [
+      "heroPhoto"
+    ],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
         }
       }
     ]
@@ -2679,6 +2807,240 @@
       }
     ]
   },
+  "planted / photoScrims.mostlyDark": {
+    "unmetNeeds": [
+      "heroPhoto"
+    ],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "439bf06b7029",
+        "host": "areas",
+        "ground": "stored:light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 5
+        }
+      },
+      {
+        "key": "p11-t1-split",
+        "host": "split",
+        "ground": "stored:dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 5
+        }
+      },
+      {
+        "key": "p11-t2-twocol",
+        "host": "narrative",
+        "ground": "stored:tint",
+        "texture": false,
+        "inset": true,
+        "adopted": "dark",
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 5
+        }
+      },
+      {
+        "key": "p11-t3-statement",
+        "host": "statement",
+        "ground": "stored:dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 5
+        }
+      },
+      {
+        "key": "p11-t4-ribbon",
+        "host": "ribbon",
+        "ground": "stored:dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 5
+        }
+      },
+      {
+        "key": "p11-t5-stats",
+        "host": "statRow",
+        "ground": "stored:light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "p11-t6-emphasis-case",
+        "host": "statement",
+        "ground": "stored:tint",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "p11-t7-token-emphasis",
+        "host": "statement",
+        "ground": "stored:light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "p11-t8-proof-slab",
+        "host": "split",
+        "ground": "stored:light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "p11-t10-split-no-media",
+        "host": "split",
+        "ground": "stored:tint",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      }
+    ]
+  },
   "planted / stored.bridge": {
     "unmetNeeds": [],
     "chrome": {
@@ -3845,6 +4207,138 @@
       }
     ]
   },
+  "adversarial-mostly-dark / photoScrims.mostlyDark": {
+    "unmetNeeds": [
+      "heroPhoto"
+    ],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc5-split",
+        "host": "split",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc6-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc7-twoColumnText",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc10-split",
+        "host": "split",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 3
+        }
+      }
+    ]
+  },
   "adversarial-mostly-dark / stored.bridge": {
     "unmetNeeds": [],
     "chrome": {
@@ -4909,6 +5403,138 @@
         "run": {
           "index": 5,
           "length": 6
+        }
+      }
+    ]
+  },
+  "planning-mostly-light / photoScrims.mostlyDark": {
+    "unmetNeeds": [
+      "heroPhoto"
+    ],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 4
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 4
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 4
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 4
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "rc8-twoColumnText",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "rc9-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
         }
       }
     ]
@@ -6219,6 +6845,172 @@
       }
     ]
   },
+  "multi-practice-balanced / photoScrims.mostlyDark": {
+    "unmetNeeds": [
+      "heroPhoto"
+    ],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc6-attorneySection",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc8-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 4
+        }
+      },
+      {
+        "key": "rc9-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 4
+        }
+      },
+      {
+        "key": "rc10-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 4
+        }
+      },
+      {
+        "key": "rc11-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 4
+        }
+      }
+    ]
+  },
   "multi-practice-balanced / stored.bridge": {
     "unmetNeeds": [],
     "chrome": {
@@ -7312,6 +8104,138 @@
       }
     ]
   },
+  "ribbons-mostly-light / photoScrims.mostlyDark": {
+    "unmetNeeds": [
+      "heroPhoto"
+    ],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc6-split",
+        "host": "split",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc10-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc11-ribbon",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 3
+        }
+      }
+    ]
+  },
   "ribbons-mostly-light / stored.bridge": {
     "unmetNeeds": [],
     "chrome": {
@@ -7441,6 +8365,3926 @@
         "run": {
           "index": 6,
           "length": 7
+        }
+      }
+    ]
+  },
+  "adversarial-photo-hero / quiet.mostlyLight": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc5-split",
+        "host": "split",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc6-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc7-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 5,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc10-split",
+        "host": "split",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 6,
+          "length": 7
+        }
+      }
+    ]
+  },
+  "adversarial-photo-hero / alternating.balanced": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc5-split",
+        "host": "split",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc6-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "rc7-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc10-split",
+        "host": "split",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      }
+    ]
+  },
+  "adversarial-photo-hero / cutBlocks.balanced": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "rise",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc5-split",
+        "host": "split",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc6-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "cut",
+          "from": "light",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "rc7-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc10-split",
+        "host": "split",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      }
+    ]
+  },
+  "adversarial-photo-hero / cutBlocks.mostlyDark": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "rise",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc5-split",
+        "host": "split",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc6-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "cut",
+          "from": "light",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc7-twoColumnText",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc10-split",
+        "host": "split",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 3
+        }
+      }
+    ]
+  },
+  "adversarial-photo-hero / typeOnBlack.allDark": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc5-split",
+        "host": "split",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc6-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc7-twoColumnText",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 5,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc10-split",
+        "host": "split",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 6,
+          "length": 7
+        }
+      }
+    ]
+  },
+  "adversarial-photo-hero / editorial.mostlyLight": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "light",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 7
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 7
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 7
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "rc5-split",
+        "host": "split",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 7
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "rc6-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 7
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "rc7-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 5,
+          "length": 7
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "rc10-split",
+        "host": "split",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 6,
+          "length": 7
+        },
+        "spacing": "spacious"
+      }
+    ]
+  },
+  "adversarial-photo-hero / ribbonRhythm.mostlyLight": {
+    "unmetNeeds": [
+      "ribbons"
+    ],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "saturated",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 6
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 6
+        }
+      },
+      {
+        "key": "rc5-split",
+        "host": "split",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 6
+        }
+      },
+      {
+        "key": "rc6-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 6
+        }
+      },
+      {
+        "key": "rc7-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 6
+        }
+      },
+      {
+        "key": "rc10-split",
+        "host": "split",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 5,
+          "length": 6
+        }
+      }
+    ]
+  },
+  "adversarial-photo-hero / photoScrims.mostlyDark": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc5-split",
+        "host": "split",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc6-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "image",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        },
+        "window": {
+          "x": 1,
+          "y": 1
+        }
+      },
+      {
+        "key": "rc7-twoColumnText",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc10-split",
+        "host": "split",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      }
+    ]
+  },
+  "adversarial-photo-hero / stored.bridge": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "rise",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc5-split",
+        "host": "split",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc6-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc7-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 5,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc10-split",
+        "host": "split",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 6,
+          "length": 7
+        }
+      }
+    ]
+  },
+  "planning-photo-hero / quiet.mostlyLight": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc8-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 5,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc9-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 6,
+          "length": 7
+        }
+      }
+    ]
+  },
+  "planning-photo-hero / alternating.balanced": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc8-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc9-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 3
+        }
+      }
+    ]
+  },
+  "planning-photo-hero / cutBlocks.balanced": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "rise",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "cut",
+          "from": "light",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc8-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc9-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 3
+        }
+      }
+    ]
+  },
+  "planning-photo-hero / cutBlocks.mostlyDark": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "rise",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 4
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 4
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 4
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 4
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "rc8-twoColumnText",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "cut",
+          "from": "light",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "rc9-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      }
+    ]
+  },
+  "planning-photo-hero / typeOnBlack.allDark": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc8-twoColumnText",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 5,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc9-twoColumnText",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 6,
+          "length": 7
+        }
+      }
+    ]
+  },
+  "planning-photo-hero / editorial.mostlyLight": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "light",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 7
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 7
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 7
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 7
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 7
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "rc8-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 5,
+          "length": 7
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "rc9-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 6,
+          "length": 7
+        },
+        "spacing": "spacious"
+      }
+    ]
+  },
+  "planning-photo-hero / ribbonRhythm.mostlyLight": {
+    "unmetNeeds": [
+      "ribbons"
+    ],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "saturated",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 6
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 6
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 6
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 6
+        }
+      },
+      {
+        "key": "rc8-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 6
+        }
+      },
+      {
+        "key": "rc9-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 5,
+          "length": 6
+        }
+      }
+    ]
+  },
+  "planning-photo-hero / photoScrims.mostlyDark": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "image",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        },
+        "window": {
+          "x": 1,
+          "y": 1
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "rc8-twoColumnText",
+        "host": "narrative",
+        "ground": "image",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        },
+        "window": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "key": "rc9-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      }
+    ]
+  },
+  "planning-photo-hero / stored.bridge": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-ribbon",
+        "host": "ribbon",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "rise",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 7
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc8-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 5,
+          "length": 7
+        }
+      },
+      {
+        "key": "rc9-twoColumnText",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 6,
+          "length": 7
+        }
+      }
+    ]
+  },
+  "multi-practice-photo-hero / quiet.mostlyLight": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 8
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 8
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 8
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc6-attorneySection",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc8-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 5,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc9-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 6,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc10-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 7,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc11-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      }
+    ]
+  },
+  "multi-practice-photo-hero / alternating.balanced": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc6-attorneySection",
+        "host": "attorneys",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc8-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc9-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc10-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "rc11-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      }
+    ]
+  },
+  "multi-practice-photo-hero / cutBlocks.balanced": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "rise",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "cut",
+          "from": "light",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc6-attorneySection",
+        "host": "attorneys",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc8-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc9-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "rc10-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "cut",
+          "from": "light",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "rc11-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      }
+    ]
+  },
+  "multi-practice-photo-hero / cutBlocks.mostlyDark": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "rise",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc6-attorneySection",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc8-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "cut",
+          "from": "light",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 4
+        }
+      },
+      {
+        "key": "rc9-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 4
+        }
+      },
+      {
+        "key": "rc10-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 4
+        }
+      },
+      {
+        "key": "rc11-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 4
+        }
+      }
+    ]
+  },
+  "multi-practice-photo-hero / typeOnBlack.allDark": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 8
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 8
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 8
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc6-attorneySection",
+        "host": "attorneys",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc8-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 5,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc9-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 6,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc10-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 7,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc11-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      }
+    ]
+  },
+  "multi-practice-photo-hero / editorial.mostlyLight": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "light",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 8
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 8
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 8
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 8
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "rc6-attorneySection",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 8
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "rc8-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 5,
+          "length": 8
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "rc9-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 6,
+          "length": 8
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "rc10-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 7,
+          "length": 8
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "rc11-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": true,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        },
+        "spacing": "spacious"
+      }
+    ]
+  },
+  "multi-practice-photo-hero / ribbonRhythm.mostlyLight": {
+    "unmetNeeds": [
+      "ribbons"
+    ],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 8
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 8
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 8
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc6-attorneySection",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc8-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 5,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc9-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 6,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc10-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 7,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc11-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      }
+    ]
+  },
+  "multi-practice-photo-hero / photoScrims.mostlyDark": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc6-attorneySection",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 3
+        }
+      },
+      {
+        "key": "rc8-statement",
+        "host": "statement",
+        "ground": "image",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        },
+        "window": {
+          "x": 1,
+          "y": 1
+        }
+      },
+      {
+        "key": "rc9-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "rc10-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "image",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        },
+        "window": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "key": "rc11-statement",
+        "host": "statement",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      }
+    ]
+  },
+  "multi-practice-photo-hero / stored.bridge": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "rc2-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "rise",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 8
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 8
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 8
+        }
+      },
+      {
+        "key": "hp-attorneyHighlightBlock",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc6-attorneySection",
+        "host": "attorneys",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc8-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 5,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc9-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 6,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc10-featuredTestimonial",
+        "host": "testimonials",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 7,
+          "length": 8
+        }
+      },
+      {
+        "key": "rc11-statement",
+        "host": "statement",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
         }
       }
     ]

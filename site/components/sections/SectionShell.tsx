@@ -1,3 +1,4 @@
+import {getImageProps} from 'next/image'
 import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import {
@@ -137,6 +138,11 @@ export function SectionShell({
 
   const bg = appearance?.backgroundImage
   const showImage = resolved.isImage && hasImage(bg)
+  // Phase 17B session 6 (`[R-530]`, record §2.2): a window of the hero's photograph, where the
+  // theme painted one and the site look carries the photograph. A band's own photo wins.
+  const photoWin = seam.paint?.ground === 'image' ? seam.paint.window ?? null : null
+  const heroPhoto = photoWin ? seam.site?.heroPhoto ?? null : null
+  const showWindow = resolved.isImage && !!heroPhoto && !showImage
   const inner = typeof children === 'function' ? children(resolved) : children
 
   // An inset band is a panel: the surface, the radius and `overflow-hidden` move
@@ -198,7 +204,7 @@ export function SectionShell({
       // Text on a photo: the action color and the focus ring resolve to the on-dark
       // body text color here (globals.css, the scrim block), because neither is
       // guaranteed 4.5:1 or 3:1 over the lightest photo pixel.
-      data-scrim={showImage ? 'true' : undefined}
+      data-scrim={showImage || showWindow ? 'true' : undefined}
       aria-labelledby={aria['aria-labelledby']}
       aria-label={aria['aria-label']}
       className={[
@@ -239,6 +245,26 @@ export function SectionShell({
         .filter(Boolean)
         .join(' ')}
     >
+      {/* A plain server image, not the <Image> component, and eager: it resolves the hero's own
+          candidate URL (the same src, sizes, loader and quality), so the page downloads the
+          photograph once; a lazy copy is fetched again by WebKit, and the component would add a
+          client reference per band (ADV-17B6-B, measured). One quadrant of it at twice the band's
+          size, toned by the scrim; the section is an Image section as one built by hand
+          (`[R-531]`): the same scrim and the same `data-scrim` colors. */}
+      {showWindow && !isInset && (
+        <>
+          <div aria-hidden="true" data-photo-window={`${photoWin!.x}${photoWin!.y}`} className="absolute inset-0 overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              {...photoWindowProps(heroPhoto!.src)}
+              alt=""
+              className="photo-window object-cover grayscale"
+              style={{['--window-x' as string]: photoWin!.x ? '-100%' : '0%', ['--window-y' as string]: photoWin!.y ? '-100%' : '0%'}}
+            />
+          </div>
+          <div className="absolute inset-0 bg-scrim/80" aria-hidden="true" />
+        </>
+      )}
       {showImage && !isInset && (
         <>
           <SanityImage image={bg} mode="fill" alt="" sizes="100vw" />
@@ -272,4 +298,13 @@ export function SectionShell({
       )}
     </Tag>
   )
+}
+
+/** The hero's photograph as the hero's own `next/image` resolves it (`sizes="100vw"`, the default
+ *  loader and quality), without its `fill` style, which the window's utility replaces. */
+function photoWindowProps(src: string) {
+  const {props} = getImageProps({src, alt: '', fill: true, sizes: '100vw', loading: 'eager'})
+  const {style: _style, ...rest} = props
+  void _style
+  return rest
 }

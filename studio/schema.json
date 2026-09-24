@@ -18028,8 +18028,19 @@
             {
               "type": "string",
               "value": "ribbonRhythm.mostlyLight"
+            },
+            {
+              "type": "string",
+              "value": "photoScrims.mostlyDark"
             }
           ]
+        },
+        "optional": true
+      },
+      "flowPhoto": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
         },
         "optional": true
       },

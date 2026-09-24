@@ -118,6 +118,19 @@ export const designSettings = defineType({
         layout: 'radio',
       },
     }),
+    // Phase 17B session 6 ([R-532]): the hero photograph Photo scrims was approved with, as its
+    // asset id. Apply writes it beside that theme and clears it with any other; the site draws the
+    // theme's photo sections only while the live hero photograph is this one, so a photograph
+    // replaced later shows nowhere until it is approved in the preview. Hidden and read-only: it
+    // is set by approving, never by hand. No `initialValue` (item 308).
+    defineField({
+      name: 'flowPhoto',
+      title: 'Theme photograph (set by Apply)',
+      type: 'string',
+      fieldset: 'theme',
+      hidden: true,
+      readOnly: true,
+    }),
 
     // ─── Headings (Phase 16B) ─────────────────────────────────────────────────
     defineField({

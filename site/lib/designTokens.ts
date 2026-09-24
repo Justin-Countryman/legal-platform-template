@@ -404,6 +404,20 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
   const bd = parseOklch(brandDark)
   const scrim = bd.l > 0.20 ? mapped(0.20, bd.c, bd.h) : brandDark
 
+  // A photo band's lightest point (Phase 17B session 6, `[R-533]`): the scrim at its opacity over
+  // pure white, the lightest pixel an 8-bit photograph can have. Every text tier holds there (the
+  // guarantee sweeps it, `validateWcag`); two marks that are not text did not: the boundary of an
+  // empty star or an inactive carousel dot, and the ring that marks the active dot. Each gets a
+  // scrim value, read only inside `[data-scrim="true"]`, that equals today's on-dark value wherever
+  // that already reaches 3:1 there, so only a palette that failed moves.
+  const photoFloor = blendOver('#ffffff', scrim, SCRIM_OPACITY)
+  let borderControlOnScrim = '#ffffff'
+  for (let l = 0.38; l <= 1; l = round6(l + 0.005)) {
+    const candidate = neutralAt(darkIn, l, 0.06, 0.010)
+    if (contrast(candidate, brandDark) >= 3 && contrast(candidate, photoFloor) >= 3) { borderControlOnScrim = candidate; break }
+  }
+  const actionStateCueOnScrim = contrast(action, photoFloor) >= 3 ? 'transparent' : inverse['color-foreground-on-dark']
+
   const tokens: Record<string, string> = {
     '--color-background':               background,
     '--color-muted':                    muted,
@@ -429,6 +443,7 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
     '--color-foreground-subtle-on-dark': inverse['color-foreground-subtle-on-dark'],
     '--color-border-on-dark':            inverse['color-border-on-dark'],
     '--color-border-control-on-dark':    borderControlOnDark,
+    '--color-border-control-on-scrim':   borderControlOnScrim,
     // Accent.
     '--color-accent':                   accent,
     '--color-accent-on-light':          accent,
@@ -446,6 +461,7 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
     '--color-action-state-cue':         actionStateCue,
     '--color-action-state-cue-on-light': actionStateCue,
     '--color-action-state-cue-on-dark': actionStateCueOnDark,
+    '--color-action-state-cue-on-scrim': actionStateCueOnScrim,
     '--color-action-text-hover':        actionTextHover,
     '--color-action-text-hover-on-light': actionTextHover,
     '--color-action-text-hover-on-dark': actionTextHoverOnDark,
@@ -665,6 +681,22 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
     let worst = Infinity
     for (let i = 1; i < 100; i++) worst = Math.min(worst, contrast(fg, mixOklab(dark, stop, i / 100)))
     results.push({pair: `${name} on the gradient ramp`, ratio: Math.round(worst * 100) / 100, min: 4.5, passes: worst >= 4.5, blocking: true})
+  }
+  // Phase 17B session 6 (`[R-533]`, record §2.4): a photo band, hand-built or a theme's, measured
+  // at its lightest point: the scrim over pure white. It is a bound, not a sample: the scrim is at
+  // least as dark over every other pixel, and every tier here is lighter than this composite, so a
+  // pair that holds here holds over any photograph. It rests on the browser compositing the scrim
+  // in gamma-encoded sRGB (`blendOver`); in linear light the subtle and muted tiers would not hold.
+  // The action text and the focus ring resolve to the body text on a photo band (`data-scrim`).
+  const photoFloor = blendOver('#ffffff', t['--color-scrim'], SCRIM_OPACITY)
+  for (const [name, fg] of onDarkTiers.filter(([n]) => n !== 'action-text-on-dark')) check(`${name} on the photo floor`, fg, photoFloor, 4.5)
+  check('star-outline-on-dark on the photo floor', t['--color-star-outline-on-dark'], photoFloor, 3)
+  check('star-fill on the photo floor',            t['--color-star-fill'],           photoFloor, 3)
+  check('border-control-on-scrim on the photo floor', t['--color-border-control-on-scrim'], photoFloor, 3)
+  {
+    const cue = t['--color-action-state-cue-on-scrim']
+    const shown = Math.max(contrast(t['--color-action'], photoFloor), cue === 'transparent' ? 0 : contrast(cue, photoFloor))
+    results.push({pair: 'the active state (action fill or cue) on the photo floor', ratio: Math.round(shown * 100) / 100, min: 3, passes: shown >= 3, blocking: true})
   }
   check('white on brand-dark',                    '#ffffff',                           dark, 7)
   check('foreground-on-dark on brand-dark',       t['--color-foreground-on-dark'],     dark, 4.5)
@@ -952,6 +984,9 @@ export const SECTION_TEXTURE_MAP: Record<SectionTexture, {image: string; size: s
 
 /** The opacity the section texture renders at, and the one `validateWcag` blends. */
 export const SECTION_TEXTURE_OPACITY = 0.04
+/** The scrim a photo band draws over its photograph (`bg-scrim/80`, `SectionShell`): 80% is the
+ *  lightest at which every text tier holds over pure white on every palette (Phase 17B session 6). */
+export const SCRIM_OPACITY = 0.8
 
 /** Every design setting the token CSS reads. Absent or unknown means the default. */
 export type DesignTokenSettings = {

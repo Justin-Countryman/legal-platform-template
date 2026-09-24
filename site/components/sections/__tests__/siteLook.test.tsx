@@ -63,7 +63,7 @@ describe('the site look from Design Settings', () => {
 
   it('interior pages keep the cards and frames but carry no theme', () => {
     const l = look({imageFrame: 'framed', attorneyCardStyle: 'avatar', ghost: {text: 'AB'}})
-    expect(interiorLook(l)).toEqual({...l, flow: null, ghost: null})
+    expect(interiorLook(l)).toEqual({...l, flow: null, ghost: null, heroPhoto: null})
   })
 })
 

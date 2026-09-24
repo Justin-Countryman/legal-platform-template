@@ -36,7 +36,7 @@
 
 import {createHmac} from 'node:crypto'
 import {spawn} from 'node:child_process'
-import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'node:fs'
+import {existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync} from 'node:fs'
 import {resolve} from 'node:path'
 import {chromium} from '@playwright/test'
 
@@ -61,7 +61,35 @@ const CANVASES = [
   ['multi-practice-balanced', 'scripts/ci/record-multi-practice-balanced.ndjson'],
   // Phase 17B session 5: two ribbons bracketing a light page, where Ribbon rhythm can be itself.
   ['ribbons-mostly-light', 'scripts/ci/record-ribbons-mostly-light.ndjson'],
+  // Phase 17B session 6: the three record canvases with a stand-in photograph behind the hero and in
+  // every split band, where Photo scrims can be itself.
+  ['adversarial-photo-hero', 'scripts/ci/record-adversarial-photo-hero.ndjson'],
+  ['planning-photo-hero', 'scripts/ci/record-planning-photo-hero.ndjson'],
+  ['multi-practice-photo-hero', 'scripts/ci/record-multi-practice-photo-hero.ndjson'],
 ]
+// The stand-in photographs (Phase 17B session 6), served from disk to the browser: the hero's own
+// optimizer address (`/_next/image?url=/stand-ins/...`) and the image CDN's address for a band's photo
+// (`cdn.sanity.io/images/.../fx<name>-<w>x<h>.jpg`). The template never lets its optimizer fetch a
+// local host, so the optimizer is bypassed here; its bytes are measured once and recorded (monorepo
+// WS-V1-PHASE17B6-DESIGN §2.11).
+const PHOTOS = resolve('scripts/ci/photos')
+const STAND_INS = existsSync(PHOTOS) ? readdirSync(PHOTOS).filter((f) => f.endsWith('.jpg')) : []
+const compact = (f) => 'fx' + f.replace(/\.jpg$/, '').replace(/[^a-z0-9]/g, '')
+async function servePhotos(context) {
+  if (!STAND_INS.length) return
+  await context.route('**/_next/image?**', (route) => {
+    const src = new URL(route.request().url()).searchParams.get('url') ?? ''
+    const file = src.startsWith('/stand-ins/') ? src.slice('/stand-ins/'.length) : null
+    return file && STAND_INS.includes(file)
+      ? route.fulfill({path: resolve(PHOTOS, file), contentType: 'image/jpeg'})
+      : route.continue()
+  })
+  await context.route('https://cdn.sanity.io/images/**', (route) => {
+    const name = new URL(route.request().url()).pathname.split('/').pop() ?? ''
+    const file = STAND_INS.find((f) => name.startsWith(compact(f) + '-'))
+    return file ? route.fulfill({path: resolve(PHOTOS, file), contentType: 'image/jpeg'}) : route.abort()
+  })
+}
 const WIDTHS = [
   ['1440', {viewport: {width: 1440, height: 900}}],
   ['390', {viewport: {width: 390, height: 844}, isMobile: true, hasTouch: true}],
@@ -143,6 +171,8 @@ function measure() {
         classes: [...s.classList].filter(keep).sort(),
         texture: !!s.querySelector('[data-section-texture]'),
         ghost: !!s.querySelector('[data-decor-layer]'),
+        // Phase 17B session 6: the window of the hero's photograph, recorded only where a band shows one.
+        ...(s.querySelector('[data-photo-window]') ? {window: s.querySelector('[data-photo-window]').getAttribute('data-photo-window')} : {}),
         top: Math.round(r.top - origin),
         height: Math.round(r.height),
         pt: px(cs.paddingTop),
@@ -167,6 +197,7 @@ try {
     for (const [width, device] of WIDTHS) {
       const context = await browser.newContext({...device, reducedMotion: 'reduce', colorScheme: 'light'})
       await context.addCookies([{name: 'lp-preview', value: operator, url: `${BASE}/site-preview`}])
+      await servePhotos(context)
       const page = await context.newPage()
       for (const flow of FLOWS) {
         const key = `${canvas} / ${flow} / ${width}`
@@ -189,8 +220,10 @@ try {
         if (flow === 'typeOnBlack.allDark') {
           const note = await page.evaluate(() => document.querySelector('.sw')?.textContent ?? '')
           const docs = readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))
+          const design = docs.find((d) => d._type === 'heroSettings')?.homepageHero
+          // A photograph behind the hero forces it dark (Phase 17B session 6's photo canvases).
           const heroDark = !!docs.find((d) => d._type === 'homePage')?.hero?.heading
-            && docs.find((d) => d._type === 'heroSettings')?.homepageHero?.schemeOverride === 'dark'
+            && (design?.schemeOverride === 'dark' || design?.backdrop === 'image')
           if (note.includes('a dark or photo hero') === heroDark) fail(`${key}: the switcher ${heroDark ? 'names' : 'does not name'} the dark-hero need under a ${heroDark ? 'dark' : 'light'} hero`)
         }
         await page.evaluate(() => document.fonts.ready)
@@ -201,6 +234,8 @@ try {
           const h = document.documentElement.scrollHeight
           for (let y = 0; y <= h; y += 400) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 30)) }
           window.scrollTo(0, 0)
+          // Every photograph decoded before the measure and the capture (Phase 17B session 6).
+          await Promise.all([...document.images].map((i) => i.decode().catch(() => {})))
           // Let the header's measured height and the last transitions settle.
           await new Promise((r) => setTimeout(r, 400))
           await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
@@ -254,7 +289,7 @@ if (UPDATE) {
     if (m.bands.length !== g.bands.length) { fail(`${key}: ${m.bands.length} bands vs golden ${g.bands.length}`); continue }
     m.bands.forEach((b, i) => {
       const gb = g.bands[i]
-      for (const f of ['heading', 'ring', 'scrim', 'bg', 'ink', 'texture', 'ghost', 'pt', 'pb']) {
+      for (const f of ['heading', 'ring', 'scrim', 'bg', 'ink', 'texture', 'ghost', 'window', 'pt', 'pb']) {
         if (JSON.stringify(b[f]) !== JSON.stringify(gb[f])) fail(`${key}: band ${i} (${b.heading}) ${f} ${JSON.stringify(b[f])} vs golden ${JSON.stringify(gb[f])}`)
       }
       if (JSON.stringify(b.classes) !== JSON.stringify(gb.classes)) fail(`${key}: band ${i} classes ${b.classes.join(' ')} vs golden ${gb.classes.join(' ')}`)

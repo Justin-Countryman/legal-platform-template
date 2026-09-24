@@ -34,7 +34,7 @@ import type {VisibleGround} from './sectionSurface'
 // dark) is a property of a theme FAMILY, and a family ships only the steps the eye
 // has passed on real canvases through the switcher (`[R-509]`); it is never a fourth
 // click. The roster below is generated from the families, so nothing is duplicated
-// by hand and the step is never buried in a label. Six families ship here; the rest
+// by hand and the step is never buried in a label. Seven families ship here; the rest
 // of the twelve in the vision's §3 arrive at the eye's pace, a few a session.
 //
 // THE VOCABULARY IS CLOSED. A rule it cannot say is a new word plus one engine clause,
@@ -62,8 +62,8 @@ export type Host = (typeof HOSTS)[number]
 
 export const DARK_BUDGETS = ['none', 'third', 'threeQuarters', 'all'] as const
 export const DARK_RHYTHMS = ['alternate', 'pairs', 'runs', 'bookends'] as const
-export const DARK_PAINTS = ['plain', 'pattern', 'gradient', 'gradientPerBand', 'photo', 'saturated'] as const
-export const CLOSES = ['dark', 'saturated', 'muted'] as const
+export const DARK_PAINTS = ['plain', 'pattern', 'gradient', 'gradientPerBand', 'photo', 'saturated', 'heroPhoto'] as const
+export const CLOSES = ['dark', 'saturated', 'muted', 'photo'] as const
 export const LIGHT_PAINTS = ['plain', 'washes', 'pattern', 'panel'] as const
 export const DIVIDER_ATS = ['intoDark', 'everyChange', 'none'] as const
 export const HAIRLINES = ['none', 'atChange', 'everyBand'] as const
@@ -83,8 +83,10 @@ export const GHOSTS = ['none', 'once'] as const
 export const CHROME_SCHEMES = ['light', 'dark'] as const
 export type ChromeScheme = (typeof CHROME_SCHEMES)[number]
 /** `ribbons`: the theme fills two ribbons on this page (read from the pass, so two adjacent or a
- *  stored one do not count); `darkHero`: the hero is dark or a photo (Phase 17B session 5). */
-export const NEEDS = ['photos', 'texture', 'initials', 'ribbons', 'darkHero', ...HOSTS] as const
+ *  stored one do not count); `darkHero`: the hero is dark or a photo (Phase 17B session 5);
+ *  `heroPhoto`: the hero's backdrop is a photograph a page can be made of, approved with this theme
+ *  (Phase 17B session 6, `heroPhotoOf`, `[R-532]`). */
+export const NEEDS = ['photos', 'texture', 'initials', 'ribbons', 'darkHero', 'heroPhoto', ...HOSTS] as const
 export type Need = (typeof NEEDS)[number]
 
 export type FlowRules = {
@@ -110,9 +112,12 @@ export type FlowRules = {
     /** What a dark band paints: the dark ground; the dark ground with the style set's texture;
      *  the ramp (one per run, sliced); the ramp restarted on every band; a photo where the band
      *  has one, else the dark ground; the accent fill where the palette and the band allow it,
-     *  else the dark ground. */
+     *  else the dark ground; a window of the hero's own photograph on a text-led band, never
+     *  beside another photograph and at most twice a page, else the dark ground (`heroPhoto`,
+     *  Phase 17B session 6, `[R-530]`). */
     paint: (typeof DARK_PAINTS)[number]
-    /** The closing call to action's ground. */
+    /** The closing call to action's ground; `photo` is a window of the hero's photograph where
+     *  the site has an approved one, else the dark ground. */
     close: (typeof CLOSES)[number]
   }
   light: {
@@ -325,6 +330,25 @@ export const FAMILIES: readonly FlowFamily[] = [
       ghost: 'none', overlap: 'none', needs: ['ribbons'], chrome: STEP_CHROME[step],
     }),
   },
+  // ─── Phase 17B session 6 (record WS-V1-PHASE17B6-DESIGN §2) ─────────────────
+  {
+    id: 'photoScrims', name: 'Photo scrims',
+    sentence: 'Dark-led: a toned piece of the hero\u2019s own photograph behind two sections and the close.',
+    // The study: delllawfirm, capflaw, abdellasise, cleghornjones and aswllp, all mostly dark, photos 57
+    // to 78% of their dark bands, the close a place. `[R-526]`, `[R-530]`: the hero's own photograph
+    // first, a quarter of it at a time, at most three windows a page (a fourth shows the hero again);
+    // a set of photographs, one per band, is backlog 365. Its sections work as an Image section built
+    // by hand, the same scrim and colors (`[R-531]`); a photograph changed after Apply shows none until
+    // it is approved (`[R-532]`). Mostly dark only: no balanced study page with a photo hero carries two
+    // photo bands, and the family's sites are all mostly dark.
+    steps: ['mostlyDark'], defaultStep: 'mostlyDark', passed: [],
+    rules: (step) => ({
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'heroPhoto', close: 'photo'},
+      light: {paint: 'plain'},
+      divider: NO_DIVIDER, spacing: 'normal',
+      ghost: 'none', overlap: 'none', needs: ['heroPhoto'], chrome: STEP_CHROME[step],
+    }),
+  },
 ]
 
 export function flowId(family: string, step: Darkness): string {
@@ -473,6 +497,9 @@ export type CanvasFacts = {
   texture: boolean
   /** The firm's name yields initials for the ghost. */
   initials: boolean
+  /** The hero's backdrop is a photograph the `heroPhoto` paint can use (`heroPhotoOf`), approved
+   *  with the theme on a live page (`[R-532]`). */
+  heroPhoto?: boolean
 }
 
 /** The needs a theme's own rules imply, for the test that holds `needs` to them. */
@@ -480,6 +507,7 @@ export function impliedNeeds(rules: Pick<FlowRules, 'dark' | 'light' | 'ghost'>)
   const out: Need[] = []
   if (rules.dark.paint === 'pattern' || rules.light.paint === 'pattern') out.push('texture')
   if (rules.dark.paint === 'photo') out.push('photos')
+  if (rules.dark.paint === 'heroPhoto' || rules.dark.close === 'photo') out.push('heroPhoto')
   if (rules.ghost === 'once') out.push('initials')
   return out
 }
@@ -492,6 +520,7 @@ export function needLabel(need: Need): string {
     case 'initials': return 'initials from the firm\u2019s name'
     case 'ribbons': return 'two ribbon sections the theme can fill'
     case 'darkHero': return 'a dark or photo hero'
+    case 'heroPhoto': return 'a landscape hero photograph of a place, approved with this theme'
     default: return `a ${need} section`
   }
 }
@@ -505,11 +534,18 @@ export function unmetNeeds(flow: FlowRules, facts: CanvasFacts): Need[] {
     if (need === 'initials') return !facts.initials
     if (need === 'ribbons') return (facts.ribbonsFilled ?? 0) < 2
     if (need === 'darkHero') return !(facts.hero === 'dark' || facts.hero === 'image')
+    if (need === 'heroPhoto') return !facts.heroPhoto
     return !facts.hosts.includes(need)
   })
 }
 
 // ─── The paints' gates ────────────────────────────────────────────────────────
+
+/** The theme draws the hero's photograph (Phase 17B session 6): its sections or its close, so Apply
+ *  records which photograph it was approved with (`[R-532]`). */
+export function drawsHeroPhoto(flow: Pick<FlowRules, 'dark'> | null | undefined): boolean {
+  return flow?.dark.paint === 'heroPhoto' || flow?.dark.close === 'photo'
+}
 
 /** A dark band's ground fades under this theme. */
 export function fadesUnder(flow: FlowRules | null | undefined): boolean {
@@ -534,9 +570,11 @@ export function saturatedFillOk(inputs: ColorInputs | Record<string, unknown> | 
   return chroma >= 0.05 && deltaE(fill, t['--color-brand-dark']) >= 20 && deltaE(fill, t['--color-background']) >= 20
 }
 
-/** The closing call to action's ground under a theme, with the saturated gate applied. */
-export function closeSurface(flow: FlowRules | null | undefined, saturatedOk: boolean): 'dark' | 'saturated' | 'muted' {
+/** The closing call to action's ground under a theme, with the saturated gate and the photograph's
+ *  gate applied: `photo` needs an approved hero photograph (`[R-532]`), else the dark ground. */
+export function closeSurface(flow: FlowRules | null | undefined, saturatedOk: boolean, heroPhoto = false): 'dark' | 'saturated' | 'muted' | 'photo' {
   const close = flow?.dark.close ?? 'muted'
+  if (close === 'photo') return heroPhoto ? 'photo' : 'dark'
   return close === 'saturated' && !saturatedOk ? 'dark' : close
 }
 

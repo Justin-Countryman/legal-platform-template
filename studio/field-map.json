@@ -5180,11 +5180,20 @@
               "cutBlocks.mostlyDark",
               "typeOnBlack.allDark",
               "editorial.mostlyLight",
-              "ribbonRhythm.mostlyLight"
+              "ribbonRhythm.mostlyLight",
+              "photoScrims.mostlyDark"
             ]
           },
           "path": "flow",
           "title": "Theme",
+          "type": "string"
+        },
+        {
+          "hidden": true,
+          "jsonType": "string",
+          "path": "flowPhoto",
+          "readOnly": true,
+          "title": "Theme photograph (set by Apply)",
           "type": "string"
         },
         {

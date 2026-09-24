@@ -1,6 +1,6 @@
 import {THEMES, matchTheme, themePatch, updatePatch, type Theme, type ThemeDoc, type ThemeMatch} from '@/lib/themes'
 import {PALETTE_PRESETS, matchPreset, presetInputs, type PalettePreset} from '@/lib/palettes'
-import {FLOWS, HIDDEN_FIELDS, RETIRED_FLOWS, flowById, flowOf, type FlowRules} from '@/lib/flows'
+import {FLOWS, HIDDEN_FIELDS, RETIRED_FLOWS, drawsHeroPhoto, flowById, flowOf, type FlowRules} from '@/lib/flows'
 import {parseHexInput, type ColorInputs} from '@/lib/designTokens'
 import {isResolvedTreatment} from '@/lib/imageTreatment'
 import {SILO_HOVER_EFFECTS} from '@/lib/siloHover'
@@ -33,6 +33,11 @@ import {type PreviewView} from './session'
 // the site already stores is the one operator action that reaches zero on a document
 // still carrying the six (ADV-17B-3 F3; the deletion pin waits for zero on every
 // client). "As the site is" contributes nothing.
+//
+// Phase 17B session 6 (`[R-532]`): a theme that draws the hero's photograph is approved WITH the
+// photograph the preview shows, its asset id written as `flowPhoto` beside `flow`; any other chosen
+// theme clears it. The live page draws that theme's photo sections only while the hero photograph
+// is still the approved one.
 
 /** The row value that leaves a choice as the site has it. */
 export const AS_THE_SITE_IS = 'site'
@@ -84,7 +89,11 @@ export type PreviewPlan = {
 const present = (v: unknown) => v !== undefined && v !== null
 const same = (a: unknown, b: unknown) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null)
 
-export function planPreview(stored: StoredDesign | null | undefined, choices: Pick<PreviewChoices, 'styleSet' | 'palette' | 'flow'>): PreviewPlan {
+export function planPreview(
+  stored: StoredDesign | null | undefined,
+  choices: Pick<PreviewChoices, 'styleSet' | 'palette' | 'flow'>,
+  heroPhoto: string | null = null,
+): PreviewPlan {
   const doc: StoredDesign = stored ?? {}
   const wears = {styleSet: matchTheme(doc), palette: matchPreset(doc), flow: flowOf(doc)}
   const set: PreviewPlan['set'] = {}
@@ -114,6 +123,11 @@ export function planPreview(stored: StoredDesign | null | undefined, choices: Pi
   if (flow) {
     if (doc.flow !== flow.id) set.flow = flow.id
     for (const field of HIDDEN_FIELDS) if (present(doc[field]) && !unset.includes(field)) unset.push(field)
+    if (drawsHeroPhoto(flow) && heroPhoto) {
+      if (doc.flowPhoto !== heroPhoto) set.flowPhoto = heroPhoto
+    } else if (present(doc.flowPhoto)) {
+      unset.push('flowPhoto')
+    }
   }
 
   return {set, unset, styleSet: theme, palette, flow, rev: typeof doc._rev === 'string' ? doc._rev : null, wears}

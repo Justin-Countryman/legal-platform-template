@@ -2465,6 +2465,16 @@
       "passed": [
         "mostlyLight"
       ]
+    },
+    {
+      "id": "photoScrims",
+      "name": "Photo scrims",
+      "sentence": "Dark-led: a toned piece of the hero’s own photograph behind two sections and the close.",
+      "steps": [
+        "mostlyDark"
+      ],
+      "defaultStep": "mostlyDark",
+      "passed": []
     }
   ],
   "flows": [
@@ -2754,6 +2764,51 @@
       "family": "ribbonRhythm",
       "step": "mostlyLight",
       "passed": true
+    },
+    {
+      "dark": {
+        "budget": "threeQuarters",
+        "hosts": [
+          "ribbon",
+          "narrative",
+          "areas",
+          "testimonials",
+          "statement",
+          "attorneys",
+          "caseResults",
+          "split",
+          "badges"
+        ],
+        "rhythm": "runs",
+        "paint": "heroPhoto",
+        "close": "photo"
+      },
+      "light": {
+        "paint": "plain"
+      },
+      "divider": {
+        "shape": "straight",
+        "at": "none",
+        "carry": [],
+        "hairline": "none",
+        "hairlineInk": "border"
+      },
+      "spacing": "normal",
+      "ghost": "none",
+      "overlap": "none",
+      "needs": [
+        "heroPhoto"
+      ],
+      "chrome": {
+        "header": "dark",
+        "footer": "dark"
+      },
+      "id": "photoScrims.mostlyDark",
+      "name": "Photo scrims",
+      "sentence": "Dark-led: a toned piece of the hero’s own photograph behind two sections and the close.",
+      "family": "photoScrims",
+      "step": "mostlyDark",
+      "passed": false
     }
   ],
   "defaultFlow": "quiet.mostlyLight",

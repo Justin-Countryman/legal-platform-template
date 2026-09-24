@@ -190,3 +190,29 @@ describe('Switcher, the client', () => {
     expect(c.querySelector('input')).toBeNull()
   })
 })
+
+describe('Switcher, the hero photograph (Phase 17B session 6, `[R-532]`)', () => {
+  const PHOTO = {src: 'https://cdn.example.com/city.jpg', width: 2400, height: 1600, hotspot: null, assetId: 'image-abc-2400x1600-jpg'}
+  const scrims = {...choices, flow: 'photoScrims.mostlyDark'}
+  const withPhoto = (doc: StoredDesign, c: typeof choices, heroPhoto: typeof PHOTO | null, chrome: SiteChrome | null) => {
+    const plan = planPreview(doc, c, heroPhoto?.assetId ?? null)
+    const shown = chrome ? {...chrome, designTokens: {...(chrome.designTokens as object), ...plan.set}} as unknown as SiteChrome : null
+    return render(<Switcher grant={operator} choices={c} plan={plan} canvas={[]} chrome={shown} origin="https://example.com" hero="image" heroPhoto={heroPhoto} />).container.textContent ?? ''
+  }
+
+  it('names the need in words where the hero has no photograph, and not where it has one', () => {
+    expect(withPhoto(stored, scrims, null, chromeWithTexture)).toContain('a landscape hero photograph of a place, approved with this theme')
+    expect(withPhoto(stored, scrims, PHOTO, chromeWithTexture)).not.toContain('Needs this page lacks: a landscape hero photograph')
+  })
+
+  it('says so when the photograph changed since the theme was applied, and not when it is the approved one', () => {
+    const applied: StoredDesign = {...stored, flow: 'photoScrims.mostlyDark', flowPhoto: 'image-old-2400x1600-jpg'}
+    const siteIs = {...choices, flow: 'site'}
+    const stale = {...chromeWithTexture, designTokens: {patternTexture: 'diagonalHatch', flow: 'photoScrims.mostlyDark', flowPhoto: 'image-old-2400x1600-jpg'}} as unknown as SiteChrome
+    expect(withPhoto(applied, siteIs, PHOTO, stale)).toContain('The hero photograph changed since Photo scrims was applied')
+    // Choosing the theme again approves the live photograph: the note goes.
+    expect(withPhoto(applied, scrims, PHOTO, stale)).not.toContain('The hero photograph changed')
+    const current = {...chromeWithTexture, designTokens: {patternTexture: 'diagonalHatch', flow: 'photoScrims.mostlyDark', flowPhoto: PHOTO.assetId}} as unknown as SiteChrome
+    expect(withPhoto({...applied, flowPhoto: PHOTO.assetId}, siteIs, PHOTO, current)).not.toContain('The hero photograph changed')
+  })
+})
