@@ -2474,7 +2474,9 @@
         "mostlyDark"
       ],
       "defaultStep": "mostlyDark",
-      "passed": []
+      "passed": [
+        "mostlyDark"
+      ]
     }
   ],
   "flows": [
@@ -2808,7 +2810,7 @@
       "sentence": "Dark-led: a toned piece of the hero’s own photograph behind two sections and the close.",
       "family": "photoScrims",
       "step": "mostlyDark",
-      "passed": false
+      "passed": true
     }
   ],
   "defaultFlow": "quiet.mostlyLight",

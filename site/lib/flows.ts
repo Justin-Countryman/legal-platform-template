@@ -236,6 +236,14 @@ const NO_DIVIDER: FlowRules['divider'] = {shape: 'straight', at: 'none', carry: 
 // ribbon evidence canvas at 1440 and 390. Type on black and Ribbon rhythm are itself where
 // their need is met (a dark or photo hero; two ribbons the pass fills) and the switcher
 // names the need where it is not.
+//
+// THE EYE PASS OF SESSION 6 (record WS-V1-PHASE17B6-DESIGN §9, captures beside it): Photo scrims at
+// mostly dark passed on the three record canvases given a photograph of a place behind the hero, at
+// 1440 and 390: told from Cut blocks at mostly dark by the photograph behind two sections and the close,
+// each a different quarter of the hero's photograph; weakest on a dark landscape, whose lower quarters
+// sit near the scrim's own tone. With no approved photograph it renders a plain mostly-dark page and
+// says so. Thinner than the study's photo pages, which show a different photograph behind most dark
+// bands: that is the photo set's (backlog 365).
 
 export const FAMILIES: readonly FlowFamily[] = [
   {
@@ -341,7 +349,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // by hand, the same scrim and colors (`[R-531]`); a photograph changed after Apply shows none until
     // it is approved (`[R-532]`). Mostly dark only: no balanced study page with a photo hero carries two
     // photo bands, and the family's sites are all mostly dark.
-    steps: ['mostlyDark'], defaultStep: 'mostlyDark', passed: [],
+    steps: ['mostlyDark'], defaultStep: 'mostlyDark', passed: ['mostlyDark'],
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'heroPhoto', close: 'photo'},
       light: {paint: 'plain'},
