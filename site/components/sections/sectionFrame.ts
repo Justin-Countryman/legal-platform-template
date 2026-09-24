@@ -3,6 +3,7 @@ import {
 } from '@/components/sections/SectionShell'
 import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
 import {flowOf, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts} from '@/lib/flows'
+import type {HeroPhoto} from '@/lib/heroGround'
 
 // ─── The seam walk ────────────────────────────────────────────────────────────
 //
@@ -94,7 +95,14 @@ export type Paint = {
   /** The theme's room around a band it filled (`flow.spacing`, Phase 17B session 5). Only
    *  `spacious` is carried; the shell reads it below a stored spacing and a section's own. */
   spacing?: 'spacious'
+  /** The window of the hero's photograph this band shows (Phase 17B session 6, `[R-530]`): one
+   *  quadrant of the photograph drawn at twice the band's size. Set only with `ground: 'image'`
+   *  on a band the theme filled; the shell draws the site look's `heroPhoto` through it. */
+  window?: PhotoWindow
 }
+
+/** A quadrant of the hero's photograph: `x` 0 is the left half, `y` 0 the top half. */
+export type PhotoWindow = {x: 0 | 1; y: 0 | 1}
 
 /** Phase 16E: whether this member can raise a feature photo into the band above.
  *  Only the content section answers true, and only for a `split` layout whose media
@@ -128,6 +136,13 @@ export type SiteLook = {
   /** The initials the ghost draws (Phase 16D, `[R-492]`), or null when the theme draws
    *  none. Derived from the firm's name, never stored; set by `HomeBody`. */
   ghost?: {text: string} | null
+  /** The hero's photograph the `heroPhoto` paint and the `photo` close draw (Phase 17B session 6):
+   *  on a live page only the photograph the theme was approved with (`[R-532]`), in the preview
+   *  the live one; null wherever there is none. Set by `HomeBody`; interior pages never carry it. */
+  heroPhoto?: HeroPhoto | null
+  /** The closing call to action renders on this page, so a photo close is a neighbour of the
+   *  last band. Set by `HomeBody`; absent reads as shown. */
+  closeShown?: boolean
 }
 
 /** The site look from the projected Design Settings (`DESIGN_TOKENS_QUERY`). */
@@ -150,7 +165,7 @@ export function siteLookOf(d: Record<string, unknown> | null | undefined): SiteL
  *  page carries no theme. The carried pieces DO reach them (`[R-483]`), painted by the
  *  site wrapper, as the drop cap does: they are the UI system's one decision each. */
 export function interiorLook(site: SiteLook | null | undefined): SiteLook | null {
-  return site ? {...site, flow: null, ghost: null} : null
+  return site ? {...site, flow: null, ghost: null, heroPhoto: null} : null
 }
 
 /** A section's own value where it has one; absent and `inherit` follow the site. */
@@ -437,10 +452,26 @@ export function walkFrame<M>(
 
 type Survivor = {appearance: SectionAppearance | null | undefined} & FlowInputs
 
+/** The bands the hero's photograph may sit behind: text-led ones (record §2.3). */
+export const PHOTO_HOSTS: readonly Host[] = ['narrative', 'split', 'testimonials', 'differentiators', 'statement']
+/** At most this many windows mid-page, plus the close: a fourth window shows the hero again. */
+export const PHOTO_WINDOWS_PER_PAGE = 2
+
+/** The photograph's windows, in the order they are given out: the quadrants farthest from the
+ *  hotspot (the subject, which stays in the hero) first, and never the one nearest it; with no
+ *  hotspot, the lower quadrants first, where a landscape's detail sits below its horizon. Three:
+ *  the close's, then two for the bands. */
+export function photoWindows(hotspot: {x: number; y: number} | null | undefined): PhotoWindow[] {
+  const quadrants: PhotoWindow[] = [{x: 0, y: 1}, {x: 1, y: 1}, {x: 0, y: 0}, {x: 1, y: 0}]
+  if (!hotspot) return quadrants.slice(0, 3)
+  const d = (q: PhotoWindow) => Math.hypot(0.25 + q.x / 2 - hotspot.x, 0.25 + q.y / 2 - hotspot.y)
+  return [...quadrants].sort((a, b) => d(b) - d(a)).slice(0, 3)
+}
+
 export function assignGrounds(
   survivors: readonly Survivor[],
   flow: FlowRules,
-  site: Pick<SiteLook, 'patternTexture' | 'saturated'> | null = null,
+  site: Pick<SiteLook, 'patternTexture' | 'saturated' | 'heroPhoto' | 'closeShown'> | null = null,
 ): (Paint | null)[] {
   const n = survivors.length
   const strongOf = (a: SectionAppearance | null | undefined) => {
@@ -537,6 +568,8 @@ export function assignGrounds(
         case 'photo': return {ground: r.photo ? 'image' : 'dark', texture: false}
         case 'pattern': return {ground: 'dark', texture}
         case 'saturated': return {ground: site?.saturated && r.content ? 'saturated' : 'dark', texture: false}
+        // The photograph's windows are placed below, over the whole page, because they read both
+        // neighbours; every dark band starts on the dark ground.
         default: return {ground: 'dark', texture: false}
       }
     }
@@ -564,6 +597,37 @@ export function assignGrounds(
         paints[i] = {ground: 'light', texture: false}
     }
   })
+  // THE HERO'S PHOTOGRAPH (Phase 17B session 6, `[R-530]`, record §2.3). A window of it on at
+  // most two text-led dark bands the pass filled, never beside another photograph above or
+  // below: the photo hero above the first band, an operator's Image band, another window, or the
+  // photo close below the last when it renders. One photograph shown more often shows the hero
+  // again (ADV-17B6-A); two windows cannot join at a seam without band heights the server does
+  // not know, so adjacent photo bands, which the family's sites run as one photograph, are a
+  // stated simplification. Text-led, because a grid's cards hide the photograph and a tall grid
+  // on a phone magnifies it five to seven times. A band that would put a photograph beside an
+  // inset between two strong grounds stays plain, so `[R-501]`'s adoption puts the panel on the
+  // run as ruled (ADV-17B6-B). The windows: the close takes the first, the bands the next two.
+  if (flow.dark.paint === 'heroPhoto' && site?.heroPhoto) {
+    const closePhoto = flow.dark.close === 'photo' && site.closeShown !== false
+    const strongAt = (i: number) => i >= 0 && i < n && (dark[i] || strongOf(survivors[i].appearance))
+    const photoAt = (i: number): boolean => {
+      if (i < 0) return true
+      if (i >= n) return closePhoto
+      // An operator's photograph counts whether its band is full width or an inset panel
+      // (`visibleGround` answers light for an inset, so the surface is read directly; ADV-17B6-2 F3).
+      return paints[i]?.ground === 'image' || (stored[i] && survivors[i].appearance?.surface === 'image')
+    }
+    const bracketsInset = (i: number) =>
+      (i - 1 >= 0 && inset[i - 1] && strongAt(i - 2)) || (i + 1 < n && inset[i + 1] && strongAt(i + 2))
+    const windows = photoWindows(site.heroPhoto.hotspot)
+    let placed = 0
+    for (let i = 0; i < n && placed < PHOTO_WINDOWS_PER_PAGE; i++) {
+      if (fixed[i] || !dark[i] || !PHOTO_HOSTS.includes(survivors[i].host as Host)) continue
+      if (photoAt(i - 1) || photoAt(i + 1) || bracketsInset(i)) continue
+      paints[i] = {ground: 'image', texture: false, window: windows[1 + placed]}
+      placed++
+    }
+  }
   // The room around the bands the theme filled (Phase 17B session 5, `[R-525]`): a band
   // whose own surface stands keeps its own room, as it keeps everything else.
   if (flow.spacing === 'spacious') {
@@ -587,6 +651,7 @@ export function canvasFacts(
     photos: survivors.filter((r) => r.photo).length,
     texture: !!site?.patternTexture,
     initials: !!site?.ghost?.text,
+    heroPhoto: !!site?.heroPhoto,
     hero,
     ribbonsFilled: survivors.filter((r, i) => r.host === 'ribbon' && (paints[i]?.ground === 'saturated' || paints[i]?.ground === 'dark')).length,
   }

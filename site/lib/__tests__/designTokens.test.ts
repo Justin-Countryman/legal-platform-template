@@ -15,6 +15,7 @@ import {
   retoneFill,
   validateWcag,
   textureOnDark,
+  SCRIM_OPACITY,
 } from '../designTokens'
 import {PALETTE_PRESETS, matchPreset, presetInputs} from '../palettes'
 
@@ -642,4 +643,60 @@ describe('the texture on a dark band (Phase 16B, [R-479])', () => {
       expect(t['--color-slab']).toBe(t['--color-brand-dark'])
     }
   })
+
+  it('a photo band’s two scrim values move only a palette that failed, and every photo pair is blocking ([R-533])', () => {
+    // The lightest point of a photo band: the scrim at its 80% over pure white.
+    const blend = (ink: string, a: number) => {
+      const k = parseInt(ink.slice(1), 16)
+      const ch = (v: number) => Math.round(255 * (1 - a) + v * a)
+      return '#' + [k >> 16, (k >> 8) & 255, k & 255].map(ch).map((v) => v.toString(16).padStart(2, '0')).join('')
+    }
+    let moved = 0
+    const inputs = [{}, {darkGround: '#13294b', accent: '#c9a227'}, {darkGround: '#121212', action: '#b3202b'}, {darkGround: '#1f4d3a', lightGround: '#f5eedc', accent: '#ff6f61'}]
+    for (const input of inputs) {
+      const p = resolvePalette(input).tokens
+      const floor = blend(p['--color-scrim'], SCRIM_OPACITY)
+      if (ratio(p['--color-border-control-on-dark'], floor) >= 3) expect(p['--color-border-control-on-scrim']).toBe(p['--color-border-control-on-dark'])
+      else { moved++; expect(ratio(p['--color-border-control-on-scrim'], floor)).toBeGreaterThanOrEqual(3) }
+      const cueDark = p['--color-action-state-cue-on-dark']
+      const shown = ratio(p['--color-action'], floor) >= 3 || (cueDark !== 'transparent' && ratio(cueDark, floor) >= 3)
+      expect(p['--color-action-state-cue-on-scrim']).toBe(shown ? cueDark : p['--color-foreground-on-dark'])
+      const pairs = validateWcag(resolvePalette(input)).filter((r) => r.pair.includes('the photo floor'))
+      expect(pairs.map((r) => r.pair)).toEqual(expect.arrayContaining([
+        'foreground-on-dark on the photo floor', 'foreground-muted-on-dark on the photo floor', 'foreground-subtle-on-dark on the photo floor',
+        'accent-on-dark on the photo floor', 'star-outline-on-dark on the photo floor', 'star-fill on the photo floor',
+        'border-control-on-scrim on the photo floor', 'the active state (action fill or cue) on the photo floor',
+      ]))
+      expect(pairs.every((r) => r.blocking && r.passes)).toBe(true)
+    }
+    // The placeholder's border fails over a photograph today (1.8:1), so the fix is not vacuous.
+    expect(moved).toBeGreaterThan(0)
+  })
+
+  it('the scrim values move no palette whose on-dark value already holds over a photograph: every preset and 2,000 seeded ([R-533], ADV-17B6-2 F2)', () => {
+    let s = 20260924 >>> 0
+    const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 2 ** 32
+    const hex = () => '#' + Math.floor(rnd() * 0x1000000).toString(16).padStart(6, '0')
+    const inputs = [{}, ...PALETTE_PRESETS.map(presetInputs), ...Array.from({length: 2000}, () => ({darkGround: hex(), lightGround: hex(), accent: hex(), action: rnd() < 0.5 ? hex() : null}))]
+    const floorOf = (t: Record<string, string>) => {
+      const k = parseInt(t['--color-scrim'].slice(1), 16)
+      const ch = (v: number) => Math.round(255 * (1 - SCRIM_OPACITY) + v * SCRIM_OPACITY)
+      return '#' + [k >> 16, (k >> 8) & 255, k & 255].map(ch).map((v) => v.toString(16).padStart(2, '0')).join('')
+    }
+    let unchangedBorders = 0, unchangedCues = 0
+    for (const input of inputs) {
+      const t = resolvePalette(input).tokens
+      const floor = floorOf(t)
+      if (ratio(t['--color-border-control-on-dark'], floor) >= 3.01) {
+        expect(t['--color-border-control-on-scrim']).toBe(t['--color-border-control-on-dark']); unchangedBorders++
+      }
+      const cueDark = t['--color-action-state-cue-on-dark']
+      if (ratio(t['--color-action'], floor) >= 3.01 || (cueDark !== 'transparent' && ratio(cueDark, floor) >= 3.01)) {
+        expect(t['--color-action-state-cue-on-scrim']).toBe(cueDark); unchangedCues++
+      }
+    }
+    // Both kinds of palette are in the sweep, so neither branch is vacuous.
+    expect(unchangedBorders).toBeGreaterThan(0)
+    expect(unchangedCues).toBeGreaterThan(0)
+  }, 30_000)
 })

@@ -65,7 +65,7 @@ describe('planPreview', () => {
   it('touches only style-set, pick, color and theme fields, and clears only the six retired ones', () => {
     const allowed = new Set([
       ...Object.keys(graphite.settings), 'headingRule',
-      'darkGround', 'lightGround', 'accent', 'action', 'flow',
+      'darkGround', 'lightGround', 'accent', 'action', 'flow', 'flowPhoto',
     ])
     const clearable = new Set([...allowed, ...HIDDEN_FIELDS])
     for (const theme of THEMES) {
@@ -77,6 +77,24 @@ describe('planPreview', () => {
         }
       }
     }
+  })
+
+  it('a theme that draws the hero’s photograph is approved with the photograph shown; any other theme clears it ([R-532])', () => {
+    const photo = 'image-abc-2400x1600-jpg'
+    const scrims = {styleSet: 'site', palette: 'site', flow: 'photoScrims.mostlyDark'}
+    expect(planPreview(plain, scrims, photo).set).toEqual({flow: 'photoScrims.mostlyDark', flowPhoto: photo})
+    const approved = {...plain, flow: 'photoScrims.mostlyDark', flowPhoto: photo}
+    // The same photograph again is no change; a new one is approved by choosing the theme again.
+    expect(planPreview(approved, scrims, photo)).toMatchObject({set: {}, unset: []})
+    expect(planPreview(approved, scrims, 'image-new-2400x1600-jpg').set).toEqual({flowPhoto: 'image-new-2400x1600-jpg'})
+    // Another theme clears it; "as the site is" contributes nothing, even with a new photograph.
+    expect(planPreview(approved, {...scrims, flow: 'cutBlocks.mostlyDark'}, photo)).toMatchObject({set: {flow: 'cutBlocks.mostlyDark'}, unset: ['flowPhoto']})
+    expect(planPreview(approved, {...scrims, flow: 'site'}, 'image-new-2400x1600-jpg')).toMatchObject({set: {}, unset: []})
+    // No qualifying photograph: nothing is approved, and a stale approval is cleared.
+    expect(planPreview(plain, scrims, null).set).toEqual({flow: 'photoScrims.mostlyDark'})
+    expect(planPreview(approved, scrims, null).unset).toEqual(['flowPhoto'])
+    // What the preview renders is what Apply writes: the plan applied carries the approval.
+    expect(withPreview({designTokens: {...plain}}, planPreview(plain, scrims, photo)).designTokens).toMatchObject({flowPhoto: photo})
   })
 
   it('a palette writes its four roles and clears an absent one, case-blind', () => {

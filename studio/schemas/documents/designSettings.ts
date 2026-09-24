@@ -112,11 +112,26 @@ export const designSettings = defineType({
       type: 'string',
       fieldset: 'theme',
       description:
-        'How the homepage flows: which sections go dark and how many, where the backgrounds merge and break, the shape of the breaks, and what sits on the backgrounds. A section with its own Surface keeps it; the theme fills the rest. Leave blank for the platform default (' + DEFAULT_FLOW + ').',
+        'How the homepage flows: which sections go dark and how many, where the backgrounds merge and break, the shape of the breaks, and what sits on the backgrounds. A section with its own Surface keeps it; the theme fills the rest. Photo scrims shows the hero photograph only once it is approved by choosing the theme in the design preview. Leave blank for the platform default (' + DEFAULT_FLOW + ').',
       options: {
         list: FLOWS.map((f) => ({title: `${f.name} \u2014 ${f.sentence}`, value: f.id})),
         layout: 'radio',
       },
+    }),
+    // Phase 17B session 6 ([R-532]): the hero photograph Photo scrims was approved with, as its
+    // asset id. Apply writes it beside that theme and clears it with any other; the site draws the
+    // theme's photo sections only while the live hero photograph is this one, so a photograph
+    // replaced later shows nowhere until it is approved in the preview. Hidden and read-only: it
+    // is set by approving, never by hand. No `initialValue` (item 308). Hidden by a PREDICATE,
+    // not a literal `true`: the field map records a literal as a retired field kept for one pin
+    // (the six the compat bridge reads), and this field is live.
+    defineField({
+      name: 'flowPhoto',
+      title: 'Theme photograph (set by Apply)',
+      type: 'string',
+      fieldset: 'theme',
+      hidden: () => true,
+      readOnly: true,
     }),
 
     // ─── Headings (Phase 16B) ─────────────────────────────────────────────────

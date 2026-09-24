@@ -269,6 +269,8 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
   // Phase 17B: the theme's hairline at the top of a band, defined in `globals.css`, and its
   // accent ink (session 5).
   'hairline-top', 'hairline-accent',
+  // Phase 17B session 6: a window of the hero's photograph, toned by the scrim.
+  'photo-window', 'grayscale',
   // WRITTEN OUT, not generated. Tailwind's own scanner looks for candidate STRINGS in
   // source; a class built from a template literal in the shell is invisible to it and
   // the utility is never emitted (measured: 0 occurrences in the served stylesheet).

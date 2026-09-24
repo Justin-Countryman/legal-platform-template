@@ -72,10 +72,10 @@ const UNREAD: Record<string, Reason> = Object.fromEntries([
   // reads the context-free name (`text-foreground`) and the block swaps it.
   ...[
     '--color-accent-on-dark', '--color-accent-on-light', '--color-accent-text-on-light',
-    '--color-action-state-cue-on-dark', '--color-action-state-cue-on-light',
+    '--color-action-state-cue-on-dark', '--color-action-state-cue-on-light', '--color-action-state-cue-on-scrim',
     '--color-action-text-hover-on-dark', '--color-action-text-hover-on-light',
     '--color-action-text-on-dark', '--color-action-text-on-light',
-    '--color-border-control-on-dark', '--color-border-control-on-light',
+    '--color-border-control-on-dark', '--color-border-control-on-light', '--color-border-control-on-scrim',
     '--color-border-on-dark', '--color-border-on-light',
     '--color-foreground-muted-on-dark', '--color-foreground-muted-on-light',
     '--color-foreground-subtle-on-dark', '--color-foreground-subtle-on-light',

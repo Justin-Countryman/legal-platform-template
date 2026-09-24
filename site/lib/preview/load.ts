@@ -3,7 +3,8 @@ import {client} from '@/lib/sanity/client'
 import {getHomePage, getSiteChrome} from '@/lib/sanity/fetchers'
 import {PREVIEW_STORED_DESIGN_QUERY} from '@/lib/sanity/queries'
 import {type SiteChrome} from '@/components/layout/SiteShell'
-import {type HomePageData} from '@/components/layout/HomeBody'
+import {homeHeroOf, type HomePageData} from '@/components/layout/HomeBody'
+import {heroPhotoOf} from '@/lib/heroGround'
 import {getPreviewSession, type PreviewGrant} from './session'
 import {grantFlow, parseChoices, planPreview, previewPath, withPreview, type PreviewChoices, type PreviewPlan, type StoredDesign} from './plan'
 
@@ -55,6 +56,7 @@ export const loadPreview = cache(async (styleSet: string, palette: string, flow:
     getHomePage(),
     client.fetch(PREVIEW_STORED_DESIGN_QUERY) as Promise<StoredDesign | null>,
   ])
-  const plan = planPreview(stored, choices)
+  // The hero's photograph a Photo scrims choice is approved with (Phase 17B session 6, `[R-532]`).
+  const plan = planPreview(stored, choices, heroPhotoOf(homeHeroOf(home))?.assetId ?? null)
   return {kind: 'live', grant, choices, plan, chrome: withPreview(liveChrome, plan), liveChrome, home}
 })

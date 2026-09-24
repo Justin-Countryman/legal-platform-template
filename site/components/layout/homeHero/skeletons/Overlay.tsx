@@ -14,7 +14,7 @@ import {HeroScrim} from '@/components/layout/HeroScrim'
 import {heroForegroundVars, HERO_BAND_MIN_H_LG} from '@/lib/heroLayout'
 import {HeroBand, HeroTextBlock} from '../shared'
 import type {HeroConfig, ResolvedHomeContent, SkeletonProps} from '../types'
-import {heroObjectPosition, type ResolvedHeroSurface, type HeroImage} from '@/lib/heroSurface'
+import {HERO_BACKDROP_SIZES, heroObjectPosition, type ResolvedHeroSurface, type HeroImage} from '@/lib/heroSurface'
 
 // ─── Backdrop (image | mosaic) + scrim ────────────────────────────────────────
 // Mosaic tiles are capped at 6 (the 2/3-col grid) and built immutably so we never
@@ -39,7 +39,7 @@ function Backdrop({config, surface, content}: {config: HeroConfig; surface: Reso
         </ul>
       ) : (
         surface.bgImage && (
-          <Image src={surface.bgImage.src} alt={surface.bgImage.alt ?? ''} fill priority className="object-cover" style={{objectPosition: heroObjectPosition(surface.bgImage)}} sizes="100vw" />
+          <Image src={surface.bgImage.src} alt={surface.bgImage.alt ?? ''} fill priority className="object-cover" style={{objectPosition: heroObjectPosition(surface.bgImage)}} sizes={HERO_BACKDROP_SIZES} />
         )
       )}
       <HeroScrim style={config.scrimStyle} color={config.scrimColor} direction={config.scrimDirection} opacity={surface.scrimOpacity} align={config.contentAlign} tone="dark" />

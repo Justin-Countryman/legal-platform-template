@@ -1,8 +1,8 @@
 import {type getHomePage} from '@/lib/sanity/fetchers'
 import {ghostSource} from '@/lib/brandMark'
-import {siteLookOf} from '@/components/sections/sectionFrame'
+import {siteLookOf, photoWindows, NO_SEAM} from '@/components/sections/sectionFrame'
 import {firstBandRises} from '@/components/layout/HomepageCanvas'
-import {heroGround} from '@/lib/heroGround'
+import {heroGround, heroPhotoOf} from '@/lib/heroGround'
 import {closeSurface} from '@/lib/flows'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
@@ -64,10 +64,20 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
   // Phase 17B: the theme (`look.flow`, from the stored `flow`, the compat bridge or the
   // platform default) says whether the ghost draws and what ground the close takes.
   const look = siteLookOf(chrome?.designTokens)
+  // Phase 17B session 6 (`[R-530]`, `[R-532]`): the hero's photograph the theme may lay in windows
+  // down the page, only while it is the photograph the theme was approved with (`flowPhoto`, which
+  // the preview sets to the live one when the operator chooses the theme); and whether the close
+  // renders, so a photo close counts as the last band's neighbour.
+  const photo = heroPhotoOf(hero)
+  const approved = (chrome?.designTokens as {flowPhoto?: unknown} | null | undefined)?.flowPhoto
+  const closeData = globalCtaData && !home?.hideCtaForm ? {...globalCtaData, ...(home?.ctaOverride ?? {})} : null
   const site = {
     ...look,
     ghost: ghostSource(header?.siteSettings?.firmName, look.flow?.ghost === 'once'),
+    heroPhoto: photo?.assetId && photo.assetId === approved ? photo : null,
+    closeShown: !!closeData?.heading,
   }
+  const close = closeSurface(look.flow, !!look.saturated, !!site.heroPhoto)
   const ground = heroGround(hero)
   const edgeBelow = firstBandRises(home?.canvas, site, ground)
 
@@ -115,7 +125,14 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
           is now live; it gated nothing before this. Its ground is the theme's
           (Phase 17B, `dark.close`), with the saturated fill gated on the palette. */}
       {!home?.hideCtaForm && (
-        <HomepageCta data={globalCtaData} override={home?.ctaOverride} surface={closeSurface(look.flow, !!look.saturated)} />
+        <HomepageCta
+          data={globalCtaData}
+          override={home?.ctaOverride}
+          surface={close === 'photo' ? 'image' : close}
+          // A photo close is an Image section like one built by hand (`[R-531]`), showing the
+          // photograph's first window.
+          seam={close === 'photo' && site.heroPhoto ? {...NO_SEAM, site, paint: {ground: 'image', texture: false, window: photoWindows(site.heroPhoto.hotspot)[0]}} : undefined}
+        />
       )}
     </>
   )

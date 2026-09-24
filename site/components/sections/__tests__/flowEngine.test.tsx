@@ -33,6 +33,7 @@ import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, chromeSchemes, flow
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {ghostSource} from '@/lib/brandMark'
 import {LOOK, themed} from './flowFixtures'
+import type {HeroPhoto} from '@/lib/heroGround'
 
 /** Quiet with the room it never takes, for the case that nothing sets `spacing` by default. */
 const QUIET_ROOM = themed({})
@@ -341,19 +342,21 @@ describe('the decision golden', () => {
   const STUB = stubCanvas('fixture.ndjson')
   const RECORDS = RECORD_CANVASES.map((f) => [f.replace(/^record-|\.ndjson$/g, ''), stubCanvas(f)] as const)
   const ciPresent = STUB !== null && RECORDS.every(([, c]) => c !== null)
-  const canvases: Array<[string, HomepageBlock[], VisibleGround]> = [
-    ...(ciPresent ? [['stub', STUB!.blocks, STUB!.hero] as [string, HomepageBlock[], VisibleGround]] : []),
-    ['migrated', migrated as unknown as HomepageBlock[], 'dark'],
-    ['planted', planted as unknown as HomepageBlock[], 'dark'],
-    ...(ciPresent ? RECORDS.map(([name, c]) => [name, c!.blocks, c!.hero] as [string, HomepageBlock[], VisibleGround]) : []),
+  type Canvas = [string, HomepageBlock[], VisibleGround, HeroPhoto | null]
+  const canvases: Canvas[] = [
+    ...(ciPresent ? [['stub', STUB!.blocks, STUB!.hero, STUB!.heroPhoto] as Canvas] : []),
+    ['migrated', migrated as unknown as HomepageBlock[], 'dark', null],
+    ['planted', planted as unknown as HomepageBlock[], 'dark', null],
+    // Phase 17B session 6: the photo canvases carry the hero's photograph, as approved.
+    ...(ciPresent ? RECORDS.map(([name, c]) => [name, c!.blocks, c!.hero, c!.heroPhoto] as Canvas) : []),
   ]
   const themes: FlowRules[] = [...FLOWS, siteLookOf({sectionJoin: 'angled', dividerCarry: ['cards'], patternTexture: 'diagonalHatch', patternGround: 'dark', sectionOverlap: 'photo', brandGhost: 'none'}).flow!]
 
   it.skipIf(!ciPresent)('records every theme’s decisions on every canvas (skipped on a client tree: the stub datasets are pruned by the press)', async () => {
     const golden: Record<string, unknown> = {}
-    for (const [name, blocks, hero] of canvases) {
+    for (const [name, blocks, hero, heroPhoto] of canvases) {
       for (const flow of themes) {
-        const site: SiteLook = {...LOOK, flow, patternTexture: 'diagonalHatch', saturated: true, ghost: ghostSource(FIRM, flow.ghost === 'once')}
+        const site: SiteLook = {...LOOK, flow, patternTexture: 'diagonalHatch', saturated: true, ghost: ghostSource(FIRM, flow.ghost === 'once'), heroPhoto}
         const survivors = blocks.map(frameOf).filter((r) => !r.empty)
         const out = walkFrame(blocks, frameOf, site, hero)
         golden[`${name} / ${flow.id}`] = {
@@ -377,6 +380,8 @@ describe('the decision golden', () => {
             run: seam.run ?? null,
             // Phase 17B session 5: the theme's room, recorded only where it moved a band.
             ...(seam.paint?.spacing ? {spacing: seam.paint.spacing} : {}),
+            // Phase 17B session 6: the window of the hero's photograph, where a band shows one.
+            ...(seam.paint?.window ? {window: seam.paint.window} : {}),
           })),
         }
       }

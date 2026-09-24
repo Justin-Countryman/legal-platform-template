@@ -86,3 +86,19 @@ describe('the saturated band', () => {
     }
   })
 })
+
+describe('the photo band block (Phase 17B session 6, `[R-533]`)', () => {
+  const photo = block('[data-scrim="true"] {')
+  const shared = block('[data-scrim="true"],\n[data-hero-image="true"]')
+
+  it('a photo band reads the scrim values of the two marks that are not text, and nothing else', () => {
+    expect([...photo.entries()]).toEqual([
+      ['--color-border-control', 'var(--color-border-control-on-scrim)'],
+      ['--color-action-state-cue', 'var(--color-action-state-cue-on-scrim)'],
+    ])
+  })
+
+  it('the image heroes do not: the block they share with a photo band keeps its three text remaps', () => {
+    expect([...shared.keys()]).toEqual(['--color-action-text', '--color-action-text-hover', '--color-ring-focus'])
+  })
+})

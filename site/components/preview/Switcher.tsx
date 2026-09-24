@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import {THEMES} from '@/lib/themes'
 import {PALETTE_PRESETS} from '@/lib/palettes'
-import {DARKNESS_LABELS, FAMILIES, chromeSchemes, familyOf, flowById, flowId, needLabel, unmetNeeds, type FlowFamily, type FlowRules} from '@/lib/flows'
+import {DARKNESS_LABELS, FAMILIES, chromeSchemes, drawsHeroPhoto, familyOf, flowById, flowId, needLabel, unmetNeeds, type FlowFamily, type FlowRules} from '@/lib/flows'
+import {type HeroPhoto} from '@/lib/heroGround'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {ghostSource} from '@/lib/brandMark'
 import {canvasFacts, siteLookOf} from '@/components/sections/sectionFrame'
@@ -56,6 +57,8 @@ type Props = {
   /** The homepage hero's ground as the walk meets it, for a theme that wants a dark hero
    *  (Phase 17B session 5). */
   hero?: VisibleGround | null
+  /** The live hero photograph a Photo scrims choice would be approved with (Phase 17B session 6). */
+  heroPhoto?: HeroPhoto | null
 }
 
 function names(plan: PreviewPlan): string {
@@ -121,7 +124,7 @@ function Choice({href, active, className, children}: {href: string; active: bool
   )
 }
 
-export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = null}: Props) {
+export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = null, heroPhoto = null}: Props) {
   const now = nowSeconds()
   const at = (c: Partial<PreviewChoices>) => previewPath({...choices, ...c})
 
@@ -159,7 +162,13 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
   const family = familyOf(shown)
   const survivors = blocks.map(frameOf).filter((r) => !r.empty)
   const look = siteLookOf(chrome?.designTokens)
-  const site = {...look, ghost: ghostSource(chrome?.header?.siteSettings?.firmName, true)}
+  // The live hero photograph (Phase 17B session 6): choosing a theme that draws it approves it, so
+  // the needs read it as met wherever the photograph qualifies (`heroPhotoOf`).
+  const site = {...look, ghost: ghostSource(chrome?.header?.siteSettings?.firmName, true), heroPhoto}
+  // The theme the page shows draws the hero's photograph, and the one it was approved with is not the
+  // live one: its photo sections are plain until this one is approved (`[R-532]`).
+  const approved = (chrome?.designTokens as {flowPhoto?: unknown} | null | undefined)?.flowPhoto
+  const photoChanged = drawsHeroPhoto(shown) && !!heroPhoto?.assetId && approved !== heroPhoto.assetId
   // Facts per theme: the ribbons a theme fills are read from that theme's own pass.
   const lacks = (f: FlowRules | null) => (f ? unmetNeeds(f, canvasFacts(survivors, site, hero, f)).map(needLabel) : [])
   const unmet = lacks(shown)
@@ -223,6 +232,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
           Theme: {shown.name}. {shown.sentence}
           {unmet.length > 0 && ` Needs this page lacks: ${unmet.join(', ')}; it renders without them.`}
           {grounds.length > 0 && ` ${grounds.length} ${grounds.length === 1 ? 'section keeps' : 'sections keep'} their own ground, whatever the theme: ${keptLine(grounds)}.`}
+          {photoChanged && ` The hero photograph changed since ${shown.name} was applied, so its photo sections show none: choose ${shown.name} and Apply to approve this one.`}
         </p>
         <p className="sw-note">{headerNote}</p>
         {keep.length > 0 && (

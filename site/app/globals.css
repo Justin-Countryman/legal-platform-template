@@ -626,6 +626,7 @@
   --color-action-state-cue:         transparent;
   --color-action-state-cue-on-light: transparent;
   --color-action-state-cue-on-dark: transparent;
+  --color-action-state-cue-on-scrim: #eeeeee;
   --color-action-text-hover-on-light: #2f2f2f;
   --color-action-text-hover-on-dark: #eeeeee;
   --color-foreground-muted-on-light: #555555;
@@ -634,6 +635,7 @@
   --color-border-control:           #8d8d8d;
   --color-border-control-on-light:  #8d8d8d;
   --color-border-control-on-dark:   #626262;
+  --color-border-control-on-scrim:  #8f8f8f;
   --color-ring-focus-on-light:      #666666;
   --color-star-outline-on-light:    #c08000;
   --color-scrim:                    #141414;
@@ -784,6 +786,19 @@ h1, h2, h3, h4, h5, h6 {
   --color-action-text:       var(--color-foreground-on-dark);
   --color-action-text-hover: var(--color-foreground-on-dark);
   --color-ring-focus:        var(--color-foreground-on-dark);
+}
+/* A photo band, built by hand or by a theme (Phase 17B session 6, `[R-533]`): the boundary of an
+   empty star or an inactive carousel dot, and the ring on the active dot, reach 3:1 over the
+   photograph's lightest point. Each scrim value equals the on-dark one wherever that already
+   holds there, so only a palette that failed moves. Photo bands only: a hero draws neither mark. */
+[data-scrim="true"] {
+  --color-border-control:    var(--color-border-control-on-scrim);
+  --color-action-state-cue:  var(--color-action-state-cue-on-scrim);
+}
+/* No image on a photo band renders brighter than the white the scrim's proof assumes (an HDR
+   photograph otherwise can, where the browser supports extended range). */
+[data-scrim="true"] img {
+  dynamic-range-limit: standard;
 }
 
 /* ─── Heading unit ──────────────────────────────────────────────────────────── */
@@ -1155,6 +1170,21 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   --hairline-ink: var(--color-accent);
 }
 @media (forced-colors: active) { .hairline-top::after { background-color: CanvasText; } }
+/* A window of the hero's photograph (Phase 17B session 6, `[R-530]`): the photograph drawn at twice
+   the band's width and height, offset so the band shows one quadrant (`--window-x`, `--window-y`:
+   0% or -100%, set per band). It replaces the image's own `fill` placement; the band's
+   `overflow-hidden` layer clips it. An HDR photograph is held to the standard range, so nothing on
+   the page is brighter than the white the scrim's proof assumes. */
+@utility photo-window {
+  position: absolute;
+  inset: auto;
+  left: var(--window-x, 0%);
+  top: var(--window-y, 0%);
+  width: 200%;
+  height: 200%;
+  max-width: none;
+  dynamic-range-limit: standard;
+}
 /* The rule under a docked dark header when scrolled (Phase 17B session 4): the header's shadow
    is invisible on a dark band. On the header's own `::after`; the header is sticky or fixed
    whenever it can be scrolled, so the rule sits at its bottom edge and takes no height. */
