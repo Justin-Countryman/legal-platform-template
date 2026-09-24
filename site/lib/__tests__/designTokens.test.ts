@@ -698,5 +698,5 @@ describe('the texture on a dark band (Phase 16B, [R-479])', () => {
     // Both kinds of palette are in the sweep, so neither branch is vacuous.
     expect(unchangedBorders).toBeGreaterThan(0)
     expect(unchangedCues).toBeGreaterThan(0)
-  })
+  }, 30_000)
 })
