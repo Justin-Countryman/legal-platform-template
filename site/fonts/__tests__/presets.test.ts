@@ -3,20 +3,20 @@ import {existsSync, readFileSync, readdirSync, statSync} from 'node:fs'
 import {join, resolve} from 'node:path'
 import {brotliDecompressSync} from 'node:zlib'
 import {describe, it, expect} from 'vitest'
-import {FONT_PRESETS, getPresetById, headingWeights, type FontPreset} from '../presets'
+import {FONT_PRESETS, drawableWeight, getPresetById, headingWeights, type FontPreset} from '../presets'
 import {resolvefonts, buildFontPreloads, buildFontFaces} from '../loader'
 import {fontFileKind, fontTables, readFontKind, variableUploadWarning} from '../fileKind'
 
 // ─── Preset library shape ─────────────────────────────────────────────────────
 
 describe('FONT_PRESETS library', () => {
-  it('has 16 presets (culled 2 of 13 original, added 5 in WS-Polish)', () => {
-    expect(FONT_PRESETS).toHaveLength(16)
+  it('has 19 presets (culled 2 of 13 original, added 5 in WS-Polish, 3 in Phase 17C)', () => {
+    expect(FONT_PRESETS).toHaveLength(19)
   })
 
   it('preserves ids 1, 2, 4, 5, 6, 7, 9, 10, 11, 12, 13 from the original library', () => {
     const ids = FONT_PRESETS.map((p) => p.id).sort((a, b) => a - b)
-    expect(ids).toEqual([1, 2, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18])
+    expect(ids).toEqual([1, 2, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21])
   })
 
   it('does NOT include the culled ids 3 (Refined Practice) and 8 (Space Age Authority)', () => {
@@ -314,7 +314,8 @@ describe('the committed font files', () => {
   it('the table reader sees an axis in the variable files and none in the static ones', () => {
     // Checked file for file against fontTools when written (the monorepo record's §8).
     const kinds = committedFonts().map((p) => isVariable(p))
-    expect({variable: kinds.filter(Boolean).length, static: kinds.filter((k) => !k).length}).toEqual({variable: 14, static: 20})
+    // Phase 17C session 2b: Oswald Medium, one static weight, is the 21st static file.
+    expect({variable: kinds.filter(Boolean).length, static: kinds.filter((k) => !k).length}).toEqual({variable: 14, static: 21})
     expect(isVariable(onDisk('/fonts/files/fraunces/Fraunces-Regular.woff2'))).toBe(true)
     expect(isVariable(onDisk('/fonts/files/fraunces/Fraunces-Italic.woff2'))).toBe(false)
     expect(isVariable(onDisk('/fonts/files/spectral/Spectral-Bold.woff2'))).toBe(false)
@@ -362,6 +363,11 @@ const FACES: Record<number, string[]> = {
     16: ['Petrona | 400 700 | normal | Petrona-Regular.woff2', 'Inter | 400 700 | normal | Inter-Regular.woff2'],
     17: ['Fraunces | 400 700 | normal | Fraunces-Regular.woff2', 'Fraunces | 400 | italic | Fraunces-Italic.woff2'],
     18: ['Source Serif 4 | 400 600 | normal | SourceSerif4-Regular.woff2'],
+    // Phase 17C session 2b: 19 a static one-weight condensed heading; 20 and 21 mono variable families
+    // spanning the union of both roles' weights (the light 300 reaches Birch's hero through 20's span).
+    19: ['Oswald | 500 | normal | Oswald-Medium.woff2', 'Source Sans 3 | 400 700 | normal | SourceSans3-Regular.woff2', 'Source Sans 3 | 400 | italic | SourceSans3-Italic.woff2'],
+    20: ['DM Sans | 300 700 | normal | DMSans-Regular.woff2', 'DM Sans | 400 | italic | DMSans-Italic.woff2'],
+    21: ['Source Sans 3 | 400 700 | normal | SourceSans3-Regular.woff2', 'Source Sans 3 | 400 | italic | SourceSans3-Italic.woff2'],
 }
 
 const faceOf = (rule: string) => {
@@ -423,6 +429,61 @@ describe('the faces a pairing declares', () => {
     expect(headingWeights(getPresetById(14)!)).toEqual(['400', '600', '700'])
     expect(headingWeights(getPresetById(11)!)).toEqual(['700'])
     expect(headingWeights(getPresetById(4)!)).toEqual(['400', '700'])
+    expect(headingWeights(getPresetById(20)!)).toEqual(['300', '400', '500', '700'])
+    expect(headingWeights(getPresetById(21)!)).toEqual(['400', '600', '700'])
+  })
+})
+
+// ─── The heading's fallback and its capitals (Phase 17C session 2b) ─────────────
+//
+// Every fallback number is Next's own arithmetic over the capsize metrics it bundles, at the
+// face's variant nearest each weight the heading may draw, over the fallback's Regular (under
+// 600) or Bold (600 and up): recomputed here from that table, so a hand-edited number fails and
+// the source is named. `capsScale` is measured, not derived (the monorepo record's §2.5): held
+// to a range, and to the one number the record measured for each face.
+
+describe("the heading's fallback metrics", () => {
+  const table = JSON.parse(readFileSync(resolve(__dirname, '../../node_modules/next/dist/server/capsize-font-metrics.json'), 'utf8'))
+  const fmt = (v: number) => Math.abs(v * 100).toFixed(2)
+  const at = (key: string, weight: string) => (weight === '400' ? table[key] : table[key].variants?.[weight]) ?? null
+  const FALLBACK_KEYS = {sans: {desktop: 'arial', android: 'roboto'}, serif: {desktop: 'timesNewRoman', android: 'notoSerif'}} as const
+
+  it('recompute from the capsize table Next bundles, per weight the heading may draw, over the fallback of the same class', () => {
+    for (const p of FONT_PRESETS) {
+      const fb = p.heading.fallback
+      expect(Object.keys(fb.at), `pairing ${p.id}`).toEqual(headingWeights(p))
+      for (const [weight, legs] of Object.entries(fb.at)) {
+        const face = at(fb.metricsKey, weight)
+        expect(face, `pairing ${p.id}: ${fb.metricsKey} at ${weight}`).not.toBeNull()
+        for (const leg of ['desktop', 'android'] as const) {
+          const fallback = at(FALLBACK_KEYS[fb.family][leg], Number(weight) >= 600 ? '700' : '400')
+          const sizeAdjust = (face.xWidthAvg / face.unitsPerEm) / (fallback.xWidthAvg / fallback.unitsPerEm)
+          expect(legs[leg], `pairing ${p.id} ${leg} at ${weight}`).toEqual({
+            sizeAdjust: fmt(sizeAdjust),
+            ascent: fmt(face.ascent / (face.unitsPerEm * sizeAdjust)),
+            descent: fmt(face.descent / (face.unitsPerEm * sizeAdjust)),
+            lineGap: fmt(face.lineGap / (face.unitsPerEm * sizeAdjust)),
+          })
+        }
+      }
+    }
+  })
+
+  it('names the family by the voice: the serif voices fall to a serif, the sans and condensed to a sans', () => {
+    for (const p of FONT_PRESETS) {
+      expect(p.heading.fallback.family, `pairing ${p.id}`).toBe(p.heading.voice.endsWith('serif') ? 'serif' : 'sans')
+    }
+  })
+
+  it('every face carries a capsScale under 1 and over 0.6, and a light reads only where the face has one', () => {
+    for (const p of FONT_PRESETS) {
+      expect(p.heading.capsScale, `pairing ${p.id}`).toBeGreaterThanOrEqual(0.6)
+      expect(p.heading.capsScale, `pairing ${p.id}`).toBeLessThanOrEqual(1)
+    }
+    expect(drawableWeight(20, 'light')).toBe('light')
+    expect(drawableWeight(4, 'light')).toBe('regular')
+    expect(drawableWeight(11, 'light')).toBe('bold')
+    expect(drawableWeight(21, 'regular')).toBe('regular')
   })
 })
 

@@ -2837,9 +2837,15 @@ export type DesignSettings = {
     | "wave"
     | "zigzag"
     | "dinkus";
-  headingWeight?: "bold" | "regular";
+  headingWeight?: "bold" | "regular" | "light";
   headingCase?: "normal" | "upper";
-  patternTexture?: "pinstripe" | "diagonalHatch" | "diamondLattice" | "scallop";
+  patternTexture?:
+    | "pinstripe"
+    | "diagonalHatch"
+    | "diamondLattice"
+    | "scallop"
+    | "grid"
+    | "dots";
   patternGround?: "light" | "dark";
   sectionJoin?:
     | "straight"
@@ -2909,7 +2915,25 @@ export type DesignSettings = {
   accent?: string;
   action?: string;
   fontPairingPreset?:
-    1 | 2 | 4 | 5 | 6 | 7 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18;
+    | 1
+    | 2
+    | 4
+    | 5
+    | 6
+    | 7
+    | 9
+    | 10
+    | 11
+    | 12
+    | 13
+    | 14
+    | 15
+    | 16
+    | 17
+    | 18
+    | 19
+    | 20
+    | 21;
   marketingScale?: "default" | "sm" | "md" | "lg";
   taglineStyle?: "plain" | "lined" | "titlecase";
   customFonts?: {
@@ -4115,7 +4139,10 @@ export type DESIGN_TOKENS_QUERY_RESULT = {
     | 16
     | 17
     | 18
+    | 19
     | 2
+    | 20
+    | 21
     | 4
     | 5
     | 6
@@ -4129,7 +4156,13 @@ export type DESIGN_TOKENS_QUERY_RESULT = {
   internalHeroBackground: "dark" | "light" | null;
   heroScrimOpacity: number | null;
   patternTexture:
-    "diagonalHatch" | "diamondLattice" | "pinstripe" | "scallop" | null;
+    | "diagonalHatch"
+    | "diamondLattice"
+    | "dots"
+    | "grid"
+    | "pinstripe"
+    | "scallop"
+    | null;
   flow:
     | "alternating.balanced"
     | "cutBlocks.balanced"
@@ -4192,7 +4225,7 @@ export type DESIGN_TOKENS_QUERY_RESULT = {
   attorneyCardStyle:
     "avatar" | "classic" | "minimal" | "portrait" | "spotlight" | null;
   dividerCarry: Array<string> | null;
-  headingWeight: "bold" | "regular" | null;
+  headingWeight: "bold" | "light" | "regular" | null;
   brandGhost: "none" | "on" | null;
   dropCap: "none" | "on" | null;
   sectionOverlap: "none" | "photo" | null;
@@ -19452,7 +19485,10 @@ export type SITE_CHROME_QUERY_RESULT = {
       | 16
       | 17
       | 18
+      | 19
       | 2
+      | 20
+      | 21
       | 4
       | 5
       | 6
@@ -19466,7 +19502,13 @@ export type SITE_CHROME_QUERY_RESULT = {
     internalHeroBackground: "dark" | "light" | null;
     heroScrimOpacity: number | null;
     patternTexture:
-      "diagonalHatch" | "diamondLattice" | "pinstripe" | "scallop" | null;
+      | "diagonalHatch"
+      | "diamondLattice"
+      | "dots"
+      | "grid"
+      | "pinstripe"
+      | "scallop"
+      | null;
     flow:
       | "alternating.balanced"
       | "cutBlocks.balanced"
@@ -19529,7 +19571,7 @@ export type SITE_CHROME_QUERY_RESULT = {
     attorneyCardStyle:
       "avatar" | "classic" | "minimal" | "portrait" | "spotlight" | null;
     dividerCarry: Array<string> | null;
-    headingWeight: "bold" | "regular" | null;
+    headingWeight: "bold" | "light" | "regular" | null;
     brandGhost: "none" | "on" | null;
     dropCap: "none" | "on" | null;
     sectionOverlap: "none" | "photo" | null;
@@ -20691,9 +20733,15 @@ export type PREVIEW_STORED_DESIGN_QUERY_RESULT = {
     | "vertical"
     | "wave"
     | "zigzag";
-  headingWeight?: "bold" | "regular";
+  headingWeight?: "bold" | "light" | "regular";
   headingCase?: "normal" | "upper";
-  patternTexture?: "diagonalHatch" | "diamondLattice" | "pinstripe" | "scallop";
+  patternTexture?:
+    | "diagonalHatch"
+    | "diamondLattice"
+    | "dots"
+    | "grid"
+    | "pinstripe"
+    | "scallop";
   patternGround?: "dark" | "light";
   sectionJoin?:
     | "angled"
@@ -20763,7 +20811,25 @@ export type PREVIEW_STORED_DESIGN_QUERY_RESULT = {
   accent?: string;
   action?: string;
   fontPairingPreset?:
-    1 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 2 | 4 | 5 | 6 | 7 | 9;
+    | 1
+    | 10
+    | 11
+    | 12
+    | 13
+    | 14
+    | 15
+    | 16
+    | 17
+    | 18
+    | 19
+    | 2
+    | 20
+    | 21
+    | 4
+    | 5
+    | 6
+    | 7
+    | 9;
   marketingScale?: "default" | "lg" | "md" | "sm";
   taglineStyle?: "lined" | "plain" | "titlecase";
   customFonts?: {

@@ -6,7 +6,7 @@
 // Returns the roles `buildFontFaces` declares (below) and `buildFontCSS()` in
 // lib/designTokens.ts wraps. Both roles may be null.
 
-import {getPresetById, type FontPreset} from './presets'
+import {getPresetById, type FontPreset, type HeadingFallback} from './presets'
 
 /** One role's files, as the page declares them. */
 export interface ResolvedFontRole {
@@ -24,6 +24,9 @@ export interface ResolvedFontRole {
   /** A static `regular` that is not a 400: a one-weight role's file, declared at its own
    *  weight (pairing 14's heading is `Poppins-Bold`, at 700). */
   regularWeight?: number
+  /** A preset heading's adjusted system fallback, one face per weight (Phase 17C session 2b;
+   *  `buildFontCSS`). An upload has none and falls to Georgia as before. */
+  fallback?: HeadingFallback
 }
 
 export interface ResolvedFontData {
@@ -72,7 +75,7 @@ function presetToFontData(preset: FontPreset): ResolvedFontData {
   const shared = preset.heading.family === preset.body.family && preset.heading.variable && preset.body.variable
   const both = [...preset.heading.weights, ...preset.body.weights]
   return {
-    heading: roleOf(preset.heading, shared ? both : preset.heading.weights),
+    heading: {...roleOf(preset.heading, shared ? both : preset.heading.weights), fallback: preset.heading.fallback},
     body:    roleOf(preset.body, shared ? both : preset.body.weights),
   }
 }

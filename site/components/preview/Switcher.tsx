@@ -140,7 +140,10 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
   const share = signToken({v: 1, role: 'client', exp: now + CLIENT_LINK_SECONDS, ...choices})
   const shareUrl = share ? `${origin}/site-preview/enter?t=${share}` : null
   const changes = Object.keys(plan.set).length + plan.unset.length
-  const apply = grant.apply && plan.rev && changes > 0
+  // A retired style set (Phase 17C session 2b, `[R-534]`) is rendered by a typed address so a live
+  // look can be seen and measured, and is offered nowhere: no Apply is minted for it.
+  const retiredChoice = plan.styleSet && 'retired' in plan.styleSet ? plan.styleSet.name : null
+  const apply = grant.apply && plan.rev && changes > 0 && !retiredChoice
     ? signToken({
         v: 1, kind: 'apply', slug: grant.apply.slug, exp: now + APPLY_LINK_SECONDS, rev: plan.rev,
         set: plan.set, unset: plan.unset,
@@ -152,7 +155,9 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
   const blocks = (Array.isArray(canvas) ? canvas : []) as HomepageBlock[]
   const keep = ownLooks(blocks)
   const grounds = ownGrounds(blocks)
-  const wearsStyle = plan.wears.styleSet ? plan.wears.styleSet.styleSet.name : 'Custom'
+  // A retired style set (Phase 17C session 2b, `[R-534]`) is named where the site wears it and
+  // never offered; a style set the eye has not passed says so, as a theme family does.
+  const wearsStyle = plan.wears.styleSet ? `${plan.wears.styleSet.styleSet.name}${plan.wears.styleSet.retired ? ' (retired)' : ''}` : 'Custom'
   const wearsPalette = plan.wears.palette ? plan.wears.palette.name : 'Custom'
 
   // The theme the page shows: the chosen one, else what the site renders. Its needs are
@@ -190,7 +195,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
           <span className="sw-head">Style set</span>
           <Choice href={at({styleSet: AS_THE_SITE_IS})} active={choices.styleSet === AS_THE_SITE_IS}>As the site is: {wearsStyle}</Choice>
           {STYLE_SETS.map((t) => (
-            <Choice key={t.id} href={at({styleSet: t.id})} active={choices.styleSet === t.id}>{t.name}</Choice>
+            <Choice key={t.id} href={at({styleSet: t.id})} active={choices.styleSet === t.id}>{t.passed ? t.name : `${t.name} (not yet judged)`}</Choice>
           ))}
         </div>
         <div className="sw-row">
@@ -244,6 +249,9 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
             <span className="sw-head">Client link, ends {date(now + CLIENT_LINK_SECONDS)}</span>
             <input readOnly value={shareUrl} className="sw-input" aria-label="Client preview link" />
           </label>
+        )}
+        {retiredChoice && (
+          <p className="sw-note">{retiredChoice} is no longer offered: this address shows it, and nothing applies it. A site already wearing it keeps its look.</p>
         )}
         <div className="sw-row">
           {apply && grant.apply ? (

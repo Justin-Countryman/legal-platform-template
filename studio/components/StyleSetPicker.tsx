@@ -89,8 +89,12 @@ export function StyleSetPicker() {
   const doc = ((useFormValue([]) as StyleSetDoc | undefined) ?? {}) as StyleSetDoc
 
   const match = matchStyleSet(doc)
+  // A retired style set (Phase 17C session 2b, `[R-534]`) is named plainly and offered no update:
+  // the site keeps its look, and the buttons below offer the eight that are.
   const status = match
-    ? `${match.styleSet.name}${match.current ? '' : ' (earlier version)'}`
+    ? match.retired
+      ? `${match.styleSet.name} (no longer offered; nothing on your site changed)`
+      : `${match.styleSet.name}${match.current ? '' : ' (earlier version)'}`
     : isPlatformDefault(doc) ? 'Platform default' : 'Custom'
   const choose = (styleSet: StyleSet) => {
     const {set, unset} = styleSetPatch(styleSet, doc)
@@ -114,7 +118,7 @@ export function StyleSetPicker() {
             .join('  —  ')}
         </p>
       )}
-      {match && !match.current && (
+      {match && !match.current && !match.retired && (
         <div style={{padding: '8px 10px', background: '#f1f5f9', borderRadius: 4, fontSize: 11, color: '#334155', display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap'}}>
           <span>{match.styleSet.name} has been updated since it was applied here.</span>
           <button type="button" onClick={update} style={{fontSize: 11, padding: '3px 8px', borderRadius: 4, border: '1px solid #94a3b8', background: '#fff', cursor: 'pointer'}}>

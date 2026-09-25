@@ -1,4 +1,4 @@
-import {STYLE_SETS, matchStyleSet, styleSetPatch, updatePatch, type StyleSet, type StyleSetDoc, type StyleSetMatch} from '@/lib/styleSets'
+import {RETIRED_STYLE_SETS, STYLE_SETS, matchStyleSet, styleSetPatch, updatePatch, type StyleSet, type StyleSetDoc, type StyleSetMatch} from '@/lib/styleSets'
 import {PALETTE_PRESETS, matchPreset, presetInputs, type PalettePreset} from '@/lib/palettes'
 import {FLOWS, HIDDEN_FIELDS, RETIRED_FLOWS, drawsHeroPhoto, flowById, flowOf, type FlowRules} from '@/lib/flows'
 import {parseHexInput, type ColorInputs} from '@/lib/designTokens'
@@ -45,9 +45,15 @@ export const COLOR_ROLES = ['darkGround', 'lightGround', 'accent', 'action'] as 
 
 export type PreviewChoices = {styleSet: string; palette: string; flow: string; view: PreviewView}
 
+/** Every style set the address may name: the eight offered and the five retired. A retired one
+ *  is never offered (the switcher, the Studio and the meeting's suggestions list the eight), but
+ *  the operator's typed address renders it, because a live site may wear one and the eye and
+ *  the metrics run (`scripts/ci/flow-metrics.mjs`) must see what it wears (Phase 17C session 2b). */
+const ADDRESSABLE: readonly StyleSet[] = [...STYLE_SETS, ...RETIRED_STYLE_SETS]
+
 /** The choices from the preview address, or null when any part is not one. */
 export function parseChoices(styleSet: string, palette: string, flow: string, view: string): PreviewChoices | null {
-  const s = styleSet === AS_THE_SITE_IS || STYLE_SETS.some((t) => t.id === styleSet)
+  const s = styleSet === AS_THE_SITE_IS || ADDRESSABLE.some((t) => t.id === styleSet)
   const p = palette === AS_THE_SITE_IS || PALETTE_PRESETS.some((x) => x.id === palette)
   const f = flow === AS_THE_SITE_IS || FLOWS.some((x) => x.id === flow)
   const v = view === 'design' || view === 'grey'
@@ -60,6 +66,14 @@ export function parseChoices(styleSet: string, palette: string, flow: string, vi
  *  unknown id stays itself and is refused, as before. */
 export function grantFlow(flow: string | null | undefined): string {
   return flow == null || flow in RETIRED_FLOWS ? AS_THE_SITE_IS : flow
+}
+
+/** A grant's style set, read against today's roster (Phase 17C session 2b, `[R-534]`): a retired
+ *  one (Canyon, Valley, Linen, Granite, Quartz) reads as the site is, so a 14-day client link
+ *  minted before the retirement still enters; an absent one too. Any other unknown id stays
+ *  itself and is refused by the address check. */
+export function grantStyleSet(styleSet: string | null | undefined): string {
+  return styleSet == null || RETIRED_STYLE_SETS.some((s) => s.id === styleSet) ? AS_THE_SITE_IS : styleSet
 }
 
 export function previewPath(c: PreviewChoices): string {
@@ -99,7 +113,7 @@ export function planPreview(
   const set: PreviewPlan['set'] = {}
   const unset: string[] = []
 
-  const styleSet = STYLE_SETS.find((t) => t.id === choices.styleSet) ?? null
+  const styleSet = ADDRESSABLE.find((t) => t.id === choices.styleSet) ?? null
   if (styleSet) {
     const patch = wears.styleSet?.styleSet.id === styleSet.id ? updatePatch(doc, wears.styleSet) : styleSetPatch(styleSet, doc)
     for (const [field, value] of Object.entries(patch.set)) if (!same(doc[field], value)) set[field] = value

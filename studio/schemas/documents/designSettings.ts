@@ -226,11 +226,12 @@ export const designSettings = defineType({
       type: 'string',
       fieldset: 'headings',
       description:
-        'How heavy the display headings are: section headings, the homepage headline and page titles. Regular needs a font that has one; where the font has only a bold or only a regular, that is what renders. Leave blank for Bold.',
+        'How heavy the display headings are: section headings, the homepage headline and page titles. Regular needs a font that has one; where the font has only a bold or only a regular, that is what renders. Light draws the headline and large headings thin and the smaller ones regular, and needs a font that has a light, else it renders regular. Leave blank for Bold.',
       options: {
         list: [
           {title: 'Bold', value: 'bold'},
           {title: 'Regular', value: 'regular'},
+          {title: 'Light', value: 'light'},
         ],
         layout: 'radio',
       },
@@ -273,6 +274,8 @@ export const designSettings = defineType({
           {title: 'Diagonal hatch \u2014 fine diagonal lines', value: 'diagonalHatch'},
           {title: 'Diamond lattice \u2014 a fine crosshatch', value: 'diamondLattice'},
           {title: 'Scallop \u2014 a repeating arc', value: 'scallop'},
+          {title: 'Grid \u2014 fine squares', value: 'grid'},
+          {title: 'Dots \u2014 a field of small dots', value: 'dots'},
         ],
         layout: 'radio',
       },
@@ -592,6 +595,9 @@ export const designSettings = defineType({
           {title: '16 — Stately Modern (Petrona + Inter)', value: 16},
           {title: '17 — Editorial Statement (Fraunces + Fraunces, mono)', value: 17},
           {title: '18 — Sovereign Mono (Source Serif 4 + Source Serif 4, mono)', value: 18},
+          {title: '19 — Industrial Capitals (Oswald + Source Sans 3)', value: 19},
+          {title: '20 — Light Geometric (DM Sans + DM Sans, mono)', value: 20},
+          {title: '21 — Plain Humanist (Source Sans 3 + Source Sans 3, mono)', value: 21},
         ],
         layout: 'radio',
       },

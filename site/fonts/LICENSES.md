@@ -17,6 +17,7 @@ Full license text: https://scripts.sil.org/OFL
 | Merriweather | Sorkin Type | https://fonts.google.com/specimen/Merriweather |
 | Montserrat | Julieta Ulanovsky | https://fonts.google.com/specimen/Montserrat |
 | Open Sans | Steve Matteson | https://fonts.google.com/specimen/Open+Sans |
+| Oswald | Vernon Adams, Kalapi Gajjar, Cyreal | https://fonts.google.com/specimen/Oswald |
 | Petrona | Andrés Torresi | https://fonts.google.com/specimen/Petrona |
 | Playfair Display | Claus Eggers Sørensen | https://fonts.google.com/specimen/Playfair+Display |
 | Poppins | Indian Type Foundry / Jonny Pinhorn | https://fonts.google.com/specimen/Poppins |

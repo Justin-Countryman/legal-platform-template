@@ -1,4 +1,5 @@
-import {getPresetById, headingWeights, type HeadingVoice} from '../fonts/presets'
+import {drawableWeight, getPresetById, type HeadingVoice} from '../fonts/presets'
+export {drawableWeight} from '../fonts/presets'
 import {matchCornerFamily} from './corners'
 import {HEADING_LINES} from './headingLines'
 import {
@@ -103,7 +104,10 @@ export type StyleSetField = (typeof STYLE_SET_FIELDS)[number]
  *  first four are the ones a visitor names first, and a pair of style sets must differ in at
  *  least two of them. */
 export const SIGNATURE_HIGH = ['typeVoice', 'headingCase', 'cornerFamily', 'surfaceDevice'] as const
-export const SIGNATURE_LOW = ['emphasis', 'kicker', 'frame', 'attorneyCards', 'texture', 'shadow', 'scale', 'ornaments'] as const
+// Phase 17C session 2b (ADV-17C-B): the texture counts ONCE, as the surface device; and `scale`
+// is the hero's rendered size (`sm` 67 px, `md` and `lg` both 88 px at 1440, `default` 56), not
+// the stored word. Seven low dimensions.
+export const SIGNATURE_LOW = ['emphasis', 'kicker', 'frame', 'attorneyCards', 'shadow', 'scale', 'ornaments'] as const
 export const SIGNATURE = [...SIGNATURE_HIGH, ...SIGNATURE_LOW] as const
 export type SignatureDimension = (typeof SIGNATURE)[number]
 
@@ -136,6 +140,10 @@ export type StyleSet = {
    *  "(earlier version)" instead of "Custom", and the Studio compares a swapped pick
    *  against the version the site actually matches. */
   previous: readonly {settings: Partial<StyleSetSettings>; picks: StyleSetPicks}[]
+  /** True only after an eye pass judged it at arm's length on the three record canvases at
+   *  1440 and 390 and recorded the verdict with its captures (`[R-506]`; Phase 17C session 2b).
+   *  Mirrored to `presets.json`; the switcher says "(not yet judged)" while false. */
+  passed: boolean
   /** Palettes that suit it (lib/palettes.ts ids). Never written: a style set sets no color. */
   suggestedPalettes: readonly string[]
   /** The study's words for it. */
@@ -220,26 +228,17 @@ export const STYLE_SET_PICK_LABELS: Record<StyleSetPickField, string> = {
 const t = (s: Partial<StyleSetSettings>): StyleSetSettings => ({...STYLE_SET_DEFAULTS, ...s})
 const p = (s: Partial<StyleSetPicks>): StyleSetPicks => ({...PICK_DEFAULTS, ...s})
 
+// ─── The roster: eight that each look different (Phase 17C session 2b, `[R-534]`) ──
+//
+// Five kept (Graphite the fixture's, unchanged; Walnut to `md`; Marble's accent words in
+// color; Dune and Flint unchanged), three new voices (Iron the condensed capitals, Birch the
+// light geometric sans, Clay the bold plain sans), and five retired as copies at arm's length
+// (`RETIRED_STYLE_SETS` below). `passed` is set only by an eye pass recorded with its captures
+// (`[R-506]`, `[R-517]`): the eight passed on 2026-09-25, the three record canvases at 1440 and a
+// true 390 under Cut blocks balanced, Editorial and Type on black, a verdict per style set and
+// per pair (the monorepo's WS-V1-PHASE17C2B-DESIGN §8.3). Graphite is first, so
+// `STYLE_SETS[0]` is the match cases' first patch in both languages (`presets.json`).
 export const STYLE_SETS: readonly StyleSet[] = [
-  {
-    id: 'canyon', name: 'Canyon', feel: 'deep and immersive: display serif, italic accents, dark bands',
-    identity: {
-      sentence: "Deep and immersive: a display serif at its own weight, italic accents, dark bands.",
-      recognizers: ['typeVoice', 'cornerFamily', 'emphasis'],
-    },
-    settings: t({
-      fontPairingPreset: 2, marketingScale: 'md', taglineStyle: 'plain', uiRadius: 'subtle', buttonShape: 'square',
-      buttonAnimation: 'sweep', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed',
-      cardHover: 'imageZoom', attorneyCardStyle: 'portrait',
-      headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'plain',
-    }),
-    picks: p({headingRule: 'line'}),
-    // Phase 17B: both earlier versions differed from today only by the overlap and the
-    // gradient, which left the matched set; pruned, so no version equals the current.
-    previous: [],
-    suggestedPalettes: ['black-gold', 'burgundy-gold', 'teal-mint'],
-    evidence: ['kicker above and a short rule below every heading', 'italic accent phrase', 'cutout portraits in rounded panels'],
-  },
   {
     id: 'graphite', name: 'Graphite', feel: 'editorial and exact: sharp corners, framed photos, angled edges',
     identity: {
@@ -256,26 +255,61 @@ export const STYLE_SETS: readonly StyleSet[] = [
     picks: p({headingRule: 'line'}),
     // Phase 17B: the one earlier version differed only by the overlap; pruned.
     previous: [],
+    passed: true,
     suggestedPalettes: ['black-gold', 'ink-lavender', 'black-crimson'],
     evidence: ['two-line heading unit with a short rule', 'thin-framed boxes', 'diagonal cuts', 'textured bands'],
   },
   {
-    id: 'walnut', name: 'Walnut', feel: 'heritage: old-style serif, italic last words, framed photos',
+    id: 'walnut', name: 'Walnut', feel: 'heritage: old-style serif at regular weight, italic last words, framed photos',
     identity: {
       sentence: "Heritage: an old-style serif, italic last words, framed photos, a diamond under each heading.",
       recognizers: ['typeVoice', 'frame', 'kicker'],
     },
     settings: t({
-      fontPairingPreset: 13, marketingScale: 'sm', taglineStyle: 'titlecase', uiRadius: 'subtle', buttonShape: 'square',
+      fontPairingPreset: 13, marketingScale: 'md', taglineStyle: 'titlecase', uiRadius: 'subtle', buttonShape: 'square',
       buttonAnimation: 'none', tertiaryStyle: 'plain', elevationStyle: '0', motionTempo: 'relaxed',
       cardHover: 'lift', attorneyCardStyle: 'classic',
       headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'framed',
       dropCap: 'on',
     }),
     picks: p({headingRule: 'leadDiamond'}),
-    previous: [{settings: {fontPairingPreset: 13, marketingScale: 'sm', taglineStyle: 'titlecase', uiRadius: 'subtle', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'plain', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'lift', attorneyCardStyle: 'classic', headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'framed'}, picks: p({headingRule: 'leadDiamond'})}],
+    // Phase 17C session 2b (`[R-534]`): scale `sm` to `md` (the audit's "under-sized"; the roster's
+    // one regular-weight serif). The `69fee75` version, and 16D's before the drop cap, stand.
+    previous: [
+      {settings: {fontPairingPreset: 13, marketingScale: 'sm', taglineStyle: 'titlecase', uiRadius: 'subtle', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'plain', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'lift', attorneyCardStyle: 'classic', headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'framed'}, picks: p({headingRule: 'leadDiamond'})},
+      {settings: {fontPairingPreset: 13, marketingScale: 'sm', taglineStyle: 'titlecase', uiRadius: 'subtle', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'plain', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'lift', attorneyCardStyle: 'classic', headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'framed', dropCap: 'on'}, picks: p({headingRule: 'leadDiamond'})},
+    ],
+    passed: true,
     suggestedPalettes: ['navy-brass', 'navy-ice', 'black-gold', 'burgundy-gold'],
     evidence: ['serif headline with its last words in italic', 'thin outline buttons', 'ochre rule'],
+  },
+  {
+    id: 'marble', name: 'Marble', feel: 'civic statement: a display serif at regular weight, capitals, a rule before every kicker, a fine lattice',
+    identity: {
+      sentence: "Civic statement: a display serif at regular weight, capitals, a rule before every kicker, a fine lattice.",
+      recognizers: ['headingCase', 'kicker', 'surfaceDevice'],
+    },
+    settings: t({
+      fontPairingPreset: 1, marketingScale: 'md', taglineStyle: 'lined', uiRadius: 'sharp', buttonShape: 'square',
+      buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed',
+      cardHover: 'accentUnderline', attorneyCardStyle: 'classic',
+      headingWeight: 'regular', headingEmphasisStyle: 'color', headingCase: 'upper', imageFrame: 'plain',
+      patternTexture: 'diamondLattice',
+      dropCap: 'on',
+    }),
+    picks: p({}),
+    // Phase 17B: the second earlier version differed only by the overlap; pruned. The
+    // first (before the drop cap, 16D) stands. Phase 17C session 2b (`[R-534]`): accent words in
+    // color, not italic inside capitals (the audit's incoherence), and the hero at Playfair's
+    // REGULAR, which the eye pass read apart from Graphite's bold Fraunces where the bold did not
+    // (the session record §8.3); the `69fee75` version stands.
+    previous: [
+      {settings: {fontPairingPreset: 1, marketingScale: 'md', taglineStyle: 'lined', uiRadius: 'sharp', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'accentUnderline', attorneyCardStyle: 'classic', headingEmphasisStyle: 'italic', headingCase: 'upper', imageFrame: 'plain', patternTexture: 'diamondLattice'}, picks: p({})},
+      {settings: {fontPairingPreset: 1, marketingScale: 'md', taglineStyle: 'lined', uiRadius: 'sharp', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'accentUnderline', attorneyCardStyle: 'classic', headingEmphasisStyle: 'italic', headingCase: 'upper', imageFrame: 'plain', patternTexture: 'diamondLattice', dropCap: 'on'}, picks: p({})},
+    ],
+    passed: true,
+    suggestedPalettes: ['forest-brass', 'charcoal-coral', 'navy-orange'],
+    evidence: ['a short gold rule then a spaced-caps kicker above every heading', 'square filled buttons', 'a damask ground'],
   },
   {
     id: 'dune', name: 'Dune', feel: 'soft and warm: rounded everything, pill buttons, a scallop texture',
@@ -292,6 +326,7 @@ export const STYLE_SETS: readonly StyleSet[] = [
     }),
     picks: p({headingRule: 'dotted'}),
     previous: [],
+    passed: true,
     suggestedPalettes: ['green-coral', 'green-sage', 'navy-rose'],
     evidence: ['italic accent phrase', 'pill buttons and rounded photo corners', 'inset rounded panels on a textured ground'],
   },
@@ -309,29 +344,97 @@ export const STYLE_SETS: readonly StyleSet[] = [
     }),
     picks: p({headingRule: 'slab'}),
     previous: [],
+    passed: true,
     suggestedPalettes: ['navy-orange', 'black-crimson', 'navy-rose'],
     evidence: ['bold sans with one phrase in a second color', 'uppercase headings', 'angled panels'],
   },
   {
-    id: 'marble', name: 'Marble', feel: 'civic statement: capitals, a rule before every kicker, a fine lattice',
+    id: 'iron', name: 'Iron', feel: 'industrial: condensed capitals, square corners, photos on a heavy slab, a grid',
     identity: {
-      sentence: "Civic statement: capitals, a rule before every kicker, a fine lattice, a peak under the hero.",
-      recognizers: ['headingCase', 'kicker', 'surfaceDevice'],
+      sentence: "Industrial: condensed capitals, square corners, photos on a heavy slab, a grid.",
+      recognizers: ['typeVoice', 'headingCase', 'frame'],
     },
     settings: t({
-      fontPairingPreset: 1, marketingScale: 'md', taglineStyle: 'lined', uiRadius: 'sharp', buttonShape: 'square',
-      buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed',
-      cardHover: 'accentUnderline', attorneyCardStyle: 'classic',
-      headingEmphasisStyle: 'italic', headingCase: 'upper', imageFrame: 'plain',
-      patternTexture: 'diamondLattice',
-      dropCap: 'on',
+      fontPairingPreset: 19, marketingScale: 'md', taglineStyle: 'plain', uiRadius: 'sharp', buttonShape: 'square',
+      buttonAnimation: 'inset', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'snappy',
+      cardHover: 'accentBorder', attorneyCardStyle: 'spotlight',
+      headingEmphasisStyle: 'color', headingCase: 'upper', imageFrame: 'slab',
+      patternTexture: 'grid',
     }),
-    picks: p({}),
-    // Phase 17B: the second earlier version differed only by the overlap; pruned. The
-    // first (before the drop cap, 16D) stands.
-    previous: [{settings: {fontPairingPreset: 1, marketingScale: 'md', taglineStyle: 'lined', uiRadius: 'sharp', buttonShape: 'square', buttonAnimation: 'none', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed', cardHover: 'accentUnderline', attorneyCardStyle: 'classic', headingEmphasisStyle: 'italic', headingCase: 'upper', imageFrame: 'plain', patternTexture: 'diamondLattice'}, picks: p({})}],
-    suggestedPalettes: ['forest-brass', 'charcoal-coral', 'navy-orange'],
-    evidence: ['a short gold rule then a spaced-caps kicker above every heading', 'square filled buttons', 'a damask ground'],
+    picks: p({headingRule: 'vertical'}),
+    previous: [],
+    passed: true,
+    suggestedPalettes: ['black-crimson', 'black-gold', 'charcoal-coral'],
+    evidence: ['condensed capitals in six of the study\'s notes, Oswald the one face named', 'a vertical rule beside headings', 'photos on a heavy slab', 'the audit\'s criminal voice'],
+  },
+  {
+    id: 'birch', name: 'Birch', feel: 'light and open: thin display headings, pills, round photos, a field of dots',
+    identity: {
+      sentence: "Light and open: thin display headings, pill buttons, round photos, a field of dots.",
+      recognizers: ['typeVoice', 'cornerFamily', 'attorneyCards'],
+    },
+    settings: t({
+      fontPairingPreset: 20, marketingScale: 'md', taglineStyle: 'titlecase', uiRadius: 'soft', buttonShape: 'pill',
+      buttonAnimation: 'lift', tertiaryStyle: 'plain', elevationStyle: '1', motionTempo: 'relaxed',
+      cardHover: 'lift', attorneyCardStyle: 'avatar',
+      headingWeight: 'light', headingEmphasisStyle: 'color', headingCase: 'normal', imageFrame: 'plain',
+      patternTexture: 'dots',
+    }),
+    picks: p({headingRule: 'fade'}),
+    previous: [],
+    passed: true,
+    suggestedPalettes: ['green-sage', 'navy-rose', 'slate-cream'],
+    evidence: ['the audit\'s light-weight soft voice', 'light headings on 2 of 65 study sites', 'pills and round photos (Quartz\'s avatar cards)'],
+  },
+  {
+    id: 'clay', name: 'Clay', feel: 'plain and direct: one bold humanist sans in mixed case, balanced corners, soft card shadows',
+    identity: {
+      sentence: "Plain and direct: one humanist sans in bold mixed case, balanced corners, soft card shadows.",
+      recognizers: ['typeVoice', 'headingCase', 'shadow'],
+    },
+    settings: t({
+      fontPairingPreset: 21, marketingScale: 'md', taglineStyle: 'titlecase', uiRadius: 'rounded', buttonShape: 'rounded',
+      buttonAnimation: 'none', tertiaryStyle: 'plain', elevationStyle: '2', motionTempo: 'balanced',
+      cardHover: 'lift', attorneyCardStyle: 'classic',
+      headingEmphasisStyle: 'color', headingCase: 'normal', imageFrame: 'plain',
+      patternTexture: 'pinstripe',
+    }),
+    picks: p({headingRule: 'line'}),
+    previous: [],
+    passed: true,
+    suggestedPalettes: ['navy-ice', 'teal-mint', 'navy-orange'],
+    evidence: ['the study\'s bold mixed-case sans, five sites, which no style set spoke', 'a short rule under headings', 'card shadows'],
+  },
+]
+
+/** Style sets that shipped and left the offered roster, each with the values it wrote, and the
+ *  entry that retired it (`[R-534]`: Canyon's hero was Graphite's, Valley one design with Dune,
+ *  Linen Walnut's voice, Granite a quieter Marble, Quartz one voice with Flint). A site wearing
+ *  one keeps its look: `matchStyleSet` still names it, the Studio says "no longer offered;
+ *  nothing on your site changed", the switcher shows "(retired)" beside "as the site is" and
+ *  never offers it, a client link naming one enters as the site is (`lib/preview/plan.ts`,
+ *  `grantStyleSet`), and the build never picks it. Never edited: a retired entry is a record. */
+export const RETIRED_STYLE_SETS: readonly (StyleSet & {retired: string})[] = [
+  {
+    id: 'canyon', name: 'Canyon', feel: 'deep and immersive: display serif, italic accents, dark bands',
+    identity: {
+      sentence: "Deep and immersive: a display serif at its own weight, italic accents, dark bands.",
+      recognizers: ['typeVoice', 'cornerFamily', 'emphasis'],
+    },
+    settings: t({
+      fontPairingPreset: 2, marketingScale: 'md', taglineStyle: 'plain', uiRadius: 'subtle', buttonShape: 'square',
+      buttonAnimation: 'sweep', tertiaryStyle: 'tracked', elevationStyle: '0', motionTempo: 'relaxed',
+      cardHover: 'imageZoom', attorneyCardStyle: 'portrait',
+      headingEmphasisStyle: 'italic', headingCase: 'normal', imageFrame: 'plain',
+    }),
+    picks: p({headingRule: 'line'}),
+    // Phase 17B: both earlier versions differed from today only by the overlap and the
+    // gradient, which left the matched set; pruned, so no version equals the current.
+    previous: [],
+    passed: false,
+    retired: '[R-534]',
+    suggestedPalettes: ['black-gold', 'burgundy-gold', 'teal-mint'],
+    evidence: ['kicker above and a short rule below every heading', 'italic accent phrase', 'cutout portraits in rounded panels'],
   },
   {
     id: 'linen', name: 'Linen', feel: 'stationery: a quiet serif, offset photo slabs, a pinstripe',
@@ -348,6 +451,8 @@ export const STYLE_SETS: readonly StyleSet[] = [
     }),
     picks: p({headingRule: 'line'}),
     previous: [{settings: {fontPairingPreset: 15, marketingScale: "default", taglineStyle: "titlecase", uiRadius: "sharp", buttonShape: "square", buttonAnimation: "none", tertiaryStyle: "plain", elevationStyle: "0", motionTempo: "relaxed", cardHover: "none", attorneyCardStyle: "minimal", headingEmphasisStyle: "italic", headingCase: "normal", imageFrame: "slab", patternTexture: "pinstripe"}, picks: p({headingRule: "line"})}],
+    passed: false,
+    retired: '[R-534]',
     suggestedPalettes: ['navy-brass', 'burgundy-gold', 'black-crimson', 'slate-cream'],
     evidence: ['a gold italic second line over a short dash', 'photos offset on flat slabs', 'pinstripe and diamond textures'],
   },
@@ -365,6 +470,8 @@ export const STYLE_SETS: readonly StyleSet[] = [
     }),
     picks: p({headingRule: 'line'}),
     previous: [{settings: {fontPairingPreset: 9, marketingScale: "sm", taglineStyle: "titlecase", uiRadius: "soft", buttonShape: "stadium", buttonAnimation: "none", tertiaryStyle: "plain", elevationStyle: "1", motionTempo: "relaxed", cardHover: "imageZoom", attorneyCardStyle: "portrait", headingEmphasisStyle: "color", headingCase: "normal", imageFrame: "plain", patternTexture: null}, picks: p({headingRule: "line"})}],
+    passed: false,
+    retired: '[R-534]',
     suggestedPalettes: ['navy-brass', 'navy-ice', 'forest-brass'],
     evidence: ['headlines over a short mustard rule', 'rounded inset panels', 'local photography'],
   },
@@ -385,6 +492,8 @@ export const STYLE_SETS: readonly StyleSet[] = [
     }),
     picks: p({headingRule: 'line'}),
     previous: [],
+    passed: false,
+    retired: '[R-534]',
     suggestedPalettes: ['navy-brass', 'navy-ice', 'navy-orange', 'navy-brick'],
     evidence: ['navy all-caps sans headings with a gold second line', 'gold hairline boxes framing cards and photos', 'a dark-to-oxblood gradient fading between bands'],
   },
@@ -403,6 +512,8 @@ export const STYLE_SETS: readonly StyleSet[] = [
     }),
     picks: p({headingRule: 'leadDot'}),
     previous: [],
+    passed: false,
+    retired: '[R-534]',
     suggestedPalettes: ['teal-mint', 'slate-cream', 'navy-rose'],
     evidence: ['a heavy caps line whose last words turn to the accent', 'a short rule beneath', 'everything a pill'],
   },
@@ -440,20 +551,6 @@ export function readStyleSetField(doc: StyleSetDoc, field: StyleSetField): Style
   return value
 }
 
-/** The weight a pairing's heading face can actually draw. A face with no 700 renders
- *  regular whatever is asked for (`font-synthesis-weight: none`), and a face with only a
- *  bold renders bold. */
-export function drawableWeight(pairing: number | null, wanted: string): string {
-  const preset = getPresetById(Number(pairing))
-  if (!preset) return wanted
-  const weights = headingWeights(preset)
-  const hasBold = weights.some((w) => Number(w) >= 600)
-  const hasRegular = weights.some((w) => Number(w) < 600)
-  if (wanted === 'bold' && !hasBold) return 'regular'
-  if (wanted === 'regular' && !hasRegular) return 'bold'
-  return wanted
-}
-
 /** The values a visitor can tell apart, for the uniqueness test and the Studio's
  *  recogniser labels. */
 export function signatureOf(styleSet: StyleSet): Record<SignatureDimension, string> {
@@ -464,6 +561,9 @@ export function signatureOf(styleSet: StyleSet): Record<SignatureDimension, stri
   const family = matchCornerFamily(String(s.uiRadius), String(s.buttonShape))?.id ?? 'custom'
   // Phase 17B: the texture's kind alone; its ground is the theme's paint.
   const texture = s.patternTexture ? String(s.patternTexture) : 'none'
+  // The hero's rendered size: `md` and `lg` are one at 1440 (`clamp(…, 1rem + 5vw, …)` binds
+  // below about 1,700 px), so only `sm` and `default` differ from them (ADV-17C-B, measured).
+  const scale = s.marketingScale === 'md' || s.marketingScale === 'lg' ? 'large' : String(s.marketingScale)
   return {
     typeVoice: `${voice}/${weight}`,
     headingCase: String(s.headingCase),
@@ -478,9 +578,8 @@ export function signatureOf(styleSet: StyleSet): Record<SignatureDimension, stri
     kicker: String(s.taglineStyle),
     frame: String(s.imageFrame),
     attorneyCards: String(s.attorneyCardStyle),
-    texture,
     shadow: String(s.elevationStyle),
-    scale: String(s.marketingScale),
+    scale,
   }
 }
 
@@ -504,15 +603,23 @@ function equals(doc: StyleSetDoc, settings: StyleSetSettings): boolean {
   return fieldsFor(doc).every((f) => readStyleSetField(doc, f) === readStyleSetField(asDoc, f))
 }
 
-export type StyleSetMatch = {styleSet: StyleSet; current: boolean; version?: StyleSet['previous'][number]}
+export type StyleSetMatch = {
+  styleSet: StyleSet
+  current: boolean
+  version?: StyleSet['previous'][number]
+  /** The entry that retired it, where the match is a retired style set (`[R-534]`). */
+  retired?: string
+}
 
-/** The style set whose values the stored settings equal, now or in an earlier
- *  version, or null ("Custom"). */
+/** The style set whose values the stored settings equal, now or in an earlier version, the
+ *  offered roster first and then the retired one, or null ("Custom"). */
 export function matchStyleSet(doc: StyleSetDoc): StyleSetMatch | null {
-  for (const styleSet of STYLE_SETS) if (equals(doc, styleSet.settings)) return {styleSet, current: true}
-  for (const styleSet of STYLE_SETS) {
-    const version = styleSet.previous.find((v) => equals(doc, {...STYLE_SET_DEFAULTS, ...v.settings}))
-    if (version) return {styleSet, current: false, version}
+  for (const roster of [STYLE_SETS, RETIRED_STYLE_SETS] as const) {
+    for (const styleSet of roster) if (equals(doc, styleSet.settings)) return {styleSet, current: true, ...('retired' in styleSet ? {retired: styleSet.retired} : {})}
+    for (const styleSet of roster) {
+      const version = styleSet.previous.find((v) => equals(doc, {...STYLE_SET_DEFAULTS, ...v.settings}))
+      if (version) return {styleSet, current: false, version, ...('retired' in styleSet ? {retired: styleSet.retired} : {})}
+    }
   }
   return null
 }

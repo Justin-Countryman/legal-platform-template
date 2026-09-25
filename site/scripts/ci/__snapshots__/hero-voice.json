@@ -1,0 +1,69 @@
+{
+  "method": "the hero of the multi-practice canvas at 1440 under Cut blocks balanced, Navy & Brass; the face and weight the h1 computes; \"Counsel you can call\" drawn at 100 px on a canvas: width per em and the mean darkness of its box",
+  "styleSets": {
+    "graphite": {
+      "face": "Fraunces",
+      "weight": 700,
+      "heroPx": 88,
+      "widthPerEm": 10.07,
+      "ink": 0.22,
+      "sectionCase": "none"
+    },
+    "walnut": {
+      "face": "Sorts Mill Goudy",
+      "weight": 400,
+      "heroPx": 88,
+      "widthPerEm": 8.84,
+      "ink": 0.118,
+      "sectionCase": "none"
+    },
+    "marble": {
+      "face": "Playfair Display",
+      "weight": 400,
+      "heroPx": 88,
+      "widthPerEm": 9.16,
+      "ink": 0.139,
+      "sectionCase": "uppercase"
+    },
+    "dune": {
+      "face": "Lora",
+      "weight": 700,
+      "heroPx": 67.4,
+      "widthPerEm": 9.71,
+      "ink": 0.21,
+      "sectionCase": "none"
+    },
+    "flint": {
+      "face": "Montserrat",
+      "weight": 700,
+      "heroPx": 88,
+      "widthPerEm": 10.68,
+      "ink": 0.225,
+      "sectionCase": "uppercase"
+    },
+    "iron": {
+      "face": "Oswald",
+      "weight": 400,
+      "heroPx": 88,
+      "widthPerEm": 7.85,
+      "ink": 0.26,
+      "sectionCase": "uppercase"
+    },
+    "birch": {
+      "face": "DM Sans",
+      "weight": 300,
+      "heroPx": 88,
+      "widthPerEm": 9.34,
+      "ink": 0.13,
+      "sectionCase": "none"
+    },
+    "clay": {
+      "face": "Source Sans 3",
+      "weight": 700,
+      "heroPx": 88,
+      "widthPerEm": 8.87,
+      "ink": 0.219,
+      "sectionCase": "none"
+    }
+  }
+}
