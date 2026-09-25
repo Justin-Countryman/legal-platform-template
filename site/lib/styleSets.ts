@@ -84,7 +84,7 @@ export const STYLE_SET_FIELDS = [
   // measured 1 high and 3 in all); its GROUND is the theme's paint since Phase 17B.
   'patternTexture',
   // Phase 16D, the drawn element a style set can turn on. A plain string field, not one
-  // array: a matched array reads as its default in both `readThemeField` and
+  // array: a matched array reads as its default in both `readStyleSetField` and
   // `presets.py:read`, which both gate on `typeof value === 'string'`, so a site
   // that changed one would still match the style set and the patch would write an
   // empty array into the dataset (measured, ADV-16D-A F12 and ADV-16D-C).

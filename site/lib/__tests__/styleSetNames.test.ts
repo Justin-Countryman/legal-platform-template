@@ -15,7 +15,11 @@ import names from '../../eslint-rules/lib/style-set-names.js'
 import eslintConfig from '../../eslint.config.mjs'
 
 // ESLint's own selector engine (a dependency of eslint; it ships no types).
-const esquery = createRequire(import.meta.url)('esquery') as {match: (ast: never, selector: unknown) => unknown[]; parse: (s: string) => unknown}
+// With TypeScript's visitor keys, as ESLint walks it, so a type position (`let x: StyleSetDoc`) is
+// reached; esquery's own keys stop at the type annotation.
+const load = createRequire(import.meta.url)
+const esquery = load('esquery') as {match: (ast: never, selector: unknown, options?: {visitorKeys: unknown}) => unknown[]; parse: (s: string) => unknown}
+const {visitorKeys} = load('@typescript-eslint/visitor-keys') as {visitorKeys: unknown}
 
 const STUDIO = resolve(__dirname, '../../../studio')
 const SKIP = new Set(['node_modules', 'dist', '.sanity'])
@@ -39,7 +43,7 @@ function violations(file: string): string[] {
   const ast = parse(code, {jsx: file.endsWith('.tsx'), loc: true, range: true})
   const out: string[] = []
   for (const {selector, message} of names.RETIRED_SELECTORS) {
-    for (const node of esquery.match(ast as never, esquery.parse(selector)) as {loc: {start: {line: number}}}[]) {
+    for (const node of esquery.match(ast as never, esquery.parse(selector), {visitorKeys}) as {loc: {start: {line: number}}}[]) {
       out.push(`${relative(STUDIO, file)}:${node.loc.start.line} ${message.split('.')[0]}`)
     }
   }
@@ -63,9 +67,17 @@ describe('the Studio says style set for the style set', () => {
 
   it('the check fires on a planted old name (so an empty list above is not a blind parser)', () => {
     const ast = parse("import {THEMES} from '../../site/lib/themes'\nfor (const theme of STYLE_SETS) f(theme)\nimport {STYLE_SETS} from '../../site/lib/styleSets'", {loc: true, range: true})
-    const fired = names.RETIRED_SELECTORS.filter(({selector}) => esquery.match(ast as never, esquery.parse(selector)).length > 0)
+    const fired = names.RETIRED_SELECTORS.filter(({selector}) => esquery.match(ast as never, esquery.parse(selector), {visitorKeys}).length > 0)
     // the old identifier, and the old module's path
     expect(fired.map((f: {selector: string}) => f.selector.split('[')[0])).toEqual(['Identifier', ':matches(ImportDeclaration, ExportNamedDeclaration, ExportAllDeclaration, ImportExpression)'])
     expect(names.scopedThemeNames(ast, allow).map((v: {name: string}) => v.name)).toEqual(['THEMES', 'theme'])
+  })
+
+  it('reaches a type position, as the site\'s ESLint does', () => {
+    for (const code of ['let x: ThemeDoc', 'const m = new Map<string, ThemeMatch>()', 'function f(): Theme { return g() }']) {
+      const ast = parse(code, {loc: true, range: true})
+      const hits = names.RETIRED_SELECTORS.flatMap(({selector}) => esquery.match(ast as never, esquery.parse(selector), {visitorKeys}))
+      expect(hits.length, code).toBe(1)
+    }
   })
 })

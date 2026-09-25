@@ -1068,7 +1068,7 @@
       }
     },
     {
-      "label": "the six hidden fields stored beside a theme",
+      "label": "the six hidden fields stored beside a style set",
       "doc": {
         "fontPairingPreset": 4,
         "marketingScale": "md",

@@ -38,8 +38,8 @@ const RETIRED_SELECTORS = [
     message: `Retired name for the style set. ${WHY} Use lib/styleSets.ts (STYLE_SETS, StyleSet, matchStyleSet, styleSetPatch, ...).`,
   },
   {
-    selector: `JSXIdentifier[name=${alternation(OLD_IDENTIFIERS)}]`,
-    message: `Retired component name for the style set. ${WHY} The Studio's picker is StyleSetPicker.`,
+    selector: `JSXIdentifier[name=${alternation([...OLD_IDENTIFIERS, ...OLD_KEYS])}]`,
+    message: `Retired component or prop name for the style set. ${WHY} The Studio's picker is StyleSetPicker.`,
   },
   {
     selector: `Identifier[name=${alternation(OLD_KEYS)}]`,
@@ -50,11 +50,21 @@ const RETIRED_SELECTORS = [
     message: `Retired presets.json key or Studio field name for the style set, as a string. ${WHY}`,
   },
   {
+    // `themes` read as a property or destructured: the old presets.json roster key. A list of
+    // flows held in a variable called themes is a binding, not a property, and passes.
+    selector: ':matches(MemberExpression[computed=false] > Identifier.property, ObjectPattern > Property[computed=false] > Identifier.key)[name="themes"]',
+    message: `Retired presets.json key for the style sets, read as a property. ${WHY} The key is styleSets.`,
+  },
+  {
     selector: `TemplateElement[value.cooked=${alternation(OLD_KEY_STRINGS)}]`,
     message: `Retired presets.json key or Studio field name for the style set, in a template literal. ${WHY}`,
   },
   {
-    selector: ':matches(ImportDeclaration, ExportNamedDeclaration, ExportAllDeclaration, ImportExpression)[source.value=/\\/themes$/]',
+    selector: ':matches(ImportDeclaration, ExportNamedDeclaration, ExportAllDeclaration, ImportExpression)[source.value=/\\/themes(\\.[cm]?[jt]sx?)?$/]',
+    message: `lib/themes.ts is lib/styleSets.ts since Phase 17C ([R-535]).`,
+  },
+  {
+    selector: 'CallExpression[callee.name="require"] > Literal.arguments[value=/\\/themes(\\.[cm]?[jt]sx?)?$/]',
     message: `lib/themes.ts is lib/styleSets.ts since Phase 17C ([R-535]).`,
   },
 ]

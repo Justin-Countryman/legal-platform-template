@@ -53,7 +53,7 @@ function cases() {
       customFonts: {headingFont: {regular: {asset: {_ref: 'file-abc'}}}},
     })),
     // Phase 17B: a document that still stores the six hidden fields matches as before.
-    matchCase('the six hidden fields stored beside a theme', doc({...STYLE_SETS[1].settings, sectionJoin: 'angled', dividerCarry: ['cards'],
+    matchCase('the six hidden fields stored beside a style set', doc({...STYLE_SETS[1].settings, sectionJoin: 'angled', dividerCarry: ['cards'],
       patternGround: 'dark', brandGhost: 'on', sectionOverlap: 'photo', sectionGradient: 'deep'})),
   ]
   for (const styleSet of STYLE_SETS) {

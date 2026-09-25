@@ -34,8 +34,18 @@ describe('the retired style-set selectors', () => {
     expect(lint('const themes = FLOWS; for (const t of themes) use(t)')).toHaveLength(0)
   })
 
+  it('fail the old roster key read as a property or destructured, and an old name as a JSX prop', () => {
+    expect(lint('const n = presets.themes.length')).toHaveLength(1)
+    expect(lint('const {themes: roster} = presets')).toHaveLength(1)
+    expect(lint('const e = <Picker themePreview />')).toHaveLength(1)
+    // A list of flows in a variable called themes, and a flow's own fields, pass.
+    expect(lint('const themes = FLOWS; const n = themes.length')).toHaveLength(0)
+  })
+
   it('fail an import of a .../themes module however it is written', () => {
     expect(lint("import {STYLE_SETS} from '@/lib/themes'")).toHaveLength(1)
+    expect(lint("import {STYLE_SETS} from '@/lib/themes.ts'")).toHaveLength(1)
+    expect(lint("const t = require('./themes')")).toHaveLength(1)
     expect(lint("import x from '../themes'")).toHaveLength(1)
     expect(lint("export {x} from './themes'")).toHaveLength(1)
     expect(lint("const m = await import('../../site/lib/themes')")).toHaveLength(1)

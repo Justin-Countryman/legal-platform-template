@@ -16,13 +16,17 @@ eslint-rules/
 │   │                              Handles literals, template strings, ternaries,
 │   │                              `&&`/`||`/`??`, array.join (incl. .filter(Boolean)),
 │   │                              and `cn`/`clsx`/`classNames` calls.
-│   └── ast-utils.js               Shared AST traversal helpers — find a JSX
-│                                  className attribute, dispatch on element name,
-│                                  walk ancestors, find first substantive child.
-├── rules/                         One file per rule (nine; see roster below).
+│   ├── ast-utils.js               Shared AST traversal helpers — find a JSX
+│   │                              className attribute, dispatch on element name,
+│   │                              walk ancestors, find first substantive child.
+│   └── style-set-names.js         The style set's retired names (Phase 17C): the
+│                                  no-restricted-syntax selectors the config spreads,
+│                                  the check behind no-theme-for-style-set, and what
+│                                  lib/__tests__/styleSetNames.test.ts applies to studio/.
+├── rules/                         One file per rule (twelve; see roster below).
 ├── __tests__/
 │   ├── <rule-name>.test.ts        One per rule.
-│   ├── rule-roster.test.ts        Pins the exported rule set to the nine.
+│   ├── rule-roster.test.ts        Pins the exported rule set to the twelve.
 │   ├── className-tokenizer.test.ts
 │   ├── ast-utils.test.ts
 │   └── parse-jsx.ts               Test helper — parse a JSX snippet to AST and
@@ -57,8 +61,8 @@ export default eslintConfig;
 ```
 
 Naming convention: kebab-case rule keys under the `platform/` namespace. The
-shipped roster is nine rules (rule IDs are the WS8 audit's and are not
-renumbered):
+shipped roster is twelve rules (rule IDs are the WS8 audit's and are not
+renumbered; `index.js` is the list and `__tests__/rule-roster.test.ts` pins it):
 
 - `platform/heading-cascade-discipline` (A2)
 - `platform/footer-landmark-naming` (A3)
@@ -67,11 +71,15 @@ renumbered):
 - `platform/h1-mobile-cap` (A8)
 - `platform/no-arbitrary-color` (T1)
 - `platform/no-text-action-raw` (T5a)
-- `platform/no-text-accent-on-bg-muted` (T5b)
+- `platform/no-text-accent-on-text` (Phase 14, was T5b `no-text-accent-on-bg-muted`)
 - `platform/no-use-hero-scheme-in-server` (C4)
+- `platform/no-fixed-radius` (Phase 16A, `[R-473]`)
+- `platform/color-roles` (Phase 16A, `[R-471]`)
+- `platform/no-theme-for-style-set` (Phase 17C, `[R-535]`)
 
 Config-only families in `eslint.config.mjs` (not custom rules): retired
-identifiers and the Google Fonts CDN via `no-restricted-syntax` (T3, T6, C5),
+identifiers and the Google Fonts CDN via `no-restricted-syntax` (T3, T6, C5; and
+since Phase 17C the style set's old names, from `lib/style-set-names.js`),
 `next/font/google` via `no-restricted-imports` (T6), `@next/next/no-img-element`
 (A1) and `jsx-a11y/control-has-associated-label` (A7).
 

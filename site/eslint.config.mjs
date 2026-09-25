@@ -3,8 +3,8 @@
 // because the FlatCompat shim path produced a circular-structure JSON error
 // when validating eslint-plugin-react's plugin export under ESLint 9.
 //
-// WS8 platform rules (9 custom + 5 config-rule-families = 14 total active
-// platform-shipped rules) are documented in
+// WS8 platform rules (12 custom since Phase 17C, `eslint-rules/index.js`, plus the
+// config-rule families below) are documented in
 // `BI/skills/skill-eslint-platform-rules/SKILL.md`. Each rule below cites
 // the BI / skill / OUTSTANDING source that locks the posture it enforces.
 // Eight design-token rules were cut 2026-09-13 (monorepo WS-V1-PLAN Phase 8,

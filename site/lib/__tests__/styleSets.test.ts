@@ -336,7 +336,9 @@ describe('a site built at an earlier pin still matches its style set', () => {
   const frozen = (pin: string): FrozenStyleSet[] => {
     const file = JSON.parse(readFileSync(resolve(__dirname, `fixtures/presets-${pin}.json`), 'utf8')) as Record<string, FrozenStyleSet[] | undefined>
     // eslint-disable-next-line no-restricted-syntax -- a frozen pin's own key, from before the rename
-    return file.styleSets ?? file['themes'] ?? []
+    const roster = file.styleSets ?? file['themes']
+    if (!roster?.length) throw new Error(`fixtures/presets-${pin}.json carries no roster`)
+    return roster
   }
   // One file per pin at which a matched value moved. `bd74cdd` is Phase 16C's;
   // `22da44f` is Phase 16D's revision, frozen by 16E because it put the raised photo on
@@ -346,6 +348,12 @@ describe('a site built at an earlier pin still matches its style set', () => {
   // `a164ce0` is 17A's, frozen by 17B before four matched fields and two picks left
   // the style sets ([R-510]): a frozen file carries the six, and the match ignores them.
   const PINS = ['bd74cdd', '22da44f', '3979e37', 'a164ce0'] as const
+  // How many style sets each pin froze, so a reader that found none could not pass vacuously.
+  const FROZEN_COUNT: Record<(typeof PINS)[number], number> = {bd74cdd: 9, '22da44f': 9, '3979e37': 9, a164ce0: 10}
+
+  it.each(PINS)('reads the %s roster, every style set it froze', (pin) => {
+    expect(frozen(pin)).toHaveLength(FROZEN_COUNT[pin])
+  })
 
   it.each(PINS)('reads every style set at %s as that style set, current or earlier', (pin) => {
     const pinned = frozen(pin)
