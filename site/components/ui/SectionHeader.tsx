@@ -60,7 +60,7 @@ export type SectionHeaderProps = {
 // skill-typography → Section vertical rhythm system. Exported for tests +
 // the Design Studio catalog cell.
 
-// `section-heading` carries the theme's heading signature: capitals and the rule
+// `section-heading` carries the style set's heading signature: capitals and the rule
 // under the heading (Phase 16B, globals.css).
 export const SECTION_HEADER_H2_CLASS: Record<SectionHeaderScale, string> = {
   md: 'mb-4 text-3xl font-bold text-foreground md:text-4xl section-heading',

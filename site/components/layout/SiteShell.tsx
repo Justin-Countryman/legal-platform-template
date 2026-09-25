@@ -147,7 +147,7 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
   // layout (rather than <html>, which is rendered by the root layout that
   // doesn't fetch designSettings) so the GROQ call isn't duplicated.
   const buttonAnimation = designTokens?.buttonAnimation ?? 'none'
-  // The same wrapper carries two theme settings whose paint must resolve on the
+  // The same wrapper carries two style set settings whose paint must resolve on the
   // element it decorates, not at :root (Phase 16B): the rule under section headings
   // (`data-heading-rule`) and the site's photo frame on attorney photos
   // (`data-image-frame`). globals.css reads both.

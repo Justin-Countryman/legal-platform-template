@@ -2800,7 +2800,7 @@ export type DesignSettings = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  themePreview?: string;
+  styleSetPicker?: string;
   flow?:
     | "quiet.mostlyLight"
     | "alternating.balanced"
@@ -20654,7 +20654,7 @@ export type PREVIEW_STORED_DESIGN_QUERY_RESULT = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  themePreview?: string;
+  styleSetPicker?: string;
   flow?:
     | "alternating.balanced"
     | "cutBlocks.balanced"

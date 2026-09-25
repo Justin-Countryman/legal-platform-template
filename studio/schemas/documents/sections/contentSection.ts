@@ -22,7 +22,7 @@ import {appearanceFieldset, appearanceFields} from '../../objects/appearanceFiel
 // layout; every `hidden` and `validation` callback reads `parent`, never
 // `document`, because inside the homepage list `document` is the homePage.
 //
-// NO `initialValue` ON `imageTreatment`. It is a theme axis: absent means
+// NO `initialValue` ON `imageTreatment`. It is a style set axis: absent means
 // "inherit", and a seeded value would be folded into every composed member as
 // if the operator had chosen it (design §7 amendments 1 and 19).
 //

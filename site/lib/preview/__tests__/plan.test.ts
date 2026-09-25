@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest'
-import {THEMES, matchTheme, themePatch} from '@/lib/themes'
+import {STYLE_SETS, matchStyleSet, styleSetPatch} from '@/lib/styleSets'
 import {PALETTE_PRESETS, matchPreset} from '@/lib/palettes'
 import {DEFAULT_FLOW, FLOWS, HIDDEN_FIELDS} from '@/lib/flows'
 import {AS_THE_SITE_IS, grantFlow, parseChoices, planPreview, withPreview, ownLooks, ownGrounds, previewPath, type PreviewPlan, type StoredDesign} from '../plan'
@@ -20,26 +20,26 @@ const uploads: StoredDesign = {
   _id: 'designSettings', _rev: 'rev-2',
   customFonts: {headingFont: {regular: {asset: {_ref: 'file-heading'}}}},
 }
-const graphite = THEMES.find((t) => t.id === 'graphite')!
+const graphite = STYLE_SETS.find((t) => t.id === 'graphite')!
 const wearsGraphite: StoredDesign = {...applied(plain, planPreview(plain, {styleSet: 'graphite', palette: 'site', flow: 'site'}))}
 const swapped: StoredDesign = {...wearsGraphite, headingRule: 'hatched'}
 
 describe('planPreview', () => {
   it('on a plain site, a style set is exactly its own patch', () => {
-    for (const theme of THEMES) {
-      const plan = planPreview({}, {styleSet: theme.id, palette: 'site', flow: 'site'})
-      expect(plan.set).toEqual(themePatch(theme, {}).set)
+    for (const styleSet of STYLE_SETS) {
+      const plan = planPreview({}, {styleSet: styleSet.id, palette: 'site', flow: 'site'})
+      expect(plan.set).toEqual(styleSetPatch(styleSet, {}).set)
       expect(plan.unset).toEqual([])
     }
   })
 
   it('every style set by every palette, applied, is what the Studio names it, on a plain site and an uploaded-font one', () => {
     for (const doc of [plain, uploads, swapped]) {
-      for (const theme of THEMES) {
+      for (const styleSet of STYLE_SETS) {
         for (const palette of PALETTE_PRESETS) {
-          const after = applied(doc, planPreview(doc, {styleSet: theme.id, palette: palette.id, flow: 'site'}))
-          expect(matchTheme(after)?.theme.id).toBe(theme.id)
-          expect(matchTheme(after)?.current).toBe(true)
+          const after = applied(doc, planPreview(doc, {styleSet: styleSet.id, palette: palette.id, flow: 'site'}))
+          expect(matchStyleSet(after)?.styleSet.id).toBe(styleSet.id)
+          expect(matchStyleSet(after)?.current).toBe(true)
           expect(matchPreset(after)?.id).toBe(palette.id)
         }
       }
@@ -47,8 +47,8 @@ describe('planPreview', () => {
   })
 
   it('never changes the pairing or the heading weight of a site that renders its own uploaded fonts', () => {
-    for (const theme of THEMES) {
-      const plan = planPreview(uploads, {styleSet: theme.id, palette: 'site', flow: 'site'})
+    for (const styleSet of STYLE_SETS) {
+      const plan = planPreview(uploads, {styleSet: styleSet.id, palette: 'site', flow: 'site'})
       expect(Object.keys(plan.set)).not.toContain('fontPairingPreset')
       expect(Object.keys(plan.set)).not.toContain('headingWeight')
       expect(plan.unset).not.toContain('fontPairingPreset')
@@ -68,10 +68,10 @@ describe('planPreview', () => {
       'darkGround', 'lightGround', 'accent', 'action', 'flow', 'flowPhoto',
     ])
     const clearable = new Set([...allowed, ...HIDDEN_FIELDS])
-    for (const theme of THEMES) {
+    for (const styleSet of STYLE_SETS) {
       for (const palette of PALETTE_PRESETS) {
         for (const flow of [...FLOWS.map((f) => f.id), 'site']) {
-          const plan = planPreview({...plain, logoOnLight: {x: 1}, lightGround: '#ffffff', action: '#123456', sectionJoin: 'angled'}, {styleSet: theme.id, palette: palette.id, flow})
+          const plan = planPreview({...plain, logoOnLight: {x: 1}, lightGround: '#ffffff', action: '#123456', sectionJoin: 'angled'}, {styleSet: styleSet.id, palette: palette.id, flow})
           for (const f of Object.keys(plan.set)) expect(allowed.has(f), f).toBe(true)
           for (const f of plan.unset) expect(clearable.has(f), f).toBe(true)
         }
@@ -115,7 +115,7 @@ describe('planPreview', () => {
   it('carries the revision it was computed on, and names what the site wears now', () => {
     const plan = planPreview(wearsGraphite, {styleSet: 'marble', palette: 'site', flow: 'site'})
     expect(plan.rev).toBe('rev-1')
-    expect(plan.wears.styleSet?.theme.id).toBe('graphite')
+    expect(plan.wears.styleSet?.styleSet.id).toBe('graphite')
     expect(plan.wears.flow.id).toBe(DEFAULT_FLOW)
   })
 

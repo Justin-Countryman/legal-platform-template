@@ -1,4 +1,4 @@
-import {THEMES, matchTheme, themePatch, updatePatch, type Theme, type ThemeDoc, type ThemeMatch} from '@/lib/themes'
+import {STYLE_SETS, matchStyleSet, styleSetPatch, updatePatch, type StyleSet, type StyleSetDoc, type StyleSetMatch} from '@/lib/styleSets'
 import {PALETTE_PRESETS, matchPreset, presetInputs, type PalettePreset} from '@/lib/palettes'
 import {FLOWS, HIDDEN_FIELDS, RETIRED_FLOWS, drawsHeroPhoto, flowById, flowOf, type FlowRules} from '@/lib/flows'
 import {parseHexInput, type ColorInputs} from '@/lib/designTokens'
@@ -10,7 +10,7 @@ import {type PreviewView} from './session'
 //
 // Phase 17A (monorepo WS-V1-PHASE17A-DESIGN §2.3). A style set and a palette are
 // not stored as names: choosing one writes its values into Design Settings, and the
-// name is matched back by value (`lib/themes.ts`, `lib/palettes.ts`). So what the
+// name is matched back by value (`lib/styleSets.ts`, `lib/palettes.ts`). So what the
 // preview shows is a CHANGE to the stored settings, and this module computes it with
 // the same functions the Studio's pickers write with, on the document as it is
 // stored. The projected settings the layout reads are a different shape (uploaded
@@ -47,7 +47,7 @@ export type PreviewChoices = {styleSet: string; palette: string; flow: string; v
 
 /** The choices from the preview address, or null when any part is not one. */
 export function parseChoices(styleSet: string, palette: string, flow: string, view: string): PreviewChoices | null {
-  const s = styleSet === AS_THE_SITE_IS || THEMES.some((t) => t.id === styleSet)
+  const s = styleSet === AS_THE_SITE_IS || STYLE_SETS.some((t) => t.id === styleSet)
   const p = palette === AS_THE_SITE_IS || PALETTE_PRESETS.some((x) => x.id === palette)
   const f = flow === AS_THE_SITE_IS || FLOWS.some((x) => x.id === flow)
   const v = view === 'design' || view === 'grey'
@@ -67,7 +67,7 @@ export function previewPath(c: PreviewChoices): string {
 }
 
 /** Design Settings as stored, with the revision the plan was computed on. */
-export type StoredDesign = ThemeDoc & ColorInputs & {_id?: string; _rev?: string} & Record<string, unknown>
+export type StoredDesign = StyleSetDoc & ColorInputs & {_id?: string; _rev?: string} & Record<string, unknown>
 
 export type PreviewPlan = {
   /** Values to write. */
@@ -75,7 +75,7 @@ export type PreviewPlan = {
   /** Fields to clear. */
   unset: string[]
   /** The chosen style set, palette and theme; null is "as the site is". */
-  styleSet: Theme | null
+  styleSet: StyleSet | null
   palette: PalettePreset | null
   flow: FlowRules | null
   /** The stored revision the plan was computed on; Apply writes against it. */
@@ -83,7 +83,7 @@ export type PreviewPlan = {
   /** What the stored settings wear now, named as the Studio names them. The theme is
    *  what the site renders: the stored id, the bridge over the retired fields, or the
    *  platform default (`flowOf`). */
-  wears: {styleSet: ThemeMatch | null; palette: PalettePreset | null; flow: FlowRules}
+  wears: {styleSet: StyleSetMatch | null; palette: PalettePreset | null; flow: FlowRules}
 }
 
 const present = (v: unknown) => v !== undefined && v !== null
@@ -95,13 +95,13 @@ export function planPreview(
   heroPhoto: string | null = null,
 ): PreviewPlan {
   const doc: StoredDesign = stored ?? {}
-  const wears = {styleSet: matchTheme(doc), palette: matchPreset(doc), flow: flowOf(doc)}
+  const wears = {styleSet: matchStyleSet(doc), palette: matchPreset(doc), flow: flowOf(doc)}
   const set: PreviewPlan['set'] = {}
   const unset: string[] = []
 
-  const theme = THEMES.find((t) => t.id === choices.styleSet) ?? null
-  if (theme) {
-    const patch = wears.styleSet?.theme.id === theme.id ? updatePatch(doc, wears.styleSet) : themePatch(theme, doc)
+  const styleSet = STYLE_SETS.find((t) => t.id === choices.styleSet) ?? null
+  if (styleSet) {
+    const patch = wears.styleSet?.styleSet.id === styleSet.id ? updatePatch(doc, wears.styleSet) : styleSetPatch(styleSet, doc)
     for (const [field, value] of Object.entries(patch.set)) if (!same(doc[field], value)) set[field] = value
     for (const field of patch.unset) if (present(doc[field])) unset.push(field)
   }
@@ -130,7 +130,7 @@ export function planPreview(
     }
   }
 
-  return {set, unset, styleSet: theme, palette, flow, rev: typeof doc._rev === 'string' ? doc._rev : null, wears}
+  return {set, unset, styleSet: styleSet, palette, flow, rev: typeof doc._rev === 'string' ? doc._rev : null, wears}
 }
 
 /** The chrome with the plan applied to the settings the layout and the page read. The

@@ -1,7 +1,7 @@
 // ─── Section dividers (Phase 16C) ─────────────────────────────────────────────
 //
-// The shape where one homepage section meets the next, picked independently of the
-// theme with a default from each theme (Justin, 2026-09-19: `[R-482]`, `[R-485]`),
+// The shape where one homepage section meets the next, named by the theme since Phase 17B
+// (`[R-513]`; Justin, 2026-09-19 made it a pick apart from the style set, `[R-482]`, `[R-485]`),
 // placed by one rule rather than section by section (`[R-481]`: under the hero and
 // wherever the page enters a dark or saturated section), and carried into small
 // places (`[R-483]`: card corners, button corners, a feature photo's corner, a mark

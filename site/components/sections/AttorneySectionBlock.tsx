@@ -50,7 +50,7 @@ export function AttorneySectionBlock({
   const heading = resolveTokenString(data.heading, napTokens)
   const description = resolveTokenString(data.description, napTokens)
   // The section's own style where it has one; otherwise the site's (Phase 16B: a
-  // theme sets it, `[R-468]`'s continuity rule), otherwise Classic.
+  // style set sets it, `[R-468]`'s continuity rule), otherwise Classic.
   const cardStyle = followSite(data.cardStyle as string | null | undefined, seam.site?.attorneyCardStyle) as AttorneyCardStyle | null
   const isSlider = data.layout === 'slider'
 

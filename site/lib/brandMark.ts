@@ -15,7 +15,7 @@
 // every live domain, so it would have to be inlined by the server; a logo on a white
 // artboard and a knockout logo both mask as a solid rectangle, because `mask-mode`
 // resolves to alpha; and the fetch costs three GETs on a cold build. The initials
-// cost none of that and are of a piece with the theme's own type.
+// cost none of that and are of a piece with the style set's own type.
 //
 // The initials are DERIVED, never stored, so a theme that turns the ghost on renders
 // something on every client from the first build.

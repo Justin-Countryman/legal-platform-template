@@ -6,64 +6,63 @@ import {
   MOTION_TEMPO_MAP, SECTION_TEXTURES, TAGLINE_STYLE_MAP, TERTIARY_STYLE_MAP, UI_RADIUS_MAP,
 } from './designTokens'
 
-// ─── Themes (Phase 16B) ───────────────────────────────────────────────────────
+// ─── Style sets (Phase 16B; named in Phase 17C) ───────────────────────────────
 //
-// A theme is the site's signature and its UI system, applied everywhere
+// A style set is the site's signature and its UI system, applied everywhere
 // automatically; the colors (the palette) and the story (which sections, in what
 // order) stay separate (Justin, 2026-09-18). It works exactly like a palette
 // (lib/palettes.ts) and a corner family (lib/corners.ts): choosing one in the
 // Studio WRITES the design settings below, the settings are the truth after that,
-// and the active theme is DERIVED by matching the stored values. Nothing stores
-// which theme a site wears and the site never reads a theme, so a theme retuned
+// and the active style set is DERIVED by matching the stored values. Nothing stores
+// which style set a site wears and the site never reads one, so a style set retuned
 // later changes no built site until someone applies it again (Justin: exact match
-// only, an earlier version of the same theme included).
+// only, an earlier version of the same style set included).
 //
-// Every theme names every field. `null` means the theme leaves the field unset,
-// which renders the field's default. No theme writes a color, so any theme wears
-// any palette the same way, and no theme touches a section: a look set on one
-// section on purpose stays as it was set.
+// Every style set names every field. `null` means it leaves the field unset, which
+// renders the field's default. No style set writes a color, so any style set wears
+// any palette the same way, and none touches a section: a look set on one section
+// on purpose stays as it was set.
 //
-// Provenance. Each theme is drawn from the sample sites of the homepage field
+// Provenance. Each style set is drawn from the sample sites of the homepage field
 // study that the monorepo's decisions log names for it (ruling 10). The records,
 // by domain, are cited in the monorepo's Phase 16 design record, because the
 // template carries no firm identity. Values are provisional until the Phase 18
-// eye pass. The tenth theme of that roster, corporate navy, returns when its
-// drawn devices exist (Phase 16D).
+// eye pass.
 //
-// ─── Phase 16C: three parts, and what makes a theme its own ───────────────────
+// ─── Phase 16C: three parts, and what makes a style set its own ───────────────
 //
-// A theme is now three things:
-//   settings — the fields it writes and is MATCHED by (`THEME_FIELDS`);
-//   picks    — the libraries it only suggests: the divider, the pieces that repeat
-//              its shape, and the line under section headings. They sit OUTSIDE the
-//              match, like the palette, so a site that swaps one keeps the theme's
-//              name (`[R-485]`);
+// A style set is three things:
+//   settings — the fields it writes and is MATCHED by (`STYLE_SET_FIELDS`);
+//   picks    — the libraries it only suggests: since Phase 17B the one line under
+//              section headings. It sits OUTSIDE the match, like the palette, so a
+//              site that swaps it keeps the style set's name (`[R-485]`);
 //   identity — a sentence and the two or three things a visitor recognises.
 //
-// UNIQUENESS IS A TEST, not a promise (`[R-487]`; `__tests__/themes.test.ts`). It is
-// measured on the SETTINGS only, because a theme's name survives any pick being
+// UNIQUENESS IS A TEST, not a promise (`[R-487]`; `__tests__/styleSets.test.ts`). It is
+// measured on the SETTINGS only, because a style set's name survives its pick being
 // swapped, and on what a visitor can actually tell apart: the heading's VOICE (its
 // face's class, not its family: two Fraunces pairings are one voice) with the weight
 // that face can draw, the heading case, the corner family (Soft and Round count as
 // one at a glance), and the surface device — four "high" dimensions — plus seven
-// lower ones. Every pair of themes differs in at least two high and five in all, and
-// each theme's recognisers belong to no other theme. A tenth theme that crowds a
-// ninth fails the test rather than shipping.
+// lower ones. Every pair of style sets differs in at least two high and five in all,
+// and each style set's recognisers belong to no other. One that crowds another fails
+// the test rather than shipping.
 //
-// ─── Phase 17B: a theme here is a STYLE SET, and the page devices left it ─────
+// ─── Phase 17B: the page devices left the style set; Phase 17C: its name ──────
 //
-// Justin, 2026-09-22 (`[R-505]`, `[R-509]`, `[R-510]`): what this file calls a theme
-// is the atoms and molecules that repeat inside every section, a style set; a THEME
-// is the flow of the page, and lives in `lib/flows.ts` as a stored id plus a rule
-// set. The six page-level fields a style set used to write are the theme's now:
-// the divider's shape and its carried pieces (the two picks), the texture's ground,
-// the ghost, the overlap and the gradient (four matched fields). A style set has 17
-// matched fields and ONE pick, the heading line, and its patch writes 18 keys. The
-// six stay in the schema hidden for one pin, read by nothing but the compat bridge
-// (`flowOf`), and the Studio shows them nowhere. The word "theme" in the code below
-// keeps its old meaning until item 357 is ruled (`[R-514]`).
+// Justin, 2026-09-22 (`[R-505]`, `[R-509]`, `[R-510]`): the atoms and molecules that
+// repeat inside every section are a style set; a THEME is the flow of the page, and
+// lives in `lib/flows.ts` as a stored id plus a rule set. The six page-level fields a
+// style set used to write are the theme's now: the divider's shape and its carried
+// pieces (the two picks), the texture's ground, the ghost, the overlap and the
+// gradient (four matched fields). A style set has 17 matched fields and ONE pick, the
+// heading line, and its patch writes 18 keys. The six stay in the schema hidden for
+// one pin, read by nothing but the compat bridge (`flowOf`), and the Studio shows
+// them nowhere. Phase 17C (`[R-535]`) gave the style set its name in code: this file
+// was `lib/themes.ts`, and nothing in the code says theme for the style set
+// (`eslint-rules/lib/style-set-names.js` holds the old names).
 
-export const THEME_FIELDS = [
+export const STYLE_SET_FIELDS = [
   // The UI system
   'fontPairingPreset',
   'marketingScale',
@@ -84,13 +83,13 @@ export const THEME_FIELDS = [
   // The texture KIND stays a style-set atom (moving it breaks the uniqueness floor,
   // measured 1 high and 3 in all); its GROUND is the theme's paint since Phase 17B.
   'patternTexture',
-  // Phase 16D, the drawn element a theme can turn on. A plain string field, not one
-  // array: a matched array reads as its default in both `readThemeField` and
+  // Phase 16D, the drawn element a style set can turn on. A plain string field, not one
+  // array: a matched array reads as its default in both `readStyleSetField` and
   // `presets.py:read`, which both gate on `typeof value === 'string'`, so a site
-  // that changed one would still match the theme and `themePatch` would write an
+  // that changed one would still match the style set and the patch would write an
   // empty array into the dataset (measured, ADV-16D-A F12 and ADV-16D-C).
   //
-  // Justin, 2026-09-21: only the divider and the drop cap ship ON in a theme, and
+  // Justin, 2026-09-21: only the divider and the drop cap ship ON in a style set, and
   // since Phase 17B the divider is the theme's (`[R-513]`), so the drop cap is the
   // one drawn element a style set still turns on (`[R-497]`, amended by `[R-510]`).
   // The ghost (16D), the overlap (16E, `[R-499]`, `[R-500]`) and the gradient (16F,
@@ -98,53 +97,53 @@ export const THEME_FIELDS = [
   'dropCap',
 ] as const
 
-export type ThemeField = (typeof THEME_FIELDS)[number]
+export type StyleSetField = (typeof STYLE_SET_FIELDS)[number]
 
 /** What a visitor can tell apart at rest, derived from the settings (`[R-487]`). The
- *  first four are the ones a visitor names first, and a pair of themes must differ in at
+ *  first four are the ones a visitor names first, and a pair of style sets must differ in at
  *  least two of them. */
 export const SIGNATURE_HIGH = ['typeVoice', 'headingCase', 'cornerFamily', 'surfaceDevice'] as const
 export const SIGNATURE_LOW = ['emphasis', 'kicker', 'frame', 'attorneyCards', 'texture', 'shadow', 'scale', 'ornaments'] as const
 export const SIGNATURE = [...SIGNATURE_HIGH, ...SIGNATURE_LOW] as const
 export type SignatureDimension = (typeof SIGNATURE)[number]
 
-/** The library a theme suggests but is not matched by (`[R-485]`): picking a theme
- *  sets it, swapping it keeps the theme's name, and the Studio says it was swapped.
+/** The library a style set suggests but is not matched by (`[R-485]`): picking a style
+ *  set sets it, swapping it keeps the style set's name, and the Studio says it was swapped.
  *  Stored beside the settings, and never compared. One pick since Phase 17B: the
  *  divider and its carried pieces are the theme's (`[R-513]`). */
-export const THEME_PICKS = ['headingRule'] as const
-export type ThemePickField = (typeof THEME_PICKS)[number]
-export type ThemePicks = {
+export const STYLE_SET_PICKS = ['headingRule'] as const
+export type StyleSetPickField = (typeof STYLE_SET_PICKS)[number]
+export type StyleSetPicks = {
   /** The line under section headings (`lib/headingLines.ts`); `null` draws none. */
   headingRule: string | null
 }
-export const PICK_DEFAULTS: ThemePicks = {headingRule: null}
-export type ThemeValue = string | number | null
-export type ThemeSettings = Record<ThemeField, ThemeValue>
+export const PICK_DEFAULTS: StyleSetPicks = {headingRule: null}
+export type StyleSetValue = string | number | null
+export type StyleSetSettings = Record<StyleSetField, StyleSetValue>
 
-export type Theme = {
+export type StyleSet = {
   id: string
   name: string
   /** A few words shown under the name in the Studio. */
   feel: string
   /** What a visitor recognises: one sentence, and two or three signature dimensions
-   *  whose values together no other theme holds (`[R-487]`). */
+   *  whose values together no other style set holds (`[R-487]`). */
   identity: {sentence: string; recognizers: readonly SignatureDimension[]}
-  settings: ThemeSettings
-  picks: ThemePicks
-  /** The theme's earlier settings and picks, oldest first. Append only: when a theme is
+  settings: StyleSetSettings
+  picks: StyleSetPicks
+  /** The style set's earlier settings and picks, oldest first. Append only: when one is
    *  retuned, its old values move here, so a site that still wears them reads
    *  "(earlier version)" instead of "Custom", and the Studio compares a swapped pick
    *  against the version the site actually matches. */
-  previous: readonly {settings: Partial<ThemeSettings>; picks: ThemePicks}[]
-  /** Palettes that suit it (lib/palettes.ts ids). Never written: a theme sets no color. */
+  previous: readonly {settings: Partial<StyleSetSettings>; picks: StyleSetPicks}[]
+  /** Palettes that suit it (lib/palettes.ts ids). Never written: a style set sets no color. */
   suggestedPalettes: readonly string[]
   /** The study's words for it. */
   evidence: readonly string[]
 }
 
-// The values each theme-owned field can take. The schema's option lists hold the
-// same values (lib/__tests__/themes.test.ts reads them from studio/field-map.json).
+// The values each field a style set owns can take. The schema's option lists hold the
+// same values (lib/__tests__/styleSets.test.ts reads them from studio/field-map.json).
 export const CARD_HOVERS = ['imageZoom', 'lift', 'glow', 'accentBorder', 'accentUnderline', 'none'] as const
 export const ATTORNEY_CARD_STYLES = ['classic', 'portrait', 'avatar', 'minimal', 'spotlight'] as const
 export const IMAGE_FRAMES = ['plain', 'framed', 'slab'] as const
@@ -152,7 +151,7 @@ export const BUTTON_ANIMATIONS = ['none', 'sweep', 'fill-center', 'inset', 'lift
 /** Phase 16D: the drawn element is off or on. Absent is off. */
 export const DRAWN_ELEMENT_STATES = ['none', 'on'] as const
 
-const OPTIONS: Record<Exclude<ThemeField, 'fontPairingPreset'>, readonly string[]> = {
+const OPTIONS: Record<Exclude<StyleSetField, 'fontPairingPreset'>, readonly string[]> = {
   marketingScale: ['default', ...Object.keys(MARKETING_SCALE_MAP)],
   taglineStyle: Object.keys(TAGLINE_STYLE_MAP),
   uiRadius: Object.keys(UI_RADIUS_MAP),
@@ -172,7 +171,7 @@ const OPTIONS: Record<Exclude<ThemeField, 'fontPairingPreset'>, readonly string[
 }
 
 /** What an ABSENT field renders: the default each reader falls back to. */
-export const THEME_DEFAULTS: ThemeSettings = {
+export const STYLE_SET_DEFAULTS: StyleSetSettings = {
   fontPairingPreset: null,
   marketingScale: 'default',
   taglineStyle: 'plain',
@@ -193,7 +192,7 @@ export const THEME_DEFAULTS: ThemeSettings = {
 }
 
 /** Studio labels for the fields, used where a difference is named. */
-export const THEME_FIELD_LABELS: Record<ThemeField, string> = {
+export const STYLE_SET_FIELD_LABELS: Record<StyleSetField, string> = {
   fontPairingPreset: 'Fonts',
   marketingScale: 'Heading size',
   taglineStyle: 'Line above headings',
@@ -214,14 +213,14 @@ export const THEME_FIELD_LABELS: Record<ThemeField, string> = {
 }
 
 /** Studio labels for the picks. */
-export const THEME_PICK_LABELS: Record<ThemePickField, string> = {
+export const STYLE_SET_PICK_LABELS: Record<StyleSetPickField, string> = {
   headingRule: 'Heading line',
 }
 
-const t = (s: Partial<ThemeSettings>): ThemeSettings => ({...THEME_DEFAULTS, ...s})
-const p = (s: Partial<ThemePicks>): ThemePicks => ({...PICK_DEFAULTS, ...s})
+const t = (s: Partial<StyleSetSettings>): StyleSetSettings => ({...STYLE_SET_DEFAULTS, ...s})
+const p = (s: Partial<StyleSetPicks>): StyleSetPicks => ({...PICK_DEFAULTS, ...s})
 
-export const THEMES: readonly Theme[] = [
+export const STYLE_SETS: readonly StyleSet[] = [
   {
     id: 'canyon', name: 'Canyon', feel: 'deep and immersive: display serif, italic accents, dark bands',
     identity: {
@@ -411,9 +410,9 @@ export const THEMES: readonly Theme[] = [
 
 // ─── Reading a stored document ────────────────────────────────────────────────
 
-/** The stored Design Settings, as far as a theme is concerned: the fields it is matched
+/** The stored Design Settings, as far as a style set is concerned: the fields it is matched
  *  by, and the picks it sets but is not matched by (Phase 16C). */
-export type ThemeDoc = Partial<Record<ThemeField | ThemePickField, unknown>> & {
+export type StyleSetDoc = Partial<Record<StyleSetField | StyleSetPickField, unknown>> & {
   customFonts?: {
     headingFont?: {regular?: {asset?: unknown} | null} | null
     bodyFont?: {regular?: {asset?: unknown} | null} | null
@@ -422,8 +421,8 @@ export type ThemeDoc = Partial<Record<ThemeField | ThemePickField, unknown>> & {
 
 /** True when the site's own uploaded fonts are what renders: uploads exist and no
  *  valid pairing is set (a set pairing wins over uploads, and the build writes one on
- *  every client). A theme then leaves the pairing alone, and matching ignores it. */
-export function usesCustomFonts(doc: ThemeDoc): boolean {
+ *  every client). A style set then leaves the pairing alone, and matching ignores it. */
+export function usesCustomFonts(doc: StyleSetDoc): boolean {
   const uploads = Boolean(doc.customFonts?.headingFont?.regular?.asset || doc.customFonts?.bodyFont?.regular?.asset)
   return uploads && !getPresetById(Number(doc.fontPairingPreset))
 }
@@ -431,13 +430,13 @@ export function usesCustomFonts(doc: ThemeDoc): boolean {
 /** A stored value read the way the site reads it: absent, empty or unknown is the
  *  default it renders, and a weight the heading face cannot draw reads as the one it
  *  does (Phase 16C: with font synthesis off, "bold" on a 400-only pairing renders
- *  regular, so a site that never chose a weight still matches a theme that names the
+ *  regular, so a site that never chose a weight still matches a style set that names the
  *  real one). */
-export function readThemeField(doc: ThemeDoc, field: ThemeField): ThemeValue {
+export function readStyleSetField(doc: StyleSetDoc, field: StyleSetField): StyleSetValue {
   const v = doc[field]
   if (field === 'fontPairingPreset') return getPresetById(Number(v)) ? Number(v) : null
-  const value = typeof v === 'string' && OPTIONS[field].includes(v) ? v : THEME_DEFAULTS[field]
-  if (field === 'headingWeight') return drawableWeight(readThemeField(doc, 'fontPairingPreset') as number | null, value as string)
+  const value = typeof v === 'string' && OPTIONS[field].includes(v) ? v : STYLE_SET_DEFAULTS[field]
+  if (field === 'headingWeight') return drawableWeight(readStyleSetField(doc, 'fontPairingPreset') as number | null, value as string)
   return value
 }
 
@@ -457,8 +456,8 @@ export function drawableWeight(pairing: number | null, wanted: string): string {
 
 /** The values a visitor can tell apart, for the uniqueness test and the Studio's
  *  recogniser labels. */
-export function signatureOf(theme: Theme): Record<SignatureDimension, string> {
-  const s = theme.settings
+export function signatureOf(styleSet: StyleSet): Record<SignatureDimension, string> {
+  const s = styleSet.settings
   const preset = getPresetById(Number(s.fontPairingPreset))
   const voice: HeadingVoice | 'system' = preset?.heading.voice ?? 'system'
   const weight = drawableWeight(s.fontPairingPreset as number | null, String(s.headingWeight))
@@ -485,8 +484,8 @@ export function signatureOf(theme: Theme): Record<SignatureDimension, string> {
   }
 }
 
-/** The dimensions on which two themes differ, split as the test reads them. */
-export function signatureDifferences(a: Theme, b: Theme): {high: SignatureDimension[]; all: SignatureDimension[]} {
+/** The dimensions on which two style sets differ, split as the test reads them. */
+export function signatureDifferences(a: StyleSet, b: StyleSet): {high: SignatureDimension[]; all: SignatureDimension[]} {
   const sa = signatureOf(a)
   const sb = signatureOf(b)
   const all = SIGNATURE.filter((d) => sa[d] !== sb[d])
@@ -496,24 +495,24 @@ export function signatureDifferences(a: Theme, b: Theme): {high: SignatureDimens
 // A site rendering its own uploaded fonts is matched without the pairing — and without
 // the weight, which is read as the face can draw it and that face is the site's own
 // (Phase 16C).
-function fieldsFor(doc: ThemeDoc): readonly ThemeField[] {
-  return usesCustomFonts(doc) ? THEME_FIELDS.filter((f) => f !== 'fontPairingPreset' && f !== 'headingWeight') : THEME_FIELDS
+function fieldsFor(doc: StyleSetDoc): readonly StyleSetField[] {
+  return usesCustomFonts(doc) ? STYLE_SET_FIELDS.filter((f) => f !== 'fontPairingPreset' && f !== 'headingWeight') : STYLE_SET_FIELDS
 }
 
-function equals(doc: ThemeDoc, settings: ThemeSettings): boolean {
-  const asDoc = settings as ThemeDoc
-  return fieldsFor(doc).every((f) => readThemeField(doc, f) === readThemeField(asDoc, f))
+function equals(doc: StyleSetDoc, settings: StyleSetSettings): boolean {
+  const asDoc = settings as StyleSetDoc
+  return fieldsFor(doc).every((f) => readStyleSetField(doc, f) === readStyleSetField(asDoc, f))
 }
 
-export type ThemeMatch = {theme: Theme; current: boolean; version?: Theme['previous'][number]}
+export type StyleSetMatch = {styleSet: StyleSet; current: boolean; version?: StyleSet['previous'][number]}
 
-/** The theme whose values the stored settings equal, now or in an earlier
+/** The style set whose values the stored settings equal, now or in an earlier
  *  version, or null ("Custom"). */
-export function matchTheme(doc: ThemeDoc): ThemeMatch | null {
-  for (const theme of THEMES) if (equals(doc, theme.settings)) return {theme, current: true}
-  for (const theme of THEMES) {
-    const version = theme.previous.find((v) => equals(doc, {...THEME_DEFAULTS, ...v.settings}))
-    if (version) return {theme, current: false, version}
+export function matchStyleSet(doc: StyleSetDoc): StyleSetMatch | null {
+  for (const styleSet of STYLE_SETS) if (equals(doc, styleSet.settings)) return {styleSet, current: true}
+  for (const styleSet of STYLE_SETS) {
+    const version = styleSet.previous.find((v) => equals(doc, {...STYLE_SET_DEFAULTS, ...v.settings}))
+    if (version) return {styleSet, current: false, version}
   }
   return null
 }
@@ -521,62 +520,62 @@ export function matchTheme(doc: ThemeDoc): ThemeMatch | null {
 /** The picks the site wears that its matched version does not, for the Studio's line
  *  ("Divider · Arc (Graphite's is Angled)"). A site matches a version, so a swap is
  *  named against THAT version's picks, not against the current ones (`[R-485]`). */
-export function swappedPicks(doc: ThemeDoc, match: ThemeMatch): {field: ThemePickField; site: unknown; theme: unknown}[] {
-  const theirs = match.version?.picks ?? match.theme.picks
-  const out: {field: ThemePickField; site: unknown; theme: unknown}[] = []
-  for (const field of THEME_PICKS) {
+export function swappedPicks(doc: StyleSetDoc, match: StyleSetMatch): {field: StyleSetPickField; site: unknown; styleSet: unknown}[] {
+  const theirs = match.version?.picks ?? match.styleSet.picks
+  const out: {field: StyleSetPickField; site: unknown; styleSet: unknown}[] = []
+  for (const field of STYLE_SET_PICKS) {
     const site = readPick(doc, field)
     const mine = theirs[field]
-    if ((site ?? null) !== (mine ?? null)) out.push({field, site, theme: mine})
+    if ((site ?? null) !== (mine ?? null)) out.push({field, site, styleSet: mine})
   }
   return out
 }
 
 /** A stored pick, read the way the site reads it: an unknown value and `none` both
  *  read as "none picked". */
-export function readPick(doc: ThemeDoc, field: ThemePickField): string | null {
+export function readPick(doc: StyleSetDoc, field: StyleSetPickField): string | null {
   const v = (doc as Record<string, unknown>)[field]
   const options: readonly string[] = HEADING_LINES
   return typeof v === 'string' && options.includes(v) && v !== 'none' ? v : null
 }
 
 /** True when the settings are what the build writes and nobody has chosen a
- *  theme: every field at its default, with the build's pairing or none. */
-export function isPlatformDefault(doc: ThemeDoc): boolean {
+ *  style set: every field at its default, with the build's pairing or none. */
+export function isPlatformDefault(doc: StyleSetDoc): boolean {
   return fieldsFor(doc).every((f) =>
-    f === 'fontPairingPreset' ? [null, 1].includes(readThemeField(doc, f) as number | null) : readThemeField(doc, f) === THEME_DEFAULTS[f],
+    f === 'fontPairingPreset' ? [null, 1].includes(readStyleSetField(doc, f) as number | null) : readStyleSetField(doc, f) === STYLE_SET_DEFAULTS[f],
   )
 }
 
-/** The one patch that applies a theme: set every value it names, unset every field it
+/** The one patch that applies a style set: set every value it names, unset every field it
  *  leaves to the default, never touch a color or a section, and leave the pairing alone
- *  on a site that uses its own fonts. Choosing a theme also sets its picks (`[R-485]`:
- *  picking a theme sets its defaults); `keepPicks` is for "Apply the current X", where a
+ *  on a site that uses its own fonts. Choosing a style set also sets its picks (`[R-485]`:
+ *  picking a style set sets its defaults); `keepPicks` is for "Apply the current X", where a
  *  pick the site swapped on purpose survives the update. */
-export function themePatch(
-  theme: Theme,
-  doc: ThemeDoc = {},
-  keepPicks: readonly ThemePickField[] = [],
+export function styleSetPatch(
+  styleSet: StyleSet,
+  doc: StyleSetDoc = {},
+  keepPicks: readonly StyleSetPickField[] = [],
 ): {set: Record<string, string | number | string[]>; unset: string[]} {
   const set: Record<string, string | number | string[]> = {}
   const unset: string[] = []
   for (const field of fieldsFor(doc)) {
-    const value = theme.settings[field]
+    const value = styleSet.settings[field]
     if (value === null) unset.push(field)
     else set[field] = value
   }
-  for (const field of THEME_PICKS) {
+  for (const field of STYLE_SET_PICKS) {
     if (keepPicks.includes(field)) continue
-    const value = theme.picks[field]
+    const value = styleSet.picks[field]
     if (value === null) unset.push(field)
     else set[field] = value
   }
   return {set, unset}
 }
 
-/** Applying a theme's update: the settings and any pick the site had NOT swapped away
+/** Applying a style set's update: the settings and any pick the site had NOT swapped away
  *  from the version it matched. A deliberate swap survives (ADV-P16C-A). */
-export function updatePatch(doc: ThemeDoc, match: ThemeMatch) {
+export function updatePatch(doc: StyleSetDoc, match: StyleSetMatch) {
   const swapped = swappedPicks(doc, match).map((s) => s.field)
-  return themePatch(match.theme, doc, swapped)
+  return styleSetPatch(match.styleSet, doc, swapped)
 }

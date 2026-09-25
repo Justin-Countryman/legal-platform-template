@@ -907,7 +907,7 @@ export const MARKETING_SCALE_MAP: Record<string, MarketingScaleTokens> = {
 // ─── The heading signature (Phase 16B) ────────────────────────────────────────
 // How highlighted words in a heading are marked, the short rule under section
 // headings, and whether section headings are set in capitals: three settings a
-// theme writes (lib/themes.ts). The emphasis and the case are custom properties
+// style set writes (lib/styleSets.ts). The emphasis and the case are custom properties
 // the `heading-emphasis` and `section-heading` utilities read; the rule's kind is
 // a data attribute on the layout's wrapper (`data-heading-rule`), because its paint
 // must resolve on the heading, where a dark or saturated band has redeclared the
@@ -915,12 +915,12 @@ export const MARKETING_SCALE_MAP: Record<string, MarketingScaleTokens> = {
 //
 // `italic` is the pairing's real italic face at 400: an italic phrase inside a
 // 700 heading would otherwise be a synthesised bold italic (Phase 16B amendment
-// 10), and `.heading-emphasis` turns synthesis off. There is no `bold`: no theme
+// 10), and `.heading-emphasis` turns synthesis off. There is no `bold`: no style set
 // chose it, and it re-weighted every section heading on the site.
 export const HEADING_EMPHASIS_STYLES = ['color', 'italic'] as const
 /** The heading line, widened to the library of Phase 16C (`[R-484]`, `[R-489]`); `line` is the Bar. */
 export const HEADING_RULES = HEADING_LINES
-/** A theme may set the display headings regular where its pairing has both faces (`[R-487]`). */
+/** A style set may set the display headings regular where its pairing has both faces (`[R-487]`). */
 export const HEADING_WEIGHTS = ['bold', 'regular'] as const
 export const HEADING_CASES = ['normal', 'upper'] as const
 
@@ -942,7 +942,7 @@ export const HEADING_CASE_MAP: Record<string, {transform: string; tracking: stri
 // site-wide background; a texture only on a homepage section someone set to
 // Pattern). The choice is a site value, `designSettings.patternTexture`, so it is
 // emitted as two custom properties that one `section-texture` utility reads: no
-// prop threads through the section dispatchers, and a theme sets it like any other
+// prop threads through the section dispatchers, and a style set sets it like any other
 // axis. The four units are the ones the study's textured sites wear (Phase 13).
 //
 // Gradients, not SVG, drawn in `currentColor`, so the layer that wears them sets the

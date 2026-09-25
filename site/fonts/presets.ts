@@ -35,7 +35,7 @@ export interface FontPreset {
   heading: {
     family: string
     slug: string
-    /** What a visitor sees before reading a word, used to measure how far apart two themes
+    /** What a visitor sees before reading a word, used to measure how far apart two style sets
      *  are (Phase 16C, `[R-487]`): two pairings in one voice are not a difference a visitor
      *  can name. */
     voice: HeadingVoice

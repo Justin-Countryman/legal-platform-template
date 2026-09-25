@@ -7,8 +7,8 @@ import type {VisibleGround} from './sectionSurface'
 // ─── Themes: the flow of the page (Phase 17B) ─────────────────────────────────
 //
 // Justin, 2026-09-22 (`[R-505]`, `[R-506]`, `[R-509]`): the design layer is three
-// named things. A STYLE SET (`lib/themes.ts`, which still calls itself a theme in
-// code) owns what repeats inside every section; a PALETTE owns color; a THEME owns
+// named things. A STYLE SET (`lib/styleSets.ts`, named in code for the style set since
+// Phase 17C, `[R-535]`) owns what repeats inside every section; a PALETTE owns color; a THEME owns
 // the flow down the page: how dark it is and which sections go dark, where the
 // backgrounds merge and break, the shape of the breaks, what sits on the
 // backgrounds, and where the one repeated device lands.
@@ -41,8 +41,9 @@ import type {VisibleGround} from './sectionSurface'
 // never a special case in a theme: that is the discipline the divider library set.
 // `flows.test.ts` holds every generated theme to every word.
 //
-// The word `theme` in the code around this file means the style set until item 357
-// is ruled; this layer is named `flow` in code and "Theme" in the Studio (`[R-514]`).
+// Since Phase 17C (`[R-535]`) the word `theme` in code means this layer, and the style set
+// says `styleSet`; this layer keeps its code name `flow`, and reads "Theme" in the Studio
+// (`[R-514]`).
 
 export const DARKNESS = ['mostlyLight', 'balanced', 'mostlyDark', 'allDark'] as const
 export type Darkness = (typeof DARKNESS)[number]

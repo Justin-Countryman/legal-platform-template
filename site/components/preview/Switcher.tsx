@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import {THEMES} from '@/lib/themes'
+import {STYLE_SETS} from '@/lib/styleSets'
 import {PALETTE_PRESETS} from '@/lib/palettes'
 import {DARKNESS_LABELS, FAMILIES, chromeSchemes, drawsHeroPhoto, familyOf, flowById, flowId, needLabel, unmetNeeds, type FlowFamily, type FlowRules} from '@/lib/flows'
 import {type HeroPhoto} from '@/lib/heroGround'
@@ -62,7 +62,7 @@ type Props = {
 }
 
 function names(plan: PreviewPlan): string {
-  const s = plan.styleSet?.name ?? (plan.wears.styleSet ? `${plan.wears.styleSet.theme.name} (as the site is)` : 'the site\'s own style')
+  const s = plan.styleSet?.name ?? (plan.wears.styleSet ? `${plan.wears.styleSet.styleSet.name} (as the site is)` : 'the site\'s own style')
   const p = plan.palette?.name ?? (plan.wears.palette ? `${plan.wears.palette.name} (as the site is)` : 'the site\'s own colors')
   const f = plan.flow?.name ?? `${plan.wears.flow.name} (as the site is)`
   return `${s}, ${p}, ${f}`
@@ -152,7 +152,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
   const blocks = (Array.isArray(canvas) ? canvas : []) as HomepageBlock[]
   const keep = ownLooks(blocks)
   const grounds = ownGrounds(blocks)
-  const wearsStyle = plan.wears.styleSet ? plan.wears.styleSet.theme.name : 'Custom'
+  const wearsStyle = plan.wears.styleSet ? plan.wears.styleSet.styleSet.name : 'Custom'
   const wearsPalette = plan.wears.palette ? plan.wears.palette.name : 'Custom'
 
   // The theme the page shows: the chosen one, else what the site renders. Its needs are
@@ -189,7 +189,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
         <div className="sw-row">
           <span className="sw-head">Style set</span>
           <Choice href={at({styleSet: AS_THE_SITE_IS})} active={choices.styleSet === AS_THE_SITE_IS}>As the site is: {wearsStyle}</Choice>
-          {THEMES.map((t) => (
+          {STYLE_SETS.map((t) => (
             <Choice key={t.id} href={at({styleSet: t.id})} active={choices.styleSet === t.id}>{t.name}</Choice>
           ))}
         </div>
