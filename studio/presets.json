@@ -3223,10 +3223,12 @@
         "hosts": [],
         "rhythm": "bookends",
         "paint": "plain",
+        "texture": "quiet",
         "close": "dark"
       },
       "light": {
-        "paint": "plain"
+        "paint": "plain",
+        "texture": "quiet"
       },
       "divider": {
         "shape": "straight",
@@ -3264,10 +3266,12 @@
         ],
         "rhythm": "pairs",
         "paint": "plain",
+        "texture": "quiet",
         "close": "dark"
       },
       "light": {
-        "paint": "plain"
+        "paint": "plain",
+        "texture": "quiet"
       },
       "divider": {
         "shape": "straight",
@@ -3305,10 +3309,12 @@
         ],
         "rhythm": "pairs",
         "paint": "pattern",
+        "texture": "alternate",
         "close": "dark"
       },
       "light": {
-        "paint": "plain"
+        "paint": "plain",
+        "texture": "quiet"
       },
       "divider": {
         "shape": "peak",
@@ -3352,10 +3358,12 @@
         ],
         "rhythm": "runs",
         "paint": "pattern",
+        "texture": "alternate",
         "close": "dark"
       },
       "light": {
-        "paint": "plain"
+        "paint": "plain",
+        "texture": "quiet"
       },
       "divider": {
         "shape": "peak",
@@ -3403,10 +3411,12 @@
         ],
         "rhythm": "runs",
         "paint": "plain",
+        "texture": "quiet",
         "close": "dark"
       },
       "light": {
-        "paint": "plain"
+        "paint": "plain",
+        "texture": "quiet"
       },
       "divider": {
         "shape": "straight",
@@ -3438,10 +3448,12 @@
         "hosts": [],
         "rhythm": "bookends",
         "paint": "plain",
+        "texture": "quiet",
         "close": "muted"
       },
       "light": {
-        "paint": "pattern"
+        "paint": "pattern",
+        "texture": "quiet"
       },
       "divider": {
         "shape": "straight",
@@ -3475,10 +3487,12 @@
         ],
         "rhythm": "alternate",
         "paint": "saturated",
+        "texture": "quiet",
         "close": "dark"
       },
       "light": {
-        "paint": "plain"
+        "paint": "plain",
+        "texture": "quiet"
       },
       "divider": {
         "shape": "straight",
@@ -3520,10 +3534,12 @@
         ],
         "rhythm": "runs",
         "paint": "heroPhoto",
+        "texture": "quiet",
         "close": "photo"
       },
       "light": {
-        "paint": "plain"
+        "paint": "plain",
+        "texture": "quiet"
       },
       "divider": {
         "shape": "straight",

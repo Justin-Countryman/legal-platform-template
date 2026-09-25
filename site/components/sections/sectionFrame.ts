@@ -5,6 +5,7 @@ import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
 import {flowOf, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts} from '@/lib/flows'
 import type {HeroPhoto} from '@/lib/heroGround'
 import type {HeadingFace} from '@/lib/headingFace'
+import type {DrawnStrength} from '@/lib/designTokens'
 
 // ─── The seam walk ────────────────────────────────────────────────────────────
 //
@@ -91,7 +92,9 @@ export type FlowInputs = {
  *  the surface value, so a stored `pattern` keeps its one meaning under every theme. */
 export type Paint = {
   ground?: 'light' | 'tint' | 'dark' | 'saturated' | 'image'
-  texture: boolean
+  /** The texture and its strength (Phase 17C session 3, `[R-538]`): none, or the tile drawn quiet or
+   *  strong, the theme's `alternate` resolved band by band in page order. */
+  texture: false | DrawnStrength
   inset?: boolean
   /** The theme's room around a band it filled (`flow.spacing`, Phase 17B session 5). Only
    *  `spacious` is carried; the shell reads it below a stored spacing and a section's own. */
@@ -566,12 +569,12 @@ export function assignGrounds(
       // A stored dark band takes the theme's texture as a treatment (record §2.8); an
       // inset, image or saturated band does not.
       const textured = flow.dark.paint === 'pattern' && texture && stored[i] && !inset[i] && visibleGround(r.appearance) === 'dark'
-      return textured ? {texture: true} : null
+      return textured ? {texture: 'quiet'} : null
     }
     if (dark[i]) {
       switch (flow.dark.paint) {
         case 'photo': return {ground: r.photo ? 'image' : 'dark', texture: false}
-        case 'pattern': return {ground: 'dark', texture}
+        case 'pattern': return {ground: 'dark', texture: texture ? 'quiet' : false}
         case 'saturated': return {ground: site?.saturated && r.content ? 'saturated' : 'dark', texture: false}
         // The photograph's windows are placed below, over the whole page, because they read both
         // neighbours; every dark band starts on the dark ground.
@@ -591,7 +594,7 @@ export function assignGrounds(
         wash++
         break
       case 'pattern':
-        paints[i] = {ground: 'light', texture}
+        paints[i] = {ground: 'light', texture: texture ? 'quiet' : false}
         break
       case 'panel':
         paints[i] = i > 0 && i < n - 1 && dark[i - 1] && dark[i + 1]
@@ -633,6 +636,20 @@ export function assignGrounds(
       placed++
     }
   }
+  // THE STRENGTH (Phase 17C session 3, `[R-538]`). Every band the pass textured was marked `quiet`
+  // above; here the theme's word for its dark and light paints resolves: `strong` everywhere, or
+  // `alternate`, the bands that paint textures in page order quiet, strong, quiet (a stored dark band the
+  // theme textures counts in the order). A stored Pattern band is not the pass's and stays quiet.
+  const strengthOf = (word: FlowRules['dark']['texture'], n: number): DrawnStrength =>
+    word === 'strong' ? 'strong' : word === 'alternate' && n % 2 === 1 ? 'strong' : 'quiet'
+  let darkN = 0
+  let lightN = 0
+  paints.forEach((p, i) => {
+    if (!p?.texture) return
+    const lightBand = p.ground === 'light' && !fixed[i]
+    const word = lightBand ? flow.light.texture : flow.dark.texture
+    paints[i] = {...p, texture: strengthOf(word, lightBand ? lightN++ : darkN++)}
+  })
   // The room around the bands the theme filled (Phase 17B session 5, `[R-525]`): a band
   // whose own surface stands keeps its own room, as it keeps everything else.
   if (flow.spacing === 'spacious') {

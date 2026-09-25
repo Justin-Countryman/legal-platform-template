@@ -259,7 +259,7 @@ describe('each paint, gated by its data', () => {
 
   it('pattern textures the dark bands only where the style set names a texture', () => {
     const with_ = walkFrame([b('split'), b('split', {surface: 'dark'}), b('split', {surface: 'pattern'})], resolveBand, {...LOOK, flow: dark('pattern'), patternTexture: 'scallop'}, 'dark')
-    expect(with_.map((o) => o.seam.paint)).toEqual([{ground: 'dark', texture: true}, {texture: true}, null])
+    expect(with_.map((o) => o.seam.paint)).toEqual([{ground: 'dark', texture: 'quiet'}, {texture: 'quiet'}, null])
     const without = walkFrame([b('split'), b('split', {surface: 'dark'})], resolveBand, {...LOOK, flow: dark('pattern')}, 'dark')
     expect(without.map((o) => o.seam.paint)).toEqual([{ground: 'dark', texture: false}, null])
   })
@@ -288,9 +288,29 @@ describe('each paint, gated by its data', () => {
   it('a light pattern textures the light bands the theme assigns, gated on the texture', () => {
     const flow = themed({light: {paint: 'pattern'}})
     const out = walkFrame([b('split'), b('split', {surface: 'tint'})], resolveBand, {...LOOK, flow, patternTexture: 'pinstripe'}, 'dark')
-    expect(out.map((o) => o.seam.paint)).toEqual([{ground: 'light', texture: true}, null])
+    expect(out.map((o) => o.seam.paint)).toEqual([{ground: 'light', texture: 'quiet'}, null])
     const none = walkFrame([b('split')], resolveBand, {...LOOK, flow}, 'dark')
     expect(none[0].seam.paint).toEqual({ground: 'light', texture: false})
+  })
+
+  // Phase 17C session 3 (`[R-538]`): the strength word. `alternate` counts the bands the paint
+  // textures in page order, a stored dark band it treats included; a stored Pattern band is not the
+  // pass's and stays quiet; `strong` is strong everywhere; the light paint counts its own bands.
+  it('alternate gives the bands a paint textures quiet, strong, quiet down the page', () => {
+    const flow = themed({dark: {budget: 'all', hosts: ['split', 'ribbon'], rhythm: 'runs', paint: 'pattern', texture: 'alternate'}})
+    const bands = [b('split'), b('split'), b('split', {surface: 'dark'}), b('split', {surface: 'pattern'}), b('ribbon')]
+    const out = walkFrame(bands, resolveBand, {...LOOK, flow, patternTexture: 'grid'}, 'dark')
+    expect(out.map((o) => o.seam.paint?.texture ?? null)).toEqual(['quiet', 'strong', 'quiet', null, 'strong'])
+    const strong = themed({dark: {budget: 'all', hosts: ['split'], rhythm: 'runs', paint: 'pattern', texture: 'strong'}})
+    expect(walkFrame([b('split'), b('split')], resolveBand, {...LOOK, flow: strong, patternTexture: 'grid'}, 'dark').map((o) => o.seam.paint?.texture)).toEqual(['strong', 'strong'])
+  })
+
+  it('a light pattern alternates its own bands, apart from the dark ones', () => {
+    const flow = themed({dark: {budget: 'all', hosts: ['ribbon'], rhythm: 'runs', paint: 'pattern', texture: 'alternate'}, light: {paint: 'pattern', texture: 'alternate'}})
+    const out = walkFrame([b('split'), b('ribbon'), b('split'), b('ribbon'), b('split')], resolveBand, {...LOOK, flow, patternTexture: 'dots'}, 'dark')
+    expect(out.map((o) => [o.seam.paint?.ground, o.seam.paint?.texture])).toEqual([
+      ['light', 'quiet'], ['dark', 'quiet'], ['light', 'strong'], ['dark', 'strong'], ['light', 'quiet'],
+    ])
   })
 
   it('panel fills an absent inset on a light band inside a dark run, so the panel sits on the run ([R-501])', () => {
@@ -369,7 +389,8 @@ describe('the decision golden', () => {
             key: member._key,
             host: hostOf(member),
             ground: seam.paint?.ground ?? `stored:${member.appearance?.surface ?? 'light'}`,
-            texture: !!seam.paint?.texture,
+            // Phase 17C session 3: the strength the pass gave the band, or false.
+            texture: seam.paint?.texture ?? false,
             inset: !!(member.appearance?.inset || seam.paint?.inset),
             adopted: seam.insetGround ?? null,
             seam: seam.seamTop,

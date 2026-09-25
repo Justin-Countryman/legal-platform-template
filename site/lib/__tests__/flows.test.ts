@@ -4,8 +4,7 @@ import {resolve} from 'node:path'
 import {
   CLOSES, DARKNESS, DARK_BUDGETS, DARK_PAINTS, DARK_RHYTHMS, DEFAULT_FLOW, DIVIDER_ATS, FAMILIES, FLOWS, GHOSTS, HAIRLINES, HAIRLINE_INKS, HIDDEN_FIELDS,
   HOSTS, LIGHT_PAINTS, NEEDS, SPACINGS, STEP_HOSTS, bridgeOf, closeSurface, darkBudget, flowById, flowOf, hostOf, impliedNeeds, needLabel, saturatedFillOk,
-  storesHiddenFields, unmetNeeds, CHROME_SCHEMES, STEP_CHROME, chromeSchemes, darkHeaderReady, drawsHeroPhoto, familyOf,
-} from '../flows'
+  storesHiddenFields, unmetNeeds, CHROME_SCHEMES, STEP_CHROME, chromeSchemes, darkHeaderReady, drawsHeroPhoto, familyOf, TEXTURE_STRENGTHS,} from '../flows'
 import {DIVIDERS, CARRY_PIECES} from '../dividers'
 import {OVERLAPS} from '../overlaps'
 import {PALETTE_PRESETS, presetInputs} from '../palettes'
@@ -171,6 +170,25 @@ describe('the families and the roster', () => {
   })
 })
 
+describe('the texture strength (Phase 17C session 3, [R-538])', () => {
+  it('every roster theme names a word from the vocabulary on both paints', () => {
+    for (const f of FLOWS) {
+      expect(TEXTURE_STRENGTHS, f.id).toContain(f.dark.texture)
+      expect(TEXTURE_STRENGTHS, f.id).toContain(f.light.texture)
+    }
+  })
+  it('a paint that is not pattern names quiet, so no family carries a word that does nothing', () => {
+    for (const f of FLOWS) {
+      if (f.dark.paint !== 'pattern') expect(f.dark.texture, f.id).toBe('quiet')
+      if (f.light.paint !== 'pattern') expect(f.light.texture, f.id).toBe('quiet')
+    }
+  })
+  it('Cut blocks alternates its dark bands; Editorial draws its light bands quiet', () => {
+    for (const f of FLOWS.filter((x) => x.family === 'cutBlocks')) expect(f.dark.texture).toBe('alternate')
+    for (const f of FLOWS.filter((x) => x.family === 'editorial')) expect(f.light.texture).toBe('quiet')
+  })
+})
+
 describe('hosts', () => {
   it('every composer role maps to a host by its stable key, whatever its type says', () => {
     // The composer writes both the differentiators and the narrative as a two-column
@@ -238,7 +256,7 @@ describe('the compat bridge, for one pin', () => {
     expect(b.spacing).toBe('normal')
     expect(b.ghost).toBe('once')
     expect(b.overlap).toBe('photo')
-    expect(b.dark).toEqual({budget: 'none', hosts: [], rhythm: 'bookends', paint: 'gradient', close: 'muted'})
+    expect(b.dark).toEqual({budget: 'none', hosts: [], rhythm: 'bookends', paint: 'gradient', texture: 'quiet', close: 'muted'})
     expect(b.light.paint).toBe('plain')
     // Unknown values read as nothing, as the site read them.
     const none = bridgeOf({sectionJoin: 'squiggle', sectionOverlap: 'yes', brandGhost: 'true', sectionGradient: 'shallow'})
