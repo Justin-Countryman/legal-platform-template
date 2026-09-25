@@ -16,6 +16,7 @@
 import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
 import platform from "./eslint-rules/index.js";
+import styleSetNames from "./eslint-rules/lib/style-set-names.js";
 
 const eslintConfig = [
   ...nextCoreWebVitals,
@@ -135,6 +136,11 @@ const eslintConfig = [
       // not path-restricted to app/** (per WS8 direction).
       "platform/no-use-hero-scheme-in-server": "error",
 
+      // Phase 17C (`[R-535]`): in a module that imports lib/styleSets, no declared name says
+      // theme, which there would be the style set's old name. The names below mean the flow of
+      // the page in such a module, each read in review.
+      "platform/no-theme-for-style-set": ["error", {allow: []}],
+
       // ─── Retired identifiers / Google Fonts CDN (config-only) ──────────
       // T3 — `OUTSTANDING.md → 2026-04-30 WS4 closure` +
       // `BI-OVERVIEW.md → 2026-04-30 Workstream 4` ("3 orphan tokens
@@ -195,6 +201,10 @@ const eslintConfig = [
           message:
             "Retired Sanity input constant from the deleted GroupedArrayInput module. See OUTSTANDING.md → 'Workstream 7.7 → Commit 4'.",
         },
+        // Phase 17C (`[R-535]`): the style set's old names, the old presets.json keys and the
+        // Studio field `themePreview`, and any import of a `.../themes` module. The list is
+        // `eslint-rules/lib/style-set-names.js`, which the Studio's test also applies.
+        ...styleSetNames.RETIRED_SELECTORS,
         // WS-Sidebar Phase 1 (2026-05-16) — banned escape hatch.
         // `[key: string]: any` (or any index signature with `any` value type)
         // was the WS8 Decision-2 deferral mechanism on `SidebarComponent`.
@@ -253,6 +263,9 @@ const eslintConfig = [
     files: [
       "eslint.config.mjs",
       "eslint-rules/**/*.js",
+      // Phase 17C: the tests of the style-set names name the retired ones on purpose.
+      "eslint-rules/__tests__/no-theme-for-style-set.test.ts",
+      "eslint-rules/__tests__/style-set-names.test.ts",
     ],
     rules: {
       "@typescript-eslint/no-require-imports": "off",
