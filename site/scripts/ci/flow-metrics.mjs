@@ -47,8 +47,16 @@
 // style sets' voices are written to `__snapshots__/hero-voice.json`, which
 // `lib/__tests__/heroVoice.test.ts` reads for the pair test.
 //
-// Lines are counted as distinct line tops of a Range over the heading's contents: a box
-// height over the line height counted the heading's `::after` rule as a line (ADV-17C2B).
+// Lines are counted as distinct line tops of the heading's TEXT NODES: a box height over the
+// line height counted the heading's `::after` rule as a line (ADV-17C2B), and a range over the
+// heading's contents counts the fitted span's box, whose top sits a pixel or three above the first
+// glyph's (Phase 17C session 3, ADV-17C3-A). The size and weight are read from that span where the
+// heading has one (`.heading-fit`), so the golden records the size drawn.
+//
+// THE LONG-HEADINGS CANVAS (Phase 17C session 3, `[R-536]`; monorepo WS-V1-PHASE17C3-DESIGN §2.1).
+// The record canvases' headings are short, so a heading in a narrow column that wrapped to four
+// lines at 1440 on real copy was never measured. `record-long-headings.ndjson` carries 42 to 89
+// characters in the layouts that put a heading in a column; it runs in the style-set matrix only.
 
 import {createHmac} from 'node:crypto'
 import {spawn} from 'node:child_process'
@@ -71,7 +79,9 @@ const STYLE_SET = 'graphite'
 const PALETTE = 'navy-brass'
 // The style-set matrix: the three record canvases, one theme, every style set.
 const STYLE_SET_FLOW = 'cutBlocks.balanced'
-const STYLE_SET_CANVASES = ['adversarial-mostly-dark', 'planning-mostly-light', 'multi-practice-balanced']
+const STYLE_SET_CANVASES = ['adversarial-mostly-dark', 'planning-mostly-light', 'multi-practice-balanced', 'long-headings']
+// Canvases measured by the style-set matrix only, never by the theme matrix.
+const STYLE_SET_ONLY = ['long-headings']
 const FONT_BUDGET = 150_000
 const HERO_VOICE = resolve('scripts/ci/__snapshots__/hero-voice.json')
 const HERO_VOICE_CANVAS = 'multi-practice-balanced'
@@ -88,6 +98,8 @@ const CANVASES = [
   ['adversarial-photo-hero', 'scripts/ci/record-adversarial-photo-hero.ndjson'],
   ['planning-photo-hero', 'scripts/ci/record-planning-photo-hero.ndjson'],
   ['multi-practice-photo-hero', 'scripts/ci/record-multi-practice-photo-hero.ndjson'],
+  // Phase 17C session 3: section headings of 42 to 89 characters in narrow columns.
+  ['long-headings', 'scripts/ci/record-long-headings.ndjson'],
 ]
 // The stand-in photographs (Phase 17B session 6), served from disk to the browser: the hero's own
 // optimizer address (`/_next/image?url=/stand-ins/...`) and the image CDN's address for a band's photo
@@ -218,11 +230,17 @@ function measure() {
       let headingWeight = null
       let headingSize = null
       if (heading) {
-        const h = getComputedStyle(heading)
-        // Distinct line tops of the heading's contents: the `::after` rule is not in the range.
-        const range = document.createRange()
-        range.selectNodeContents(heading)
-        lines = new Set([...range.getClientRects()].filter((r) => r.width > 0).map((r) => Math.round(r.top))).size
+        const h = getComputedStyle(heading.querySelector('.heading-fit') ?? heading)
+        // Distinct line tops of the heading's text nodes: neither the `::after` rule nor the fitted
+        // span's own box is in them.
+        const tops = new Set()
+        const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT)
+        for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+          const range = document.createRange()
+          range.selectNodeContents(n)
+          for (const r of range.getClientRects()) if (r.width > 0) tops.add(Math.round(r.top))
+        }
+        lines = tops.size
         headingWeight = Number(h.fontWeight)
         headingSize = Math.round(parseFloat(h.fontSize) * 10) / 10
       }
@@ -262,7 +280,7 @@ try {
   for (const [canvas, file] of CANVASES) {
     if (!existsSync(file)) { console.log(`flow-metrics: ${file} absent, skipped`); continue }
     await startStub(file)
-    for (const [width, device] of WIDTHS) {
+    for (const [width, device] of STYLE_SET_ONLY.includes(canvas) ? [] : WIDTHS) {
       const context = await browser.newContext({...device, reducedMotion: 'reduce', colorScheme: 'light'})
       await context.addCookies([{name: 'lp-preview', value: operator, url: `${BASE}/site-preview`}])
       await servePhotos(context)
