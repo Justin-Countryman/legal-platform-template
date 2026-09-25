@@ -803,7 +803,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─── Heading unit ──────────────────────────────────────────────────────────── */
 /* The emphasis span inside a heading (Phase 11; components/ui/HeadingUnit.tsx).
-   Upright in the accent by default; a theme may set it in the pairing's real
+   Upright in the accent by default; a style set may set it in the pairing's real
    italic at 400 (`--heading-emphasis-style`, `--heading-emphasis-weight`, from
    buildDesignTokenCSS, Phase 16B). Synthesis is off, so a font with no italic
    file shows the words upright rather than a faked slant. The color is the accent
@@ -817,7 +817,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─── Section headings (Phase 16B, `[R-468]`) ──────────────────────────────── */
 /* Every section's <h2> carries `section-heading` (a rendered test holds it), so a
-   theme's heading signature reaches all of them: capitals from `--heading-case`,
+   style set's heading signature reaches all of them: capitals from `--heading-case`,
    and the short rule under the heading from the layout wrapper's
    `data-heading-rule`. The rule is drawn by the heading's own ::after (a DOM element
    moved 215 of 928 captures in Phase 11), in the decor role resolved on the heading,
@@ -901,7 +901,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─── Heading weight (Phase 16C) ─────────────────────────────────────────────── */
 /* No faked bold: a pairing without a bold face renders its real regular (pairings 2
-   and 13 inked 37% and 60% more than their real face, ADV-P16C-A). A theme may set the
+   and 13 inked 37% and 60% more than their real face, ADV-P16C-A). A style set may set the
    display headings regular; unlayered, so it wins over the `font-bold` utility. */
 h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 [data-heading-weight="regular"] :is(h1, .section-heading) { font-weight: 400; }

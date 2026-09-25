@@ -33,7 +33,7 @@ const READ_ELSEWHERE: Record<string, string> = {
   webclipImage: 'the root layout metadata',
   colorPreview: 'nothing: the Studio palette panel, which stores no value',
   cornerPreview: 'nothing: the Studio corner-family panel, which stores no value',
-  themePreview: 'nothing: the Studio theme panel, which stores no value (Phase 16B)',
+  styleSetPicker: 'nothing: the Studio style set picker, which stores no value (Phase 16B; named in Phase 17C)',
   customFonts: 'the font query',
   showBackToTop: 'the footer query',
   profileLayout: 'the profile page queries',

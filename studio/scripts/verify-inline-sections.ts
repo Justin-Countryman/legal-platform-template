@@ -30,7 +30,7 @@
  *   7. The content section (Phase 11): its layout-scoped `hidden` callbacks,
  *      its heading warning (statement, ribbon and two-column text only) and
  *      its emphasis, proof and button warnings follow the member under a decoy
- *      root, and `imageTreatment` carries no `initialValue` (a theme axis:
+ *      root, and `imageTreatment` carries no `initialValue` (a style set axis:
  *      absent means inherit, and a seed would be folded into composed members).
  *
  * Exits non-zero on any failure. Detected by: itself (CI studio-build job).
@@ -277,10 +277,10 @@ if (initial('practiceAreaNav', 'mode') !== 'manual') fail('practiceAreaNav.mode 
 // A boolean belongs here as much as a string: `initialValue: false` is folded
 // too, because `_is_empty(False)` is False. Measured in the Phase 13 challenge.
 const NO_SEED: Array<[type: string, field: string, why: string]> = [
-  ['contentSection', 'imageTreatment', 'a theme axis (Phase 16)'],
-  ['contentSectionInline', 'imageTreatment', 'a theme axis (Phase 16)'],
-  ['attorneySection', 'imageTreatment', 'a theme axis (Phase 16)'],
-  ['attorneySectionInline', 'imageTreatment', 'a theme axis (Phase 16)'],
+  ['contentSection', 'imageTreatment', 'a style set axis (Phase 16)'],
+  ['contentSectionInline', 'imageTreatment', 'a style set axis (Phase 16)'],
+  ['attorneySection', 'imageTreatment', 'a style set axis (Phase 16)'],
+  ['attorneySectionInline', 'imageTreatment', 'a style set axis (Phase 16)'],
 ]
 // Every section carrying the shared appearance fieldset leaves every appearance
 // field unseeded, on the document and on its inline copy alike: the three frame
@@ -294,18 +294,18 @@ for (const [doc, inline] of PAIRS) {
 for (const doc of ['ctaSection', 'faqSection']) {
   for (const field of ['surface', 'spacing']) NO_SEED.push([doc, field, 'an appearance field (item 308)'])
 }
-// Phase 16B: the per-section looks a theme reaches when the section sets none
+// Phase 16B: the per-section looks a style set reaches when the section sets none
 // ([R-468]'s continuity rule), and item 341's four practice-area layout fields,
 // which the composer folded into every build.
 for (const [doc, inline] of [['attorneySection', 'attorneySectionInline'], ['practiceAreaNav', 'practiceAreaNavInline']]) {
   for (const field of ['cardStyle', 'hoverEffects', 'gridMode', 'sectionLayout', 'iconPosition', 'showArrow']) {
-    NO_SEED.push([doc, field, 'a look that follows the theme, or item 341'], [inline, field, 'a look that follows the theme, or item 341'])
+    NO_SEED.push([doc, field, 'a look that follows the style set, or item 341'], [inline, field, 'a look that follows the style set, or item 341'])
   }
 }
-// The theme's own new Design Settings fields: a seed would be written to every
+// The style set's own new Design Settings fields: a seed would be written to every
 // client by the build and read as a choice (Phase 16B).
 for (const field of ['patternGround', 'headingEmphasisStyle', 'headingRule', 'headingCase', 'imageFrame', 'sectionJoin', 'cardHover', 'attorneyCardStyle', 'patternTexture']) {
-  NO_SEED.push(['designSettings', field, 'a theme field (Phase 16B)'])
+  NO_SEED.push(['designSettings', field, 'a style set field (Phase 16B)'])
 }
 // Phase 17B: the theme's stored id. A seed would make "nobody chose" mean two things,
 // frozen on a fresh build and floating on a propagated one (ADV-17B-C F8).

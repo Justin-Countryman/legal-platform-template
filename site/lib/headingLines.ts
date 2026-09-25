@@ -1,7 +1,7 @@
 // ─── Lines under section headings (Phase 16C, `[R-484]`) ──────────────────────
 //
-// Twenty-three designs plus none, picked independently of the theme with a default
-// from each theme (`[R-485]`). Every design but Flanking and Monogram is a one-color
+// Twenty-three designs plus none, picked independently of the style set with a default
+// from each style set (`[R-485]`). Every design but Flanking and Monogram is a one-color
 // SVG drawn as a MASK on the heading's `::after` and painted in the decor role
 // resolved on the heading, so a dark or saturated band's redeclared accent reaches it
 // (16B amendment 9). `buildDesignTokenCSS` emits the chosen design at `:root`

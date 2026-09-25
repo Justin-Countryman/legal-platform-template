@@ -10,7 +10,7 @@ vi.mock('next/link', () => ({
 }))
 
 import {Switcher, ROW_THEME_HEAD, CHROME_NOTE_HEAD, chromeNote, familyLabel} from '../Switcher'
-import {THEMES} from '@/lib/themes'
+import {STYLE_SETS} from '@/lib/styleSets'
 import {PALETTE_PRESETS} from '@/lib/palettes'
 import {FAMILIES, FLOWS, flowId} from '@/lib/flows'
 import {planPreview, type StoredDesign} from '@/lib/preview/plan'
@@ -41,7 +41,7 @@ const hrefs = (el: Element) => [...el.querySelectorAll('a')].map((a) => a.getAtt
 describe('Switcher, the operator', () => {
   it('offers every style set, palette and theme family as a link to another preview address, and the view', () => {
     const links = hrefs(draw(operator))
-    for (const t of THEMES) expect(links).toContain(`/site-preview/${t.id}/navy-brass/site/design`)
+    for (const t of STYLE_SETS) expect(links).toContain(`/site-preview/${t.id}/navy-brass/site/design`)
     for (const p of PALETTE_PRESETS) expect(links).toContain(`/site-preview/graphite/${p.id}/site/design`)
     for (const f of FAMILIES) expect(links).toContain(`/site-preview/graphite/navy-brass/${flowId(f.id, f.defaultStep)}/design`)
     expect(links).toContain('/site-preview/site/navy-brass/site/design')

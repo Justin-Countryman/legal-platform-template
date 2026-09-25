@@ -9,7 +9,7 @@ import {
 import {DIVIDERS, CARRY_PIECES} from '../dividers'
 import {OVERLAPS} from '../overlaps'
 import {PALETTE_PRESETS, presetInputs} from '../palettes'
-import {THEME_FIELDS, THEME_PICKS} from '../themes'
+import {STYLE_SET_FIELDS, STYLE_SET_PICKS} from '../styleSets'
 import {ROWS_BY_ROLE} from './fixtures/composerRoles'
 
 // The theme roster (Phase 17B, [R-509]): a theme is data in a closed vocabulary,
@@ -303,8 +303,8 @@ describe('needs and gates', () => {
 describe('the move (Phase 17B, [R-510])', () => {
   it('the six hidden fields are in no style set and hidden in the schema, and flow is offered unseeded', () => {
     for (const f of HIDDEN_FIELDS) {
-      expect(THEME_FIELDS).not.toContain(f)
-      expect(THEME_PICKS).not.toContain(f)
+      expect(STYLE_SET_FIELDS).not.toContain(f)
+      expect(STYLE_SET_PICKS).not.toContain(f)
       expect(designRows.find((r) => r.path === f)?.hidden, f).toBe(true)
     }
     const flowRow = designRows.find((r) => r.path === 'flow') as {initialValue?: unknown} | undefined

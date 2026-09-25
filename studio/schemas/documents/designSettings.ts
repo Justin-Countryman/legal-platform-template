@@ -3,7 +3,7 @@ import {PageLinkInput} from '../../components/PageLinkInput'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {ColorPreview} from '../../components/ColorPreview'
 import {CornerPreview} from '../../components/CornerPreview'
-import {ThemePreview} from '../../components/ThemePreview'
+import {StyleSetPicker} from '../../components/StyleSetPicker'
 import {HeadingLinePicker} from '../../components/HeadingLinePicker'
 import {DividerPicker} from '../../components/DividerPicker'
 import {FLOWS, DEFAULT_FLOW} from '../../../site/lib/flows'
@@ -49,8 +49,11 @@ export const designSettings = defineType({
   type: 'document',
   fieldsets: [
     {
+      // Phase 17C (`[R-535]`): the fieldset holds the style set and the theme, and keeps its
+      // name `theme`, since a fieldset is recorded nowhere a detector could hold a rename
+      // (neither schema.json nor field-map.json carries fieldsets).
       name: 'theme',
-      title: 'Theme',
+      title: 'Style set and theme',
       options: {collapsible: true, collapsed: false},
     },
     {
@@ -110,23 +113,23 @@ export const designSettings = defineType({
     },
   ],
   fields: [
-    // ─── The theme (Phase 16B, [R-468], [R-469], [R-477]) ─────────────────────
-    // A theme is the site's signature and UI system. Choosing one writes the
+    // ─── The style set (Phase 16B, [R-468], [R-469], [R-477]; named in Phase 17C, [R-535]) ──
+    // A style set is the site's signature and UI system. Choosing one writes the
     // settings it names, across the fieldsets below, in one patch; the settings are
-    // the truth after that, and the Studio names the theme only while they still
-    // match it. Nothing records which theme was chosen and the site never reads a
-    // theme. See site/lib/themes.ts and studio/components/ThemePreview.tsx.
+    // the truth after that, and the Studio names the style set only while they still
+    // match it. Nothing records which style set was chosen and the site never reads
+    // one. See site/lib/styleSets.ts and studio/components/StyleSetPicker.tsx.
     //
-    // NONE of the theme's own new fields below carries an `initialValue`: a seed is
+    // NONE of the style set's own new fields below carries an `initialValue`: a seed is
     // folded into every Site-Build write and stamped on every client, where nothing
     // can tell it from a choice (item 308, [R-450]). Absent is the default render.
     defineField({
-      name: 'themePreview',
+      name: 'styleSetPicker',
       title: 'Style set',
       type: 'string',
       fieldset: 'theme',
       readOnly: true,
-      components: {input: ThemePreview},
+      components: {input: StyleSetPicker},
       description: 'Choose a style set to set the fonts, corners, headings, photo frames, texture and hover together. It never changes your colors, and a look set on one section on purpose stays as it was set. The flow of the page (which sections go dark, the shape of the breaks, what sits on the backgrounds) is the Theme below.',
     }),
     // ─── The theme: the flow of the page (Phase 17B, [R-505], [R-509], [R-514]) ──
@@ -187,7 +190,7 @@ export const designSettings = defineType({
       fieldset: 'headings',
       components: {input: HeadingLinePicker},
       description:
-        'The line under every section heading, in the accent, centered under a centered heading. Twenty-three designs, ordered by how often law firms use them; a theme sets one and you can pick any other without changing the theme\u2019s name. Leave blank for none.',
+        'The line under every section heading, in the accent, centered under a centered heading. Twenty-three designs, ordered by how often law firms use them; a style set sets one and you can pick any other without changing the style set\u2019s name. Leave blank for none.',
       options: {
         list: [
           {title: 'None', value: 'none'},
@@ -280,7 +283,7 @@ export const designSettings = defineType({
     // exactly what it did until Apply writes `flow` and clears them. They are deleted
     // at the next pin, once `retired_settings` reads zero on every client (the Phase 14
     // and 15 shape for the five color fields). A style set neither writes nor matches
-    // them (`lib/themes.ts`).
+    // them (`lib/styleSets.ts`).
     defineField({
       name: 'patternGround',
       title: 'Texture Ground',

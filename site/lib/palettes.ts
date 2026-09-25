@@ -24,7 +24,7 @@
 //
 // Ids read `<dark ground>-<accent>`, as the decisions log's ruling 11 already
 // writes them. A palette is chosen by its colors, so its name predicts its
-// swatches; theme names stay the one-word style.
+// swatches; style set names stay the one-word style.
 
 import {COLOR_DEFAULTS, parseHexInput, type ColorInputs} from './designTokens'
 

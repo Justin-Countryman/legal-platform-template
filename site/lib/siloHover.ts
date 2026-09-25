@@ -107,8 +107,8 @@ export function defaultHoverForStyle(style?: string | null): SiloHoverEffect {
 // Resolve the operator's selection into the effects to apply:
 //   • includes 'none'  → [] (explicitly static; 'none' overrides the rest)
 //   • non-empty        → exactly the (valid) chosen effects, all composed
-//   • unset / empty    → the SITE's hover (`designSettings.cardHover`, which a theme
-//                        sets, Phase 16B) where this layout can show it, else the
+//   • unset / empty    → the SITE's hover (`designSettings.cardHover`, which a style
+//                        set sets, Phase 16B) where this layout can show it, else the
 //                        per-style default (a single effect)
 // A zoom (or grayscale) acts on the photo; the two layouts that may carry none
 // take their own default instead of a hover that would do nothing. A glow is its

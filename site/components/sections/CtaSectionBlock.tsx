@@ -47,8 +47,8 @@ function layoutOf(data: CtaSectionBlockData): Layout {
 // The defaults live here in CODE rather than as a Studio `initialValue`, because
 // `compose_canvas` folds a member `initialValue` into every band the build
 // writes and the canvas keeps no per-field origin, so a seed could never be told
-// from an operator's choice (item 308, [R-450]). No theme sets a surface: the
-// planner (Phase 17) composes the page's rhythm, band by band.
+// from an operator's choice (item 308, [R-450]). No style set sets a surface: the
+// theme (Phase 17B) composes the page's rhythm, band by band.
 const DEFAULT_SURFACE: Record<Layout, SectionSurface> = {
   // `bg-muted` is the `accent` surface.
   centered: 'muted',

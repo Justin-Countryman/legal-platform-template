@@ -17989,7 +17989,7 @@
           "type": "string"
         }
       },
-      "themePreview": {
+      "styleSetPicker": {
         "type": "objectAttribute",
         "value": {
           "type": "string"

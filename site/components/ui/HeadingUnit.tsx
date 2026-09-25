@@ -16,7 +16,7 @@ import {splitEmphasis} from '@/lib/headingEmphasis'
 // `{{firmName}}` meets the resolved firm name. The first occurrence renders as
 // `<em class="heading-emphasis">`: `em` for its default meaning, though screen
 // readers do not announce it. The class sets the accent color, upright or in the
-// pairing's italic as the theme chooses (`globals.css`, Phase 16B).
+// pairing's italic as the style set chooses (`globals.css`, Phase 16B).
 //
 // THE TIER. A typed scale, never a class passthrough, so every class a heading
 // can carry is enumerable: `__tests__/HeadingUnit.test.tsx` runs the real

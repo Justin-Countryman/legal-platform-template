@@ -110,7 +110,7 @@ describe('the texture on a dark section ([R-479]; the theme\u2019s paint since 1
   })
 })
 
-describe('per-section looks follow the theme ([R-468] continuity)', () => {
+describe('per-section looks follow the style set ([R-468] continuity)', () => {
   const attorneys = [{_id: 'x', title: 'Jane Roe', slug: 'attorneys/jane'}]
   const band = (cardStyle?: string) => [{_type: 'attorneySectionInline', _key: 'a', heading: 'Our people', layout: 'grid', attorneys, ...(cardStyle ? {cardStyle} : {})}] as HomepageBlock[]
 
@@ -150,7 +150,7 @@ describe('per-section looks follow the theme ([R-468] continuity)', () => {
   })
 })
 
-describe('every section heading carries the theme heading signature', () => {
+describe('every section heading carries the style set heading signature', () => {
   const t = {_id: 't', quote: 'Superb counsel.', name: 'A client'}
   const answer = [{_type: 'block', _key: 'b', style: 'normal', markDefs: [], children: [{_type: 'span', _key: 's', text: 'An answer.', marks: []}]}]
   const videos = [{_id: 'v1', title: 'Intro', youTubeUrl: 'https://www.youtube.com/watch?v=abc123xyz00', description: 'A video.', videoType: 'educational'}]

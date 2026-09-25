@@ -138,8 +138,9 @@ const eslintConfig = [
 
       // Phase 17C (`[R-535]`): in a module that imports lib/styleSets, no declared name says
       // theme, which there would be the style set's old name. The names below mean the flow of
-      // the page in such a module, each read in review.
-      "platform/no-theme-for-style-set": ["error", {allow: []}],
+      // the page in such a module, each read in review: the switcher's theme row head, and a
+      // test document that stores a theme.
+      "platform/no-theme-for-style-set": ["error", {allow: ["ROW_THEME_HEAD", "themed"]}],
 
       // ─── Retired identifiers / Google Fonts CDN (config-only) ──────────
       // T3 — `OUTSTANDING.md → 2026-04-30 WS4 closure` +
