@@ -1,5 +1,5 @@
 import {NextResponse, type NextRequest} from 'next/server'
-import {grantFlow, parseChoices, previewPath} from '@/lib/preview/plan'
+import {grantFlow, grantStyleSet, parseChoices, previewPath} from '@/lib/preview/plan'
 import {PREVIEW_COOKIE, PREVIEW_PATH, asGrant, isLive, nowSeconds, verifyToken} from '@/lib/preview/session'
 
 // ─── The way into a preview ───────────────────────────────────────────────────
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
   }
   // A grant without `flow` (a link minted before the fourth segment), or naming a step since
   // retired, enters as the site is.
-  const choices = parseChoices(grant.styleSet ?? 'site', grant.palette ?? 'site', grantFlow(grant.flow), grant.view ?? 'design')
+  const choices = parseChoices(grantStyleSet(grant.styleSet), grant.palette ?? 'site', grantFlow(grant.flow), grant.view ?? 'design')
   if (!choices) return new NextResponse('Not found', {status: 404, headers: HEADERS})
 
   const response = NextResponse.redirect(new URL(previewPath(choices), request.url), {status: 303, headers: HEADERS})

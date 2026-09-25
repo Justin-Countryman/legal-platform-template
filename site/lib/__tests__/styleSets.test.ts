@@ -6,8 +6,8 @@ import {matchCornerFamily} from '../corners'
 import {PALETTE_PRESETS} from '../palettes'
 import {HEADING_LINES} from '../headingLines'
 import {
-  PICK_DEFAULTS, SIGNATURE_HIGH, STYLE_SETS, STYLE_SET_DEFAULTS, STYLE_SET_FIELDS, STYLE_SET_PICKS, drawableWeight, isPlatformDefault,
-  matchStyleSet, readPick, readStyleSetField, signatureDifferences, signatureOf, swappedPicks, styleSetPatch, updatePatch,
+  PICK_DEFAULTS, RETIRED_STYLE_SETS, SIGNATURE_HIGH, SIGNATURE_LOW, STYLE_SETS, STYLE_SET_DEFAULTS, STYLE_SET_FIELDS, STYLE_SET_PICKS, drawableWeight,
+  isPlatformDefault, matchStyleSet, readPick, readStyleSetField, signatureDifferences, signatureOf, swappedPicks, styleSetPatch, updatePatch,
   usesCustomFonts,
   type StyleSet, type StyleSetDoc, type StyleSetSettings,
 } from '../styleSets'
@@ -32,8 +32,27 @@ const optionsOf = (field: string) => designRows.find((r) => r.path === field)?.o
 const stored = (s: StyleSetSettings): StyleSetDoc => Object.fromEntries(Object.entries(s).filter(([, v]) => v !== null))
 
 describe('the style sets', () => {
-  it('ships ten, Granite among them ([R-478], [R-504])', () => {
-    expect(STYLE_SETS.map((t) => t.id)).toEqual(['canyon', 'graphite', 'walnut', 'dune', 'flint', 'marble', 'linen', 'valley', 'granite', 'quartz'])
+  // Phase 17C session 2b (`[R-534]`): eight that each look different, Graphite first; the five
+  // retired keep their values in `RETIRED_STYLE_SETS` and are offered nowhere.
+  it('ships eight, Graphite first, and keeps the five retired readable ([R-534])', () => {
+    expect(STYLE_SETS.map((t) => t.id)).toEqual(['graphite', 'walnut', 'marble', 'dune', 'flint', 'iron', 'birch', 'clay'])
+    expect(RETIRED_STYLE_SETS.map((t) => t.id)).toEqual(['canyon', 'linen', 'valley', 'granite', 'quartz'])
+    for (const t of RETIRED_STYLE_SETS) expect(t.retired).toBe('[R-534]')
+    expect(new Set([...STYLE_SETS, ...RETIRED_STYLE_SETS].map((t) => t.id)).size).toBe(13)
+  })
+
+  it('every retired style set still reads as itself, named retired, and is offered by no roster reader', () => {
+    for (const t of RETIRED_STYLE_SETS) {
+      expect(matchStyleSet(stored(t.settings))).toMatchObject({styleSet: t, current: true, retired: '[R-534]'})
+      for (const [i, v] of t.previous.entries()) expect(matchStyleSet(stored({...STYLE_SET_DEFAULTS, ...v.settings})), `${t.id} previous ${i + 1}`).toMatchObject({styleSet: t, current: false, retired: '[R-534]'})
+    }
+    for (const t of STYLE_SETS) expect(matchStyleSet(stored(t.settings))?.retired).toBeUndefined()
+  })
+
+  it('no style set is passed before the eye pass sets it, and every one carries the flag', () => {
+    for (const t of [...STYLE_SETS, ...RETIRED_STYLE_SETS]) expect(typeof t.passed, t.id).toBe('boolean')
+    // Set only by the eye pass of the monorepo's WS-V1-PHASE17C2B-DESIGN §9, one style set at a time.
+    for (const t of RETIRED_STYLE_SETS) expect(t.passed, t.id).toBe(false)
   })
 
   it.each(STYLE_SETS.map((t) => [t.name, t] as [string, StyleSet]))('%s names every field, its picks and an identity', (_, styleSet) => {
@@ -135,6 +154,23 @@ describe('the style sets', () => {
   // (Soft and Round are one at a glance) and the surface device, plus seven lower
   // dimensions. Two high and five in all is the closest pair that ships, so a tenth
   // style set that crowds a ninth fails here rather than shipping.
+  // Phase 17C session 2b (ADV-17C-B): the texture counts once, as the surface device, and the
+  // scale is the hero's rendered size; the eight measure 2 high and 5 in all, three pairs at the
+  // floor (Flint and Iron, Flint and Clay, Birch and Clay) and Marble and Iron the closest at 2 high.
+  it('counts the texture once and the scale as the hero renders it', () => {
+    expect(SIGNATURE_LOW).not.toContain('texture')
+    const md = signatureOf(STYLE_SETS.find((t) => t.id === 'graphite')!)
+    const lg = signatureOf({...STYLE_SETS.find((t) => t.id === 'graphite')!, settings: {...STYLE_SETS.find((t) => t.id === 'graphite')!.settings, marketingScale: 'lg'}})
+    const sm = signatureOf(STYLE_SETS.find((t) => t.id === 'dune')!)
+    expect(md.scale).toBe('large')
+    expect(lg.scale).toBe('large')
+    expect(sm.scale).toBe('sm')
+    // Iron's one weight is 500, under the 600 that reads as bold, so its voice is read as regular
+    // and the page asks the face for 400, which draws the one face it has.
+    expect(signatureOf(STYLE_SETS.find((t) => t.id === 'iron')!)).toMatchObject({typeVoice: 'condensed sans/regular', headingCase: 'upper', surfaceDevice: 'grid'})
+    expect(signatureOf(STYLE_SETS.find((t) => t.id === 'birch')!)).toMatchObject({typeVoice: 'geometric sans/light', surfaceDevice: 'dots'})
+  })
+
   it('every pair of style sets differs in at least two of the four a visitor names first, and five in all', () => {
     for (const a of STYLE_SETS) {
       for (const b of STYLE_SETS) {
@@ -166,8 +202,17 @@ describe('the style sets', () => {
       // the default takes whatever its face has: pairings 2 and 13 have no bold, and with
       // font synthesis off they render their real regular (ADV-P16C-A measured the fake).
       if (wanted !== STYLE_SET_DEFAULTS.headingWeight) expect(drawn, styleSet.id).toBe(wanted)
-      expect(['bold', 'regular']).toContain(drawn)
+      expect(['bold', 'regular', 'light']).toContain(drawn)
     }
+  })
+
+  // Phase 17C session 2b: `light` (Birch, pairing 20, whose DM Sans spans 300). A face with no
+  // light reads as its regular, so a site asking light of Graphite's Fraunces is read, and
+  // rendered, as regular.
+  it('reads light only where the face has one, and as regular where it does not', () => {
+    expect(readStyleSetField({fontPairingPreset: 20, headingWeight: 'light'}, 'headingWeight')).toBe('light')
+    expect(readStyleSetField({fontPairingPreset: 4, headingWeight: 'light'}, 'headingWeight')).toBe('regular')
+    expect(readStyleSetField({fontPairingPreset: 11, headingWeight: 'light'}, 'headingWeight')).toBe('bold')
   })
 
   // Phase 17C (ADV-17C2A-2): the page matches faces by family name, so a mono pairing's heading
@@ -189,8 +234,10 @@ describe('matching by value ([R-477])', () => {
     const graphite = STYLE_SETS.find((t) => t.id === 'graphite')!
     const doc = {...stored(graphite.settings), cardHover: graphite.settings.cardHover}
     expect(matchStyleSet(doc)?.styleSet.id).toBe('graphite')
-    const canyon = STYLE_SETS.find((t) => t.id === 'canyon')!
-    expect(canyon.settings.patternTexture).toBeNull()
+    const flint = STYLE_SETS.find((t) => t.id === 'flint')!
+    expect(flint.settings.patternTexture).toBeNull()
+    expect(matchStyleSet({...stored(flint.settings), patternTexture: ''})?.styleSet.id).toBe('flint')
+    const canyon = RETIRED_STYLE_SETS.find((t) => t.id === 'canyon')!
     expect(matchStyleSet({...stored(canyon.settings), patternTexture: ''})?.styleSet.id).toBe('canyon')
   })
 
@@ -269,13 +316,13 @@ describe('the patch the Studio picker runs', () => {
   })
 
   it('applying a style set’s update keeps a pick the site swapped on purpose', () => {
-    const linen = STYLE_SETS.find((t) => t.id === 'linen')!
-    const old = linen.previous[0]
+    const walnut = STYLE_SETS.find((t) => t.id === 'walnut')!
+    const old = walnut.previous[walnut.previous.length - 1]
     const site = {...old.settings, ...old.picks, headingRule: 'hatched'} as StyleSetDoc
     const match = matchStyleSet(site)!
-    expect(match).toMatchObject({styleSet: linen, current: false})
+    expect(match).toMatchObject({styleSet: walnut, current: false})
     const {set, unset} = updatePatch(site, match)
-    expect({...set, ...Object.fromEntries(unset.map((k) => [k, null]))}).toMatchObject({headingWeight: 'regular'})
+    expect({...set, ...Object.fromEntries(unset.map((k) => [k, null]))}).toMatchObject({marketingScale: 'md'})
     expect('headingRule' in set).toBe(false)
     expect(unset).not.toContain('headingRule')
   })
@@ -360,9 +407,9 @@ describe('a site built at an earlier pin still matches its style set', () => {
 
   it.each(PINS)('reads every style set at %s as that style set, current or earlier', (pin) => {
     const pinned = frozen(pin)
-    // A pin holds the roster AS IT WAS, which is not today's length once a style set is
-    // added. What must hold is that every style set frozen there still reads as itself.
-    expect(pinned.length).toBeLessThanOrEqual(STYLE_SETS.length)
+    // A pin holds the roster AS IT WAS, which is not today's roster once a style set is added
+    // or retired. What must hold is that every style set frozen there still reads as itself,
+    // a retired one through `RETIRED_STYLE_SETS`.
     expect(new Set(pinned.map((t) => t.id)).size).toBe(pinned.length)
     for (const old of pinned) {
       const match = matchStyleSet(old.settings as StyleSetDoc)
@@ -377,13 +424,15 @@ describe('a site built at an earlier pin still matches its style set', () => {
   // matched set in Phase 17B ([R-510]), so a site frozen before them reads as CURRENT
   // again: the retune was in a field a style set no longer owns. Measured on the four
   // frozen files when the six left (four `previous` entries became duplicates and were
-  // pruned). Granite is new at `a164ce0` and cannot be retuned.
+  // pruned). Granite is new at `a164ce0` and cannot be retuned. Phase 17C session 2b
+  // retuned Walnut (scale `md`) and Marble (accent words in color), so both read as earlier
+  // versions at EVERY pin, `69fee75` included ([R-534]); the five retired read as current.
   const RETUNED_SINCE: Record<(typeof PINS)[number], Set<string>> = {
     bd74cdd: new Set(['walnut', 'marble']),
-    '22da44f': new Set<string>(),
-    '3979e37': new Set<string>(),
-    a164ce0: new Set<string>(),
-    '69fee75': new Set<string>(),
+    '22da44f': new Set(['walnut', 'marble']),
+    '3979e37': new Set(['walnut', 'marble']),
+    a164ce0: new Set(['walnut', 'marble']),
+    '69fee75': new Set(['walnut', 'marble']),
   }
 
   it.each(PINS)('names the style sets retuned since %s as earlier versions, and the rest as current', (pin) => {

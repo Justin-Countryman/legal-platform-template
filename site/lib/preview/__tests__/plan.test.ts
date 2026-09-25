@@ -1,8 +1,8 @@
 import {describe, it, expect} from 'vitest'
-import {STYLE_SETS, matchStyleSet, styleSetPatch} from '@/lib/styleSets'
+import {RETIRED_STYLE_SETS, STYLE_SETS, matchStyleSet, styleSetPatch} from '@/lib/styleSets'
 import {PALETTE_PRESETS, matchPreset} from '@/lib/palettes'
 import {DEFAULT_FLOW, FLOWS, HIDDEN_FIELDS} from '@/lib/flows'
-import {AS_THE_SITE_IS, grantFlow, parseChoices, planPreview, withPreview, ownLooks, ownGrounds, previewPath, type PreviewPlan, type StoredDesign} from '../plan'
+import {AS_THE_SITE_IS, grantFlow, grantStyleSet, parseChoices, planPreview, withPreview, ownLooks, ownGrounds, previewPath, type PreviewPlan, type StoredDesign} from '../plan'
 
 // What a preview choice changes (Phase 17A, monorepo WS-V1-PHASE17A-DESIGN §2.3).
 // The preview renders this plan and Apply writes it, so "shown equals applied"
@@ -225,5 +225,34 @@ describe('grantFlow (Phase 17B session 5, [R-523])', () => {
     // An id no pin ever shipped is not rescued: the address refuses it, as before.
     expect(grantFlow('nope')).toBe('nope')
     expect(parseChoices('site', 'site', grantFlow('nope'), 'design')).toBeNull()
+  })
+})
+
+// Phase 17C session 2b (`[R-534]`): a retired style set is named where a site wears it, never
+// offered by the address, and a client link that names one enters as the site is (ADV-17C-C).
+describe('a retired style set', () => {
+  it('renders from a typed address (a live site may wear one), and a grant naming one reads as the site is', () => {
+    for (const t of RETIRED_STYLE_SETS) {
+      expect(parseChoices(t.id, 'site', 'site', 'design')?.styleSet).toBe(t.id)
+      expect(planPreview({}, {styleSet: t.id, palette: 'site', flow: 'site'}).set).toEqual(styleSetPatch(t, {}).set)
+      expect(grantStyleSet(t.id)).toBe(AS_THE_SITE_IS)
+    }
+    expect(parseChoices('no-such-style-set', 'site', 'site', 'design')).toBeNull()
+    for (const t of STYLE_SETS) {
+      expect(parseChoices(t.id, 'site', 'site', 'design')?.styleSet).toBe(t.id)
+      expect(grantStyleSet(t.id)).toBe(t.id)
+    }
+    expect(grantStyleSet(null)).toBe(AS_THE_SITE_IS)
+    expect(grantStyleSet(undefined)).toBe(AS_THE_SITE_IS)
+    expect(grantStyleSet('no-such-style-set')).toBe('no-such-style-set')
+  })
+
+  it('a site wearing one is named as wearing it, retired, and "as the site is" changes nothing', () => {
+    const canyon = RETIRED_STYLE_SETS.find((t) => t.id === 'canyon')!
+    const stored: StoredDesign = {_id: 'designSettings', _rev: 'rev-9', ...canyon.settings, ...canyon.picks} as StoredDesign
+    const plan = planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'site'})
+    expect(plan.wears.styleSet).toMatchObject({styleSet: canyon, current: true, retired: '[R-534]'})
+    expect(plan.set).toEqual({})
+    expect(plan.unset).toEqual([])
   })
 })

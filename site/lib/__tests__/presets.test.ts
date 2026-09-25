@@ -3,7 +3,7 @@ import {FONT_PRESETS, headingWeights} from '../../fonts/presets'
 import {CORNER_FAMILIES} from '../corners'
 import {PALETTE_PRESETS} from '../palettes'
 import {
-  PICK_DEFAULTS, STYLE_SETS, STYLE_SET_DEFAULTS, STYLE_SET_FIELDS, STYLE_SET_PICKS, isPlatformDefault, matchStyleSet, styleSetPatch,
+  PICK_DEFAULTS, RETIRED_STYLE_SETS, STYLE_SETS, STYLE_SET_DEFAULTS, STYLE_SET_FIELDS, STYLE_SET_PICKS, isPlatformDefault, matchStyleSet, styleSetPatch,
   type StyleSetDoc,
 } from '../styleSets'
 import {PREVIEW_TOKEN_VECTOR, signToken} from '../preview/session'
@@ -34,7 +34,7 @@ function matchCase(label: string, d: StyleSetDoc) {
   return {
     label,
     doc: d as Record<string, unknown>,
-    match: match ? {id: match.styleSet.id, current: match.current} : null,
+    match: match ? {id: match.styleSet.id, current: match.current, retired: !!match.retired} : null,
     platformDefault: isPlatformDefault(d),
     // The patch of the first style set against this document, so the two languages agree on
     // what a style set writes as well as on what it matches.
@@ -55,8 +55,12 @@ function cases() {
     // Phase 17B: a document that still stores the six hidden fields matches as before.
     matchCase('the six hidden fields stored beside a style set', doc({...STYLE_SETS[1].settings, sectionJoin: 'angled', dividerCarry: ['cards'],
       patternGround: 'dark', brandGhost: 'on', sectionOverlap: 'photo', sectionGradient: 'deep'})),
+    // Phase 17C session 2b: `light` reads only where the face has one (pairing 20), else regular.
+    matchCase('light asked of a face with no light', doc({...STYLE_SETS[0].settings, headingWeight: 'light'})),
+    matchCase('light on a face that has one', doc({...STYLE_SETS.find((s) => s.id === 'birch')!.settings})),
   ]
-  for (const styleSet of STYLE_SETS) {
+  // The offered roster, then the retired one: a retired style set still matches, as retired.
+  for (const styleSet of [...STYLE_SETS, ...RETIRED_STYLE_SETS]) {
     out.push(matchCase(`${styleSet.id}, as applied`, doc({...styleSet.settings, ...styleSet.picks})))
     // A swapped heading line keeps the style set's name ([R-485]).
     out.push(matchCase(`${styleSet.id}, with the heading line swapped`, doc({...styleSet.settings, headingRule: 'hatched'})))
@@ -78,6 +82,9 @@ function presets() {
     styleSetDefaults: STYLE_SET_DEFAULTS,
     styleSetPicks: STYLE_SET_PICKS,
     pickDefaults: PICK_DEFAULTS,
+    // Phase 17C session 2b (`[R-534]`): the eight offered with `passed` (set only by an eye pass),
+    // and the five retired with their values and the entry that retired them, so Python names a
+    // site wearing one and the build never picks it.
     styleSets: STYLE_SETS.map((t) => ({
       id: t.id,
       name: t.name,
@@ -86,7 +93,16 @@ function presets() {
       settings: t.settings,
       picks: t.picks,
       previous: t.previous,
+      passed: t.passed,
       suggestedPalettes: t.suggestedPalettes,
+    })),
+    retiredStyleSets: RETIRED_STYLE_SETS.map((t) => ({
+      id: t.id,
+      name: t.name,
+      retired: t.retired,
+      settings: t.settings,
+      picks: t.picks,
+      previous: t.previous,
     })),
     cornerFamilies: CORNER_FAMILIES.map((f) => ({id: f.id, name: f.name, uiRadius: f.uiRadius, buttonShape: f.buttonShape})),
     palettes: PALETTE_PRESETS.map((p) => ({id: p.id, name: p.name, darkGround: p.darkGround, lightGround: p.lightGround ?? null, accent: p.accent, action: p.action ?? null})),
@@ -100,6 +116,8 @@ function presets() {
       // its voice, so it can measure how far apart two style sets are (Phase 16C).
       headingWeights: headingWeights(f),
       headingVoice: f.heading.voice,
+      // Phase 17C session 2b: how much smaller the face sets capitals (`[R-536]`).
+      capsScale: f.heading.capsScale,
     })),
     matchCases: cases(),
     // Phase 17A: the preview's signed-link format, as one fixed case. The Site Builder

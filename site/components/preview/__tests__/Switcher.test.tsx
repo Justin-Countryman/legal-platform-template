@@ -10,7 +10,7 @@ vi.mock('next/link', () => ({
 }))
 
 import {Switcher, ROW_THEME_HEAD, CHROME_NOTE_HEAD, chromeNote, familyLabel} from '../Switcher'
-import {STYLE_SETS} from '@/lib/styleSets'
+import {RETIRED_STYLE_SETS, STYLE_SETS} from '@/lib/styleSets'
 import {PALETTE_PRESETS} from '@/lib/palettes'
 import {FAMILIES, FLOWS, flowId} from '@/lib/flows'
 import {planPreview, type StoredDesign} from '@/lib/preview/plan'
@@ -76,7 +76,10 @@ describe('Switcher, the operator', () => {
     // family's own button where it has one step (Phase 17B session 5).
     const unjudged = FAMILIES.filter((f) => f.steps.length === 1 && !f.passed.includes(f.defaultStep)).length
       + FAMILIES.filter((f) => f.id === 'cutBlocks').flatMap((f) => f.steps.filter((s) => !f.passed.includes(s))).length
-    expect((c.textContent!.match(/\(not yet judged\)/g) ?? []).length).toBe(unjudged)
+    // Counted on the theme rows only: since Phase 17C session 2b the style-set row marks its own
+    // unjudged entries the same way.
+    const flowRows = [...c.querySelectorAll('.sw-row')].slice(3).map((r) => r.textContent ?? '').join(' ')
+    expect((flowRows.match(/\(not yet judged\)/g) ?? []).length).toBe(unjudged)
     // A one-step family shows no step line.
     expect(draw(operator, stored, {...choices, flow: 'quiet.mostlyLight'}).textContent).not.toContain('Step: Quiet')
   })
@@ -214,5 +217,25 @@ describe('Switcher, the hero photograph (Phase 17B session 6, `[R-532]`)', () =>
     expect(withPhoto(applied, scrims, PHOTO, stale)).not.toContain('The hero photograph changed')
     const current = {...chromeWithTexture, designTokens: {patternTexture: 'diagonalHatch', flow: 'photoScrims.mostlyDark', flowPhoto: PHOTO.assetId}} as unknown as SiteChrome
     expect(withPhoto({...applied, flowPhoto: PHOTO.assetId}, siteIs, PHOTO, current)).not.toContain('The hero photograph changed')
+  })
+})
+
+// Phase 17C session 2b (`[R-534]`): the eight offered, a retired one named and never offered, a
+// style set the eye has not passed says so.
+describe('the style-set row after the roster of eight', () => {
+  it('offers the eight and never a retired id, and marks a style set the eye has not passed', () => {
+    const c = draw(operator, stored, choices)
+    const links = [...c.querySelectorAll('a')].map((a) => a.getAttribute('href'))
+    for (const t of STYLE_SETS) expect(links).toContain(`/site-preview/${t.id}/navy-brass/site/design`)
+    for (const t of RETIRED_STYLE_SETS) expect(links).not.toContain(`/site-preview/${t.id}/navy-brass/site/design`)
+    const unjudged = STYLE_SETS.filter((t) => !t.passed).length
+    const labels = [...c.querySelectorAll('.sw-row')][1].textContent ?? ''
+    expect((labels.match(/\(not yet judged\)/g) ?? []).length).toBe(unjudged)
+  })
+
+  it('names a retired style set the site wears, with "(retired)", beside "as the site is"', () => {
+    const canvasless = {...stored, ...RETIRED_STYLE_SETS[0].settings, ...RETIRED_STYLE_SETS[0].picks} as typeof stored
+    const c = draw(operator, canvasless, {...choices, styleSet: 'site'})
+    expect(c.textContent).toContain(`As the site is: ${RETIRED_STYLE_SETS[0].name} (retired)`)
   })
 })

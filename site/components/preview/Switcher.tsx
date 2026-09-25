@@ -152,7 +152,9 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
   const blocks = (Array.isArray(canvas) ? canvas : []) as HomepageBlock[]
   const keep = ownLooks(blocks)
   const grounds = ownGrounds(blocks)
-  const wearsStyle = plan.wears.styleSet ? plan.wears.styleSet.styleSet.name : 'Custom'
+  // A retired style set (Phase 17C session 2b, `[R-534]`) is named where the site wears it and
+  // never offered; a style set the eye has not passed says so, as a theme family does.
+  const wearsStyle = plan.wears.styleSet ? `${plan.wears.styleSet.styleSet.name}${plan.wears.styleSet.retired ? ' (retired)' : ''}` : 'Custom'
   const wearsPalette = plan.wears.palette ? plan.wears.palette.name : 'Custom'
 
   // The theme the page shows: the chosen one, else what the site renders. Its needs are
@@ -190,7 +192,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
           <span className="sw-head">Style set</span>
           <Choice href={at({styleSet: AS_THE_SITE_IS})} active={choices.styleSet === AS_THE_SITE_IS}>As the site is: {wearsStyle}</Choice>
           {STYLE_SETS.map((t) => (
-            <Choice key={t.id} href={at({styleSet: t.id})} active={choices.styleSet === t.id}>{t.name}</Choice>
+            <Choice key={t.id} href={at({styleSet: t.id})} active={choices.styleSet === t.id}>{t.passed ? t.name : `${t.name} (not yet judged)`}</Choice>
           ))}
         </div>
         <div className="sw-row">
