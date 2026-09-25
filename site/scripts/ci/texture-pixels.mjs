@@ -11,18 +11,18 @@
 // renders under the sweep (its render scale), and this script holds what that buys: for every tile at
 // every strength, on the light ground and on a dark ground whose ink is lighter than it (the one case where
 // a darker-drawn line moves toward the text; a black ink only moves away), over the presets and the
-// near-threshold palettes, in the headless shell and in full Chromium, at DPR 1 and 3, the pixel furthest
+// near-threshold palettes, in the headless shell, in full Chromium and in WebKit, at DPR 1 and 3, the pixel furthest
 // from the ground toward the ink is no further than the swept blend, and every text tier holds 4.5:1 on
-// it. The cases come from the engine (`lib/__tests__/fixtures/texture-cases.json`, written by
+// it. The cases come from the engine (`scripts/ci/__snapshots__/texture-cases.json`, written by
 // `lib/__tests__/textureCases.test.ts`), so this script needs no TypeScript.
 
 import {readFileSync} from 'node:fs'
 import {resolve} from 'node:path'
-import {chromium} from '@playwright/test'
+import {chromium, webkit} from '@playwright/test'
 import sharp from 'sharp'
 import {converter, formatHex, wcagContrast} from 'culori'
 
-const data = JSON.parse(readFileSync(resolve('lib/__tests__/fixtures/texture-cases.json'), 'utf8'))
+const data = JSON.parse(readFileSync(resolve('scripts/ci/__snapshots__/texture-cases.json'), 'utf8'))
 const toRgb = converter('rgb')
 const LUT = Array.from({length: 256}, (_, i) => { const v = i / 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4 })
 const lum = (hex) => { const c = toRgb(hex); const f = (v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4); return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b) }
@@ -34,14 +34,17 @@ const cells = []
 for (const p of data.palettes) {
   for (const t of data.tiles) {
     cells.push({p, t, ground: 'light', bg: p.light.ground, ink: p.light.ink, swept: p.light.opacity, opacity: p.light.opacity * t.render.light, tiers: p.light.tiers})
-    if (p.dark.lighterInk) cells.push({p, t, ground: 'dark', bg: p.dark.ground, ink: p.dark.ink, swept: p.dark.opacity, opacity: p.dark.opacity * t.render.dark, tiers: p.dark.tiers})
+    // A lighter ink renders at its render scale and never above the cushion (whole alpha steps in WebKit).
+    if (p.dark.lighterInk) cells.push({p, t, ground: 'dark', bg: p.dark.ground, ink: p.dark.ink, swept: p.dark.opacity, opacity: Math.min(p.dark.opacity * t.render.dark, p.dark.cushion), tiers: p.dark.tiers})
   }
 }
 
 const CELL = 32, COLS = 30, PER = 600
 const failures = []
-for (const path of ['headless shell', 'full Chromium']) {
-  const browser = await chromium.launch(path === 'full Chromium' ? {channel: 'chromium'} : {})
+// Three engines: Chromium's software raster (the headless shell), full Chromium, and WebKit (Safari's
+// engine), which rounds a layer's opacity to whole steps of 1/255 (ADV-17C3-PRB).
+for (const path of ['headless shell', 'full Chromium', 'WebKit']) {
+  const browser = path === 'WebKit' ? await webkit.launch() : await chromium.launch(path === 'full Chromium' ? {channel: 'chromium'} : {})
   for (const dpr of [1, 3]) {
     const context = await browser.newContext({viewport: {width: COLS * CELL, height: 800}, deviceScaleFactor: dpr})
     const page = await context.newPage()
@@ -88,4 +91,4 @@ if (failures.length) {
   console.log(`texture-pixels: ${failures.length} failure(s)${failures.length > 80 ? ' (the first 80 printed)' : ''}`)
   process.exit(1)
 }
-console.log('texture-pixels: every tile at every strength draws no further toward its ink than the blend validateWcag sweeps, in both raster paths.')
+console.log('texture-pixels: every tile at every strength, and the ghost, draws no further toward its ink than the blend validateWcag sweeps, in the headless shell, full Chromium and WebKit.')

@@ -503,11 +503,11 @@ describe('the ghost, placed once per page (Phase 16D, `[R-492]`, `[R-495]`; the 
   })
 
   it('takes the band’s own ink: the texture’s on-dark ink on dark, brand-dark on light', () => {
+    // Phase 17C session 3: at the texture's own render margin (`decor-ghost-on-*`, ADV-17C3-PRB).
     const [onDark] = layers(page([band('a', {surface: 'dark'})]).container)
-    expect(onDark.className).toContain('section-texture-dark')
+    expect(onDark.className.split(' ')).toContain('decor-ghost-on-dark')
     const [onLight] = layers(page([band('a', {surface: 'light'})]).container)
-    expect(onLight.className).toContain('text-brand-dark')
-    expect(onLight.className).toContain('opacity-4')
+    expect(onLight.className.split(' ')).toContain('decor-ghost-on-light')
   })
 
   it('gives its band the stacking context its -z-10 needs', () => {
