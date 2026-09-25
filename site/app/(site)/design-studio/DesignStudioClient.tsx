@@ -235,7 +235,7 @@ function TypographyPanel() {
               </div>
               <p
                 className="mb-1 text-2xl font-bold text-foreground"
-                style={{fontFamily: `'${catalogFamily(p, 'heading')}', Georgia, serif`}}
+                style={{fontFamily: `'${catalogFamily(p, 'heading')}', Georgia, serif`, fontSynthesisWeight: 'none'}}
               >
                 Heading sample
               </p>

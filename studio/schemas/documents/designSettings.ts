@@ -7,7 +7,7 @@ import {ThemePreview} from '../../components/ThemePreview'
 import {HeadingLinePicker} from '../../components/HeadingLinePicker'
 import {DividerPicker} from '../../components/DividerPicker'
 import {FLOWS, DEFAULT_FLOW} from '../../../site/lib/flows'
-import {fontFileKind, variableUploadWarning, type FontFileKind} from '../../../site/fonts/fileKind'
+import {readFontKind, variableUploadWarning, type FontFileKind} from '../../../site/fonts/fileKind'
 
 // Phase 17C (`[R-541]`; monorepo WS-V1-PHASE17C2A-DESIGN §7.6 amendment 4): an upload's
 // "Variable font" box, checked against the file itself. The Studio reads the uploaded
@@ -15,6 +15,9 @@ import {fontFileKind, variableUploadWarning, type FontFileKind} from '../../../s
 // that guards the committed files, and warns on either mismatch or on a Bold uploaded
 // beside a ticked box. A warning, never a block (`[R-162]`); a file it cannot read says
 // nothing. The page never reads the file: it declares what the box says.
+// The read is cached per file and gives up after four seconds (`readFontKind`), because Sanity
+// re-validates the document on every edit and Publish waits for validation to finish.
+
 function variableFontField(heavier: readonly string[]) {
   return defineField({
     name: 'variable',
@@ -27,14 +30,9 @@ function variableFontField(heavier: readonly string[]) {
         const ref = font.regular?.asset?._ref
         let kind: FontFileKind = 'unknown'
         if (ref) {
-          try {
-            const {projectId, dataset} = ctx.getClient({apiVersion: '2024-01-01'}).config()
-            const [, id, ext] = ref.split('-')
-            const res = await fetch(`https://cdn.sanity.io/files/${projectId}/${dataset}/${id}.${ext}`, {headers: {Range: 'bytes=0-8191'}})
-            if (res.ok) kind = fontFileKind(new Uint8Array(await res.arrayBuffer()))
-          } catch {
-            kind = 'unknown'
-          }
+          const {projectId, dataset} = ctx.getClient({apiVersion: '2024-01-01'}).config()
+          const [, id, ext] = ref.split('-')
+          kind = await readFontKind(`https://cdn.sanity.io/files/${projectId}/${dataset}/${id}.${ext}`)
         }
         return variableUploadWarning(kind, Boolean(ticked), heavier.some((k) => font[k]?.asset)) ?? true
       }).warning(),

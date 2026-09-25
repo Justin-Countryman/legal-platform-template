@@ -5,7 +5,7 @@ import {brotliDecompressSync} from 'node:zlib'
 import {describe, it, expect} from 'vitest'
 import {FONT_PRESETS, getPresetById, headingWeights, type FontPreset} from '../presets'
 import {resolvefonts, buildFontPreloads, buildFontFaces} from '../loader'
-import {fontFileKind, fontTables, variableUploadWarning} from '../fileKind'
+import {fontFileKind, fontTables, readFontKind, variableUploadWarning} from '../fileKind'
 
 // ─── Preset library shape ─────────────────────────────────────────────────────
 
@@ -182,10 +182,9 @@ describe('buildFontPreloads()', () => {
   })
 
   it('dedupes to 1 entry when a mono-pair resolves heading.regular === body.regular', () => {
-    // Preset 18 Sovereign Mono — heading uses SourceSerif4-SemiBold, body uses
-    // SourceSerif4-Regular. Different files. Use a true file-identity mono case:
-    // Preset 17 Editorial Statement — heading uses Fraunces-Bold, body uses
-    // Fraunces-Regular. Also different. Construct an explicit case:
+    // Since Phase 17C the variable mono pairings (17, 18) name one file for both roles, so
+    // they are this case (a heading bold that is its regular's file drops too); an explicit
+    // pair keeps the rule itself in view:
     const preloads = buildFontPreloads(
       {name: 'X', regular: '/fonts/files/x/X-Regular.woff2'},
       {name: 'X', regular: '/fonts/files/x/X-Regular.woff2'},
@@ -476,5 +475,37 @@ describe('the file reader (fonts/fileKind.ts), which the Studio runs on an uploa
     expect(variableUploadWarning('static', false, true)).toBeNull()
     expect(variableUploadWarning('unknown', true, false)).toBeNull()
     expect(variableUploadWarning('unknown', false, false)).toBeNull()
+  })
+})
+
+describe("the Studio's read of an upload (fonts/fileKind.ts readFontKind)", () => {
+  const bytes = readFileSync(onDisk('/fonts/files/inter/Inter-Regular.woff2'))
+
+  it('reads a file once however often the document is validated', async () => {
+    let calls = 0
+    const load = (async () => { calls++; return new Response(bytes) }) as unknown as typeof fetch
+    expect(await readFontKind('https://cdn.example/once.woff2', load)).toBe('variable')
+    expect(await readFontKind('https://cdn.example/once.woff2', load)).toBe('variable')
+    expect(calls).toBe(1)
+  })
+
+  it('gives up on a CDN that never answers, so validation always finishes, and tries again next time', async () => {
+    let calls = 0
+    const never = ((_: string, init?: RequestInit) => {
+      calls++
+      return new Promise<Response>((_resolve, reject) => init?.signal?.addEventListener('abort', () => reject(init.signal?.reason)))
+    }) as unknown as typeof fetch
+    const started = Date.now()
+    expect(await readFontKind('https://cdn.example/stalled.woff2', never, 50)).toBe('unknown')
+    expect(Date.now() - started).toBeLessThan(2000)
+    expect(await readFontKind('https://cdn.example/stalled.woff2', never, 50)).toBe('unknown')
+    expect(calls).toBe(2)
+  })
+
+  it('an answer that is not a font, or an error status, says unknown', async () => {
+    const html = (async () => new Response('<html></html>')) as unknown as typeof fetch
+    const missing = (async () => new Response('', {status: 404})) as unknown as typeof fetch
+    expect(await readFontKind('https://cdn.example/page.woff2', html)).toBe('unknown')
+    expect(await readFontKind('https://cdn.example/missing.woff2', missing)).toBe('unknown')
   })
 })

@@ -76,6 +76,26 @@ export function fontFileKind(bytes: Uint8Array): FontFileKind {
   return tables.some((t) => t.tag === 'fvar') ? 'variable' : 'static'
 }
 
+// The Studio's read of an uploaded file: its first bytes, from the asset CDN. Sanity
+// re-validates the whole document on every edit and Publish waits for validation to finish,
+// so the read is cached per URL (an asset's URL never changes its bytes) and gives up after
+// four seconds: a slow or unreachable CDN costs one wait and never holds Publish. A failed
+// read is forgotten, so the next validation tries again.
+const kinds = new Map<string, Promise<FontFileKind>>()
+
+export function readFontKind(url: string, load: typeof fetch = fetch, timeoutMs = 4000): Promise<FontFileKind> {
+  const known = kinds.get(url)
+  if (known) return known
+  const read = load(url, {headers: {Range: 'bytes=0-8191'}, signal: AbortSignal.timeout(timeoutMs)})
+    .then(async (res): Promise<FontFileKind> => (res.ok ? fontFileKind(new Uint8Array(await res.arrayBuffer())) : 'unknown'))
+    .catch((): FontFileKind => {
+      kinds.delete(url)
+      return 'unknown'
+    })
+  kinds.set(url, read)
+  return read
+}
+
 /** What the Studio says about an upload's "Variable font" box against the file itself, or
  *  null when they agree. Never blocks Publish (`[R-162]`); an unreadable file says nothing. */
 export function variableUploadWarning(kind: FontFileKind, ticked: boolean, heavierUploaded: boolean): string | null {
