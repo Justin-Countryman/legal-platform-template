@@ -5,6 +5,7 @@ import {HeadingUnit} from '../HeadingUnit'
 import {ContentSectionBlock} from '../../sections/ContentSectionBlock'
 import {NO_SEAM, type SeamProps} from '../../sections/sectionFrame'
 import {headingFit} from '@/lib/headingFit'
+import {withAdvances} from '@/lib/headingAdvances'
 
 // Phase 17C session 3 (`[R-536]`, `[R-544]`): a section heading carries the two widths its words
 // need and holds its words in one fitted span; with no fit it renders as before.
@@ -36,14 +37,14 @@ describe('the fitted heading', () => {
   })
 
   it('is computed by the section from the face the site look carries', () => {
-    const seam: SeamProps = {...NO_SEAM, site: {imageFrame: null, cardHover: null, attorneyCardStyle: null, headingFace: {pairing: 7, weight: '700', upper: true}}}
+    const seam: SeamProps = {...NO_SEAM, site: {imageFrame: null, cardHover: null, attorneyCardStyle: null, headingFace: withAdvances({pairing: 7, weight: '700', upper: true})}}
     const {container} = render(
       <ContentSectionBlock data={{layout: 'statement', heading: 'Serious counsel for every stage'}} disclaimer="d" scale="marketing" seam={seam} />,
     )
-    const want = headingFit('Serious counsel for every stage', {pairing: 7, weight: '700', upper: true})!
+    const want = headingFit('Serious counsel for every stage', withAdvances({pairing: 7, weight: '700', upper: true}))!
     const h2 = container.querySelector('h2')!
     expect(h2.style.getPropertyValue('--heading-w3')).toBe(String(want.w3))
     // Capitals are wider than the same words in mixed case in the same face.
-    expect(want.w3).toBeGreaterThan(headingFit('Serious counsel for every stage', {pairing: 7, weight: '700', upper: false})!.w3)
+    expect(want.w3).toBeGreaterThan(headingFit('Serious counsel for every stage', withAdvances({pairing: 7, weight: '700', upper: false}))!.w3)
   })
 })

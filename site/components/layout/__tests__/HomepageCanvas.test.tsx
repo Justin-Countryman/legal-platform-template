@@ -219,8 +219,7 @@ describe('HomepageCanvas — contentSectionInline (Phase 11)', () => {
   it('dispatches to the content section at the marketing tier, with the emphasis resolved', () => {
     const {container} = render(<HomepageCanvas blocks={[statement('a')]} napTokens={{firmName: 'Acme Law'}} />)
     const h2 = container.querySelector('h2')!
-    // The words sit in the fitted span (Phase 17C session 3).
-    expect(h2.querySelector('.heading-fit')!.innerHTML).toBe('Why <em class="heading-emphasis">Acme Law</em> wins')
+    expect(h2.innerHTML).toBe('Why <em class="heading-emphasis">Acme Law</em> wins')
     expect(h2.className).toContain('marketing-h2')
     expect(container.querySelector('[data-testid="results-disclaimer"]')).toBeNull()
   })

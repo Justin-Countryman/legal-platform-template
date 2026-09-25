@@ -4,7 +4,7 @@ import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {VIDEO_INDEX_PAGE_QUERY} from '@/lib/sanity/queries'
 import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
-import {headingFaceOf} from '@/lib/headingFace'
+import {headingFaceWithAdvances} from '@/lib/headingAdvances'
 import {headingFit} from '@/lib/headingFit'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
@@ -129,7 +129,7 @@ export default async function VideoLibraryPage() {
             tagline={tagline}
             heading={heading}
             description={description}
-            fit={headingFit(heading, headingFaceOf((await getSiteChrome())?.designTokens))}
+            fit={headingFit(heading, headingFaceWithAdvances((await getSiteChrome())?.designTokens))}
           />
         </div>
       </section>

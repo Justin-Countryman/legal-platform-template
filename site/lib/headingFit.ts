@@ -1,4 +1,3 @@
-import ADVANCES from '@/fonts/heading-advances.json'
 import {HEADING_CASE_MAP} from '@/lib/designTokens'
 import type {HeadingFace} from '@/lib/headingFace'
 
@@ -19,8 +18,9 @@ import type {HeadingFace} from '@/lib/headingFace'
 // that cleared them shrank one heading in eight that already fit (ADV-17C3-A, reproduced). Exact
 // widths leave none past it and shrink almost none.
 //
-// SERVER CODE ONLY. The table is 24 KB; `SectionHeader` and `HeadingUnit` take the numbers as a
-// prop and never import this, because two client components render `SectionHeader`.
+// NO TABLE HERE. The face arrives with its own row of widths (`HeadingFace.advances`, attached by the
+// server page, `lib/headingAdvances.ts`), because the section components that call this are also
+// rendered by a client component, and the table must never reach a browser file.
 
 export type HeadingFit = {
   /** The narrowest line, in em of the heading's size, at which its words fit in three lines. */
@@ -31,16 +31,6 @@ export type HeadingFit = {
 
 const FIRST = 32
 type Row = readonly number[]
-const TABLE = ADVANCES.pairings as unknown as Record<string, Record<string, Row>>
-
-/** Each character's widest advance over every shipped face and weight: an uploaded or unknown
- *  heading font is fitted as if it were the widest, so it shrinks early, never late. */
-const WIDEST: Row = Array.from({length: 95}, (_, i) =>
-  Math.max(...Object.values(TABLE).flatMap((byWeight) => Object.values(byWeight).map((row) => row[i]))))
-
-function rowOf(face: HeadingFace | null | undefined): Row {
-  return (face?.pairing != null && TABLE[String(face.pairing)]?.[face.weight]) || WIDEST
-}
 
 /** The advance of one character in em; one outside printable ASCII takes the row's widest letter. */
 function advance(row: Row, ch: string): number {
@@ -95,12 +85,12 @@ function narrowest(ps: {w: number; space: boolean}[], n: number, space: number):
 const up = (x: number) => Math.ceil(x * 100) / 100
 
 /** The two widths a section heading carries, or null for an empty heading (which renders as
- *  today, so the rule's `:empty` still hides the line under it). `text` is the heading as it
- *  renders: tokens resolved, the emphasis included. */
+ *  today, so the rule's `:empty` still hides the line under it) and for a face without its widths.
+ *  `text` is the heading as it renders: tokens resolved, the emphasis included. */
 export function headingFit(text: string | null | undefined, face: HeadingFace | null | undefined): HeadingFit | null {
   const plain = (text ?? '').trim()
-  if (!plain) return null
-  const row = rowOf(face)
+  const row = face?.advances
+  if (!plain || !row) return null
   const upper = !!face?.upper
   const tracking = upper ? parseFloat(HEADING_CASE_MAP.upper.tracking) : 0
   const ps = pieces(upper ? plain.toUpperCase() : plain, row, tracking)

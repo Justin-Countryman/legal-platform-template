@@ -3,13 +3,14 @@ import ADVANCES from '../../fonts/heading-advances.json'
 import {FONT_PRESETS, headingWeights} from '../../fonts/presets'
 import {headingFaceOf, type HeadingFace} from '../headingFace'
 import {headingFit} from '../headingFit'
+import {headingFaceWithAdvances, withAdvances} from '../headingAdvances'
 
 // Phase 17C session 3 (`[R-536]`, `[R-544]`; monorepo WS-V1-PHASE17C3-DESIGN §2.1): the widths a
 // section heading carries, from the face's own character advances, wrapped as the browser wraps.
 
 const TABLE = ADVANCES.pairings as unknown as Record<string, Record<string, number[]>>
 const adv = (face: HeadingFace, s: string) => [...s].reduce((a, ch) => a + TABLE[String(face.pairing)][face.weight][ch.charCodeAt(0) - 32], 0)
-const GRAPHITE: HeadingFace = {pairing: 4, weight: '700', upper: false}
+const GRAPHITE: HeadingFace = withAdvances({pairing: 4, weight: '700', upper: false})
 
 describe('fonts/heading-advances.json', () => {
   it('holds every pairing heading at every weight it can draw, 95 characters each', () => {
@@ -75,8 +76,8 @@ describe('headingFit', () => {
   })
 
   it('reads capitals wider, with the tracking every capital carries', () => {
-    const upper: HeadingFace = {pairing: 7, weight: '700', upper: true}
-    const mixed: HeadingFace = {pairing: 7, weight: '700', upper: false}
+    const upper: HeadingFace = withAdvances({pairing: 7, weight: '700', upper: true})
+    const mixed: HeadingFace = withAdvances({pairing: 7, weight: '700', upper: false})
     const text = 'Why work with us'
     const u = headingFit(text, upper)!
     const m = headingFit(text, mixed)!
@@ -87,14 +88,20 @@ describe('headingFit', () => {
 
   it('fits an upload or an unknown pairing as the widest shipped face, so it shrinks early, never late', () => {
     const text = 'A practice built on answers, not guesswork'
-    const widest = headingFit(text, {pairing: null, weight: '', upper: false})!
+    const widest = headingFit(text, withAdvances({pairing: null, weight: '', upper: false}))!
     for (const p of FONT_PRESETS) {
       for (const w of headingWeights(p)) {
-        const f = headingFit(text, {pairing: p.id, weight: w, upper: false})!
+        const f = headingFit(text, withAdvances({pairing: p.id, weight: w, upper: false}))!
         expect(widest.w3, `pairing ${p.id} at ${w}`).toBeGreaterThanOrEqual(f.w3 - 0.01)
       }
     }
-    expect(headingFit(text, {pairing: 99, weight: '700', upper: false})).toEqual(widest)
+    expect(headingFit(text, withAdvances({pairing: 99, weight: '700', upper: false}))).toEqual(widest)
+  })
+
+  it('takes no fit for a face without its widths (a look no server page built)', () => {
+    expect(headingFit('Why work with us', {pairing: 4, weight: '700', upper: false})).toBeNull()
+    expect(headingFit('Why work with us', null)).toBeNull()
+    expect(headingFaceWithAdvances({fontPairingPreset: 4}).advances).toHaveLength(95)
   })
 
   it('reads a character outside printable ASCII as the face\'s widest letter', () => {

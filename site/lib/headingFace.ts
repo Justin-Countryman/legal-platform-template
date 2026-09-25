@@ -8,8 +8,8 @@ import {drawableWeight, getPresetById, headingWeights} from '@/fonts/presets'
 // that face, read from the projected Design Settings the way the shell reads it: the pairing,
 // the weight a section heading draws in it, and whether the case is capitals. It reaches every
 // section through the site look (`siteLookOf`, `seam.site`), so the preview's chosen style set
-// reaches it with the rest of the plan. Small and table-free: `lib/headingFit.ts` holds the
-// widths, and only server code imports it.
+// reaches it with the rest of the plan. Small and table-free: the widths are attached where a page is
+// built on the server (`lib/headingAdvances.ts`).
 
 export type HeadingFace = {
   /** `fontPairingPreset`: the pairing whose heading the page declares; null where the page wears
@@ -19,6 +19,9 @@ export type HeadingFace = {
   weight: string
   /** The site sets its section headings in capitals (`headingCase: 'upper'`). */
   upper: boolean
+  /** The face's character widths in em, printable ASCII in order: set only by the server page that
+   *  builds the site look (`lib/headingAdvances.ts`); without them a heading takes no fit. */
+  advances?: readonly number[]
 }
 
 /** The weight a section heading draws, as a number the face has: bold is the face's heaviest

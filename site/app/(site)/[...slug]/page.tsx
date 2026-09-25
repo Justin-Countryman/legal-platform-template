@@ -28,7 +28,7 @@ import {notFound} from 'next/navigation'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import type {Metadata} from 'next'
 import {chromeGlobalCta, chromeNap, getCatchAllPage, getSiteChrome} from '@/lib/sanity/fetchers'
-import {siteLookOf} from '@/components/sections/sectionFrame'
+import {siteLookWithHeadingFace} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {aboutPageTitle, areaOfLawPageName, geoHubPageName, geoSpokePageName, locationPageName, resolveTitle, serviceAreaPageName} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -361,7 +361,7 @@ export default async function CatchAllPage({params}: Props) {
 
       {/* Full Width Sections */}
       {page.sections && page.sections.length > 0 && (
-        <PageSections sections={page.sections} napTokens={tokens} resultsDisclaimer={page.resultsDisclaimer} site={siteLookOf((await getSiteChrome())?.designTokens)} />
+        <PageSections sections={page.sections} napTokens={tokens} resultsDisclaimer={page.resultsDisclaimer} site={siteLookWithHeadingFace((await getSiteChrome())?.designTokens)} />
       )}
 
       {!page.hideCtaForm && globalCtaData && (
