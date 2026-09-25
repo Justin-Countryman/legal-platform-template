@@ -347,9 +347,12 @@ describe('a site built at an earlier pin still matches its style set', () => {
   // that could take another style set's name at a pin, and this is what proves none does.
   // `a164ce0` is 17A's, frozen by 17B before four matched fields and two picks left
   // the style sets ([R-510]): a frozen file carries the six, and the match ignores them.
-  const PINS = ['bd74cdd', '22da44f', '3979e37', 'a164ce0'] as const
+  // `69fee75` is 17C session 2a's (the rename; version 2), frozen by session 2b before the
+  // roster of eight: Walnut and Marble retuned, five retired ([R-534]). A retired style set
+  // frozen at any pin still reads as itself (`RETIRED_STYLE_SETS`).
+  const PINS = ['bd74cdd', '22da44f', '3979e37', 'a164ce0', '69fee75'] as const
   // How many style sets each pin froze, so a reader that found none could not pass vacuously.
-  const FROZEN_COUNT: Record<(typeof PINS)[number], number> = {bd74cdd: 9, '22da44f': 9, '3979e37': 9, a164ce0: 10}
+  const FROZEN_COUNT: Record<(typeof PINS)[number], number> = {bd74cdd: 9, '22da44f': 9, '3979e37': 9, a164ce0: 10, '69fee75': 10}
 
   it.each(PINS)('reads the %s roster, every style set it froze', (pin) => {
     expect(frozen(pin)).toHaveLength(FROZEN_COUNT[pin])
@@ -380,6 +383,7 @@ describe('a site built at an earlier pin still matches its style set', () => {
     '22da44f': new Set<string>(),
     '3979e37': new Set<string>(),
     a164ce0: new Set<string>(),
+    '69fee75': new Set<string>(),
   }
 
   it.each(PINS)('names the style sets retuned since %s as earlier versions, and the rest as current', (pin) => {
