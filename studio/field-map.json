@@ -5563,14 +5563,21 @@
           "type": "string"
         },
         {
-          "description": "Required. The standard weight file. Variable fonts (.woff2) uploaded here will cover all weights automatically.",
+          "description": "Required. The standard weight file, or one variable font that carries every weight: then tick \"Variable font\" below.",
           "jsonType": "object",
           "path": "customFonts.headingFont.regular",
           "title": "Regular (400)",
           "type": "file"
         },
         {
-          "description": "Optional. Only needed if using a separate non-variable bold file.",
+          "description": "Tick when the Regular file is a variable font: one file that carries every weight, as fonts downloaded from Google Fonts now are. It is then declared across every weight, and a Bold or Semibold file is not used. The Studio reads the file and warns when this box does not match it.",
+          "jsonType": "boolean",
+          "path": "customFonts.headingFont.variable",
+          "title": "Variable font",
+          "type": "boolean"
+        },
+        {
+          "description": "Optional. A separate bold file, for a font that is not variable. Not used while \"Variable font\" is ticked.",
           "jsonType": "object",
           "path": "customFonts.headingFont.bold",
           "title": "Bold (700)",
@@ -5598,21 +5605,28 @@
           "type": "string"
         },
         {
-          "description": "Required.",
+          "description": "Required. The standard weight file, or one variable font that carries every weight: then tick \"Variable font\" below.",
           "jsonType": "object",
           "path": "customFonts.bodyFont.regular",
           "title": "Regular (400)",
           "type": "file"
         },
         {
-          "description": "Optional. Used for subheadings, nav labels, and emphasized UI text.",
+          "description": "Tick when the Regular file is a variable font: one file that carries every weight, as fonts downloaded from Google Fonts now are. It is then declared across every weight, and a Bold or Semibold file is not used. The Studio reads the file and warns when this box does not match it.",
+          "jsonType": "boolean",
+          "path": "customFonts.bodyFont.variable",
+          "title": "Variable font",
+          "type": "boolean"
+        },
+        {
+          "description": "Optional. Used for subheadings, nav labels, and emphasized UI text. Not used while \"Variable font\" is ticked.",
           "jsonType": "object",
           "path": "customFonts.bodyFont.semibold",
           "title": "Semibold (600)",
           "type": "file"
         },
         {
-          "description": "Optional.",
+          "description": "Optional. Not used while \"Variable font\" is ticked.",
           "jsonType": "object",
           "path": "customFonts.bodyFont.bold",
           "title": "Bold (700)",
