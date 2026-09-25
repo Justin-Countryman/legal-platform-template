@@ -5,7 +5,7 @@ import {buildRobotsMeta} from '@/lib/robotsMeta'
 import Link from 'next/link'
 import {EVENT_INDEX_PAGE_QUERY, EVENT_INDEX_QUERY} from '@/lib/sanity/queries'
 import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
-import {siteLookWithHeadingFace} from '@/lib/headingAdvances'
+import {headingFaceWithAdvances, siteLookWithHeadingFace} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -269,7 +269,7 @@ export default async function EventsIndexPage() {
 
       {/* Global CTA */}
       {!(indexPage?.hideCtaForm) && globalCtaData && (
-        <GlobalCta
+        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
           data={
             indexPage?.ctaOverride
               ? {...globalCtaData, ...indexPage.ctaOverride}

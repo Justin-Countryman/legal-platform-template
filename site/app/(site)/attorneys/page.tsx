@@ -226,7 +226,7 @@ export default async function AttorneyIndexPage() {
 
       {/* Global CTA */}
       {!(indexPage?.hideCtaForm) && globalCtaData && (
-        <GlobalCta
+        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
           data={
             indexPage?.ctaOverride
               ? {...globalCtaData, ...indexPage.ctaOverride}

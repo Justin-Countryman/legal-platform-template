@@ -4,7 +4,8 @@ import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {notFound} from 'next/navigation'
 import {ATTORNEY_PAGE_QUERY, ATTORNEY_SLUGS_QUERY} from '@/lib/sanity/queries'
-import {chromeDesignTokens, chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
+import {chromeDesignTokens, chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
+import {headingFaceWithAdvances} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {urlForImage, hasImage} from '@/lib/sanity/image'
@@ -172,7 +173,7 @@ export default async function AttorneyProfilePage({params}: PageProps) {
       <AttorneyLayout attorney={attorney} napTokens={napTokens} cta={cta} isDark={isDark} />
 
       {!attorney.hideCtaForm && globalCtaData && (
-        <GlobalCta
+        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
           data={
             attorney.ctaFormOverride
               ? {...globalCtaData, ...attorney.ctaFormOverride}

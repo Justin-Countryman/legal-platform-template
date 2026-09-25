@@ -12,7 +12,7 @@
 // by `lib/__tests__/presets.test.ts` from the font loader), with `--update` writes the table, and without
 // it fails on any difference, so a font file that changes cannot leave the table behind.
 
-import {readFileSync, writeFileSync} from 'node:fs'
+import {readFileSync, unlinkSync, writeFileSync} from 'node:fs'
 import {resolve} from 'node:path'
 import {chromium} from '@playwright/test'
 
@@ -24,13 +24,17 @@ const PUBLIC = resolve('public')
 const PX = 1000
 const TOLERANCE = 0.003
 const presets = JSON.parse(readFileSync('../studio/presets.json', 'utf8'))
-const CHARS = Array.from({length: 95}, (_, i) => String.fromCharCode(32 + i))
+// Printable ASCII, then the typographic and accented characters real headings carry: the same list as
+// `lib/headingChars.ts`, which a unit test holds equal to the table's `chars`.
+const EXTRAS = '\u2019\u2018\u201c\u201d\u2013\u2014\u2026\u00e9\u00e8\u00e1\u00e0\u00ed\u00f3\u00fa\u00f1\u00fc\u00f6\u00e7\u00a9\u00ae\u2122\u00b7\u2022\u00a7'
+const CHARS = [...Array.from({length: 95}, (_, i) => String.fromCharCode(32 + i)), ...EXTRAS]
 
 const faces = presets.fontPairings.flatMap((p) => (p.headingFaces ?? []).map((rule) =>
   rule.replace(`font-family:'heading'`, `font-family:'p${p.id}'`).replace(/url\('\/fonts\//g, `url('file://${PUBLIC}/fonts/`)))
 const html = `<!doctype html><html><head><style>${faces.join('')}</style></head><body></body></html>`
 const page0 = resolve(process.env.TMPDIR ?? '/tmp', `heading-advances-${process.pid}.html`)
 writeFileSync(page0, html)
+process.on('exit', () => { try { unlinkSync(page0) } catch {} })
 
 const browser = await chromium.launch({channel: 'chromium'})
 const page = await browser.newPage()
@@ -52,7 +56,8 @@ for (const p of presets.fontPairings) {
 await browser.close()
 
 const table = {
-  method: 'the advance of each printable ASCII character (32 to 126, in order) in em, measured in Chromium with canvas measureText at 1000 px, per pairing (fontPairings[].id) and per weight the heading can draw, from the faces presets.json declares',
+  method: 'the advance of each printable ASCII character (32 to 126, in order), then of each character in chars, in em, measured in Chromium with canvas measureText at 1000 px, per pairing (fontPairings[].id) and per weight the heading can draw, from the faces presets.json declares',
+  chars: EXTRAS,
   pairings: measured,
 }
 if (UPDATE) {
@@ -64,7 +69,7 @@ if (UPDATE) {
   for (const [id, byWeight] of Object.entries(measured)) {
     for (const [w, row] of Object.entries(byWeight)) {
       const was = committed[id]?.[w]
-      if (!was) { failures.push(`pairing ${id} at ${w}: not in the table`); continue }
+      if (!was || was.length !== row.length) { failures.push(`pairing ${id} at ${w}: not in the table, or measured over other characters`); continue }
       row.forEach((v, i) => { if (Math.abs(v - was[i]) > TOLERANCE) failures.push(`pairing ${id} at ${w}: '${CHARS[i]}' measures ${v}, the table says ${was[i]}`) })
     }
   }

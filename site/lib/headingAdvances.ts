@@ -1,5 +1,6 @@
 import ADVANCES from '@/fonts/heading-advances.json'
 import {headingFaceOf, type HeadingFace} from '@/lib/headingFace'
+import {HEADING_CHARS} from '@/lib/headingChars'
 import {siteLookOf, type SiteLook} from '@/components/sections/sectionFrame'
 
 // ─── The width table, read where a page is built on the server ────────────────
@@ -17,7 +18,7 @@ const TABLE = ADVANCES.pairings as unknown as Record<string, Record<string, Row>
 
 /** Each character's widest advance over every shipped face and weight: an uploaded or unknown heading
  *  font is fitted as if it were the widest, so it shrinks early, never late. */
-const WIDEST: Row = Array.from({length: 95}, (_, i) =>
+const WIDEST: Row = Array.from({length: HEADING_CHARS.length}, (_, i) =>
   Math.max(...Object.values(TABLE).flatMap((byWeight) => Object.values(byWeight).map((row) => row[i]))))
 
 /** The face with its row of widths: the pairing's at the drawn weight, else the widest. */

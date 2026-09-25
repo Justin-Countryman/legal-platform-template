@@ -1,5 +1,6 @@
 import {HEADING_CASE_MAP} from '@/lib/designTokens'
 import type {HeadingFace} from '@/lib/headingFace'
+import {HEADING_CHARS} from '@/lib/headingChars'
 
 // ─── How wide a section heading's words are ───────────────────────────────────
 //
@@ -29,21 +30,25 @@ export type HeadingFit = {
   w4: number
 }
 
-const FIRST = 32
 type Row = readonly number[]
+const INDEX = new Map([...HEADING_CHARS].map((ch, i) => [ch, i]))
+// A no-break space draws as wide as a space and is never a break (ADV-17C3-PRA).
+const NO_BREAK_SPACES = /[\u00a0\u202f\u2007]/g
 
-/** The advance of one character in em; one outside printable ASCII takes the row's widest letter. */
+/** The advance of one character in em; one the table does not hold takes the row's widest letter. */
 function advance(row: Row, ch: string): number {
-  const i = ch.charCodeAt(0) - FIRST
-  return i >= 0 && i < row.length ? row[i] : Math.max(row['M'.charCodeAt(0) - FIRST], row['W'.charCodeAt(0) - FIRST])
+  const i = INDEX.get(ch)
+  return i !== undefined && i < row.length ? row[i] : Math.max(row[INDEX.get('M')!], row[INDEX.get('W')!])
 }
 
 /** The pieces a line may break between: words, and the parts of a hyphenated word (the hyphen
  *  stays with the part before it). `space` says whether a space precedes the piece. */
 function pieces(text: string, row: Row, tracking: number): {w: number; space: boolean}[] {
   const out: {w: number; space: boolean}[] = []
-  for (const word of text.split(/\s+/).filter(Boolean)) {
-    const parts = word.split(/(?<=[-‐–—])/)
+  // Break only at breaking whitespace; a no-break space joins its neighbours. Within a word, a break
+  // after a hyphen or a dash, and before an em dash, as both engines break (UAX #14).
+  for (const word of text.split(/[^\S\u00a0\u202f\u2007]+/).filter(Boolean)) {
+    const parts = word.replace(NO_BREAK_SPACES, ' ').split(/(?<=[-\u2010\u2013\u2014])|(?=\u2014)/).filter(Boolean)
     parts.forEach((part, i) => {
       let w = 0
       for (const ch of part) w += advance(row, ch) + tracking

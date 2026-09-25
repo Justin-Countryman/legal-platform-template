@@ -70,13 +70,18 @@ if (staticFiles.length === 0) fail('.next/static is empty: run the build first')
 // Server-only data that must never reach a browser file either (Phase 17C session 3): the heading
 // width table (`fonts/heading-advances.json`, read by `lib/headingFit.ts`), 24 KB that two client
 // components rendering `SectionHeader` would otherwise carry. Its method line is the sentinel.
+// A bundler may drop an unread property of a JSON module, so the table is also found by a run of its
+// numbers (one row's first eight advances, with or without a minifier's leading zero).
 const SERVER_ONLY = ['the advance of each printable ASCII character']
+const TABLE = JSON.parse(readFileSync('fonts/heading-advances.json', 'utf8')).pairings
+const firstRow = Object.values(Object.values(TABLE)[0])[0]
+const TABLE_RUN = new RegExp(firstRow.slice(0, 8).map((v) => String(v).replace(/^0\./, '0?\\.')).join(',\\s*'))
 for (const f of staticFiles) {
   const text = readFileSync(f, 'utf8')
   const hit = found(text)
   if (hit.length) fail(`${f} carries ${hit.join(', ')}`)
   const server = SERVER_ONLY.filter((s) => text.includes(s))
-  if (server.length) fail(`${f} carries server-only data: ${server.join(', ')}`)
+  if (server.length || TABLE_RUN.test(text)) fail(`${f} carries server-only data: the heading width table`)
 }
 const pages = walk('.next/server/app', (p) => p.endsWith('.html') || p.endsWith('.rsc'))
 for (const f of pages) {

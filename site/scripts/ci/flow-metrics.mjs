@@ -233,14 +233,18 @@ function measure() {
         const h = getComputedStyle(heading.querySelector('.heading-fit') ?? heading)
         // Distinct line tops of the heading's text nodes: neither the `::after` rule nor the fitted
         // span's own box is in them.
-        const tops = new Set()
+        // A line is a cluster of tops within half a line of each other: an emphasis in another face
+        // sits a pixel or two off its neighbours' top (ADV-17C3-PRA).
+        const tops = []
         const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT)
         for (let n = walker.nextNode(); n; n = walker.nextNode()) {
           const range = document.createRange()
           range.selectNodeContents(n)
-          for (const r of range.getClientRects()) if (r.width > 0) tops.add(Math.round(r.top))
+          for (const r of range.getClientRects()) if (r.width > 0) tops.push(r.top)
         }
-        lines = tops.size
+        const lineHeight = parseFloat(h.lineHeight) || parseFloat(h.fontSize) * 1.2
+        tops.sort((a, b) => a - b)
+        lines = tops.reduce((count, top, k) => (k === 0 || top - tops[k - 1] > lineHeight / 2 ? count + 1 : count), 0)
         headingWeight = Number(h.fontWeight)
         headingSize = Math.round(parseFloat(h.fontSize) * 10) / 10
       }
@@ -269,9 +273,10 @@ function measure() {
   }
 }
 
-// A heading set at its readable floor may take one more line than the rule (`[R-544]`, Justin
+// A heading set at its readable floor may take ONE more line than the rule (`[R-544]`, Justin
 // 2026-09-25: it stays readable): 20 px, and 32 px where it draws the light weight (`globals.css`).
-const atFloor = (b) => b.headingSize !== null && b.headingSize <= (b.headingWeight === 300 ? 32 : 20) + 0.05
+// Two more lines, even at the floor, fail.
+const atFloor = (b, limit) => b.headingSize !== null && b.headingSize <= (b.headingWeight === 300 ? 32 : 20) + 0.05 && b.headingLines <= limit + 1
 
 // ─── Run ──────────────────────────────────────────────────────────────────────
 await wait(`${BASE}/`, 200, 200)
@@ -334,7 +339,7 @@ try {
         results[key] = m
         if (m.innerWidth !== device.viewport.width) fail(`${key}: innerWidth is ${m.innerWidth}, not ${device.viewport.width} (the layout is not at this width)`)
         if (m.scrollWidth > m.clientWidth) fail(`${key}: horizontal scroll: scrollWidth ${m.scrollWidth} over ${m.clientWidth}`)
-        if (width === '390') for (const b of m.bands) if (b.headingLines > 4 && !atFloor(b)) fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at 390: ${b.heading}`)
+        if (width === '390') for (const b of m.bands) if (b.headingLines > 4 && !atFloor(b, 4)) fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at 390: ${b.heading}`)
         await page.screenshot({path: resolve(OUT, `${canvas}--${flow}--${width}.jpg`), fullPage: true, type: 'jpeg', quality: 60})
         // The header scrolled (Phase 17B session 4): prerendered HTML only ever holds the state
         // at the top, so this is the one check that sees the scrolled bar, its ground and its rule.
@@ -393,7 +398,7 @@ try {
         const limit = width === '390' ? 4 : 3
         for (const b of m.bands) {
           if (b.headingLines <= limit) continue
-          if (atFloor(b)) console.log(`flow-metrics: ${key}: band ${b.i} at the readable floor (${b.headingSize} px) takes ${b.headingLines} lines, as [R-544] allows: ${b.heading}`)
+          if (atFloor(b, limit)) console.log(`flow-metrics: ${key}: band ${b.i} at the readable floor (${b.headingSize} px) takes ${b.headingLines} lines, as [R-544] allows: ${b.heading}`)
           else fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at ${width} (the rule is ${limit}): ${b.heading}`)
         }
         if (fontBytes > FONT_BUDGET) fail(`${key}: ${fontBytes} font bytes over the budget of ${FONT_BUDGET}: ${fontFiles.join(', ')}`)

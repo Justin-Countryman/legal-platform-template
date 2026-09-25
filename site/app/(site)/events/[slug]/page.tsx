@@ -5,7 +5,8 @@ import {buildRobotsMeta} from '@/lib/robotsMeta'
 import type {Metadata} from 'next'
 import Link from 'next/link'
 import {EVENT_PAGE_QUERY, EVENT_SLUGS_QUERY} from '@/lib/sanity/queries'
-import {chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
+import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
+import {headingFaceWithAdvances} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -312,7 +313,7 @@ export default async function EventDetailPage({params}: Props) {
 
       {/* Global CTA */}
       {!event.hideCtaForm && globalCtaData && (
-        <GlobalCta data={event.ctaOverride ? {...globalCtaData, ...event.ctaOverride} : globalCtaData} napTokens={tokens} />
+        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)} data={event.ctaOverride ? {...globalCtaData, ...event.ctaOverride} : globalCtaData} napTokens={tokens} />
       )}
     </>
   )

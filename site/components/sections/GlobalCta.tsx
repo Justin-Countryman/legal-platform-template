@@ -6,6 +6,7 @@ import {SectionShell} from './SectionShell'
 import {type SectionSurface} from '@/lib/sectionSurface'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {headingFit, type HeadingFit} from '@/lib/headingFit'
+import type {HeadingFace} from '@/lib/headingFace'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -60,7 +61,7 @@ function CtaText({
 
 // ─── Centered layout ──────────────────────────────────────────────────────────
 
-function CenteredCta({data, surface, seam}: {data: GlobalCtaData; surface: SectionSurface; seam: SeamProps}) {
+function CenteredCta({data, surface, seam, face}: {data: GlobalCtaData; surface: SectionSurface; seam: SeamProps; face?: HeadingFace | null}) {
   const {tagline, heading, description, buttons, formEmbed} = data
   if (!heading) return null
 
@@ -69,7 +70,7 @@ function CenteredCta({data, surface, seam}: {data: GlobalCtaData; surface: Secti
   return (
     <SectionShell appearance={{surface}} contained={false} className="text-foreground" seam={seam}>
       <div className="mx-auto w-full max-w-lg text-center">
-        <CtaText tagline={tagline} heading={heading} description={description} centered fit={headingFit(heading, seam.site?.headingFace)} />
+        <CtaText tagline={tagline} heading={heading} description={description} centered fit={headingFit(heading, face ?? seam.site?.headingFace)} />
 
         {items.length > 0 && (
           <ButtonGroup items={items} align="center" className="mt-6 md:mt-8" />
@@ -87,7 +88,7 @@ function CenteredCta({data, surface, seam}: {data: GlobalCtaData; surface: Secti
 
 // ─── Split layout ─────────────────────────────────────────────────────────────
 
-function SplitCta({data, surface, seam}: {data: GlobalCtaData; surface: SectionSurface; seam: SeamProps}) {
+function SplitCta({data, surface, seam, face}: {data: GlobalCtaData; surface: SectionSurface; seam: SeamProps; face?: HeadingFace | null}) {
   const {tagline, heading, description, formEmbed} = data
   if (!heading) return null
 
@@ -96,7 +97,7 @@ function SplitCta({data, surface, seam}: {data: GlobalCtaData; surface: SectionS
 
         {/* Left: text */}
         <div>
-          <CtaText tagline={tagline} heading={heading} description={description} fit={headingFit(heading, seam.site?.headingFace)} />
+          <CtaText tagline={tagline} heading={heading} description={description} fit={headingFit(heading, face ?? seam.site?.headingFace)} />
         </div>
 
         {/* Right: form */}
@@ -134,11 +135,15 @@ export function GlobalCta({
   napTokens,
   surface = GLOBAL_CTA_DEFAULT_SURFACE,
   seam = NO_SEAM,
+  headingFace,
 }: {
   data: GlobalCtaData
   napTokens?: NapTokens | null
   surface?: SectionSurface
   seam?: SeamProps
+  /** The face its heading is fitted in (Phase 17C session 3): the page passes it, since an interior
+   *  page renders the close with no seam. */
+  headingFace?: HeadingFace | null
 }) {
   const resolved: GlobalCtaData = napTokens
     ? {
@@ -152,6 +157,6 @@ export function GlobalCta({
         })),
       }
     : data
-  if (resolved.layout === 'split') return <SplitCta data={resolved} surface={surface} seam={seam} />
-  return <CenteredCta data={resolved} surface={surface} seam={seam} />
+  if (resolved.layout === 'split') return <SplitCta data={resolved} surface={surface} seam={seam} face={headingFace} />
+  return <CenteredCta data={resolved} surface={surface} seam={seam} face={headingFace} />
 }

@@ -3,6 +3,7 @@ import ADVANCES from '../../fonts/heading-advances.json'
 import {FONT_PRESETS, headingWeights} from '../../fonts/presets'
 import {headingFaceOf, type HeadingFace} from '../headingFace'
 import {headingFit} from '../headingFit'
+import {HEADING_CHARS, HEADING_EXTRA_CHARS} from '../headingChars'
 import {headingFaceWithAdvances, withAdvances} from '../headingAdvances'
 
 // Phase 17C session 3 (`[R-536]`, `[R-544]`; monorepo WS-V1-PHASE17C3-DESIGN §2.1): the widths a
@@ -13,11 +14,12 @@ const adv = (face: HeadingFace, s: string) => [...s].reduce((a, ch) => a + TABLE
 const GRAPHITE: HeadingFace = withAdvances({pairing: 4, weight: '700', upper: false})
 
 describe('fonts/heading-advances.json', () => {
-  it('holds every pairing heading at every weight it can draw, 95 characters each', () => {
+  it('holds every pairing heading at every weight it can draw, over the characters the fit reads', () => {
+    expect(ADVANCES.chars).toBe(HEADING_EXTRA_CHARS)
     for (const p of FONT_PRESETS) {
       for (const w of headingWeights(p)) {
         const row = TABLE[String(p.id)]?.[w]
-        expect(row, `pairing ${p.id} at ${w}`).toHaveLength(95)
+        expect(row, `pairing ${p.id} at ${w}`).toHaveLength(HEADING_CHARS.length)
         // A space is narrower than an M in every face; nothing is zero or wider than 1.5 em.
         expect(row![0]).toBeLessThan(row!['M'.charCodeAt(0) - 32])
         for (const v of row!) expect(v > 0 && v < 1.5).toBe(true)
@@ -101,12 +103,27 @@ describe('headingFit', () => {
   it('takes no fit for a face without its widths (a look no server page built)', () => {
     expect(headingFit('Why work with us', {pairing: 4, weight: '700', upper: false})).toBeNull()
     expect(headingFit('Why work with us', null)).toBeNull()
-    expect(headingFaceWithAdvances({fontPairingPreset: 4}).advances).toHaveLength(95)
+    expect(headingFaceWithAdvances({fontPairingPreset: 4}).advances).toHaveLength(HEADING_CHARS.length)
   })
 
-  it('reads a character outside printable ASCII as the face\'s widest letter', () => {
-    const plain = headingFit('Cafe law', GRAPHITE)!
-    const accented = headingFit('Café law', GRAPHITE)!
-    expect(accented.w4).toBeGreaterThan(plain.w4)
+  it('measures the typographic and accented characters, and reads any other as the widest letter', () => {
+    const at = (ch: string) => GRAPHITE.advances![HEADING_CHARS.indexOf(ch)]
+    // An accented e is its own width, near a plain e's; an unknown character is the widest letter.
+    expect(headingFit('Café', GRAPHITE)!.w4).toBeCloseTo(Math.ceil((adv(GRAPHITE, 'Caf') + at('é')) * 100) / 100, 2)
+    expect(headingFit('Cafē', GRAPHITE)!.w4).toBeGreaterThan(headingFit('Café', GRAPHITE)!.w4)
+    expect(at('’')).toBeLessThan(at('M'))
+  })
+
+  it('never breaks at a no-break space, which is as wide as a space', () => {
+    const joined = headingFit('Over $250 million recovered', GRAPHITE)!
+    // The narrowest four lines cannot put 250 and million apart: the widest piece is the two together.
+    expect(joined.w4).toBeGreaterThanOrEqual(adv(GRAPHITE, '$250 million') - 0.005)
+    expect(headingFit('Over $250 million recovered', GRAPHITE)!.w4).toBeLessThan(joined.w4)
+  })
+
+  it('breaks after a dash and before an em dash, as both engines do', () => {
+    const dash = GRAPHITE.advances![HEADING_CHARS.indexOf('—')]
+    const f = headingFit('Answers—every time', GRAPHITE)!
+    expect(f.w4).toBeLessThan(adv(GRAPHITE, 'Answers') + dash + adv(GRAPHITE, 'every'))
   })
 })

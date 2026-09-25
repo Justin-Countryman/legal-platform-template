@@ -135,7 +135,7 @@ export default async function VideoLibraryPage() {
       </section>
 
       {!indexPage?.hideCtaForm && globalCtaData && (
-        <GlobalCta
+        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
           data={indexPage?.ctaOverride ? {...globalCtaData, ...indexPage.ctaOverride} : globalCtaData}
           napTokens={tokens}
         />
