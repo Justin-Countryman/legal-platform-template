@@ -5,6 +5,7 @@ import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {getEmbedUrl} from '@/lib/videoEmbed'
 import {VideoEmbed} from '@/components/media/VideoEmbed'
 import {type VideoSectionProps} from './sectionProps'
+import {headingFit} from '@/lib/headingFit'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -69,6 +70,7 @@ export function VideoSectionBlock({
               <SectionHeader
                 tagline={tagline}
                 heading={heading}
+                fit={headingFit(heading, seam.site?.headingFace)}
                 description={description}
                 alignment="left"
               />
@@ -93,6 +95,7 @@ export function VideoSectionBlock({
           <SectionHeader
             tagline={tagline}
             heading={heading}
+            fit={headingFit(heading, seam.site?.headingFace)}
             description={description}
             alignment="center"
             className="mx-auto mb-12 max-w-2xl"

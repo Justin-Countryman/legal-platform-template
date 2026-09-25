@@ -5,6 +5,7 @@ import {FormEmbed} from '@/components/layout/footers/FormEmbed'
 import {SectionShell} from './SectionShell'
 import {type SectionSurface} from '@/lib/sectionSurface'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
+import {headingFit, type HeadingFit} from '@/lib/headingFit'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -30,17 +31,20 @@ function CtaText({
   heading,
   description,
   centered = false,
+  fit,
 }: {
   tagline?: string | null
   heading: string
   description?: string | null
   centered?: boolean
+  fit?: HeadingFit | null
 }) {
   return (
     <div className={centered ? 'text-center' : undefined}>
       <SectionHeader
         tagline={tagline}
         heading={heading}
+        fit={fit}
         scale="xl"
         alignment={centered ? 'center' : 'left'}
       />
@@ -65,7 +69,7 @@ function CenteredCta({data, surface, seam}: {data: GlobalCtaData; surface: Secti
   return (
     <SectionShell appearance={{surface}} contained={false} className="text-foreground" seam={seam}>
       <div className="mx-auto w-full max-w-lg text-center">
-        <CtaText tagline={tagline} heading={heading} description={description} centered />
+        <CtaText tagline={tagline} heading={heading} description={description} centered fit={headingFit(heading, seam.site?.headingFace)} />
 
         {items.length > 0 && (
           <ButtonGroup items={items} align="center" className="mt-6 md:mt-8" />
@@ -92,7 +96,7 @@ function SplitCta({data, surface, seam}: {data: GlobalCtaData; surface: SectionS
 
         {/* Left: text */}
         <div>
-          <CtaText tagline={tagline} heading={heading} description={description} />
+          <CtaText tagline={tagline} heading={heading} description={description} fit={headingFit(heading, seam.site?.headingFace)} />
         </div>
 
         {/* Right: form */}

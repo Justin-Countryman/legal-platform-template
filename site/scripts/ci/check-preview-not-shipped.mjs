@@ -67,9 +67,16 @@ function walk(dir, keep) {
 // ─── Built ────────────────────────────────────────────────────────────────────
 const staticFiles = walk('.next/static', () => true)
 if (staticFiles.length === 0) fail('.next/static is empty: run the build first')
+// Server-only data that must never reach a browser file either (Phase 17C session 3): the heading
+// width table (`fonts/heading-advances.json`, read by `lib/headingFit.ts`), 24 KB that two client
+// components rendering `SectionHeader` would otherwise carry. Its method line is the sentinel.
+const SERVER_ONLY = ['the advance of each printable ASCII character']
 for (const f of staticFiles) {
-  const hit = found(readFileSync(f, 'utf8'))
+  const text = readFileSync(f, 'utf8')
+  const hit = found(text)
   if (hit.length) fail(`${f} carries ${hit.join(', ')}`)
+  const server = SERVER_ONLY.filter((s) => text.includes(s))
+  if (server.length) fail(`${f} carries server-only data: ${server.join(', ')}`)
 }
 const pages = walk('.next/server/app', (p) => p.endsWith('.html') || p.endsWith('.rsc'))
 for (const f of pages) {

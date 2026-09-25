@@ -13,6 +13,7 @@ import {MarqueeRibbon} from './MarqueeRibbon'
 import {SectionShell, type SectionAppearance} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
 import type {ContentSectionProps} from './sectionProps'
+import {headingFit} from '@/lib/headingFit'
 
 // ─── Content section ──────────────────────────────────────────────────────────
 //
@@ -176,6 +177,7 @@ export function ContentSectionBlock({
             tokens={napTokens}
             scale={scale}
             align={center ? 'center' : 'left'}
+            fit={headingFit(t(data.heading), seam.site?.headingFace)}
           />
         ) : null
 
@@ -299,8 +301,8 @@ export function ContentSectionBlock({
 
           case 'twoColumnText':
             return (
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-16">
-                <div className="md:col-span-5">{heading}</div>
+              <div className="heading-grid-5 grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-16">
+                <div className="heading-grows md:col-span-5">{heading}</div>
                 <div className="md:col-span-7">
                   {body}
                   {itemList}

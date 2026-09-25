@@ -3,7 +3,9 @@ export const revalidate = 3600
 import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {VIDEO_INDEX_PAGE_QUERY} from '@/lib/sanity/queries'
-import {chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
+import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
+import {headingFaceOf} from '@/lib/headingFace'
+import {headingFit} from '@/lib/headingFit'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -127,6 +129,7 @@ export default async function VideoLibraryPage() {
             tagline={tagline}
             heading={heading}
             description={description}
+            fit={headingFit(heading, headingFaceOf((await getSiteChrome())?.designTokens))}
           />
         </div>
       </section>

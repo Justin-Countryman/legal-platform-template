@@ -12,6 +12,7 @@ import {SiloCarousel} from './silo/SiloCarousel'
 import {SiloCompactList} from './silo/SiloCompactList'
 import {isBentoMode} from './silo/bento'
 import type {SiloNavItem, SiloLayout, SiloIconPosition, SiloSectionLayout, SiloGridMode, SiloMobileDisplay} from './silo/types'
+import {headingFit, type HeadingFit} from '@/lib/headingFit'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -145,6 +146,7 @@ export function PracticeAreaNavBlock({
         heading={heading}
         description={description}
         buttons={buttons}
+        fit={headingFit(heading, seam.site?.headingFace)}
       />
     </SectionShell>
   )
@@ -154,7 +156,7 @@ export function PracticeAreaNavBlock({
 // adapts to whatever column width it lands in (SiloNav is a @container), so these
 // layouts stay independent of the chosen button layout.
 function SiloSectionFrame({
-  layout, hasHeader, tagline, heading, description, buttons,
+  layout, hasHeader, tagline, heading, description, buttons, fit,
 }: {
   layout: SiloSectionLayout
   hasHeader: boolean
@@ -162,12 +164,14 @@ function SiloSectionFrame({
   heading: string | null
   description: string | null
   buttons: React.ReactNode
+  fit?: HeadingFit | null
 }) {
   const header = (alignment: 'center' | 'left', opts?: {withDescription?: boolean; className?: string}) =>
     hasHeader ? (
       <SectionHeader
         tagline={tagline}
         heading={heading ?? ''}
+        fit={fit}
         description={opts?.withDescription === false ? null : description}
         alignment={alignment}
         className={opts?.className}
@@ -185,9 +189,9 @@ function SiloSectionFrame({
 
     case 'aside':
       return (
-        <div data-section-layout="aside" className="lg:grid lg:grid-cols-[18rem_1fr] lg:gap-12 xl:gap-16">
+        <div data-section-layout="aside" className="heading-grid-aside lg:grid lg:grid-cols-[18rem_1fr] lg:gap-12 xl:gap-16">
           {hasHeader && (
-            <div className="mb-10 lg:mb-0 lg:sticky lg:top-28 lg:self-start">{header('left')}</div>
+            <div className="heading-grows mb-10 lg:mb-0 lg:sticky lg:top-28 lg:self-start">{header('left')}</div>
           )}
           <div>{buttons}</div>
         </div>
@@ -198,7 +202,7 @@ function SiloSectionFrame({
         <div data-section-layout="banner">
           {hasHeader && (
             <div className="mb-10 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between md:gap-12">
-              {header('left', {withDescription: false, className: 'max-w-2xl'})}
+              {header('left', {withDescription: false, className: 'heading-flex-banner max-w-2xl'})}
               {description && <p className="max-w-md text-foreground-muted md:text-right">{description}</p>}
             </div>
           )}

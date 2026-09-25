@@ -836,11 +836,74 @@ h1, h2, h3, h4, h5, h6 {
   --text-3xl: max(1.25rem, calc(1.875rem * var(--heading-caps-scale, 1)));
   --text-4xl: max(1.25rem, calc(2.25rem * var(--heading-caps-scale, 1)));
   --text-5xl: max(1.25rem, calc(3rem * var(--heading-caps-scale, 1)));
+  /* A size container, so its fitted words can read its width (Phase 17C session 3, below). On the
+     heading and not its wrapper: a container stops margins collapsing through it, and the heading's
+     only children are the fitted span and the rule's pseudo-elements. */
+  container-type: inline-size;
 }
 /* The homepage tier's size is a clamp, not a theme variable: multiplied here, on a section
    heading only (the Design Studio's sample wears `marketing-h2` alone). */
 .section-heading.marketing-h2 {
   font-size: max(1.25rem, calc(clamp(1.5rem, 0.75rem + 4vw, var(--marketing-h2, 2.25rem)) * var(--heading-caps-scale, 1)));
+}
+/* A heading that fits its column (Phase 17C session 3, `[R-536]`, `[R-544]`; monorepo
+   WS-V1-PHASE17C3-DESIGN §2.1). The heading carries the narrowest line, in em of its own size, at
+   which its words wrap into three lines and into four (`--heading-w3`, `--heading-w4`, from the
+   face's own character widths, `lib/headingFit.ts`); its words sit in this span, at the heading's
+   own size (`1em`) or, where the words would wrap past the rule in the column, the column's width
+   (`100cqi`, the heading's content box, rules and padding already out of it) over that line, and
+   never under the floor: 20 px, 32 px where the light weight draws (below). Three lines from `lg`,
+   four under it (phones and tablets). 0.98 is the slack for kerning and italic emphasis. An engine
+   without container units drops the declaration, and the span is the heading's size, as before. */
+.heading-fit {
+  display: block;
+  /* The heading's tracking resolves to pixels on the heading; recomputed at the span's size. */
+  letter-spacing: var(--heading-tracking, normal);
+  font-size: min(1em, max(var(--heading-floor, 1.25rem), calc(100cqi * 0.98 / var(--heading-w4, 1))));
+}
+@media (min-width: 992px) {
+  .heading-fit { font-size: min(1em, max(var(--heading-floor, 1.25rem), calc(100cqi * 0.98 / var(--heading-w3, 1)))); }
+}
+/* The areas banner's header sits in a flex row beside its description; a size container gives a flex
+   item no content width, so the header would collapse to its tagline. It takes the room the description
+   leaves, from the 42rem its own max-width allows (measured closest to today at 768 and 1024, ADV-17C3-A). */
+@supports (container-type: inline-size) {
+  @media (min-width: 768px) { .heading-flex-banner { flex: 1 1 42rem; min-width: 0; } }
+}
+/* A heading column that widens before its heading shrinks (Phase 17C session 3, `[R-544]`: Justin,
+   "if we can make the column bigger to fit the text bigger we can do that"; monorepo
+   WS-V1-PHASE17C3-DESIGN §7.7 as amended by ADV-17C3-A2). In a layout whose heading column holds the
+   heading unit beside other content (`heading-grows` on that column), the heading's intrinsic width is
+   the width its words need for their lines at its own size, so the grid's `auto` track grows toward it,
+   from today's width, only into room the other track's minimum leaves: today's width when the heading
+   fits, the need between, the limit past it; then the fit (above) sets it smaller; then, at the floor, it
+   takes one more line. Nothing else in the column sizes it: the tagline, the description and the buttons
+   are contained, and the tagline keeps its one line box. The other side never falls under today's
+   mirror, nor under a readable 30rem where there is room, so on a tablet the fit does the work. Behind a
+   support check: an engine without container queries or intrinsic-size containment keeps today's grid. */
+@supports (container-type: inline-size) and (contain-intrinsic-inline-size: 1px) {
+  .heading-grows .section-heading { contain-intrinsic-inline-size: calc(var(--heading-w4, 0) * 1em / 0.98); }
+  .heading-grows :is(p, .flex-wrap) { contain: inline-size; }
+  .heading-grows .tagline { min-width: 100%; }
+  @media (min-width: 768px) {
+    /* The two-column text and the reviews split: today 5 of 12 columns with 4rem gaps; up to 7 of 12. */
+    .heading-grid-5 {
+      --heading-col: calc(max(0px, (100% - 44rem) / 12) * 5 + 16rem);
+      grid-template-columns: minmax(var(--heading-col), auto) minmax(max(var(--heading-col), min(30rem, 100% - 4rem - var(--heading-col))), 1fr);
+    }
+    .heading-grid-5 > * { grid-column: auto; }
+    /* The CTA block's text-only layout: today halves with a 3rem gap; up to 7 of 12. */
+    .heading-grid-half {
+      grid-template-columns: minmax(calc((100% - 3rem) / 2), auto) minmax(max(calc((100% - 3rem) * 5 / 12), min(30rem, calc((100% - 3rem) / 2))), 1fr);
+    }
+    /* Badges beside and split: today a third of the row; up to a half. */
+    .heading-flex-third { flex: 0 1 auto; width: auto; min-width: calc(100% / 3); max-width: 50%; }
+  }
+  @media (min-width: 992px) {
+    .heading-grows .section-heading { contain-intrinsic-inline-size: calc(var(--heading-w3, 0) * 1em / 0.98); }
+    /* The areas aside: today 18rem; up to 26rem. */
+    .heading-grid-aside { grid-template-columns: minmax(18rem, auto) minmax(calc(100% - 30rem), 1fr); }
+  }
 }
 /* Phase 16C (`[R-484]`): every design but Flanking is a one-color SVG mask from
    `headingLineVars`, painted in the decor role resolved on the heading. */
@@ -932,6 +995,12 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 @media (min-width: 500px) { [data-heading-weight="light"] .section-heading.marketing-h2 { font-weight: 300; } }
 @media (min-width: 768px) { [data-heading-weight="light"] :is(h1, .section-heading):is(.md\:text-4xl, .md\:text-5xl) { font-weight: 300; } }
 @media (min-width: 992px) { [data-heading-weight="light"] .section-heading.lg\:text-4xl { font-weight: 300; } }
+/* A fitted heading that draws 300 is never set under 32 px (Phase 17C session 3): the same
+   selectors, so the floor rises exactly where the light weight draws. */
+[data-heading-weight="light"] .section-heading.text-4xl > .heading-fit { --heading-floor: 2rem; }
+@media (min-width: 500px) { [data-heading-weight="light"] .section-heading.marketing-h2 > .heading-fit { --heading-floor: 2rem; } }
+@media (min-width: 768px) { [data-heading-weight="light"] .section-heading:is(.md\:text-4xl, .md\:text-5xl) > .heading-fit { --heading-floor: 2rem; } }
+@media (min-width: 992px) { [data-heading-weight="light"] .section-heading.lg\:text-4xl > .heading-fit { --heading-floor: 2rem; } }
 
 /* ─── The section texture (Phase 16A) ───────────────────────────────────────── */
 /* What a band set to the Pattern surface wears, and nothing else on the site:

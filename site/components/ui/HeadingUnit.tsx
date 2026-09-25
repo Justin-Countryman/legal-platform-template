@@ -1,6 +1,8 @@
 import {Tagline} from '@/components/ui/Tagline'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {splitEmphasis} from '@/lib/headingEmphasis'
+import {HeadingText, headingFitStyle} from '@/components/ui/HeadingText'
+import type {HeadingFit} from '@/lib/headingFit'
 
 // ─── Heading unit ─────────────────────────────────────────────────────────────
 //
@@ -46,6 +48,9 @@ export type HeadingUnitProps = {
   align?: 'left' | 'center'
   /** Wrapper layout only (max-width, margins). Never a heading class. */
   className?: string
+  /** The widths the heading's words need, from the section's `headingFit` (Phase 17C session 3,
+   *  `[R-536]`): the heading is set smaller only where its words would wrap past the rule. */
+  fit?: HeadingFit | null
 }
 
 export function HeadingUnit({
@@ -57,6 +62,7 @@ export function HeadingUnit({
   as = 'h2',
   align = 'left',
   className,
+  fit,
 }: HeadingUnitProps) {
   const text = resolveTokenString(heading, tokens)
   const taglineText = resolveTokenString(tagline, tokens)
@@ -77,11 +83,11 @@ export function HeadingUnit({
     <div className={wrapperClass || undefined}>
       {taglineText && <Tagline as="p">{taglineText}</Tagline>}
       {as === 'h1' ? (
-        <h1 className={tier}>{content}</h1>
+        <h1 className={tier} style={headingFitStyle(fit)}><HeadingText fit={fit}>{content}</HeadingText></h1>
       ) : as === 'h3' ? (
-        <h3 className={tier}>{content}</h3>
+        <h3 className={tier} style={headingFitStyle(fit)}><HeadingText fit={fit}>{content}</HeadingText></h3>
       ) : (
-        <h2 className={tier}>{content}</h2>
+        <h2 className={tier} style={headingFitStyle(fit)}><HeadingText fit={fit}>{content}</HeadingText></h2>
       )}
     </div>
   )

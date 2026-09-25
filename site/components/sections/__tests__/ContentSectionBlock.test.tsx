@@ -127,7 +127,8 @@ describe('slots', () => {
   it('emphasises the first occurrence only, with tokens resolved', () => {
     const {container} = renderSection({layout: 'statement', heading: '{{firmName}} for {{firmName}}', headingEmphasis: '{{firmName}}'}, {tokens: {firmName: 'Acme'}})
     expect(container.querySelectorAll('em')).toHaveLength(1)
-    expect(container.querySelector('h2')!.innerHTML).toBe('<em class="heading-emphasis">Acme</em> for Acme')
+    // The words sit in the fitted span (Phase 17C session 3).
+    expect(container.querySelector('h2 > .heading-fit')!.innerHTML).toBe('<em class="heading-emphasis">Acme</em> for Acme')
   })
 
   it('a proof number wins over badges, and renders the disclaimer', () => {

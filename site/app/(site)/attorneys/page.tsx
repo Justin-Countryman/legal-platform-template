@@ -6,7 +6,9 @@ import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import Link from 'next/link'
 import {ATTORNEY_INDEX_QUERY, ATTORNEY_PAGES_QUERY} from '@/lib/sanity/queries'
-import {chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
+import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
+import {headingFaceOf} from '@/lib/headingFace'
+import {headingFit} from '@/lib/headingFit'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -197,6 +199,7 @@ export default async function AttorneyIndexPage() {
           <SectionHeader
             tagline={tagline}
             heading={heading}
+            fit={headingFit(heading, headingFaceOf((await getSiteChrome())?.designTokens))}
             description={description}
             alignment="left"
             className="container max-w-lg"

@@ -4,6 +4,7 @@ import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {SectionShell} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type CaseResultsSectionProps} from './sectionProps'
+import {headingFit} from '@/lib/headingFit'
 
 // ─── Case Results section ─────────────────────────────────────────────────────
 //
@@ -90,7 +91,7 @@ export function CaseResultsSection({
       seam={seam}
     >
       {heading && (
-        <SectionHeader heading={heading} description={intro} className="mx-auto mb-12 max-w-2xl" />
+        <SectionHeader heading={heading} fit={headingFit(heading, seam.site?.headingFace)} description={intro} className="mx-auto mb-12 max-w-2xl" />
       )}
 
       <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-label="Case results">
