@@ -269,6 +269,10 @@ function measure() {
   }
 }
 
+// A heading set at its readable floor may take one more line than the rule (`[R-544]`, Justin
+// 2026-09-25: it stays readable): 20 px, and 32 px where it draws the light weight (`globals.css`).
+const atFloor = (b) => b.headingSize !== null && b.headingSize <= (b.headingWeight === 300 ? 32 : 20) + 0.05
+
 // ─── Run ──────────────────────────────────────────────────────────────────────
 await wait(`${BASE}/`, 200, 200)
 mkdirSync(OUT, {recursive: true})
@@ -330,7 +334,7 @@ try {
         results[key] = m
         if (m.innerWidth !== device.viewport.width) fail(`${key}: innerWidth is ${m.innerWidth}, not ${device.viewport.width} (the layout is not at this width)`)
         if (m.scrollWidth > m.clientWidth) fail(`${key}: horizontal scroll: scrollWidth ${m.scrollWidth} over ${m.clientWidth}`)
-        if (width === '390') for (const b of m.bands) if (b.headingLines > 4) fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at 390: ${b.heading}`)
+        if (width === '390') for (const b of m.bands) if (b.headingLines > 4 && !atFloor(b)) fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at 390: ${b.heading}`)
         await page.screenshot({path: resolve(OUT, `${canvas}--${flow}--${width}.jpg`), fullPage: true, type: 'jpeg', quality: 60})
         // The header scrolled (Phase 17B session 4): prerendered HTML only ever holds the state
         // at the top, so this is the one check that sees the scrolled bar, its ground and its rule.
@@ -387,7 +391,11 @@ try {
         if (m.innerWidth !== device.viewport.width) fail(`${key}: innerWidth is ${m.innerWidth}, not ${device.viewport.width}`)
         if (m.scrollWidth > m.clientWidth) fail(`${key}: horizontal scroll: scrollWidth ${m.scrollWidth} over ${m.clientWidth}`)
         const limit = width === '390' ? 4 : 3
-        for (const b of m.bands) if (b.headingLines > limit) fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at ${width} (the rule is ${limit}): ${b.heading}`)
+        for (const b of m.bands) {
+          if (b.headingLines <= limit) continue
+          if (atFloor(b)) console.log(`flow-metrics: ${key}: band ${b.i} at the readable floor (${b.headingSize} px) takes ${b.headingLines} lines, as [R-544] allows: ${b.heading}`)
+          else fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at ${width} (the rule is ${limit}): ${b.heading}`)
+        }
         if (fontBytes > FONT_BUDGET) fail(`${key}: ${fontBytes} font bytes over the budget of ${FONT_BUDGET}: ${fontFiles.join(', ')}`)
         await page.screenshot({path: resolve(OUT, `${canvas}--${STYLE_SET_FLOW}--${width}--${styleSet}.jpg`), fullPage: true, type: 'jpeg', quality: 60})
         await context.close()
