@@ -1,3 +1,6 @@
+import {createHash} from 'node:crypto'
+import {existsSync, readFileSync, readdirSync, statSync} from 'node:fs'
+import {join, resolve} from 'node:path'
 import {describe, it, expect} from 'vitest'
 import {FONT_PRESETS, getPresetById, type FontPreset} from '../presets'
 import {resolvefonts, buildFontPreloads} from '../loader'
@@ -211,5 +214,124 @@ describe('buildFontPreloads()', () => {
     // The preset deliberately points heading.regular at Poppins-Bold (700) and
     // body.regular at Poppins-Regular (400) — distinct files, so 2 preloads.
     expect(preloads).toHaveLength(2)
+  })
+})
+
+// ─── The committed files, read from disk (Phase 17C, `[R-540]`) ─────────────
+//
+// Every variable family was committed as byte-identical copies under Regular, Bold,
+// SemiBold and Medium names (23 copies), and a page fetched the same bytes once per
+// name: Graphite 170 KB of fonts for 85 KB distinct (monorepo
+// WS-V1-PHASE17C2A-DESIGN §0). These read the files themselves, not the list.
+
+const PUBLIC = resolve(__dirname, '../../public')
+const FILES = join(PUBLIC, 'fonts/files')
+
+function committedFonts(dir = FILES): string[] {
+  const out: string[] = []
+  for (const name of readdirSync(dir).sort()) {
+    const p = join(dir, name)
+    if (statSync(p).isDirectory()) out.push(...committedFonts(p))
+    else if (name.endsWith('.woff2')) out.push(p)
+  }
+  return out
+}
+
+const digest = (path: string) => createHash('sha256').update(readFileSync(path)).digest('hex')
+const onDisk = (url: string) => join(PUBLIC, url)
+
+// The WOFF2 table directory (W3C WOFF2 §5.2), enough to see whether a file carries a
+// variation axis without decompressing it: a 48-byte header with numTables at 12; per
+// table a flags byte whose low six bits index the known-tag list (63: a four-byte tag
+// follows), a UIntBase128 length, and a second one when the table is transformed (glyf
+// and loca at transform version 0, any other table at a non-zero version).
+const KNOWN_TAGS = [
+  'cmap', 'head', 'hhea', 'hmtx', 'maxp', 'name', 'OS/2', 'post', 'cvt ', 'fpgm', 'glyf', 'loca', 'prep', 'CFF ', 'VORG',
+  'EBDT', 'EBLC', 'gasp', 'hdmx', 'kern', 'LTSH', 'PCLT', 'VDMX', 'vhea', 'vmtx', 'BASE', 'GDEF', 'GPOS', 'GSUB', 'EBSC',
+  'JSTF', 'MATH', 'CBDT', 'CBLC', 'COLR', 'CPAL', 'SVG ', 'sbix', 'acnt', 'avar', 'bdat', 'bloc', 'bsln', 'cvar', 'fdsc',
+  'feat', 'fmtx', 'fvar', 'gvar', 'hsty', 'just', 'lcar', 'mort', 'morx', 'opbd', 'prop', 'trak', 'Zapf', 'Silf', 'Glat',
+  'Gloc', 'Feat', 'Sill',
+]
+
+function woff2Tables(path: string): string[] {
+  const buf = readFileSync(path)
+  if (buf.toString('latin1', 0, 4) !== 'wOF2') throw new Error(`${path} is not WOFF2`)
+  let o = 48
+  const base128 = () => {
+    let v = 0
+    for (let i = 0; i < 5; i++) {
+      const b = buf[o++]
+      v = v * 128 + (b & 0x7f)
+      if (!(b & 0x80)) return v
+    }
+    throw new Error(`${path}: bad UIntBase128`)
+  }
+  const tags: string[] = []
+  for (let i = 0, n = buf.readUInt16BE(12); i < n; i++) {
+    const flags = buf[o++]
+    let tag: string
+    if ((flags & 0x3f) === 63) { tag = buf.toString('latin1', o, o + 4); o += 4 } else tag = KNOWN_TAGS[flags & 0x3f]
+    base128()
+    const version = flags >> 6
+    if (tag === 'glyf' || tag === 'loca' ? version === 0 : version !== 0) base128()
+    tags.push(tag)
+  }
+  return tags
+}
+const isVariable = (path: string) => woff2Tables(path).includes('fvar')
+
+const UPRIGHT_KEYS = ['regular', 'medium', 'semibold', 'bold'] as const
+const roles = FONT_PRESETS.flatMap((p) => [
+  {id: p.id, role: 'heading' as const, def: p.heading as FontPreset['heading'] & {files: Record<string, string | undefined>}},
+  {id: p.id, role: 'body' as const, def: p.body as FontPreset['body'] & {files: Record<string, string | undefined>}},
+])
+
+describe('the committed font files', () => {
+  it('no two committed font files are byte-identical', () => {
+    const byDigest = new Map<string, string[]>()
+    for (const path of committedFonts()) {
+      const d = digest(path)
+      byDigest.set(d, [...(byDigest.get(d) ?? []), path.slice(FILES.length + 1)])
+    }
+    const copies = [...byDigest.values()].filter((paths) => paths.length > 1)
+    expect(copies).toEqual([])
+  })
+
+  it('every file a pairing names exists', () => {
+    const missing = roles.flatMap(({id, role, def}) =>
+      Object.values(def.files).filter((url): url is string => !!url && !existsSync(onDisk(url))).map((url) => `${id} ${role} ${url}`))
+    expect(missing).toEqual([])
+  })
+
+  it("a pairing's preloads name files of distinct bytes", () => {
+    const doubled = FONT_PRESETS.flatMap((p) => {
+      const r = resolvefonts(p.id, null, null)
+      const hrefs = buildFontPreloads(r.heading, r.body).map((e) => e.href)
+      const digests = hrefs.map((h) => digest(onDisk(h)))
+      return new Set(digests).size === digests.length ? [] : [`${p.id}: ${hrefs.join(', ')}`]
+    })
+    expect(doubled).toEqual([])
+  })
+
+  it('the table reader sees an axis in the variable files and none in the static ones', () => {
+    // Checked file for file against fontTools when written (the monorepo record's §8).
+    const kinds = committedFonts().map((p) => isVariable(p))
+    expect({variable: kinds.filter(Boolean).length, static: kinds.filter((k) => !k).length}).toEqual({variable: 14, static: 43})
+    expect(isVariable(onDisk('/fonts/files/fraunces/Fraunces-Regular.woff2'))).toBe(true)
+    expect(isVariable(onDisk('/fonts/files/fraunces/Fraunces-Italic.woff2'))).toBe(false)
+    expect(isVariable(onDisk('/fonts/files/spectral/Spectral-Bold.woff2'))).toBe(false)
+    expect(isVariable(onDisk('/fonts/files/poppins/Poppins-Bold.woff2'))).toBe(false)
+  })
+
+  it('a role is flagged variable exactly when its file carries an axis, and a variable role names one upright file', () => {
+    const wrong = roles.flatMap(({id, role, def}) => {
+      const out: string[] = []
+      if (def.variable !== isVariable(onDisk(def.files.regular))) out.push(`${id} ${role}: flagged ${def.variable}`)
+      const upright = new Set(UPRIGHT_KEYS.map((k) => def.files[k]).filter(Boolean))
+      if (def.variable && upright.size !== 1) out.push(`${id} ${role}: ${upright.size} upright files`)
+      if (def.variable && UPRIGHT_KEYS.some((k) => k !== 'regular' && def.files[k])) out.push(`${id} ${role}: names a weight file beside its variable one`)
+      return out
+    })
+    expect(wrong).toEqual([])
   })
 })
