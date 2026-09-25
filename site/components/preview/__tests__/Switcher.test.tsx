@@ -238,4 +238,10 @@ describe('the style-set row after the roster of eight', () => {
     const c = draw(operator, canvasless, {...choices, styleSet: 'site'})
     expect(c.textContent).toContain(`As the site is: ${RETIRED_STYLE_SETS[0].name} (retired)`)
   })
+
+  it('mints no Apply for a retired style set: the typed address renders it, but it is offered nowhere (pre-PR pass F1)', () => {
+    const c = draw(operator, stored, {...choices, styleSet: RETIRED_STYLE_SETS[0].id})
+    expect(hrefs(c).some((h) => h.includes('#/design'))).toBe(false)
+    expect(c.textContent).toContain('no longer offered')
+  })
 })

@@ -11,6 +11,13 @@ import {STYLE_SETS} from '../styleSets'
 // em and mean darkness) into `scripts/ci/__snapshots__/hero-voice.json`, and this test refuses
 // any pair within 5% of width and 0.03 of ink with the same section case and hero size.
 //
+// The case and the hero's size count as voice on purpose, and that is where the rule's power over
+// the eight lies (the pre-PR pass): Walnut and Marble (3.5%, 0.021) pass on Marble's capitals,
+// Graphite and Dune (3.6%, 0.010) on Dune's smaller hero, Marble and Birch (1.9%, 0.009) on the
+// capitals; Walnut and Birch sit 5.4% apart. The eye pass judged those pairs and told them apart
+// by the same things (the record's §8.3); a pair inside both thresholds with the same case and
+// size is what this refuses, and among the retired Dune and Valley would have been one.
+//
 // Read only where the CI scripts are present: a client tree prunes `scripts/ci/`
 // (`traps.md`), so this skips by name there.
 
