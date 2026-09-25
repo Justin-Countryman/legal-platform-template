@@ -1,0 +1,8187 @@
+{
+ "method": "every tile at every strength with its render scale, over the presets and the near-threshold palettes; written by lib/__tests__/textureCases.test.ts, rendered by scripts/ci/texture-pixels.mjs",
+ "tiles": [
+  {
+   "family": "pinstripe",
+   "strength": "quiet",
+   "image": "repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 10px)",
+   "size": "auto",
+   "render": {
+    "light": 1,
+    "dark": 1
+   }
+  },
+  {
+   "family": "diagonalHatch",
+   "strength": "quiet",
+   "image": "repeating-linear-gradient(45deg,currentColor 0 1px,transparent 1px 8px)",
+   "size": "auto",
+   "render": {
+    "light": 1,
+    "dark": 1
+   }
+  },
+  {
+   "family": "diamondLattice",
+   "strength": "quiet",
+   "image": "repeating-linear-gradient(45deg,currentColor 0 1px,transparent 1px 14px),repeating-linear-gradient(-45deg,currentColor 0 1px,transparent 1px 14px)",
+   "size": "auto",
+   "render": {
+    "light": 1,
+    "dark": 1
+   }
+  },
+  {
+   "family": "scallop",
+   "strength": "quiet",
+   "image": "radial-gradient(circle at 50% 100%,transparent 0 7px,currentColor 7px 8px,transparent 8px)",
+   "size": "16px 16px",
+   "render": {
+    "light": 1,
+    "dark": 1
+   }
+  },
+  {
+   "family": "grid",
+   "strength": "quiet",
+   "image": "repeating-linear-gradient(0deg,currentColor 0 1px,transparent 1px 24px),repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 24px)",
+   "size": "auto",
+   "render": {
+    "light": 1,
+    "dark": 1
+   }
+  },
+  {
+   "family": "dots",
+   "strength": "quiet",
+   "image": "radial-gradient(circle at center,currentColor 0 1.5px,transparent 2px)",
+   "size": "12px 12px",
+   "render": {
+    "light": 1,
+    "dark": 1
+   }
+  }
+ ],
+ "palettes": [
+  {
+   "label": "black-gold",
+   "light": {
+    "ground": "#ffffff",
+    "ink": "#111111",
+    "opacity": 0.04,
+    "tiers": [
+     "#161616",
+     "#555555",
+     "#707070",
+     "#8d6b12",
+     "#111111",
+     "#111111"
+    ]
+   },
+   "dark": {
+    "ground": "#111111",
+    "ink": "#000000",
+    "opacity": 0.676,
+    "tiers": [
+     "#eeeeee",
+     "#d7d7d7",
+     "#b7b7b7",
+     "#eed59f",
+     "#c5a253"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "navy-brass",
+   "light": {
+    "ground": "#f5eedc",
+    "ink": "#1c2b4a",
+    "opacity": 0.04,
+    "tiers": [
+     "#151619",
+     "#545558",
+     "#656668",
+     "#845a00",
+     "#1c2b4a",
+     "#1c2b4a"
+    ]
+   },
+   "dark": {
+    "ground": "#1c2b4a",
+    "ink": "#000000",
+    "opacity": 0.128,
+    "tiers": [
+     "#eceef3",
+     "#d6d7db",
+     "#b6b7ba",
+     "#f4d29e",
+     "#be8f41"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "navy-ice",
+   "light": {
+    "ground": "#f3f7fa",
+    "ink": "#0b2545",
+    "opacity": 0.04,
+    "tiers": [
+     "#141619",
+     "#535558",
+     "#696a6d",
+     "#2263c8",
+     "#0b2545",
+     "#00298c"
+    ]
+   },
+   "dark": {
+    "ground": "#0b2545",
+    "ink": "#000000",
+    "opacity": 0.149,
+    "tiers": [
+     "#ebeff3",
+     "#d5d8db",
+     "#b6b7ba",
+     "#a8d9ff",
+     "#4d8ef8"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "navy-orange",
+   "light": {
+    "ground": "#ffffff",
+    "ink": "#13294b",
+    "opacity": 0.04,
+    "tiers": [
+     "#141619",
+     "#535558",
+     "#6f7072",
+     "#ae5600",
+     "#13294b",
+     "#13294b"
+    ]
+   },
+   "dark": {
+    "ground": "#13294b",
+    "ink": "#000000",
+    "opacity": 0.159,
+    "tiers": [
+     "#eceff3",
+     "#d5d8db",
+     "#b6b7ba",
+     "#ffc086",
+     "#f57c00"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "burgundy-gold",
+   "light": {
+    "ground": "#f5efe3",
+    "ink": "#5a1a24",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a1415",
+     "#595454",
+     "#6b6666",
+     "#7b5f21",
+     "#5a1a24",
+     "#5a1a24"
+    ]
+   },
+   "dark": {
+    "ground": "#5a1a24",
+    "ink": "#000000",
+    "opacity": 0.125,
+    "tiers": [
+     "#f5ecec",
+     "#dcd5d6",
+     "#bbb6b6",
+     "#ead5aa",
+     "#b89b5e"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "teal-mint",
+   "light": {
+    "ground": "#ffffff",
+    "ink": "#0f4c5c",
+    "opacity": 0.04,
+    "tiers": [
+     "#131718",
+     "#525657",
+     "#6e7172",
+     "#00805c",
+     "#0f4c5c",
+     "#0f4c5c"
+    ]
+   },
+   "dark": {
+    "ground": "#0f4c5c",
+    "ink": "#000000",
+    "opacity": 0.086,
+    "tiers": [
+     "#eaf0f1",
+     "#d4d8da",
+     "#b5b8b9",
+     "#a0eac9",
+     "#54c79b"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "navy-brick",
+   "light": {
+    "ground": "#ffffff",
+    "ink": "#1b2a41",
+    "opacity": 0.04,
+    "tiers": [
+     "#151618",
+     "#545557",
+     "#6f7072",
+     "#a23b2a",
+     "#a23b2a",
+     "#610000"
+    ]
+   },
+   "dark": {
+    "ground": "#1b2a41",
+    "ink": "#000000",
+    "opacity": 0.155,
+    "tiers": [
+     "#eceff2",
+     "#d6d7da",
+     "#b6b7b9",
+     "#ffc0af",
+     "#df725e"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "ink-lavender",
+   "light": {
+    "ground": "#ffffff",
+    "ink": "#17171f",
+    "opacity": 0.04,
+    "tiers": [
+     "#161617",
+     "#555556",
+     "#707071",
+     "#7664a9",
+     "#17171f",
+     "#17171f"
+    ]
+   },
+   "dark": {
+    "ground": "#17171f",
+    "ink": "#000000",
+    "opacity": 0.283,
+    "tiers": [
+     "#eeeeef",
+     "#d7d7d8",
+     "#b7b7b8",
+     "#dacfff",
+     "#8e7cc3"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "black-crimson",
+   "light": {
+    "ground": "#ffffff",
+    "ink": "#121212",
+    "opacity": 0.04,
+    "tiers": [
+     "#161616",
+     "#555555",
+     "#707070",
+     "#c8102e",
+     "#c8102e",
+     "#7c0000"
+    ]
+   },
+   "dark": {
+    "ground": "#121212",
+    "ink": "#000000",
+    "opacity": 0.528,
+    "tiers": [
+     "#eeeeee",
+     "#d7d7d7",
+     "#b7b7b7",
+     "#ffafab",
+     "#ec414b"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "charcoal-coral",
+   "light": {
+    "ground": "#f6efe6",
+    "ink": "#2f3437",
+    "opacity": 0.04,
+    "tiers": [
+     "#161616",
+     "#555555",
+     "#676768",
+     "#b3371f",
+     "#2f3437",
+     "#2f3437"
+    ]
+   },
+   "dark": {
+    "ground": "#2f3437",
+    "ink": "#000000",
+    "opacity": 0.106,
+    "tiers": [
+     "#eeeeef",
+     "#d7d7d8",
+     "#b7b7b7",
+     "#ffbba7",
+     "#f9775d"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "green-coral",
+   "light": {
+    "ground": "#f8f1e6",
+    "ink": "#1f4d3a",
+    "opacity": 0.04,
+    "tiers": [
+     "#141715",
+     "#535654",
+     "#666867",
+     "#b1412a",
+     "#1f4d3a",
+     "#1f4d3a"
+    ]
+   },
+   "dark": {
+    "ground": "#1f4d3a",
+    "ink": "#000000",
+    "opacity": 0.084,
+    "tiers": [
+     "#ebf0ed",
+     "#d5d8d6",
+     "#b5b8b7",
+     "#ffbeaa",
+     "#ff9b84"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "forest-brass",
+   "light": {
+    "ground": "#f4efe2",
+    "ink": "#1f3d2b",
+    "opacity": 0.04,
+    "tiers": [
+     "#141715",
+     "#545654",
+     "#656665",
+     "#7d6108",
+     "#1f3d2b",
+     "#1f3d2b"
+    ]
+   },
+   "dark": {
+    "ground": "#1f3d2b",
+    "ink": "#000000",
+    "opacity": 0.107,
+    "tiers": [
+     "#ecefed",
+     "#d5d8d6",
+     "#b6b8b6",
+     "#ebd6a2",
+     "#bb9d52"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "green-sage",
+   "light": {
+    "ground": "#f6f3ea",
+    "ink": "#1d3b2a",
+    "opacity": 0.04,
+    "tiers": [
+     "#141715",
+     "#545654",
+     "#686968",
+     "#407450",
+     "#1d3b2a",
+     "#033e1e"
+    ]
+   },
+   "dark": {
+    "ground": "#1d3b2a",
+    "ink": "#000000",
+    "opacity": 0.11,
+    "tiers": [
+     "#ecefed",
+     "#d5d8d6",
+     "#b6b8b6",
+     "#bde3c6",
+     "#75ab84"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "slate-cream",
+   "light": {
+    "ground": "#f4efe4",
+    "ink": "#2c3e50",
+    "opacity": 0.04,
+    "tiers": [
+     "#151618",
+     "#545557",
+     "#656667",
+     "#486483",
+     "#2c3e50",
+     "#2c3e50"
+    ]
+   },
+   "dark": {
+    "ground": "#2c3e50",
+    "ink": "#000000",
+    "opacity": 0.089,
+    "tiers": [
+     "#eceff1",
+     "#d6d8d9",
+     "#b6b7b9",
+     "#c4daf3",
+     "#8eacce"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "navy-rose",
+   "light": {
+    "ground": "#ffffff",
+    "ink": "#1d2f4f",
+    "opacity": 0.04,
+    "tiers": [
+     "#141619",
+     "#545558",
+     "#6f7072",
+     "#af4f4d",
+     "#1d2f4f",
+     "#1d2f4f"
+    ]
+   },
+   "dark": {
+    "ground": "#1d2f4f",
+    "ink": "#000000",
+    "opacity": 0.133,
+    "tiers": [
+     "#eceff3",
+     "#d6d7db",
+     "#b6b7ba",
+     "#ffc1bc",
+     "#df7976"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "hole",
+   "light": {
+    "ground": "#ffdefd",
+    "ink": "#0d0924",
+    "opacity": 0.04,
+    "tiers": [
+     "#161618",
+     "#555558",
+     "#636365",
+     "#ae0194",
+     "#0d0924",
+     "#5b125c"
+    ]
+   },
+   "dark": {
+    "ground": "#0d0924",
+    "ink": "#000000",
+    "opacity": 0.944,
+    "tiers": [
+     "#eeeef2",
+     "#d7d7da",
+     "#b7b7b9",
+     "#ffadfd",
+     "#ae63ae"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "black-c8102e",
+   "light": {
+    "ground": "#ffffff",
+    "ink": "#000000",
+    "opacity": 0.04,
+    "tiers": [
+     "#161616",
+     "#555555",
+     "#707070",
+     "#c8102e",
+     "#c8102e",
+     "#7c0000"
+    ]
+   },
+   "dark": {
+    "ground": "#000000",
+    "ink": "#eeeeee",
+    "opacity": 0.018,
+    "tiers": [
+     "#eeeeee",
+     "#d7d7d7",
+     "#b7b7b7",
+     "#ffafab",
+     "#de3140"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s20260916#3",
+   "light": {
+    "ground": "#fbdfff",
+    "ink": "#375106",
+    "opacity": 0.04,
+    "tiers": [
+     "#141710",
+     "#535750",
+     "#61645e",
+     "#3656ce",
+     "#375106",
+     "#375106"
+    ]
+   },
+   "dark": {
+    "ground": "#375106",
+    "ink": "#000000",
+    "opacity": 0.08,
+    "tiers": [
+     "#ebf1e6",
+     "#d5d9d1",
+     "#b5b9b2",
+     "#b2d4ff",
+     "#a3bdff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#361",
+   "light": {
+    "ground": "#ffe1ff",
+    "ink": "#11497b",
+    "opacity": 0.04,
+    "tiers": [
+     "#11171d",
+     "#50565c",
+     "#60656a",
+     "#3c57ce",
+     "#11497b",
+     "#11497b"
+    ]
+   },
+   "dark": {
+    "ground": "#11497b",
+    "ink": "#000000",
+    "opacity": 0.075,
+    "tiers": [
+     "#e7f0f8",
+     "#d2d8df",
+     "#b3b8be",
+     "#b4d4ff",
+     "#9eb7ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#497",
+   "light": {
+    "ground": "#ffe2e6",
+    "ink": "#250a12",
+    "opacity": 0.04,
+    "tiers": [
+     "#181516",
+     "#575455",
+     "#656263",
+     "#3d6e00",
+     "#250a12",
+     "#250a12"
+    ]
+   },
+   "dark": {
+    "ground": "#250a12",
+    "ink": "#000000",
+    "opacity": 0.419,
+    "tiers": [
+     "#f1edee",
+     "#dad6d7",
+     "#b9b7b7",
+     "#b8e996",
+     "#b1f77b"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#657",
+   "light": {
+    "ground": "#ffe5d3",
+    "ink": "#0e2804",
+    "opacity": 0.04,
+    "tiers": [
+     "#151714",
+     "#545653",
+     "#626461",
+     "#92416b",
+     "#0e2804",
+     "#0e2804"
+    ]
+   },
+   "dark": {
+    "ground": "#0e2804",
+    "ink": "#000000",
+    "opacity": 0.163,
+    "tiers": [
+     "#ecf0eb",
+     "#d6d8d5",
+     "#b6b8b5",
+     "#ffc1df",
+     "#16a114"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#682",
+   "light": {
+    "ground": "#ebf0dc",
+    "ink": "#050501",
+    "opacity": 0.04,
+    "tiers": [
+     "#161615",
+     "#555554",
+     "#666665",
+     "#974f69",
+     "#050501",
+     "#050501"
+    ]
+   },
+   "dark": {
+    "ground": "#050501",
+    "ink": "#eeeeed",
+    "opacity": 0.045,
+    "tiers": [
+     "#eeeeed",
+     "#d7d7d6",
+     "#b7b7b7",
+     "#ffc5d7",
+     "#d98aa5"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s20260916#983",
+   "light": {
+    "ground": "#ffe8f6",
+    "ink": "#06154a",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161d",
+     "#52555c",
+     "#64666b",
+     "#9a493f",
+     "#75063c",
+     "#460018"
+    ]
+   },
+   "dark": {
+    "ground": "#06154a",
+    "ink": "#000000",
+    "opacity": 0.214,
+    "tiers": [
+     "#eaeff9",
+     "#d4d7df",
+     "#b5b7bd",
+     "#ffc5bb",
+     "#cc5e85"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#1021",
+   "light": {
+    "ground": "#ffe7d7",
+    "ink": "#1c2b0b",
+    "opacity": 0.04,
+    "tiers": [
+     "#151714",
+     "#545653",
+     "#646563",
+     "#9129cf",
+     "#1c2b0b",
+     "#1c2b0b"
+    ]
+   },
+   "dark": {
+    "ground": "#1c2b0b",
+    "ink": "#000000",
+    "opacity": 0.151,
+    "tiers": [
+     "#edefeb",
+     "#d6d8d5",
+     "#b6b8b5",
+     "#f6b8ff",
+     "#49f233"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#1053",
+   "light": {
+    "ground": "#ffe6e0",
+    "ink": "#271406",
+    "opacity": 0.04,
+    "tiers": [
+     "#171614",
+     "#575554",
+     "#666463",
+     "#007305",
+     "#271406",
+     "#271406"
+    ]
+   },
+   "dark": {
+    "ground": "#271406",
+    "ink": "#000000",
+    "opacity": 0.244,
+    "tiers": [
+     "#f1eeec",
+     "#d9d7d5",
+     "#b8b7b6",
+     "#90f48a",
+     "#1bce20"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#1082",
+   "light": {
+    "ground": "#ffe6ea",
+    "ink": "#3f1143",
+    "opacity": 0.04,
+    "tiers": [
+     "#181419",
+     "#585458",
+     "#666367",
+     "#407100",
+     "#3f1143",
+     "#3f1143"
+    ]
+   },
+   "dark": {
+    "ground": "#3f1143",
+    "ink": "#000000",
+    "opacity": 0.157,
+    "tiers": [
+     "#f2ecf2",
+     "#dad6da",
+     "#b9b6b9",
+     "#bee6a1",
+     "#c58bd7"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#1224",
+   "light": {
+    "ground": "#ffe2fa",
+    "ink": "#65274c",
+    "opacity": 0.04,
+    "tiers": [
+     "#1b1317",
+     "#5b5357",
+     "#696366",
+     "#643ad9",
+     "#4a3e21",
+     "#241900"
+    ]
+   },
+   "dark": {
+    "ground": "#65274c",
+    "ink": "#000000",
+    "opacity": 0.084,
+    "tiers": [
+     "#f7ebf0",
+     "#ded4d9",
+     "#bcb5b8",
+     "#d2c6ff",
+     "#baac8c"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#1225",
+   "light": {
+    "ground": "#e7ebff",
+    "ink": "#162e64",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161d",
+     "#52555c",
+     "#62656a",
+     "#b52677",
+     "#9409d0",
+     "#57008b"
+    ]
+   },
+   "dark": {
+    "ground": "#162e64",
+    "ink": "#000000",
+    "opacity": 0.12,
+    "tiers": [
+     "#e9eff9",
+     "#d3d8df",
+     "#b4b7bd",
+     "#ffb2e2",
+     "#ca77ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#1294",
+   "light": {
+    "ground": "#ffe2fc",
+    "ink": "#1f4f17",
+    "opacity": 0.04,
+    "tiers": [
+     "#131812",
+     "#525751",
+     "#616460",
+     "#4c6f00",
+     "#1f4f17",
+     "#1f4f17"
+    ]
+   },
+   "dark": {
+    "ground": "#1f4f17",
+    "ink": "#000000",
+    "opacity": 0.082,
+    "tiers": [
+     "#e9f1e8",
+     "#d3d9d2",
+     "#b4b9b4",
+     "#c0e78d",
+     "#8fc434"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#1308",
+   "light": {
+    "ground": "#fbedb0",
+    "ink": "#3e0e24",
+    "opacity": 0.04,
+    "tiers": [
+     "#191516",
+     "#585455",
+     "#676365",
+     "#6d5f82",
+     "#542258",
+     "#2d0032"
+    ]
+   },
+   "dark": {
+    "ground": "#3e0e24",
+    "ink": "#000000",
+    "opacity": 0.179,
+    "tiers": [
+     "#f3ecee",
+     "#dbd6d7",
+     "#bab6b7",
+     "#dcd2ee",
+     "#af77b3"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#1401",
+   "light": {
+    "ground": "#ffe0fe",
+    "ink": "#005231",
+    "opacity": 0.04,
+    "tiers": [
+     "#111814",
+     "#505753",
+     "#606561",
+     "#8d4a8d",
+     "#005231",
+     "#005231"
+    ]
+   },
+   "dark": {
+    "ground": "#005231",
+    "ink": "#000000",
+    "opacity": 0.079,
+    "tiers": [
+     "#e7f1eb",
+     "#d2dad5",
+     "#b3b9b5",
+     "#f7c3f6",
+     "#eea5ed"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#1619",
+   "light": {
+    "ground": "#e5ebff",
+    "ink": "#251d23",
+    "opacity": 0.04,
+    "tiers": [
+     "#161616",
+     "#565555",
+     "#656465",
+     "#2f7200",
+     "#251d23",
+     "#251d23"
+    ]
+   },
+   "dark": {
+    "ground": "#251d23",
+    "ink": "#000000",
+    "opacity": 0.19,
+    "tiers": [
+     "#efeeef",
+     "#d8d7d8",
+     "#b8b7b7",
+     "#9ff17d",
+     "#e3ad94"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#1700",
+   "light": {
+    "ground": "#ffe0fc",
+    "ink": "#6d2d50",
+    "opacity": 0.04,
+    "tiers": [
+     "#1b1317",
+     "#5b5356",
+     "#696266",
+     "#8b4b69",
+     "#6d2d50",
+     "#5c213f"
+    ]
+   },
+   "dark": {
+    "ground": "#6d2d50",
+    "ink": "#000000",
+    "opacity": 0.078,
+    "tiers": [
+     "#f7ebf0",
+     "#ded4d9",
+     "#bdb5b8",
+     "#fbc6dc",
+     "#e69ebe"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#1750",
+   "light": {
+    "ground": "#e0eeff",
+    "ink": "#131818",
+    "opacity": 0.04,
+    "tiers": [
+     "#161616",
+     "#555555",
+     "#646565",
+     "#336171",
+     "#336171",
+     "#002e3d"
+    ]
+   },
+   "dark": {
+    "ground": "#131818",
+    "ink": "#000000",
+    "opacity": 0.313,
+    "tiers": [
+     "#eeeeee",
+     "#d7d7d7",
+     "#b7b7b7",
+     "#bcdeeb",
+     "#5c8a9b"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#1763",
+   "light": {
+    "ground": "#ffe4f9",
+    "ink": "#58356e",
+    "opacity": 0.04,
+    "tiers": [
+     "#18141b",
+     "#57535a",
+     "#68646a",
+     "#a43889",
+     "#58356e",
+     "#680053"
+    ]
+   },
+   "dark": {
+    "ground": "#58356e",
+    "ink": "#000000",
+    "opacity": 0.085,
+    "tiers": [
+     "#f2ecf6",
+     "#dad5dd",
+     "#b9b6bc",
+     "#ffb9f1",
+     "#fc8adb"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#1793",
+   "light": {
+    "ground": "#d4ebff",
+    "ink": "#732e28",
+    "opacity": 0.04,
+    "tiers": [
+     "#1c1412",
+     "#5c5352",
+     "#696160",
+     "#146e00",
+     "#732e28",
+     "#732e28"
+    ]
+   },
+   "dark": {
+    "ground": "#732e28",
+    "ink": "#000000",
+    "opacity": 0.083,
+    "tiers": [
+     "#f8ebe9",
+     "#dfd5d3",
+     "#beb5b4",
+     "#9bf18e",
+     "#47ce31"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#1863",
+   "light": {
+    "ground": "#ffe9fb",
+    "ink": "#050206",
+    "opacity": 0.04,
+    "tiers": [
+     "#161617",
+     "#565556",
+     "#666666",
+     "#6b6a00",
+     "#af3363",
+     "#69002c"
+    ]
+   },
+   "dark": {
+    "ground": "#050206",
+    "ink": "#efeeef",
+    "opacity": 0.044,
+    "tiers": [
+     "#efeeef",
+     "#d8d7d8",
+     "#b8b7b8",
+     "#dedf77",
+     "#cb4d7a"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s20260916#1882",
+   "light": {
+    "ground": "#ffe9db",
+    "ink": "#051203",
+    "opacity": 0.04,
+    "tiers": [
+     "#151615",
+     "#545654",
+     "#646564",
+     "#4a4a3d",
+     "#4a4a3d",
+     "#212115"
+    ]
+   },
+   "dark": {
+    "ground": "#051203",
+    "ink": "#000000",
+    "opacity": 0.75,
+    "tiers": [
+     "#edefed",
+     "#d6d8d6",
+     "#b6b8b6",
+     "#d8d8cd",
+     "#7d7d6f"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#2037",
+   "light": {
+    "ground": "#eeedff",
+    "ink": "#0b1b4e",
+    "opacity": 0.04,
+    "tiers": [
+     "#14161b",
+     "#53555a",
+     "#646669",
+     "#387422",
+     "#0b1b4e",
+     "#0b1b4e"
+    ]
+   },
+   "dark": {
+    "ground": "#0b1b4e",
+    "ink": "#000000",
+    "opacity": 0.173,
+    "tiers": [
+     "#ebeef5",
+     "#d5d7dd",
+     "#b5b7bb",
+     "#b9e7ac",
+     "#73b260"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#2128",
+   "light": {
+    "ground": "#ffeaef",
+    "ink": "#0b021f",
+    "opacity": 0.04,
+    "tiers": [
+     "#161619",
+     "#555558",
+     "#666668",
+     "#00753d",
+     "#0b021f",
+     "#0b021f"
+    ]
+   },
+   "dark": {
+    "ground": "#0b021f",
+    "ink": "#eeeef2",
+    "opacity": 0.042,
+    "tiers": [
+     "#eeeef2",
+     "#d7d7da",
+     "#b7b7ba",
+     "#80f4a8",
+     "#13f688"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s20260916#2195",
+   "light": {
+    "ground": "#ffe8fd",
+    "ink": "#732c34",
+    "opacity": 0.04,
+    "tiers": [
+     "#1c1314",
+     "#5c5353",
+     "#6d6565",
+     "#4818b6",
+     "#4818b6",
+     "#290080"
+    ]
+   },
+   "dark": {
+    "ground": "#732c34",
+    "ink": "#000000",
+    "opacity": 0.083,
+    "tiers": [
+     "#f8ebeb",
+     "#dfd4d5",
+     "#beb5b5",
+     "#cdc8ff",
+     "#aaa7ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#2232",
+   "light": {
+    "ground": "#ffe9e8",
+    "ink": "#0f1847",
+    "opacity": 0.04,
+    "tiers": [
+     "#14161a",
+     "#545559",
+     "#656669",
+     "#0e6d92",
+     "#0f1847",
+     "#0f1847"
+    ]
+   },
+   "dark": {
+    "ground": "#0f1847",
+    "ink": "#000000",
+    "opacity": 0.19,
+    "tiers": [
+     "#eceef5",
+     "#d5d7dc",
+     "#b6b7bb",
+     "#aae0fd",
+     "#3f91b7"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#2246",
+   "light": {
+    "ground": "#d7eeff",
+    "ink": "#18235a",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161d",
+     "#53555c",
+     "#62646a",
+     "#416a00",
+     "#b22151",
+     "#6c001d"
+    ]
+   },
+   "dark": {
+    "ground": "#18235a",
+    "ink": "#000000",
+    "opacity": 0.146,
+    "tiers": [
+     "#eaeef9",
+     "#d4d7e0",
+     "#b5b7bd",
+     "#b6eb82",
+     "#f26085"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#2272",
+   "light": {
+    "ground": "#ffe3ff",
+    "ink": "#0d5122",
+    "opacity": 0.04,
+    "tiers": [
+     "#131713",
+     "#525753",
+     "#626663",
+     "#c30027",
+     "#0e079b",
+     "#110071"
+    ]
+   },
+   "dark": {
+    "ground": "#0d5122",
+    "ink": "#000000",
+    "opacity": 0.08,
+    "tiers": [
+     "#eaf1eb",
+     "#d4d9d4",
+     "#b5b8b5",
+     "#ffa5a0",
+     "#97b5ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#2568",
+   "light": {
+    "ground": "#fee6ff",
+    "ink": "#0d4d3a",
+    "opacity": 0.04,
+    "tiers": [
+     "#131715",
+     "#525655",
+     "#646765",
+     "#007157",
+     "#0d4d3a",
+     "#0d4d3a"
+    ]
+   },
+   "dark": {
+    "ground": "#0d4d3a",
+    "ink": "#000000",
+    "opacity": 0.084,
+    "tiers": [
+     "#eaf0ed",
+     "#d4d9d7",
+     "#b5b8b7",
+     "#7df1cb",
+     "#0af7c2"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#2729",
+   "light": {
+    "ground": "#ffe5e2",
+    "ink": "#041347",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161c",
+     "#53555b",
+     "#616368",
+     "#007509",
+     "#041347",
+     "#041347"
+    ]
+   },
+   "dark": {
+    "ground": "#041347",
+    "ink": "#000000",
+    "opacity": 0.261,
+    "tiers": [
+     "#eaeff7",
+     "#d4d7de",
+     "#b5b7bc",
+     "#8ff48b",
+     "#06ca1a"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#2763",
+   "light": {
+    "ground": "#ffe0f0",
+    "ink": "#281a01",
+    "opacity": 0.04,
+    "tiers": [
+     "#171614",
+     "#565553",
+     "#646361",
+     "#785949",
+     "#281a01",
+     "#281a01"
+    ]
+   },
+   "dark": {
+    "ground": "#281a01",
+    "ink": "#000000",
+    "opacity": 0.212,
+    "tiers": [
+     "#f0eeeb",
+     "#d9d7d5",
+     "#b8b7b5",
+     "#ebd2c4",
+     "#21f036"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#2787",
+   "light": {
+    "ground": "#ffe9e8",
+    "ink": "#11080a",
+    "opacity": 0.04,
+    "tiers": [
+     "#171616",
+     "#565555",
+     "#666666",
+     "#006c74",
+     "#11080a",
+     "#11080a"
+    ]
+   },
+   "dark": {
+    "ground": "#11080a",
+    "ink": "#efeeee",
+    "opacity": 0.041,
+    "tiers": [
+     "#efeeee",
+     "#d8d7d7",
+     "#b8b7b7",
+     "#a3e5eb",
+     "#40ee77"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s20260916#3005",
+   "light": {
+    "ground": "#d8efff",
+    "ink": "#17120f",
+    "opacity": 0.04,
+    "tiers": [
+     "#161616",
+     "#565555",
+     "#656464",
+     "#6054c6",
+     "#17120f",
+     "#17120f"
+    ]
+   },
+   "dark": {
+    "ground": "#17120f",
+    "ink": "#000000",
+    "opacity": 0.472,
+    "tiers": [
+     "#efeeee",
+     "#d8d7d7",
+     "#b8b7b7",
+     "#cdcdff",
+     "#8780f6"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#3040",
+   "light": {
+    "ground": "#fee3ff",
+    "ink": "#631f32",
+    "opacity": 0.04,
+    "tiers": [
+     "#1b1415",
+     "#5b5354",
+     "#696364",
+     "#00752f",
+     "#631f32",
+     "#631f32"
+    ]
+   },
+   "dark": {
+    "ground": "#631f32",
+    "ink": "#000000",
+    "opacity": 0.106,
+    "tiers": [
+     "#f7ebed",
+     "#ded5d6",
+     "#bcb5b6",
+     "#8ef2a1",
+     "#32de69"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#3152",
+   "light": {
+    "ground": "#e5eeff",
+    "ink": "#0d2a54",
+    "opacity": 0.04,
+    "tiers": [
+     "#14161a",
+     "#535559",
+     "#646669",
+     "#9a4b5e",
+     "#641437",
+     "#3a0016"
+    ]
+   },
+   "dark": {
+    "ground": "#0d2a54",
+    "ink": "#000000",
+    "opacity": 0.137,
+    "tiers": [
+     "#ebeff4",
+     "#d5d8dc",
+     "#b5b7bb",
+     "#ffc3d0",
+     "#d27997"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#3456",
+   "light": {
+    "ground": "#ffe9e2",
+    "ink": "#14295f",
+    "opacity": 0.04,
+    "tiers": [
+     "#14161b",
+     "#53555a",
+     "#64666a",
+     "#5a59a6",
+     "#14295f",
+     "#532c11"
+    ]
+   },
+   "dark": {
+    "ground": "#14295f",
+    "ink": "#000000",
+    "opacity": 0.134,
+    "tiers": [
+     "#ebeff6",
+     "#d5d7dd",
+     "#b5b7bc",
+     "#ced1ff",
+     "#b7896c"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#3656",
+   "light": {
+    "ground": "#ffed98",
+    "ink": "#520c15",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a1414",
+     "#5a5453",
+     "#686363",
+     "#ca0049",
+     "#520c15",
+     "#520c15"
+    ]
+   },
+   "dark": {
+    "ground": "#520c15",
+    "ink": "#000000",
+    "opacity": 0.14,
+    "tiers": [
+     "#f5ecec",
+     "#ddd5d5",
+     "#bbb6b6",
+     "#ffaabb",
+     "#f2c577"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#3731",
+   "light": {
+    "ground": "#f6e9ff",
+    "ink": "#2d2b1e",
+    "opacity": 0.04,
+    "tiers": [
+     "#161615",
+     "#555554",
+     "#666665",
+     "#007542",
+     "#2d2b1e",
+     "#2d2b1e"
+    ]
+   },
+   "dark": {
+    "ground": "#2d2b1e",
+    "ink": "#000000",
+    "opacity": 0.144,
+    "tiers": [
+     "#efeeed",
+     "#d8d7d6",
+     "#b7b7b6",
+     "#9eecba",
+     "#50cb85"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#3838",
+   "light": {
+    "ground": "#feebd4",
+    "ink": "#26283d",
+    "opacity": 0.04,
+    "tiers": [
+     "#161618",
+     "#555557",
+     "#666667",
+     "#54667b",
+     "#26283d",
+     "#26283d"
+    ]
+   },
+   "dark": {
+    "ground": "#26283d",
+    "ink": "#000000",
+    "opacity": 0.139,
+    "tiers": [
+     "#eeeef1",
+     "#d7d7d9",
+     "#b7b7b9",
+     "#cbd9ea",
+     "#adc1d9"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#3996",
+   "light": {
+    "ground": "#ffe1f3",
+    "ink": "#004e44",
+    "opacity": 0.04,
+    "tiers": [
+     "#101816",
+     "#505755",
+     "#5f6563",
+     "#0d0e21",
+     "#0d0e21",
+     "#030210"
+    ]
+   },
+   "dark": {
+    "ground": "#004e44",
+    "ink": "#000000",
+    "opacity": 0.083,
+    "tiers": [
+     "#e7f1ef",
+     "#d1d9d8",
+     "#b3b9b7",
+     "#d3d6ea",
+     "#b0b4cf"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#4029",
+   "light": {
+    "ground": "#ffe2fc",
+    "ink": "#064d76",
+    "opacity": 0.04,
+    "tiers": [
+     "#12171a",
+     "#525659",
+     "#626568",
+     "#61661d",
+     "#064d76",
+     "#064d76"
+    ]
+   },
+   "dark": {
+    "ground": "#064d76",
+    "ink": "#000000",
+    "opacity": 0.072,
+    "tiers": [
+     "#e9eff4",
+     "#d3d8dc",
+     "#b4b8bb",
+     "#d7ddab",
+     "#e6a6dd"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#4033",
+   "light": {
+    "ground": "#ffe6e4",
+    "ink": "#14273c",
+    "opacity": 0.04,
+    "tiers": [
+     "#151618",
+     "#545557",
+     "#636566",
+     "#00706c",
+     "#14273c",
+     "#14273c"
+    ]
+   },
+   "dark": {
+    "ground": "#14273c",
+    "ink": "#000000",
+    "opacity": 0.167,
+    "tiers": [
+     "#eceff2",
+     "#d6d8da",
+     "#b6b7b9",
+     "#8eebe4",
+     "#e1aba3"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#4230",
+   "light": {
+    "ground": "#f5e8f8",
+    "ink": "#450d00",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a1513",
+     "#595453",
+     "#686462",
+     "#00720c",
+     "#450d00",
+     "#450d00"
+    ]
+   },
+   "dark": {
+    "ground": "#450d00",
+    "ink": "#000000",
+    "opacity": 0.167,
+    "tiers": [
+     "#f4edea",
+     "#dcd6d4",
+     "#bbb6b5",
+     "#95f292",
+     "#64f464"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#4236",
+   "light": {
+    "ground": "#ffe0fd",
+    "ink": "#004f37",
+    "opacity": 0.04,
+    "tiers": [
+     "#111815",
+     "#515754",
+     "#606562",
+     "#755c00",
+     "#004f37",
+     "#004f37"
+    ]
+   },
+   "dark": {
+    "ground": "#004f37",
+    "ink": "#000000",
+    "opacity": 0.082,
+    "tiers": [
+     "#e7f1ec",
+     "#d2dad6",
+     "#b3b9b6",
+     "#f0d58d",
+     "#efc858"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#4354",
+   "light": {
+    "ground": "#eae9ff",
+    "ink": "#1e1c55",
+    "opacity": 0.04,
+    "tiers": [
+     "#15161b",
+     "#54555a",
+     "#646468",
+     "#915035",
+     "#1e1c55",
+     "#1e1c55"
+    ]
+   },
+   "dark": {
+    "ground": "#1e1c55",
+    "ink": "#000000",
+    "opacity": 0.161,
+    "tiers": [
+     "#edeef6",
+     "#d6d7dd",
+     "#b6b7bb",
+     "#ffcab5",
+     "#fbb98d"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#4461",
+   "light": {
+    "ground": "#fae0ff",
+    "ink": "#4a2359",
+    "opacity": 0.04,
+    "tiers": [
+     "#181519",
+     "#575458",
+     "#656266",
+     "#18089b",
+     "#4a2359",
+     "#4a2359"
+    ]
+   },
+   "dark": {
+    "ground": "#4a2359",
+    "ink": "#000000",
+    "opacity": 0.115,
+    "tiers": [
+     "#f1ecf3",
+     "#d9d6db",
+     "#b9b6ba",
+     "#b2d2ff",
+     "#65bb6c"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#4468",
+   "light": {
+    "ground": "#ffe2fa",
+    "ink": "#101e09",
+    "opacity": 0.04,
+    "tiers": [
+     "#151615",
+     "#545654",
+     "#626362",
+     "#007519",
+     "#a14c24",
+     "#5f0b00"
+    ]
+   },
+   "dark": {
+    "ground": "#101e09",
+    "ink": "#000000",
+    "opacity": 0.219,
+    "tiers": [
+     "#edefec",
+     "#d6d8d6",
+     "#b6b8b6",
+     "#8af58d",
+     "#c97049"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#4529",
+   "light": {
+    "ground": "#dfeaff",
+    "ink": "#201e57",
+    "opacity": 0.04,
+    "tiers": [
+     "#14151d",
+     "#54555c",
+     "#626369",
+     "#5300e5",
+     "#751b13",
+     "#460000"
+    ]
+   },
+   "dark": {
+    "ground": "#201e57",
+    "ink": "#000000",
+    "opacity": 0.15,
+    "tiers": [
+     "#eceef9",
+     "#d5d7df",
+     "#b6b7be",
+     "#c7c4ff",
+     "#d27062"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#4799",
+   "light": {
+    "ground": "#e7eeff",
+    "ink": "#32230e",
+    "opacity": 0.04,
+    "tiers": [
+     "#171614",
+     "#565553",
+     "#676664",
+     "#4f6b00",
+     "#32230e",
+     "#32230e"
+    ]
+   },
+   "dark": {
+    "ground": "#32230e",
+    "ink": "#000000",
+    "opacity": 0.157,
+    "tiers": [
+     "#f0eeeb",
+     "#d9d7d5",
+     "#b8b7b6",
+     "#c7e498",
+     "#d6ff8c"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#4839",
+   "light": {
+    "ground": "#e3ecff",
+    "ink": "#11292e",
+    "opacity": 0.04,
+    "tiers": [
+     "#141617",
+     "#545656",
+     "#636565",
+     "#bf222a",
+     "#11292e",
+     "#11292e"
+    ]
+   },
+   "dark": {
+    "ground": "#11292e",
+    "ink": "#000000",
+    "opacity": 0.159,
+    "tiers": [
+     "#eceff0",
+     "#d6d8d8",
+     "#b6b8b8",
+     "#ffb4ab",
+     "#f85d59"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#4851",
+   "light": {
+    "ground": "#fcdfff",
+    "ink": "#541618",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a1414",
+     "#595453",
+     "#666262",
+     "#6f6100",
+     "#541618",
+     "#541618"
+    ]
+   },
+   "dark": {
+    "ground": "#541618",
+    "ink": "#000000",
+    "opacity": 0.125,
+    "tiers": [
+     "#f5ecec",
+     "#dcd6d5",
+     "#bbb6b6",
+     "#e5d997",
+     "#dbc966"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s20260916#4998",
+   "light": {
+    "ground": "#efe8ff",
+    "ink": "#4f1310",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a1514",
+     "#595453",
+     "#686363",
+     "#5a6360",
+     "#4a0494",
+     "#290066"
+    ]
+   },
+   "dark": {
+    "ground": "#4f1310",
+    "ink": "#000000",
+    "opacity": 0.133,
+    "tiers": [
+     "#f4eceb",
+     "#dcd6d5",
+     "#bbb6b5",
+     "#cedbd7",
+     "#a37aff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#28",
+   "light": {
+    "ground": "#ffe4f4",
+    "ink": "#3d0400",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a1514",
+     "#595453",
+     "#686463",
+     "#236f00",
+     "#3d0400",
+     "#3d0400"
+    ]
+   },
+   "dark": {
+    "ground": "#3d0400",
+    "ink": "#000000",
+    "opacity": 0.189,
+    "tiers": [
+     "#f4eceb",
+     "#dcd6d4",
+     "#bbb6b5",
+     "#a4ef91",
+     "#3dad06"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#63",
+   "light": {
+    "ground": "#fce0ff",
+    "ink": "#0b5022",
+    "opacity": 0.04,
+    "tiers": [
+     "#111812",
+     "#515752",
+     "#5f6560",
+     "#5d37e9",
+     "#0b5022",
+     "#0b5022"
+    ]
+   },
+   "dark": {
+    "ground": "#0b5022",
+    "ink": "#000000",
+    "opacity": 0.081,
+    "tiers": [
+     "#e8f1e9",
+     "#d2dad3",
+     "#b3b9b4",
+     "#c8c7ff",
+     "#a0c459"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#115",
+   "light": {
+    "ground": "#ffe7f7",
+    "ink": "#181a4f",
+    "opacity": 0.04,
+    "tiers": [
+     "#15161a",
+     "#54555a",
+     "#656669",
+     "#4e6a00",
+     "#181a4f",
+     "#181a4f"
+    ]
+   },
+   "dark": {
+    "ground": "#181a4f",
+    "ink": "#000000",
+    "opacity": 0.173,
+    "tiers": [
+     "#eceef5",
+     "#d6d7dd",
+     "#b6b7bb",
+     "#c0e97a",
+     "#b1e92e"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#289",
+   "light": {
+    "ground": "#ffe9fe",
+    "ink": "#005235",
+    "opacity": 0.04,
+    "tiers": [
+     "#101814",
+     "#505753",
+     "#636966",
+     "#511baf",
+     "#005235",
+     "#005235"
+    ]
+   },
+   "dark": {
+    "ground": "#005235",
+    "ink": "#000000",
+    "opacity": 0.079,
+    "tiers": [
+     "#e6f2eb",
+     "#d1dad5",
+     "#b2b9b5",
+     "#d7c6ff",
+     "#e89ee7"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#392",
+   "light": {
+    "ground": "#dceeff",
+    "ink": "#2b1851",
+    "opacity": 0.04,
+    "tiers": [
+     "#16151b",
+     "#55545a",
+     "#656468",
+     "#965136",
+     "#2b1851",
+     "#2b1851"
+    ]
+   },
+   "dark": {
+    "ground": "#2b1851",
+    "ink": "#000000",
+    "opacity": 0.174,
+    "tiers": [
+     "#efedf5",
+     "#d8d6dd",
+     "#b7b7bb",
+     "#ffc9b3",
+     "#77fe6b"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#442",
+   "light": {
+    "ground": "#ffe5c6",
+    "ink": "#3f102f",
+    "opacity": 0.04,
+    "tiers": [
+     "#191517",
+     "#585456",
+     "#656264",
+     "#00705a",
+     "#3f102f",
+     "#3f102f"
+    ]
+   },
+   "dark": {
+    "ground": "#3f102f",
+    "ink": "#000000",
+    "opacity": 0.167,
+    "tiers": [
+     "#f3ecf0",
+     "#dbd6d8",
+     "#bab6b8",
+     "#90edd2",
+     "#28cfab"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#588",
+   "light": {
+    "ground": "#ffe5e1",
+    "ink": "#340632",
+    "opacity": 0.04,
+    "tiers": [
+     "#191518",
+     "#585457",
+     "#676366",
+     "#9b2da3",
+     "#340632",
+     "#66006e"
+    ]
+   },
+   "dark": {
+    "ground": "#340632",
+    "ink": "#000000",
+    "opacity": 0.202,
+    "tiers": [
+     "#f2ecf1",
+     "#dad6da",
+     "#b9b6b9",
+     "#ffb7ff",
+     "#c356ca"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#620",
+   "light": {
+    "ground": "#ffe6f7",
+    "ink": "#3e2661",
+    "opacity": 0.04,
+    "tiers": [
+     "#17151b",
+     "#56545a",
+     "#66656a",
+     "#8d4296",
+     "#3e2661",
+     "#3e2661"
+    ]
+   },
+   "dark": {
+    "ground": "#3e2661",
+    "ink": "#000000",
+    "opacity": 0.118,
+    "tiers": [
+     "#efedf6",
+     "#d8d6dd",
+     "#b8b6bb",
+     "#fac0ff",
+     "#4cca93"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#691",
+   "light": {
+    "ground": "#ffe5f4",
+    "ink": "#4a1000",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a1513",
+     "#595452",
+     "#686462",
+     "#006f55",
+     "#4a1000",
+     "#4a1000"
+    ]
+   },
+   "dark": {
+    "ground": "#4a1000",
+    "ink": "#000000",
+    "opacity": 0.155,
+    "tiers": [
+     "#f4ecea",
+     "#dcd6d4",
+     "#bbb6b5",
+     "#96eccd",
+     "#f0c026"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#1040",
+   "light": {
+    "ground": "#f9e1ff",
+    "ink": "#653b00",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a150f",
+     "#5a544f",
+     "#67625e",
+     "#b41c91",
+     "#653b00",
+     "#653b00"
+    ]
+   },
+   "dark": {
+    "ground": "#653b00",
+    "ink": "#000000",
+    "opacity": 0.076,
+    "tiers": [
+     "#f5ede5",
+     "#ddd6d0",
+     "#bbb6b2",
+     "#ffaff6",
+     "#17c7d8"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#1050",
+   "light": {
+    "ground": "#e3e8ff",
+    "ink": "#1a0019",
+    "opacity": 0.04,
+    "tiers": [
+     "#181518",
+     "#575457",
+     "#656264",
+     "#5c52c1",
+     "#1a0019",
+     "#1a0019"
+    ]
+   },
+   "dark": {
+    "ground": "#1a0019",
+    "ink": "#f1edf1",
+    "opacity": 0.036,
+    "tiers": [
+     "#f1edf1",
+     "#dad6d9",
+     "#b9b6b9",
+     "#ccceff",
+     "#8e8afe"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s7#1059",
+   "light": {
+    "ground": "#ffe0fb",
+    "ink": "#6d2d4f",
+    "opacity": 0.04,
+    "tiers": [
+     "#1b1317",
+     "#5b5356",
+     "#696265",
+     "#057000",
+     "#6d2d4f",
+     "#6d2d4f"
+    ]
+   },
+   "dark": {
+    "ground": "#6d2d4f",
+    "ink": "#000000",
+    "opacity": 0.078,
+    "tiers": [
+     "#f7ebf0",
+     "#ded4d8",
+     "#bdb5b8",
+     "#97f28f",
+     "#8cbe82"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#1120",
+   "light": {
+    "ground": "#c4f8f1",
+    "ink": "#1a1a26",
+    "opacity": 0.04,
+    "tiers": [
+     "#161617",
+     "#555556",
+     "#646465",
+     "#0f61cf",
+     "#1a1a26",
+     "#002692"
+    ]
+   },
+   "dark": {
+    "ground": "#1a1a26",
+    "ink": "#000000",
+    "opacity": 0.212,
+    "tiers": [
+     "#eeeef0",
+     "#d7d7d9",
+     "#b7b7b8",
+     "#a2d9ff",
+     "#3581f2"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#1122",
+   "light": {
+    "ground": "#ffdfff",
+    "ink": "#3e4b00",
+    "opacity": 0.04,
+    "tiers": [
+     "#151712",
+     "#545651",
+     "#636460",
+     "#af00ab",
+     "#3e4b00",
+     "#4c0096"
+    ]
+   },
+   "dark": {
+    "ground": "#3e4b00",
+    "ink": "#000000",
+    "opacity": 0.073,
+    "tiers": [
+     "#edf0e8",
+     "#d6d8d2",
+     "#b7b8b4",
+     "#ffa6ff",
+     "#c3a4ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#1256",
+   "light": {
+    "ground": "#ffe3f8",
+    "ink": "#2f0b06",
+    "opacity": 0.04,
+    "tiers": [
+     "#191514",
+     "#585454",
+     "#676463",
+     "#9f3d6a",
+     "#2f0b06",
+     "#2f0b06"
+    ]
+   },
+   "dark": {
+    "ground": "#2f0b06",
+    "ink": "#000000",
+    "opacity": 0.266,
+    "tiers": [
+     "#f2edec",
+     "#dbd6d5",
+     "#bab6b6",
+     "#ffbddb",
+     "#c7618d"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#1598",
+   "light": {
+    "ground": "#ffe6cd",
+    "ink": "#27322f",
+    "opacity": 0.04,
+    "tiers": [
+     "#151616",
+     "#545555",
+     "#636363",
+     "#a000de",
+     "#6648cf",
+     "#35008a"
+    ]
+   },
+   "dark": {
+    "ground": "#27322f",
+    "ink": "#000000",
+    "opacity": 0.115,
+    "tiers": [
+     "#edefee",
+     "#d6d8d7",
+     "#b7b7b7",
+     "#ffafff",
+     "#9887ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#1679",
+   "light": {
+    "ground": "#fde9e4",
+    "ink": "#12275d",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161c",
+     "#52555b",
+     "#626569",
+     "#706706",
+     "#12275d",
+     "#12275d"
+    ]
+   },
+   "dark": {
+    "ground": "#12275d",
+    "ink": "#000000",
+    "opacity": 0.141,
+    "tiers": [
+     "#eaeff7",
+     "#d4d7de",
+     "#b5b7bc",
+     "#dfdba2",
+     "#cff783"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#1711",
+   "light": {
+    "ground": "#f8e2ff",
+    "ink": "#34071f",
+    "opacity": 0.04,
+    "tiers": [
+     "#191516",
+     "#585455",
+     "#656263",
+     "#ab00a8",
+     "#34071f",
+     "#34071f"
+    ]
+   },
+   "dark": {
+    "ground": "#34071f",
+    "ink": "#000000",
+    "opacity": 0.221,
+    "tiers": [
+     "#f3ecef",
+     "#dbd6d8",
+     "#bab6b7",
+     "#ffaaff",
+     "#65eeac"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#1736",
+   "light": {
+    "ground": "#ffdffb",
+    "ink": "#004d59",
+    "opacity": 0.04,
+    "tiers": [
+     "#121718",
+     "#515657",
+     "#606465",
+     "#ac00a1",
+     "#004d59",
+     "#004d59"
+    ]
+   },
+   "dark": {
+    "ground": "#004d59",
+    "ink": "#000000",
+    "opacity": 0.084,
+    "tiers": [
+     "#e9f0f2",
+     "#d3d9da",
+     "#b4b8b9",
+     "#ff9dff",
+     "#78c888"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#1786",
+   "light": {
+    "ground": "#efe9ff",
+    "ink": "#002333",
+    "opacity": 0.04,
+    "tiers": [
+     "#141618",
+     "#535657",
+     "#636566",
+     "#6f55ab",
+     "#3e0696",
+     "#230069"
+    ]
+   },
+   "dark": {
+    "ground": "#002333",
+    "ink": "#000000",
+    "opacity": 0.186,
+    "tiers": [
+     "#ebeff1",
+     "#d5d8da",
+     "#b5b8b9",
+     "#dcccff",
+     "#8c74fc"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#1827",
+   "light": {
+    "ground": "#ffe3e8",
+    "ink": "#003b51",
+    "opacity": 0.04,
+    "tiers": [
+     "#131718",
+     "#525658",
+     "#616465",
+     "#1964b5",
+     "#003b51",
+     "#003b51"
+    ]
+   },
+   "dark": {
+    "ground": "#003b51",
+    "ink": "#000000",
+    "opacity": 0.11,
+    "tiers": [
+     "#eaeff2",
+     "#d4d8da",
+     "#b5b8b9",
+     "#a9dbff",
+     "#5ba2f9"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#1922",
+   "light": {
+    "ground": "#fce8ff",
+    "ink": "#732c31",
+    "opacity": 0.04,
+    "tiers": [
+     "#1c1313",
+     "#5c5353",
+     "#6d6565",
+     "#5f595b",
+     "#5f595b",
+     "#32252a"
+    ]
+   },
+   "dark": {
+    "ground": "#732c31",
+    "ink": "#000000",
+    "opacity": 0.083,
+    "tiers": [
+     "#f9ebea",
+     "#dfd4d4",
+     "#bdb5b5",
+     "#e0d4d8",
+     "#b9b2b4"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#2010",
+   "light": {
+    "ground": "#fddeff",
+    "ink": "#00524b",
+    "opacity": 0.04,
+    "tiers": [
+     "#101817",
+     "#505756",
+     "#5f6464",
+     "#b82744",
+     "#00524b",
+     "#790014"
+    ]
+   },
+   "dark": {
+    "ground": "#00524b",
+    "ink": "#000000",
+    "opacity": 0.079,
+    "tiers": [
+     "#e7f1ef",
+     "#d1d9d8",
+     "#b3b9b8",
+     "#ffb5bc",
+     "#ff9ca3"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#2228",
+   "light": {
+    "ground": "#ffe3dd",
+    "ink": "#15255b",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161d",
+     "#52555c",
+     "#616369",
+     "#4713b8",
+     "#4713b8",
+     "#290082"
+    ]
+   },
+   "dark": {
+    "ground": "#15255b",
+    "ink": "#000000",
+    "opacity": 0.149,
+    "tiers": [
+     "#eaeef9",
+     "#d4d7e0",
+     "#b4b7be",
+     "#ccc8ff",
+     "#8f86ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#2406",
+   "light": {
+    "ground": "#e9ecff",
+    "ink": "#221c55",
+    "opacity": 0.04,
+    "tiers": [
+     "#15151d",
+     "#54555c",
+     "#65656b",
+     "#006f56",
+     "#221c55",
+     "#221c55"
+    ]
+   },
+   "dark": {
+    "ground": "#221c55",
+    "ink": "#000000",
+    "opacity": 0.161,
+    "tiers": [
+     "#ededf9",
+     "#d6d7df",
+     "#b6b7bd",
+     "#96ecce",
+     "#19b992"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#2415",
+   "light": {
+    "ground": "#ffdffc",
+    "ink": "#071147",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161c",
+     "#52555c",
+     "#616368",
+     "#415baa",
+     "#071147",
+     "#071147"
+    ]
+   },
+   "dark": {
+    "ground": "#071147",
+    "ink": "#000000",
+    "opacity": 0.275,
+    "tiers": [
+     "#eaeef8",
+     "#d4d7df",
+     "#b5b7bd",
+     "#bed6ff",
+     "#627fd1"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#2444",
+   "light": {
+    "ground": "#ffe4e5",
+    "ink": "#200607",
+    "opacity": 0.04,
+    "tiers": [
+     "#181515",
+     "#575454",
+     "#656362",
+     "#0f7200",
+     "#200607",
+     "#200607"
+    ]
+   },
+   "dark": {
+    "ground": "#200607",
+    "ink": "#000000",
+    "opacity": 0.672,
+    "tiers": [
+     "#f1eded",
+     "#dad6d6",
+     "#b9b7b6",
+     "#83f775",
+     "#70d8d8"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#2552",
+   "light": {
+    "ground": "#ffdffa",
+    "ink": "#663900",
+    "opacity": 0.04,
+    "tiers": [
+     "#1b150f",
+     "#5a544f",
+     "#68625e",
+     "#476e10",
+     "#663900",
+     "#663900"
+    ]
+   },
+   "dark": {
+    "ground": "#663900",
+    "ink": "#000000",
+    "opacity": 0.079,
+    "tiers": [
+     "#f6ede4",
+     "#ddd6d0",
+     "#bcb6b1",
+     "#c4e4a7",
+     "#f8c2e4"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#2595",
+   "light": {
+    "ground": "#ffe3e1",
+    "ink": "#3b0634",
+    "opacity": 0.04,
+    "tiers": [
+     "#191418",
+     "#585457",
+     "#656265",
+     "#18639f",
+     "#3b0634",
+     "#00366d"
+    ]
+   },
+   "dark": {
+    "ground": "#3b0634",
+    "ink": "#000000",
+    "opacity": 0.178,
+    "tiers": [
+     "#f3ecf1",
+     "#dbd6d9",
+     "#bab6b9",
+     "#acddff",
+     "#488dcc"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#2764",
+   "light": {
+    "ground": "#d3fdbb",
+    "ink": "#1e0003",
+    "opacity": 0.04,
+    "tiers": [
+     "#191515",
+     "#585454",
+     "#686565",
+     "#9c316d",
+     "#9c316d",
+     "#5c0037"
+    ]
+   },
+   "dark": {
+    "ground": "#1e0003",
+    "ink": "#f2eded",
+    "opacity": 0.04,
+    "tiers": [
+     "#f2eded",
+     "#dbd6d6",
+     "#bab6b6",
+     "#ffbae2",
+     "#c45691"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s7#2773",
+   "light": {
+    "ground": "#f9e9ff",
+    "ink": "#201e57",
+    "opacity": 0.04,
+    "tiers": [
+     "#15161b",
+     "#54555b",
+     "#65666a",
+     "#00703d",
+     "#201e57",
+     "#201e57"
+    ]
+   },
+   "dark": {
+    "ground": "#201e57",
+    "ink": "#000000",
+    "opacity": 0.15,
+    "tiers": [
+     "#eceef6",
+     "#d6d7de",
+     "#b6b7bc",
+     "#a5ebbc",
+     "#ead2df"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#2803",
+   "light": {
+    "ground": "#e2ebff",
+    "ink": "#1a245c",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161d",
+     "#53555c",
+     "#62646b",
+     "#606800",
+     "#1a245c",
+     "#1a245c"
+    ]
+   },
+   "dark": {
+    "ground": "#1a245c",
+    "ink": "#000000",
+    "opacity": 0.147,
+    "tiers": [
+     "#ebeef9",
+     "#d4d7e0",
+     "#b5b7be",
+     "#d5dfa0",
+     "#20f696"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#2880",
+   "light": {
+    "ground": "#ffdef9",
+    "ink": "#00505a",
+    "opacity": 0.04,
+    "tiers": [
+     "#0f1819",
+     "#4f5758",
+     "#5e6465",
+     "#216c00",
+     "#00505a",
+     "#00505a"
+    ]
+   },
+   "dark": {
+    "ground": "#00505a",
+    "ink": "#000000",
+    "opacity": 0.081,
+    "tiers": [
+     "#e5f1f3",
+     "#d0d9db",
+     "#b2b9ba",
+     "#90f576",
+     "#5bfa17"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#2893",
+   "light": {
+    "ground": "#fedeff",
+    "ink": "#005048",
+    "opacity": 0.04,
+    "tiers": [
+     "#111816",
+     "#505756",
+     "#5f6463",
+     "#131093",
+     "#005048",
+     "#005048"
+    ]
+   },
+   "dark": {
+    "ground": "#005048",
+    "ink": "#000000",
+    "opacity": 0.081,
+    "tiers": [
+     "#e7f1ef",
+     "#d2d9d8",
+     "#b3b9b8",
+     "#b1d4ff",
+     "#4fc1f7"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#2899",
+   "light": {
+    "ground": "#efe3ff",
+    "ink": "#653d00",
+    "opacity": 0.04,
+    "tiers": [
+     "#1b150f",
+     "#5a544e",
+     "#67625e",
+     "#3b6a00",
+     "#653d00",
+     "#653d00"
+    ]
+   },
+   "dark": {
+    "ground": "#653d00",
+    "ink": "#000000",
+    "opacity": 0.074,
+    "tiers": [
+     "#f5ede4",
+     "#ddd6cf",
+     "#bbb6b1",
+     "#b9e898",
+     "#88ca52"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#2995",
+   "light": {
+    "ground": "#ffe8f4",
+    "ink": "#232731",
+    "opacity": 0.04,
+    "tiers": [
+     "#161617",
+     "#555556",
+     "#666667",
+     "#b6354c",
+     "#232731",
+     "#7a001e"
+    ]
+   },
+   "dark": {
+    "ground": "#232731",
+    "ink": "#000000",
+    "opacity": 0.157,
+    "tiers": [
+     "#eeeef0",
+     "#d7d7d8",
+     "#b7b7b8",
+     "#ffb8bf",
+     "#e76374"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#3033",
+   "light": {
+    "ground": "#cdf4ff",
+    "ink": "#211046",
+    "opacity": 0.04,
+    "tiers": [
+     "#16151a",
+     "#555559",
+     "#666569",
+     "#6c6400",
+     "#211046",
+     "#211046"
+    ]
+   },
+   "dark": {
+    "ground": "#211046",
+    "ink": "#000000",
+    "opacity": 0.219,
+    "tiers": [
+     "#eeedf4",
+     "#d7d7dc",
+     "#b7b7bb",
+     "#e0db98",
+     "#7597e6"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#3034",
+   "light": {
+    "ground": "#fae4ff",
+    "ink": "#235118",
+    "opacity": 0.04,
+    "tiers": [
+     "#121811",
+     "#525751",
+     "#626661",
+     "#8f525a",
+     "#235118",
+     "#5b242d"
+    ]
+   },
+   "dark": {
+    "ground": "#235118",
+    "ink": "#000000",
+    "opacity": 0.08,
+    "tiers": [
+     "#e9f1e8",
+     "#d3d9d2",
+     "#b4b9b3",
+     "#fbc9ce",
+     "#eaa5ad"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#3136",
+   "light": {
+    "ground": "#ffe6f4",
+    "ink": "#2a255f",
+    "opacity": 0.04,
+    "tiers": [
+     "#15151d",
+     "#54555c",
+     "#65656c",
+     "#5f6600",
+     "#2a255f",
+     "#2a255f"
+    ]
+   },
+   "dark": {
+    "ground": "#2a255f",
+    "ink": "#000000",
+    "opacity": 0.132,
+    "tiers": [
+     "#ededf9",
+     "#d6d7df",
+     "#b6b7be",
+     "#d6df99",
+     "#c5d068"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#3374",
+   "light": {
+    "ground": "#ffe5fd",
+    "ink": "#562658",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a141a",
+     "#595359",
+     "#696469",
+     "#556d00",
+     "#562658",
+     "#562658"
+    ]
+   },
+   "dark": {
+    "ground": "#562658",
+    "ink": "#000000",
+    "opacity": 0.099,
+    "tiers": [
+     "#f4ebf4",
+     "#dcd5dc",
+     "#bbb5ba",
+     "#c6e77a",
+     "#b1dd16"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#3407",
+   "light": {
+    "ground": "#ffe4f6",
+    "ink": "#0c3146",
+    "opacity": 0.04,
+    "tiers": [
+     "#141618",
+     "#535657",
+     "#636566",
+     "#007309",
+     "#0c3146",
+     "#0c3146"
+    ]
+   },
+   "dark": {
+    "ground": "#0c3146",
+    "ink": "#000000",
+    "opacity": 0.133,
+    "tiers": [
+     "#ebeff2",
+     "#d5d8da",
+     "#b5b8b9",
+     "#9df098",
+     "#57d755"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#3427",
+   "light": {
+    "ground": "#ffe7ca",
+    "ink": "#6a2535",
+    "opacity": 0.04,
+    "tiers": [
+     "#1c1415",
+     "#5b5354",
+     "#696364",
+     "#bf004c",
+     "#6a2535",
+     "#8d0021"
+    ]
+   },
+   "dark": {
+    "ground": "#6a2535",
+    "ink": "#000000",
+    "opacity": 0.095,
+    "tiers": [
+     "#f7ebec",
+     "#ded5d6",
+     "#bcb5b6",
+     "#ffa9c0",
+     "#ff829a"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#3715",
+   "light": {
+    "ground": "#e4ecff",
+    "ink": "#040135",
+    "opacity": 0.04,
+    "tiers": [
+     "#14161b",
+     "#53555a",
+     "#636468",
+     "#37152d",
+     "#37152d",
+     "#1c0014"
+    ]
+   },
+   "dark": {
+    "ground": "#040135",
+    "ink": "#eceef5",
+    "opacity": 0.035,
+    "tiers": [
+     "#eceef5",
+     "#d5d7dd",
+     "#b6b7bb",
+     "#edcce1",
+     "#9a708c"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s7#3762",
+   "light": {
+    "ground": "#eae9ff",
+    "ink": "#292761",
+    "opacity": 0.04,
+    "tiers": [
+     "#15151d",
+     "#54555c",
+     "#63646a",
+     "#446a00",
+     "#670e85",
+     "#3a0055"
+    ]
+   },
+   "dark": {
+    "ground": "#292761",
+    "ink": "#000000",
+    "opacity": 0.129,
+    "tiers": [
+     "#eceef9",
+     "#d6d7df",
+     "#b6b7bd",
+     "#c0e69a",
+     "#cb7aee"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#3821",
+   "light": {
+    "ground": "#ffe7b0",
+    "ink": "#3f1c27",
+    "opacity": 0.04,
+    "tiers": [
+     "#181516",
+     "#585455",
+     "#656263",
+     "#9b4f00",
+     "#3f1c27",
+     "#621900"
+    ]
+   },
+   "dark": {
+    "ground": "#3f1c27",
+    "ink": "#000000",
+    "opacity": 0.141,
+    "tiers": [
+     "#f2edee",
+     "#dad6d7",
+     "#b9b6b7",
+     "#ffc99f",
+     "#d07e41"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#3898",
+   "light": {
+    "ground": "#ffe0f6",
+    "ink": "#005135",
+    "opacity": 0.04,
+    "tiers": [
+     "#101814",
+     "#505753",
+     "#5f6562",
+     "#625c6d",
+     "#005135",
+     "#005135"
+    ]
+   },
+   "dark": {
+    "ground": "#005135",
+    "ink": "#000000",
+    "opacity": 0.08,
+    "tiers": [
+     "#e6f2eb",
+     "#d1dad5",
+     "#b2b9b5",
+     "#dad5e3",
+     "#4ef953"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#3967",
+   "light": {
+    "ground": "#eae6ff",
+    "ink": "#22205a",
+    "opacity": 0.04,
+    "tiers": [
+     "#14151d",
+     "#54555c",
+     "#626369",
+     "#925400",
+     "#22205a",
+     "#22205a"
+    ]
+   },
+   "dark": {
+    "ground": "#22205a",
+    "ink": "#000000",
+    "opacity": 0.141,
+    "tiers": [
+     "#eceef9",
+     "#d5d7df",
+     "#b6b7be",
+     "#ffc786",
+     "#91d92a"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#3976",
+   "light": {
+    "ground": "#ffebef",
+    "ink": "#12181f",
+    "opacity": 0.04,
+    "tiers": [
+     "#151617",
+     "#555556",
+     "#676768",
+     "#16121a",
+     "#12181f",
+     "#12181f"
+    ]
+   },
+   "dark": {
+    "ground": "#12181f",
+    "ink": "#000000",
+    "opacity": 0.271,
+    "tiers": [
+     "#eeeeef",
+     "#d7d7d8",
+     "#b7b7b8",
+     "#dad5df",
+     "#e04d88"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#4053",
+   "light": {
+    "ground": "#ffeac6",
+    "ink": "#000620",
+    "opacity": 0.04,
+    "tiers": [
+     "#141619",
+     "#545558",
+     "#636567",
+     "#007034",
+     "#000620",
+     "#000620"
+    ]
+   },
+   "dark": {
+    "ground": "#000620",
+    "ink": "#eceff3",
+    "opacity": 0.041,
+    "tiers": [
+     "#eceff3",
+     "#d6d7db",
+     "#b6b7ba",
+     "#96f0ac",
+     "#ff9a93"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s7#4084",
+   "light": {
+    "ground": "#d0f1ff",
+    "ink": "#062f09",
+    "opacity": 0.04,
+    "tiers": [
+     "#141714",
+     "#535653",
+     "#636563",
+     "#007263",
+     "#062f09",
+     "#770000"
+    ]
+   },
+   "dark": {
+    "ground": "#062f09",
+    "ink": "#000000",
+    "opacity": 0.138,
+    "tiers": [
+     "#ebf0eb",
+     "#d5d8d5",
+     "#b6b8b5",
+     "#9ce9d8",
+     "#f35c4d"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#4100",
+   "light": {
+    "ground": "#ffe7e5",
+    "ink": "#0e0c38",
+    "opacity": 0.04,
+    "tiers": [
+     "#15161a",
+     "#545559",
+     "#646467",
+     "#6c6700",
+     "#0e0c38",
+     "#0e0c38"
+    ]
+   },
+   "dark": {
+    "ground": "#0e0c38",
+    "ink": "#000000",
+    "opacity": 0.509,
+    "tiers": [
+     "#edeef4",
+     "#d6d7dc",
+     "#b6b7ba",
+     "#e3dd6a",
+     "#9e7f36"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#4171",
+   "light": {
+    "ground": "#ffe6fe",
+    "ink": "#02401d",
+    "opacity": 0.04,
+    "tiers": [
+     "#131714",
+     "#535653",
+     "#646765",
+     "#9210db",
+     "#9210db",
+     "#550094"
+    ]
+   },
+   "dark": {
+    "ground": "#02401d",
+    "ink": "#000000",
+    "opacity": 0.102,
+    "tiers": [
+     "#ebf0ec",
+     "#d4d9d5",
+     "#b5b8b6",
+     "#f7b4ff",
+     "#c481ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#4352",
+   "light": {
+    "ground": "#ffe1ef",
+    "ink": "#420f1b",
+    "opacity": 0.04,
+    "tiers": [
+     "#191515",
+     "#595454",
+     "#666262",
+     "#406e00",
+     "#5c5249",
+     "#2d241c"
+    ]
+   },
+   "dark": {
+    "ground": "#420f1b",
+    "ink": "#000000",
+    "opacity": 0.159,
+    "tiers": [
+     "#f4eced",
+     "#dbd6d6",
+     "#bab6b6",
+     "#afed7b",
+     "#978c82"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#4387",
+   "light": {
+    "ground": "#ebefff",
+    "ink": "#571407",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a1413",
+     "#5a5452",
+     "#6b6665",
+     "#b43b00",
+     "#571407",
+     "#571407"
+    ]
+   },
+   "dark": {
+    "ground": "#571407",
+    "ink": "#000000",
+    "opacity": 0.132,
+    "tiers": [
+     "#f5ecea",
+     "#ddd6d4",
+     "#bbb6b5",
+     "#ffba97",
+     "#d37d8e"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#4711",
+   "light": {
+    "ground": "#e0eaff",
+    "ink": "#08083f",
+    "opacity": 0.04,
+    "tiers": [
+     "#14161c",
+     "#53555b",
+     "#626367",
+     "#006e34",
+     "#08083f",
+     "#08083f"
+    ]
+   },
+   "dark": {
+    "ground": "#08083f",
+    "ink": "#000000",
+    "opacity": 0.563,
+    "tiers": [
+     "#ebeef7",
+     "#d5d7de",
+     "#b5b7bc",
+     "#8bf2a8",
+     "#46f287"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#4927",
+   "light": {
+    "ground": "#ffdefd",
+    "ink": "#004b5a",
+    "opacity": 0.04,
+    "tiers": [
+     "#0f181a",
+     "#4f5759",
+     "#5e6466",
+     "#884e5b",
+     "#004b5a",
+     "#004b5a"
+    ]
+   },
+   "dark": {
+    "ground": "#004b5a",
+    "ink": "#000000",
+    "opacity": 0.087,
+    "tiers": [
+     "#e5f1f4",
+     "#d0d9dc",
+     "#b2b9bb",
+     "#f9c9d2",
+     "#e3a1ae"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#5117",
+   "light": {
+    "ground": "#e9f0ff",
+    "ink": "#5e191a",
+    "opacity": 0.04,
+    "tiers": [
+     "#1b1413",
+     "#5b5353",
+     "#6c6665",
+     "#b803aa",
+     "#5e191a",
+     "#5e191a"
+    ]
+   },
+   "dark": {
+    "ground": "#5e191a",
+    "ink": "#000000",
+    "opacity": 0.122,
+    "tiers": [
+     "#f7ebea",
+     "#ded5d4",
+     "#bcb6b5",
+     "#ffabff",
+     "#f75ae5"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#5121",
+   "light": {
+    "ground": "#fde0ff",
+    "ink": "#702e4c",
+    "opacity": 0.04,
+    "tiers": [
+     "#1c1316",
+     "#5b5356",
+     "#686163",
+     "#005fcf",
+     "#702e4c",
+     "#00239f"
+    ]
+   },
+   "dark": {
+    "ground": "#702e4c",
+    "ink": "#000000",
+    "opacity": 0.076,
+    "tiers": [
+     "#f7ebef",
+     "#ded4d8",
+     "#bdb5b8",
+     "#9bd9ff",
+     "#84b6ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#5139",
+   "light": {
+    "ground": "#ffe5e9",
+    "ink": "#2f2963",
+    "opacity": 0.04,
+    "tiers": [
+     "#15151d",
+     "#54545c",
+     "#64646a",
+     "#815900",
+     "#2f2963",
+     "#2f2963"
+    ]
+   },
+   "dark": {
+    "ground": "#2f2963",
+    "ink": "#000000",
+    "opacity": 0.117,
+    "tiers": [
+     "#ededf9",
+     "#d6d7df",
+     "#b6b7be",
+     "#ffcf81",
+     "#adb12c"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#5149",
+   "light": {
+    "ground": "#fee9e8",
+    "ink": "#061d39",
+    "opacity": 0.04,
+    "tiers": [
+     "#141619",
+     "#535558",
+     "#656668",
+     "#006e5c",
+     "#061d39",
+     "#061d39"
+    ]
+   },
+   "dark": {
+    "ground": "#061d39",
+    "ink": "#000000",
+    "opacity": 0.19,
+    "tiers": [
+     "#eceff3",
+     "#d5d8db",
+     "#b6b7ba",
+     "#a7e7d5",
+     "#9afbe2"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#5283",
+   "light": {
+    "ground": "#e4ecff",
+    "ink": "#151539",
+    "opacity": 0.04,
+    "tiers": [
+     "#151619",
+     "#545558",
+     "#646467",
+     "#005cca",
+     "#151539",
+     "#151539"
+    ]
+   },
+   "dark": {
+    "ground": "#151539",
+    "ink": "#000000",
+    "opacity": 0.262,
+    "tiers": [
+     "#edeef3",
+     "#d6d7db",
+     "#b7b7ba",
+     "#9bd9ff",
+     "#a9aa8d"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#5366",
+   "light": {
+    "ground": "#ffe1f8",
+    "ink": "#220b3f",
+    "opacity": 0.04,
+    "tiers": [
+     "#16151a",
+     "#565459",
+     "#636366",
+     "#9d4f00",
+     "#220b3f",
+     "#003f00"
+    ]
+   },
+   "dark": {
+    "ground": "#220b3f",
+    "ink": "#000000",
+    "opacity": 0.278,
+    "tiers": [
+     "#efedf4",
+     "#d8d6dc",
+     "#b8b7ba",
+     "#ffc289",
+     "#37933a"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#5744",
+   "light": {
+    "ground": "#f5ecff",
+    "ink": "#12124a",
+    "opacity": 0.04,
+    "tiers": [
+     "#14161b",
+     "#54555a",
+     "#66676b",
+     "#8d39bd",
+     "#8d39bd",
+     "#500079"
+    ]
+   },
+   "dark": {
+    "ground": "#12124a",
+    "ink": "#000000",
+    "opacity": 0.25,
+    "tiers": [
+     "#eceef6",
+     "#d5d7de",
+     "#b6b7bc",
+     "#f5bdff",
+     "#b260e5"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#5888",
+   "light": {
+    "ground": "#f3edff",
+    "ink": "#292a64",
+    "opacity": 0.04,
+    "tiers": [
+     "#14151d",
+     "#54555c",
+     "#66676d",
+     "#646900",
+     "#292a64",
+     "#292a64"
+    ]
+   },
+   "dark": {
+    "ground": "#292a64",
+    "ink": "#000000",
+    "opacity": 0.125,
+    "tiers": [
+     "#eceef9",
+     "#d5d7e0",
+     "#b6b7be",
+     "#d7df90",
+     "#e5ef76"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#5897",
+   "light": {
+    "ground": "#dfeaff",
+    "ink": "#222407",
+    "opacity": 0.04,
+    "tiers": [
+     "#161614",
+     "#555553",
+     "#636362",
+     "#3b7000",
+     "#222407",
+     "#222407"
+    ]
+   },
+   "dark": {
+    "ground": "#222407",
+    "ink": "#000000",
+    "opacity": 0.162,
+    "tiers": [
+     "#eeefeb",
+     "#d7d8d5",
+     "#b7b7b5",
+     "#b0ec89",
+     "#6cc114"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#5938",
+   "light": {
+    "ground": "#cdf0ff",
+    "ink": "#080700",
+    "opacity": 0.04,
+    "tiers": [
+     "#161615",
+     "#555554",
+     "#636362",
+     "#406b00",
+     "#155e02",
+     "#002f00"
+    ]
+   },
+   "dark": {
+    "ground": "#080700",
+    "ink": "#efeeec",
+    "opacity": 0.016,
+    "tiers": [
+     "#efeeec",
+     "#d7d7d6",
+     "#b7b7b6",
+     "#bae993",
+     "#428836"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s7#5953",
+   "light": {
+    "ground": "#d7eeff",
+    "ink": "#171f55",
+    "opacity": 0.04,
+    "tiers": [
+     "#14161b",
+     "#54555a",
+     "#636468",
+     "#007151",
+     "#171f55",
+     "#171f55"
+    ]
+   },
+   "dark": {
+    "ground": "#171f55",
+    "ink": "#000000",
+    "opacity": 0.152,
+    "tiers": [
+     "#eceef5",
+     "#d5d7dd",
+     "#b6b7bb",
+     "#86f0c4",
+     "#22e55a"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#6012",
+   "light": {
+    "ground": "#ffdefd",
+    "ink": "#732f49",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a1416",
+     "#5a5355",
+     "#676263",
+     "#576500",
+     "#732f49",
+     "#732f49"
+    ]
+   },
+   "dark": {
+    "ground": "#732f49",
+    "ink": "#000000",
+    "opacity": 0.074,
+    "tiers": [
+     "#f5ecee",
+     "#ddd5d7",
+     "#bbb6b7",
+     "#d0e28e",
+     "#ff9cc9"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#6091",
+   "light": {
+    "ground": "#f3eaff",
+    "ink": "#470e27",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a1416",
+     "#595455",
+     "#696566",
+     "#834e9d",
+     "#470e27",
+     "#470e27"
+    ]
+   },
+   "dark": {
+    "ground": "#470e27",
+    "ink": "#000000",
+    "opacity": 0.162,
+    "tiers": [
+     "#f4ecee",
+     "#dcd6d7",
+     "#bab6b7",
+     "#edc6ff",
+     "#b17d8b"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#6129",
+   "light": {
+    "ground": "#fce0ff",
+    "ink": "#1c511c",
+    "opacity": 0.04,
+    "tiers": [
+     "#121812",
+     "#515751",
+     "#606560",
+     "#00720f",
+     "#1c511c",
+     "#1c511c"
+    ]
+   },
+   "dark": {
+    "ground": "#1c511c",
+    "ink": "#000000",
+    "opacity": 0.08,
+    "tiers": [
+     "#e9f1e8",
+     "#d3dad2",
+     "#b4b9b3",
+     "#8cf48a",
+     "#23dc33"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#6168",
+   "light": {
+    "ground": "#f5e2ff",
+    "ink": "#011f26",
+    "opacity": 0.04,
+    "tiers": [
+     "#141617",
+     "#535656",
+     "#626364",
+     "#506900",
+     "#011f26",
+     "#003f00"
+    ]
+   },
+   "dark": {
+    "ground": "#011f26",
+    "ink": "#000000",
+    "opacity": 0.21,
+    "tiers": [
+     "#eceff0",
+     "#d5d8d9",
+     "#b6b8b8",
+     "#c1e970",
+     "#46993d"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#6300",
+   "light": {
+    "ground": "#ffdefe",
+    "ink": "#005051",
+    "opacity": 0.04,
+    "tiers": [
+     "#101818",
+     "#505757",
+     "#5f6464",
+     "#496726",
+     "#005051",
+     "#3e1f56"
+    ]
+   },
+   "dark": {
+    "ground": "#005051",
+    "ink": "#000000",
+    "opacity": 0.081,
+    "tiers": [
+     "#e7f1f1",
+     "#d1d9d9",
+     "#b3b9b9",
+     "#c9e1b1",
+     "#cdacef"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#6336",
+   "light": {
+    "ground": "#ffeada",
+    "ink": "#43132d",
+    "opacity": 0.04,
+    "tiers": [
+     "#191516",
+     "#585456",
+     "#686566",
+     "#007132",
+     "#43132d",
+     "#43132d"
+    ]
+   },
+   "dark": {
+    "ground": "#43132d",
+    "ink": "#000000",
+    "opacity": 0.157,
+    "tiers": [
+     "#f3ecef",
+     "#dbd6d8",
+     "#bab6b8",
+     "#93f1a8",
+     "#3dd871"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#6373",
+   "light": {
+    "ground": "#ffe0f9",
+    "ink": "#2c0320",
+    "opacity": 0.04,
+    "tiers": [
+     "#191517",
+     "#585456",
+     "#656264",
+     "#3a4b2c",
+     "#2c0320",
+     "#2c0320"
+    ]
+   },
+   "dark": {
+    "ground": "#2c0320",
+    "ink": "#000000",
+    "opacity": 0.33,
+    "tiers": [
+     "#f2ecf0",
+     "#dbd6d8",
+     "#bab6b8",
+     "#ceddc4",
+     "#04aa97"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#6523",
+   "light": {
+    "ground": "#f3eaff",
+    "ink": "#4f1d1b",
+    "opacity": 0.04,
+    "tiers": [
+     "#191514",
+     "#595453",
+     "#696565",
+     "#366f16",
+     "#4f1d1b",
+     "#4f1d1b"
+    ]
+   },
+   "dark": {
+    "ground": "#4f1d1b",
+    "ink": "#000000",
+    "opacity": 0.121,
+    "tiers": [
+     "#f4edec",
+     "#dbd6d5",
+     "#bab6b6",
+     "#bbe6aa",
+     "#9cd299"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#6600",
+   "light": {
+    "ground": "#f3e8ff",
+    "ink": "#302964",
+    "opacity": 0.04,
+    "tiers": [
+     "#15151c",
+     "#54555b",
+     "#65656a",
+     "#78556d",
+     "#302964",
+     "#302964"
+    ]
+   },
+   "dark": {
+    "ground": "#302964",
+    "ink": "#000000",
+    "opacity": 0.115,
+    "tiers": [
+     "#ededf7",
+     "#d6d7de",
+     "#b7b7bc",
+     "#eacee0",
+     "#cfa8c2"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#6609",
+   "light": {
+    "ground": "#ffe4f0",
+    "ink": "#322560",
+    "opacity": 0.04,
+    "tiers": [
+     "#16151d",
+     "#55545c",
+     "#64646a",
+     "#007159",
+     "#322560",
+     "#322560"
+    ]
+   },
+   "dark": {
+    "ground": "#322560",
+    "ink": "#000000",
+    "opacity": 0.122,
+    "tiers": [
+     "#eeedf8",
+     "#d7d6df",
+     "#b7b6bd",
+     "#88efcf",
+     "#3aedc1"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#6869",
+   "light": {
+    "ground": "#f0e6ff",
+    "ink": "#18171d",
+    "opacity": 0.04,
+    "tiers": [
+     "#161616",
+     "#555556",
+     "#636363",
+     "#466e25",
+     "#18171d",
+     "#18171d"
+    ]
+   },
+   "dark": {
+    "ground": "#18171d",
+    "ink": "#000000",
+    "opacity": 0.283,
+    "tiers": [
+     "#eeeeef",
+     "#d7d7d8",
+     "#b7b7b8",
+     "#c3e3af",
+     "#05feca"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#6918",
+   "light": {
+    "ground": "#ffe4e9",
+    "ink": "#390e41",
+    "opacity": 0.04,
+    "tiers": [
+     "#191419",
+     "#585459",
+     "#656266",
+     "#8f562c",
+     "#390e41",
+     "#003161"
+    ]
+   },
+   "dark": {
+    "ground": "#390e41",
+    "ink": "#000000",
+    "opacity": 0.179,
+    "tiers": [
+     "#f2ecf3",
+     "#dad5db",
+     "#b9b6ba",
+     "#fbcdae",
+     "#3c8fc6"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#6959",
+   "light": {
+    "ground": "#fde3ff",
+    "ink": "#0a5022",
+    "opacity": 0.04,
+    "tiers": [
+     "#111812",
+     "#515752",
+     "#616662",
+     "#243400",
+     "#243400",
+     "#091600"
+    ]
+   },
+   "dark": {
+    "ground": "#0a5022",
+    "ink": "#000000",
+    "opacity": 0.081,
+    "tiers": [
+     "#e8f1e9",
+     "#d2dad3",
+     "#b3b9b4",
+     "#cedeb9",
+     "#a5ba85"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#7114",
+   "light": {
+    "ground": "#e3efff",
+    "ink": "#151f56",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161d",
+     "#53555c",
+     "#64666c",
+     "#c20051",
+     "#151f56",
+     "#151f56"
+    ]
+   },
+   "dark": {
+    "ground": "#151f56",
+    "ink": "#000000",
+    "opacity": 0.157,
+    "tiers": [
+     "#eaeef9",
+     "#d4d7e0",
+     "#b5b7be",
+     "#ffaac3",
+     "#f6fc42"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#7118",
+   "light": {
+    "ground": "#ffe1f3",
+    "ink": "#4d0617",
+    "opacity": 0.04,
+    "tiers": [
+     "#1b1414",
+     "#5a5354",
+     "#676262",
+     "#006e74",
+     "#4d0617",
+     "#4d0617"
+    ]
+   },
+   "dark": {
+    "ground": "#4d0617",
+    "ink": "#000000",
+    "opacity": 0.149,
+    "tiers": [
+     "#f6ecec",
+     "#ddd5d6",
+     "#bbb6b6",
+     "#9be7eb",
+     "#20b9ed"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#7157",
+   "light": {
+    "ground": "#fde3ff",
+    "ink": "#21531d",
+    "opacity": 0.04,
+    "tiers": [
+     "#121812",
+     "#525751",
+     "#626661",
+     "#426b00",
+     "#21531d",
+     "#21531d"
+    ]
+   },
+   "dark": {
+    "ground": "#21531d",
+    "ink": "#000000",
+    "opacity": 0.078,
+    "tiers": [
+     "#e9f1e8",
+     "#d3dad2",
+     "#b4b9b3",
+     "#b1ed74",
+     "#a4fb2a"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#7272",
+   "light": {
+    "ground": "#e6eeff",
+    "ink": "#192d11",
+    "opacity": 0.04,
+    "tiers": [
+     "#151714",
+     "#545653",
+     "#656665",
+     "#5a5684",
+     "#aa2c48",
+     "#670015"
+    ]
+   },
+   "dark": {
+    "ground": "#192d11",
+    "ink": "#000000",
+    "opacity": 0.144,
+    "tiers": [
+     "#edefec",
+     "#d6d8d5",
+     "#b6b8b6",
+     "#d5d3f8",
+     "#e9677b"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#7381",
+   "light": {
+    "ground": "#ffebf6",
+    "ink": "#012e2b",
+    "opacity": 0.04,
+    "tiers": [
+     "#141716",
+     "#535656",
+     "#666868",
+     "#28752a",
+     "#355a63",
+     "#032b33"
+    ]
+   },
+   "dark": {
+    "ground": "#012e2b",
+    "ink": "#000000",
+    "opacity": 0.141,
+    "tiers": [
+     "#ebefef",
+     "#d5d8d8",
+     "#b5b8b8",
+     "#b3e8b0",
+     "#6e959e"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#7496",
+   "light": {
+    "ground": "#f4edff",
+    "ink": "#060c0d",
+    "opacity": 0.04,
+    "tiers": [
+     "#151616",
+     "#555555",
+     "#676768",
+     "#7a641c",
+     "#060c0d",
+     "#060c0d"
+    ]
+   },
+   "dark": {
+    "ground": "#060c0d",
+    "ink": "#eeefef",
+    "opacity": 0.037,
+    "tiers": [
+     "#eeefef",
+     "#d7d7d8",
+     "#b7b7b7",
+     "#e7d7a7",
+     "#a9ac37"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s7#8124",
+   "light": {
+    "ground": "#e8efff",
+    "ink": "#0b1325",
+    "opacity": 0.04,
+    "tiers": [
+     "#151618",
+     "#545557",
+     "#656667",
+     "#6c6728",
+     "#0b1325",
+     "#0b1325"
+    ]
+   },
+   "dark": {
+    "ground": "#0b1325",
+    "ink": "#000000",
+    "opacity": 0.447,
+    "tiers": [
+     "#edeef1",
+     "#d6d7d9",
+     "#b6b7b9",
+     "#dddaad",
+     "#12f753"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#8165",
+   "light": {
+    "ground": "#ffe7af",
+    "ink": "#190108",
+    "opacity": 0.04,
+    "tiers": [
+     "#181516",
+     "#575455",
+     "#656263",
+     "#756022",
+     "#3e654f",
+     "#09321f"
+    ]
+   },
+   "dark": {
+    "ground": "#190108",
+    "ink": "#f2edee",
+    "opacity": 0.014,
+    "tiers": [
+     "#f2edee",
+     "#dad6d7",
+     "#b9b6b7",
+     "#e6d7ac",
+     "#5a826b"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s7#8350",
+   "light": {
+    "ground": "#f4e2ff",
+    "ink": "#230204",
+    "opacity": 0.04,
+    "tiers": [
+     "#191515",
+     "#585454",
+     "#656262",
+     "#9b4163",
+     "#230204",
+     "#660d36"
+    ]
+   },
+   "dark": {
+    "ground": "#230204",
+    "ink": "#000000",
+    "opacity": 0.75,
+    "tiers": [
+     "#f2eded",
+     "#dbd6d6",
+     "#bab6b6",
+     "#ffc0d6",
+     "#bc5f80"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#8439",
+   "light": {
+    "ground": "#ffdffb",
+    "ink": "#132a60",
+    "opacity": 0.04,
+    "tiers": [
+     "#12161d",
+     "#52555c",
+     "#606369",
+     "#536c00",
+     "#132a60",
+     "#122f79"
+    ]
+   },
+   "dark": {
+    "ground": "#132a60",
+    "ink": "#000000",
+    "opacity": 0.13,
+    "tiers": [
+     "#e9eff9",
+     "#d3d8e0",
+     "#b4b7be",
+     "#c7e58b",
+     "#6e95e8"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#8766",
+   "light": {
+    "ground": "#ffe5e6",
+    "ink": "#39093a",
+    "opacity": 0.04,
+    "tiers": [
+     "#191418",
+     "#585458",
+     "#676366",
+     "#585ca5",
+     "#39093a",
+     "#39093a"
+    ]
+   },
+   "dark": {
+    "ground": "#39093a",
+    "ink": "#000000",
+    "opacity": 0.181,
+    "tiers": [
+     "#f2ecf2",
+     "#dad6da",
+     "#bab6b9",
+     "#cbd3ff",
+     "#979fee"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#8938",
+   "light": {
+    "ground": "#e8f0ff",
+    "ink": "#402e02",
+    "opacity": 0.04,
+    "tiers": [
+     "#171613",
+     "#565552",
+     "#686765",
+     "#9935a9",
+     "#254429",
+     "#022007"
+    ]
+   },
+   "dark": {
+    "ground": "#402e02",
+    "ink": "#000000",
+    "opacity": 0.12,
+    "tiers": [
+     "#f0eeea",
+     "#d9d7d4",
+     "#b8b7b5",
+     "#ffb9ff",
+     "#7fa182"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#8971",
+   "light": {
+    "ground": "#ffe7f5",
+    "ink": "#223d2f",
+    "opacity": 0.04,
+    "tiers": [
+     "#141715",
+     "#545655",
+     "#656665",
+     "#7b6400",
+     "#223d2f",
+     "#223d2f"
+    ]
+   },
+   "dark": {
+    "ground": "#223d2f",
+    "ink": "#000000",
+    "opacity": 0.107,
+    "tiers": [
+     "#ecefed",
+     "#d6d8d7",
+     "#b6b8b7",
+     "#f0d682",
+     "#e3b496"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#9035",
+   "light": {
+    "ground": "#ffe9e6",
+    "ink": "#271f15",
+    "opacity": 0.04,
+    "tiers": [
+     "#171615",
+     "#565554",
+     "#666665",
+     "#8049a9",
+     "#271f15",
+     "#4f1473"
+    ]
+   },
+   "dark": {
+    "ground": "#271f15",
+    "ink": "#000000",
+    "opacity": 0.177,
+    "tiers": [
+     "#efeeed",
+     "#d8d7d6",
+     "#b8b7b6",
+     "#ecc5ff",
+     "#ab73d6"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#9037",
+   "light": {
+    "ground": "#ffe7a8",
+    "ink": "#070123",
+    "opacity": 0.04,
+    "tiers": [
+     "#151619",
+     "#555558",
+     "#636366",
+     "#006b83",
+     "#070123",
+     "#003f57"
+    ]
+   },
+   "dark": {
+    "ground": "#070123",
+    "ink": "#eeeef3",
+    "opacity": 0.019,
+    "tiers": [
+     "#eeeef3",
+     "#d7d7db",
+     "#b7b7ba",
+     "#a5e3f6",
+     "#1a849e"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s7#9125",
+   "light": {
+    "ground": "#ffe7f2",
+    "ink": "#3f0f22",
+    "opacity": 0.04,
+    "tiers": [
+     "#191516",
+     "#585455",
+     "#686566",
+     "#9608c0",
+     "#3f0f22",
+     "#3f0f22"
+    ]
+   },
+   "dark": {
+    "ground": "#3f0f22",
+    "ink": "#000000",
+    "opacity": 0.167,
+    "tiers": [
+     "#f3ecee",
+     "#dbd6d7",
+     "#bab6b7",
+     "#ffb3ff",
+     "#e2f06c"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#9140",
+   "light": {
+    "ground": "#fae0ff",
+    "ink": "#37093c",
+    "opacity": 0.04,
+    "tiers": [
+     "#181419",
+     "#585458",
+     "#656265",
+     "#107100",
+     "#37093c",
+     "#37093c"
+    ]
+   },
+   "dark": {
+    "ground": "#37093c",
+    "ink": "#000000",
+    "opacity": 0.175,
+    "tiers": [
+     "#f2ecf3",
+     "#dad6db",
+     "#b9b6ba",
+     "#94f388",
+     "#4ae037"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#9166",
+   "light": {
+    "ground": "#ffebd0",
+    "ink": "#2b2862",
+    "opacity": 0.04,
+    "tiers": [
+     "#15161b",
+     "#54555a",
+     "#65666a",
+     "#bc0097",
+     "#2b2862",
+     "#5e0084"
+    ]
+   },
+   "dark": {
+    "ground": "#2b2862",
+    "ink": "#000000",
+    "opacity": 0.128,
+    "tiers": [
+     "#edeef6",
+     "#d6d7dd",
+     "#b6b7bb",
+     "#ffa5fd",
+     "#d36eff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#9196",
+   "light": {
+    "ground": "#ffe6f9",
+    "ink": "#471517",
+    "opacity": 0.04,
+    "tiers": [
+     "#191514",
+     "#595454",
+     "#696565",
+     "#6c1aa7",
+     "#6c1aa7",
+     "#3d006f"
+    ]
+   },
+   "dark": {
+    "ground": "#471517",
+    "ink": "#000000",
+    "opacity": 0.134,
+    "tiers": [
+     "#f4edec",
+     "#dbd6d6",
+     "#bab6b6",
+     "#edbfff",
+     "#b46df8"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#9297",
+   "light": {
+    "ground": "#ffe0f7",
+    "ink": "#6a3d00",
+    "opacity": 0.04,
+    "tiers": [
+     "#191511",
+     "#595451",
+     "#666360",
+     "#007111",
+     "#6a3d00",
+     "#6a3d00"
+    ]
+   },
+   "dark": {
+    "ground": "#6a3d00",
+    "ink": "#000000",
+    "opacity": 0.074,
+    "tiers": [
+     "#f3ede8",
+     "#dbd6d2",
+     "#bab7b3",
+     "#91f390",
+     "#36d941"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#9505",
+   "light": {
+    "ground": "#ffe2fa",
+    "ink": "#413976",
+    "opacity": 0.04,
+    "tiers": [
+     "#15151d",
+     "#55545c",
+     "#64646a",
+     "#5d487f",
+     "#413976",
+     "#004429"
+    ]
+   },
+   "dark": {
+    "ground": "#413976",
+    "ink": "#000000",
+    "opacity": 0.085,
+    "tiers": [
+     "#ededf8",
+     "#d7d6df",
+     "#b7b6be",
+     "#decffc",
+     "#5bc29e"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#9687",
+   "light": {
+    "ground": "#e6e8ff",
+    "ink": "#05063d",
+    "opacity": 0.04,
+    "tiers": [
+     "#14161b",
+     "#53555b",
+     "#616367",
+     "#615a9c",
+     "#05063d",
+     "#05063d"
+    ]
+   },
+   "dark": {
+    "ground": "#05063d",
+    "ink": "#000000",
+    "opacity": 0.68,
+    "tiers": [
+     "#ebeef7",
+     "#d5d7de",
+     "#b5b7bc",
+     "#d3d1ff",
+     "#4d92ed"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#9794",
+   "light": {
+    "ground": "#ffe5fb",
+    "ink": "#244f15",
+    "opacity": 0.04,
+    "tiers": [
+     "#131811",
+     "#525751",
+     "#636762",
+     "#aa23b5",
+     "#244f15",
+     "#244f15"
+    ]
+   },
+   "dark": {
+    "ground": "#244f15",
+    "ink": "#000000",
+    "opacity": 0.082,
+    "tiers": [
+     "#eaf1e7",
+     "#d4d9d2",
+     "#b4b9b3",
+     "#ffb1ff",
+     "#ff9f89"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#10205",
+   "light": {
+    "ground": "#ffe5da",
+    "ink": "#0d0611",
+    "opacity": 0.04,
+    "tiers": [
+     "#161617",
+     "#565556",
+     "#636364",
+     "#4f644f",
+     "#0d0611",
+     "#0d0611"
+    ]
+   },
+   "dark": {
+    "ground": "#0d0611",
+    "ink": "#efeef0",
+    "opacity": 0.041,
+    "tiers": [
+     "#efeef0",
+     "#d8d7d8",
+     "#b8b7b8",
+     "#ccddcc",
+     "#1bbff1"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s7#10473",
+   "light": {
+    "ground": "#caf1ff",
+    "ink": "#170a39",
+    "opacity": 0.04,
+    "tiers": [
+     "#16151a",
+     "#555559",
+     "#636366",
+     "#b9009b",
+     "#170a39",
+     "#170a39"
+    ]
+   },
+   "dark": {
+    "ground": "#170a39",
+    "ink": "#000000",
+    "opacity": 0.412,
+    "tiers": [
+     "#eeeef4",
+     "#d7d7dc",
+     "#b7b7ba",
+     "#ffa6ff",
+     "#e328bf"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#10482",
+   "light": {
+    "ground": "#f4e3ff",
+    "ink": "#141920",
+    "opacity": 0.04,
+    "tiers": [
+     "#161617",
+     "#555556",
+     "#636364",
+     "#006d1a",
+     "#141920",
+     "#141920"
+    ]
+   },
+   "dark": {
+    "ground": "#141920",
+    "ink": "#000000",
+    "opacity": 0.26,
+    "tiers": [
+     "#eeeeef",
+     "#d7d7d8",
+     "#b7b7b8",
+     "#92f296",
+     "#f4cb47"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#10611",
+   "light": {
+    "ground": "#e5e8ff",
+    "ink": "#0b2055",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161c",
+     "#52555b",
+     "#616368",
+     "#ae1686",
+     "#0b2055",
+     "#0b2055"
+    ]
+   },
+   "dark": {
+    "ground": "#0b2055",
+    "ink": "#000000",
+    "opacity": 0.171,
+    "tiers": [
+     "#eaeff7",
+     "#d4d7de",
+     "#b5b7bc",
+     "#ffb0f2",
+     "#c1870c"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#10687",
+   "light": {
+    "ground": "#fee1ff",
+    "ink": "#0f5224",
+    "opacity": 0.04,
+    "tiers": [
+     "#131714",
+     "#525753",
+     "#616461",
+     "#685d90",
+     "#284b0e",
+     "#022400"
+    ]
+   },
+   "dark": {
+    "ground": "#0f5224",
+    "ink": "#000000",
+    "opacity": 0.079,
+    "tiers": [
+     "#eaf0eb",
+     "#d4d9d5",
+     "#b5b8b5",
+     "#d8d1fa",
+     "#9ac384"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#10696",
+   "light": {
+    "ground": "#d1edff",
+    "ink": "#25134d",
+    "opacity": 0.04,
+    "tiers": [
+     "#16151c",
+     "#55545b",
+     "#636267",
+     "#696154",
+     "#25134d",
+     "#25134d"
+    ]
+   },
+   "dark": {
+    "ground": "#25134d",
+    "ink": "#000000",
+    "opacity": 0.184,
+    "tiers": [
+     "#eeedf7",
+     "#d7d6de",
+     "#b7b6bc",
+     "#ddd6cc",
+     "#a59c8e"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#10832",
+   "light": {
+    "ground": "#fde3ff",
+    "ink": "#283f77",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161d",
+     "#52555c",
+     "#62656b",
+     "#197416",
+     "#197416",
+     "#003c00"
+    ]
+   },
+   "dark": {
+    "ground": "#283f77",
+    "ink": "#000000",
+    "opacity": 0.087,
+    "tiers": [
+     "#eaeff9",
+     "#d4d7e0",
+     "#b4b7be",
+     "#afeaa9",
+     "#70c56a"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#10867",
+   "light": {
+    "ground": "#e9ebff",
+    "ink": "#152223",
+    "opacity": 0.04,
+    "tiers": [
+     "#151616",
+     "#545555",
+     "#646565",
+     "#007533",
+     "#152223",
+     "#152223"
+    ]
+   },
+   "dark": {
+    "ground": "#152223",
+    "ink": "#000000",
+    "opacity": 0.186,
+    "tiers": [
+     "#edefef",
+     "#d6d8d8",
+     "#b6b7b7",
+     "#90f1a6",
+     "#17bf8e"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#10889",
+   "light": {
+    "ground": "#ffead6",
+    "ink": "#592e63",
+    "opacity": 0.04,
+    "tiers": [
+     "#181419",
+     "#585459",
+     "#686569",
+     "#2e5771",
+     "#a50841",
+     "#650012"
+    ]
+   },
+   "dark": {
+    "ground": "#592e63",
+    "ink": "#000000",
+    "opacity": 0.096,
+    "tiers": [
+     "#f2ecf3",
+     "#dad6db",
+     "#b9b6ba",
+     "#bedcf2",
+     "#ff899d"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#10914",
+   "light": {
+    "ground": "#e9edff",
+    "ink": "#10274b",
+    "opacity": 0.04,
+    "tiers": [
+     "#141619",
+     "#535559",
+     "#646669",
+     "#006f7d",
+     "#10274b",
+     "#10274b"
+    ]
+   },
+   "dark": {
+    "ground": "#10274b",
+    "ink": "#000000",
+    "opacity": 0.141,
+    "tiers": [
+     "#eceff3",
+     "#d5d8db",
+     "#b6b7ba",
+     "#96e7f5",
+     "#54d7ec"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#10941",
+   "light": {
+    "ground": "#ffe6e9",
+    "ink": "#270f28",
+    "opacity": 0.04,
+    "tiers": [
+     "#171517",
+     "#575457",
+     "#666466",
+     "#42695f",
+     "#270f28",
+     "#270f28"
+    ]
+   },
+   "dark": {
+    "ground": "#270f28",
+    "ink": "#000000",
+    "opacity": 0.269,
+    "tiers": [
+     "#f1edf0",
+     "#d9d6d9",
+     "#b8b6b8",
+     "#c2dfd7",
+     "#719ac0"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#10973",
+   "light": {
+    "ground": "#e5ecff",
+    "ink": "#581631",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a1416",
+     "#5a5355",
+     "#686364",
+     "#bb3301",
+     "#581631",
+     "#581631"
+    ]
+   },
+   "dark": {
+    "ground": "#581631",
+    "ink": "#000000",
+    "opacity": 0.119,
+    "tiers": [
+     "#f5ecee",
+     "#ddd5d7",
+     "#bbb6b7",
+     "#ffb99d",
+     "#fa6f4a"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#10979",
+   "light": {
+    "ground": "#ffe4f0",
+    "ink": "#1e2860",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161d",
+     "#53555c",
+     "#62646b",
+     "#766000",
+     "#1e2860",
+     "#1e2860"
+    ]
+   },
+   "dark": {
+    "ground": "#1e2860",
+    "ink": "#000000",
+    "opacity": 0.138,
+    "tiers": [
+     "#ebeef9",
+     "#d4d7e0",
+     "#b5b7be",
+     "#f2d67b",
+     "#909d46"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#10987",
+   "light": {
+    "ground": "#ffe9ec",
+    "ink": "#380c40",
+    "opacity": 0.04,
+    "tiers": [
+     "#181519",
+     "#575458",
+     "#686568",
+     "#4f6955",
+     "#380c40",
+     "#380c40"
+    ]
+   },
+   "dark": {
+    "ground": "#380c40",
+    "ink": "#000000",
+    "opacity": 0.18,
+    "tiers": [
+     "#f2ecf3",
+     "#dad6db",
+     "#b9b6ba",
+     "#c9decd",
+     "#ceecd4"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#11060",
+   "light": {
+    "ground": "#ffe1f7",
+    "ink": "#04354a",
+    "opacity": 0.04,
+    "tiers": [
+     "#131718",
+     "#535658",
+     "#616465",
+     "#a44500",
+     "#04354a",
+     "#04354a"
+    ]
+   },
+   "dark": {
+    "ground": "#04354a",
+    "ink": "#000000",
+    "opacity": 0.123,
+    "tiers": [
+     "#ebeff2",
+     "#d4d8da",
+     "#b5b8b9",
+     "#ffc096",
+     "#ff8849"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#11081",
+   "light": {
+    "ground": "#ffe2fd",
+    "ink": "#00542b",
+    "opacity": 0.04,
+    "tiers": [
+     "#111813",
+     "#505752",
+     "#606662",
+     "#6e5e7f",
+     "#6e5e7f",
+     "#362845"
+    ]
+   },
+   "dark": {
+    "ground": "#00542b",
+    "ink": "#000000",
+    "opacity": 0.077,
+    "tiers": [
+     "#e7f2ea",
+     "#d2dad4",
+     "#b3b9b4",
+     "#ded1ec",
+     "#c3b2d7"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#11096",
+   "light": {
+    "ground": "#e7ebff",
+    "ink": "#0c0d18",
+    "opacity": 0.04,
+    "tiers": [
+     "#161617",
+     "#555556",
+     "#646465",
+     "#4e667f",
+     "#0c0d18",
+     "#0c0d18"
+    ]
+   },
+   "dark": {
+    "ground": "#0c0d18",
+    "ink": "#000000",
+    "opacity": 0.808,
+    "tiers": [
+     "#eeeef0",
+     "#d7d7d9",
+     "#b7b7b8",
+     "#c7daee",
+     "#b3ceea"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#11170",
+   "light": {
+    "ground": "#f9e4ff",
+    "ink": "#31134a",
+    "opacity": 0.04,
+    "tiers": [
+     "#17151a",
+     "#565459",
+     "#656467",
+     "#00712a",
+     "#31134a",
+     "#31134a"
+    ]
+   },
+   "dark": {
+    "ground": "#31134a",
+    "ink": "#000000",
+    "opacity": 0.169,
+    "tiers": [
+     "#f0edf4",
+     "#d9d6dc",
+     "#b8b6ba",
+     "#9aefa6",
+     "#78c493"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#11181",
+   "light": {
+    "ground": "#eaefff",
+    "ink": "#3a1246",
+    "opacity": 0.04,
+    "tiers": [
+     "#19141a",
+     "#585359",
+     "#69666a",
+     "#0b508e",
+     "#0b508e",
+     "#001f5a"
+    ]
+   },
+   "dark": {
+    "ground": "#3a1246",
+    "ink": "#000000",
+    "opacity": 0.164,
+    "tiers": [
+     "#f2ecf4",
+     "#dad5dc",
+     "#b9b6bb",
+     "#afdcff",
+     "#5492d5"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#11199",
+   "light": {
+    "ground": "#e5edff",
+    "ink": "#0b061d",
+    "opacity": 0.04,
+    "tiers": [
+     "#161618",
+     "#555557",
+     "#646466",
+     "#4329e6",
+     "#4329e6",
+     "#2800a4"
+    ]
+   },
+   "dark": {
+    "ground": "#0b061d",
+    "ink": "#eeeef2",
+    "opacity": 0.041,
+    "tiers": [
+     "#eeeef2",
+     "#d7d7da",
+     "#b7b7b9",
+     "#b8cbff",
+     "#656cff"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s7#11271",
+   "light": {
+    "ground": "#ffe5ff",
+    "ink": "#1b3556",
+    "opacity": 0.04,
+    "tiers": [
+     "#141619",
+     "#535558",
+     "#646668",
+     "#566778",
+     "#1b3556",
+     "#1b3556"
+    ]
+   },
+   "dark": {
+    "ground": "#1b3556",
+    "ink": "#000000",
+    "opacity": 0.104,
+    "tiers": [
+     "#ebeff3",
+     "#d5d8db",
+     "#b6b7ba",
+     "#ccd9e7",
+     "#bccfe2"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#11426",
+   "light": {
+    "ground": "#d5f3ff",
+    "ink": "#1f032a",
+    "opacity": 0.04,
+    "tiers": [
+     "#171519",
+     "#575458",
+     "#676568",
+     "#317156",
+     "#1f032a",
+     "#88004c"
+    ]
+   },
+   "dark": {
+    "ground": "#1f032a",
+    "ink": "#000000",
+    "opacity": 0.583,
+    "tiers": [
+     "#f0edf2",
+     "#d9d6da",
+     "#b8b6b9",
+     "#b7e4cd",
+     "#ec239d"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#11470",
+   "light": {
+    "ground": "#ffe4da",
+    "ink": "#360524",
+    "opacity": 0.04,
+    "tiers": [
+     "#191517",
+     "#585456",
+     "#666264",
+     "#a93e1e",
+     "#360524",
+     "#360524"
+    ]
+   },
+   "dark": {
+    "ground": "#360524",
+    "ink": "#000000",
+    "opacity": 0.213,
+    "tiers": [
+     "#f3ecef",
+     "#dbd6d8",
+     "#bab6b8",
+     "#ffc0a8",
+     "#d26344"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#11616",
+   "light": {
+    "ground": "#f4e2ff",
+    "ink": "#005032",
+    "opacity": 0.04,
+    "tiers": [
+     "#121814",
+     "#515753",
+     "#606462",
+     "#7f5c00",
+     "#005032",
+     "#005032"
+    ]
+   },
+   "dark": {
+    "ground": "#005032",
+    "ink": "#000000",
+    "opacity": 0.081,
+    "tiers": [
+     "#e8f1ec",
+     "#d3d9d5",
+     "#b4b9b6",
+     "#fad184",
+     "#e6ac23"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#11712",
+   "light": {
+    "ground": "#fadfff",
+    "ink": "#693c00",
+    "opacity": 0.04,
+    "tiers": [
+     "#1b150f",
+     "#5a544e",
+     "#67625e",
+     "#007232",
+     "#693c00",
+     "#693c00"
+    ]
+   },
+   "dark": {
+    "ground": "#693c00",
+    "ink": "#000000",
+    "opacity": 0.075,
+    "tiers": [
+     "#f6ede4",
+     "#ddd6cf",
+     "#bcb6b1",
+     "#7df69b",
+     "#0bfb76"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#11714",
+   "light": {
+    "ground": "#ffe6f0",
+    "ink": "#0f4007",
+    "opacity": 0.04,
+    "tiers": [
+     "#131713",
+     "#535652",
+     "#636662",
+     "#077111",
+     "#0f4007",
+     "#0f4007"
+    ]
+   },
+   "dark": {
+    "ground": "#0f4007",
+    "ink": "#000000",
+    "opacity": 0.102,
+    "tiers": [
+     "#ebf0ea",
+     "#d4d9d4",
+     "#b5b8b5",
+     "#adeaa9",
+     "#8fea8c"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#11741",
+   "light": {
+    "ground": "#ffe8ec",
+    "ink": "#18010a",
+    "opacity": 0.04,
+    "tiers": [
+     "#181516",
+     "#575455",
+     "#686566",
+     "#6c6500",
+     "#18010a",
+     "#18010a"
+    ]
+   },
+   "dark": {
+    "ground": "#18010a",
+    "ink": "#f1edee",
+    "opacity": 0.039,
+    "tiers": [
+     "#f1edee",
+     "#dad6d7",
+     "#b9b6b7",
+     "#e3dc82",
+     "#d4c830"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s7#11865",
+   "light": {
+    "ground": "#ffeae8",
+    "ink": "#06083f",
+    "opacity": 0.04,
+    "tiers": [
+     "#14161b",
+     "#53555a",
+     "#64666a",
+     "#1a7234",
+     "#06083f",
+     "#06083f"
+    ]
+   },
+   "dark": {
+    "ground": "#06083f",
+    "ink": "#000000",
+    "opacity": 0.563,
+    "tiers": [
+     "#eceef6",
+     "#d5d7dd",
+     "#b6b7bb",
+     "#b0e8b8",
+     "#e7e0b5"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12162",
+   "light": {
+    "ground": "#fbdfff",
+    "ink": "#00524f",
+    "opacity": 0.04,
+    "tiers": [
+     "#111817",
+     "#505756",
+     "#5f6464",
+     "#006f1f",
+     "#00524f",
+     "#00524f"
+    ]
+   },
+   "dark": {
+    "ground": "#00524f",
+    "ink": "#000000",
+    "opacity": 0.079,
+    "tiers": [
+     "#e7f1f0",
+     "#d2d9d9",
+     "#b3b9b8",
+     "#a4eda8",
+     "#63d16e"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12234",
+   "light": {
+    "ground": "#ffe5d0",
+    "ink": "#261e1a",
+    "opacity": 0.04,
+    "tiers": [
+     "#171615",
+     "#565555",
+     "#646363",
+     "#b70c9b",
+     "#5f5772",
+     "#2d253d"
+    ]
+   },
+   "dark": {
+    "ground": "#261e1a",
+    "ink": "#000000",
+    "opacity": 0.183,
+    "tiers": [
+     "#efeeed",
+     "#d8d7d7",
+     "#b8b7b7",
+     "#ffacfe",
+     "#8e85a2"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12316",
+   "light": {
+    "ground": "#d9efff",
+    "ink": "#301717",
+    "opacity": 0.04,
+    "tiers": [
+     "#181515",
+     "#575454",
+     "#666464",
+     "#006f57",
+     "#040b43",
+     "#02002d"
+    ]
+   },
+   "dark": {
+    "ground": "#301717",
+    "ink": "#000000",
+    "opacity": 0.196,
+    "tiers": [
+     "#f1eded",
+     "#d9d7d6",
+     "#b9b7b7",
+     "#aae7d1",
+     "#6f89cb"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12352",
+   "light": {
+    "ground": "#ffddfa",
+    "ink": "#753048",
+    "opacity": 0.04,
+    "tiers": [
+     "#1c1316",
+     "#5b5355",
+     "#686163",
+     "#a74300",
+     "#06560d",
+     "#002b00"
+    ]
+   },
+   "dark": {
+    "ground": "#753048",
+    "ink": "#000000",
+    "opacity": 0.073,
+    "tiers": [
+     "#f8ebee",
+     "#dfd4d7",
+     "#bdb5b7",
+     "#ffc09a",
+     "#83ca80"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12375",
+   "light": {
+    "ground": "#baf8ff",
+    "ink": "#190811",
+    "opacity": 0.04,
+    "tiers": [
+     "#171516",
+     "#565555",
+     "#666465",
+     "#bf2d00",
+     "#9a2b13",
+     "#5d0000"
+    ]
+   },
+   "dark": {
+    "ground": "#190811",
+    "ink": "#000000",
+    "opacity": 0.813,
+    "tiers": [
+     "#f0edef",
+     "#d9d7d8",
+     "#b8b7b7",
+     "#ffb397",
+     "#ca583f"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12390",
+   "light": {
+    "ground": "#e6eeff",
+    "ink": "#19265d",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161d",
+     "#53555c",
+     "#64666b",
+     "#c80013",
+     "#7b542f",
+     "#432100"
+    ]
+   },
+   "dark": {
+    "ground": "#19265d",
+    "ink": "#000000",
+    "opacity": 0.14,
+    "tiers": [
+     "#eaeef8",
+     "#d4d7df",
+     "#b5b7bd",
+     "#ffa99a",
+     "#b38963"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12462",
+   "light": {
+    "ground": "#ffe1f2",
+    "ink": "#1c2412",
+    "opacity": 0.04,
+    "tiers": [
+     "#161615",
+     "#555554",
+     "#636362",
+     "#00723f",
+     "#0843fd",
+     "#1100b5"
+    ]
+   },
+   "dark": {
+    "ground": "#1c2412",
+    "ink": "#000000",
+    "opacity": 0.181,
+    "tiers": [
+     "#eeefec",
+     "#d7d8d6",
+     "#b7b7b6",
+     "#96efb5",
+     "#5085ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12476",
+   "light": {
+    "ground": "#fde4ff",
+    "ink": "#041f30",
+    "opacity": 0.04,
+    "tiers": [
+     "#141618",
+     "#535657",
+     "#636566",
+     "#ae373f",
+     "#920bdf",
+     "#550097"
+    ]
+   },
+   "dark": {
+    "ground": "#041f30",
+    "ink": "#000000",
+    "opacity": 0.21,
+    "tiers": [
+     "#eceff1",
+     "#d5d8da",
+     "#b6b8b9",
+     "#ffbbb9",
+     "#b355ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12603",
+   "light": {
+    "ground": "#ffead6",
+    "ink": "#562413",
+    "opacity": 0.04,
+    "tiers": [
+     "#191513",
+     "#595453",
+     "#696564",
+     "#921fd8",
+     "#3f06f4",
+     "#2c00b2"
+    ]
+   },
+   "dark": {
+    "ground": "#562413",
+    "ink": "#000000",
+    "opacity": 0.11,
+    "tiers": [
+     "#f4edeb",
+     "#dbd6d4",
+     "#bab6b5",
+     "#f6b6ff",
+     "#8295ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12673",
+   "light": {
+    "ground": "#d6efff",
+    "ink": "#3d0a39",
+    "opacity": 0.04,
+    "tiers": [
+     "#191418",
+     "#585457",
+     "#676366",
+     "#007436",
+     "#3d0a39",
+     "#3d0a39"
+    ]
+   },
+   "dark": {
+    "ground": "#3d0a39",
+    "ink": "#000000",
+    "opacity": 0.167,
+    "tiers": [
+     "#f3ecf2",
+     "#dbd5da",
+     "#bab6b9",
+     "#92f1aa",
+     "#48e27e"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12692",
+   "light": {
+    "ground": "#ffdff7",
+    "ink": "#00534b",
+    "opacity": 0.04,
+    "tiers": [
+     "#111817",
+     "#505756",
+     "#5f6464",
+     "#765d00",
+     "#00534b",
+     "#493100"
+    ]
+   },
+   "dark": {
+    "ground": "#00534b",
+    "ink": "#000000",
+    "opacity": 0.078,
+    "tiers": [
+     "#e7f1ef",
+     "#d2d9d8",
+     "#b3b9b8",
+     "#e9d6a2",
+     "#d3b86a"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12826",
+   "light": {
+    "ground": "#dfeaff",
+    "ink": "#221b54",
+    "opacity": 0.04,
+    "tiers": [
+     "#15151d",
+     "#54555c",
+     "#626369",
+     "#310741",
+     "#221b54",
+     "#221b54"
+    ]
+   },
+   "dark": {
+    "ground": "#221b54",
+    "ink": "#000000",
+    "opacity": 0.162,
+    "tiers": [
+     "#ededf9",
+     "#d6d7df",
+     "#b6b7bd",
+     "#eacafa",
+     "#999a5e"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12830",
+   "light": {
+    "ground": "#ffe2fb",
+    "ink": "#5b394d",
+    "opacity": 0.04,
+    "tiers": [
+     "#181517",
+     "#575456",
+     "#666465",
+     "#79548e",
+     "#5b394d",
+     "#5b394d"
+    ]
+   },
+   "dark": {
+    "ground": "#5b394d",
+    "ink": "#000000",
+    "opacity": 0.079,
+    "tiers": [
+     "#f1edef",
+     "#dad6d8",
+     "#b9b6b8",
+     "#e7cbf9",
+     "#06cb4c"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12871",
+   "light": {
+    "ground": "#f4e7ff",
+    "ink": "#0a1f10",
+    "opacity": 0.04,
+    "tiers": [
+     "#151715",
+     "#545654",
+     "#646564",
+     "#346689",
+     "#3625ee",
+     "#2500ac"
+    ]
+   },
+   "dark": {
+    "ground": "#0a1f10",
+    "ink": "#000000",
+    "opacity": 0.21,
+    "tiers": [
+     "#edefed",
+     "#d6d8d6",
+     "#b6b8b6",
+     "#b8ddf9",
+     "#6078ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12876",
+   "light": {
+    "ground": "#fbe8ff",
+    "ink": "#151850",
+    "opacity": 0.04,
+    "tiers": [
+     "#14161b",
+     "#54555a",
+     "#65666a",
+     "#596900",
+     "#372b8e",
+     "#1a005f"
+    ]
+   },
+   "dark": {
+    "ground": "#151850",
+    "ink": "#000000",
+    "opacity": 0.188,
+    "tiers": [
+     "#eceef5",
+     "#d6d7dd",
+     "#b6b7bb",
+     "#cce578",
+     "#8081eb"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12889",
+   "light": {
+    "ground": "#f5e5ff",
+    "ink": "#3b0f42",
+    "opacity": 0.04,
+    "tiers": [
+     "#191419",
+     "#585359",
+     "#676367",
+     "#070910",
+     "#070910",
+     "#010206"
+    ]
+   },
+   "dark": {
+    "ground": "#3b0f42",
+    "ink": "#000000",
+    "opacity": 0.167,
+    "tiers": [
+     "#f3ecf4",
+     "#dbd5db",
+     "#bab6ba",
+     "#d3d7e2",
+     "#898c97"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12942",
+   "light": {
+    "ground": "#ffdef9",
+    "ink": "#1e531f",
+    "opacity": 0.04,
+    "tiers": [
+     "#121812",
+     "#525751",
+     "#606460",
+     "#00702c",
+     "#1e531f",
+     "#1e531f"
+    ]
+   },
+   "dark": {
+    "ground": "#1e531f",
+    "ink": "#000000",
+    "opacity": 0.078,
+    "tiers": [
+     "#e9f1e9",
+     "#d3d9d3",
+     "#b4b9b4",
+     "#a4ecaf",
+     "#64d27c"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#12968",
+   "light": {
+    "ground": "#ffe8e7",
+    "ink": "#500e2d",
+    "opacity": 0.04,
+    "tiers": [
+     "#1b1416",
+     "#5a5355",
+     "#6a6466",
+     "#a94318",
+     "#500e2d",
+     "#500e2d"
+    ]
+   },
+   "dark": {
+    "ground": "#500e2d",
+    "ink": "#000000",
+    "opacity": 0.144,
+    "tiers": [
+     "#f5ebee",
+     "#ddd5d7",
+     "#bbb6b7",
+     "#ffc1a5",
+     "#b2e59c"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#13149",
+   "light": {
+    "ground": "#fce1ff",
+    "ink": "#07250e",
+    "opacity": 0.04,
+    "tiers": [
+     "#141715",
+     "#545654",
+     "#626462",
+     "#8626de",
+     "#07250e",
+     "#07250e"
+    ]
+   },
+   "dark": {
+    "ground": "#07250e",
+    "ink": "#000000",
+    "opacity": 0.179,
+    "tiers": [
+     "#ecefec",
+     "#d5d8d6",
+     "#b6b8b6",
+     "#ecbaff",
+     "#8ae15d"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#13526",
+   "light": {
+    "ground": "#f0e5ff",
+    "ink": "#430215",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a1415",
+     "#595454",
+     "#666262",
+     "#6f6400",
+     "#430215",
+     "#430215"
+    ]
+   },
+   "dark": {
+    "ground": "#430215",
+    "ink": "#000000",
+    "opacity": 0.172,
+    "tiers": [
+     "#f5eced",
+     "#dcd5d6",
+     "#bbb6b6",
+     "#e5da87",
+     "#ded113"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#13726",
+   "light": {
+    "ground": "#ffe7bf",
+    "ink": "#040317",
+    "opacity": 0.04,
+    "tiers": [
+     "#151618",
+     "#555557",
+     "#636365",
+     "#a72e7e",
+     "#040317",
+     "#040317"
+    ]
+   },
+   "dark": {
+    "ground": "#040317",
+    "ink": "#eeeef2",
+    "opacity": 0.045,
+    "tiers": [
+     "#eeeef2",
+     "#d7d7da",
+     "#b7b7b9",
+     "#ffb6eb",
+     "#f375c2"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s7#13811",
+   "light": {
+    "ground": "#e4ecff",
+    "ink": "#2f3004",
+    "opacity": 0.04,
+    "tiers": [
+     "#161613",
+     "#555552",
+     "#656562",
+     "#a20b03",
+     "#2f3004",
+     "#8c0000"
+    ]
+   },
+   "dark": {
+    "ground": "#2f3004",
+    "ink": "#000000",
+    "opacity": 0.135,
+    "tiers": [
+     "#eeefea",
+     "#d7d8d4",
+     "#b7b7b5",
+     "#ffb7a6",
+     "#ff6551"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#13821",
+   "light": {
+    "ground": "#ffe1f6",
+    "ink": "#0b3c3c",
+    "opacity": 0.04,
+    "tiers": [
+     "#141717",
+     "#535656",
+     "#616464",
+     "#307000",
+     "#0b3c3c",
+     "#0b3c3c"
+    ]
+   },
+   "dark": {
+    "ground": "#0b3c3c",
+    "ink": "#000000",
+    "opacity": 0.108,
+    "tiers": [
+     "#ebefef",
+     "#d5d8d8",
+     "#b5b8b8",
+     "#aeec95",
+     "#5bb22b"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#13849",
+   "light": {
+    "ground": "#ffeae5",
+    "ink": "#240c00",
+    "opacity": 0.04,
+    "tiers": [
+     "#181514",
+     "#575553",
+     "#676664",
+     "#a13993",
+     "#240c00",
+     "#240c00"
+    ]
+   },
+   "dark": {
+    "ground": "#240c00",
+    "ink": "#000000",
+    "opacity": 0.458,
+    "tiers": [
+     "#f1eeeb",
+     "#dad7d5",
+     "#b9b7b6",
+     "#ffb9f9",
+     "#fc023f"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#13917",
+   "light": {
+    "ground": "#ffdefe",
+    "ink": "#384f00",
+    "opacity": 0.04,
+    "tiers": [
+     "#141710",
+     "#53574f",
+     "#62645e",
+     "#9e3f55",
+     "#384f00",
+     "#384f00"
+    ]
+   },
+   "dark": {
+    "ground": "#384f00",
+    "ink": "#000000",
+    "opacity": 0.07,
+    "tiers": [
+     "#ecf0e6",
+     "#d5d9d1",
+     "#b6b9b2",
+     "#ffc0cb",
+     "#ff9eaf"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#13931",
+   "light": {
+    "ground": "#ffeaeb",
+    "ink": "#022819",
+    "opacity": 0.04,
+    "tiers": [
+     "#141715",
+     "#535654",
+     "#656765",
+     "#9922c9",
+     "#022819",
+     "#60008b"
+    ]
+   },
+   "dark": {
+    "ground": "#022819",
+    "ink": "#000000",
+    "opacity": 0.163,
+    "tiers": [
+     "#ecf0ed",
+     "#d5d8d6",
+     "#b6b8b7",
+     "#feb5ff",
+     "#c659fa"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#13954",
+   "light": {
+    "ground": "#ffe6fe",
+    "ink": "#313b4d",
+    "opacity": 0.04,
+    "tiers": [
+     "#151618",
+     "#545557",
+     "#656667",
+     "#527000",
+     "#313b4d",
+     "#313b4d"
+    ]
+   },
+   "dark": {
+    "ground": "#313b4d",
+    "ink": "#000000",
+    "opacity": 0.093,
+    "tiers": [
+     "#edeef1",
+     "#d6d7d9",
+     "#b6b7b9",
+     "#c5e592",
+     "#8cb634"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#13959",
+   "light": {
+    "ground": "#f6e5ff",
+    "ink": "#31295b",
+    "opacity": 0.04,
+    "tiers": [
+     "#16151a",
+     "#555559",
+     "#646467",
+     "#a01dcd",
+     "#31295b",
+     "#680092"
+    ]
+   },
+   "dark": {
+    "ground": "#31295b",
+    "ink": "#000000",
+    "opacity": 0.126,
+    "tiers": [
+     "#eeeef4",
+     "#d7d7dc",
+     "#b7b7ba",
+     "#ffb2ff",
+     "#d471ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#14042",
+   "light": {
+    "ground": "#d8f2ff",
+    "ink": "#101c52",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161d",
+     "#52555c",
+     "#64666c",
+     "#706700",
+     "#101c52",
+     "#101c52"
+    ]
+   },
+   "dark": {
+    "ground": "#101c52",
+    "ink": "#000000",
+    "opacity": 0.189,
+    "tiers": [
+     "#eaeef9",
+     "#d4d7e0",
+     "#b5b7be",
+     "#e3db84",
+     "#ebde53"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#14310",
+   "light": {
+    "ground": "#e9eeff",
+    "ink": "#2d1005",
+    "opacity": 0.04,
+    "tiers": [
+     "#181514",
+     "#575453",
+     "#686565",
+     "#4938e6",
+     "#2d1005",
+     "#2d1005"
+    ]
+   },
+   "dark": {
+    "ground": "#2d1005",
+    "ink": "#000000",
+    "opacity": 0.256,
+    "tiers": [
+     "#f2edec",
+     "#dad7d5",
+     "#b9b7b6",
+     "#bbcbff",
+     "#56b3ae"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#14315",
+   "light": {
+    "ground": "#ffe5f7",
+    "ink": "#060e43",
+    "opacity": 0.04,
+    "tiers": [
+     "#14161b",
+     "#53555a",
+     "#636568",
+     "#516900",
+     "#060e43",
+     "#060e43"
+    ]
+   },
+   "dark": {
+    "ground": "#060e43",
+    "ink": "#000000",
+    "opacity": 0.393,
+    "tiers": [
+     "#ebeef6",
+     "#d5d7dd",
+     "#b5b7bc",
+     "#c3e876",
+     "#70cf06"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#14323",
+   "light": {
+    "ground": "#ffe1f8",
+    "ink": "#733037",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a1414",
+     "#595454",
+     "#686363",
+     "#b70088",
+     "#733037",
+     "#733037"
+    ]
+   },
+   "dark": {
+    "ground": "#733037",
+    "ink": "#000000",
+    "opacity": 0.074,
+    "tiers": [
+     "#f5ecec",
+     "#dcd6d6",
+     "#bbb6b6",
+     "#ffa3f5",
+     "#ff96d6"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#14467",
+   "light": {
+    "ground": "#ffdffa",
+    "ink": "#00486d",
+    "opacity": 0.04,
+    "tiers": [
+     "#10171c",
+     "#50565b",
+     "#5f6468",
+     "#007066",
+     "#00486d",
+     "#00486d"
+    ]
+   },
+   "dark": {
+    "ground": "#00486d",
+    "ink": "#000000",
+    "opacity": 0.076,
+    "tiers": [
+     "#e6f0f7",
+     "#d1d9de",
+     "#b3b8bc",
+     "#9de9dd",
+     "#68decf"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#14591",
+   "light": {
+    "ground": "#e3ecff",
+    "ink": "#360500",
+    "opacity": 0.04,
+    "tiers": [
+     "#191514",
+     "#595453",
+     "#676463",
+     "#af3800",
+     "#360500",
+     "#360500"
+    ]
+   },
+   "dark": {
+    "ground": "#360500",
+    "ink": "#000000",
+    "opacity": 0.231,
+    "tiers": [
+     "#f4edeb",
+     "#dbd6d5",
+     "#bab6b5",
+     "#ffb38c",
+     "#fb5606"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#14608",
+   "light": {
+    "ground": "#ffe4d1",
+    "ink": "#242107",
+    "opacity": 0.04,
+    "tiers": [
+     "#161614",
+     "#555553",
+     "#636362",
+     "#8301a2",
+     "#242107",
+     "#242107"
+    ]
+   },
+   "dark": {
+    "ground": "#242107",
+    "ink": "#000000",
+    "opacity": 0.181,
+    "tiers": [
+     "#efefeb",
+     "#d8d7d5",
+     "#b7b7b6",
+     "#ffb6ff",
+     "#7fe6e4"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#14759",
+   "light": {
+    "ground": "#eeecff",
+    "ink": "#302215",
+    "opacity": 0.04,
+    "tiers": [
+     "#171615",
+     "#565554",
+     "#676665",
+     "#796100",
+     "#302215",
+     "#302215"
+    ]
+   },
+   "dark": {
+    "ground": "#302215",
+    "ink": "#000000",
+    "opacity": 0.162,
+    "tiers": [
+     "#f0eeec",
+     "#d9d7d6",
+     "#b8b7b6",
+     "#edd692",
+     "#b08f18"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#14807",
+   "light": {
+    "ground": "#f8e4ff",
+    "ink": "#4c0614",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a1414",
+     "#5a5353",
+     "#686363",
+     "#006a76",
+     "#4c0614",
+     "#4c0614"
+    ]
+   },
+   "dark": {
+    "ground": "#4c0614",
+    "ink": "#000000",
+    "opacity": 0.151,
+    "tiers": [
+     "#f5ecec",
+     "#ddd5d5",
+     "#bbb6b6",
+     "#91e8f5",
+     "#d4dac1"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#14870",
+   "light": {
+    "ground": "#ffe1ef",
+    "ink": "#38211b",
+    "opacity": 0.04,
+    "tiers": [
+     "#181515",
+     "#575554",
+     "#646362",
+     "#ae3128",
+     "#ae3128",
+     "#6a0000"
+    ]
+   },
+   "dark": {
+    "ground": "#38211b",
+    "ink": "#000000",
+    "opacity": 0.152,
+    "tiers": [
+     "#f1eeed",
+     "#d9d7d6",
+     "#b9b7b6",
+     "#ffbbad",
+     "#e66557"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#15110",
+   "light": {
+    "ground": "#ffe6f3",
+    "ink": "#020e43",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161c",
+     "#53555b",
+     "#636569",
+     "#117100",
+     "#020e43",
+     "#020e43"
+    ]
+   },
+   "dark": {
+    "ground": "#020e43",
+    "ink": "#000000",
+    "opacity": 0.396,
+    "tiers": [
+     "#eaeff7",
+     "#d4d7de",
+     "#b5b7bc",
+     "#96f28a",
+     "#dd419f"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#15171",
+   "light": {
+    "ground": "#d9eeff",
+    "ink": "#10132d",
+    "opacity": 0.04,
+    "tiers": [
+     "#151618",
+     "#545558",
+     "#646466",
+     "#815e00",
+     "#10132d",
+     "#10132d"
+    ]
+   },
+   "dark": {
+    "ground": "#10132d",
+    "ink": "#000000",
+    "opacity": 0.367,
+    "tiers": [
+     "#edeef2",
+     "#d6d7da",
+     "#b7b7b9",
+     "#f2d398",
+     "#27eaac"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#15189",
+   "light": {
+    "ground": "#eceeff",
+    "ink": "#4a1949",
+    "opacity": 0.04,
+    "tiers": [
+     "#191419",
+     "#585358",
+     "#686568",
+     "#914aa1",
+     "#8b0d9e",
+     "#510064"
+    ]
+   },
+   "dark": {
+    "ground": "#4a1949",
+    "ink": "#000000",
+    "opacity": 0.13,
+    "tiers": [
+     "#f3ecf2",
+     "#dbd5da",
+     "#bab6b9",
+     "#f7c1ff",
+     "#da69ee"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#15305",
+   "light": {
+    "ground": "#e7efff",
+    "ink": "#000c0a",
+    "opacity": 0.04,
+    "tiers": [
+     "#151616",
+     "#545655",
+     "#656666",
+     "#731538",
+     "#2c1a1f",
+     "#140509"
+    ]
+   },
+   "dark": {
+    "ground": "#000c0a",
+    "ink": "#edefee",
+    "opacity": 0.012,
+    "tiers": [
+     "#edefee",
+     "#d6d8d7",
+     "#b6b8b7",
+     "#ffbfd0",
+     "#8b747a"
+    ],
+    "lighterInk": true
+   }
+  },
+  {
+   "label": "s7#15550",
+   "light": {
+    "ground": "#ffdffc",
+    "ink": "#0b4f21",
+    "opacity": 0.04,
+    "tiers": [
+     "#111812",
+     "#515752",
+     "#5f6560",
+     "#834694",
+     "#0b4f21",
+     "#521562"
+    ]
+   },
+   "dark": {
+    "ground": "#0b4f21",
+    "ink": "#000000",
+    "opacity": 0.082,
+    "tiers": [
+     "#e8f1e9",
+     "#d2dad3",
+     "#b3b9b4",
+     "#f2c4ff",
+     "#dc9bef"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#15554",
+   "light": {
+    "ground": "#ffe4f4",
+    "ink": "#253d75",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161d",
+     "#52555c",
+     "#62656b",
+     "#173baa",
+     "#173baa",
+     "#030075"
+    ]
+   },
+   "dark": {
+    "ground": "#253d75",
+    "ink": "#000000",
+    "opacity": 0.09,
+    "tiers": [
+     "#e9eff9",
+     "#d3d8e0",
+     "#b4b7be",
+     "#aed6ff",
+     "#85abff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#15615",
+   "light": {
+    "ground": "#e3eaff",
+    "ink": "#0d0f47",
+    "opacity": 0.04,
+    "tiers": [
+     "#14161c",
+     "#53555b",
+     "#626368",
+     "#006595",
+     "#0d0f47",
+     "#0d0f47"
+    ]
+   },
+   "dark": {
+    "ground": "#0d0f47",
+    "ink": "#000000",
+    "opacity": 0.303,
+    "tiers": [
+     "#ebeef7",
+     "#d5d7de",
+     "#b5b7bc",
+     "#a3e0ff",
+     "#3e9cd5"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#15718",
+   "light": {
+    "ground": "#ede9e2",
+    "ink": "#2e1b1d",
+    "opacity": 0.04,
+    "tiers": [
+     "#171516",
+     "#575555",
+     "#646363",
+     "#5f4ed0",
+     "#2e1b1d",
+     "#2e1b1d"
+    ]
+   },
+   "dark": {
+    "ground": "#2e1b1d",
+    "ink": "#000000",
+    "opacity": 0.167,
+    "tiers": [
+     "#f0eeee",
+     "#d9d7d7",
+     "#b8b7b7",
+     "#cccbff",
+     "#867bff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#15743",
+   "light": {
+    "ground": "#c8f3ff",
+    "ink": "#36002b",
+    "opacity": 0.04,
+    "tiers": [
+     "#191418",
+     "#585457",
+     "#676366",
+     "#226d66",
+     "#36002b",
+     "#36002b"
+    ]
+   },
+   "dark": {
+    "ground": "#36002b",
+    "ink": "#000000",
+    "opacity": 0.221,
+    "tiers": [
+     "#f3ecf1",
+     "#dbd5d9",
+     "#bab6b9",
+     "#b2e3dd",
+     "#3ef709"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#15752",
+   "light": {
+    "ground": "#ffe5fb",
+    "ink": "#603c00",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a150f",
+     "#5a544e",
+     "#6a6560",
+     "#006d87",
+     "#603c00",
+     "#5e007c"
+    ]
+   },
+   "dark": {
+    "ground": "#603c00",
+    "ink": "#000000",
+    "opacity": 0.078,
+    "tiers": [
+     "#f5ede4",
+     "#ddd6cf",
+     "#bbb6b1",
+     "#a8e2f7",
+     "#e298ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#15842",
+   "light": {
+    "ground": "#ffe2dc",
+    "ink": "#012e47",
+    "opacity": 0.04,
+    "tiers": [
+     "#131619",
+     "#535658",
+     "#616365",
+     "#4e6631",
+     "#012e47",
+     "#012e47"
+    ]
+   },
+   "dark": {
+    "ground": "#012e47",
+    "ink": "#000000",
+    "opacity": 0.134,
+    "tiers": [
+     "#ebeff2",
+     "#d4d8da",
+     "#b5b8ba",
+     "#ccdfb7",
+     "#94ae76"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#15859",
+   "light": {
+    "ground": "#ffe9fe",
+    "ink": "#125120",
+    "opacity": 0.04,
+    "tiers": [
+     "#121812",
+     "#515751",
+     "#646964",
+     "#895d1f",
+     "#125120",
+     "#125120"
+    ]
+   },
+   "dark": {
+    "ground": "#125120",
+    "ink": "#000000",
+    "opacity": 0.08,
+    "tiers": [
+     "#e8f1e9",
+     "#d3dad3",
+     "#b3b9b4",
+     "#f3d1a8",
+     "#ff9db7"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#15898",
+   "light": {
+    "ground": "#ffe2fa",
+    "ink": "#21531d",
+    "opacity": 0.04,
+    "tiers": [
+     "#121812",
+     "#525751",
+     "#616661",
+     "#65104b",
+     "#21531d",
+     "#21531d"
+    ]
+   },
+   "dark": {
+    "ground": "#21531d",
+    "ink": "#000000",
+    "opacity": 0.078,
+    "tiers": [
+     "#e9f1e8",
+     "#d3dad2",
+     "#b4b9b3",
+     "#ffbfe7",
+     "#89ce59"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#16439",
+   "light": {
+    "ground": "#ffe0f9",
+    "ink": "#00522a",
+    "opacity": 0.04,
+    "tiers": [
+     "#111813",
+     "#505752",
+     "#5f6561",
+     "#2a6d0c",
+     "#00522a",
+     "#00522a"
+    ]
+   },
+   "dark": {
+    "ground": "#00522a",
+    "ink": "#000000",
+    "opacity": 0.079,
+    "tiers": [
+     "#e7f2ea",
+     "#d2dad4",
+     "#b3b9b5",
+     "#b7e8a8",
+     "#85ca70"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#16808",
+   "light": {
+    "ground": "#ffecbf",
+    "ink": "#051308",
+    "opacity": 0.04,
+    "tiers": [
+     "#151615",
+     "#545654",
+     "#656665",
+     "#706700",
+     "#051308",
+     "#051308"
+    ]
+   },
+   "dark": {
+    "ground": "#051308",
+    "ink": "#000000",
+    "opacity": 0.658,
+    "tiers": [
+     "#edefed",
+     "#d6d8d6",
+     "#b6b8b7",
+     "#e6dc74",
+     "#e65a58"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#16831",
+   "light": {
+    "ground": "#ffe8f1",
+    "ink": "#051322",
+    "opacity": 0.04,
+    "tiers": [
+     "#151618",
+     "#545557",
+     "#656667",
+     "#0205c3",
+     "#0205c3",
+     "#160090"
+    ]
+   },
+   "dark": {
+    "ground": "#051322",
+    "ink": "#000000",
+    "opacity": 0.515,
+    "tiers": [
+     "#edeff1",
+     "#d6d8d9",
+     "#b6b7b9",
+     "#9cd3ff",
+     "#4178ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#17325",
+   "light": {
+    "ground": "#e9ead7",
+    "ink": "#061919",
+    "opacity": 0.04,
+    "tiers": [
+     "#151616",
+     "#545655",
+     "#626363",
+     "#486634",
+     "#061919",
+     "#061919"
+    ]
+   },
+   "dark": {
+    "ground": "#061919",
+    "ink": "#000000",
+    "opacity": 0.3,
+    "tiers": [
+     "#edefef",
+     "#d6d8d8",
+     "#b6b8b7",
+     "#c8e1ba",
+     "#d9fdc4"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#17346",
+   "light": {
+    "ground": "#ffebed",
+    "ink": "#15235a",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161d",
+     "#52555c",
+     "#65676d",
+     "#006d71",
+     "#15235a",
+     "#15235a"
+    ]
+   },
+   "dark": {
+    "ground": "#15235a",
+    "ink": "#000000",
+    "opacity": 0.157,
+    "tiers": [
+     "#eaeef9",
+     "#d4d7e0",
+     "#b4b7be",
+     "#8beaee",
+     "#99e84d"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#17369",
+   "light": {
+    "ground": "#ffe0f6",
+    "ink": "#0f3947",
+    "opacity": 0.04,
+    "tiers": [
+     "#141718",
+     "#535657",
+     "#616464",
+     "#207200",
+     "#0f3947",
+     "#0f3947"
+    ]
+   },
+   "dark": {
+    "ground": "#0f3947",
+    "ink": "#000000",
+    "opacity": 0.114,
+    "tiers": [
+     "#ebeff1",
+     "#d5d8d9",
+     "#b5b8b9",
+     "#a3ef92",
+     "#42b51e"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#17467",
+   "light": {
+    "ground": "#ffe2ee",
+    "ink": "#2b245f",
+    "opacity": 0.04,
+    "tiers": [
+     "#15151b",
+     "#54555a",
+     "#636367",
+     "#006a74",
+     "#2b245f",
+     "#2b245f"
+    ]
+   },
+   "dark": {
+    "ground": "#2b245f",
+    "ink": "#000000",
+    "opacity": 0.128,
+    "tiers": [
+     "#edeef6",
+     "#d6d7dd",
+     "#b7b7bc",
+     "#9be6f0",
+     "#779d74"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#17480",
+   "light": {
+    "ground": "#ffe9fe",
+    "ink": "#18501d",
+    "opacity": 0.04,
+    "tiers": [
+     "#121812",
+     "#515751",
+     "#646964",
+     "#420835",
+     "#18501d",
+     "#18501d"
+    ]
+   },
+   "dark": {
+    "ground": "#18501d",
+    "ink": "#000000",
+    "opacity": 0.081,
+    "tiers": [
+     "#e9f1e8",
+     "#d3dad3",
+     "#b4b9b3",
+     "#f8c6e7",
+     "#66e30e"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#17700",
+   "light": {
+    "ground": "#e7eeff",
+    "ink": "#2d1517",
+    "opacity": 0.04,
+    "tiers": [
+     "#181515",
+     "#575555",
+     "#676565",
+     "#895d1c",
+     "#2d1517",
+     "#2d1517"
+    ]
+   },
+   "dark": {
+    "ground": "#2d1517",
+    "ink": "#000000",
+    "opacity": 0.211,
+    "tiers": [
+     "#f1eded",
+     "#d9d7d7",
+     "#b9b7b7",
+     "#f4d1a7",
+     "#f45700"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#17779",
+   "light": {
+    "ground": "#ffe2fc",
+    "ink": "#571a3e",
+    "opacity": 0.04,
+    "tiers": [
+     "#1b1417",
+     "#5a5356",
+     "#686365",
+     "#3d5ab8",
+     "#571a3e",
+     "#004300"
+    ]
+   },
+   "dark": {
+    "ground": "#571a3e",
+    "ink": "#000000",
+    "opacity": 0.109,
+    "tiers": [
+     "#f6ebf0",
+     "#ddd5d9",
+     "#bcb5b8",
+     "#b9d6ff",
+     "#66ae4b"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#17780",
+   "light": {
+    "ground": "#ffe9ec",
+    "ink": "#3c2c11",
+    "opacity": 0.04,
+    "tiers": [
+     "#171614",
+     "#565553",
+     "#676664",
+     "#004d1e",
+     "#004d1e",
+     "#002600"
+    ]
+   },
+   "dark": {
+    "ground": "#3c2c11",
+    "ink": "#000000",
+    "opacity": 0.125,
+    "tiers": [
+     "#f0eeeb",
+     "#d9d7d5",
+     "#b8b7b5",
+     "#b7e5be",
+     "#65a672"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#17808",
+   "light": {
+    "ground": "#ece5ff",
+    "ink": "#54275a",
+    "opacity": 0.04,
+    "tiers": [
+     "#19141a",
+     "#585359",
+     "#656266",
+     "#4439d0",
+     "#54275a",
+     "#54275a"
+    ]
+   },
+   "dark": {
+    "ground": "#54275a",
+    "ink": "#000000",
+    "opacity": 0.101,
+    "tiers": [
+     "#f3ecf4",
+     "#dbd5dc",
+     "#bab6ba",
+     "#becdff",
+     "#46b3b1"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#18012",
+   "light": {
+    "ground": "#e9eaff",
+    "ink": "#1b093c",
+    "opacity": 0.04,
+    "tiers": [
+     "#16151a",
+     "#555559",
+     "#656468",
+     "#b31d11",
+     "#b31d11",
+     "#6e0000"
+    ]
+   },
+   "dark": {
+    "ground": "#1b093c",
+    "ink": "#000000",
+    "opacity": 0.358,
+    "tiers": [
+     "#eeedf4",
+     "#d7d7dc",
+     "#b7b7bb",
+     "#ffb6a5",
+     "#e55240"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#18014",
+   "light": {
+    "ground": "#fadfff",
+    "ink": "#713800",
+    "opacity": 0.04,
+    "tiers": [
+     "#1b1410",
+     "#5a5450",
+     "#67625f",
+     "#006f45",
+     "#713800",
+     "#713800"
+    ]
+   },
+   "dark": {
+    "ground": "#713800",
+    "ink": "#000000",
+    "opacity": 0.075,
+    "tiers": [
+     "#f6ece6",
+     "#ddd6d1",
+     "#bcb6b2",
+     "#93efbc",
+     "#56e9a2"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#18081",
+   "light": {
+    "ground": "#ffe9e9",
+    "ink": "#330a1f",
+    "opacity": 0.04,
+    "tiers": [
+     "#191516",
+     "#585455",
+     "#686566",
+     "#b01a96",
+     "#330a1f",
+     "#330a1f"
+    ]
+   },
+   "dark": {
+    "ground": "#330a1f",
+    "ink": "#000000",
+    "opacity": 0.225,
+    "tiers": [
+     "#f3edef",
+     "#dbd6d8",
+     "#bab6b7",
+     "#ffaffc",
+     "#22d26a"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#18417",
+   "light": {
+    "ground": "#f8e5ff",
+    "ink": "#210d46",
+    "opacity": 0.04,
+    "tiers": [
+     "#16151b",
+     "#55545a",
+     "#656469",
+     "#12004f",
+     "#210d46",
+     "#210d46"
+    ]
+   },
+   "dark": {
+    "ground": "#210d46",
+    "ink": "#000000",
+    "opacity": 0.25,
+    "tiers": [
+     "#eeedf6",
+     "#d7d6de",
+     "#b7b6bc",
+     "#c9d2ff",
+     "#fccdf4"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#18509",
+   "light": {
+    "ground": "#ffebaa",
+    "ink": "#101f55",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161d",
+     "#52555c",
+     "#62656a",
+     "#7b0d0d",
+     "#101f55",
+     "#101f55"
+    ]
+   },
+   "dark": {
+    "ground": "#101f55",
+    "ink": "#000000",
+    "opacity": 0.171,
+    "tiers": [
+     "#eaeef9",
+     "#d4d7e0",
+     "#b4b7be",
+     "#ffbfb3",
+     "#5ea6e0"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#18596",
+   "light": {
+    "ground": "#dbf1ff",
+    "ink": "#4c0f21",
+    "opacity": 0.04,
+    "tiers": [
+     "#1a1415",
+     "#595454",
+     "#696565",
+     "#5305a6",
+     "#5305a6",
+     "#2f0073"
+    ]
+   },
+   "dark": {
+    "ground": "#4c0f21",
+    "ink": "#000000",
+    "opacity": 0.151,
+    "tiers": [
+     "#f4eced",
+     "#dcd5d6",
+     "#bbb6b7",
+     "#dec3ff",
+     "#a075ff"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#18613",
+   "light": {
+    "ground": "#ffe3f9",
+    "ink": "#004f2f",
+    "opacity": 0.04,
+    "tiers": [
+     "#111814",
+     "#505753",
+     "#616663",
+     "#706200",
+     "#004f2f",
+     "#004f2f"
+    ]
+   },
+   "dark": {
+    "ground": "#004f2f",
+    "ink": "#000000",
+    "opacity": 0.082,
+    "tiers": [
+     "#e7f2eb",
+     "#d2dad5",
+     "#b3b9b5",
+     "#e9d980",
+     "#41cb2e"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#18666",
+   "light": {
+    "ground": "#f7e8ff",
+    "ink": "#331340",
+    "opacity": 0.04,
+    "tiers": [
+     "#181519",
+     "#575458",
+     "#676568",
+     "#606a00",
+     "#114b39",
+     "#002415"
+    ]
+   },
+   "dark": {
+    "ground": "#331340",
+    "ink": "#000000",
+    "opacity": 0.184,
+    "tiers": [
+     "#f1edf3",
+     "#d9d6db",
+     "#b9b6ba",
+     "#d3e277",
+     "#609782"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#18680",
+   "light": {
+    "ground": "#ffeae6",
+    "ink": "#1d0e06",
+    "opacity": 0.04,
+    "tiers": [
+     "#171615",
+     "#565554",
+     "#676665",
+     "#4f6a00",
+     "#1d0e06",
+     "#1d0e06"
+    ]
+   },
+   "dark": {
+    "ground": "#1d0e06",
+    "ink": "#000000",
+    "opacity": 0.534,
+    "tiers": [
+     "#f0eeed",
+     "#d9d7d6",
+     "#b8b7b6",
+     "#c5e688",
+     "#99c528"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#18718",
+   "light": {
+    "ground": "#ffe2fc",
+    "ink": "#4d3b78",
+    "opacity": 0.04,
+    "tiers": [
+     "#16151c",
+     "#55545b",
+     "#65646a",
+     "#4d61a5",
+     "#4d3b78",
+     "#4d3b78"
+    ]
+   },
+   "dark": {
+    "ground": "#4d3b78",
+    "ink": "#000000",
+    "opacity": 0.076,
+    "tiers": [
+     "#efedf8",
+     "#d8d6df",
+     "#b8b6bd",
+     "#c3d6ff",
+     "#4ecccb"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#18789",
+   "light": {
+    "ground": "#ffe0f6",
+    "ink": "#104d71",
+    "opacity": 0.04,
+    "tiers": [
+     "#13171a",
+     "#525659",
+     "#616466",
+     "#007003",
+     "#104d71",
+     "#104d71"
+    ]
+   },
+   "dark": {
+    "ground": "#104d71",
+    "ink": "#000000",
+    "opacity": 0.075,
+    "tiers": [
+     "#eaeff4",
+     "#d4d8db",
+     "#b5b8ba",
+     "#9bf095",
+     "#50d54c"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#18852",
+   "light": {
+    "ground": "#ffe6fa",
+    "ink": "#524100",
+    "opacity": 0.04,
+    "tiers": [
+     "#171611",
+     "#575551",
+     "#676663",
+     "#935106",
+     "#524100",
+     "#602200"
+    ]
+   },
+   "dark": {
+    "ground": "#524100",
+    "ink": "#000000",
+    "opacity": 0.085,
+    "tiers": [
+     "#f0eee8",
+     "#d9d7d2",
+     "#b8b7b3",
+     "#ffcca2",
+     "#e8a063"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#18943",
+   "light": {
+    "ground": "#ffeaf2",
+    "ink": "#23245d",
+    "opacity": 0.04,
+    "tiers": [
+     "#14151d",
+     "#53555c",
+     "#64666c",
+     "#855b6c",
+     "#23245d",
+     "#23245d"
+    ]
+   },
+   "dark": {
+    "ground": "#23245d",
+    "ink": "#000000",
+    "opacity": 0.145,
+    "tiers": [
+     "#eceef9",
+     "#d5d7e0",
+     "#b6b7be",
+     "#efcdda",
+     "#999a3d"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#19158",
+   "light": {
+    "ground": "#ffebec",
+    "ink": "#3b164d",
+    "opacity": 0.04,
+    "tiers": [
+     "#181519",
+     "#575459",
+     "#69666a",
+     "#1f7136",
+     "#3b164d",
+     "#3b164d"
+    ]
+   },
+   "dark": {
+    "ground": "#3b164d",
+    "ink": "#000000",
+    "opacity": 0.159,
+    "tiers": [
+     "#f1edf3",
+     "#d9d6db",
+     "#b9b6ba",
+     "#b1e8b9",
+     "#deccbf"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#19190",
+   "light": {
+    "ground": "#ffe2e0",
+    "ink": "#283029",
+    "opacity": 0.04,
+    "tiers": [
+     "#151616",
+     "#555555",
+     "#636363",
+     "#396874",
+     "#283029",
+     "#283029"
+    ]
+   },
+   "dark": {
+    "ground": "#283029",
+    "ink": "#000000",
+    "opacity": 0.115,
+    "tiers": [
+     "#eeefee",
+     "#d7d8d7",
+     "#b7b7b7",
+     "#bcdee8",
+     "#80b0bd"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#19377",
+   "light": {
+    "ground": "#ffe9ee",
+    "ink": "#0d1126",
+    "opacity": 0.04,
+    "tiers": [
+     "#151618",
+     "#545557",
+     "#656667",
+     "#1d7146",
+     "#0d1126",
+     "#0d1126"
+    ]
+   },
+   "dark": {
+    "ground": "#0d1126",
+    "ink": "#000000",
+    "opacity": 0.513,
+    "tiers": [
+     "#edeef1",
+     "#d7d7da",
+     "#b7b7b9",
+     "#b1e7c3",
+     "#e8a47d"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#19576",
+   "light": {
+    "ground": "#ffeae5",
+    "ink": "#181249",
+    "opacity": 0.04,
+    "tiers": [
+     "#15161a",
+     "#54555a",
+     "#656669",
+     "#526467",
+     "#181249",
+     "#181249"
+    ]
+   },
+   "dark": {
+    "ground": "#181249",
+    "ink": "#000000",
+    "opacity": 0.229,
+    "tiers": [
+     "#edeef5",
+     "#d6d7dd",
+     "#b6b7bb",
+     "#ccdbdd",
+     "#86999c"
+    ],
+    "lighterInk": false
+   }
+  },
+  {
+   "label": "s7#19627",
+   "light": {
+    "ground": "#ffe7d9",
+    "ink": "#07164b",
+    "opacity": 0.04,
+    "tiers": [
+     "#13161d",
+     "#52555c",
+     "#62656a",
+     "#6d5d58",
+     "#07164b",
+     "#07164b"
+    ]
+   },
+   "dark": {
+    "ground": "#07164b",
+    "ink": "#000000",
+    "opacity": 0.207,
+    "tiers": [
+     "#eaeef8",
+     "#d4d7df",
+     "#b5b7bd",
+     "#e1d4d0",
+     "#98f645"
+    ],
+    "lighterInk": false
+   }
+  }
+ ]
+}
