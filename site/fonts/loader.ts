@@ -3,27 +3,32 @@
 //   1. Preset   — fontPairingPreset is set; use committed woff2 files from /fonts/files/
 //   2. Custom   — headingFont / bodyFont objects uploaded in Sanity Design Settings
 //
-// Returns a FontData shape compatible with buildFontCSS() in lib/designTokens.ts.
-// Always returns a defined heading + body pair; never returns null for both.
+// Returns the roles `buildFontFaces` declares (below) and `buildFontCSS()` in
+// lib/designTokens.ts wraps. Both roles may be null.
 
 import {getPresetById, type FontPreset} from './presets'
 
+/** One role's files, as the page declares them. */
+export interface ResolvedFontRole {
+  name: string
+  regular: string
+  medium?: string
+  semibold?: string
+  bold?: string
+  italic?: string
+  boldItalic?: string
+  /** `regular` is a variable font: ONE face spans these weights (lowest, highest), so a weight
+   *  between draws as itself and one outside clamps to the nearer end. The weight files are
+   *  then not declared (Phase 17C, `[R-540]`, `[R-541]`). */
+  span?: [number, number]
+  /** A static `regular` that is not a 400: a one-weight role's file, declared at its own
+   *  weight (pairing 14's heading is `Poppins-Bold`, at 700). */
+  regularWeight?: number
+}
+
 export interface ResolvedFontData {
-  heading: {
-    name: string
-    regular: string
-    bold?: string
-    italic?: string
-  } | null
-  body: {
-    name: string
-    regular: string
-    medium?: string
-    semibold?: string
-    bold?: string
-    italic?: string
-    boldItalic?: string
-  } | null
+  heading: ResolvedFontRole | null
+  body: ResolvedFontRole | null
 }
 
 type SanityFontUpload = {
@@ -33,26 +38,66 @@ type SanityFontUpload = {
   bold?: string | null
   italic?: string | null
   boldItalic?: string | null
+  /** The operator's "Variable font" box: the Regular file carries every weight. */
+  variable?: boolean | null
 } | null
 
-function presetToFontData(preset: FontPreset): ResolvedFontData {
-  return {
-    heading: {
-      name:    preset.heading.family,
-      regular: preset.heading.files.regular,
-      bold:    preset.heading.files.bold,
-      italic:  preset.heading.files.italic,
-    },
-    body: {
-      name:       preset.body.family,
-      regular:    preset.body.files.regular,
-      medium:     preset.body.files.medium,
-      semibold:   preset.body.files.semibold,
-      bold:       preset.body.files.bold,
-      italic:     preset.body.files.italic,
-      boldItalic: preset.body.files.boldItalic,
-    },
+const spanOf = (weights: readonly string[]): [number, number] => {
+  const n = weights.map(Number)
+  return [Math.min(...n), Math.max(...n)]
+}
+
+// The page matches faces by FAMILY NAME, not by role: where heading and body share a name
+// (pairings 14, 17, 18), the body's faces serve the heading too. So a variable family shared
+// by both roles is declared once, across the union of their weights (ADV-17C2A-2).
+function roleOf(role: FontPreset['heading'] | FontPreset['body'], familyWeights: readonly string[]): ResolvedFontRole {
+  const files = role.files as FontPreset['body']['files']
+  if (role.variable) {
+    return {name: role.family, regular: files.regular, italic: files.italic, span: spanOf(familyWeights)}
   }
+  const single = role.weights.length === 1 ? Number(role.weights[0]) : 400
+  return {
+    name:          role.family,
+    regular:       files.regular,
+    medium:        files.medium,
+    semibold:      files.semibold,
+    bold:          files.bold,
+    italic:        files.italic,
+    boldItalic:    files.boldItalic,
+    regularWeight: single !== 400 ? single : undefined,
+  }
+}
+
+function presetToFontData(preset: FontPreset): ResolvedFontData {
+  const shared = preset.heading.family === preset.body.family && preset.heading.variable && preset.body.variable
+  const both = [...preset.heading.weights, ...preset.body.weights]
+  return {
+    heading: roleOf(preset.heading, shared ? both : preset.heading.weights),
+    body:    roleOf(preset.body, shared ? both : preset.body.weights),
+  }
+}
+
+/** The `@font-face` rules for one role, in order: the upright face or faces, then the
+ *  italics. `name` renames the family (the Design Studio's catalog keeps each pairing's
+ *  faces apart). One builder for the page and the catalog, so the catalog draws what a
+ *  page draws. */
+export function buildFontFaces(role: ResolvedFontRole | null | undefined, name = role?.name): string[] {
+  if (!role?.regular || !name) return []
+  const face = (url: string, weight: string, style = 'normal') =>
+    `@font-face{font-family:'${name}';src:url('${url}') format('woff2');font-weight:${weight};font-style:${style};font-display:swap;}`
+  const out: string[] = []
+  if (role.span) {
+    const [low, high] = role.span
+    out.push(face(role.regular, low === high ? `${low}` : `${low} ${high}`))
+  } else {
+    out.push(face(role.regular, String(role.regularWeight ?? 400)))
+    if (role.medium)   out.push(face(role.medium, '500'))
+    if (role.semibold) out.push(face(role.semibold, '600'))
+    if (role.bold)     out.push(face(role.bold, '700'))
+  }
+  if (role.italic)     out.push(face(role.italic, '400', 'italic'))
+  if (role.boldItalic) out.push(face(role.boldItalic, '700', 'italic'))
+  return out
 }
 
 // Build the <link rel="preload"> manifest for the active heading + body fonts.
@@ -110,28 +155,22 @@ export function resolvefonts(
     if (preset) return presetToFontData(preset)
   }
 
-  // Custom uploads — both can be independently set or left null
-  const heading =
-    headingFont?.name && headingFont.regular
-      ? {
-          name:    headingFont.name,
-          regular: headingFont.regular,
-          bold:    headingFont.bold    ?? undefined,
-          italic:  headingFont.italic  ?? undefined,
-        }
-      : null
+  // Custom uploads — both can be independently set or left null. A Regular marked variable
+  // spans every weight, and the Bold and Semibold files are then neither declared nor
+  // preloaded (the Studio warns when the box and the file disagree).
+  const upload = (font: NonNullable<SanityFontUpload>): ResolvedFontRole => font.variable
+    ? {name: font.name!, regular: font.regular!, italic: font.italic ?? undefined, boldItalic: font.boldItalic ?? undefined, span: [100, 900]}
+    : {
+        name:       font.name!,
+        regular:    font.regular!,
+        semibold:   font.semibold ?? undefined,
+        bold:       font.bold ?? undefined,
+        italic:     font.italic ?? undefined,
+        boldItalic: font.boldItalic ?? undefined,
+      }
 
-  const body =
-    bodyFont?.name && bodyFont.regular
-      ? {
-          name:       bodyFont.name,
-          regular:    bodyFont.regular,
-          semibold:   bodyFont.semibold   ?? undefined,
-          bold:       bodyFont.bold       ?? undefined,
-          italic:     bodyFont.italic     ?? undefined,
-          boldItalic: bodyFont.boldItalic ?? undefined,
-        }
-      : null
+  const heading = headingFont?.name && headingFont.regular ? upload(headingFont) : null
+  const body = bodyFont?.name && bodyFont.regular ? upload(bodyFont) : null
 
   return {heading, body}
 }

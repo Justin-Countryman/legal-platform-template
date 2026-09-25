@@ -59,7 +59,8 @@ import {
   LinkIcon, UsersIcon, BookmarkIcon,
 } from '@/components/ui/icons'
 import {TAGLINE_STYLE_MAP, type TaglineStyle, MARKETING_SCALE_MAP, MOTION_TEMPO_MAP, STRUCTURAL_DURATIONS, UI_RADIUS_MAP, BUTTON_SHAPE_MAP, ELEVATION_STYLE_MAP} from '@/lib/designTokens'
-import {FONT_PRESETS} from '@/fonts/presets'
+import {FONT_PRESETS, type FontPreset} from '@/fonts/presets'
+import {buildFontFaces, resolvefonts} from '@/fonts/loader'
 
 // ─── Section helpers (shared by tab panels) ───────────────────────────────────
 
@@ -144,6 +145,12 @@ const CHIP_DEMOS: ReadonlyArray<{
 // WS-Atomic-Reorg commit that populates it. They land in WS11 Commit 1 so
 // the 7-tab structure is testable in isolation before content lands.
 
+/** A catalog cell's family name: the pairing's own, so its faces are that pairing's (Phase 17C).
+ *  A mono pairing's two roles keep one name, as they do on a page. */
+function catalogFamily(p: FontPreset, role: 'heading' | 'body'): string {
+  return `${p[role].family} ${p.id}`
+}
+
 function TypographyPanel() {
   return (
     <section className="mb-12">
@@ -192,10 +199,11 @@ function TypographyPanel() {
       </p>
 
       {/* ── Preset catalog (all 16 presets rendered with their own fonts) ───
-          @font-face declarations for every preset font are emitted in a single
-          <style> block scoped to this panel, so each preview cell renders in
-          the actual preset typeface. Same provenance as buildFontCSS() at
-          runtime — these are the same /fonts/files/<slug>/ woff2 URLs. ── */}
+          Each pairing's faces come from buildFontFaces(), the builder the page
+          uses, under family names of its own (`<family> <id>`), so a cell draws
+          what that pairing's page draws: two pairings that share a family but
+          not its weights (Fraunces in 4, 11 and 17) cannot borrow each other's
+          faces. The files are the same /fonts/files/<slug>/ woff2 URLs. ── */}
       <div className="mt-12">
         <Subheading>Preset catalog (all 16)</Subheading>
         <Note>
@@ -206,29 +214,10 @@ function TypographyPanel() {
         </Note>
 
         <style dangerouslySetInnerHTML={{
-          __html: (() => {
-            // Dedupe @font-face declarations by family+src so duplicate fonts across
-            // presets (e.g. Open Sans appears in 4 presets) emit only once.
-            const seen = new Set<string>()
-            const lines: string[] = []
-            for (const p of FONT_PRESETS) {
-              for (const role of [p.heading, p.body] as const) {
-                const regularKey = `${role.family}|${role.files.regular}|400|normal`
-                if (!seen.has(regularKey)) {
-                  seen.add(regularKey)
-                  lines.push(`@font-face{font-family:'${role.family}';src:url('${role.files.regular}') format('woff2');font-weight:400;font-style:normal;font-display:swap;}`)
-                }
-                if ('bold' in role.files && role.files.bold) {
-                  const k = `${role.family}|${role.files.bold}|700|normal`
-                  if (!seen.has(k)) {
-                    seen.add(k)
-                    lines.push(`@font-face{font-family:'${role.family}';src:url('${role.files.bold}') format('woff2');font-weight:700;font-style:normal;font-display:swap;}`)
-                  }
-                }
-              }
-            }
-            return lines.join('')
-          })(),
+          __html: FONT_PRESETS.flatMap((p) => {
+            const r = resolvefonts(p.id, null, null)
+            return [...new Set([...buildFontFaces(r.heading, catalogFamily(p, 'heading')), ...buildFontFaces(r.body, catalogFamily(p, 'body'))])]
+          }).join(''),
         }} />
 
         <ul
@@ -246,13 +235,13 @@ function TypographyPanel() {
               </div>
               <p
                 className="mb-1 text-2xl font-bold text-foreground"
-                style={{fontFamily: `'${p.heading.family}', Georgia, serif`}}
+                style={{fontFamily: `'${catalogFamily(p, 'heading')}', Georgia, serif`}}
               >
                 Heading sample
               </p>
               <p
                 className="mb-3 text-sm text-foreground"
-                style={{fontFamily: `'${p.body.family}', system-ui, sans-serif`}}
+                style={{fontFamily: `'${catalogFamily(p, 'body')}', system-ui, sans-serif`}}
               >
                 Body copy carries the reading load &mdash; the body font does most of
                 the work across long-form prose.

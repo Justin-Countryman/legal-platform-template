@@ -1,6 +1,7 @@
 import { converter, formatHex, wcagContrast, parse, clampChroma, differenceCiede2000 } from 'culori'
 import {DIVIDER_DEPTH, MOTIF_PIECES, dividerPolygon, dividerShape} from './dividers'
 import {HEADING_LINES, headingLineVars} from './headingLines'
+import {buildFontFaces, type ResolvedFontRole} from '../fonts/loader'
 
 // ─── Shadow RGB helper ────────────────────────────────────────────────────────
 // Converts a hex color to a space-separated R G B triplet string ("28 19 20").
@@ -729,35 +730,19 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
 
 // ─── Font CSS ─────────────────────────────────────────────────────────────────
 
-type FontData = {
-  name?:       string | null
-  regular?:    string | null
-  medium?:     string | null
-  semibold?:   string | null
-  bold?:       string | null
-  italic?:     string | null
-  boldItalic?: string | null
-} | null
-
-function fontFace(name: string, url: string, weight: string, style = 'normal'): string {
-  return `@font-face{font-family:'${name}';src:url('${url}') format('woff2');font-weight:${weight};font-style:${style};font-display:swap;}`
-}
-
-export function buildFontCSS(heading: FontData, body: FontData): string {
+// The faces themselves come from `buildFontFaces` (fonts/loader.ts): a variable role is ONE face
+// spanning its weights, a static role one face per file (Phase 17C, `[R-540]`, `[R-541]`). A
+// face the heading and body declare alike (a mono pairing) is written once.
+export function buildFontCSS(heading: ResolvedFontRole | null, body: ResolvedFontRole | null): string {
+  const seen = new Set<string>()
   let css = ''
+  const add = (faces: string[]) => { for (const f of faces) if (!seen.has(f)) { seen.add(f); css += f } }
   if (heading?.name && heading.regular) {
-    css += fontFace(heading.name, heading.regular, '400')
-    if (heading.bold)   css += fontFace(heading.name, heading.bold,   '700')
-    if (heading.italic) css += fontFace(heading.name, heading.italic, '400', 'italic')
+    add(buildFontFaces(heading))
     css += `:root{--dynamic-font-heading:'${heading.name}',Georgia,serif;}`
   }
   if (body?.name && body.regular) {
-    css += fontFace(body.name, body.regular, '400')
-    if (body.medium)     css += fontFace(body.name, body.medium,    '500')
-    if (body.semibold)   css += fontFace(body.name, body.semibold,  '600')
-    if (body.bold)       css += fontFace(body.name, body.bold,      '700')
-    if (body.italic)     css += fontFace(body.name, body.italic,    '400', 'italic')
-    if (body.boldItalic) css += fontFace(body.name, body.boldItalic,'700', 'italic')
+    add(buildFontFaces(body))
     css += `:root{--dynamic-font-body:'${body.name}',system-ui,sans-serif;}`
   }
   return css

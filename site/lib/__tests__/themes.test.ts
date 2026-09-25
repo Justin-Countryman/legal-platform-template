@@ -169,6 +169,15 @@ describe('the themes', () => {
       expect(['bold', 'regular']).toContain(drawn)
     }
   })
+
+  // Phase 17C (ADV-17C2A-2): the page matches faces by family name, so a mono pairing's heading
+  // draws its body's regular. The matcher reads that too, or a site set to regular on 14, 17
+  // or 18 would be called bold while the page draws regular.
+  it("reads a mono pairing's regular as regular, and a bold-only heading of its own family as bold", () => {
+    for (const pairing of [14, 17, 18]) expect(drawableWeight(pairing, 'regular'), `pairing ${pairing}`).toBe('regular')
+    expect(drawableWeight(11, 'regular')).toBe('bold')
+    expect(drawableWeight(2, 'bold')).toBe('regular')
+  })
 })
 
 describe('matching by value ([R-477])', () => {

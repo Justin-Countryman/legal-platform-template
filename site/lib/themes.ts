@@ -1,4 +1,4 @@
-import {getPresetById, type HeadingVoice} from '../fonts/presets'
+import {getPresetById, headingWeights, type HeadingVoice} from '../fonts/presets'
 import {matchCornerFamily} from './corners'
 import {HEADING_LINES} from './headingLines'
 import {
@@ -445,8 +445,9 @@ export function readThemeField(doc: ThemeDoc, field: ThemeField): ThemeValue {
  *  regular whatever is asked for (`font-synthesis-weight: none`), and a face with only a
  *  bold renders bold. */
 export function drawableWeight(pairing: number | null, wanted: string): string {
-  const weights = getPresetById(Number(pairing))?.heading.weights
-  if (!weights) return wanted
+  const preset = getPresetById(Number(pairing))
+  if (!preset) return wanted
+  const weights = headingWeights(preset)
   const hasBold = weights.some((w) => Number(w) >= 600)
   const hasRegular = weights.some((w) => Number(w) < 600)
   if (wanted === 'bold' && !hasBold) return 'regular'
