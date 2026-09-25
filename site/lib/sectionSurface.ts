@@ -261,7 +261,8 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
   'before:bg-background', 'before:bg-hero-tint', 'before:bg-muted', 'before:bg-brand-dark', 'before:bg-accent-fill',
   // Phase 16D: the ghost's own classes, which live in `SectionShell`'s JSX but whose
   // utility is defined in `globals.css`, so the resolution test covers them too.
-  'decor-ghost', 'section-texture-dark', 'text-brand-dark', 'opacity-4',
+  'decor-ghost', 'decor-ghost-on-light', 'decor-ghost-on-dark',
+  // Phase 17C session 3: the texture layer's strength and ink.
   'section-texture-strong', 'section-texture-on-light', 'section-texture-on-dark',
   // Phase 16E: the raised photo's utility and its column alignment.
   'xl:photo-rise', 'xl:self-start',

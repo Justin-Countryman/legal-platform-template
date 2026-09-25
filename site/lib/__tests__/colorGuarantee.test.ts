@@ -25,6 +25,7 @@ import {converter, clampChroma, formatHex} from 'culori'
 import {parseHexInput, resolvePalette, validateWcag, type ColorInputs} from '../designTokens'
 import {PALETTE_PRESETS, presetInputs} from '../palettes'
 import before from './fixtures/color-tokens-before-phase14.json'
+import {nearBlack} from './sweeps'
 
 const toOklch = converter('oklch')
 const lightness = (hex: string) => (toOklch(hex)?.l as number | undefined) ?? 0
@@ -92,7 +93,10 @@ describe('color guarantee: every blocking pair passes for any operator input', (
   // blend as a ground of its own now; every other palette resolves exactly as before (record §8).
   it('the texture blend is a ground the light tiers are solved against, not only checked on', () => {
     expectNone(failures('texture-hole', {darkGround: '#0d0924', lightGround: '#fc58fa', accent: '#ed56ce', action: '#a157a1'}))
-  })
+    // Near-black grounds with saturated accents: 35 of 24,066 failed on the texture's blend before the
+    // solve took it as a ground (ADV-17C3-PRB), and the uniform sweeps above never generate them.
+    expectNone(nearBlack(5000, 17).flatMap((inputs, i) => failures(`near-black#${i}`, inputs)))
+  }, 60_000)
 
   it('the render margin reaches a dark band only where its ink is lighter than the ground', () => {
     // Every preset solves a black ink, which only raises contrast, so its dark bands render as solved.

@@ -165,9 +165,9 @@ export function SectionShell({
   // decorative child, absolutely placed BEFORE the content container, which is
   // `relative` and so paints above it in tree order, exactly as the background
   // photo and its scrim do. The gradients are drawn in `currentColor`: on a light
-  // band the dark ground at `opacity-4`, the tested ceiling (see
-  // `SECTION_TEXTURE_OPACITY`); on a dark band the ink and opacity the engine
-  // derived for the palette (`section-texture-dark`, Phase 16B). `-z-10` inside an
+  // band the dark ground under the tested ceiling (see `SECTION_TEXTURE_OPACITY`
+  // and the render scale, Phase 17C session 3); on a dark band the ink and opacity
+  // the engine derived for the palette (`section-texture-on-dark`, Phase 16B). `-z-10` inside an
   // `isolate` band keeps it under the angled edge this band paints for the band
   // above, which it otherwise striped. `data-section-texture` is what the
   // forced-colors and print rules remove.
@@ -183,7 +183,8 @@ export function SectionShell({
   ) : null
 
   // THE GHOST (Phase 16D, `[R-492]`). One decorative child beside the texture, in the
-  // same ink and at the same opacity, so `validateWcag`'s sweep covers the blend. The
+  // same ink, under the same swept opacity (a solid mark, at 0.9 of it; Phase 17C session 3),
+  // so `validateWcag`'s sweep covers the blend. The
   // walk decides which band draws it, because no band can know it is the first.
   // `-z-10` needs the band's `isolate`, which is why `isolate` now follows either
   // layer and not the texture alone: with the texture's `isolate` and the ghost's
@@ -194,7 +195,7 @@ export function SectionShell({
     <div
       aria-hidden="true"
       data-decor-layer
-      className={`pointer-events-none absolute inset-0 -z-10 overflow-hidden ${resolved.ringContext === 'dark' ? 'section-texture-dark' : 'text-brand-dark opacity-4'}`}
+      className={`pointer-events-none absolute inset-0 -z-10 overflow-hidden ${resolved.ringContext === 'dark' ? 'decor-ghost-on-dark' : 'decor-ghost-on-light'}`}
     >
       <span className="decor-ghost absolute right-[6%] top-1/2 -translate-y-1/2 text-[30vw] md:text-[22vw] lg:text-[16rem]">
         {ghostText}

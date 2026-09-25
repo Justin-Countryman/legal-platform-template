@@ -508,6 +508,13 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
   // the ground (the on-dark text color on a near-black ground), the one case where a line drawn a level
   // toward its ink moves toward the text. A black ink moves away, so those bands render as solved.
   tokens['--section-texture-dark-margin'] = lightness(texture.ink) > lightness(brandDark) ? '1' : '0'
+  // WebKit rounds a layer's opacity to whole steps of 1/255, so on that path a relative margin on a small
+  // opacity can round back up to the swept blend and one level past it (ADV-17C3-PRB, measured and
+  // reproduced: #06131d drawn for a model of #06121d). There the layer renders at least one and a half
+  // steps under the swept opacity; a black ink renders as solved.
+  tokens['--section-texture-opacity-on-dark-cushion'] = String(
+    lightness(texture.ink) > lightness(brandDark) ? Math.max(0, Math.round((texture.opacity - 1.5 / 255) * 10000) / 10000) : texture.opacity,
+  )
 
   return {
     inputs: {darkGround: darkIn, lightGround: lightIn, accent: accentIn, action: actionIn},

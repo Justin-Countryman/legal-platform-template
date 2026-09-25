@@ -1,6 +1,6 @@
 // @vitest-environment node
 //
-// The cases `scripts/ci/texture-pixels.mjs` renders (Phase 17C session 3, `[R-538]`; monorepo
+// The cases `scripts/ci/texture-pixels.mjs` renders (Phase 17C session 3, `[R-538]`, `[R-546]`; monorepo
 // WS-V1-PHASE17C3-DESIGN §2.3). `validateWcag` holds every text tier to 4.5:1 on the texture's blend
 // as modelled; the pixel script holds what a browser actually draws against that model. It needs the
 // engine's own numbers, so this test writes them: every texture tile at every strength with the scale
@@ -10,9 +10,12 @@
 // engine moves this file; read its diff.
 
 import {describe, expect, it} from 'vitest'
+import {existsSync} from 'node:fs'
+import {resolve} from 'node:path'
 import {converter, formatHex, wcagContrast} from 'culori'
 import {resolvePalette, SECTION_TEXTURE_MAP, SECTION_TEXTURE_OPACITY, type ColorInputs} from '../designTokens'
 import {PALETTE_PRESETS, presetInputs} from '../palettes'
+import {nearBlack} from './sweeps'
 
 const toRgb = converter('rgb')
 const toLab = converter('lab')
@@ -41,6 +44,8 @@ function caseOf(label: string, inputs: ColorInputs) {
     ground: t['--color-brand-dark'],
     ink: t['--color-texture-ink-on-dark'],
     opacity: Number(t['--section-texture-opacity-on-dark']),
+    // The opacity a lighter ink never renders above (WebKit's whole alpha steps; `resolvePalette`).
+    cushion: Number(t['--section-texture-opacity-on-dark-cushion']),
     tiers: DARK_TIERS.map((k) => t[k]),
   }
   const light = {ground: t['--color-background'], ink: t['--color-brand-dark'], opacity: SECTION_TEXTURE_OPACITY, tiers: LIGHT_TIERS.map((k) => t[k])}
@@ -63,21 +68,34 @@ function cases() {
     // ADV-17C3-B's palette, which the model itself once failed on the light texture blend.
     caseOf('hole', {darkGround: '#0d0924', lightGround: '#fc58fa', accent: '#ed56ce', action: '#a157a1'}),
     caseOf('black-c8102e', {darkGround: '#000000', accent: '#c8102e'}),
+    // ADV-17C3-PRB's WebKit case: WebKit drew #06131d over a model of #06121d.
+    caseOf('black-crimson-000d18', {...presetInputs(PALETTE_PRESETS.find((p) => p.id === 'black-crimson')!), darkGround: '#000d18'}),
     ...([[20260916, 5000], [7, 20000]] as const).flatMap(([seed, n]) =>
       seeded(n, seed).map((inputs, i) => caseOf(`s${seed}#${i}`, inputs)).filter(near)),
+    // The 200 near-black palettes nearest the threshold (a lighter ink's blend, or the light one).
+    ...nearBlack(4000, 17).map((inputs, i) => caseOf(`nb17#${i}`, inputs)).filter(near)
+      .sort((a, b) => Math.min(a.lightMin, a.dark.lighterInk ? a.darkMin : 99) - Math.min(b.lightMin, b.dark.lighterInk ? b.darkMin : 99)).slice(0, 200),
   ].map(({label, light, dark}) => ({label, light, dark}))
   // Every tile at both strengths, with its render scale: the light layer always renders under the sweep;
   // a dark layer only where its ink is lighter than the ground, which is the only dark case rendered.
-  const tiles = Object.entries(SECTION_TEXTURE_MAP).flatMap(([family, t]) => (['quiet', 'strong'] as const).map((strength) => ({
-    family, strength, image: strength === 'strong' ? t.strong : t.image, size: t.size, render: {light: t.render, dark: t.render},
-  })))
+  const tiles = [
+    ...Object.entries(SECTION_TEXTURE_MAP).flatMap(([family, t]) => (['quiet', 'strong'] as const).map((strength) => ({
+      family, strength, image: strength === 'strong' ? t.strong : t.image, size: t.size, render: {light: t.render, dark: t.render},
+    }))),
+    // The ghost: one solid mark in the texture's ink, at 0.9 of the swept opacity (`decor-ghost-on-*`).
+    {family: 'ghost', strength: 'solid', image: 'linear-gradient(currentColor,currentColor)', size: 'auto', render: {light: 0.9, dark: 0.9}},
+  ]
   return {method: 'every tile at every strength with its render scale, over the presets and the near-threshold palettes; written by lib/__tests__/textureCases.test.ts, rendered by scripts/ci/texture-pixels.mjs', tiles, palettes}
 }
 
-describe('lib/__tests__/fixtures/texture-cases.json', () => {
-  it('is what the engine says', async () => {
+// The cases live beside the script that reads them, under `scripts/ci/`, which the press prunes from a
+// client's tree; there this test skips by name (`[R-175]`).
+const CI = resolve(__dirname, '../../scripts/ci')
+
+describe('scripts/ci/__snapshots__/texture-cases.json', () => {
+  it.skipIf(!existsSync(CI))('is what the engine says (skipped on a client tree: scripts/ci is pruned)', async () => {
     const c = cases()
     expect(c.palettes.length).toBeGreaterThan(100)
-    await expect(JSON.stringify(c, null, 1) + '\n').toMatchFileSnapshot('./fixtures/texture-cases.json')
-  }, 120_000)
+    await expect(JSON.stringify(c) + '\n').toMatchFileSnapshot('../../scripts/ci/__snapshots__/texture-cases.json')
+  }, 180_000)
 })
