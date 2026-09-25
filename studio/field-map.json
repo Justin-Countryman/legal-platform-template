@@ -5246,13 +5246,14 @@
           "type": "string"
         },
         {
-          "description": "How heavy the display headings are: section headings, the homepage headline and page titles. Regular needs a font that has one; where the font has only a bold or only a regular, that is what renders. Leave blank for Bold.",
+          "description": "How heavy the display headings are: section headings, the homepage headline and page titles. Regular needs a font that has one; where the font has only a bold or only a regular, that is what renders. Light draws the headline and large headings thin and the smaller ones regular, and needs a font that has a light, else it renders regular. Leave blank for Bold.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
             "list": [
               "bold",
-              "regular"
+              "regular",
+              "light"
             ]
           },
           "path": "headingWeight",
@@ -5282,7 +5283,9 @@
               "pinstripe",
               "diagonalHatch",
               "diamondLattice",
-              "scallop"
+              "scallop",
+              "grid",
+              "dots"
             ]
           },
           "path": "patternTexture",
@@ -5501,7 +5504,10 @@
               15,
               16,
               17,
-              18
+              18,
+              19,
+              20,
+              21
             ]
           },
           "path": "fontPairingPreset",

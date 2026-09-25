@@ -6,6 +6,11 @@ import {
   acceptLightGround,
   buildColorCSS,
   buildDesignTokenCSS,
+  buildFallbackFaces,
+  buildFontCSS,
+  HEADING_WEIGHTS,
+  SECTION_TEXTURES,
+  SECTION_TEXTURE_MAP,
   deriveInverseNeutrals,
   deriveNeutrals,
   heroTintOf,
@@ -18,6 +23,7 @@ import {
   SCRIM_OPACITY,
 } from '../designTokens'
 import {PALETTE_PRESETS, matchPreset, presetInputs} from '../palettes'
+import {resolvefonts} from '../../fonts/loader'
 
 // The color engine's behaviour, rule by rule. The guarantee over arbitrary input
 // is colorGuarantee.test.ts; what existing sites see is pinned there too, against
@@ -390,6 +396,72 @@ describe('hexToRgbTriplet', () => {
 })
 
 // ─── --shadow-rgb in buildColorCSS ───────────────────────────────────────────
+
+// ─── The heading's fallback and its capitals (Phase 17C session 2b) ─────────────
+describe('buildFontCSS with the heading fallback', () => {
+  it('declares one adjusted face per weight the heading may draw, by PostScript name, in a desktop and an Android family, and stacks them after the real face', () => {
+    const r = resolvefonts(4, null, null)
+    const css = buildFontCSS(r.heading, r.body)
+    // Fraunces (a serif voice) at 400 and 700: Times New Roman and Noto Serif, Regular under 600, Bold from 600.
+    expect(css).toContain("@font-face{font-family:'Fraunces Fallback';src:local('TimesNewRomanPSMT');font-weight:400;font-style:normal;size-adjust:115.45%;ascent-override:84.71%;descent-override:22.09%;line-gap-override:0.00%;}")
+    expect(css).toContain("@font-face{font-family:'Fraunces Fallback';src:local('TimesNewRomanPS-BoldMT');font-weight:700;font-style:normal;size-adjust:115.58%;")
+    expect(css).toContain("@font-face{font-family:'Fraunces Fallback Android';src:local('NotoSerif-Regular'),local('Noto Serif');font-weight:400;")
+    expect(css).toContain("@font-face{font-family:'Fraunces Fallback Android';src:local('NotoSerif-Bold'),local('Noto Serif Bold');font-weight:700;")
+    expect(css).toContain(":root{--dynamic-font-heading:'Fraunces','Fraunces Fallback','Fraunces Fallback Android',serif;}")
+    // The condensed voice: Arial and Roboto, one face at 500 (the Regular class).
+    const iron = resolvefonts(19, null, null)
+    const ironCss = buildFontCSS(iron.heading, iron.body)
+    expect(ironCss).toContain("@font-face{font-family:'Oswald Fallback';src:local('ArialMT');font-weight:500;font-style:normal;size-adjust:87.03%;ascent-override:137.07%;descent-override:33.21%;line-gap-override:0.00%;}")
+    expect(ironCss).toContain("src:local('Roboto-Regular'),local('Roboto');font-weight:500;")
+    expect(ironCss).toContain(":root{--dynamic-font-heading:'Oswald','Oswald Fallback','Oswald Fallback Android',sans-serif;}")
+    expect(ironCss).not.toContain('Arial-BoldMT')
+    // The body keeps its stack; the fallback faces are never the body's.
+    expect(css).toContain(":root{--dynamic-font-body:'Inter',system-ui,sans-serif;}")
+  })
+
+  it('a family the heading and body share declares its fallback faces once, and a one-weight heading one face per family', () => {
+    const r = resolvefonts(21, null, null)
+    const css = buildFontCSS(r.heading, r.body)
+    expect(css.match(/font-family:'Source Sans 3 Fallback';/g)).toHaveLength(3)
+    expect(css.match(/font-family:'Source Sans 3 Fallback Android';/g)).toHaveLength(3)
+    const two = resolvefonts(2, null, null)
+    const twoCss = buildFontCSS(two.heading, two.body)
+    expect(twoCss.match(/font-family:'DM Serif Display Fallback';/g)).toHaveLength(1)
+    expect(twoCss).toContain("src:local('TimesNewRomanPSMT');font-weight:400;")
+  })
+
+  it('an uploaded heading font keeps Georgia: no face is known, so no number can be right', () => {
+    const upload = {name: 'House Serif', regular: 'https://cdn.sanity.io/files/x/y/regular.woff2'}
+    const css = buildFontCSS(resolvefonts(null, upload, null).heading, null)
+    expect(css).toContain(":root{--dynamic-font-heading:'House Serif',Georgia,serif;}")
+    expect(css).not.toContain('Fallback')
+    expect(buildFallbackFaces({name: 'House Serif'})).toEqual({faces: [], stack: ['Georgia', 'serif']})
+  })
+})
+
+describe('the capitals scale (`[R-536]`)', () => {
+  it('emits the pairing\'s capsScale only where the site sets capitals, and 1 otherwise', () => {
+    expect(buildDesignTokenCSS({fontPairingPreset: 7, headingCase: 'upper'})).toContain('--heading-caps-scale:0.72;')
+    expect(buildDesignTokenCSS({fontPairingPreset: 1, headingCase: 'upper'})).toContain('--heading-caps-scale:0.71;')
+    expect(buildDesignTokenCSS({fontPairingPreset: 7, headingCase: 'normal'})).toContain('--heading-caps-scale:1;')
+    expect(buildDesignTokenCSS({fontPairingPreset: 7})).toContain('--heading-caps-scale:1;')
+    // An upload (no pairing) and an unknown pairing in capitals stay at 1.
+    expect(buildDesignTokenCSS({headingCase: 'upper'})).toContain('--heading-caps-scale:1;')
+    expect(buildDesignTokenCSS({fontPairingPreset: 3, headingCase: 'upper'})).toContain('--heading-caps-scale:1;')
+    // The fixture's case: Graphite, mixed case, byte for byte the mixed-case block.
+    expect(buildDesignTokenCSS({fontPairingPreset: 4, headingCase: 'normal'})).toBe(buildDesignTokenCSS({headingCase: 'normal'}))
+  })
+
+  it('offers light as a heading weight, and grid and dots as textures, in currentColor', () => {
+    expect(HEADING_WEIGHTS).toEqual(['bold', 'regular', 'light'])
+    expect(SECTION_TEXTURES).toEqual(['pinstripe', 'diagonalHatch', 'diamondLattice', 'scallop', 'grid', 'dots'])
+    for (const t of ['grid', 'dots'] as const) {
+      expect(SECTION_TEXTURE_MAP[t].image).toContain('currentColor')
+      expect(buildDesignTokenCSS({patternTexture: t})).toContain(`--section-texture-image:${SECTION_TEXTURE_MAP[t].image};`)
+    }
+    expect(buildDesignTokenCSS({patternTexture: 'dots'})).toContain('--section-texture-size:12px 12px;')
+  })
+})
 
 describe('buildDesignTokenCSS elevation tokens', () => {
   it('level 0 (default) outputs --shadow-card-rest:none', () => {

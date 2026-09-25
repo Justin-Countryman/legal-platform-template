@@ -18178,6 +18178,10 @@
             {
               "type": "string",
               "value": "regular"
+            },
+            {
+              "type": "string",
+              "value": "light"
             }
           ]
         },
@@ -18220,6 +18224,14 @@
             {
               "type": "string",
               "value": "scallop"
+            },
+            {
+              "type": "string",
+              "value": "grid"
+            },
+            {
+              "type": "string",
+              "value": "dots"
             }
           ]
         },
@@ -18788,6 +18800,18 @@
             {
               "type": "number",
               "value": 18
+            },
+            {
+              "type": "number",
+              "value": 19
+            },
+            {
+              "type": "number",
+              "value": 20
+            },
+            {
+              "type": "number",
+              "value": 21
             }
           ]
         },

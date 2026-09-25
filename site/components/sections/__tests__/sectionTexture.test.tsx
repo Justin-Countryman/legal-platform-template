@@ -41,8 +41,8 @@ describe('item 338: the site texture reaches a band only through the token build
     expect(SECTION_TEXTURE_MAP[texture].image).not.toMatch(/#[0-9a-f]{3,6}\b/i)
   })
 
-  it('scallop is the one texture that needs a tile size', () => {
-    expect(SECTION_TEXTURES.filter((t) => SECTION_TEXTURE_MAP[t].size !== 'auto')).toEqual(['scallop'])
+  it('scallop and dots are the textures that need a tile size', () => {
+    expect(SECTION_TEXTURES.filter((t) => SECTION_TEXTURE_MAP[t].size !== 'auto')).toEqual(['scallop', 'dots'])
   })
 
   it.each([[undefined], [null], ['photo'], ['gradient']])('%s emits no texture at all', (value) => {

@@ -1,4 +1,5 @@
 import { converter, formatHex, wcagContrast, parse, clampChroma, differenceCiede2000 } from 'culori'
+import {getPresetById} from '../fonts/presets'
 import {DIVIDER_DEPTH, MOTIF_PIECES, dividerPolygon, dividerShape} from './dividers'
 import {HEADING_LINES, headingLineVars} from './headingLines'
 import {buildFontFaces, type ResolvedFontRole} from '../fonts/loader'
@@ -733,13 +734,52 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
 // The faces themselves come from `buildFontFaces` (fonts/loader.ts): a variable role is ONE face
 // spanning its weights, a static role one face per file (Phase 17C, `[R-540]`, `[R-541]`). A
 // face the heading and body declare alike (a mono pairing) is written once.
+//
+// THE HEADING'S FALLBACK (Phase 17C session 2b; monorepo WS-V1-PHASE17C2B-DESIGN §2.4). While
+// the heading file loads, the heading is drawn in a system face adjusted to the real face's
+// width and line box (`size-adjust`, the three overrides), so the swap moves no line: one face
+// per weight the heading may draw, by POSTSCRIPT NAME, because WebKit resolves a local family
+// name against the requested weight and would draw the family's Bold under a Regular's numbers
+// (ADV-17C2B, measured in both engines). Two families: the desktop one (Arial, Times New Roman)
+// and the Android one (Roboto, Noto Serif), each failing whole where the machine lacks it, so
+// the stack moves on to the next. Without the fallback Iron's hero doubled its lines and the
+// page grew 1,087 px at 1440 while Oswald loaded (17C record §0.5). An uploaded heading font has
+// no known face and keeps `Georgia,serif`.
+const FALLBACK_NAMES = {
+  sans:  {generic: 'sans-serif', desktop: {regular: ["ArialMT"], bold: ["Arial-BoldMT"]}, android: {regular: ["Roboto-Regular", "Roboto"], bold: ["Roboto-Bold", "Roboto Bold"]}},
+  serif: {generic: 'serif', desktop: {regular: ["TimesNewRomanPSMT"], bold: ["TimesNewRomanPS-BoldMT"]}, android: {regular: ["NotoSerif-Regular", "Noto Serif"], bold: ["NotoSerif-Bold", "Noto Serif Bold"]}},
+} as const
+
+/** The fallback faces a preset heading declares, and the family names its stack lists after
+ *  the real one. Exported for the tests and the Design Studio. */
+export function buildFallbackFaces(heading: Pick<ResolvedFontRole, 'name' | 'fallback'>): {faces: string[]; stack: string[]} {
+  const fb = heading.fallback
+  if (!fb) return {faces: [], stack: ['Georgia', 'serif']}
+  const names = FALLBACK_NAMES[fb.family]
+  const faces: string[] = []
+  const families = {desktop: `${heading.name} Fallback`, android: `${heading.name} Fallback Android`} as const
+  for (const leg of ['desktop', 'android'] as const) {
+    for (const [weight, metrics] of Object.entries(fb.at)) {
+      const m = metrics[leg]
+      const src = names[leg][Number(weight) >= 600 ? 'bold' : 'regular'].map((n) => `local('${n}')`).join(',')
+      faces.push(
+        `@font-face{font-family:'${families[leg]}';src:${src};font-weight:${weight};font-style:normal;` +
+        `size-adjust:${m.sizeAdjust}%;ascent-override:${m.ascent}%;descent-override:${m.descent}%;line-gap-override:${m.lineGap}%;}`,
+      )
+    }
+  }
+  return {faces, stack: [`'${families.desktop}'`, `'${families.android}'`, names.generic]}
+}
+
 export function buildFontCSS(heading: ResolvedFontRole | null, body: ResolvedFontRole | null): string {
   const seen = new Set<string>()
   let css = ''
   const add = (faces: string[]) => { for (const f of faces) if (!seen.has(f)) { seen.add(f); css += f } }
   if (heading?.name && heading.regular) {
     add(buildFontFaces(heading))
-    css += `:root{--dynamic-font-heading:'${heading.name}',Georgia,serif;}`
+    const fallback = buildFallbackFaces(heading)
+    add(fallback.faces)
+    css += `:root{--dynamic-font-heading:'${heading.name}',${fallback.stack.join(',')};}`
   }
   if (body?.name && body.regular) {
     add(buildFontFaces(body))
@@ -921,7 +961,7 @@ export const HEADING_EMPHASIS_STYLES = ['color', 'italic'] as const
 /** The heading line, widened to the library of Phase 16C (`[R-484]`, `[R-489]`); `line` is the Bar. */
 export const HEADING_RULES = HEADING_LINES
 /** A style set may set the display headings regular where its pairing has both faces (`[R-487]`). */
-export const HEADING_WEIGHTS = ['bold', 'regular'] as const
+export const HEADING_WEIGHTS = ['bold', 'regular', 'light'] as const
 export const HEADING_CASES = ['normal', 'upper'] as const
 
 export const HEADING_EMPHASIS_MAP: Record<string, {style: string; weight: string}> = {
@@ -957,7 +997,10 @@ export const HEADING_CASE_MAP: Record<string, {transform: string; tracking: stri
 // Phase 16A challenge: 0 failures at 0.04, 2,679 at 0.05). On a dark band the ink
 // and its opacity come from `textureOnDark`. `validateWcag` holds both blends as
 // grounds of their own, so the claim is tested, not remembered.
-export const SECTION_TEXTURES = ['pinstripe', 'diagonalHatch', 'diamondLattice', 'scallop'] as const
+// Phase 17C session 2b (`[R-534]`): `grid` (Iron) and `dots` (Birch), drawn like the four at
+// today's one strength; the strength word is session 3's (`[R-538]`). The grid is two layers,
+// as the lattice is, and inks one level darker in software raster until session 3's margin.
+export const SECTION_TEXTURES = ['pinstripe', 'diagonalHatch', 'diamondLattice', 'scallop', 'grid', 'dots'] as const
 export type SectionTexture = (typeof SECTION_TEXTURES)[number]
 
 export const SECTION_TEXTURE_MAP: Record<SectionTexture, {image: string; size: string}> = {
@@ -968,6 +1011,11 @@ export const SECTION_TEXTURE_MAP: Record<SectionTexture, {image: string; size: s
     size: 'auto',
   },
   scallop:        {image: 'radial-gradient(circle at 50% 100%,transparent 0 7px,currentColor 7px 8px,transparent 8px)', size: '16px 16px'},
+  grid: {
+    image: 'repeating-linear-gradient(0deg,currentColor 0 1px,transparent 1px 24px),repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 24px)',
+    size: 'auto',
+  },
+  dots:           {image: 'radial-gradient(circle at center,currentColor 0 1.5px,transparent 2px)', size: '12px 12px'},
 }
 
 /** The opacity the section texture renders at, and the one `validateWcag` blends. */
@@ -978,6 +1026,9 @@ export const SCRIM_OPACITY = 0.8
 
 /** Every design setting the token CSS reads. Absent or unknown means the default. */
 export type DesignTokenSettings = {
+  /** Read only for `capsScale` (Phase 17C session 2b): the face's number where the site sets
+   *  capitals; an upload or an unknown pairing emits 1. */
+  fontPairingPreset?:    number | null
   uiRadius?:             string | null
   buttonShape?:          string | null
   tertiaryStyle?:        string | null
@@ -1007,7 +1058,7 @@ export function dividerVars(sectionJoin: string | null | undefined): string {
 }
 
 export function buildDesignTokenCSS({
-  uiRadius, buttonShape, tertiaryStyle, elevationStyle, motionTempo, marketingScale, taglineStyle, patternTexture,
+  fontPairingPreset, uiRadius, buttonShape, tertiaryStyle, elevationStyle, motionTempo, marketingScale, taglineStyle, patternTexture,
   headingEmphasisStyle, headingCase, sectionJoin, headingRule,
 }: DesignTokenSettings = {}): string {
   const radius    = UI_RADIUS_MAP[uiRadius ?? '']            ?? UI_RADIUS_MAP.rounded
@@ -1028,9 +1079,14 @@ export function buildDesignTokenCSS({
   const textureVars = `--section-texture-image:${texture?.image ?? 'none'};--section-texture-size:${texture?.size ?? 'auto'};`
   const emphasis = HEADING_EMPHASIS_MAP[headingEmphasisStyle ?? ''] ?? HEADING_EMPHASIS_MAP.color
   const hcase    = HEADING_CASE_MAP[headingCase ?? '']          ?? HEADING_CASE_MAP.normal
+  // Capitals set smaller by what the face needs (`[R-536]`, Phase 17C session 2b): the pairing's
+  // `capsScale` where the site sets capitals, read by `section-heading` in globals.css; 1 in
+  // mixed case, for an upload and for an unknown pairing, so those pages are byte for byte as
+  // before.
+  const capsScale = hcase === HEADING_CASE_MAP.upper ? (getPresetById(Number(fontPairingPreset))?.heading.capsScale ?? 1) : 1
   const headingVars =
     `--heading-emphasis-style:${emphasis.style};--heading-emphasis-weight:${emphasis.weight};` +
-    `--heading-case:${hcase.transform};--heading-tracking:${hcase.tracking};`
+    `--heading-case:${hcase.transform};--heading-tracking:${hcase.tracking};--heading-caps-scale:${capsScale};`
   return (
     `:root{` +
     `--radius-ui:${radius};` +

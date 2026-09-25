@@ -21,6 +21,7 @@ import {DEFAULT_SCRIM_OPACITY, resolveHeroSurface, resolveMergedHeaderScheme} fr
 import {SidebarDesignSettingsProvider} from '@/lib/sidebarDesignSettingsContext'
 import {OfficeHoursProvider} from '@/components/location/OfficeHoursContext'
 import {resolvefonts, buildFontPreloads} from '@/fonts/loader'
+import {drawableWeight} from '@/fonts/presets'
 import {Header, type NavItem, type NavChild} from '@/components/layout/Header'
 import {Footer} from '@/components/layout/Footer'
 import {BackToTop} from '@/components/ui/BackToTop'
@@ -108,6 +109,7 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
   // the same theme through the site look (`HomeBody`).
   const flow = flowOf(designTokens)
   const tokenCSS = buildDesignTokenCSS({
+    fontPairingPreset:    designTokens?.fontPairingPreset,
     uiRadius:             designTokens?.uiRadius,
     buttonShape:          designTokens?.buttonShape,
     tertiaryStyle:        designTokens?.tertiaryStyle,
@@ -161,7 +163,10 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
   // headings in four goldens. Site-wide, interior pages included (Phase 17B, record §2.9).
   const carry = dividerShape(flow.divider.shape) ? flow.divider.carry : []
   const cornered = designTokens?.buttonShape === 'square' && ['sharp', 'subtle'].includes(designTokens?.uiRadius ?? '')
-  const headingWeight = designTokens?.headingWeight === 'regular' ? 'regular' : undefined
+  // Phase 17C session 2b: `light` too (Birch), read as the face can draw it (`drawableWeight`), so
+  // a site asking light of a face with no light wears the regular the match reads.
+  const drawn = drawableWeight(designTokens?.fontPairingPreset ?? null, designTokens?.headingWeight ?? 'bold')
+  const headingWeight = drawn === 'regular' || drawn === 'light' ? drawn : undefined
   // Phase 16D. The drop cap rides the same wrapper the heading rule and the carried
   // pieces already do. The ghost is not here: it is per band, so it rides the walk
   // (`sectionFrame.ts`).

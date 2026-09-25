@@ -826,6 +826,21 @@ h1, h2, h3, h4, h5, h6 {
 @utility section-heading {
   text-transform: var(--heading-case, none);
   letter-spacing: var(--heading-tracking, normal);
+  /* Capitals set smaller by what the face needs (Phase 17C session 2b, `[R-536]`): the
+     pairing's `capsScale` arrives as `--heading-caps-scale` (1 in mixed case). A `text-*`
+     utility on this heading reads `var(--text-3xl)` on the element, where it is redefined
+     here, so the scaled size wins at every breakpoint and the unitless line height follows;
+     a floor of 20 px keeps a phone's section heading readable whatever the face. */
+  --text-xl: max(1.25rem, calc(1.25rem * var(--heading-caps-scale, 1)));
+  --text-2xl: max(1.25rem, calc(1.5rem * var(--heading-caps-scale, 1)));
+  --text-3xl: max(1.25rem, calc(1.875rem * var(--heading-caps-scale, 1)));
+  --text-4xl: max(1.25rem, calc(2.25rem * var(--heading-caps-scale, 1)));
+  --text-5xl: max(1.25rem, calc(3rem * var(--heading-caps-scale, 1)));
+}
+/* The homepage tier's size is a clamp, not a theme variable: multiplied here, on a section
+   heading only (the Design Studio's sample wears `marketing-h2` alone). */
+.section-heading.marketing-h2 {
+  font-size: max(1.25rem, calc(clamp(1.5rem, 0.75rem + 4vw, var(--marketing-h2, 2.25rem)) * var(--heading-caps-scale, 1)));
 }
 /* Phase 16C (`[R-484]`): every design but Flanking is a one-color SVG mask from
    `headingLineVars`, painted in the decor role resolved on the heading. */
@@ -905,6 +920,18 @@ h1, h2, h3, h4, h5, h6 {
    display headings regular; unlayered, so it wins over the `font-bold` utility. */
 h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 [data-heading-weight="regular"] :is(h1, .section-heading) { font-weight: 400; }
+/* Light (Phase 17C session 2b, `[R-534]`): 300 on the hero and on headings of 32 px and up,
+   400 under (thin strokes under about 24 px fall below readability guidance at the contrast
+   the platform guarantees). Written by the size utilities the headings carry, since CSS cannot
+   read a size: `marketing-h2` reaches 32 px at a 500 px viewport, `md:text-4xl` is 36 px from
+   768, the CTA block's `lg:text-4xl` 36 px from this stylesheet's `lg` (992). The reset is
+   `:where()`, whose specificity is zero, so the rules below beat it (ADV-17C2B: with `:is()`
+   the hero never drew 300). */
+[data-heading-weight="light"] :where(h1, .section-heading) { font-weight: 400; }
+[data-heading-weight="light"] :is(h1.marketing-h1, h1.text-page-h1, .section-heading.text-4xl) { font-weight: 300; }
+@media (min-width: 500px) { [data-heading-weight="light"] .section-heading.marketing-h2 { font-weight: 300; } }
+@media (min-width: 768px) { [data-heading-weight="light"] :is(h1, .section-heading):is(.md\:text-4xl, .md\:text-5xl) { font-weight: 300; } }
+@media (min-width: 992px) { [data-heading-weight="light"] .section-heading.lg\:text-4xl { font-weight: 300; } }
 
 /* ─── The section texture (Phase 16A) ───────────────────────────────────────── */
 /* What a band set to the Pattern surface wears, and nothing else on the site:
