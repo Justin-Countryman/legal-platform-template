@@ -171,11 +171,14 @@ export function SectionShell({
   // `isolate` band keeps it under the angled edge this band paints for the band
   // above, which it otherwise striped. `data-section-texture` is what the
   // forced-colors and print rules remove.
+  // Phase 17C session 3 (`[R-538]`): the strength the theme gave this band (a stored Pattern band is
+  // quiet), and the layer's ink at the swept blend times the tile's render scale.
+  const strength = seam.paint?.texture === 'strong' ? 'strong' : 'quiet'
   const texture = textured ? (
     <div
       aria-hidden="true"
-      data-section-texture
-      className={`section-texture pointer-events-none absolute inset-0 -z-10 ${resolved.ringContext === 'dark' ? 'section-texture-dark' : 'text-brand-dark opacity-4'}`}
+      data-section-texture={strength}
+      className={`${strength === 'strong' ? 'section-texture-strong' : 'section-texture'} pointer-events-none absolute inset-0 -z-10 ${resolved.ringContext === 'dark' ? 'section-texture-on-dark' : 'section-texture-on-light'}`}
     />
   ) : null
 

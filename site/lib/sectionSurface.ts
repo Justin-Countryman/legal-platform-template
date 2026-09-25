@@ -262,6 +262,7 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
   // Phase 16D: the ghost's own classes, which live in `SectionShell`'s JSX but whose
   // utility is defined in `globals.css`, so the resolution test covers them too.
   'decor-ghost', 'section-texture-dark', 'text-brand-dark', 'opacity-4',
+  'section-texture-strong', 'section-texture-on-light', 'section-texture-on-dark',
   // Phase 16E: the raised photo's utility and its column alignment.
   'xl:photo-rise', 'xl:self-start',
   // Phase 16F: the gradient on a dark band, and the band's place in its run.

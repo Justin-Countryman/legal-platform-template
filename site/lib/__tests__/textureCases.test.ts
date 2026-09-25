@@ -17,8 +17,8 @@ import {PALETTE_PRESETS, presetInputs} from '../palettes'
 const toRgb = converter('rgb')
 const toLab = converter('lab')
 const blend = (g0: string, k0: string, a: number) => {
-  const g = toRgb(g0) as {r: number; g: number; b: number}
-  const k = toRgb(k0) as {r: number; g: number; b: number}
+  const g = toRgb(g0) as unknown as {r: number; g: number; b: number}
+  const k = toRgb(k0) as unknown as {r: number; g: number; b: number}
   const m = (x: number, y: number) => x * (1 - a) + y * a
   return formatHex({mode: 'rgb', r: m(g.r, k.r), g: m(g.g, k.g), b: m(g.b, k.b)})
 }
@@ -66,7 +66,11 @@ function cases() {
     ...([[20260916, 5000], [7, 20000]] as const).flatMap(([seed, n]) =>
       seeded(n, seed).map((inputs, i) => caseOf(`s${seed}#${i}`, inputs)).filter(near)),
   ].map(({label, light, dark}) => ({label, light, dark}))
-  const tiles = Object.entries(SECTION_TEXTURE_MAP).map(([family, t]) => ({family, strength: 'quiet', image: t.image, size: t.size, render: {light: 1, dark: 1}}))
+  // Every tile at both strengths, with its render scale: the light layer always renders under the sweep;
+  // a dark layer only where its ink is lighter than the ground, which is the only dark case rendered.
+  const tiles = Object.entries(SECTION_TEXTURE_MAP).flatMap(([family, t]) => (['quiet', 'strong'] as const).map((strength) => ({
+    family, strength, image: strength === 'strong' ? t.strong : t.image, size: t.size, render: {light: t.render, dark: t.render},
+  })))
   return {method: 'every tile at every strength with its render scale, over the presets and the near-threshold palettes; written by lib/__tests__/textureCases.test.ts, rendered by scripts/ci/texture-pixels.mjs', tiles, palettes}
 }
 

@@ -1039,11 +1039,28 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   background-size: var(--section-texture-size, auto);
 }
 /* On a dark band (a theme's `patternGround: dark`, Phase 16B): the ink and the
-   opacity the engine derived for this palette (`textureOnDark`). The light layer
-   takes `text-brand-dark opacity-4` in SectionShell. */
+   opacity the engine derived for this palette (`textureOnDark`). The ghost (Phase 16D)
+   draws in it; the texture layer draws in the two utilities below. */
 @utility section-texture-dark {
   color: var(--color-texture-ink-on-dark);
   opacity: var(--section-texture-opacity-on-dark);
+}
+/* The strong step (Phase 17C session 3, `[R-538]`): the same motif at twice the ink, same spacing. */
+@utility section-texture-strong {
+  background-image: var(--section-texture-image-strong, none);
+  background-size: var(--section-texture-size, auto);
+}
+/* The texture layer's ink and opacity (Phase 17C session 3): the blend `validateWcag` sweeps, times the
+   tile's render scale, because a browser draws some tiles a level of 255 past the model
+   (`SECTION_TEXTURE_MAP`, `scripts/ci/texture-pixels.mjs`). On a dark band the scale applies only
+   where the ink is lighter than the ground (`--section-texture-dark-margin`). */
+@utility section-texture-on-light {
+  color: var(--color-brand-dark);
+  opacity: calc(var(--section-texture-opacity, 0.04) * var(--section-texture-render, 1));
+}
+@utility section-texture-on-dark {
+  color: var(--color-texture-ink-on-dark);
+  opacity: calc(var(--section-texture-opacity-on-dark) * (1 - var(--section-texture-dark-margin, 0) * (1 - var(--section-texture-render, 1))));
 }
 
 /* Forced-colors mode overrides background-color but forces background-image to

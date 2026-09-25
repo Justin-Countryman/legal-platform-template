@@ -7,8 +7,18 @@
    "image": "repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 10px)",
    "size": "auto",
    "render": {
-    "light": 1,
-    "dark": 1
+    "light": 0.9,
+    "dark": 0.9
+   }
+  },
+  {
+   "family": "pinstripe",
+   "strength": "strong",
+   "image": "repeating-linear-gradient(90deg,currentColor 0 2px,transparent 2px 10px)",
+   "size": "auto",
+   "render": {
+    "light": 0.9,
+    "dark": 0.9
    }
   },
   {
@@ -17,8 +27,18 @@
    "image": "repeating-linear-gradient(45deg,currentColor 0 1px,transparent 1px 8px)",
    "size": "auto",
    "render": {
-    "light": 1,
-    "dark": 1
+    "light": 0.9,
+    "dark": 0.9
+   }
+  },
+  {
+   "family": "diagonalHatch",
+   "strength": "strong",
+   "image": "repeating-linear-gradient(45deg,currentColor 0 2px,transparent 2px 8px)",
+   "size": "auto",
+   "render": {
+    "light": 0.9,
+    "dark": 0.9
    }
   },
   {
@@ -27,8 +47,18 @@
    "image": "repeating-linear-gradient(45deg,currentColor 0 1px,transparent 1px 14px),repeating-linear-gradient(-45deg,currentColor 0 1px,transparent 1px 14px)",
    "size": "auto",
    "render": {
-    "light": 1,
-    "dark": 1
+    "light": 0.8,
+    "dark": 0.8
+   }
+  },
+  {
+   "family": "diamondLattice",
+   "strength": "strong",
+   "image": "repeating-linear-gradient(45deg,currentColor 0 2px,transparent 2px 14px),repeating-linear-gradient(-45deg,currentColor 0 2px,transparent 2px 14px)",
+   "size": "auto",
+   "render": {
+    "light": 0.8,
+    "dark": 0.8
    }
   },
   {
@@ -37,18 +67,38 @@
    "image": "radial-gradient(circle at 50% 100%,transparent 0 7px,currentColor 7px 8px,transparent 8px)",
    "size": "16px 16px",
    "render": {
-    "light": 1,
-    "dark": 1
+    "light": 0.9,
+    "dark": 0.9
+   }
+  },
+  {
+   "family": "scallop",
+   "strength": "strong",
+   "image": "radial-gradient(circle at 50% 100%,transparent 0 6px,currentColor 6px 8px,transparent 8px)",
+   "size": "16px 16px",
+   "render": {
+    "light": 0.9,
+    "dark": 0.9
    }
   },
   {
    "family": "grid",
    "strength": "quiet",
-   "image": "repeating-linear-gradient(0deg,currentColor 0 1px,transparent 1px 24px),repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 24px)",
-   "size": "auto",
+   "image": "conic-gradient(from 90deg at 1px 1px,transparent 90deg,currentColor 0)",
+   "size": "24px 24px",
    "render": {
-    "light": 1,
-    "dark": 1
+    "light": 0.9,
+    "dark": 0.9
+   }
+  },
+  {
+   "family": "grid",
+   "strength": "strong",
+   "image": "conic-gradient(from 90deg at 2px 2px,transparent 90deg,currentColor 0)",
+   "size": "24px 24px",
+   "render": {
+    "light": 0.9,
+    "dark": 0.9
    }
   },
   {
@@ -57,8 +107,18 @@
    "image": "radial-gradient(circle at center,currentColor 0 1.5px,transparent 2px)",
    "size": "12px 12px",
    "render": {
-    "light": 1,
-    "dark": 1
+    "light": 0.9,
+    "dark": 0.9
+   }
+  },
+  {
+   "family": "dots",
+   "strength": "strong",
+   "image": "radial-gradient(circle at center,currentColor 0 2.1px,transparent 2.6px)",
+   "size": "12px 12px",
+   "render": {
+    "light": 0.9,
+    "dark": 0.9
    }
   }
  ],
@@ -507,7 +567,7 @@
     "tiers": [
      "#161618",
      "#555558",
-     "#636365",
+     "#616164",
      "#ae0194",
      "#0d0924",
      "#5b125c"

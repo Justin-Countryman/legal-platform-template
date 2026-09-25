@@ -302,7 +302,12 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
   const background = lightA.hex
   const muted      = mutedOf(background)
   const heroTint   = heroTintOf(background)
-  const lightGrounds = [background, heroTint, muted]
+  // Every light ground text sits on, the texture's darkest blend included (Phase 17C session 3): the
+  // tiers are solved against what `validateWcag` holds them to, so no palette an operator types reaches
+  // a textured band with a tier under AA (ADV-17C3-B found one the solve left at 4.48:1). A palette whose
+  // tiers already hold there resolves exactly as before.
+  const lightTexture = textureOnLight(brandDark)
+  const lightGrounds = [background, heroTint, muted, blendOver(background, lightTexture.ink, lightTexture.opacity)]
   const accent = accentA.hex
   const action = actionA.hex
 
@@ -499,6 +504,10 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
   ])
   tokens['--color-texture-ink-on-dark'] = texture.ink
   tokens['--section-texture-opacity-on-dark'] = String(texture.opacity)
+  // Phase 17C session 3: the render margin applies on a dark band only where its ink is lighter than
+  // the ground (the on-dark text color on a near-black ground), the one case where a line drawn a level
+  // toward its ink moves toward the text. A black ink moves away, so those bands render as solved.
+  tokens['--section-texture-dark-margin'] = lightness(texture.ink) > lightness(brandDark) ? '1' : '0'
 
   return {
     inputs: {darkGround: darkIn, lightGround: lightIn, accent: accentIn, action: actionIn},
@@ -571,6 +580,14 @@ export function gradientStopOn(dark: string, _lightGround: string, accent: strin
   }
   while (alpha > 0 && !holds(alpha)) alpha = Math.round((alpha - 0.005) * 1000) / 1000
   return blendOver(dark, ink, Math.max(0, alpha))
+}
+
+/** The texture on a light band (Phase 17C session 3, `[R-538]`): the dark ground as its ink, at the
+ *  opacity every light text tier holds 4.5:1 over for any palette (Phase 16A). Beside
+ *  `textureOnDark`, so both grounds' textures come from one place; `validateWcag` sweeps this blend,
+ *  and the layer renders under it (`TEXTURE_RENDER_SCALE`). */
+export function textureOnLight(dark: string): {ink: string; opacity: number} {
+  return {ink: dark, opacity: SECTION_TEXTURE_OPACITY}
 }
 
 export function textureOnDark(dark: string, lightGround: string, onDarkText: string[]): {ink: string; opacity: number} {
@@ -647,7 +664,7 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
     // A Pattern band's darkest pixel: its ink line at the texture's opacity over the
     // light ground. WCAG measures text against the lowest-contrast part of what is
     // behind it (F83), so every light tier must hold here too (Phase 16A).
-    ['section-texture', blendOver(t['--color-background'], t['--color-brand-dark'], SECTION_TEXTURE_OPACITY)],
+    ['section-texture', blendOver(t['--color-background'], textureOnLight(t['--color-brand-dark']).ink, textureOnLight(t['--color-brand-dark']).opacity)],
   ]
   for (const [name, ground] of lightGrounds) {
     check(`foreground on ${name}`,        t['--color-foreground'],        ground, 4.5)
@@ -997,28 +1014,59 @@ export const HEADING_CASE_MAP: Record<string, {transform: string; tracking: stri
 // Phase 16A challenge: 0 failures at 0.04, 2,679 at 0.05). On a dark band the ink
 // and its opacity come from `textureOnDark`. `validateWcag` holds both blends as
 // grounds of their own, so the claim is tested, not remembered.
-// Phase 17C session 2b (`[R-534]`): `grid` (Iron) and `dots` (Birch), drawn like the four at
-// today's one strength; the strength word is session 3's (`[R-538]`). The grid is two layers,
-// as the lattice is, and inks one level darker in software raster until session 3's margin.
+// Phase 17C session 2b (`[R-534]`): `grid` (Iron) and `dots` (Birch).
+//
+// Phase 17C session 3 (`[R-538]`; monorepo WS-V1-PHASE17C3-DESIGN §2.2, §2.3). A STRENGTH per tile:
+// `quiet` is the tile as it shipped, `strong` doubles its ink at the same spacing (a line family draws
+// 2 px where it drew 1, the scallop's ring 2 px, a dot at 1.41 times its radius), so a theme can vary
+// the texture from one section to the next without a second motif (`flows.ts`, `texture`). A strength
+// never raises the opacity, so the darkest pixel is still the ink at the swept opacity. And a RENDER
+// SCALE per tile: a browser draws a linear tile a level of 255 toward its ink in both raster paths, and a
+// two-layer tile another in the headless shell's software raster, so the layer renders under the blend
+// `validateWcag` sweeps: 0.9 of it, 0.8 for the lattice, the one two-layer tile (the grid is drawn as one
+// conic layer, which both paths draw exactly). `scripts/ci/texture-pixels.mjs` holds the result.
 export const SECTION_TEXTURES = ['pinstripe', 'diagonalHatch', 'diamondLattice', 'scallop', 'grid', 'dots'] as const
 export type SectionTexture = (typeof SECTION_TEXTURES)[number]
+/** The strengths a band can draw; a theme's `alternate` resolves to these (`sectionFrame.ts`). */
+export const DRAWN_STRENGTHS = ['quiet', 'strong'] as const
+export type DrawnStrength = (typeof DRAWN_STRENGTHS)[number]
 
-export const SECTION_TEXTURE_MAP: Record<SectionTexture, {image: string; size: string}> = {
-  pinstripe:      {image: 'repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 10px)', size: 'auto'},
-  diagonalHatch:  {image: 'repeating-linear-gradient(45deg,currentColor 0 1px,transparent 1px 8px)', size: 'auto'},
+export const SECTION_TEXTURE_MAP: Record<SectionTexture, {image: string; strong: string; size: string; render: number}> = {
+  pinstripe: {
+    image: 'repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 10px)',
+    strong: 'repeating-linear-gradient(90deg,currentColor 0 2px,transparent 2px 10px)',
+    size: 'auto', render: 0.9,
+  },
+  diagonalHatch: {
+    image: 'repeating-linear-gradient(45deg,currentColor 0 1px,transparent 1px 8px)',
+    strong: 'repeating-linear-gradient(45deg,currentColor 0 2px,transparent 2px 8px)',
+    size: 'auto', render: 0.9,
+  },
   diamondLattice: {
     image: 'repeating-linear-gradient(45deg,currentColor 0 1px,transparent 1px 14px),repeating-linear-gradient(-45deg,currentColor 0 1px,transparent 1px 14px)',
-    size: 'auto',
+    strong: 'repeating-linear-gradient(45deg,currentColor 0 2px,transparent 2px 14px),repeating-linear-gradient(-45deg,currentColor 0 2px,transparent 2px 14px)',
+    size: 'auto', render: 0.8,
   },
-  scallop:        {image: 'radial-gradient(circle at 50% 100%,transparent 0 7px,currentColor 7px 8px,transparent 8px)', size: '16px 16px'},
+  scallop: {
+    image: 'radial-gradient(circle at 50% 100%,transparent 0 7px,currentColor 7px 8px,transparent 8px)',
+    strong: 'radial-gradient(circle at 50% 100%,transparent 0 6px,currentColor 6px 8px,transparent 8px)',
+    size: '16px 16px', render: 0.9,
+  },
+  // The same 1 px lines every 24 px as the two linear layers it replaced, drawn as one layer.
   grid: {
-    image: 'repeating-linear-gradient(0deg,currentColor 0 1px,transparent 1px 24px),repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 24px)',
-    size: 'auto',
+    image: 'conic-gradient(from 90deg at 1px 1px,transparent 90deg,currentColor 0)',
+    strong: 'conic-gradient(from 90deg at 2px 2px,transparent 90deg,currentColor 0)',
+    size: '24px 24px', render: 0.9,
   },
-  dots:           {image: 'radial-gradient(circle at center,currentColor 0 1.5px,transparent 2px)', size: '12px 12px'},
+  dots: {
+    image: 'radial-gradient(circle at center,currentColor 0 1.5px,transparent 2px)',
+    strong: 'radial-gradient(circle at center,currentColor 0 2.1px,transparent 2.6px)',
+    size: '12px 12px', render: 0.9,
+  },
 }
 
-/** The opacity the section texture renders at, and the one `validateWcag` blends. */
+/** The opacity `validateWcag` sweeps the light texture at (`textureOnLight`); the layer renders at this
+ *  times its tile's render scale. */
 export const SECTION_TEXTURE_OPACITY = 0.04
 /** The scrim a photo band draws over its photograph (`bg-scrim/80`, `SectionShell`): 80% is the
  *  lightest at which every text tier holds over pure white on every palette (Phase 17B session 6). */
@@ -1076,7 +1124,10 @@ export function buildDesignTokenCSS({
     : ''
   const taglineVars = Object.entries(tagline).map(([k, v]) => `${k}:${v};`).join('')
   const texture = SECTION_TEXTURE_MAP[(patternTexture ?? '') as SectionTexture]
-  const textureVars = `--section-texture-image:${texture?.image ?? 'none'};--section-texture-size:${texture?.size ?? 'auto'};`
+  const textureVars =
+    `--section-texture-image:${texture?.image ?? 'none'};--section-texture-image-strong:${texture?.strong ?? 'none'};` +
+    `--section-texture-size:${texture?.size ?? 'auto'};--section-texture-render:${texture?.render ?? 1};` +
+    `--section-texture-opacity:${SECTION_TEXTURE_OPACITY};`
   const emphasis = HEADING_EMPHASIS_MAP[headingEmphasisStyle ?? ''] ?? HEADING_EMPHASIS_MAP.color
   const hcase    = HEADING_CASE_MAP[headingCase ?? '']          ?? HEADING_CASE_MAP.normal
   // Capitals set smaller by what the face needs (`[R-536]`, Phase 17C session 2b): the pairing's

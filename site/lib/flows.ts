@@ -66,6 +66,11 @@ export const DARK_RHYTHMS = ['alternate', 'pairs', 'runs', 'bookends'] as const
 export const DARK_PAINTS = ['plain', 'pattern', 'gradient', 'gradientPerBand', 'photo', 'saturated', 'heroPhoto'] as const
 export const CLOSES = ['dark', 'saturated', 'muted', 'photo'] as const
 export const LIGHT_PAINTS = ['plain', 'washes', 'pattern', 'panel'] as const
+/** The texture's strength where a paint is `pattern` (Phase 17C session 3, `[R-538]`): the style set's
+ *  one tile as it shipped, the same motif at twice the ink, or the two in turn down the page (the bands
+ *  the paint textures, in order: quiet, strong, quiet). Every other paint names `quiet`. */
+export const TEXTURE_STRENGTHS = ['quiet', 'strong', 'alternate'] as const
+export type TextureStrength = (typeof TEXTURE_STRENGTHS)[number]
 export const DIVIDER_ATS = ['intoDark', 'everyChange', 'none'] as const
 export const HAIRLINES = ['none', 'atChange', 'everyBand'] as const
 /** The hairline's ink (Phase 17B session 5, `[R-524]`): the border token, or the accent. The
@@ -117,6 +122,8 @@ export type FlowRules = {
      *  beside another photograph and at most twice a page, else the dark ground (`heroPhoto`,
      *  Phase 17B session 6, `[R-530]`). */
     paint: (typeof DARK_PAINTS)[number]
+    /** The texture's strength on the bands the `pattern` paint textures (`TEXTURE_STRENGTHS`). */
+    texture: TextureStrength
     /** The closing call to action's ground; `photo` is a window of the hero's photograph where
      *  the site has an approved one, else the dark ground. */
     close: (typeof CLOSES)[number]
@@ -125,6 +132,8 @@ export type FlowRules = {
     /** Light bands: one ground; light and tint alternating; textured; or, inside a dark run,
      *  an inset panel that adopts the run (`[R-501]`) where the band stores no `inset`. */
     paint: (typeof LIGHT_PAINTS)[number]
+    /** The texture's strength on the light bands a `pattern` paint textures. */
+    texture: TextureStrength
   }
   divider: {
     /** `lib/dividers.ts`; `straight` draws none. */
@@ -252,8 +261,8 @@ export const FAMILIES: readonly FlowFamily[] = [
     sentence: 'A dark hero, then light all the way down, and one dark band to close.',
     steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', close: 'dark'},
-      light: {paint: 'plain'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark'},
+      light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
       ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME[step],
     }),
@@ -274,8 +283,8 @@ export const FAMILIES: readonly FlowFamily[] = [
     // their dark bands into runs, which is Cut blocks' rhythm.
     steps: ['balanced'], defaultStep: 'balanced', passed: ['balanced'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: 'pairs', paint: 'plain', close: 'dark'},
-      light: {paint: 'plain'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: 'pairs', paint: 'plain', texture: 'quiet', close: 'dark'},
+      light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
       ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME[step],
     }),
@@ -286,8 +295,9 @@ export const FAMILIES: readonly FlowFamily[] = [
     // The study: dark 5, balanced 2.
     steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: ['balanced', 'mostlyDark'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'pattern', close: 'dark'},
-      light: {paint: 'plain'},
+      // Phase 17C session 3 (`[R-538]`): its textured bands alternate quiet and strong.
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'pattern', texture: 'alternate', close: 'dark'},
+      light: {paint: 'plain', texture: 'quiet'},
       divider: {shape: 'peak', at: 'intoDark', carry: ['cards'], hairline: 'none', hairlineInk: 'border'}, spacing: 'normal',
       ghost: 'none', overlap: 'photo', needs: ['texture'], chrome: STEP_CHROME[step],
     }),
@@ -303,8 +313,8 @@ export const FAMILIES: readonly FlowFamily[] = [
     // dark or photo hero, which the composer writes and a theme cannot reach.
     steps: ['allDark'], defaultStep: 'allDark', passed: ['allDark'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', close: 'dark'},
-      light: {paint: 'plain'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark'},
+      light: {paint: 'plain', texture: 'quiet'},
       divider: {shape: 'straight', at: 'none', carry: [], hairline: 'everyBand', hairlineInk: 'accent'}, spacing: 'normal',
       ghost: 'none', overlap: 'none', needs: ['darkHero'], chrome: STEP_CHROME[step],
     }),
@@ -318,8 +328,9 @@ export const FAMILIES: readonly FlowFamily[] = [
     // study draws initials; the evidenced large mark is the logo, backlog 350).
     steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', close: 'muted'},
-      light: {paint: 'pattern'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'muted'},
+      // Phase 17C session 3 (`[R-538]`): its light bands at the quiet strength.
+      light: {paint: 'pattern', texture: 'quiet'},
       divider: {shape: 'straight', at: 'none', carry: [], hairline: 'everyBand', hairlineInk: 'border'}, spacing: 'spacious',
       ghost: 'none', overlap: 'none', needs: ['texture'], chrome: {header: 'light', footer: 'light'},
     }),
@@ -333,8 +344,8 @@ export const FAMILIES: readonly FlowFamily[] = [
     // which is the story's to fix (backlog 364), not this family's.
     steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
     rules: (step) => ({
-      dark: {budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', close: 'dark'},
-      light: {paint: 'plain'},
+      dark: {budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', texture: 'quiet', close: 'dark'},
+      light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
       ghost: 'none', overlap: 'none', needs: ['ribbons'], chrome: STEP_CHROME[step],
     }),
@@ -352,8 +363,8 @@ export const FAMILIES: readonly FlowFamily[] = [
     // photo bands, and the family's sites are all mostly dark.
     steps: ['mostlyDark'], defaultStep: 'mostlyDark', passed: ['mostlyDark'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'heroPhoto', close: 'photo'},
-      light: {paint: 'plain'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'heroPhoto', texture: 'quiet', close: 'photo'},
+      light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
       ghost: 'none', overlap: 'none', needs: ['heroPhoto'], chrome: STEP_CHROME[step],
     }),
@@ -437,8 +448,8 @@ export function bridgeOf(d: Record<string, unknown>): FlowRules {
   return {
     id: 'stored.bridge', name: 'As stored', family: 'stored', step: 'mostlyLight', passed: false,
     sentence: 'The page as the six retired fields stored it, until Apply writes a theme.',
-    dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: d.sectionGradient === 'deep' ? 'gradient' : 'plain', close: 'muted'},
-    light: {paint: 'plain'},
+    dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: d.sectionGradient === 'deep' ? 'gradient' : 'plain', texture: 'quiet', close: 'muted'},
+    light: {paint: 'plain', texture: 'quiet'},
     divider: {shape, at: 'intoDark', carry: readCarry(d.dividerCarry), hairline: 'none', hairlineInk: 'border'},
     spacing: 'normal',
     ghost: d.brandGhost === 'on' ? 'once' : 'none',

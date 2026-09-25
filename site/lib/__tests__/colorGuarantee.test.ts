@@ -87,6 +87,20 @@ describe('color guarantee: every blocking pair passes for any operator input', (
     expectNone(Object.entries(named).flatMap(([name, inputs]) => failures(name, inputs)))
   })
 
+  // Phase 17C session 3: a palette the light-tier solve once left at 4.48:1 on the texture's blend,
+  // because the texture was checked but not solved against (ADV-17C3-B). The solve takes the texture's
+  // blend as a ground of its own now; every other palette resolves exactly as before (record §8).
+  it('the texture blend is a ground the light tiers are solved against, not only checked on', () => {
+    expectNone(failures('texture-hole', {darkGround: '#0d0924', lightGround: '#fc58fa', accent: '#ed56ce', action: '#a157a1'}))
+  })
+
+  it('the render margin reaches a dark band only where its ink is lighter than the ground', () => {
+    // Every preset solves a black ink, which only raises contrast, so its dark bands render as solved.
+    for (const p of PALETTE_PRESETS) expect(resolvePalette(presetInputs(p)).tokens['--section-texture-dark-margin'], p.id).toBe('0')
+    // A black ground can go no darker, so its ink is the on-dark text color, lighter than the ground.
+    expect(resolvePalette({darkGround: '#000000', accent: '#c8102e'}).tokens['--section-texture-dark-margin']).toBe('1')
+  })
+
   it('accent-text keeps the accent: it reaches its ratio by stepping, never by falling back to brand-dark', () => {
     const fellBack = grid().filter((hex) => {
       const t = resolvePalette({accent: hex}).tokens
