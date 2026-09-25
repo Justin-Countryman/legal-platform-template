@@ -4,24 +4,15 @@
 **Designer:** Steve Matteson  
 **Google Fonts:** https://fonts.google.com/specimen/Open+Sans
 
-Used in preset: **9 — Neutral Professional** (body)
+Used in pairings: **7 — Geometric Precision** (body), **9 — Neutral Professional** (body), **12 — Traditional Fallback** (body), **13 — Heritage Old-Style** (body), **15 — Heritage Voice** (body)
 
-## Files required
+## Files
 
 | File | Weight | Style |
 |------|--------|-------|
-| OpenSans-Regular.woff2 | 400 | normal |
-| OpenSans-SemiBold.woff2 | 600 | normal |
-| OpenSans-Bold.woff2 | 700 | normal |
 | OpenSans-Italic.woff2 | 400 | italic |
+| OpenSans-Regular.woff2 | variable, `wght` 300 to 800 | normal |
 
-## Download instructions
+## How this folder is kept
 
-1. Visit https://fonts.google.com/specimen/Open+Sans
-2. Click **Get font** → **Download all**
-3. Unzip — locate `static/` folder
-4. Copy `.woff2` files for Regular, SemiBold, Bold, and Italic
-5. Rename to match the filenames above and place here
-
-> Open Sans is a variable font — `OpenSans[wdth,wght].woff2` and
-> `OpenSans-Italic[wdth,wght].woff2` serve all weights from two files.
+This family is **variable**: its one upright file carries every weight, and a pairing declares it once across the weights it draws (`fonts/presets.ts` `weights`; 400–700 here), so a weight in between draws as itself. Commit a variable family as ONE file named `<Family>-Regular.woff2`, never as copies under weight names: `fonts/__tests__/presets.test.ts` refuses two identical files and a variable role that names a second upright file. An italic, where committed, is a separate static file declared at 400.

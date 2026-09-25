@@ -4,28 +4,14 @@
 **Designer:** Frank Grießhammer (Adobe)  
 **Google Fonts:** https://fonts.google.com/specimen/Source+Serif+4
 
-Used in preset: **18 — Sovereign Mono** (heading + body, mono-pair)
+Used in pairings: **18 — Sovereign Mono** (heading and body)
 
-## Files required
+## Files
 
 | File | Weight | Style |
 |------|--------|-------|
-| SourceSerif4-Regular.woff2 | 400 | normal |
-| SourceSerif4-SemiBold.woff2 | 600 | normal |
+| SourceSerif4-Regular.woff2 | variable, `wght` 200 to 900 | normal |
 
-## Download instructions
+## How this folder is kept
 
-1. Visit https://fonts.google.com/specimen/Source+Serif+4
-2. Click **Get font** → **Download all**
-3. Unzip — locate either the variable file `SourceSerif4[opsz,wght].woff2`
-   or static weights
-4. If using the variable file, copy it under both `SourceSerif4-Regular.woff2`
-   and `SourceSerif4-SemiBold.woff2` filenames (the @font-face declaration
-   binds font-weight to the same source). If using static, copy each weight
-   separately
-5. Place here
-
-> Source Serif 4 is the modernized successor to Source Serif Pro by Adobe.
-> Designed for editorial reading at long form. Google serves the variable
-> woff2 via the standard CSS API — both files are byte-identical when
-> fetched that way.
+This family is **variable**: its one upright file carries every weight, and a pairing declares it once across the weights it draws (`fonts/presets.ts` `weights`; 400–600, 600 here), so a weight in between draws as itself. Commit a variable family as ONE file named `<Family>-Regular.woff2`, never as copies under weight names: `fonts/__tests__/presets.test.ts` refuses two identical files and a variable role that names a second upright file. An italic, where committed, is a separate static file declared at 400.

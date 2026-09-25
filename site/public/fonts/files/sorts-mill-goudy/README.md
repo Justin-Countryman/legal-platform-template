@@ -1,17 +1,17 @@
-# DM Serif Display
+# Sorts Mill Goudy
 
 **License:** SIL OFL 1.1  
-**Designer:** Colophon Foundry  
-**Google Fonts:** https://fonts.google.com/specimen/DM+Serif+Display
+**Designer:** Barry Schwartz  
+**Google Fonts:** https://fonts.google.com/specimen/Sorts+Mill+Goudy
 
-Used in pairings: **2 — Modern Counsel** (heading)
+Used in pairings: **13 — Heritage Old-Style** (heading)
 
 ## Files
 
 | File | Weight | Style |
 |------|--------|-------|
-| DMSerifDisplay-Italic.woff2 | 400 | italic |
-| DMSerifDisplay-Regular.woff2 | 400 | normal |
+| SortsMillGoudy-Italic.woff2 | 400 | italic |
+| SortsMillGoudy-Regular.woff2 | 400 | normal |
 
 ## How this folder is kept
 

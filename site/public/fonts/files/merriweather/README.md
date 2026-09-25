@@ -4,23 +4,15 @@
 **Designer:** Sorkin Type (Eben Sorkin)  
 **Google Fonts:** https://fonts.google.com/specimen/Merriweather
 
-Used in preset: **9 — Neutral Professional** (heading)
+Used in pairings: **9 — Neutral Professional** (heading)
 
-## Files required
+## Files
 
 | File | Weight | Style |
 |------|--------|-------|
-| Merriweather-Regular.woff2 | 400 | normal |
-| Merriweather-Bold.woff2 | 700 | normal |
 | Merriweather-Italic.woff2 | 400 | italic |
+| Merriweather-Regular.woff2 | variable, `wght` 300 to 900 | normal |
 
-## Download instructions
+## How this folder is kept
 
-1. Visit https://fonts.google.com/specimen/Merriweather
-2. Click **Get font** → **Download all**
-3. Unzip — copy the `.woff2` static files
-4. Rename to match the filenames above and place here
-
-> Merriweather is a static (non-variable) font designed for reading long-form
-> text on screens. Its low contrast and generous x-height make it especially
-> legible at body sizes (16–20px).
+This family is **variable**: its one upright file carries every weight, and a pairing declares it once across the weights it draws (`fonts/presets.ts` `weights`; 400–700 here), so a weight in between draws as itself. Commit a variable family as ONE file named `<Family>-Regular.woff2`, never as copies under weight names: `fonts/__tests__/presets.test.ts` refuses two identical files and a variable role that names a second upright file. An italic, where committed, is a separate static file declared at 400.

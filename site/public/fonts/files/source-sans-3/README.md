@@ -4,25 +4,15 @@
 **Designer:** Adobe (Paul D. Hunt)  
 **Google Fonts:** https://fonts.google.com/specimen/Source+Sans+3
 
-Used in presets: **1 — Classical Authority** (body), **11 — Bold Advocate** (body)
+Used in pairings: **1 — Classical Authority** (body), **11 — Bold Advocate** (body)
 
-## Files required
+## Files
 
 | File | Weight | Style |
 |------|--------|-------|
-| SourceSans3-Regular.woff2 | 400 | normal |
-| SourceSans3-SemiBold.woff2 | 600 | normal |
-| SourceSans3-Bold.woff2 | 700 | normal |
 | SourceSans3-Italic.woff2 | 400 | italic |
+| SourceSans3-Regular.woff2 | variable, `wght` 200 to 900 | normal |
 
-## Download instructions
+## How this folder is kept
 
-1. Visit https://fonts.google.com/specimen/Source+Sans+3
-2. Click **Get font** → **Download all**
-3. Unzip — locate the `static/` folder
-4. Copy the `.woff2` files matching the weights above
-5. Rename to match the filenames in the table and place here
-
-> Source Sans 3 is a variable font — the variable woff2 can serve all weights
-> from a single file. Use `SourceSans3[wght].woff2` for the regular axis
-> and `SourceSans3-Italic[wght].woff2` for italic if preferred.
+This family is **variable**: its one upright file carries every weight, and a pairing declares it once across the weights it draws (`fonts/presets.ts` `weights`; 400–600, 400–700 here), so a weight in between draws as itself. Commit a variable family as ONE file named `<Family>-Regular.woff2`, never as copies under weight names: `fonts/__tests__/presets.test.ts` refuses two identical files and a variable role that names a second upright file. An italic, where committed, is a separate static file declared at 400.
