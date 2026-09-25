@@ -334,6 +334,8 @@ const SWITCHER_CSS = `
 .sw-all[open]{flex-basis:100%}
 .sw-all>summary{list-style:none;cursor:pointer}
 .sw-all>summary::-webkit-details-marker{display:none}
+.sw-all>summary::after{content:" \\25B8"}
+.sw-all[open]>summary::after{content:" \\25BE"}
 .sw-why{margin-top:4px}
 .sw-input{flex:1;min-width:240px;background:#222;color:#f5f5f5;border:1px solid #8a8a8a;border-radius:4px;padding:4px 6px;font-size:12px}
 `
