@@ -7,6 +7,37 @@ import {ThemePreview} from '../../components/ThemePreview'
 import {HeadingLinePicker} from '../../components/HeadingLinePicker'
 import {DividerPicker} from '../../components/DividerPicker'
 import {FLOWS, DEFAULT_FLOW} from '../../../site/lib/flows'
+import {readFontKind, variableUploadWarning, type FontFileKind} from '../../../site/fonts/fileKind'
+
+// Phase 17C (`[R-541]`; monorepo WS-V1-PHASE17C2A-DESIGN §7.6 amendment 4): an upload's
+// "Variable font" box, checked against the file itself. The Studio reads the uploaded
+// Regular file's table directory (the first bytes, from the asset CDN) with the reader
+// that guards the committed files, and warns on either mismatch or on a Bold uploaded
+// beside a ticked box. A warning, never a block (`[R-162]`); a file it cannot read says
+// nothing. The page never reads the file: it declares what the box says.
+// The read is cached per file and gives up after four seconds (`readFontKind`), because Sanity
+// re-validates the document on every edit and Publish waits for validation to finish.
+
+function variableFontField(heavier: readonly string[]) {
+  return defineField({
+    name: 'variable',
+    title: 'Variable font',
+    type: 'boolean',
+    description: 'Tick when the Regular file is a variable font: one file that carries every weight, as fonts downloaded from Google Fonts now are. It is then declared across every weight, and a Bold or Semibold file is not used. The Studio reads the file and warns when this box does not match it.',
+    validation: (Rule) =>
+      Rule.custom<boolean>(async (ticked, ctx) => {
+        const font = (ctx.parent ?? {}) as Record<string, {asset?: {_ref?: string}} | undefined>
+        const ref = font.regular?.asset?._ref
+        let kind: FontFileKind = 'unknown'
+        if (ref) {
+          const {projectId, dataset} = ctx.getClient({apiVersion: '2024-01-01'}).config()
+          const [, id, ext] = ref.split('-')
+          kind = await readFontKind(`https://cdn.sanity.io/files/${projectId}/${dataset}/${id}.${ext}`)
+        }
+        return variableUploadWarning(kind, Boolean(ticked), heavier.some((k) => font[k]?.asset)) ?? true
+      }).warning(),
+  })
+}
 
 // Design Settings
 // Visual identity: logos, colors, typography, UI style
@@ -629,15 +660,16 @@ export const designSettings = defineType({
               name: 'regular',
               title: 'Regular (400)',
               type: 'file',
-              description: 'Required. The standard weight file. Variable fonts (.woff2) uploaded here will cover all weights automatically.',
+              description: 'Required. The standard weight file, or one variable font that carries every weight: then tick "Variable font" below.',
               options: {accept: '.woff2,.woff'},
               validation: (Rule) => Rule.required().warning(),
             },
+            variableFontField(['bold']),
             {
               name: 'bold',
               title: 'Bold (700)',
               type: 'file',
-              description: 'Optional. Only needed if using a separate non-variable bold file.',
+              description: 'Optional. A separate bold file, for a font that is not variable. Not used while "Variable font" is ticked.',
               options: {accept: '.woff2,.woff'},
             },
             {
@@ -667,22 +699,23 @@ export const designSettings = defineType({
               name: 'regular',
               title: 'Regular (400)',
               type: 'file',
-              description: 'Required.',
+              description: 'Required. The standard weight file, or one variable font that carries every weight: then tick "Variable font" below.',
               options: {accept: '.woff2,.woff'},
               validation: (Rule) => Rule.required().warning(),
             },
+            variableFontField(['semibold', 'bold']),
             {
               name: 'semibold',
               title: 'Semibold (600)',
               type: 'file',
-              description: 'Optional. Used for subheadings, nav labels, and emphasized UI text.',
+              description: 'Optional. Used for subheadings, nav labels, and emphasized UI text. Not used while "Variable font" is ticked.',
               options: {accept: '.woff2,.woff'},
             },
             {
               name: 'bold',
               title: 'Bold (700)',
               type: 'file',
-              description: 'Optional.',
+              description: 'Optional. Not used while "Variable font" is ticked.',
               options: {accept: '.woff2,.woff'},
             },
             {

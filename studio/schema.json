@@ -18887,6 +18887,13 @@
                     },
                     "optional": true
                   },
+                  "variable": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "boolean"
+                    },
+                    "optional": true
+                  },
                   "bold": {
                     "type": "objectAttribute",
                     "value": {
@@ -18993,6 +19000,13 @@
                           }
                         }
                       }
+                    },
+                    "optional": true
+                  },
+                  "variable": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "boolean"
                     },
                     "optional": true
                   },

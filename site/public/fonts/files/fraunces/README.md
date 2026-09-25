@@ -4,24 +4,15 @@
 **Designer:** Undercase Type (Phaedra Charles, Flavia Zimbardi)  
 **Google Fonts:** https://fonts.google.com/specimen/Fraunces
 
-Used in presets: **4 — Editorial Authority** (heading), **11 — Bold Advocate** (heading)
+Used in pairings: **4 — Editorial Authority** (heading), **11 — Bold Advocate** (heading), **17 — Editorial Statement** (heading and body)
 
-## Files required
+## Files
 
 | File | Weight | Style |
 |------|--------|-------|
-| Fraunces-Regular.woff2 | 400 | normal |
-| Fraunces-Bold.woff2 | 700 | normal |
 | Fraunces-Italic.woff2 | 400 | italic |
+| Fraunces-Regular.woff2 | variable, `wght` 100 to 900 | normal |
 
-## Download instructions
+## How this folder is kept
 
-1. Visit https://fonts.google.com/specimen/Fraunces
-2. Click **Get font** → **Download all**
-3. Unzip — locate `static/` folder
-4. Copy `.woff2` files for Regular, Bold, and Italic
-5. Rename to match the filenames above and place here
-
-> Fraunces is a variable "wonky" serif — it has a distinctive soft wobble in its
-> letterforms that creates a bold, editorial character unlike conventional serifs.
-> Variable axes include `wght`, `SOFT`, and `WONK`.
+This family is **variable**: its one upright file carries every weight, and a pairing declares it once across the weights it draws (`fonts/presets.ts` `weights`; 400–700, 700 here, the page's own faces), so a weight in between draws as itself. Commit a variable family as ONE file named `<Family>-Regular.woff2`, never as copies under weight names: `fonts/__tests__/presets.test.ts` refuses two identical files and a variable role that names a second upright file. An italic, where committed, is a separate static file declared at 400.

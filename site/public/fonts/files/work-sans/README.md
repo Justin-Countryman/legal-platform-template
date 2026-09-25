@@ -4,23 +4,14 @@
 **Designer:** Wei Huang  
 **Google Fonts:** https://fonts.google.com/specimen/Work+Sans
 
-Used in presets: **6 — Humanist Trust** (body), **10 — Accessible Modern** (heading)
+Used in pairings: **6 — Humanist Trust** (body), **10 — Accessible Modern** (heading)
 
-## Files required
+## Files
 
 | File | Weight | Style |
 |------|--------|-------|
-| WorkSans-Regular.woff2 | 400 | normal |
-| WorkSans-SemiBold.woff2 | 600 | normal |
-| WorkSans-Bold.woff2 | 700 | normal |
+| WorkSans-Regular.woff2 | variable, `wght` 100 to 900 | normal |
 
-## Download instructions
+## How this folder is kept
 
-1. Visit https://fonts.google.com/specimen/Work+Sans
-2. Click **Get font** → **Download all**
-3. Unzip — locate `static/` folder
-4. Copy `.woff2` files for Regular, SemiBold, and Bold
-5. Rename to match the filenames above and place here
-
-> Work Sans is a variable font — `WorkSans[wght].woff2` covers all weights.
-> Designed for mid-size text (14–48px), slightly tighter than Inter.
+This family is **variable**: its one upright file carries every weight, and a pairing declares it once across the weights it draws (`fonts/presets.ts` `weights`; 400–700 here, the page's own faces), so a weight in between draws as itself. Commit a variable family as ONE file named `<Family>-Regular.woff2`, never as copies under weight names: `fonts/__tests__/presets.test.ts` refuses two identical files and a variable role that names a second upright file. An italic, where committed, is a separate static file declared at 400.

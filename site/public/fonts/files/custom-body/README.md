@@ -1,25 +1,16 @@
 # Custom Body Font
 
-This folder is the destination for a custom body font uploaded via Sanity Design Settings.
+A placeholder: nothing is committed here and nothing reads this folder.
 
-When a client uploads a body font through the Sanity Studio:
-- The file is stored in Sanity's asset CDN (not this folder)
-- The font is loaded at runtime via `@font-face` injection in the page `<style>` block
-- This folder is a placeholder — no files need to be committed here
+A custom body font is uploaded in the Studio (Design Settings, Custom Fonts, Body Font). Its files are
+Sanity assets on Sanity's CDN, and the page declares them in its `@font-face` rules (`fonts/loader.ts`); an
+upload field holds a file, never a path, so a file placed here cannot be chosen there.
 
-## When to use this folder
+- **A variable font** (one file that carries every weight, as a Google Fonts download now is): upload it as
+  Regular and tick **Variable font**. The page declares it once across every weight; a Bold or Semibold
+  upload beside it is not used. The Studio reads the file and warns when the box does not match it.
+- **Separate weight files**: upload each in its own field and leave the box off; each is declared at its
+  field's weight.
 
-If you want to self-host a custom font instead of using Sanity CDN delivery:
-1. Place the `.woff2` files here with descriptive names
-2. Reference them via the Sanity custom upload fields pointing to `/fonts/files/custom-body/`
-3. Or update the `bodyFont.regular` path in the GROQ query to point here
-
-## Naming convention
-
-```
-CustomFontName-Regular.woff2
-CustomFontName-SemiBold.woff2
-CustomFontName-Bold.woff2
-CustomFontName-Italic.woff2
-CustomFontName-BoldItalic.woff2
-```
+Name uploads plainly, for example `CustomFontName-Regular.woff2`, and `-SemiBold`, `-Bold`, `-Italic` and `-BoldItalic`. A committed pairing's files live in their own folders beside this
+one (`fonts/presets.ts`).

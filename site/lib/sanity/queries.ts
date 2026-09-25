@@ -915,12 +915,14 @@ export const DESIGN_TOKENS_QUERY = groq`
     sidebarItemSeparators,
     "headingFont": customFonts.headingFont{
       name,
+      variable,
       "regular":   regular.asset->url,
       "bold":      bold.asset->url,
       "italic":    italic.asset->url,
     },
     "bodyFont": customFonts.bodyFont{
       name,
+      variable,
       "regular":   regular.asset->url,
       "semibold":  semibold.asset->url,
       "bold":      bold.asset->url,

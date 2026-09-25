@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest'
-import {FONT_PRESETS} from '../../fonts/presets'
+import {FONT_PRESETS, headingWeights} from '../../fonts/presets'
 import {CORNER_FAMILIES} from '../corners'
 import {PALETTE_PRESETS} from '../palettes'
 import {
@@ -94,7 +94,7 @@ function presets() {
       headingItalic: f.heading.italic,
       // What the face can draw, so Python reads a weight the way the site renders it, and
       // its voice, so it can measure how far apart two themes are (Phase 16C).
-      headingWeights: f.heading.weights,
+      headingWeights: headingWeights(f),
       headingVoice: f.heading.voice,
     })),
     matchCases: cases(),

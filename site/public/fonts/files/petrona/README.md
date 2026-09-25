@@ -4,27 +4,14 @@
 **Designer:** Andrés Torresi  
 **Google Fonts:** https://fonts.google.com/specimen/Petrona
 
-Used in preset: **16 — Stately Modern** (heading)
+Used in pairings: **16 — Stately Modern** (heading)
 
-## Files required
+## Files
 
 | File | Weight | Style |
 |------|--------|-------|
-| Petrona-Regular.woff2 | 400 | normal |
-| Petrona-Bold.woff2 | 700 | normal |
+| Petrona-Regular.woff2 | variable, `wght` 400 to 900 | normal |
 
-## Download instructions
+## How this folder is kept
 
-1. Visit https://fonts.google.com/specimen/Petrona
-2. Click **Get font** → **Download all**
-3. Unzip — locate either the variable file `Petrona[wght].woff2` or static
-   weights
-4. If using the variable file, copy it under both `Petrona-Regular.woff2`
-   and `Petrona-Bold.woff2` filenames (the @font-face declaration binds
-   font-weight to the same source). If using static, copy each weight
-   separately
-5. Place here
-
-> Petrona is a contemporary transitional serif with strong editorial bones.
-> Google Fonts serves the variable woff2 via the standard CSS API — both
-> files are byte-identical when fetched that way.
+This family is **variable**: its one upright file carries every weight, and a pairing declares it once across the weights it draws (`fonts/presets.ts` `weights`; 400–700 here, the page's own faces), so a weight in between draws as itself. Commit a variable family as ONE file named `<Family>-Regular.woff2`, never as copies under weight names: `fonts/__tests__/presets.test.ts` refuses two identical files and a variable role that names a second upright file. An italic, where committed, is a separate static file declared at 400.

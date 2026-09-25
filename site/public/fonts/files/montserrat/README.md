@@ -4,24 +4,15 @@
 **Designer:** Julieta Ulanovsky  
 **Google Fonts:** https://fonts.google.com/specimen/Montserrat
 
-Used in presets: **5 — Corporate Clarity** (body), **7 — Geometric Precision** (heading)
+Used in pairings: **5 — Corporate Clarity** (body), **7 — Geometric Precision** (heading)
 
-## Files required
+## Files
 
 | File | Weight | Style |
 |------|--------|-------|
-| Montserrat-Regular.woff2 | 400 | normal |
-| Montserrat-SemiBold.woff2 | 600 | normal |
-| Montserrat-Bold.woff2 | 700 | normal |
 | Montserrat-Italic.woff2 | 400 | italic |
+| Montserrat-Regular.woff2 | variable, `wght` 100 to 900 | normal |
 
-## Download instructions
+## How this folder is kept
 
-1. Visit https://fonts.google.com/specimen/Montserrat
-2. Click **Get font** → **Download all**
-3. Unzip — locate `static/` folder
-4. Copy `.woff2` files for Regular, SemiBold, Bold, and Italic
-5. Rename to match the filenames above and place here
-
-> Montserrat is a variable font — `Montserrat[wght].woff2` and
-> `Montserrat-Italic[wght].woff2` can serve all weights from two files.
+This family is **variable**: its one upright file carries every weight, and a pairing declares it once across the weights it draws (`fonts/presets.ts` `weights`; 400–700 here, the page's own faces), so a weight in between draws as itself. Commit a variable family as ONE file named `<Family>-Regular.woff2`, never as copies under weight names: `fonts/__tests__/presets.test.ts` refuses two identical files and a variable role that names a second upright file. An italic, where committed, is a separate static file declared at 400.

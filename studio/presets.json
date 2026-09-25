@@ -842,6 +842,8 @@
       "body": "Poppins",
       "headingItalic": false,
       "headingWeights": [
+        "400",
+        "600",
         "700"
       ],
       "headingVoice": "geometric sans"
@@ -877,6 +879,7 @@
       "body": "Fraunces",
       "headingItalic": false,
       "headingWeights": [
+        "400",
         "700"
       ],
       "headingVoice": "soft serif"
@@ -888,6 +891,7 @@
       "body": "Source Serif 4",
       "headingItalic": false,
       "headingWeights": [
+        "400",
         "600"
       ],
       "headingVoice": "transitional serif"

@@ -4,25 +4,15 @@
 **Designer:** Google (Christian Robertson)  
 **Google Fonts:** https://fonts.google.com/specimen/Roboto
 
-Used in preset: **10 — Accessible Modern** (body)
+Used in pairings: **10 — Accessible Modern** (body)
 
-## Files required
+## Files
 
 | File | Weight | Style |
 |------|--------|-------|
-| Roboto-Regular.woff2 | 400 | normal |
-| Roboto-Medium.woff2 | 500 | normal |
-| Roboto-Bold.woff2 | 700 | normal |
 | Roboto-Italic.woff2 | 400 | italic |
+| Roboto-Regular.woff2 | variable, `wght` 100 to 900 | normal |
 
-## Download instructions
+## How this folder is kept
 
-1. Visit https://fonts.google.com/specimen/Roboto
-2. Click **Get font** → **Download all**
-3. Unzip — locate `static/` folder
-4. Copy `.woff2` files for Regular, Medium, Bold, and Italic
-5. Rename to match the filenames above and place here
-
-> Note: Roboto uses the Apache License 2.0, not OFL — both are free for
-> commercial use. The roboto v3 (2022) is a variable font;
-> `Roboto[wdth,wght].woff2` covers all weights from a single file.
+This family is **variable**: its one upright file carries every weight, and a pairing declares it once across the weights it draws (`fonts/presets.ts` `weights`; 400–700 here, the page's own faces), so a weight in between draws as itself. Commit a variable family as ONE file named `<Family>-Regular.woff2`, never as copies under weight names: `fonts/__tests__/presets.test.ts` refuses two identical files and a variable role that names a second upright file. An italic, where committed, is a separate static file declared at 400.

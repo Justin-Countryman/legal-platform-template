@@ -3,6 +3,15 @@
 // Files are committed to site/public/fonts/files/<slug>/ — see README in each
 // folder. Google Fonts OFL license applies to all presets.
 //
+// A VARIABLE family is committed as ONE file, its `-Regular.woff2`, which carries every
+// weight; a variable role names only that file (and a static italic), and the page
+// declares it once across the role's `weights` (lib/designTokens.ts `buildFontFaces`).
+// Phase 17C (`[R-540]`, `[R-541]`): each family used to be committed as byte-identical
+// copies under Bold and SemiBold names, a page fetched every copy it used, and a weight
+// between two copies snapped to one of them. `fonts/__tests__/presets.test.ts` reads the
+// files and refuses two identical ones, a flag that disagrees with its file, and a
+// variable role naming more than one upright file.
+//
 // Id allocation history (see BI/OUTSTANDING.md → "Font preset library audit"):
 //   1-13  — original library (id 13 = Heritage Old-Style, the canonical preset)
 //   3, 8  — culled in WS-Polish (Refined Practice, Space Age Authority);
@@ -30,11 +39,16 @@ export interface FontPreset {
      *  are (Phase 16C, `[R-487]`): two pairings in one voice are not a difference a visitor
      *  can name. */
     voice: HeadingVoice
+    /** The weights the pairing draws in this role. A variable role is declared once across
+     *  them (lowest to highest), so a weight between draws as itself and one outside clamps
+     *  to the nearer end; a static role declares one face per file. */
     weights: string[]
     italic: boolean
+    /** True when `files.regular` is a variable font (read from the file by the test). */
     variable: boolean
     files: {
       regular: string
+      /** A static family's separate bold file; a variable role has none. */
       bold?: string
       italic?: string
     }
@@ -68,10 +82,9 @@ export const FONT_PRESETS: FontPreset[] = [
       slug: 'playfair-display',
       weights: ['400', '700'],
       italic: true,
-      variable: false,
+      variable: true,
       files: {
         regular: '/fonts/files/playfair-display/PlayfairDisplay-Regular.woff2',
-        bold:    '/fonts/files/playfair-display/PlayfairDisplay-Bold.woff2',
         italic:  '/fonts/files/playfair-display/PlayfairDisplay-Italic.woff2',
       },
     },
@@ -83,8 +96,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular:   '/fonts/files/source-sans-3/SourceSans3-Regular.woff2',
-        semibold:  '/fonts/files/source-sans-3/SourceSans3-SemiBold.woff2',
-        bold:      '/fonts/files/source-sans-3/SourceSans3-Bold.woff2',
         italic:    '/fonts/files/source-sans-3/SourceSans3-Italic.woff2',
       },
     },
@@ -114,8 +125,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular: '/fonts/files/dm-sans/DMSans-Regular.woff2',
-        medium:  '/fonts/files/dm-sans/DMSans-Medium.woff2',
-        bold:    '/fonts/files/dm-sans/DMSans-Bold.woff2',
         italic:  '/fonts/files/dm-sans/DMSans-Italic.woff2',
       },
     },
@@ -135,7 +144,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular: '/fonts/files/fraunces/Fraunces-Regular.woff2',
-        bold:    '/fonts/files/fraunces/Fraunces-Bold.woff2',
         italic:  '/fonts/files/fraunces/Fraunces-Italic.woff2',
       },
     },
@@ -147,8 +155,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular:  '/fonts/files/inter/Inter-Regular.woff2',
-        semibold: '/fonts/files/inter/Inter-SemiBold.woff2',
-        bold:     '/fonts/files/inter/Inter-Bold.woff2',
       },
     },
     tone: 'Bold, distinctive, editorial',
@@ -163,10 +169,9 @@ export const FONT_PRESETS: FontPreset[] = [
       slug: 'libre-baskerville',
       weights: ['400', '700'],
       italic: true,
-      variable: false,
+      variable: true,
       files: {
         regular: '/fonts/files/libre-baskerville/LibreBaskerville-Regular.woff2',
-        bold:    '/fonts/files/libre-baskerville/LibreBaskerville-Bold.woff2',
         italic:  '/fonts/files/libre-baskerville/LibreBaskerville-Italic.woff2',
       },
     },
@@ -178,8 +183,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular:   '/fonts/files/montserrat/Montserrat-Regular.woff2',
-        semibold:  '/fonts/files/montserrat/Montserrat-SemiBold.woff2',
-        bold:      '/fonts/files/montserrat/Montserrat-Bold.woff2',
         italic:    '/fonts/files/montserrat/Montserrat-Italic.woff2',
       },
     },
@@ -198,20 +201,17 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular: '/fonts/files/lora/Lora-Regular.woff2',
-        bold:    '/fonts/files/lora/Lora-Bold.woff2',
         italic:  '/fonts/files/lora/Lora-Italic.woff2',
       },
     },
     body: {
       family: 'Work Sans',
       slug: 'work-sans',
-      weights: ['400', '500', '600'],
+      weights: ['400', '500', '600', '700'],
       italic: false,
       variable: true,
       files: {
         regular:  '/fonts/files/work-sans/WorkSans-Regular.woff2',
-        semibold: '/fonts/files/work-sans/WorkSans-SemiBold.woff2',
-        bold:     '/fonts/files/work-sans/WorkSans-Bold.woff2',
       },
     },
     tone: 'Warm, trustworthy, community-oriented',
@@ -232,7 +232,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular: '/fonts/files/montserrat/Montserrat-Regular.woff2',
-        bold:    '/fonts/files/montserrat/Montserrat-Bold.woff2',
       },
     },
     body: {
@@ -243,8 +242,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular:   '/fonts/files/open-sans/OpenSans-Regular.woff2',
-        semibold:  '/fonts/files/open-sans/OpenSans-SemiBold.woff2',
-        bold:      '/fonts/files/open-sans/OpenSans-Bold.woff2',
         italic:    '/fonts/files/open-sans/OpenSans-Italic.woff2',
       },
     },
@@ -261,10 +258,9 @@ export const FONT_PRESETS: FontPreset[] = [
       slug: 'merriweather',
       weights: ['400', '700'],
       italic: true,
-      variable: false,
+      variable: true,
       files: {
         regular: '/fonts/files/merriweather/Merriweather-Regular.woff2',
-        bold:    '/fonts/files/merriweather/Merriweather-Bold.woff2',
         italic:  '/fonts/files/merriweather/Merriweather-Italic.woff2',
       },
     },
@@ -276,8 +272,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular:   '/fonts/files/open-sans/OpenSans-Regular.woff2',
-        semibold:  '/fonts/files/open-sans/OpenSans-SemiBold.woff2',
-        bold:      '/fonts/files/open-sans/OpenSans-Bold.woff2',
         italic:    '/fonts/files/open-sans/OpenSans-Italic.woff2',
       },
     },
@@ -296,7 +290,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular: '/fonts/files/work-sans/WorkSans-Regular.woff2',
-        bold:    '/fonts/files/work-sans/WorkSans-Bold.woff2',
       },
     },
     body: {
@@ -304,11 +297,9 @@ export const FONT_PRESETS: FontPreset[] = [
       slug: 'roboto',
       weights: ['400', '500', '700'],
       italic: true,
-      variable: false,
+      variable: true,
       files: {
         regular: '/fonts/files/roboto/Roboto-Regular.woff2',
-        medium:  '/fonts/files/roboto/Roboto-Medium.woff2',
-        bold:    '/fonts/files/roboto/Roboto-Bold.woff2',
         italic:  '/fonts/files/roboto/Roboto-Italic.woff2',
       },
     },
@@ -326,7 +317,7 @@ export const FONT_PRESETS: FontPreset[] = [
       italic: false,
       variable: true,
       files: {
-        regular: '/fonts/files/fraunces/Fraunces-Bold.woff2',
+        regular: '/fonts/files/fraunces/Fraunces-Regular.woff2',
       },
     },
     body: {
@@ -337,7 +328,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular:  '/fonts/files/source-sans-3/SourceSans3-Regular.woff2',
-        semibold: '/fonts/files/source-sans-3/SourceSans3-SemiBold.woff2',
         italic:   '/fonts/files/source-sans-3/SourceSans3-Italic.woff2',
       },
     },
@@ -356,10 +346,9 @@ export const FONT_PRESETS: FontPreset[] = [
       slug: 'libre-baskerville',
       weights: ['400', '700'],
       italic: true,
-      variable: false,
+      variable: true,
       files: {
         regular: '/fonts/files/libre-baskerville/LibreBaskerville-Regular.woff2',
-        bold:    '/fonts/files/libre-baskerville/LibreBaskerville-Bold.woff2',
         italic:  '/fonts/files/libre-baskerville/LibreBaskerville-Italic.woff2',
       },
     },
@@ -371,8 +360,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular:   '/fonts/files/open-sans/OpenSans-Regular.woff2',
-        semibold:  '/fonts/files/open-sans/OpenSans-SemiBold.woff2',
-        bold:      '/fonts/files/open-sans/OpenSans-Bold.woff2',
         italic:    '/fonts/files/open-sans/OpenSans-Italic.woff2',
       },
     },
@@ -405,8 +392,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular:   '/fonts/files/open-sans/OpenSans-Regular.woff2',
-        semibold:  '/fonts/files/open-sans/OpenSans-SemiBold.woff2',
-        bold:      '/fonts/files/open-sans/OpenSans-Bold.woff2',
         italic:    '/fonts/files/open-sans/OpenSans-Italic.woff2',
       },
     },
@@ -475,8 +460,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular:   '/fonts/files/open-sans/OpenSans-Regular.woff2',
-        semibold:  '/fonts/files/open-sans/OpenSans-SemiBold.woff2',
-        bold:      '/fonts/files/open-sans/OpenSans-Bold.woff2',
         italic:    '/fonts/files/open-sans/OpenSans-Italic.woff2',
       },
     },
@@ -495,7 +478,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular: '/fonts/files/petrona/Petrona-Regular.woff2',
-        bold:    '/fonts/files/petrona/Petrona-Bold.woff2',
       },
     },
     body: {
@@ -506,8 +488,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular:  '/fonts/files/inter/Inter-Regular.woff2',
-        semibold: '/fonts/files/inter/Inter-SemiBold.woff2',
-        bold:     '/fonts/files/inter/Inter-Bold.woff2',
       },
     },
     tone: 'Editorial-serif contemporary, UI-clean body — distinguished but distinct',
@@ -524,7 +504,7 @@ export const FONT_PRESETS: FontPreset[] = [
       italic: false,
       variable: true,
       files: {
-        regular: '/fonts/files/fraunces/Fraunces-Bold.woff2',
+        regular: '/fonts/files/fraunces/Fraunces-Regular.woff2',
       },
     },
     body: {
@@ -552,7 +532,7 @@ export const FONT_PRESETS: FontPreset[] = [
       italic: false,
       variable: true,
       files: {
-        regular: '/fonts/files/source-serif-4/SourceSerif4-SemiBold.woff2',
+        regular: '/fonts/files/source-serif-4/SourceSerif4-Regular.woff2',
       },
     },
     body: {
@@ -563,7 +543,6 @@ export const FONT_PRESETS: FontPreset[] = [
       variable: true,
       files: {
         regular:  '/fonts/files/source-serif-4/SourceSerif4-Regular.woff2',
-        semibold: '/fonts/files/source-serif-4/SourceSerif4-SemiBold.woff2',
       },
     },
     tone: 'Reserved editorial mono-pair, Adobe-modernized classical serif',
@@ -573,4 +552,13 @@ export const FONT_PRESETS: FontPreset[] = [
 
 export function getPresetById(id: number): FontPreset | undefined {
   return FONT_PRESETS.find((p) => p.id === id)
+}
+
+/** The weights a pairing's HEADING can draw. The page matches faces by family name, not by
+ *  role, so where heading and body share a family (pairings 14, 17, 18) the body's weights
+ *  are the heading's too: 17's heading, listed bold only, draws its regular through the
+ *  body's face. `drawableWeight` and `studio/presets.json` read this (ADV-17C2A-2). */
+export function headingWeights(p: FontPreset): string[] {
+  const all = p.heading.family === p.body.family ? [...p.heading.weights, ...p.body.weights] : p.heading.weights
+  return [...new Set(all)].sort((a, b) => Number(a) - Number(b))
 }
