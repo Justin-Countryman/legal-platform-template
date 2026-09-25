@@ -276,7 +276,8 @@ function measure() {
         bg: cs.backgroundColor,
         ink: cs.color,
         classes: [...s.classList].filter(keep).sort(),
-        texture: !!s.querySelector('[data-section-texture]'),
+        // The texture's strength (Phase 17C session 3, `[R-538]`), or false where the band has none.
+        texture: s.querySelector('[data-section-texture]')?.getAttribute('data-section-texture') || false,
         ghost: !!s.querySelector('[data-decor-layer]'),
         // Phase 17B session 6: the window of the hero's photograph, recorded only where a band shows one.
         ...(s.querySelector('[data-photo-window]') ? {window: s.querySelector('[data-photo-window]').getAttribute('data-photo-window')} : {}),
