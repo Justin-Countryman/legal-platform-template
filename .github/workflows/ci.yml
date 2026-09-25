@@ -595,21 +595,21 @@ jobs:
           key: playwright-${{ runner.os }}-${{ hashFiles('site/package-lock.json') }}
       - name: Install the Playwright browser
         working-directory: site
-        run: npx playwright install --with-deps chromium
-      - name: The flow metrics golden at 1440 and 390 (built and served)
-        working-directory: site
-        run: node scripts/ci/flow-metrics.mjs --out flow-captures
+        run: npx playwright install --with-deps chromium webkit
       # Phase 17C session 3 (monorepo WS-V1-PHASE17C3-DESIGN §2.1): the heading width table a
       # heading's fit reads, re-measured from the committed faces; a changed font file is red here.
       - name: The heading width table matches the committed faces
         working-directory: site
         run: node scripts/ci/heading-advances.mjs
       # Phase 17C session 3 (monorepo WS-V1-PHASE17C3-DESIGN §2.3): every texture tile at every
-      # strength, as the headless shell and full Chromium draw it, no darker than the blend
-      # validateWcag sweeps, over the presets and the near-threshold palettes.
+      # strength and the ghost, as the headless shell, full Chromium and WebKit draw them, no darker
+      # than the blend validateWcag sweeps, over the presets and the near-threshold palettes.
       - name: The texture pixels (both raster paths)
         working-directory: site
         run: node scripts/ci/texture-pixels.mjs
+      - name: The flow metrics golden at 1440 and 390 (built and served)
+        working-directory: site
+        run: node scripts/ci/flow-metrics.mjs --out flow-captures
       - name: Upload the captures for the eye
         if: always()
         uses: actions/upload-artifact@v4
