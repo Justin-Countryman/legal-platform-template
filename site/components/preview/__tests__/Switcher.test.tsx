@@ -245,3 +245,52 @@ describe('the style-set row after the roster of eight', () => {
     expect(c.textContent).toContain('no longer offered')
   })
 })
+
+// Phase 17C session 3 (`[R-537]`): the meeting's preselection, three first with the reason, the rest behind "All".
+describe('the meeting’s preselection', () => {
+  const suggest = {
+    styleSet: {ids: ['iron', 'flint', 'graphite'], why: 'A fight tone: capitals first.'},
+    palette: {ids: ['black-gold', 'navy-brass', 'navy-ice'], why: 'The study’s three commonest pairs.'},
+  }
+  const rowOf = (el: Element, head: string) => [...el.querySelectorAll('.sw-row')].find((r) => r.querySelector('.sw-head')?.textContent === head)!
+  const firstLinks = (row: Element) => [...row.children].filter((c) => c.tagName === 'A').map((a) => a.textContent)
+
+  it('shows the suggested three first with the reason, and the rest behind All', () => {
+    const c = draw({...operator, suggest})
+    const styles = rowOf(c, 'Style set')
+    expect(firstLinks(styles)).toEqual([expect.stringContaining('As the site is'), 'Iron', 'Flint', 'Graphite'])
+    const all = styles.querySelector('details.sw-all')!
+    expect(all.querySelector('summary')!.textContent).toBe(`All (${STYLE_SETS.length - 3} more)`)
+    expect(all.querySelectorAll('a')).toHaveLength(STYLE_SETS.length - 3)
+    expect(firstLinks(rowOf(c, 'Palette')).slice(1)).toEqual(['Black & Gold', 'Navy & Brass', 'Navy & Ice'])
+    expect(c.textContent).toContain('Suggested first: A fight tone: capitals first.')
+    // Every choice is still one click away.
+    const links = hrefs(c)
+    for (const t of STYLE_SETS) expect(links).toContain(`/site-preview/${t.id}/navy-brass/site/design`)
+  })
+
+  it('opens All when the active choice is among the rest', () => {
+    const c = draw({...operator, suggest}, stored, {...choices, styleSet: 'birch'})
+    expect(rowOf(c, 'Style set').querySelector('details.sw-all')!.hasAttribute('open')).toBe(true)
+  })
+
+  it('drops an id this roster does not offer, retired or unknown, and shows the whole row with none left', () => {
+    const c = draw({...operator, suggest: {styleSet: {ids: ['canyon', 'iron', 'nope'], why: 'x'}}})
+    expect(firstLinks(rowOf(c, 'Style set')).slice(1)).toEqual(['Iron'])
+    const none = draw({...operator, suggest: {styleSet: {ids: ['canyon', 'nope'], why: 'x'}}})
+    expect(rowOf(none, 'Style set').querySelector('details')).toBeNull()
+    expect(none.textContent).not.toContain('Suggested first')
+  })
+
+  it('shows the whole roster without a suggestion, as before', () => {
+    const c = draw(operator)
+    expect(c.querySelector('details.sw-all')).toBeNull()
+    expect(firstLinks(rowOf(c, 'Style set'))).toHaveLength(STYLE_SETS.length + 1)
+  })
+
+  it('a client sees one line, whatever its grant carried', () => {
+    const c = draw({...client, suggest} as PreviewGrant)
+    expect(c.querySelectorAll('.sw-row')).toHaveLength(0)
+    expect(c.textContent).not.toContain('Suggested first')
+  })
+})
