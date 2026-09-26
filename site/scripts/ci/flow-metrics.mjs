@@ -63,6 +63,13 @@
 // width. The long-headings canvas is measured at 768 too, and there no heading passes four lines, at
 // the readable floor or not (a stacked heading never needs the floor's extra line), and every heading
 // column that can sit beside content (`.heading-grows`) spans its row.
+//
+// THE SMALL LAPTOP (`[R-549]`, Justin 2026-09-25: "the highest quality and best experience no matter what
+// the screensize"). The stack reaches `xl` (1280 px); a stacked reading layout centers at the template's
+// 768 px single column, its body text keeps a 34rem measure, and a stacked photo stays inside the screen.
+// The canvas is measured at 1024 and 1279 (the widest stacked width) too: no heading passes three lines
+// there, at the floor or not; and at 768, 1024 and 1279 nothing sits beside a heading column, none is
+// wider than 768 px, no body text is wider than 34rem, and no stacked photo is taller than the cap.
 
 import {createHmac} from 'node:crypto'
 import {spawn} from 'node:child_process'
@@ -135,6 +142,12 @@ const WIDTHS = [
   ['390', {viewport: {width: 390, height: 844}, isMobile: true, hasTouch: true}],
 ]
 const TABLET = ['768', {viewport: {width: 768, height: 1024}, isMobile: true, hasTouch: true}]
+const LAPTOP = ['1024', {viewport: {width: 1024, height: 768}}]
+const LAPTOP_WIDE = ['1279', {viewport: {width: 1279, height: 800}}]
+// The stacked layouts' single column (`max-w-3xl`), their body measure (34rem) and photo cap (`globals.css`).
+const STACKED_MAX = 768
+const STACKED_MEASURE = 544
+const STACKED_PHOTO = (viewportHeight) => Math.min(576, 0.75 * viewportHeight)
 const presets = JSON.parse(readFileSync('../studio/presets.json', 'utf8'))
 const FLOWS = presets.flows.map((f) => f.id)
 const OFFERED = presets.styleSets.map((s) => s.id)
@@ -365,7 +378,7 @@ try {
       await context.close()
     }
     if (!STYLE_SET_CANVASES.includes(canvas)) continue
-    for (const [width, device] of canvas === 'long-headings' ? [...WIDTHS, TABLET] : WIDTHS) {
+    for (const [width, device] of canvas === 'long-headings' ? [...WIDTHS, TABLET, LAPTOP, LAPTOP_WIDE] : WIDTHS) {
       for (const styleSet of STYLE_SETS) {
         // A fresh context per page: the font bytes are what one visitor's first page fetches.
         const context = await browser.newContext({...device, reducedMotion: 'reduce', colorScheme: 'light'})
@@ -402,20 +415,38 @@ try {
         results[key] = m
         if (m.innerWidth !== device.viewport.width) fail(`${key}: innerWidth is ${m.innerWidth}, not ${device.viewport.width}`)
         if (m.scrollWidth > m.clientWidth) fail(`${key}: horizontal scroll: scrollWidth ${m.scrollWidth} over ${m.clientWidth}`)
-        const limit = width === '1440' ? 3 : 4
+        const limit = Number(width) >= 992 ? 3 : 4
+        const stacked = ['768', '1024', '1279'].includes(width)
         for (const b of m.bands) {
           if (b.headingLines <= limit) continue
-          if (width !== '768' && atFloor(b, limit)) console.log(`flow-metrics: ${key}: band ${b.i} at the readable floor (${b.headingSize} px) takes ${b.headingLines} lines, as [R-544] allows: ${b.heading}`)
+          if (!stacked && atFloor(b, limit)) console.log(`flow-metrics: ${key}: band ${b.i} at the readable floor (${b.headingSize} px) takes ${b.headingLines} lines, as [R-544] allows: ${b.heading}`)
           else fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at ${width} (the rule is ${limit}): ${b.heading}`)
         }
-        if (width === '768') {
-          // A heading column spans its row on a tablet: nothing sits beside it (`[R-548]`).
-          const narrow = await page.evaluate(() => [...document.querySelectorAll('.heading-grows')].map((el) => {
-            const row = el.parentElement
-            const cs = getComputedStyle(row)
-            return {w: el.getBoundingClientRect().width, row: row.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight), text: (el.textContent ?? '').trim().replace(/\s+/g, ' ').slice(0, 48)}
-          }).filter((c) => c.w < c.row - 1))
-          for (const c of narrow) fail(`${key}: a heading column ${Math.round(c.w)} px wide in a ${Math.round(c.row)} px row at 768 (it stacks under lg): ${c.text}`)
+        if (stacked) {
+          // Nothing sits beside a heading column (`[R-548]`, `[R-549]`): no sibling shares its rows. It is no
+          // wider than the single column; the body text keeps its measure; a stacked photo stays on screen.
+          const found = await page.evaluate(() => ({
+            columns: [...document.querySelectorAll('.heading-grows')].map((el) => {
+              const r = el.getBoundingClientRect()
+              const beside = [...(el.parentElement?.children ?? [])].filter((o) => {
+                if (o === el) return false
+                const q = o.getBoundingClientRect()
+                return q.width > 0 && q.height > 0 && q.top < r.bottom - 1 && q.bottom > r.top + 1
+              }).length
+              return {w: r.width, beside, text: (el.textContent ?? '').trim().replace(/\s+/g, ' ').slice(0, 48)}
+            }),
+            measures: [...document.querySelectorAll('.stacked-measure :is(p, ul, ol, blockquote)')].map((el) => el.getBoundingClientRect().width),
+            photos: [...document.querySelectorAll('.stacked-photo img, .stacked-cutout img')].map((el) => el.getBoundingClientRect().height),
+            viewportHeight: window.innerHeight,
+          }))
+          for (const c of found.columns) {
+            if (c.beside) fail(`${key}: ${c.beside} element(s) beside a heading column at ${width} (it stacks under xl): ${c.text}`)
+            if (c.w > STACKED_MAX + 1) fail(`${key}: a stacked heading column ${Math.round(c.w)} px wide at ${width}, past the ${STACKED_MAX} px single column: ${c.text}`)
+          }
+          const wide = found.measures.filter((w) => w > STACKED_MEASURE + 1)
+          if (wide.length) fail(`${key}: ${wide.length} stacked text block(s) wider than the ${STACKED_MEASURE} px measure at ${width} (widest ${Math.round(Math.max(...wide))} px)`)
+          const tall = found.photos.filter((h) => h > STACKED_PHOTO(found.viewportHeight) + 1)
+          if (tall.length) fail(`${key}: ${tall.length} stacked photo(s) taller than the cap at ${width} (tallest ${Math.round(Math.max(...tall))} px)`)
         }
         if (fontBytes > FONT_BUDGET) fail(`${key}: ${fontBytes} font bytes over the budget of ${FONT_BUDGET}: ${fontFiles.join(', ')}`)
         await page.screenshot({path: resolve(OUT, `${canvas}--${STYLE_SET_FLOW}--${width}--${styleSet}.jpg`), fullPage: true, type: 'jpeg', quality: 60})
