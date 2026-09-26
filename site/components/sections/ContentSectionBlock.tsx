@@ -301,9 +301,9 @@ export function ContentSectionBlock({
 
           case 'twoColumnText':
             return (
-              <div className="heading-grid-5 grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-16">
-                <div className="heading-grows md:col-span-5">{heading}</div>
-                <div className="md:col-span-7">
+              <div className="heading-grid-5 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-16">
+                <div className="heading-grows lg:col-span-5">{heading}</div>
+                <div className="lg:col-span-7">
                   {body}
                   {itemList}
                   {pullQuote}
@@ -328,14 +328,14 @@ export function ContentSectionBlock({
             )
             if (!hasMedia(data.media)) return <div className="mx-auto max-w-3xl">{text}</div>
             return (
-              <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
+              <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
                 <div className={[
-                  data.mediaSide === 'left' ? 'md:order-first' : 'md:order-last',
+                  data.mediaSide === 'left' ? 'lg:order-first' : 'lg:order-last',
                   // Phase 16E: the raised photo. `self-start` puts the column's margin box
                   // at the row's top so the negative margin moves the border box by exactly
                   // that amount; `photo-rise` cancels the band's own top padding and its
                   // divider, so what is left is `--photo-rise` and nothing else.
-                  seam.raisePhoto ? 'md:self-start md:photo-rise' : '',
+                  seam.raisePhoto ? 'lg:self-start lg:photo-rise' : '',
                 ].filter(Boolean).join(' ')}>
                   <ContentMedia data={data} ground={ground} siteFrame={seam.site?.imageFrame} />
                 </div>
@@ -371,7 +371,7 @@ function ContentMedia({data, ground, siteFrame}: {data: ContentSectionData; grou
         image={media.image}
         mode="natural"
         alt={media.image.alt ?? ''}
-        sizes="(min-width: 768px) 50vw, 100vw"
+        sizes="(min-width: 992px) 50vw, 100vw"
         className={`${treatment.image} ${cutout ? 'object-contain' : 'object-cover'}`}
       />
     </div>

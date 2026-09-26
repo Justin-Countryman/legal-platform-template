@@ -201,9 +201,9 @@ function SiloSectionFrame({
       return (
         <div data-section-layout="banner">
           {hasHeader && (
-            <div className="mb-10 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between md:gap-12">
+            <div className="mb-10 flex flex-col gap-4 md:mb-12 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
               {header('left', {withDescription: false, className: 'heading-flex-banner max-w-2xl'})}
-              {description && <p className="max-w-md text-foreground-muted md:text-right">{description}</p>}
+              {description && <p className="max-w-md text-foreground-muted lg:text-right">{description}</p>}
             </div>
           )}
           {buttons}

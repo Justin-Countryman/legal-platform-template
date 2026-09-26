@@ -83,7 +83,7 @@ function CenteredGrid({data, tagline, heading, description, buttons, fit}: {data
 function InlineBadges({data, tagline, heading, description, buttons, fit}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]; fit?: HeadingFit | null}) {
   return (
     <>
-        <div className="heading-grows heading-flex-third shrink-0 md:w-1/3">
+        <div className="heading-grows heading-flex-third shrink-0 lg:w-1/3">
           {heading && (
             <SectionHeader
               tagline={tagline}
@@ -103,7 +103,7 @@ function InlineBadges({data, tagline, heading, description, buttons, fit}: {data
         </div>
         {data.badges && data.badges.length > 0 && (
           <div className="flex-1">
-            <BadgeList badges={data.badges} className="flex flex-wrap items-center justify-start gap-8 md:justify-end" imageClassName="h-36 w-auto object-contain" />
+            <BadgeList badges={data.badges} className="flex flex-wrap items-center justify-start gap-8 lg:justify-end" imageClassName="h-36 w-auto object-contain" />
           </div>
         )}
     </>
@@ -113,7 +113,7 @@ function InlineBadges({data, tagline, heading, description, buttons, fit}: {data
 function SplitBadges({data, tagline, heading, description, buttons, fit}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]; fit?: HeadingFit | null}) {
   return (
     <>
-        <div className="heading-grows heading-flex-third shrink-0 md:w-1/3">
+        <div className="heading-grows heading-flex-third shrink-0 lg:w-1/3">
           {heading && (
             <SectionHeader
               tagline={tagline}
@@ -214,8 +214,8 @@ function ScrollingBadges({data, tagline, heading, description, buttons, fit}: {d
 // extra div appears.
 const INNER_CLASS: Record<string, string> = {
   centeredGrid: 'text-center',
-  inline:       'flex flex-col gap-8 md:flex-row md:items-center md:gap-12',
-  split:        'flex flex-col gap-12 md:flex-row md:items-start md:gap-16',
+  inline:       'flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-12',
+  split:        'flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16',
 }
 
 /** The appearance this section will actually render with, for the seam walk. */

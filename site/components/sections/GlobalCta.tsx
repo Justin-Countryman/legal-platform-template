@@ -93,7 +93,7 @@ function SplitCta({data, surface, seam, face}: {data: GlobalCtaData; surface: Se
   if (!heading) return null
 
   return (
-    <SectionShell appearance={{surface}} className="text-foreground" innerClassName="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-x-12 lg:gap-x-20 md:items-start" seam={seam}>
+    <SectionShell appearance={{surface}} className="text-foreground" innerClassName="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-x-20 lg:items-start" seam={seam}>
 
         {/* Left: text */}
         <div>

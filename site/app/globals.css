@@ -866,9 +866,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 /* The areas banner's header sits in a flex row beside its description; a size container gives a flex
    item no content width, so the header would collapse to its tagline. It takes the room the description
-   leaves, from the 42rem its own max-width allows (measured closest to today at 768 and 1024, ADV-17C3-A). */
+   leaves, from the 42rem its own max-width allows (measured closest to today at 1024, ADV-17C3-A). Under
+   `lg` the banner stacks as on a phone (`[R-548]`), so the row and this basis start at 992 px. */
 @supports (container-type: inline-size) {
-  @media (min-width: 768px) { .heading-flex-banner { flex: 1 1 42rem; min-width: 0; } }
+  @media (min-width: 992px) { .heading-flex-banner { flex: 1 1 42rem; min-width: 0; } }
 }
 /* A heading column that widens before its heading shrinks (Phase 17C session 3, `[R-544]`: Justin,
    "if we can make the column bigger to fit the text bigger we can do that"; monorepo
@@ -879,13 +880,16 @@ h1, h2, h3, h4, h5, h6 {
    fits, the need between, the limit past it; then the fit (above) sets it smaller; then, at the floor, it
    takes one more line. Nothing else in the column sizes it: the tagline, the description and the buttons
    are contained, and the tagline keeps its one line box. The other side never falls under today's
-   mirror, nor under a readable 30rem where there is room, so on a tablet the fit does the work. Behind a
-   support check: an engine without container queries or intrinsic-size containment keeps today's grid. */
+   mirror, nor under a readable 30rem where there is room. Under `lg` every one of these layouts stacks as
+   on a phone (`[R-548]`: Justin, on a tablet the heading gets the whole width), so nothing widens there.
+   Behind a support check: an engine without container queries or intrinsic-size containment keeps
+   today's grid. */
 @supports (container-type: inline-size) and (contain-intrinsic-inline-size: 1px) {
   .heading-grows .section-heading { contain-intrinsic-inline-size: calc(var(--heading-w4, 0) * 1em / 0.98); }
   .heading-grows :is(p, .flex-wrap) { contain: inline-size; }
   .heading-grows .tagline { min-width: 100%; }
-  @media (min-width: 768px) {
+  @media (min-width: 992px) {
+    .heading-grows .section-heading { contain-intrinsic-inline-size: calc(var(--heading-w3, 0) * 1em / 0.98); }
     /* The two-column text and the reviews split: today 5 of 12 columns with 4rem gaps; up to 7 of 12. */
     .heading-grid-5 {
       --heading-col: calc(max(0px, (100% - 44rem) / 12) * 5 + 16rem);
@@ -898,9 +902,6 @@ h1, h2, h3, h4, h5, h6 {
     }
     /* Badges beside and split: today a third of the row; up to a half. */
     .heading-flex-third { flex: 0 1 auto; width: auto; min-width: calc(100% / 3); max-width: 50%; }
-  }
-  @media (min-width: 992px) {
-    .heading-grows .section-heading { contain-intrinsic-inline-size: calc(var(--heading-w3, 0) * 1em / 0.98); }
     /* The areas aside: today 18rem; up to 26rem. */
     .heading-grid-aside { grid-template-columns: minmax(18rem, auto) minmax(calc(100% - 30rem), 1fr); }
   }

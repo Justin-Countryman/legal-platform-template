@@ -55,7 +55,7 @@ const TEXT_ONLY_DATA: CtaSectionBlockData = {
 // ─── TextOnlyCta — SectionHeader consumption with noTrailingGap ───────────────
 //
 // TextOnlyCta splits the header across grid columns: tagline + h2 LEFT,
-// description + buttons RIGHT, under `md:grid-cols-2 md:items-center`. It was
+// description + buttons RIGHT, under `lg:grid-cols-2 lg:items-center`. It was
 // hand-rolled for exactly that reason — the canonical `mb-5` would have become
 // left-column height and shifted the row's vertical centering. It now consumes
 // the primitive and opts out of the gap by name. See
@@ -82,7 +82,8 @@ describe('CtaSectionBlock — TextOnlyCta header', () => {
   it('keeps the description and buttons in the right column, outside the header', () => {
     const {container, getByTestId} = render(<CtaSectionBlock data={TEXT_ONLY_DATA} />)
     const grid = container.querySelector('.container') as HTMLElement
-    expect(grid.className).toContain('md:items-center')
+    // Side by side from `lg` only: under it the layout stacks as on a phone (Phase 17C session 3, `[R-548]`).
+    expect(grid.className).toContain('lg:items-center')
     // Two grid children: the SectionHeader wrapper, then the description column.
     expect(grid.children.length).toBe(2)
     expect(grid.children[0].querySelector('h2')).not.toBeNull()

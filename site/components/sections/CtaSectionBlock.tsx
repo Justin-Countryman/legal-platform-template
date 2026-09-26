@@ -70,9 +70,9 @@ const DEFAULT_SURFACE: Record<Layout, SectionSurface> = {
 // RSC payload for no reason.
 const INNER_CLASS: Record<Layout, string> = {
   centered:   'mx-auto max-w-2xl text-center',
-  split:      'grid grid-cols-1 items-center gap-12 md:grid-cols-2 lg:gap-20',
+  split:      'grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20',
   background: 'text-center text-foreground',
-  textOnly:   'heading-grid-half grid grid-cols-1 gap-8 md:grid-cols-2 md:items-center md:gap-12',
+  textOnly:   'heading-grid-half grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center lg:gap-12',
 }
 
 /** The appearance this section will actually render with, for the seam walk. */
@@ -146,7 +146,7 @@ function TextOnlyCta({data, fit}: {data: CtaSectionBlockData; fit?: HeadingFit |
     <>
       {/* Column-only header — the description and buttons live in the RIGHT column,
           so the header's canonical trailing gap has nothing below it and would only
-          add height to the left column, shifting the grid's md:items-center row. */}
+          add height to the left column, shifting the grid's lg:items-center row. */}
       <SectionHeader tagline={tagline} heading={heading ?? ''} fit={fit} scale="lg" alignment="left" noTrailingGap className="heading-grows" />
       <div>
         {description && <p className="mb-6 text-foreground-muted">{description}</p>}

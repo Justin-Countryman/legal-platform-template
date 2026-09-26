@@ -72,23 +72,23 @@ describe('the five layouts', () => {
   it('split: media and text in two columns, media on the right by default and on the left when asked', () => {
     const data: ContentSectionData = {layout: 'split', heading: 'About us', body: block('We help.'), media: {kind: 'photo', image}}
     const right = renderSection(data).container
-    expect(mediaImg(right).closest('div.md\\:order-last')).not.toBeNull()
-    expect(right.querySelector('.md\\:grid-cols-2')).not.toBeNull()
+    expect(mediaImg(right).closest('div.lg\\:order-last')).not.toBeNull()
+    expect(right.querySelector('.lg\\:grid-cols-2')).not.toBeNull()
     const left = renderSection({...data, mediaSide: 'left'}).container
-    expect(mediaImg(left).closest('div.md\\:order-first')).not.toBeNull()
+    expect(mediaImg(left).closest('div.lg\\:order-first')).not.toBeNull()
   })
 
   it('split with no media renders one text column', () => {
     const {container, queryByTestId} = renderSection({layout: 'split', heading: 'About', body: block('Text.')})
     expect(queryByTestId('media-img')).toBeNull()
-    expect(container.querySelector('.md\\:grid-cols-2')).toBeNull()
+    expect(container.querySelector('.lg\\:grid-cols-2')).toBeNull()
     expect(container.querySelector('.max-w-3xl h2')).not.toBeNull()
   })
 
   it('twoColumnText: heading on the left, body and items on the right', () => {
     const {container} = renderSection({layout: 'twoColumnText', heading: 'Two', body: block('Right side.'), items: [{_key: 'i', title: 'Point'}]})
-    expect(container.querySelector('.md\\:col-span-5 h2')?.textContent).toBe('Two')
-    const right = container.querySelector('.md\\:col-span-7')!
+    expect(container.querySelector('.lg\\:col-span-5 h2')?.textContent).toBe('Two')
+    const right = container.querySelector('.lg\\:col-span-7')!
     expect(right.textContent).toContain('Right side.')
     expect(right.querySelector('h3')?.textContent).toBe('Point')
   })

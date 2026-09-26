@@ -63,7 +63,7 @@ export function VideoSectionBlock({
   // Split — heading text in a left column, video(s) stacked on the right.
   if (layout === 'split') {
     return (
-      <SectionShell appearance={resolveAppearance(data)} innerClassName="grid grid-cols-1 items-start gap-12 md:grid-cols-2 lg:gap-20" seam={seam}>
+      <SectionShell appearance={resolveAppearance(data)} innerClassName="grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-20" seam={seam}>
         <>
           <div>
             {heading && (

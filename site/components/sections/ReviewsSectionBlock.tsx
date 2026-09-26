@@ -66,13 +66,13 @@ export function ReviewsSectionBlock({
   const body =
     data.layout === 'split' ? (
       <>
-        <div className="heading-grows md:col-span-5">
+        <div className="heading-grows lg:col-span-5">
           {heading && (
             <SectionHeader tagline={tagline} heading={heading} fit={fit} description={description} alignment="left" className="mb-6" />
           )}
           {buttons.length > 0 && <ButtonGroup items={buttons} />}
         </div>
-        <div className="md:col-span-7">
+        <div className="lg:col-span-7">
           <HtmlEmbed html={embed} aria-label={heading || 'Reviews'} />
         </div>
       </>
@@ -96,7 +96,7 @@ export function ReviewsSectionBlock({
   return (
     <SectionShell
       appearance={resolveAppearance(data)}
-      innerClassName={data.layout === 'split' ? 'heading-grid-5 grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-16' : undefined}
+      innerClassName={data.layout === 'split' ? 'heading-grid-5 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-16' : undefined}
       seam={seam}
     >
       {body}
