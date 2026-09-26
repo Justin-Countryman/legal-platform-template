@@ -45,6 +45,7 @@ vi.mock('@/components/ui/ScrollReveal', () => ({
 
 import {HomepageCanvas, type HomepageBlock} from '../HomepageCanvas'
 import canvas from './fixtures/migrated-canvas.json'
+import {withoutHeadingFit} from '../../ui/__tests__/headingFitMarkup'
 
 describe('HomepageCanvas on a migrated stored canvas', () => {
   it('renders the golden markup', async () => {
@@ -54,6 +55,6 @@ describe('HomepageCanvas on a migrated stored canvas', () => {
     // Three bands, the first without ScrollReveal.
     expect(container.querySelectorAll('section')).toHaveLength(3)
     expect(container.querySelectorAll('[data-testid="scroll-reveal"]')).toHaveLength(2)
-    await expect(container.innerHTML).toMatchFileSnapshot('./__snapshots__/migrated-canvas.html')
+    await expect(withoutHeadingFit(container.innerHTML)).toMatchFileSnapshot('./__snapshots__/migrated-canvas.html')
   })
 })

@@ -1,6 +1,7 @@
 import {type getHomePage} from '@/lib/sanity/fetchers'
 import {ghostSource} from '@/lib/brandMark'
-import {siteLookOf, photoWindows, NO_SEAM} from '@/components/sections/sectionFrame'
+import {photoWindows, NO_SEAM} from '@/components/sections/sectionFrame'
+import {siteLookWithHeadingFace} from '@/lib/headingAdvances'
 import {firstBandRises} from '@/components/layout/HomepageCanvas'
 import {heroGround, heroPhotoOf} from '@/lib/heroGround'
 import {closeSurface} from '@/lib/flows'
@@ -63,7 +64,8 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
   // gains a prop. Derived from the firm's name, never stored (`[R-492]`).
   // Phase 17B: the theme (`look.flow`, from the stored `flow`, the compat bridge or the
   // platform default) says whether the ghost draws and what ground the close takes.
-  const look = siteLookOf(chrome?.designTokens)
+  // Phase 17C session 3: with the heading face's widths, which only a server page may read.
+  const look = siteLookWithHeadingFace(chrome?.designTokens)
   // Phase 17B session 6 (`[R-530]`, `[R-532]`): the hero's photograph the theme may lay in windows
   // down the page, only while it is the photograph the theme was approved with (`flowPhoto`, which
   // the preview sets to the live one when the operator chooses the theme); and whether the close
@@ -129,6 +131,7 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
           data={globalCtaData}
           override={home?.ctaOverride}
           surface={close === 'photo' ? 'image' : close}
+          headingFace={site.headingFace}
           // A photo close is an Image section like one built by hand (`[R-531]`), showing the
           // photograph's first window.
           seam={close === 'photo' && site.heroPhoto ? {...NO_SEAM, site, paint: {ground: 'image', texture: false, window: photoWindows(site.heroPhoto.hotspot)[0]}} : undefined}

@@ -5,6 +5,7 @@ import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {getEmbedUrl} from '@/lib/videoEmbed'
 import {VideoEmbed} from '@/components/media/VideoEmbed'
 import {type VideoSectionProps} from './sectionProps'
+import {headingFit} from '@/lib/headingFit'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -62,13 +63,14 @@ export function VideoSectionBlock({
   // Split — heading text in a left column, video(s) stacked on the right.
   if (layout === 'split') {
     return (
-      <SectionShell appearance={resolveAppearance(data)} innerClassName="grid grid-cols-1 items-start gap-12 md:grid-cols-2 lg:gap-20" seam={seam}>
+      <SectionShell appearance={resolveAppearance(data)} innerClassName="stacked-measure grid grid-cols-1 items-start gap-12 max-xl:mx-auto max-xl:max-w-3xl xl:grid-cols-2 xl:gap-20" seam={seam}>
         <>
           <div>
             {heading && (
               <SectionHeader
                 tagline={tagline}
                 heading={heading}
+                fit={headingFit(heading, seam.site?.headingFace)}
                 description={description}
                 alignment="left"
               />
@@ -93,6 +95,7 @@ export function VideoSectionBlock({
           <SectionHeader
             tagline={tagline}
             heading={heading}
+            fit={headingFit(heading, seam.site?.headingFace)}
             description={description}
             alignment="center"
             className="mx-auto mb-12 max-w-2xl"

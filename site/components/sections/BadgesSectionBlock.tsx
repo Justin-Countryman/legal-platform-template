@@ -5,6 +5,7 @@ import {SectionHeader} from '@/components/ui/SectionHeader'
 import {SectionShell, type SectionAppearance} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type BadgesSectionProps} from './sectionProps'
+import {headingFit, type HeadingFit} from '@/lib/headingFit'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -52,13 +53,14 @@ function BadgeList({badges, className, imageClassName}: {badges: BadgeImage[]; c
 
 // ─── Layouts ──────────────────────────────────────────────────────────────────
 
-function CenteredGrid({data, tagline, heading, description, buttons}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]}) {
+function CenteredGrid({data, tagline, heading, description, buttons, fit}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]; fit?: HeadingFit | null}) {
   return (
     <>
         {heading && (
           <SectionHeader
             tagline={tagline}
             heading={heading}
+            fit={fit}
             description={description}
             className={description ? 'mb-10' : undefined}
           />
@@ -78,14 +80,15 @@ function CenteredGrid({data, tagline, heading, description, buttons}: {data: Bad
   )
 }
 
-function InlineBadges({data, tagline, heading, description, buttons}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]}) {
+function InlineBadges({data, tagline, heading, description, buttons, fit}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]; fit?: HeadingFit | null}) {
   return (
     <>
-        <div className="shrink-0 md:w-1/3">
+        <div className="heading-grows heading-flex-third shrink-0 max-xl:max-w-2xl xl:w-1/3">
           {heading && (
             <SectionHeader
               tagline={tagline}
               heading={heading}
+              fit={fit}
               description={description}
               alignment="left"
             />
@@ -100,21 +103,22 @@ function InlineBadges({data, tagline, heading, description, buttons}: {data: Bad
         </div>
         {data.badges && data.badges.length > 0 && (
           <div className="flex-1">
-            <BadgeList badges={data.badges} className="flex flex-wrap items-center justify-start gap-8 md:justify-end" imageClassName="h-36 w-auto object-contain" />
+            <BadgeList badges={data.badges} className="flex flex-wrap items-center justify-start gap-8 xl:justify-end" imageClassName="h-36 w-auto object-contain" />
           </div>
         )}
     </>
   )
 }
 
-function SplitBadges({data, tagline, heading, description, buttons}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]}) {
+function SplitBadges({data, tagline, heading, description, buttons, fit}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]; fit?: HeadingFit | null}) {
   return (
     <>
-        <div className="shrink-0 md:w-1/3">
+        <div className="heading-grows heading-flex-third shrink-0 max-xl:max-w-2xl xl:w-1/3">
           {heading && (
             <SectionHeader
               tagline={tagline}
               heading={heading}
+              fit={fit}
               description={description}
               alignment="left"
             />
@@ -154,7 +158,7 @@ function SplitBadges({data, tagline, heading, description, buttons}: {data: Badg
 // and Buttons fields did nothing while it painted its own `<section>`. The shell
 // runs without its gutter and container so the strip stays edge to edge; the
 // heading and the buttons sit in a container of their own.
-function ScrollingBadges({data, tagline, heading, description, buttons}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]}) {
+function ScrollingBadges({data, tagline, heading, description, buttons, fit}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]; fit?: HeadingFit | null}) {
   const badges = data.badges ?? []
   if (badges.length === 0) return null
 
@@ -162,7 +166,7 @@ function ScrollingBadges({data, tagline, heading, description, buttons}: {data: 
     <>
       {heading && (
         <div className="container px-[5%]">
-          <SectionHeader tagline={tagline} heading={heading} description={description} className={description ? 'mb-10' : undefined} />
+          <SectionHeader tagline={tagline} heading={heading} fit={fit} description={description} className={description ? 'mb-10' : undefined} />
         </div>
       )}
       <div className="w-full overflow-hidden" aria-label="Awards and recognition badges">
@@ -210,8 +214,8 @@ function ScrollingBadges({data, tagline, heading, description, buttons}: {data: 
 // extra div appears.
 const INNER_CLASS: Record<string, string> = {
   centeredGrid: 'text-center',
-  inline:       'flex flex-col gap-8 md:flex-row md:items-center md:gap-12',
-  split:        'flex flex-col gap-12 md:flex-row md:items-start md:gap-16',
+  inline:       'stacked-measure flex flex-col gap-8 xl:flex-row xl:items-center xl:gap-12',
+  split:        'stacked-measure flex flex-col gap-12 xl:flex-row xl:items-start xl:gap-16',
 }
 
 /** The appearance this section will actually render with, for the seam walk. */
@@ -238,6 +242,8 @@ export function BadgesSectionBlock({
   const tagline = resolveTokenString(data.tagline, napTokens)
   const heading = resolveTokenString(data.heading, napTokens)
   const description = resolveTokenString(data.description, napTokens)
+  // Phase 17C session 3: the widths the heading's words need, in the face the page wears.
+  const fit = headingFit(heading, seam.site?.headingFace)
   const buttons = data.buttons?.map((btn) => ({
     ...btn,
     title: resolveTokenString(btn.title, napTokens),
@@ -248,15 +254,15 @@ export function BadgesSectionBlock({
     if (!data.badges || data.badges.length === 0) return null
     return (
       <SectionShell appearance={resolveAppearance(data)} contained={false} gutter={false} seam={seam}>
-        <ScrollingBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} />
+        <ScrollingBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} fit={fit} />
       </SectionShell>
     )
   }
 
   const body =
-    data.layout === 'inline' ? <InlineBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} />
-    : data.layout === 'split' ? <SplitBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} />
-    : <CenteredGrid data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} />
+    data.layout === 'inline' ? <InlineBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} fit={fit} />
+    : data.layout === 'split' ? <SplitBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} fit={fit} />
+    : <CenteredGrid data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} fit={fit} />
 
   return (
     <SectionShell

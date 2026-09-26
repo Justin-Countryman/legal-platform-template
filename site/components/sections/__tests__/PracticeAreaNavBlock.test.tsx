@@ -57,8 +57,9 @@ describe('PracticeAreaNavBlock — section layouts', () => {
   it('aside builds the two-column (sticky header) structure', () => {
     const {container} = render(<PracticeAreaNavBlock data={data({sectionLayout: 'aside'})} />)
     const frame = container.querySelector('[data-section-layout="aside"]')
-    expect(frame?.className).toContain('lg:grid-cols-[18rem_1fr]')
-    expect(frame?.querySelector('.lg\\:sticky')).not.toBeNull()
+    // Side by side from `xl` (Phase 17C session 3, `[R-549]`): under it the aside stacks as on a phone.
+    expect(frame?.className).toContain('xl:grid-cols-[18rem_1fr]')
+    expect(frame?.querySelector('.xl\\:sticky')).not.toBeNull()
   })
 
   it('the grid is a container-query context so it adapts to its column', () => {

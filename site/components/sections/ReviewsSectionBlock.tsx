@@ -5,6 +5,7 @@ import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {HtmlEmbed} from '@/components/ui/HtmlEmbed'
 import {ButtonGroup, toCtaItems} from '@/components/ui/ButtonGroup'
 import {type ReviewsSectionProps} from './sectionProps'
+import {headingFit} from '@/lib/headingFit'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 //
@@ -56,6 +57,8 @@ export function ReviewsSectionBlock({
   const tagline = resolveTokenString(data.tagline, napTokens)
   const heading = resolveTokenString(data.heading, napTokens)
   const description = resolveTokenString(data.description, napTokens)
+  // Phase 17C session 3: the widths the heading's words need, in the face the page wears.
+  const fit = headingFit(heading, seam.site?.headingFace)
   const buttons = toCtaItems(data.buttons)
     .slice(0, 2)
     .map((item) => ({...item, label: resolveTokenString(item.label, napTokens)}))
@@ -63,20 +66,20 @@ export function ReviewsSectionBlock({
   const body =
     data.layout === 'split' ? (
       <>
-        <div className="md:col-span-5">
+        <div className="heading-grows max-xl:max-w-2xl xl:col-span-5">
           {heading && (
-            <SectionHeader tagline={tagline} heading={heading} description={description} alignment="left" className="mb-6" />
+            <SectionHeader tagline={tagline} heading={heading} fit={fit} description={description} alignment="left" className="mb-6" />
           )}
           {buttons.length > 0 && <ButtonGroup items={buttons} />}
         </div>
-        <div className="md:col-span-7">
+        <div className="xl:col-span-7">
           <HtmlEmbed html={embed} aria-label={heading || 'Reviews'} />
         </div>
       </>
     ) : buttons.length > 0 ? (
       <>
         {heading && (
-          <SectionHeader tagline={tagline} heading={heading} description={description} className="mx-auto mb-6 max-w-2xl" />
+          <SectionHeader tagline={tagline} heading={heading} fit={fit} description={description} className="mx-auto mb-6 max-w-2xl" />
         )}
         <ButtonGroup items={buttons} align="center" className="mb-12" />
         <HtmlEmbed html={embed} />
@@ -84,7 +87,7 @@ export function ReviewsSectionBlock({
     ) : (
       <>
         {heading && (
-          <SectionHeader tagline={tagline} heading={heading} description={description} className="mx-auto mb-12 max-w-2xl" />
+          <SectionHeader tagline={tagline} heading={heading} fit={fit} description={description} className="mx-auto mb-12 max-w-2xl" />
         )}
         <HtmlEmbed html={embed} />
       </>
@@ -93,7 +96,7 @@ export function ReviewsSectionBlock({
   return (
     <SectionShell
       appearance={resolveAppearance(data)}
-      innerClassName={data.layout === 'split' ? 'grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-16' : undefined}
+      innerClassName={data.layout === 'split' ? 'heading-grid-5 stacked-measure grid grid-cols-1 gap-10 xl:grid-cols-12 xl:gap-16' : undefined}
       seam={seam}
     >
       {body}

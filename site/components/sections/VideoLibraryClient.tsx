@@ -6,6 +6,7 @@ import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {DialogPanel} from '@/components/ui/DialogPanel'
 import {getEmbedUrl, autoThumbnails} from '@/lib/videoEmbed'
+import type {HeadingFit} from '@/lib/headingFit'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -180,12 +181,16 @@ export function VideoLibraryClient({
   tagline,
   heading,
   description,
+  fit,
 }: {
   featured?: VideoCardData | null
   videos: VideoCardData[]
   tagline?: string | null
   heading?: string | null
   description?: string | null
+  /** The widths the heading needs, computed by the server page (Phase 17C session 3): this is a
+   *  client component, so the width table never reaches it. */
+  fit?: HeadingFit | null
 }) {
   // Only keep playable videos (valid YouTube/Vimeo URL).
   const playable = videos.filter((v) => getEmbedUrl(v.youTubeUrl))
@@ -213,6 +218,7 @@ export function VideoLibraryClient({
         <SectionHeader
           tagline={tagline}
           heading={heading as string}
+          fit={fit}
           description={description}
           alignment="left"
           className="mb-8 max-w-2xl"

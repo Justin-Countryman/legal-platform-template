@@ -47,8 +47,29 @@
 // style sets' voices are written to `__snapshots__/hero-voice.json`, which
 // `lib/__tests__/heroVoice.test.ts` reads for the pair test.
 //
-// Lines are counted as distinct line tops of a Range over the heading's contents: a box
-// height over the line height counted the heading's `::after` rule as a line (ADV-17C2B).
+// Lines are counted as distinct line tops of the heading's TEXT NODES: a box height over the
+// line height counted the heading's `::after` rule as a line (ADV-17C2B), and a range over the
+// heading's contents counts the fitted span's box, whose top sits a pixel or three above the first
+// glyph's (Phase 17C session 3, ADV-17C3-A). The size and weight are read from that span where the
+// heading has one (`.heading-fit`), so the golden records the size drawn.
+//
+// THE LONG-HEADINGS CANVAS (Phase 17C session 3, `[R-536]`; monorepo WS-V1-PHASE17C3-DESIGN §2.1).
+// The record canvases' headings are short, so a heading in a narrow column that wrapped to four
+// lines at 1440 on real copy was never measured. `record-long-headings.ndjson` carries 42 to 89
+// characters in the layouts that put a heading in a column; it runs in the style-set matrix only.
+//
+// THE TABLET (Phase 17C session 3, `[R-548]`, Justin 2026-09-25). Under `lg` (992 px) a layout that sets
+// a section heading beside other content stacks as it does on a phone, so the heading has the band's
+// width. The long-headings canvas is measured at 768 too, and there no heading passes four lines, at
+// the readable floor or not (a stacked heading never needs the floor's extra line), and every heading
+// column that can sit beside content (`.heading-grows`) spans its row.
+//
+// THE SMALL LAPTOP (`[R-549]`, Justin 2026-09-25: "the highest quality and best experience no matter what
+// the screensize"). The stack reaches `xl` (1280 px); a stacked reading layout centers at the template's
+// 768 px single column, its body text keeps a 34rem measure, and a stacked photo stays inside the screen.
+// The canvas is measured at 1024 and 1279 (the widest stacked width) too: no heading passes three lines
+// there, at the floor or not; and at 768, 1024 and 1279 nothing sits beside a heading column, none is
+// wider than 768 px, no body text is wider than 34rem, and no stacked photo is taller than the cap.
 
 import {createHmac} from 'node:crypto'
 import {spawn} from 'node:child_process'
@@ -71,7 +92,9 @@ const STYLE_SET = 'graphite'
 const PALETTE = 'navy-brass'
 // The style-set matrix: the three record canvases, one theme, every style set.
 const STYLE_SET_FLOW = 'cutBlocks.balanced'
-const STYLE_SET_CANVASES = ['adversarial-mostly-dark', 'planning-mostly-light', 'multi-practice-balanced']
+const STYLE_SET_CANVASES = ['adversarial-mostly-dark', 'planning-mostly-light', 'multi-practice-balanced', 'long-headings']
+// Canvases measured by the style-set matrix only, never by the theme matrix.
+const STYLE_SET_ONLY = ['long-headings']
 const FONT_BUDGET = 150_000
 const HERO_VOICE = resolve('scripts/ci/__snapshots__/hero-voice.json')
 const HERO_VOICE_CANVAS = 'multi-practice-balanced'
@@ -88,6 +111,8 @@ const CANVASES = [
   ['adversarial-photo-hero', 'scripts/ci/record-adversarial-photo-hero.ndjson'],
   ['planning-photo-hero', 'scripts/ci/record-planning-photo-hero.ndjson'],
   ['multi-practice-photo-hero', 'scripts/ci/record-multi-practice-photo-hero.ndjson'],
+  // Phase 17C session 3: section headings of 42 to 89 characters in narrow columns.
+  ['long-headings', 'scripts/ci/record-long-headings.ndjson'],
 ]
 // The stand-in photographs (Phase 17B session 6), served from disk to the browser: the hero's own
 // optimizer address (`/_next/image?url=/stand-ins/...`) and the image CDN's address for a band's photo
@@ -116,6 +141,13 @@ const WIDTHS = [
   ['1440', {viewport: {width: 1440, height: 900}}],
   ['390', {viewport: {width: 390, height: 844}, isMobile: true, hasTouch: true}],
 ]
+const TABLET = ['768', {viewport: {width: 768, height: 1024}, isMobile: true, hasTouch: true}]
+const LAPTOP = ['1024', {viewport: {width: 1024, height: 768}}]
+const LAPTOP_WIDE = ['1279', {viewport: {width: 1279, height: 800}}]
+// The stacked layouts' single column (`max-w-3xl`), their body measure (34rem) and photo cap (`globals.css`).
+const STACKED_MAX = 768
+const STACKED_MEASURE = 544
+const STACKED_PHOTO = (viewportHeight) => Math.min(576, 0.75 * viewportHeight)
 const presets = JSON.parse(readFileSync('../studio/presets.json', 'utf8'))
 const FLOWS = presets.flows.map((f) => f.id)
 const OFFERED = presets.styleSets.map((s) => s.id)
@@ -218,11 +250,21 @@ function measure() {
       let headingWeight = null
       let headingSize = null
       if (heading) {
-        const h = getComputedStyle(heading)
-        // Distinct line tops of the heading's contents: the `::after` rule is not in the range.
-        const range = document.createRange()
-        range.selectNodeContents(heading)
-        lines = new Set([...range.getClientRects()].filter((r) => r.width > 0).map((r) => Math.round(r.top))).size
+        const h = getComputedStyle(heading.querySelector('.heading-fit') ?? heading)
+        // Distinct line tops of the heading's text nodes: neither the `::after` rule nor the fitted
+        // span's own box is in them.
+        // A line is a cluster of tops within half a line of each other: an emphasis in another face
+        // sits a pixel or two off its neighbours' top (ADV-17C3-PRA).
+        const tops = []
+        const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT)
+        for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+          const range = document.createRange()
+          range.selectNodeContents(n)
+          for (const r of range.getClientRects()) if (r.width > 0) tops.push(r.top)
+        }
+        const lineHeight = parseFloat(h.lineHeight) || parseFloat(h.fontSize) * 1.2
+        tops.sort((a, b) => a - b)
+        lines = tops.reduce((count, top, k) => (k === 0 || top - tops[k - 1] > lineHeight / 2 ? count + 1 : count), 0)
         headingWeight = Number(h.fontWeight)
         headingSize = Math.round(parseFloat(h.fontSize) * 10) / 10
       }
@@ -251,6 +293,11 @@ function measure() {
   }
 }
 
+// A heading set at its readable floor may take ONE more line than the rule (`[R-544]`, Justin
+// 2026-09-25: it stays readable): 20 px, and 32 px where it draws the light weight (`globals.css`).
+// Two more lines, even at the floor, fail.
+const atFloor = (b, limit) => b.headingSize !== null && b.headingSize <= (b.headingWeight === 300 ? 32 : 20) + 0.05 && b.headingLines <= limit + 1
+
 // ─── Run ──────────────────────────────────────────────────────────────────────
 await wait(`${BASE}/`, 200, 200)
 mkdirSync(OUT, {recursive: true})
@@ -262,7 +309,7 @@ try {
   for (const [canvas, file] of CANVASES) {
     if (!existsSync(file)) { console.log(`flow-metrics: ${file} absent, skipped`); continue }
     await startStub(file)
-    for (const [width, device] of WIDTHS) {
+    for (const [width, device] of STYLE_SET_ONLY.includes(canvas) ? [] : WIDTHS) {
       const context = await browser.newContext({...device, reducedMotion: 'reduce', colorScheme: 'light'})
       await context.addCookies([{name: 'lp-preview', value: operator, url: `${BASE}/site-preview`}])
       await servePhotos(context)
@@ -312,7 +359,7 @@ try {
         results[key] = m
         if (m.innerWidth !== device.viewport.width) fail(`${key}: innerWidth is ${m.innerWidth}, not ${device.viewport.width} (the layout is not at this width)`)
         if (m.scrollWidth > m.clientWidth) fail(`${key}: horizontal scroll: scrollWidth ${m.scrollWidth} over ${m.clientWidth}`)
-        if (width === '390') for (const b of m.bands) if (b.headingLines > 4) fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at 390: ${b.heading}`)
+        if (width === '390') for (const b of m.bands) if (b.headingLines > 4 && !atFloor(b, 4)) fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at 390: ${b.heading}`)
         await page.screenshot({path: resolve(OUT, `${canvas}--${flow}--${width}.jpg`), fullPage: true, type: 'jpeg', quality: 60})
         // The header scrolled (Phase 17B session 4): prerendered HTML only ever holds the state
         // at the top, so this is the one check that sees the scrolled bar, its ground and its rule.
@@ -331,7 +378,7 @@ try {
       await context.close()
     }
     if (!STYLE_SET_CANVASES.includes(canvas)) continue
-    for (const [width, device] of WIDTHS) {
+    for (const [width, device] of canvas === 'long-headings' ? [...WIDTHS, TABLET, LAPTOP, LAPTOP_WIDE] : WIDTHS) {
       for (const styleSet of STYLE_SETS) {
         // A fresh context per page: the font bytes are what one visitor's first page fetches.
         const context = await browser.newContext({...device, reducedMotion: 'reduce', colorScheme: 'light'})
@@ -368,8 +415,39 @@ try {
         results[key] = m
         if (m.innerWidth !== device.viewport.width) fail(`${key}: innerWidth is ${m.innerWidth}, not ${device.viewport.width}`)
         if (m.scrollWidth > m.clientWidth) fail(`${key}: horizontal scroll: scrollWidth ${m.scrollWidth} over ${m.clientWidth}`)
-        const limit = width === '390' ? 4 : 3
-        for (const b of m.bands) if (b.headingLines > limit) fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at ${width} (the rule is ${limit}): ${b.heading}`)
+        const limit = Number(width) >= 992 ? 3 : 4
+        const stacked = ['768', '1024', '1279'].includes(width)
+        for (const b of m.bands) {
+          if (b.headingLines <= limit) continue
+          if (!stacked && atFloor(b, limit)) console.log(`flow-metrics: ${key}: band ${b.i} at the readable floor (${b.headingSize} px) takes ${b.headingLines} lines, as [R-544] allows: ${b.heading}`)
+          else fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at ${width} (the rule is ${limit}): ${b.heading}`)
+        }
+        if (stacked) {
+          // Nothing sits beside a heading column (`[R-548]`, `[R-549]`): no sibling shares its rows. It is no
+          // wider than the single column; the body text keeps its measure; a stacked photo stays on screen.
+          const found = await page.evaluate(() => ({
+            columns: [...document.querySelectorAll('.heading-grows')].map((el) => {
+              const r = el.getBoundingClientRect()
+              const beside = [...(el.parentElement?.children ?? [])].filter((o) => {
+                if (o === el) return false
+                const q = o.getBoundingClientRect()
+                return q.width > 0 && q.height > 0 && q.top < r.bottom - 1 && q.bottom > r.top + 1
+              }).length
+              return {w: r.width, beside, text: (el.textContent ?? '').trim().replace(/\s+/g, ' ').slice(0, 48)}
+            }),
+            measures: [...document.querySelectorAll('.stacked-measure :is(p, ul, ol, blockquote)')].map((el) => el.getBoundingClientRect().width),
+            photos: [...document.querySelectorAll('.stacked-photo img, .stacked-cutout img')].map((el) => el.getBoundingClientRect().height),
+            viewportHeight: window.innerHeight,
+          }))
+          for (const c of found.columns) {
+            if (c.beside) fail(`${key}: ${c.beside} element(s) beside a heading column at ${width} (it stacks under xl): ${c.text}`)
+            if (c.w > STACKED_MAX + 1) fail(`${key}: a stacked heading column ${Math.round(c.w)} px wide at ${width}, past the ${STACKED_MAX} px single column: ${c.text}`)
+          }
+          const wide = found.measures.filter((w) => w > STACKED_MEASURE + 1)
+          if (wide.length) fail(`${key}: ${wide.length} stacked text block(s) wider than the ${STACKED_MEASURE} px measure at ${width} (widest ${Math.round(Math.max(...wide))} px)`)
+          const tall = found.photos.filter((h) => h > STACKED_PHOTO(found.viewportHeight) + 1)
+          if (tall.length) fail(`${key}: ${tall.length} stacked photo(s) taller than the cap at ${width} (tallest ${Math.round(Math.max(...tall))} px)`)
+        }
         if (fontBytes > FONT_BUDGET) fail(`${key}: ${fontBytes} font bytes over the budget of ${FONT_BUDGET}: ${fontFiles.join(', ')}`)
         await page.screenshot({path: resolve(OUT, `${canvas}--${STYLE_SET_FLOW}--${width}--${styleSet}.jpg`), fullPage: true, type: 'jpeg', quality: 60})
         await context.close()

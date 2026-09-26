@@ -5,6 +5,7 @@ import {AttorneySlider} from './AttorneySlider'
 import {SectionShell} from './SectionShell'
 import {type SeamProps, NO_SEAM, followSite} from './sectionFrame'
 import {type AttorneySectionProps} from './sectionProps'
+import {headingFit} from '@/lib/headingFit'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -64,6 +65,7 @@ export function AttorneySectionBlock({
         <SectionHeader
           tagline={tagline}
           heading={heading}
+          fit={headingFit(heading, seam.site?.headingFace)}
           description={description}
           className="mx-auto mb-12 max-w-2xl"
         />

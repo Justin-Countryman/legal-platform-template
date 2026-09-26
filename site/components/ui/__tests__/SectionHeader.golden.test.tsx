@@ -56,6 +56,7 @@ import {TestimonialsGridSection} from '@/components/sections/TestimonialsGridSec
 import {FaqSectionBlock} from '@/components/sections/FaqSectionBlock'
 import {ReviewsSectionBlock} from '@/components/sections/ReviewsSectionBlock'
 import {VideoLibraryClient} from '@/components/sections/VideoLibraryClient'
+import {withoutHeadingFit} from './headingFitMarkup'
 
 type Case = [label: string, element: React.ReactElement]
 
@@ -63,7 +64,7 @@ function capture(cases: Case[]): string {
   return cases
     .map(([label, element]) => {
       const {container, unmount} = render(element)
-      const html = container.innerHTML
+      const html = withoutHeadingFit(container.innerHTML)
       unmount()
       return `<!-- ${label} -->\n${html}\n`
     })

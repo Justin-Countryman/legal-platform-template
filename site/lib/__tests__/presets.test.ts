@@ -1,5 +1,6 @@
 import {describe, expect, it} from 'vitest'
 import {FONT_PRESETS, headingWeights} from '../../fonts/presets'
+import {buildFontFaces, resolvefonts} from '../../fonts/loader'
 import {CORNER_FAMILIES} from '../corners'
 import {PALETTE_PRESETS} from '../palettes'
 import {
@@ -118,6 +119,9 @@ function presets() {
       headingVoice: f.heading.voice,
       // Phase 17C session 2b: how much smaller the face sets capitals (`[R-536]`).
       capsScale: f.heading.capsScale,
+      // Phase 17C session 3: the heading's upright faces exactly as the page declares them, which
+      // `scripts/ci/heading-advances.mjs` loads to measure the character widths a heading fit reads.
+      headingFaces: buildFontFaces(resolvefonts(f.id, null, null).heading, 'heading').filter((r) => !r.includes('font-style:italic')),
     })),
     matchCases: cases(),
     // Phase 17A: the preview's signed-link format, as one fixed case. The Site Builder

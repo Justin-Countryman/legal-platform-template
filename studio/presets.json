@@ -828,7 +828,10 @@
         "700"
       ],
       "headingVoice": "display serif",
-      "capsScale": 0.71
+      "capsScale": 0.71,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/playfair-display/PlayfairDisplay-Regular.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 2,
@@ -840,7 +843,10 @@
         "400"
       ],
       "headingVoice": "display serif",
-      "capsScale": 0.75
+      "capsScale": 0.75,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/dm-serif-display/DMSerifDisplay-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 4,
@@ -853,7 +859,10 @@
         "700"
       ],
       "headingVoice": "soft serif",
-      "capsScale": 0.71
+      "capsScale": 0.71,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/fraunces/Fraunces-Regular.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 5,
@@ -866,7 +875,10 @@
         "700"
       ],
       "headingVoice": "transitional serif",
-      "capsScale": 0.68
+      "capsScale": 0.68,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/libre-baskerville/LibreBaskerville-Regular.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 6,
@@ -879,7 +891,10 @@
         "700"
       ],
       "headingVoice": "text serif",
-      "capsScale": 0.72
+      "capsScale": 0.72,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/lora/Lora-Regular.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 7,
@@ -892,7 +907,10 @@
         "700"
       ],
       "headingVoice": "geometric sans",
-      "capsScale": 0.72
+      "capsScale": 0.72,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/montserrat/Montserrat-Regular.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 9,
@@ -905,7 +923,10 @@
         "700"
       ],
       "headingVoice": "text serif",
-      "capsScale": 0.73
+      "capsScale": 0.73,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/merriweather/Merriweather-Regular.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 10,
@@ -919,7 +940,10 @@
         "700"
       ],
       "headingVoice": "humanist sans",
-      "capsScale": 0.76
+      "capsScale": 0.76,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/work-sans/WorkSans-Regular.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 11,
@@ -931,7 +955,10 @@
         "700"
       ],
       "headingVoice": "soft serif",
-      "capsScale": 0.71
+      "capsScale": 0.71,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/fraunces/Fraunces-Regular.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 12,
@@ -944,7 +971,10 @@
         "700"
       ],
       "headingVoice": "transitional serif",
-      "capsScale": 0.68
+      "capsScale": 0.68,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/libre-baskerville/LibreBaskerville-Regular.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 13,
@@ -956,7 +986,10 @@
         "400"
       ],
       "headingVoice": "old-style serif",
-      "capsScale": 0.62
+      "capsScale": 0.62,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/sorts-mill-goudy/SortsMillGoudy-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 14,
@@ -970,7 +1003,10 @@
         "700"
       ],
       "headingVoice": "geometric sans",
-      "capsScale": 0.8
+      "capsScale": 0.8,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/poppins/Poppins-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 15,
@@ -983,7 +1019,11 @@
         "700"
       ],
       "headingVoice": "text serif",
-      "capsScale": 0.66
+      "capsScale": 0.66,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/spectral/Spectral-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;}",
+        "@font-face{font-family:'heading';src:url('/fonts/files/spectral/Spectral-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 16,
@@ -996,7 +1036,10 @@
         "700"
       ],
       "headingVoice": "text serif",
-      "capsScale": 0.72
+      "capsScale": 0.72,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/petrona/Petrona-Regular.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 17,
@@ -1009,7 +1052,10 @@
         "700"
       ],
       "headingVoice": "soft serif",
-      "capsScale": 0.71
+      "capsScale": 0.71,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/fraunces/Fraunces-Regular.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 18,
@@ -1022,7 +1068,10 @@
         "600"
       ],
       "headingVoice": "transitional serif",
-      "capsScale": 0.74
+      "capsScale": 0.74,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/source-serif-4/SourceSerif4-Regular.woff2') format('woff2');font-weight:400 600;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 19,
@@ -1034,7 +1083,10 @@
         "500"
       ],
       "headingVoice": "condensed sans",
-      "capsScale": 0.75
+      "capsScale": 0.75,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/oswald/Oswald-Medium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 20,
@@ -1049,7 +1101,10 @@
         "700"
       ],
       "headingVoice": "geometric sans",
-      "capsScale": 0.75
+      "capsScale": 0.75,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/dm-sans/DMSans-Regular.woff2') format('woff2');font-weight:300 700;font-style:normal;font-display:swap;}"
+      ]
     },
     {
       "id": 21,
@@ -1063,7 +1118,10 @@
         "700"
       ],
       "headingVoice": "humanist sans",
-      "capsScale": 0.76
+      "capsScale": 0.76,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/source-sans-3/SourceSans3-Regular.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;}"
+      ]
     }
   ],
   "matchCases": [

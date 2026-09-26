@@ -4,6 +4,7 @@ import {TestimonialCard, type TestimonialData} from '@/components/ui/Testimonial
 import {SectionShell} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type TestimonialsGridProps} from './sectionProps'
+import {headingFit} from '@/lib/headingFit'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -61,6 +62,7 @@ export function TestimonialsGridSection({
         <SectionHeader
           tagline={tagline}
           heading={heading}
+          fit={headingFit(heading, seam.site?.headingFace)}
           description={description}
           className="mx-auto mb-12 max-w-2xl"
         />

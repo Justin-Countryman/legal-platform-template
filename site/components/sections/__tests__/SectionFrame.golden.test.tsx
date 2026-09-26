@@ -52,6 +52,7 @@ import {VideoSectionBlock} from '@/components/sections/VideoSectionBlock'
 import {FaqSectionBlock} from '@/components/sections/FaqSectionBlock'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {HomepageCta} from '@/components/layout/HomepageCta'
+import {withoutHeadingFit} from '../../ui/__tests__/headingFitMarkup'
 
 type Case = [label: string, element: React.ReactElement]
 
@@ -59,7 +60,7 @@ function capture(cases: Case[]): string {
   return cases
     .map(([label, element]) => {
       const {container, unmount} = render(element)
-      const html = container.innerHTML
+      const html = withoutHeadingFit(container.innerHTML)
       unmount()
       return `<!-- ${label} -->\n${html}\n`
     })

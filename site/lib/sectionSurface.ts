@@ -133,7 +133,7 @@ export const SECTION_SPACING: Record<SectionSpacing, SectionSpacingSteps> = {
     bottom:  'pb-12 md:pb-16',
     seamTop: 'pt-6 md:pt-8',
     topOverlap: 'pt-12 md:pt-0',
-    bottomBeforeOverlap: {small: 'pb-12 md:pb-28', large: 'pb-12 md:pb-40', photo: 'pb-12 md:pb-32'},
+    bottomBeforeOverlap: {small: 'pb-12 md:pb-28', large: 'pb-12 md:pb-40', photo: 'pb-12 md:pb-16 xl:pb-32'},
     ptVar: 'band-pt-compact',
   },
   normal: {
@@ -141,7 +141,7 @@ export const SECTION_SPACING: Record<SectionSpacing, SectionSpacingSteps> = {
     bottom:  'pb-16 md:pb-24 lg:pb-28',
     seamTop: 'pt-8 md:pt-12 lg:pt-14',
     topOverlap: 'pt-16 md:pt-0',
-    bottomBeforeOverlap: {small: 'pb-16 md:pb-36 lg:pb-40', large: 'pb-16 md:pb-48 lg:pb-52', photo: 'pb-16 md:pb-40 lg:pb-44'},
+    bottomBeforeOverlap: {small: 'pb-16 md:pb-36 lg:pb-40', large: 'pb-16 md:pb-48 lg:pb-52', photo: 'pb-16 md:pb-24 lg:pb-28 xl:pb-44'},
     ptVar: 'band-pt-normal',
   },
   spacious: {
@@ -149,7 +149,7 @@ export const SECTION_SPACING: Record<SectionSpacing, SectionSpacingSteps> = {
     bottom:  'pb-24 md:pb-32 lg:pb-40',
     seamTop: 'pt-12 md:pt-16 lg:pt-20',
     topOverlap: 'pt-24 md:pt-0',
-    bottomBeforeOverlap: {small: 'pb-24 md:pb-44 lg:pb-52', large: 'pb-24 md:pb-56 lg:pb-64', photo: 'pb-24 md:pb-48 lg:pb-56'},
+    bottomBeforeOverlap: {small: 'pb-24 md:pb-44 lg:pb-52', large: 'pb-24 md:pb-56 lg:pb-64', photo: 'pb-24 md:pb-32 lg:pb-40 xl:pb-56'},
     ptVar: 'band-pt-spacious',
   },
 }
@@ -163,7 +163,7 @@ export const TIGHT_SPACING: SectionSpacingSteps = {
   bottom:  'pb-10 md:pb-12',
   seamTop: 'pt-5 md:pt-6',
   topOverlap: 'pt-10 md:pt-0',
-  bottomBeforeOverlap: {small: 'pb-10 md:pb-24', large: 'pb-10 md:pb-36', photo: 'pb-10 md:pb-28'},
+  bottomBeforeOverlap: {small: 'pb-10 md:pb-24', large: 'pb-10 md:pb-36', photo: 'pb-10 md:pb-12 xl:pb-28'},
   ptVar: 'band-pt-tight',
 }
 
@@ -263,7 +263,7 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
   // utility is defined in `globals.css`, so the resolution test covers them too.
   'decor-ghost', 'section-texture-dark', 'text-brand-dark', 'opacity-4',
   // Phase 16E: the raised photo's utility and its column alignment.
-  'md:photo-rise', 'md:self-start',
+  'xl:photo-rise', 'xl:self-start',
   // Phase 16F: the gradient on a dark band, and the band's place in its run.
   'band-gradient',
   // Phase 17B: the theme's hairline at the top of a band, defined in `globals.css`, and its

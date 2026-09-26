@@ -7,6 +7,8 @@ import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import {SectionShell, type SectionAppearance} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type SectionSurface} from '@/lib/sectionSurface'
+import {headingFit, type HeadingFit} from '@/lib/headingFit'
+import {HeadingText, headingFitStyle} from '@/components/ui/HeadingText'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -68,9 +70,9 @@ const DEFAULT_SURFACE: Record<Layout, SectionSurface> = {
 // RSC payload for no reason.
 const INNER_CLASS: Record<Layout, string> = {
   centered:   'mx-auto max-w-2xl text-center',
-  split:      'grid grid-cols-1 items-center gap-12 md:grid-cols-2 lg:gap-20',
+  split:      'stacked-measure grid grid-cols-1 items-center gap-12 max-xl:mx-auto max-xl:max-w-3xl xl:grid-cols-2 xl:gap-20',
   background: 'text-center text-foreground',
-  textOnly:   'grid grid-cols-1 gap-8 md:grid-cols-2 md:items-center md:gap-12',
+  textOnly:   'heading-grid-half stacked-measure grid grid-cols-1 gap-8 max-xl:mx-auto max-xl:max-w-3xl xl:grid-cols-2 xl:items-center xl:gap-12',
 }
 
 /** The appearance this section will actually render with, for the seam walk. */
@@ -95,40 +97,40 @@ export function isEmpty(data: CtaSectionBlockData): boolean {
 
 // ─── Layouts ──────────────────────────────────────────────────────────────────
 
-function CenteredCta({data}: {data: CtaSectionBlockData}) {
+function CenteredCta({data, fit}: {data: CtaSectionBlockData; fit?: HeadingFit | null}) {
   const {tagline, heading, description, buttons} = data
   return (
     <>
       {tagline && <Tagline as="p">{tagline}</Tagline>}
-      <h2 className="section-heading mb-4 text-2xl font-bold text-foreground md:text-3xl lg:text-4xl">{heading}</h2>
+      <h2 className="section-heading mb-4 text-2xl font-bold text-foreground md:text-3xl lg:text-4xl" style={headingFitStyle(fit)}><HeadingText fit={fit}>{heading}</HeadingText></h2>
       {description && <p className="text-foreground-muted">{description}</p>}
       {buttons && <ButtonGroup items={toCtaItems(buttons)} align="center" className="mt-6 md:mt-8" />}
     </>
   )
 }
 
-function SplitCta({data}: {data: CtaSectionBlockData}) {
+function SplitCta({data, fit}: {data: CtaSectionBlockData; fit?: HeadingFit | null}) {
   const {tagline, heading, description, buttons, image} = data
   return (
     <>
       <div>
-        <SectionHeader tagline={tagline} heading={heading ?? ''} description={description} scale="lg" alignment="left" />
+        <SectionHeader tagline={tagline} heading={heading ?? ''} fit={fit} description={description} scale="lg" alignment="left" />
         {buttons && <ButtonGroup items={toCtaItems(buttons)} className="mt-6 md:mt-8" />}
       </div>
       {hasImage(image) && (
         <div className="relative h-96 w-full overflow-hidden">
-          <SanityImage image={image} mode="fill" alt={image.alt ?? ''} sizes="(min-width:1024px) 50vw, 100vw" />
+          <SanityImage image={image} mode="fill" alt={image.alt ?? ''} sizes="(min-width: 1280px) 50vw, (min-width: 853px) 768px, 100vw" />
         </div>
       )}
     </>
   )
 }
 
-function BackgroundCta({data}: {data: CtaSectionBlockData}) {
+function BackgroundCta({data, fit}: {data: CtaSectionBlockData; fit?: HeadingFit | null}) {
   const {tagline, heading, description, buttons} = data
   return (
     <>
-      <SectionHeader tagline={tagline} heading={heading ?? ''} scale="lg" />
+      <SectionHeader tagline={tagline} heading={heading ?? ''} fit={fit} scale="lg" />
       {/* Description hand-rolled (not via SectionHeader) — dark image scrim needs full-strength
           text-foreground for contrast; SectionHeader's default text-foreground-muted reads weakly
           against busy backgrounds. */}
@@ -138,14 +140,14 @@ function BackgroundCta({data}: {data: CtaSectionBlockData}) {
   )
 }
 
-function TextOnlyCta({data}: {data: CtaSectionBlockData}) {
+function TextOnlyCta({data, fit}: {data: CtaSectionBlockData; fit?: HeadingFit | null}) {
   const {tagline, heading, description, buttons} = data
   return (
     <>
       {/* Column-only header — the description and buttons live in the RIGHT column,
           so the header's canonical trailing gap has nothing below it and would only
-          add height to the left column, shifting the grid's md:items-center row. */}
-      <SectionHeader tagline={tagline} heading={heading ?? ''} scale="lg" alignment="left" noTrailingGap />
+          add height to the left column, shifting the grid's xl:items-center row. */}
+      <SectionHeader tagline={tagline} heading={heading ?? ''} fit={fit} scale="lg" alignment="left" noTrailingGap className="heading-grows" />
       <div>
         {description && <p className="mb-6 text-foreground-muted">{description}</p>}
         {buttons && <ButtonGroup items={toCtaItems(buttons)} className="mt-6 md:mt-8" />}
@@ -179,11 +181,13 @@ export function CtaSectionBlock({
   if (isEmpty(resolved)) return null
 
   const layout = layoutOf(resolved)
+  // Phase 17C session 3: the widths the heading's words need, in the face the page wears.
+  const fit = headingFit(resolved.heading, seam.site?.headingFace)
   const body =
-    layout === 'centered' ? <CenteredCta data={resolved} />
-    : layout === 'split' ? <SplitCta data={resolved} />
-    : layout === 'background' ? <BackgroundCta data={resolved} />
-    : <TextOnlyCta data={resolved} />
+    layout === 'centered' ? <CenteredCta data={resolved} fit={fit} />
+    : layout === 'split' ? <SplitCta data={resolved} fit={fit} />
+    : layout === 'background' ? <BackgroundCta data={resolved} fit={fit} />
+    : <TextOnlyCta data={resolved} fit={fit} />
 
   return (
     <SectionShell

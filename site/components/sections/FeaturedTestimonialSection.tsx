@@ -6,6 +6,8 @@ import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {SectionShell} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type FeaturedTestimonialProps} from './sectionProps'
+import {headingFit} from '@/lib/headingFit'
+import {HeadingText, headingFitStyle} from '@/components/ui/HeadingText'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -47,6 +49,8 @@ export function FeaturedTestimonialSection({
   // Editable H2; falls back to the original default for sections created before
   // the heading field existed.
   const heading = resolveTokenString(data.heading, napTokens) || 'Client Testimonial'
+  // Phase 17C session 3: the widths the heading's words need, in the face the page wears.
+  const fit = headingFit(heading, seam.site?.headingFace)
 
   return (
     <SectionShell
@@ -57,8 +61,8 @@ export function FeaturedTestimonialSection({
 
         {/* Section heading */}
         {tagline && <Tagline as="p">{tagline}</Tagline>}
-        <h2 className="section-heading mb-6 font-heading text-xl font-bold text-foreground md:text-2xl">
-          {heading}
+        <h2 className="section-heading mb-6 font-heading text-xl font-bold text-foreground md:text-2xl" style={headingFitStyle(fit)}>
+          <HeadingText fit={fit}>{heading}</HeadingText>
         </h2>
 
         {/* Stars */}

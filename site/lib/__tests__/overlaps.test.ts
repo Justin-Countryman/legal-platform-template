@@ -1,4 +1,6 @@
 import {describe, expect, it} from 'vitest'
+import {readFileSync} from 'node:fs'
+import {resolve} from 'node:path'
 import fieldMap from '../../../studio/field-map.json'
 import {OVERLAPS, PHOTO_RISE, readOverlap, raisesPhotos} from '../overlaps'
 import {SECTION_SPACING, TIGHT_SPACING} from '../sectionSurface'
@@ -36,20 +38,31 @@ describe('the overlap library', () => {
     expect(raisesPhotos('panel')).toBe(false)
   })
 
-  it('the band above grows by EXACTLY the rise, at every preset and every breakpoint', () => {
-    const rem = (c: string) => Number(c.replace(/^[a-z]*:?pb-/, '')) / 4
+  it('the band above grows by EXACTLY the rise, at every preset, from the breakpoint the photo rises at', () => {
+    // Phase 17C session 3 (`[R-548]`, `[R-549]`): under `xl` the split stacks as on a phone, so the photo
+    // rises from `xl` (ContentSectionBlock's `xl:photo-rise`), and under it the band above keeps its own
+    // padding; a growth left below drew 64 px of empty ground above a photo that no longer rose (ADV-17C3-T).
+    const source = readFileSync(resolve(__dirname, '../../components/sections/ContentSectionBlock.tsx'), 'utf8')
+    const from = [...source.matchAll(/\b(\w+):photo-rise\b/g)].map((m) => m[1])
+    expect(new Set(from)).toEqual(new Set(['xl']))
     const rise = Number(PHOTO_RISE.replace('rem', ''))
+    // The padding a responsive class list sets at a breakpoint: its last step at or under it, in rem.
+    const at = (classes: string, bp: '' | 'md' | 'lg' | 'xl') => {
+      const order = ['', 'md', 'lg', 'xl']
+      let rem = NaN
+      for (const c of classes.split(/\s+/)) {
+        const prefix = c.includes(':') ? c.split(':')[0] : ''
+        if (order.indexOf(prefix) <= order.indexOf(bp)) rem = Number(c.replace(/^[a-z]*:?pb-/, '')) / 4
+      }
+      return rem
+    }
     for (const [name, steps] of [...Object.entries(SECTION_SPACING), ['tight', TIGHT_SPACING] as const]) {
-      const bottom = steps.bottom.split(/\s+/)
-      const grown = steps.bottomBeforeOverlap.photo.split(/\s+/)
-      expect(grown.length, name).toBe(bottom.length)
-      grown.forEach((c, i) => {
-        const prefix = (s: string) => (s.includes(':') ? s.split(':')[0] : '')
-        expect(prefix(c), `${name} breakpoint`).toBe(prefix(bottom[i]))
-        // Phones stack flat, so the phone step is unchanged; every step from `md` grows
-        // by the rise and by nothing else.
-        expect(rem(c) - rem(bottom[i]), `${name} ${c}`).toBe(prefix(c) === '' ? 0 : rise)
-      })
+      const {bottom} = steps
+      const grown = steps.bottomBeforeOverlap.photo
+      expect(at(grown, ''), `${name} on a phone`).toBe(at(bottom, ''))
+      expect(at(grown, 'md'), `${name} on a tablet`).toBe(at(bottom, 'md'))
+      expect(at(grown, 'lg'), `${name} on a small laptop`).toBe(at(bottom, 'lg'))
+      expect(at(grown, 'xl') - at(bottom, 'xl'), `${name} from xl`).toBe(rise)
     }
   })
 

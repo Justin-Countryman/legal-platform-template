@@ -4,6 +4,7 @@ import {FaqAccordion} from '@/components/ui/FaqAccordion'
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {SectionShell, type SectionAppearance} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
+import {headingFit} from '@/lib/headingFit'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -82,6 +83,7 @@ export function FaqSectionBlock({
 
         <SectionHeader
           heading={heading}
+          fit={headingFit(heading, seam.site?.headingFace)}
           description={description}
           alignment="left"
           className="mb-10"

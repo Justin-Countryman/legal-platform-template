@@ -51,6 +51,7 @@ import {ghostSource} from '@/lib/brandMark'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import planted from './fixtures/fixture-shaped-canvas.json'
 import migrated from '@/components/layout/__tests__/fixtures/migrated-canvas.json'
+import {withoutHeadingFit} from '../../ui/__tests__/headingFitMarkup'
 
 const FIRM = 'Example Law Firm'
 const tokens = {firmName: FIRM, firmNameShort: 'Example', primaryPhone: null, primaryTollFree: null}
@@ -126,7 +127,7 @@ describe('the compat bridge reproduces the a164ce0 walk and canvas byte for byte
         const {container} = render(
           <HomepageCanvas blocks={blocks} site={site} hero={hero} napTokens={tokens} resultsDisclaimer="Past results do not guarantee a future outcome." />,
         )
-        await expect(container.innerHTML).toMatchFileSnapshot(`./__snapshots__/flow-reproduction/${canvasName}-${lookName}.html`)
+        await expect(withoutHeadingFit(container.innerHTML)).toMatchFileSnapshot(`./__snapshots__/flow-reproduction/${canvasName}-${lookName}.html`)
       })
     }
   }

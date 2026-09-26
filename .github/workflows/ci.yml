@@ -599,6 +599,11 @@ jobs:
       - name: The flow metrics golden at 1440 and 390 (built and served)
         working-directory: site
         run: node scripts/ci/flow-metrics.mjs --out flow-captures
+      # Phase 17C session 3 (monorepo WS-V1-PHASE17C3-DESIGN §2.1): the heading width table a
+      # heading's fit reads, re-measured from the committed faces; a changed font file is red here.
+      - name: The heading width table matches the committed faces
+        working-directory: site
+        run: node scripts/ci/heading-advances.mjs
       - name: Upload the captures for the eye
         if: always()
         uses: actions/upload-artifact@v4

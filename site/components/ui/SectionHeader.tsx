@@ -1,4 +1,6 @@
 import {Tagline} from '@/components/ui/Tagline'
+import {HeadingText, headingFitStyle} from '@/components/ui/HeadingText'
+import type {HeadingFit} from '@/lib/headingFit'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 //
@@ -52,6 +54,12 @@ export type SectionHeaderProps = {
    * through className.
    */
   className?:   string
+  /**
+   * The widths the heading's words need, computed by the section on the server
+   * (`headingFit`, Phase 17C session 3, `[R-536]`): with it the heading is set smaller
+   * only where its words would wrap past the rule in its column. Absent renders as before.
+   */
+  fit?:         HeadingFit | null
 }
 
 // ─── Scale → h2 className mapping ─────────────────────────────────────────────
@@ -99,6 +107,7 @@ export function SectionHeader({
   alignment = 'center',
   noTrailingGap = false,
   className,
+  fit,
 }: SectionHeaderProps) {
   const wrapperClass = [
     alignment === 'center' ? 'text-center' : null,
@@ -112,7 +121,7 @@ export function SectionHeader({
   return (
     <div className={wrapperClass || undefined}>
       {tagline && <Tagline as="p">{tagline}</Tagline>}
-      <h2 className={h2Class}>{heading}</h2>
+      <h2 className={h2Class} style={headingFitStyle(fit)}><HeadingText fit={fit}>{heading}</HeadingText></h2>
       {description && <p className="text-foreground-muted">{description}</p>}
     </div>
   )

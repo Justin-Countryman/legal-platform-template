@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import type {CSSProperties} from 'react'
 import {BlockProse} from '@/components/ui/BlockProse'
 import {ButtonGroup, toCtaItems} from '@/components/ui/ButtonGroup'
 import {HeadingUnit, type HeadingUnitScale} from '@/components/ui/HeadingUnit'
@@ -6,13 +7,14 @@ import {SanityImage} from '@/components/ui/SanityImage'
 import {VideoEmbed} from '@/components/media/VideoEmbed'
 import {splitEmphasis} from '@/lib/headingEmphasis'
 import {resolveTreatment, treatmentClasses, type TreatmentGround} from '@/lib/imageTreatment'
-import {hasImage} from '@/lib/sanity/image'
+import {hasImage, sanityObjectPosition} from '@/lib/sanity/image'
 import {formatPhone, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {proseTakesDropCap} from '@/lib/dropCap'
 import {MarqueeRibbon} from './MarqueeRibbon'
 import {SectionShell, type SectionAppearance} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
 import type {ContentSectionProps} from './sectionProps'
+import {headingFit} from '@/lib/headingFit'
 
 // ─── Content section ──────────────────────────────────────────────────────────
 //
@@ -176,6 +178,7 @@ export function ContentSectionBlock({
             tokens={napTokens}
             scale={scale}
             align={center ? 'center' : 'left'}
+            fit={headingFit(t(data.heading), seam.site?.headingFace)}
           />
         ) : null
 
@@ -299,9 +302,9 @@ export function ContentSectionBlock({
 
           case 'twoColumnText':
             return (
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-16">
-                <div className="md:col-span-5">{heading}</div>
-                <div className="md:col-span-7">
+              <div className="heading-grid-5 stacked-measure grid grid-cols-1 gap-8 max-xl:mx-auto max-xl:max-w-3xl xl:grid-cols-12 xl:gap-16">
+                <div className="heading-grows xl:col-span-5">{heading}</div>
+                <div className="xl:col-span-7">
                   {body}
                   {itemList}
                   {pullQuote}
@@ -326,14 +329,14 @@ export function ContentSectionBlock({
             )
             if (!hasMedia(data.media)) return <div className="mx-auto max-w-3xl">{text}</div>
             return (
-              <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
+              <div className="stacked-measure grid grid-cols-1 items-center gap-10 max-xl:mx-auto max-xl:max-w-3xl xl:grid-cols-2 xl:gap-16">
                 <div className={[
-                  data.mediaSide === 'left' ? 'md:order-first' : 'md:order-last',
+                  data.mediaSide === 'left' ? 'xl:order-first' : 'xl:order-last',
                   // Phase 16E: the raised photo. `self-start` puts the column's margin box
                   // at the row's top so the negative margin moves the border box by exactly
                   // that amount; `photo-rise` cancels the band's own top padding and its
                   // divider, so what is left is `--photo-rise` and nothing else.
-                  seam.raisePhoto ? 'md:self-start md:photo-rise' : '',
+                  seam.raisePhoto ? 'xl:self-start xl:photo-rise' : '',
                 ].filter(Boolean).join(' ')}>
                   <ContentMedia data={data} ground={ground} siteFrame={seam.site?.imageFrame} />
                 </div>
@@ -364,12 +367,18 @@ function ContentMedia({data, ground, siteFrame}: {data: ContentSectionData; grou
     // Phase 16C: a plain photo takes the carried corner; a slab photo is cut on the image
     // so the slab shows through; a framed photo is never cut (the frame is the signature,
     // and a clip would cut its border).
-    <div className={treatment.wrapper} data-feature-photo={context === 'contentMedia' && (resolved === 'plain' || resolved === 'slab') ? resolved : undefined}>
+    // Phase 17C session 3 (`[R-549]`): stacked under `xl`, a photo is capped in height and cropped around
+    // its focus point, and a cutout is centered, so a portrait photo never runs past the screen.
+    <div
+      className={[treatment.wrapper, cutout ? 'stacked-cutout' : 'stacked-photo'].filter(Boolean).join(' ')}
+      style={cutout ? undefined : ({'--photo-focus': sanityObjectPosition(media.image)} as CSSProperties)}
+      data-feature-photo={context === 'contentMedia' && (resolved === 'plain' || resolved === 'slab') ? resolved : undefined}
+    >
       <SanityImage
         image={media.image}
         mode="natural"
         alt={media.image.alt ?? ''}
-        sizes="(min-width: 768px) 50vw, 100vw"
+        sizes="(min-width: 1280px) 50vw, (min-width: 853px) 768px, 100vw"
         className={`${treatment.image} ${cutout ? 'object-contain' : 'object-cover'}`}
       />
     </div>

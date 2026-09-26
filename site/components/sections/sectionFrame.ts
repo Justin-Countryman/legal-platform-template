@@ -4,6 +4,7 @@ import {
 import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
 import {flowOf, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts} from '@/lib/flows'
 import type {HeroPhoto} from '@/lib/heroGround'
+import type {HeadingFace} from '@/lib/headingFace'
 
 // ─── The seam walk ────────────────────────────────────────────────────────────
 //
@@ -143,6 +144,10 @@ export type SiteLook = {
   /** The closing call to action renders on this page, so a photo close is a neighbour of the
    *  last band. Set by `HomeBody`; absent reads as shown. */
   closeShown?: boolean
+  /** The face a section heading draws in, with its widths (Phase 17C session 3): what a section's
+   *  `headingFit` measures its words in. Set by the server page (`siteLookWithHeadingFace`, which
+   *  holds the width table); absent, a heading takes no fit. Optional, as `flow` is. */
+  headingFace?: HeadingFace | null
 }
 
 /** The site look from the projected Design Settings (`DESIGN_TOKENS_QUERY`). */

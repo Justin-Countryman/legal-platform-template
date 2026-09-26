@@ -72,23 +72,23 @@ describe('the five layouts', () => {
   it('split: media and text in two columns, media on the right by default and on the left when asked', () => {
     const data: ContentSectionData = {layout: 'split', heading: 'About us', body: block('We help.'), media: {kind: 'photo', image}}
     const right = renderSection(data).container
-    expect(mediaImg(right).closest('div.md\\:order-last')).not.toBeNull()
-    expect(right.querySelector('.md\\:grid-cols-2')).not.toBeNull()
+    expect(mediaImg(right).closest('div.xl\\:order-last')).not.toBeNull()
+    expect(right.querySelector('.xl\\:grid-cols-2')).not.toBeNull()
     const left = renderSection({...data, mediaSide: 'left'}).container
-    expect(mediaImg(left).closest('div.md\\:order-first')).not.toBeNull()
+    expect(mediaImg(left).closest('div.xl\\:order-first')).not.toBeNull()
   })
 
   it('split with no media renders one text column', () => {
     const {container, queryByTestId} = renderSection({layout: 'split', heading: 'About', body: block('Text.')})
     expect(queryByTestId('media-img')).toBeNull()
-    expect(container.querySelector('.md\\:grid-cols-2')).toBeNull()
+    expect(container.querySelector('.xl\\:grid-cols-2')).toBeNull()
     expect(container.querySelector('.max-w-3xl h2')).not.toBeNull()
   })
 
   it('twoColumnText: heading on the left, body and items on the right', () => {
     const {container} = renderSection({layout: 'twoColumnText', heading: 'Two', body: block('Right side.'), items: [{_key: 'i', title: 'Point'}]})
-    expect(container.querySelector('.md\\:col-span-5 h2')?.textContent).toBe('Two')
-    const right = container.querySelector('.md\\:col-span-7')!
+    expect(container.querySelector('.xl\\:col-span-5 h2')?.textContent).toBe('Two')
+    const right = container.querySelector('.xl\\:col-span-7')!
     expect(right.textContent).toContain('Right side.')
     expect(right.querySelector('h3')?.textContent).toBe('Point')
   })
@@ -174,24 +174,29 @@ describe('slots', () => {
   })
 
   it('applies the image treatment, and a cutout takes only slab', () => {
+    // Beside the treatment's own classes, the wrapper marks how it stacks under `xl` (`[R-549]`).
+    const stacked = (wrapper: string, kind: 'photo' | 'cutout') => [wrapper, `stacked-${kind}`].filter(Boolean).join(' ')
     const framed = renderSection({layout: 'split', body: block('b'), media: {kind: 'photo', image}, imageTreatment: 'framed'}).container
-    expect(mediaImg(framed).parentElement!.className).toBe(TREATMENT_CLASSES.framed.wrapper)
+    expect(mediaImg(framed).parentElement!.className).toBe(stacked(TREATMENT_CLASSES.framed.wrapper, 'photo'))
     const cutoutFramed = renderSection({layout: 'split', body: block('b'), media: {kind: 'cutout', image}, imageTreatment: 'framed'}).container
     // A cutout never takes the corners (Phase 16B): its plain wrapper is square.
-    expect(mediaImg(cutoutFramed).parentElement!.className).toBe(treatmentClasses('plain', 'cutout').wrapper)
+    expect(mediaImg(cutoutFramed).parentElement!.className).toBe(stacked(treatmentClasses('plain', 'cutout').wrapper, 'cutout'))
     expect(classTokens(mediaImg(cutoutFramed))).toContain('object-contain')
     const cutoutSlab = renderSection({layout: 'split', body: block('b'), media: {kind: 'cutout', image}, imageTreatment: 'slab'}).container
-    expect(mediaImg(cutoutSlab).parentElement!.className).toBe(treatmentClasses('slab', 'cutout').wrapper)
+    expect(mediaImg(cutoutSlab).parentElement!.className).toBe(stacked(treatmentClasses('slab', 'cutout').wrapper, 'cutout'))
     const inherit = renderSection({layout: 'split', body: block('b'), media: {kind: 'photo', image}, imageTreatment: 'inherit'}).container
-    expect(mediaImg(inherit).parentElement!.className).toBe(TREATMENT_CLASSES.plain.wrapper)
+    expect(mediaImg(inherit).parentElement!.className).toBe(stacked(TREATMENT_CLASSES.plain.wrapper, 'photo'))
+    // A photo carries its focus point for the stacked crop; a cutout is never cropped.
+    expect((mediaImg(inherit).parentElement as HTMLElement).style.getPropertyValue('--photo-focus')).toMatch(/^\d+(\.\d+)?% \d+(\.\d+)?%$/)
+    expect((mediaImg(cutoutSlab).parentElement as HTMLElement).style.getPropertyValue('--photo-focus')).toBe('')
   })
 
   it('takes the site photo frame when the section stores none, and keeps its own when it does (Phase 16B)', () => {
     const site = {...NO_SEAM, site: {imageFrame: 'slab', sectionJoin: 'straight' as const, patternDark: false, cardHover: null, attorneyCardStyle: null}}
     const inherit = renderSection({layout: 'split', body: block('b'), media: {kind: 'photo', image}}, site).container
-    expect(mediaImg(inherit).parentElement!.className).toBe(TREATMENT_CLASSES.slab.wrapper)
+    expect(mediaImg(inherit).parentElement!.className).toBe(`${TREATMENT_CLASSES.slab.wrapper} stacked-photo`)
     const own = renderSection({layout: 'split', body: block('b'), media: {kind: 'photo', image}, imageTreatment: 'framed'}, site).container
-    expect(mediaImg(own).parentElement!.className).toBe(TREATMENT_CLASSES.framed.wrapper)
+    expect(mediaImg(own).parentElement!.className).toBe(`${TREATMENT_CLASSES.framed.wrapper} stacked-photo`)
   })
 })
 

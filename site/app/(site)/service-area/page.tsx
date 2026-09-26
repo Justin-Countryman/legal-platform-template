@@ -3,7 +3,8 @@ export const revalidate = 3600
 import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {SERVICE_AREA_INDEX_QUERY, SERVICE_AREA_PAGES_QUERY} from '@/lib/sanity/queries'
-import {chromeGlobalCta, chromeNap, fetchCached} from '@/lib/sanity/fetchers'
+import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
+import {headingFaceWithAdvances} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {cityFromServiceAreaSlug} from '@/lib/serviceAreaCity'
 import {resolveTitle, SERVICE_AREA_INDEX_PAGE_NAME} from '@/lib/seoTitle'
@@ -128,7 +129,7 @@ export default async function ServiceAreaIndexPage() {
 
       {/* Global CTA */}
       {!(indexPage?.hideCtaForm) && globalCtaData && (
-        <GlobalCta
+        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
           data={
             indexPage?.ctaOverride
               ? {...globalCtaData, ...indexPage.ctaOverride}

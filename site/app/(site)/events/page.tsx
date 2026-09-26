@@ -5,7 +5,7 @@ import {buildRobotsMeta} from '@/lib/robotsMeta'
 import Link from 'next/link'
 import {EVENT_INDEX_PAGE_QUERY, EVENT_INDEX_QUERY} from '@/lib/sanity/queries'
 import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
-import {siteLookOf} from '@/components/sections/sectionFrame'
+import {headingFaceWithAdvances, siteLookWithHeadingFace} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
@@ -264,12 +264,12 @@ export default async function EventsIndexPage() {
 
       {/* Full-width sections */}
       {indexPage?.sections && indexPage.sections.length > 0 && (
-        <PageSections sections={indexPage.sections} napTokens={tokens} resultsDisclaimer={indexPage.resultsDisclaimer} site={siteLookOf((await getSiteChrome())?.designTokens)} />
+        <PageSections sections={indexPage.sections} napTokens={tokens} resultsDisclaimer={indexPage.resultsDisclaimer} site={siteLookWithHeadingFace((await getSiteChrome())?.designTokens)} />
       )}
 
       {/* Global CTA */}
       {!(indexPage?.hideCtaForm) && globalCtaData && (
-        <GlobalCta
+        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
           data={
             indexPage?.ctaOverride
               ? {...globalCtaData, ...indexPage.ctaOverride}

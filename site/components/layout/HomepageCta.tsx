@@ -4,6 +4,9 @@ import {SectionShell} from '@/components/sections/SectionShell'
 import {type SectionSurface} from '@/lib/sectionSurface'
 import {type SeamProps, NO_SEAM} from '@/components/sections/sectionFrame'
 import {Tagline} from '@/components/ui/Tagline'
+import {headingFit} from '@/lib/headingFit'
+import type {HeadingFace} from '@/lib/headingFace'
+import {HeadingText, headingFitStyle} from '@/components/ui/HeadingText'
 
 // ─── Homepage final CTA ───────────────────────────────────────────────────────
 //
@@ -54,10 +57,14 @@ export function HomepageCta({
   override,
   surface = HOMEPAGE_CTA_DEFAULT_SURFACE,
   seam = NO_SEAM,
+  headingFace,
 }: {
   data?: HomepageCtaData | null
   surface?: SectionSurface
   seam?: SeamProps
+  /** The face its heading is fitted in (Phase 17C session 3): the homepage passes it, since the
+   *  close takes a seam only for a photo close. */
+  headingFace?: HeadingFace | null
   /** The page's ctaFormOverride. Shallow-merged over the singleton, matching
    *  the interior-page precedent: an override field that is present wins, and
    *  an absent one leaves the global value in place. */
@@ -69,6 +76,8 @@ export function HomepageCta({
   // No heading means the CTA was never authored. Render nothing rather than an
   // empty band, consistent with <GlobalCta>, which bails on the same condition.
   if (!merged.heading) return null
+  // Phase 17C session 3: the widths the heading's words need, in the face the page wears.
+  const fit = headingFit(merged.heading, headingFace ?? seam.site?.headingFace)
 
   const items = toCtaItems(merged.buttons)
 
@@ -78,7 +87,7 @@ export function HomepageCta({
         {merged.tagline ? <Tagline as="p">{merged.tagline}</Tagline> : null}
 
         {/* marketing-h2, not SectionHeader. See the header. */}
-        <h2 className="marketing-h2 section-heading font-heading font-bold text-foreground">{merged.heading}</h2>
+        <h2 className="marketing-h2 section-heading font-heading font-bold text-foreground" style={headingFitStyle(fit)}><HeadingText fit={fit}>{merged.heading}</HeadingText></h2>
 
         {merged.description ? (
           <p className="mt-4 text-foreground-muted md:text-md">{merged.description}</p>

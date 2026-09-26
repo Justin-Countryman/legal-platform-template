@@ -5,6 +5,8 @@ import {FormEmbed} from '@/components/layout/footers/FormEmbed'
 import {SectionShell} from './SectionShell'
 import {type SectionSurface} from '@/lib/sectionSurface'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
+import {headingFit, type HeadingFit} from '@/lib/headingFit'
+import type {HeadingFace} from '@/lib/headingFace'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -30,17 +32,20 @@ function CtaText({
   heading,
   description,
   centered = false,
+  fit,
 }: {
   tagline?: string | null
   heading: string
   description?: string | null
   centered?: boolean
+  fit?: HeadingFit | null
 }) {
   return (
     <div className={centered ? 'text-center' : undefined}>
       <SectionHeader
         tagline={tagline}
         heading={heading}
+        fit={fit}
         scale="xl"
         alignment={centered ? 'center' : 'left'}
       />
@@ -56,7 +61,7 @@ function CtaText({
 
 // ─── Centered layout ──────────────────────────────────────────────────────────
 
-function CenteredCta({data, surface, seam}: {data: GlobalCtaData; surface: SectionSurface; seam: SeamProps}) {
+function CenteredCta({data, surface, seam, face}: {data: GlobalCtaData; surface: SectionSurface; seam: SeamProps; face?: HeadingFace | null}) {
   const {tagline, heading, description, buttons, formEmbed} = data
   if (!heading) return null
 
@@ -65,7 +70,7 @@ function CenteredCta({data, surface, seam}: {data: GlobalCtaData; surface: Secti
   return (
     <SectionShell appearance={{surface}} contained={false} className="text-foreground" seam={seam}>
       <div className="mx-auto w-full max-w-lg text-center">
-        <CtaText tagline={tagline} heading={heading} description={description} centered />
+        <CtaText tagline={tagline} heading={heading} description={description} centered fit={headingFit(heading, face ?? seam.site?.headingFace)} />
 
         {items.length > 0 && (
           <ButtonGroup items={items} align="center" className="mt-6 md:mt-8" />
@@ -83,16 +88,16 @@ function CenteredCta({data, surface, seam}: {data: GlobalCtaData; surface: Secti
 
 // ─── Split layout ─────────────────────────────────────────────────────────────
 
-function SplitCta({data, surface, seam}: {data: GlobalCtaData; surface: SectionSurface; seam: SeamProps}) {
+function SplitCta({data, surface, seam, face}: {data: GlobalCtaData; surface: SectionSurface; seam: SeamProps; face?: HeadingFace | null}) {
   const {tagline, heading, description, formEmbed} = data
   if (!heading) return null
 
   return (
-    <SectionShell appearance={{surface}} className="text-foreground" innerClassName="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-x-12 lg:gap-x-20 md:items-start" seam={seam}>
+    <SectionShell appearance={{surface}} className="text-foreground" innerClassName="stacked-measure grid grid-cols-1 gap-12 max-xl:mx-auto max-xl:max-w-3xl xl:grid-cols-2 xl:gap-x-20 xl:items-start" seam={seam}>
 
         {/* Left: text */}
         <div>
-          <CtaText tagline={tagline} heading={heading} description={description} />
+          <CtaText tagline={tagline} heading={heading} description={description} fit={headingFit(heading, face ?? seam.site?.headingFace)} />
         </div>
 
         {/* Right: form */}
@@ -130,11 +135,15 @@ export function GlobalCta({
   napTokens,
   surface = GLOBAL_CTA_DEFAULT_SURFACE,
   seam = NO_SEAM,
+  headingFace,
 }: {
   data: GlobalCtaData
   napTokens?: NapTokens | null
   surface?: SectionSurface
   seam?: SeamProps
+  /** The face its heading is fitted in (Phase 17C session 3): the page passes it, since an interior
+   *  page renders the close with no seam. */
+  headingFace?: HeadingFace | null
 }) {
   const resolved: GlobalCtaData = napTokens
     ? {
@@ -148,6 +157,6 @@ export function GlobalCta({
         })),
       }
     : data
-  if (resolved.layout === 'split') return <SplitCta data={resolved} surface={surface} seam={seam} />
-  return <CenteredCta data={resolved} surface={surface} seam={seam} />
+  if (resolved.layout === 'split') return <SplitCta data={resolved} surface={surface} seam={seam} face={headingFace} />
+  return <CenteredCta data={resolved} surface={surface} seam={seam} face={headingFace} />
 }
