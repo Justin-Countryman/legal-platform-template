@@ -111,8 +111,8 @@ describe('color guarantee: every blocking pair passes for any operator input', (
       const cap = Number(t['--section-texture-opacity-on-light-cap'])
       const opacity = Math.min(SECTION_TEXTURE_OPACITY * 0.9, cap)
       const step = Math.round(opacity * 255)
-      const drawn = g.map((v, i) => Math.floor(v + ((k[i] - v) * step) / 255) - (k[i] < v ? 1 : 0))
-      const model = g.map((v, i) => v * (1 - SECTION_TEXTURE_OPACITY) + k[i] * SECTION_TEXTURE_OPACITY)
+      const drawn = g.map((v, i) => Math.max(0, Math.floor(v + ((k[i] - v) * step) / 255) - 1))
+      const model = g.map((v, i) => Math.round(v * (1 - SECTION_TEXTURE_OPACITY) + k[i] * SECTION_TEXTURE_OPACITY))
       return Math.abs(lum(drawn) - lum(g)) <= Math.abs(lum(model) - lum(g)) + 1e-12
     }
     for (const p of PALETTE_PRESETS) {

@@ -1085,7 +1085,8 @@ export const SECTION_TEXTURE_OPACITY = 0.04
  *  a level of 255 further toward the ink, so the light texture at 0.9 of the swept 0.04 drew a level past
  *  the swept blend on 264 palettes (#e9eef2 for #eaeff3 on Navy & Ice; text at 4.484:1 on two). The model
  *  here is the harshest of those that bracket the measured result: the opacity rounded to its whole step
- *  A of 1/255, the blend truncated, then one more level toward the ink. The cap is the largest A whose draw
+ *  A of 1/255, the blend truncated, then one level darker in every channel (a channel whose ink is lighter
+ *  than the ground darkens too, measured on two near-black palettes). The cap is the largest A whose draw
  *  under it stays within the swept blend, written 0.4 of a step over A, so every engine rounds to A and
  *  one that draws exactly draws lighter still. Most presets take A = 8 (0.03294, where the layer rendered at
  *  0.036). */
@@ -1099,9 +1100,10 @@ export function lightTextureCap(ground: string, ink: string, swept = SECTION_TEX
   const g = channels(ground)
   const k = channels(ink)
   const groundL = lum(g)
-  const reach = Math.abs(lum(g.map((v, i) => v * (1 - swept) + k[i] * swept)) - groundL)
+  // The swept blend as the engine and the pixel test hold it: a color, each channel rounded.
+  const reach = Math.abs(lum(g.map((v, i) => Math.round(v * (1 - swept) + k[i] * swept))) - groundL)
   for (let step = Math.floor(swept * 255); step > 0; step--) {
-    const drawn = g.map((v, i) => Math.max(0, Math.floor(v + ((k[i] - v) * step) / 255) - (k[i] < v ? 1 : 0)))
+    const drawn = g.map((v, i) => Math.max(0, Math.floor(v + ((k[i] - v) * step) / 255) - 1))
     if (Math.abs(lum(drawn) - groundL) <= reach + 1e-12) return Math.round(((step + 0.4) / 255) * 100000) / 100000
   }
   return 0
