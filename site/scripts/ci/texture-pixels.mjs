@@ -46,6 +46,23 @@ const failures = []
 // engine), which rounds a layer's opacity to whole steps of 1/255 (ADV-17C3-PRB).
 for (const path of ['headless shell', 'full Chromium', 'WebKit']) {
   const browser = path === 'WebKit' ? await webkit.launch() : await chromium.launch(path === 'full Chromium' ? {channel: 'chromium'} : {})
+  // CALIBRATION (temporary, PR #52): the color each engine draws for a solid layer of white-ground,
+  // near-black ink at a range of opacities, as a gradient in currentColor and as a background color.
+  {
+    const context = await browser.newContext({viewport: {width: 1200, height: 200}, deviceScaleFactor: 1})
+    const page = await context.newPage()
+    const ops = Array.from({length: 53}, (_, i) => 0.02 + i * 0.0005)
+    const inks = ['#13294b', '#000000']
+    const layer = (ink, o, how) => `<div style="position:relative;isolation:isolate;width:20px;height:20px;background:#ffffff;overflow:hidden"><div style="position:absolute;inset:0;z-index:-1;color:${ink};opacity:${o.toFixed(5)};${how === 'gradient' ? 'background-image:linear-gradient(currentColor,currentColor)' : 'background-color:currentColor'}"></div></div>`
+    for (const ink of inks) for (const how of ['gradient', 'color']) {
+      await page.setContent(`<!doctype html><html><body style="margin:0;display:flex">${ops.map((o) => layer(ink, o, how)).join('')}</body></html>`)
+      const png = await page.screenshot({clip: {x: 0, y: 0, width: ops.length * 20, height: 20}})
+      const {data: px, info} = await sharp(png).raw().toBuffer({resolveWithObject: true})
+      const read = ops.map((o, i) => { const off = (10 * info.width + i * 20 + 10) * info.channels; return `${o.toFixed(4)}=${hex(px[off], px[off + 1], px[off + 2])}` })
+      console.log(`calibration ${path} ${ink} ${how}: ${read.join(' ')}`)
+    }
+    await context.close()
+  }
   for (const dpr of [1, 3]) {
     const context = await browser.newContext({viewport: {width: COLS * CELL, height: 800}, deviceScaleFactor: dpr})
     const page = await context.newPage()
