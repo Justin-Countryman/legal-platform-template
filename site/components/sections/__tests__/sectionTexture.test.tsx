@@ -7,6 +7,7 @@ import {findUnknown, readPlainCssClasses} from '../../../scripts/check-unknown-u
 
 import {SECTION_SURFACES} from '@/lib/sectionSurface'
 import {SECTION_TEXTURES, SECTION_TEXTURE_MAP, SECTION_TEXTURE_OPACITY, buildDesignTokenCSS} from '@/lib/designTokens'
+import {NO_SEAM} from '../sectionFrame'
 import {SectionShell} from '../SectionShell'
 import {PageSections, type PageSectionData} from '../PageSections'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
@@ -41,8 +42,36 @@ describe('item 338: the site texture reaches a band only through the token build
     expect(SECTION_TEXTURE_MAP[texture].image).not.toMatch(/#[0-9a-f]{3,6}\b/i)
   })
 
-  it('scallop and dots are the textures that need a tile size', () => {
-    expect(SECTION_TEXTURES.filter((t) => SECTION_TEXTURE_MAP[t].size !== 'auto')).toEqual(['scallop', 'dots'])
+  it('scallop, the grid (one conic layer since Phase 17C session 3) and dots are the textures that need a tile size', () => {
+    expect(SECTION_TEXTURES.filter((t) => SECTION_TEXTURE_MAP[t].size !== 'auto')).toEqual(['scallop', 'grid', 'dots'])
+  })
+
+  // Phase 17C session 3 (`[R-538]`): a strong step per tile at twice the ink and the same spacing, and a
+  // render scale under the swept blend (0.8 for the lattice, the one tile drawn in two layers).
+  it.each(SECTION_TEXTURES)('%s emits its strong step and its render scale', (texture) => {
+    const t = SECTION_TEXTURE_MAP[texture]
+    const css = buildDesignTokenCSS({patternTexture: texture})
+    expect(css).toContain(`--section-texture-image-strong:${t.strong};`)
+    expect(css).toContain(`--section-texture-render:${t.render};`)
+    expect(t.strong).not.toBe(t.image)
+    expect(t.strong).not.toMatch(/#[0-9a-f]{3,6}\b/i)
+    // The same number of layers, so the strength never adds a crossing.
+    expect(t.strong.split('gradient(').length).toBe(t.image.split('gradient(').length)
+    expect(t.render).toBe(t.image.split('gradient(').length > 2 ? 0.8 : 0.9)
+  })
+
+  it('only the lattice is drawn in two layers', () => {
+    expect(SECTION_TEXTURES.filter((t) => SECTION_TEXTURE_MAP[t].image.split('gradient(').length > 2)).toEqual(['diamondLattice'])
+  })
+
+  it('a band the theme gave the strong step draws the strong tile; a stored Pattern band stays quiet', () => {
+    const strong = render(<SectionShell appearance={{surface: 'dark'}} seam={{...NO_SEAM, paint: {texture: 'strong'}}}><p>Body</p></SectionShell>).container
+    const layer = textures(strong)[0] as HTMLElement
+    expect(layer.getAttribute('data-section-texture')).toBe('strong')
+    expect(layer.className.split(' ')).toEqual(expect.arrayContaining(['section-texture-strong', 'section-texture-on-dark']))
+    expect(layer.className.split(' ')).not.toContain('section-texture')
+    const stored = render(<SectionShell appearance={{surface: 'pattern'}}><p>Body</p></SectionShell>).container
+    expect(textures(stored)[0].getAttribute('data-section-texture')).toBe('quiet')
   })
 
   it.each([[undefined], [null], ['photo'], ['gradient']])('%s emits no texture at all', (value) => {
@@ -66,7 +95,7 @@ describe('item 338: only a Pattern band paints the texture', () => {
     const {container} = render(<SectionShell appearance={{surface: 'pattern'}}><p>Body</p></SectionShell>)
     const layer = textures(container)[0] as HTMLElement
     expect(layer.getAttribute('aria-hidden')).toBe('true')
-    expect(layer.className.split(' ')).toEqual(expect.arrayContaining(['section-texture', 'pointer-events-none', 'absolute', 'inset-0', 'opacity-4']))
+    expect(layer.className.split(' ')).toEqual(expect.arrayContaining(['section-texture', 'pointer-events-none', 'absolute', 'inset-0', 'section-texture-on-light']))
     // It precedes the `relative` content container, which therefore paints over it.
     expect(layer.nextElementSibling?.className.split(' ')).toContain('relative')
     expect(findUnknown(layer.className.split(' '), designSystem, plainCss)).toEqual([])

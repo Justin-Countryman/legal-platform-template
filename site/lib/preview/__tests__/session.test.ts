@@ -98,3 +98,36 @@ describe('readSession', () => {
     expect(readSession(signToken(client, SECRET)!, '', NOW)).toEqual({state: 'none'})
   })
 })
+
+// Phase 17C session 3 (`[R-537]`): the meeting's preselection in the operator's grant.
+describe('suggest', () => {
+  const suggest = {
+    styleSet: {ids: ['iron', 'flint', 'graphite'], why: 'A fight tone: capitals first.'},
+    palette: {ids: ['black-gold', 'navy-brass', 'navy-ice'], why: "The study's three commonest pairs."},
+  }
+
+  it('rides an operator grant, which stays version 1', () => {
+    const grant = asGrant({...operator, suggest})!
+    expect(grant.v).toBe(1)
+    expect(grant.suggest).toEqual(suggest)
+  })
+
+  it('is dropped, never refused, when malformed, and the grant is kept', () => {
+    for (const bad of [
+      {theme: {ids: ['quiet'], why: 'x'}},
+      {styleSet: {ids: ['a', 'b', 'c', 'd'], why: 'x'}},
+      {styleSet: {ids: ['Iron'], why: 'x'}},
+      {styleSet: {ids: ['iron'], why: ''}},
+      {styleSet: {ids: ['iron'], why: 'x'.repeat(301)}},
+      'iron',
+    ]) {
+      const grant = asGrant({...operator, suggest: bad})
+      expect(grant, JSON.stringify(bad)).not.toBeNull()
+      expect(grant!.suggest, JSON.stringify(bad)).toBeUndefined()
+    }
+  })
+
+  it('never rides a client grant: a client link carries only the choices it was sent', () => {
+    expect(asGrant({...client, suggest})!.suggest).toBeUndefined()
+  })
+})

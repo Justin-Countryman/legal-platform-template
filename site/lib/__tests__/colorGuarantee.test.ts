@@ -22,9 +22,10 @@
 
 import {describe, expect, it} from 'vitest'
 import {converter, clampChroma, formatHex} from 'culori'
-import {parseHexInput, resolvePalette, validateWcag, type ColorInputs} from '../designTokens'
+import {lightTextureCap, parseHexInput, resolvePalette, SECTION_TEXTURE_OPACITY, validateWcag, type ColorInputs} from '../designTokens'
 import {PALETTE_PRESETS, presetInputs} from '../palettes'
 import before from './fixtures/color-tokens-before-phase14.json'
+import {nearBlack} from './sweeps'
 
 const toOklch = converter('oklch')
 const lightness = (hex: string) => (toOklch(hex)?.l as number | undefined) ?? 0
@@ -85,6 +86,49 @@ describe('color guarantee: every blocking pair passes for any operator input', (
     const named: Record<string, ColorInputs> = {placeholder: {}, editedAccent: {accent: '#a12a2f'}}
     for (const p of PALETTE_PRESETS) named[p.id] = presetInputs(p)
     expectNone(Object.entries(named).flatMap(([name, inputs]) => failures(name, inputs)))
+  })
+
+  // Phase 17C session 3: a palette the light-tier solve once left at 4.48:1 on the texture's blend,
+  // because the texture was checked but not solved against (ADV-17C3-B). The solve takes the texture's
+  // blend as a ground of its own now; every other palette resolves exactly as before (record §8).
+  it('the texture blend is a ground the light tiers are solved against, not only checked on', () => {
+    expectNone(failures('texture-hole', {darkGround: '#0d0924', lightGround: '#fc58fa', accent: '#ed56ce', action: '#a157a1'}))
+    // Near-black grounds with saturated accents: 35 of 24,066 failed on the texture's blend before the
+    // solve took it as a ground (ADV-17C3-PRB), and the uniform sweeps above never generate them.
+    expectNone(nearBlack(5000, 17).flatMap((inputs, i) => failures(`near-black#${i}`, inputs)))
+  }, 60_000)
+
+  it('the light texture never renders above the step an engine one level darker than Chromium draws within the swept blend', () => {
+    // WebKit on Linux (PR #52's CI) draws a layer one level darker than Chromium; under the harshest model
+    // that brackets it (the opacity's whole step, truncated, one level more), at the cap the drawn light
+    // texture is no further from the ground than the blend the text tiers are solved against.
+    const channels = (hex: string) => { const c = converter('rgb')(hex) as unknown as {r: number; g: number; b: number}; return [c.r, c.g, c.b].map((v) => Math.round(v * 255)) }
+    const decode = (v: number) => { const x = v / 255; return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4 }
+    const lum = (c: number[]) => 0.2126 * decode(c[0]) + 0.7152 * decode(c[1]) + 0.0722 * decode(c[2])
+    const within = (inputs: ColorInputs) => {
+      const t = resolvePalette(inputs).tokens
+      const g = channels(t['--color-background']), k = channels(t['--color-brand-dark'])
+      const cap = Number(t['--section-texture-opacity-on-light-cap'])
+      const opacity = Math.min(SECTION_TEXTURE_OPACITY * 0.9, cap)
+      const step = Math.round(opacity * 255)
+      const drawn = g.map((v, i) => Math.max(0, Math.floor(v + ((k[i] - v) * step) / 255) - 1))
+      const model = g.map((v, i) => Math.round(v * (1 - SECTION_TEXTURE_OPACITY) + k[i] * SECTION_TEXTURE_OPACITY))
+      return Math.abs(lum(drawn) - lum(g)) <= Math.abs(lum(model) - lum(g)) + 1e-12
+    }
+    for (const p of PALETTE_PRESETS) {
+      expect(within(presetInputs(p)), p.id).toBe(true)
+      // Every preset still draws its light texture: at step 7 of 255 at the least.
+      expect(Number(resolvePalette(presetInputs(p)).tokens['--section-texture-opacity-on-light-cap']), p.id).toBeGreaterThan(7 / 255)
+    }
+    expect(nearBlack(2000, 17).filter((inputs) => !within(inputs))).toEqual([])
+    expect(lightTextureCap('#ffffff', '#13294b')).toBe(0.03294)
+  })
+
+  it('the render margin reaches a dark band only where its ink is lighter than the ground', () => {
+    // Every preset solves a black ink, which only raises contrast, so its dark bands render as solved.
+    for (const p of PALETTE_PRESETS) expect(resolvePalette(presetInputs(p)).tokens['--section-texture-dark-margin'], p.id).toBe('0')
+    // A black ground can go no darker, so its ink is the on-dark text color, lighter than the ground.
+    expect(resolvePalette({darkGround: '#000000', accent: '#c8102e'}).tokens['--section-texture-dark-margin']).toBe('1')
   })
 
   it('accent-text keeps the accent: it reaches its ratio by stepping, never by falling back to brand-dark', () => {

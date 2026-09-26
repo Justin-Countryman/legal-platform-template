@@ -85,13 +85,13 @@ describe('the texture on a dark section ([R-479]; the theme\u2019s paint since 1
 
   it('a stored dark band takes the theme’s texture as a treatment, drawn with the derived dark ink', () => {
     const site = look({flow: textured, patternTexture: 'diagonalHatch'})
-    const dark = render(<SectionShell appearance={{surface: 'dark'}} seam={{...NO_SEAM, site, paint: {texture: true}}}>x</SectionShell>).container
+    const dark = render(<SectionShell appearance={{surface: 'dark'}} seam={{...NO_SEAM, site, paint: {texture: 'quiet'}}}>x</SectionShell>).container
     const band = dark.querySelector('section')!
     const layer = dark.querySelector('[data-section-texture]')!
     expect(band.getAttribute('data-ring-context')).toBe('dark')
     expect(band.className.split(' ')).toEqual(expect.arrayContaining(['bg-brand-dark', 'isolate']))
-    expect(layer.className.split(' ')).toEqual(expect.arrayContaining(['section-texture', 'section-texture-dark', '-z-10']))
-    expect(layer.className.split(' ')).not.toContain('opacity-4')
+    expect(layer.className.split(' ')).toEqual(expect.arrayContaining(['section-texture', 'section-texture-on-dark', '-z-10']))
+    expect(layer.className.split(' ')).not.toContain('section-texture-on-light')
     // And a stored dark band with no paint flag draws none.
     const plain = render(<SectionShell appearance={{surface: 'dark'}} seam={{...NO_SEAM, site}}>x</SectionShell>).container
     expect(plain.querySelector('[data-section-texture]')).toBeNull()
@@ -100,7 +100,7 @@ describe('the texture on a dark section ([R-479]; the theme\u2019s paint since 1
   it('a stored Pattern band draws the light texture at the tested ceiling, whatever the theme', () => {
     const light = render(<SectionShell appearance={{surface: 'pattern'}} seam={{...NO_SEAM, site: look({flow: textured, patternTexture: 'scallop'})}}>x</SectionShell>).container
     expect(light.querySelector('section')!.className.split(' ')).toContain('bg-background')
-    expect(light.querySelector('[data-section-texture]')!.className.split(' ')).toEqual(expect.arrayContaining(['text-brand-dark', 'opacity-4', '-z-10']))
+    expect(light.querySelector('[data-section-texture]')!.className.split(' ')).toEqual(expect.arrayContaining(['section-texture-on-light', '-z-10']))
   })
 
   it('the ground the pass assigned wins over a resolver that answers light for an absent surface', () => {

@@ -302,7 +302,12 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
   const background = lightA.hex
   const muted      = mutedOf(background)
   const heroTint   = heroTintOf(background)
-  const lightGrounds = [background, heroTint, muted]
+  // Every light ground text sits on, the texture's darkest blend included (Phase 17C session 3): the
+  // tiers are solved against what `validateWcag` holds them to, so no palette an operator types reaches
+  // a textured band with a tier under AA (ADV-17C3-B found one the solve left at 4.48:1). A palette whose
+  // tiers already hold there resolves exactly as before.
+  const lightTexture = textureOnLight(brandDark)
+  const lightGrounds = [background, heroTint, muted, blendOver(background, lightTexture.ink, lightTexture.opacity)]
   const accent = accentA.hex
   const action = actionA.hex
 
@@ -499,6 +504,20 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
   ])
   tokens['--color-texture-ink-on-dark'] = texture.ink
   tokens['--section-texture-opacity-on-dark'] = String(texture.opacity)
+  // Phase 17C session 3: the render margin applies on a dark band only where its ink is lighter than
+  // the ground (the on-dark text color on a near-black ground), the one case where a line drawn a level
+  // toward its ink moves toward the text. A black ink moves away, so those bands render as solved.
+  tokens['--section-texture-dark-margin'] = lightness(texture.ink) > lightness(brandDark) ? '1' : '0'
+  // WebKit rounds a layer's opacity to whole steps of 1/255, so on that path a relative margin on a small
+  // opacity can round back up to the swept blend and one level past it (ADV-17C3-PRB, measured and
+  // reproduced: #06131d drawn for a model of #06121d). There the layer renders at least one and a half
+  // steps under the swept opacity; a black ink renders as solved.
+  tokens['--section-texture-opacity-on-dark-cushion'] = String(
+    lightness(texture.ink) > lightness(brandDark) ? Math.max(0, Math.round((texture.opacity - 1.5 / 255) * 10000) / 10000) : texture.opacity,
+  )
+  // On the light ground, the layer never renders above the whole step an engine that rounds opacity up
+  // and truncates the blend still draws within the swept blend (`lightTextureCap`).
+  tokens['--section-texture-opacity-on-light-cap'] = String(lightTextureCap(tokens['--color-background'], tokens['--color-brand-dark']))
 
   return {
     inputs: {darkGround: darkIn, lightGround: lightIn, accent: accentIn, action: actionIn},
@@ -571,6 +590,14 @@ export function gradientStopOn(dark: string, _lightGround: string, accent: strin
   }
   while (alpha > 0 && !holds(alpha)) alpha = Math.round((alpha - 0.005) * 1000) / 1000
   return blendOver(dark, ink, Math.max(0, alpha))
+}
+
+/** The texture on a light band (Phase 17C session 3, `[R-538]`): the dark ground as its ink, at the
+ *  opacity every light text tier holds 4.5:1 over for any palette (Phase 16A). Beside
+ *  `textureOnDark`, so both grounds' textures come from one place; `validateWcag` sweeps this blend,
+ *  and the layer renders under it (`TEXTURE_RENDER_SCALE`). */
+export function textureOnLight(dark: string): {ink: string; opacity: number} {
+  return {ink: dark, opacity: SECTION_TEXTURE_OPACITY}
 }
 
 export function textureOnDark(dark: string, lightGround: string, onDarkText: string[]): {ink: string; opacity: number} {
@@ -647,7 +674,7 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
     // A Pattern band's darkest pixel: its ink line at the texture's opacity over the
     // light ground. WCAG measures text against the lowest-contrast part of what is
     // behind it (F83), so every light tier must hold here too (Phase 16A).
-    ['section-texture', blendOver(t['--color-background'], t['--color-brand-dark'], SECTION_TEXTURE_OPACITY)],
+    ['section-texture', blendOver(t['--color-background'], textureOnLight(t['--color-brand-dark']).ink, textureOnLight(t['--color-brand-dark']).opacity)],
   ]
   for (const [name, ground] of lightGrounds) {
     check(`foreground on ${name}`,        t['--color-foreground'],        ground, 4.5)
@@ -997,29 +1024,90 @@ export const HEADING_CASE_MAP: Record<string, {transform: string; tracking: stri
 // Phase 16A challenge: 0 failures at 0.04, 2,679 at 0.05). On a dark band the ink
 // and its opacity come from `textureOnDark`. `validateWcag` holds both blends as
 // grounds of their own, so the claim is tested, not remembered.
-// Phase 17C session 2b (`[R-534]`): `grid` (Iron) and `dots` (Birch), drawn like the four at
-// today's one strength; the strength word is session 3's (`[R-538]`). The grid is two layers,
-// as the lattice is, and inks one level darker in software raster until session 3's margin.
+// Phase 17C session 2b (`[R-534]`): `grid` (Iron) and `dots` (Birch).
+//
+// Phase 17C session 3 (`[R-538]`; monorepo WS-V1-PHASE17C3-DESIGN §2.2, §2.3). A STRENGTH per tile:
+// `quiet` is the tile as it shipped, `strong` doubles its ink at the same spacing (a line family draws
+// 2 px where it drew 1, the scallop's ring 2 px, a dot at 1.41 times its radius), so a theme can vary
+// the texture from one section to the next without a second motif (`flows.ts`, `texture`). A strength
+// never raises the opacity, so the darkest pixel is still the ink at the swept opacity. And a RENDER
+// SCALE per tile: a browser draws a linear tile a level of 255 toward its ink in both raster paths, and a
+// two-layer tile another in the headless shell's software raster, so the layer renders under the blend
+// `validateWcag` sweeps: 0.9 of it, 0.8 for the lattice, the one two-layer tile (the grid is drawn as one
+// conic layer, which both paths draw exactly). `scripts/ci/texture-pixels.mjs` holds the result.
 export const SECTION_TEXTURES = ['pinstripe', 'diagonalHatch', 'diamondLattice', 'scallop', 'grid', 'dots'] as const
 export type SectionTexture = (typeof SECTION_TEXTURES)[number]
+/** The strengths a band can draw; a theme's `alternate` resolves to these (`sectionFrame.ts`). */
+export const DRAWN_STRENGTHS = ['quiet', 'strong'] as const
+export type DrawnStrength = (typeof DRAWN_STRENGTHS)[number]
 
-export const SECTION_TEXTURE_MAP: Record<SectionTexture, {image: string; size: string}> = {
-  pinstripe:      {image: 'repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 10px)', size: 'auto'},
-  diagonalHatch:  {image: 'repeating-linear-gradient(45deg,currentColor 0 1px,transparent 1px 8px)', size: 'auto'},
+export const SECTION_TEXTURE_MAP: Record<SectionTexture, {image: string; strong: string; size: string; render: number}> = {
+  pinstripe: {
+    image: 'repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 10px)',
+    strong: 'repeating-linear-gradient(90deg,currentColor 0 2px,transparent 2px 10px)',
+    size: 'auto', render: 0.9,
+  },
+  diagonalHatch: {
+    image: 'repeating-linear-gradient(45deg,currentColor 0 1px,transparent 1px 8px)',
+    strong: 'repeating-linear-gradient(45deg,currentColor 0 2px,transparent 2px 8px)',
+    size: 'auto', render: 0.9,
+  },
   diamondLattice: {
     image: 'repeating-linear-gradient(45deg,currentColor 0 1px,transparent 1px 14px),repeating-linear-gradient(-45deg,currentColor 0 1px,transparent 1px 14px)',
-    size: 'auto',
+    strong: 'repeating-linear-gradient(45deg,currentColor 0 2px,transparent 2px 14px),repeating-linear-gradient(-45deg,currentColor 0 2px,transparent 2px 14px)',
+    size: 'auto', render: 0.8,
   },
-  scallop:        {image: 'radial-gradient(circle at 50% 100%,transparent 0 7px,currentColor 7px 8px,transparent 8px)', size: '16px 16px'},
+  scallop: {
+    image: 'radial-gradient(circle at 50% 100%,transparent 0 7px,currentColor 7px 8px,transparent 8px)',
+    strong: 'radial-gradient(circle at 50% 100%,transparent 0 6px,currentColor 6px 8px,transparent 8px)',
+    size: '16px 16px', render: 0.9,
+  },
+  // The same 1 px lines every 24 px as the two linear layers it replaced, drawn as one layer.
   grid: {
-    image: 'repeating-linear-gradient(0deg,currentColor 0 1px,transparent 1px 24px),repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 24px)',
-    size: 'auto',
+    image: 'conic-gradient(from 90deg at 1px 1px,transparent 90deg,currentColor 0)',
+    strong: 'conic-gradient(from 90deg at 2px 2px,transparent 90deg,currentColor 0)',
+    size: '24px 24px', render: 0.9,
   },
-  dots:           {image: 'radial-gradient(circle at center,currentColor 0 1.5px,transparent 2px)', size: '12px 12px'},
+  dots: {
+    image: 'radial-gradient(circle at center,currentColor 0 1.5px,transparent 2px)',
+    strong: 'radial-gradient(circle at center,currentColor 0 2.1px,transparent 2.6px)',
+    size: '12px 12px', render: 0.9,
+  },
 }
 
-/** The opacity the section texture renders at, and the one `validateWcag` blends. */
+/** The opacity `validateWcag` sweeps the light texture at (`textureOnLight`); the layer renders at this
+ *  times its tile's render scale. */
 export const SECTION_TEXTURE_OPACITY = 0.04
+
+/** The light texture's cap (Phase 17C session 3, measured on PR #52's CI). WebKit on Linux draws a
+ *  layer's opacity one level darker than Chromium does: a calibration strip on CI (0.020 to 0.046, a solid
+ *  layer on white) switched steps at the same opacities as Chromium (0.030, 0.034, 0.038) and drew each one
+ *  a level of 255 further toward the ink, so the light texture at 0.9 of the swept 0.04 drew a level past
+ *  the swept blend on 264 palettes (#e9eef2 for #eaeff3 on Navy & Ice; text at 4.484:1 on two). The model
+ *  here is the harshest of those that bracket the measured result: the opacity rounded to its whole step
+ *  A of 1/255, the blend truncated, then one level darker in every channel (a channel whose ink is lighter
+ *  than the ground darkens too, measured on two near-black palettes). The cap is the largest A whose draw
+ *  under it stays within the swept blend, written 0.4 of a step over A, so every engine rounds to A and
+ *  one that draws exactly draws lighter still. Most presets take A = 8 (0.03294, where the layer rendered at
+ *  0.036). */
+export function lightTextureCap(ground: string, ink: string, swept = SECTION_TEXTURE_OPACITY): number {
+  const channels = (hex: string) => {
+    const c = toRgb(hex) as unknown as {r: number; g: number; b: number}
+    return [c.r, c.g, c.b].map((v) => Math.round(v * 255))
+  }
+  const decode = (v: number) => { const x = v / 255; return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4 }
+  const lum = (c: number[]) => 0.2126 * decode(c[0]) + 0.7152 * decode(c[1]) + 0.0722 * decode(c[2])
+  const g = channels(ground)
+  const k = channels(ink)
+  const groundL = lum(g)
+  // The swept blend as the engine and the pixel test hold it: a color, each channel rounded.
+  const reach = Math.abs(lum(g.map((v, i) => Math.round(v * (1 - swept) + k[i] * swept))) - groundL)
+  for (let step = Math.floor(swept * 255); step > 0; step--) {
+    const drawn = g.map((v, i) => Math.max(0, Math.floor(v + ((k[i] - v) * step) / 255) - 1))
+    if (Math.abs(lum(drawn) - groundL) <= reach + 1e-12) return Math.round(((step + 0.4) / 255) * 100000) / 100000
+  }
+  return 0
+}
 /** The scrim a photo band draws over its photograph (`bg-scrim/80`, `SectionShell`): 80% is the
  *  lightest at which every text tier holds over pure white on every palette (Phase 17B session 6). */
 export const SCRIM_OPACITY = 0.8
@@ -1076,7 +1164,10 @@ export function buildDesignTokenCSS({
     : ''
   const taglineVars = Object.entries(tagline).map(([k, v]) => `${k}:${v};`).join('')
   const texture = SECTION_TEXTURE_MAP[(patternTexture ?? '') as SectionTexture]
-  const textureVars = `--section-texture-image:${texture?.image ?? 'none'};--section-texture-size:${texture?.size ?? 'auto'};`
+  const textureVars =
+    `--section-texture-image:${texture?.image ?? 'none'};--section-texture-image-strong:${texture?.strong ?? 'none'};` +
+    `--section-texture-size:${texture?.size ?? 'auto'};--section-texture-render:${texture?.render ?? 1};` +
+    `--section-texture-opacity:${SECTION_TEXTURE_OPACITY};`
   const emphasis = HEADING_EMPHASIS_MAP[headingEmphasisStyle ?? ''] ?? HEADING_EMPHASIS_MAP.color
   const hcase    = HEADING_CASE_MAP[headingCase ?? '']          ?? HEADING_CASE_MAP.normal
   // Capitals set smaller by what the face needs (`[R-536]`, Phase 17C session 2b): the pairing's

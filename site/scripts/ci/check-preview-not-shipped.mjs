@@ -47,6 +47,9 @@ const SENTINELS = [
   'gb-label',
   'sw-choice',
   'ga-disable-',
+  // Phase 17C session 3: the meeting's preselection in the switcher's rows.
+  'sw-all',
+  'Suggested first:',
 ]
 
 const failures = []

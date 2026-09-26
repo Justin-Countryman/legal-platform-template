@@ -115,6 +115,48 @@ export function familyLabel(f: Pick<FlowFamily, 'name' | 'steps' | 'passed' | 'd
   return f.steps.length === 1 && !f.passed.includes(f.defaultStep) ? `${f.name} (not yet judged)` : f.name
 }
 
+// ─── The meeting's preselection (Phase 17C session 3, `[R-537]`) ─────────────
+//
+// The Site Builder App signs the style sets and palettes it suggests for this firm into the
+// operator's grant (`suggest`), with its reason. A row then shows those first, the ones this site's
+// own roster offers (a retired, unpassed or unknown id is dropped: the app computes at the
+// monorepo's pin, and this client may be on an older one), then the rest behind "All". With no
+// usable suggestion the row is the whole roster, as before. `[R-507]`: "never the roster" in the
+// meeting; the rest stays one click away for the operator's own eye pass.
+
+/** The suggested entries this roster offers, in the order suggested. */
+function suggestedFrom<T extends {id: string}>(all: readonly T[], ids: readonly string[] | undefined, offered: (t: T) => boolean): T[] {
+  return (ids ?? []).map((id) => all.find((t) => t.id === id && offered(t))).filter((t): t is T => !!t)
+}
+
+function Preselected<T extends {id: string}>({all, ids, offered, active, children}: {
+  all: readonly T[]
+  ids: readonly string[] | undefined
+  offered: (t: T) => boolean
+  active: string
+  children: (t: T) => React.ReactNode
+}) {
+  const first = suggestedFrom(all, ids, offered)
+  if (first.length === 0) return <>{all.map(children)}</>
+  const rest = all.filter((t) => !first.includes(t))
+  return (
+    <>
+      {first.map(children)}
+      {rest.length > 0 && (
+        <details className="sw-all" open={rest.some((t) => t.id === active) || undefined}>
+          <summary className="sw-choice">All ({rest.length} more)</summary>
+          {rest.map(children)}
+        </details>
+      )}
+    </>
+  )
+}
+
+/** The reason under a row, where the row shows a suggestion. */
+function suggestedWhy<T extends {id: string}>(all: readonly T[], row: {ids: string[]; why: string} | undefined, offered: (t: T) => boolean) {
+  return row && suggestedFrom(all, row.ids, offered).length > 0 ? <p className="sw-note sw-why">Suggested first: {row.why}</p> : null
+}
+
 function Choice({href, active, className, children}: {href: string; active: boolean; className?: string; children: React.ReactNode}) {
   const classes = ['sw-choice', active && 'sw-active', className].filter(Boolean).join(' ')
   return (
@@ -194,21 +236,25 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
         <div className="sw-row">
           <span className="sw-head">Style set</span>
           <Choice href={at({styleSet: AS_THE_SITE_IS})} active={choices.styleSet === AS_THE_SITE_IS}>As the site is: {wearsStyle}</Choice>
-          {STYLE_SETS.map((t) => (
-            <Choice key={t.id} href={at({styleSet: t.id})} active={choices.styleSet === t.id}>{t.passed ? t.name : `${t.name} (not yet judged)`}</Choice>
-          ))}
+          <Preselected all={STYLE_SETS} ids={grant.suggest?.styleSet?.ids} offered={(t) => t.passed} active={choices.styleSet}>
+            {(t) => <Choice key={t.id} href={at({styleSet: t.id})} active={choices.styleSet === t.id}>{t.passed ? t.name : `${t.name} (not yet judged)`}</Choice>}
+          </Preselected>
         </div>
+        {suggestedWhy(STYLE_SETS, grant.suggest?.styleSet, (t) => t.passed)}
         <div className="sw-row">
           <span className="sw-head">Palette</span>
           <Choice href={at({palette: AS_THE_SITE_IS})} active={choices.palette === AS_THE_SITE_IS}>As the site is: {wearsPalette}</Choice>
-          {PALETTE_PRESETS.map((p) => (
-            <Choice key={p.id} href={at({palette: p.id})} active={choices.palette === p.id}>
-              <span className="sw-swatch" style={{background: p.darkGround}} />
-              <span className="sw-swatch" style={{background: p.accent}} />
-              {p.name}
-            </Choice>
-          ))}
+          <Preselected all={PALETTE_PRESETS} ids={grant.suggest?.palette?.ids} offered={() => true} active={choices.palette}>
+            {(p) => (
+              <Choice key={p.id} href={at({palette: p.id})} active={choices.palette === p.id}>
+                <span className="sw-swatch" style={{background: p.darkGround}} />
+                <span className="sw-swatch" style={{background: p.accent}} />
+                {p.name}
+              </Choice>
+            )}
+          </Preselected>
         </div>
+        {suggestedWhy(PALETTE_PRESETS, grant.suggest?.palette, () => true)}
         <div className="sw-row">
           <span className="sw-head">{ROW_THEME_HEAD}</span>
           <Choice href={at({flow: AS_THE_SITE_IS})} active={choices.flow === AS_THE_SITE_IS}>As the site is: {plan.wears.flow.name}</Choice>
@@ -284,5 +330,12 @@ const SWITCHER_CSS = `
 .sw-swatch{display:inline-block;width:10px;height:10px;border-radius:2px;border:1px solid rgba(255,255,255,.4)}
 .sw-note{font-size:12px;color:#bbb;margin:8px 0 0}
 .sw-share{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 0}
+.sw-all{display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px}
+.sw-all[open]{flex-basis:100%}
+.sw-all>summary{list-style:none;cursor:pointer}
+.sw-all>summary::-webkit-details-marker{display:none}
+.sw-all>summary::after{content:" \\25B8"}
+.sw-all[open]>summary::after{content:" \\25BE"}
+.sw-why{margin-top:4px}
 .sw-input{flex:1;min-width:240px;background:#222;color:#f5f5f5;border:1px solid #8a8a8a;border-radius:4px;padding:4px 6px;font-size:12px}
 `

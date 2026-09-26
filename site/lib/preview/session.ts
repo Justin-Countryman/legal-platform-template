@@ -56,6 +56,46 @@ export type PreviewGrant = {
   flow?: string
   view?: PreviewView
   apply?: ApplyTarget
+  /** The meeting's preselection (Phase 17C session 3, `[R-537]`): the style sets and palettes the
+   *  Site Builder App suggests for this firm, with its reason, shown first in the switcher's rows.
+   *  Operator grants only; `v` stays 1, so an older pin, whose `asGrant` builds its grant from the
+   *  keys it knows, drops it and shows the whole roster. */
+  suggest?: PreviewSuggest
+}
+
+export type SuggestRow = {ids: string[]; why: string}
+export type PreviewSuggest = {styleSet?: SuggestRow; palette?: SuggestRow}
+
+/** The bounds the Python signer holds too (`BE/_shared/preview_tokens.py`). */
+const SUGGEST_ID = /^[a-z0-9-]{1,32}$/
+const SUGGEST_IDS_MAX = 3
+const SUGGEST_WHY_MAX = 300
+
+function suggestRow(v: unknown): SuggestRow | null {
+  const r = v as {ids?: unknown; why?: unknown} | null
+  if (!r || typeof r !== 'object' || !Array.isArray(r.ids)) return null
+  if (r.ids.length < 1 || r.ids.length > SUGGEST_IDS_MAX || !r.ids.every((i) => typeof i === 'string' && SUGGEST_ID.test(i))) return null
+  if (typeof r.why !== 'string' || !r.why || r.why.length > SUGGEST_WHY_MAX) return null
+  return {ids: r.ids as string[], why: r.why}
+}
+
+/** A grant's `suggest`, read leniently: a malformed one is dropped and the grant kept. */
+export function asSuggest(v: unknown): PreviewSuggest | undefined {
+  if (!v || typeof v !== 'object') return undefined
+  const o = v as Record<string, unknown>
+  if (Object.keys(o).some((k) => k !== 'styleSet' && k !== 'palette')) return undefined
+  const out: PreviewSuggest = {}
+  if (o.styleSet !== undefined) {
+    const row = suggestRow(o.styleSet)
+    if (!row) return undefined
+    out.styleSet = row
+  }
+  if (o.palette !== undefined) {
+    const row = suggestRow(o.palette)
+    if (!row) return undefined
+    out.palette = row
+  }
+  return out.styleSet || out.palette ? out : undefined
 }
 
 const b64 = (s: string | Buffer) => Buffer.from(s).toString('base64url')
@@ -119,6 +159,11 @@ export function asGrant(payload: unknown): PreviewGrant | null {
     // Only an operator's link may carry where Apply is confirmed.
     if (p.role !== 'operator' || !a || !isText(a.origin) || !isText(a.slug)) return null
     grant.apply = {origin: a.origin, slug: a.slug}
+  }
+  // The meeting's preselection rides an operator's grant only, and never refuses one.
+  if (p.role === 'operator') {
+    const suggest = asSuggest(p.suggest)
+    if (suggest) grant.suggest = suggest
   }
   // A client's view is bound to the choices it was sent, so it must carry them. The
   // theme is optional: a link minted before the fourth segment carries none.
