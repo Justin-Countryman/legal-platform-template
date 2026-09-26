@@ -515,6 +515,9 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
   tokens['--section-texture-opacity-on-dark-cushion'] = String(
     lightness(texture.ink) > lightness(brandDark) ? Math.max(0, Math.round((texture.opacity - 1.5 / 255) * 10000) / 10000) : texture.opacity,
   )
+  // On the light ground, the layer never renders above the whole step an engine that rounds opacity up
+  // and truncates the blend still draws within the swept blend (`lightTextureCap`).
+  tokens['--section-texture-opacity-on-light-cap'] = String(lightTextureCap(tokens['--color-background'], tokens['--color-brand-dark']))
 
   return {
     inputs: {darkGround: darkIn, lightGround: lightIn, accent: accentIn, action: actionIn},
@@ -1075,6 +1078,31 @@ export const SECTION_TEXTURE_MAP: Record<SectionTexture, {image: string; strong:
 /** The opacity `validateWcag` sweeps the light texture at (`textureOnLight`); the layer renders at this
  *  times its tile's render scale. */
 export const SECTION_TEXTURE_OPACITY = 0.04
+
+/** The light texture's cap (Phase 17C session 3, measured on PR #52's CI). WebKit on Linux rounds a layer's
+ *  opacity up to a whole step of 1/255 and truncates the blend toward the ink, so a light texture at 0.9
+ *  of the swept 0.04 drew a level past the swept blend on 264 palettes (#e9eef2 for #eaeff3 on Navy & Ice;
+ *  text at 4.484:1 on two). Rounding up then truncating every channel is the most pessimistic of the
+ *  roundings that reproduce it; the cap is the largest whole step whose draw under that model stays
+ *  within the swept blend, written 0.4 of a step under it so an engine that rounds up lands on it and one
+ *  that draws exactly draws lighter. Most presets take step 9 of 255. */
+export function lightTextureCap(ground: string, ink: string, swept = SECTION_TEXTURE_OPACITY): number {
+  const channels = (hex: string) => {
+    const c = toRgb(hex) as unknown as {r: number; g: number; b: number}
+    return [c.r, c.g, c.b].map((v) => Math.round(v * 255))
+  }
+  const decode = (v: number) => { const x = v / 255; return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4 }
+  const lum = (c: number[]) => 0.2126 * decode(c[0]) + 0.7152 * decode(c[1]) + 0.0722 * decode(c[2])
+  const g = channels(ground)
+  const k = channels(ink)
+  const groundL = lum(g)
+  const reach = Math.abs(lum(g.map((v, i) => v * (1 - swept) + k[i] * swept)) - groundL)
+  for (let n = Math.floor(swept * 255); n > 0; n--) {
+    const drawn = g.map((v, i) => Math.floor(v + ((k[i] - v) * n) / 255))
+    if (Math.abs(lum(drawn) - groundL) <= reach + 1e-12) return Math.round(((n - 0.4) / 255) * 100000) / 100000
+  }
+  return 0
+}
 /** The scrim a photo band draws over its photograph (`bg-scrim/80`, `SectionShell`): 80% is the
  *  lightest at which every text tier holds over pure white on every palette (Phase 17B session 6). */
 export const SCRIM_OPACITY = 0.8

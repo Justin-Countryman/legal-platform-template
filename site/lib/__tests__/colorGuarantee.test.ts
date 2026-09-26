@@ -22,7 +22,7 @@
 
 import {describe, expect, it} from 'vitest'
 import {converter, clampChroma, formatHex} from 'culori'
-import {parseHexInput, resolvePalette, validateWcag, type ColorInputs} from '../designTokens'
+import {lightTextureCap, parseHexInput, resolvePalette, SECTION_TEXTURE_OPACITY, validateWcag, type ColorInputs} from '../designTokens'
 import {PALETTE_PRESETS, presetInputs} from '../palettes'
 import before from './fixtures/color-tokens-before-phase14.json'
 import {nearBlack} from './sweeps'
@@ -97,6 +97,31 @@ describe('color guarantee: every blocking pair passes for any operator input', (
     // solve took it as a ground (ADV-17C3-PRB), and the uniform sweeps above never generate them.
     expectNone(nearBlack(5000, 17).flatMap((inputs, i) => failures(`near-black#${i}`, inputs)))
   }, 60_000)
+
+  it('the light texture never renders above the step a rounding-up, truncating engine draws within the swept blend', () => {
+    // WebKit on Linux (PR #52's CI) rounds a layer's opacity up to a whole 1/255 step and truncates the blend;
+    // under that model, at the cap's step, the drawn light texture is no further from the ground than the
+    // blend the text tiers are solved against. The presets take step 9 of 255, 0.4 of a step under it.
+    const channels = (hex: string) => { const c = converter('rgb')(hex) as unknown as {r: number; g: number; b: number}; return [c.r, c.g, c.b].map((v) => Math.round(v * 255)) }
+    const decode = (v: number) => { const x = v / 255; return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4 }
+    const lum = (c: number[]) => 0.2126 * decode(c[0]) + 0.7152 * decode(c[1]) + 0.0722 * decode(c[2])
+    const within = (inputs: ColorInputs) => {
+      const t = resolvePalette(inputs).tokens
+      const g = channels(t['--color-background']), k = channels(t['--color-brand-dark'])
+      const cap = Number(t['--section-texture-opacity-on-light-cap'])
+      const opacity = Math.min(SECTION_TEXTURE_OPACITY * 0.9, cap)
+      const step = Math.ceil(opacity * 255 - 1e-9)
+      const drawn = g.map((v, i) => Math.floor(v + ((k[i] - v) * step) / 255))
+      const model = g.map((v, i) => v * (1 - SECTION_TEXTURE_OPACITY) + k[i] * SECTION_TEXTURE_OPACITY)
+      return Math.abs(lum(drawn) - lum(g)) <= Math.abs(lum(model) - lum(g)) + 1e-12
+    }
+    for (const p of PALETTE_PRESETS) {
+      expect(within(presetInputs(p)), p.id).toBe(true)
+      expect(Number(resolvePalette(presetInputs(p)).tokens['--section-texture-opacity-on-light-cap']), p.id).toBeGreaterThan(0.03)
+    }
+    expect(nearBlack(2000, 17).filter((inputs) => !within(inputs))).toEqual([])
+    expect(lightTextureCap('#ffffff', '#13294b')).toBe(0.03373)
+  })
 
   it('the render margin reaches a dark band only where its ink is lighter than the ground', () => {
     // Every preset solves a black ink, which only raises contrast, so its dark bands render as solved.

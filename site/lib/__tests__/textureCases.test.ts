@@ -48,7 +48,12 @@ function caseOf(label: string, inputs: ColorInputs) {
     cushion: Number(t['--section-texture-opacity-on-dark-cushion']),
     tiers: DARK_TIERS.map((k) => t[k]),
   }
-  const light = {ground: t['--color-background'], ink: t['--color-brand-dark'], opacity: SECTION_TEXTURE_OPACITY, tiers: LIGHT_TIERS.map((k) => t[k])}
+  const light = {
+    ground: t['--color-background'], ink: t['--color-brand-dark'], opacity: SECTION_TEXTURE_OPACITY,
+    // The opacity the light layer never renders above (`lightTextureCap`; WebKit on Linux, PR #52's CI).
+    cap: Number(t['--section-texture-opacity-on-light-cap']),
+    tiers: LIGHT_TIERS.map((k) => t[k]),
+  }
   return {
     label,
     light,

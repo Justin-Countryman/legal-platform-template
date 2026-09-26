@@ -33,7 +33,8 @@ const hex = (r, g, b) => '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '
 const cells = []
 for (const p of data.palettes) {
   for (const t of data.tiles) {
-    cells.push({p, t, ground: 'light', bg: p.light.ground, ink: p.light.ink, swept: p.light.opacity, opacity: p.light.opacity * t.render.light, tiers: p.light.tiers})
+    // The light layer renders at its render scale and never above the palette's cap, as `globals.css` draws it.
+    cells.push({p, t, ground: 'light', bg: p.light.ground, ink: p.light.ink, swept: p.light.opacity, opacity: Math.min(p.light.opacity * t.render.light, p.light.cap), tiers: p.light.tiers})
     // A lighter ink renders at its render scale and never above the cushion (whole alpha steps in WebKit).
     if (p.dark.lighterInk) cells.push({p, t, ground: 'dark', bg: p.dark.ground, ink: p.dark.ink, swept: p.dark.opacity, opacity: Math.min(p.dark.opacity * t.render.dark, p.dark.cushion), tiers: p.dark.tiers})
   }

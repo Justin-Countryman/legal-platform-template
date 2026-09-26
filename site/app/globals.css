@@ -1047,10 +1047,11 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
    tile's render scale, because a browser draws some tiles a level of 255 past the model
    (`SECTION_TEXTURE_MAP`, `scripts/ci/texture-pixels.mjs`). On a dark band the scale applies only
    where the ink is lighter than the ground (`--section-texture-dark-margin`), the ink and opacity the
-   engine derived for the palette (`textureOnDark`, Phase 16B). */
+   engine derived for the palette (`textureOnDark`, Phase 16B). On the light ground the layer also never
+   renders above the palette's cap (`lightTextureCap`: WebKit on Linux rounds opacity up and truncates). */
 @utility section-texture-on-light {
   color: var(--color-brand-dark);
-  opacity: calc(var(--section-texture-opacity, 0.04) * var(--section-texture-render, 1));
+  opacity: min(calc(var(--section-texture-opacity, 0.04) * var(--section-texture-render, 1)), var(--section-texture-opacity-on-light-cap, 1));
 }
 @utility section-texture-on-dark {
   color: var(--color-texture-ink-on-dark);
@@ -1060,7 +1061,7 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
    WebKit also draw a level past the swept blend; it takes the same margin, at 0.9 (Phase 17C session 3). */
 @utility decor-ghost-on-light {
   color: var(--color-brand-dark);
-  opacity: calc(var(--section-texture-opacity, 0.04) * 0.9);
+  opacity: min(calc(var(--section-texture-opacity, 0.04) * 0.9), var(--section-texture-opacity-on-light-cap, 1));
 }
 @utility decor-ghost-on-dark {
   color: var(--color-texture-ink-on-dark);
