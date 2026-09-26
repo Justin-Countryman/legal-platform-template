@@ -57,6 +57,12 @@
 // The record canvases' headings are short, so a heading in a narrow column that wrapped to four
 // lines at 1440 on real copy was never measured. `record-long-headings.ndjson` carries 42 to 89
 // characters in the layouts that put a heading in a column; it runs in the style-set matrix only.
+//
+// THE TABLET (Phase 17C session 3, `[R-548]`, Justin 2026-09-25). Under `lg` (992 px) a layout that sets
+// a section heading beside other content stacks as it does on a phone, so the heading has the band's
+// width. The long-headings canvas is measured at 768 too, and there no heading passes four lines, at
+// the readable floor or not (a stacked heading never needs the floor's extra line), and every heading
+// column that can sit beside content (`.heading-grows`) spans its row.
 
 import {createHmac} from 'node:crypto'
 import {spawn} from 'node:child_process'
@@ -128,6 +134,7 @@ const WIDTHS = [
   ['1440', {viewport: {width: 1440, height: 900}}],
   ['390', {viewport: {width: 390, height: 844}, isMobile: true, hasTouch: true}],
 ]
+const TABLET = ['768', {viewport: {width: 768, height: 1024}, isMobile: true, hasTouch: true}]
 const presets = JSON.parse(readFileSync('../studio/presets.json', 'utf8'))
 const FLOWS = presets.flows.map((f) => f.id)
 const OFFERED = presets.styleSets.map((s) => s.id)
@@ -358,7 +365,7 @@ try {
       await context.close()
     }
     if (!STYLE_SET_CANVASES.includes(canvas)) continue
-    for (const [width, device] of WIDTHS) {
+    for (const [width, device] of canvas === 'long-headings' ? [...WIDTHS, TABLET] : WIDTHS) {
       for (const styleSet of STYLE_SETS) {
         // A fresh context per page: the font bytes are what one visitor's first page fetches.
         const context = await browser.newContext({...device, reducedMotion: 'reduce', colorScheme: 'light'})
@@ -395,11 +402,20 @@ try {
         results[key] = m
         if (m.innerWidth !== device.viewport.width) fail(`${key}: innerWidth is ${m.innerWidth}, not ${device.viewport.width}`)
         if (m.scrollWidth > m.clientWidth) fail(`${key}: horizontal scroll: scrollWidth ${m.scrollWidth} over ${m.clientWidth}`)
-        const limit = width === '390' ? 4 : 3
+        const limit = width === '1440' ? 3 : 4
         for (const b of m.bands) {
           if (b.headingLines <= limit) continue
-          if (atFloor(b, limit)) console.log(`flow-metrics: ${key}: band ${b.i} at the readable floor (${b.headingSize} px) takes ${b.headingLines} lines, as [R-544] allows: ${b.heading}`)
+          if (width !== '768' && atFloor(b, limit)) console.log(`flow-metrics: ${key}: band ${b.i} at the readable floor (${b.headingSize} px) takes ${b.headingLines} lines, as [R-544] allows: ${b.heading}`)
           else fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at ${width} (the rule is ${limit}): ${b.heading}`)
+        }
+        if (width === '768') {
+          // A heading column spans its row on a tablet: nothing sits beside it (`[R-548]`).
+          const narrow = await page.evaluate(() => [...document.querySelectorAll('.heading-grows')].map((el) => {
+            const row = el.parentElement
+            const cs = getComputedStyle(row)
+            return {w: el.getBoundingClientRect().width, row: row.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight), text: (el.textContent ?? '').trim().replace(/\s+/g, ' ').slice(0, 48)}
+          }).filter((c) => c.w < c.row - 1))
+          for (const c of narrow) fail(`${key}: a heading column ${Math.round(c.w)} px wide in a ${Math.round(c.row)} px row at 768 (it stacks under lg): ${c.text}`)
         }
         if (fontBytes > FONT_BUDGET) fail(`${key}: ${fontBytes} font bytes over the budget of ${FONT_BUDGET}: ${fontFiles.join(', ')}`)
         await page.screenshot({path: resolve(OUT, `${canvas}--${STYLE_SET_FLOW}--${width}--${styleSet}.jpg`), fullPage: true, type: 'jpeg', quality: 60})
