@@ -189,9 +189,9 @@ function SiloSectionFrame({
 
     case 'aside':
       return (
-        <div data-section-layout="aside" className="heading-grid-aside lg:grid lg:grid-cols-[18rem_1fr] lg:gap-12 xl:gap-16">
+        <div data-section-layout="aside" className="heading-grid-aside stacked-measure xl:grid xl:grid-cols-[18rem_1fr] xl:gap-16">
           {hasHeader && (
-            <div className="heading-grows mb-10 lg:mb-0 lg:sticky lg:top-28 lg:self-start">{header('left')}</div>
+            <div className="heading-grows mb-10 max-xl:max-w-2xl xl:mb-0 xl:sticky xl:top-28 xl:self-start">{header('left')}</div>
           )}
           <div>{buttons}</div>
         </div>
@@ -201,9 +201,9 @@ function SiloSectionFrame({
       return (
         <div data-section-layout="banner">
           {hasHeader && (
-            <div className="mb-10 flex flex-col gap-4 md:mb-12 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
+            <div className="mb-10 flex flex-col gap-4 md:mb-12 xl:flex-row xl:items-end xl:justify-between xl:gap-12">
               {header('left', {withDescription: false, className: 'heading-flex-banner max-w-2xl'})}
-              {description && <p className="max-w-md text-foreground-muted lg:text-right">{description}</p>}
+              {description && <p className="max-w-md text-foreground-muted xl:text-right">{description}</p>}
             </div>
           )}
           {buttons}

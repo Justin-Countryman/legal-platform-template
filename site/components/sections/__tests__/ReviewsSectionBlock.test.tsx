@@ -51,8 +51,8 @@ describe('ReviewsSectionBlock', () => {
 
   it('split: heading and buttons in the left column, the widget on the right with an accessible label', () => {
     const {container} = renderSection({layout: 'split', tagline: 'Clients', heading: 'What {{firmName}} clients say', buttons: three.slice(0, 1), reviewsEmbed: EMBED})
-    const left = container.querySelector('.lg\\:col-span-5')!
-    const right = container.querySelector('.lg\\:col-span-7')!
+    const left = container.querySelector('.xl\\:col-span-5')!
+    const right = container.querySelector('.xl\\:col-span-7')!
     expect(left.querySelector('h2')?.textContent).toBe('What Acme Law clients say')
     expect(left.firstElementChild!.className).not.toContain('text-center')
     expect(left.querySelectorAll('a')).toHaveLength(1)
@@ -61,7 +61,7 @@ describe('ReviewsSectionBlock', () => {
 
   it('split with no heading still renders the widget', () => {
     const {container} = renderSection({layout: 'split', reviewsEmbed: EMBED})
-    expect(container.querySelector('.lg\\:col-span-7')).not.toBeNull()
+    expect(container.querySelector('.xl\\:col-span-7')).not.toBeNull()
     expect(container.querySelector('h2')).toBeNull()
   })
 })

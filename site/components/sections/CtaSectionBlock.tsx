@@ -70,9 +70,9 @@ const DEFAULT_SURFACE: Record<Layout, SectionSurface> = {
 // RSC payload for no reason.
 const INNER_CLASS: Record<Layout, string> = {
   centered:   'mx-auto max-w-2xl text-center',
-  split:      'grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20',
+  split:      'stacked-measure grid grid-cols-1 items-center gap-12 max-xl:mx-auto max-xl:max-w-3xl xl:grid-cols-2 xl:gap-20',
   background: 'text-center text-foreground',
-  textOnly:   'heading-grid-half grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center lg:gap-12',
+  textOnly:   'heading-grid-half stacked-measure grid grid-cols-1 gap-8 max-xl:mx-auto max-xl:max-w-3xl xl:grid-cols-2 xl:items-center xl:gap-12',
 }
 
 /** The appearance this section will actually render with, for the seam walk. */
@@ -119,7 +119,7 @@ function SplitCta({data, fit}: {data: CtaSectionBlockData; fit?: HeadingFit | nu
       </div>
       {hasImage(image) && (
         <div className="relative h-96 w-full overflow-hidden">
-          <SanityImage image={image} mode="fill" alt={image.alt ?? ''} sizes="(min-width:1024px) 50vw, 100vw" />
+          <SanityImage image={image} mode="fill" alt={image.alt ?? ''} sizes="(min-width: 1280px) 50vw, (min-width: 853px) 768px, 100vw" />
         </div>
       )}
     </>
@@ -146,7 +146,7 @@ function TextOnlyCta({data, fit}: {data: CtaSectionBlockData; fit?: HeadingFit |
     <>
       {/* Column-only header — the description and buttons live in the RIGHT column,
           so the header's canonical trailing gap has nothing below it and would only
-          add height to the left column, shifting the grid's lg:items-center row. */}
+          add height to the left column, shifting the grid's xl:items-center row. */}
       <SectionHeader tagline={tagline} heading={heading ?? ''} fit={fit} scale="lg" alignment="left" noTrailingGap className="heading-grows" />
       <div>
         {description && <p className="mb-6 text-foreground-muted">{description}</p>}
