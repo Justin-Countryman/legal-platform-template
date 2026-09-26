@@ -48955,7 +48955,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "quiet",
         "ghost": false,
         "top": 1107,
         "height": 1095,
@@ -49016,7 +49016,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "strong",
         "ghost": false,
         "top": 3192,
         "height": 985,
@@ -49295,7 +49295,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "quiet",
         "ghost": false,
         "top": 1070,
         "height": 1006,
@@ -49356,7 +49356,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "strong",
         "ghost": false,
         "top": 2956,
         "height": 947,
@@ -49465,7 +49465,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "quiet",
         "ghost": false,
         "top": 1109,
         "height": 1050,
@@ -49526,7 +49526,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "strong",
         "ghost": false,
         "top": 3153,
         "height": 987,
@@ -49805,7 +49805,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "quiet",
         "ghost": false,
         "top": 1071,
         "height": 1010,
@@ -49866,7 +49866,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "strong",
         "ghost": false,
         "top": 2951,
         "height": 951,
@@ -49975,7 +49975,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "quiet",
         "ghost": false,
         "top": 1106,
         "height": 1047,
@@ -50036,7 +50036,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "strong",
         "ghost": false,
         "top": 3141,
         "height": 984,
@@ -50144,7 +50144,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "quiet",
         "ghost": false,
         "top": 1108,
         "height": 1048,
@@ -50205,7 +50205,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "strong",
         "ghost": false,
         "top": 3146,
         "height": 985,
@@ -50483,7 +50483,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "quiet",
         "ghost": false,
         "top": 1092,
         "height": 1033,
@@ -50544,7 +50544,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "strong",
         "ghost": false,
         "top": 3031,
         "height": 985,
@@ -50994,7 +50994,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "quiet",
         "ghost": false,
         "top": 1176,
         "height": 1070,
@@ -51055,7 +51055,7 @@
           "bg-brand-dark",
           "divider-cut"
         ],
-        "texture": true,
+        "texture": "strong",
         "ghost": false,
         "top": 3188,
         "height": 973,
