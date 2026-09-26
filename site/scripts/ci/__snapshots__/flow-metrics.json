@@ -48904,7 +48904,7 @@
     "innerWidth": 768,
     "clientWidth": 768,
     "scrollWidth": 768,
-    "scrollHeight": 4833,
+    "scrollHeight": 4881,
     "bands": [
       {
         "i": 0,
@@ -48958,7 +48958,7 @@
         "texture": true,
         "ghost": false,
         "top": 1107,
-        "height": 1071,
+        "height": 1095,
         "pt": 96,
         "pb": 96,
         "headingLines": 3,
@@ -48977,8 +48977,8 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2178,
-        "height": 543,
+        "top": 2202,
+        "height": 567,
         "pt": 96,
         "pb": 96,
         "headingLines": 3,
@@ -48997,7 +48997,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2721,
+        "top": 2769,
         "height": 423,
         "pt": 48,
         "pb": 96,
@@ -49018,7 +49018,7 @@
         ],
         "texture": true,
         "ghost": false,
-        "top": 3144,
+        "top": 3192,
         "height": 985,
         "pt": 96,
         "pb": 96,
@@ -49038,7 +49038,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4128,
+        "top": 4176,
         "height": 372,
         "pt": 96,
         "pb": 96,
@@ -49074,7 +49074,7 @@
     "innerWidth": 768,
     "clientWidth": 768,
     "scrollWidth": 768,
-    "scrollHeight": 4828,
+    "scrollHeight": 4876,
     "bands": [
       {
         "i": 0,
@@ -49128,7 +49128,7 @@
         "texture": false,
         "ghost": false,
         "top": 1114,
-        "height": 1031,
+        "height": 1055,
         "pt": 96,
         "pb": 96,
         "headingLines": 2,
@@ -49147,8 +49147,8 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2145,
-        "height": 550,
+        "top": 2169,
+        "height": 574,
         "pt": 96,
         "pb": 96,
         "headingLines": 3,
@@ -49167,7 +49167,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2695,
+        "top": 2743,
         "height": 430,
         "pt": 48,
         "pb": 96,
@@ -49188,7 +49188,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3125,
+        "top": 3173,
         "height": 992,
         "pt": 96,
         "pb": 96,
@@ -49208,7 +49208,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4116,
+        "top": 4164,
         "height": 379,
         "pt": 96,
         "pb": 96,
@@ -49244,7 +49244,7 @@
     "innerWidth": 768,
     "clientWidth": 768,
     "scrollWidth": 768,
-    "scrollHeight": 4509,
+    "scrollHeight": 4581,
     "bands": [
       {
         "i": 0,
@@ -49277,7 +49277,7 @@
         "texture": false,
         "ghost": false,
         "top": 463,
-        "height": 583,
+        "height": 607,
         "pt": 96,
         "pb": 96,
         "headingLines": 2,
@@ -49297,8 +49297,8 @@
         ],
         "texture": true,
         "ghost": false,
-        "top": 1046,
-        "height": 982,
+        "top": 1070,
+        "height": 1006,
         "pt": 96,
         "pb": 96,
         "headingLines": 2,
@@ -49317,8 +49317,8 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2028,
-        "height": 488,
+        "top": 2076,
+        "height": 512,
         "pt": 96,
         "pb": 96,
         "headingLines": 3,
@@ -49337,7 +49337,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2516,
+        "top": 2588,
         "height": 368,
         "pt": 48,
         "pb": 96,
@@ -49358,7 +49358,7 @@
         ],
         "texture": true,
         "ghost": false,
-        "top": 2884,
+        "top": 2956,
         "height": 947,
         "pt": 96,
         "pb": 96,
@@ -49378,7 +49378,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3832,
+        "top": 3904,
         "height": 344,
         "pt": 96,
         "pb": 96,
@@ -49584,7 +49584,7 @@
     "innerWidth": 768,
     "clientWidth": 768,
     "scrollWidth": 768,
-    "scrollHeight": 4734,
+    "scrollHeight": 4782,
     "bands": [
       {
         "i": 0,
@@ -49638,7 +49638,7 @@
         "texture": false,
         "ghost": false,
         "top": 1142,
-        "height": 1035,
+        "height": 1059,
         "pt": 96,
         "pb": 96,
         "headingLines": 3,
@@ -49657,8 +49657,8 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2177,
-        "height": 507,
+        "top": 2201,
+        "height": 531,
         "pt": 96,
         "pb": 96,
         "headingLines": 3,
@@ -49677,7 +49677,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2685,
+        "top": 2733,
         "height": 387,
         "pt": 48,
         "pb": 96,
@@ -49698,7 +49698,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3072,
+        "top": 3120,
         "height": 966,
         "pt": 96,
         "pb": 96,
@@ -49718,7 +49718,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4038,
+        "top": 4086,
         "height": 363,
         "pt": 96,
         "pb": 96,
@@ -49754,7 +49754,7 @@
     "innerWidth": 768,
     "clientWidth": 768,
     "scrollWidth": 768,
-    "scrollHeight": 4524,
+    "scrollHeight": 4596,
     "bands": [
       {
         "i": 0,
@@ -49787,7 +49787,7 @@
         "texture": false,
         "ghost": false,
         "top": 460,
-        "height": 587,
+        "height": 611,
         "pt": 96,
         "pb": 96,
         "headingLines": 2,
@@ -49807,8 +49807,8 @@
         ],
         "texture": true,
         "ghost": false,
-        "top": 1047,
-        "height": 986,
+        "top": 1071,
+        "height": 1010,
         "pt": 96,
         "pb": 96,
         "headingLines": 2,
@@ -49827,8 +49827,8 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2033,
-        "height": 459,
+        "top": 2081,
+        "height": 483,
         "pt": 96,
         "pb": 96,
         "headingLines": 2,
@@ -49847,7 +49847,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2491,
+        "top": 2563,
         "height": 388,
         "pt": 48,
         "pb": 96,
@@ -49868,7 +49868,7 @@
         ],
         "texture": true,
         "ghost": false,
-        "top": 2879,
+        "top": 2951,
         "height": 951,
         "pt": 96,
         "pb": 96,
@@ -49888,7 +49888,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3830,
+        "top": 3902,
         "height": 360,
         "pt": 96,
         "pb": 96,
@@ -49924,7 +49924,7 @@
     "innerWidth": 768,
     "clientWidth": 768,
     "scrollWidth": 768,
-    "scrollHeight": 4780,
+    "scrollHeight": 4828,
     "bands": [
       {
         "i": 0,
@@ -49978,7 +49978,7 @@
         "texture": true,
         "ghost": false,
         "top": 1106,
-        "height": 1023,
+        "height": 1047,
         "pt": 96,
         "pb": 96,
         "headingLines": 2,
@@ -49997,8 +49997,8 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2129,
-        "height": 542,
+        "top": 2153,
+        "height": 566,
         "pt": 96,
         "pb": 96,
         "headingLines": 3,
@@ -50017,7 +50017,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2671,
+        "top": 2719,
         "height": 422,
         "pt": 48,
         "pb": 96,
@@ -50038,7 +50038,7 @@
         ],
         "texture": true,
         "ghost": false,
-        "top": 3093,
+        "top": 3141,
         "height": 984,
         "pt": 96,
         "pb": 96,
@@ -50058,7 +50058,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4076,
+        "top": 4124,
         "height": 371,
         "pt": 96,
         "pb": 96,
@@ -50093,7 +50093,7 @@
     "innerWidth": 768,
     "clientWidth": 768,
     "scrollWidth": 768,
-    "scrollHeight": 4763,
+    "scrollHeight": 4835,
     "bands": [
       {
         "i": 0,
@@ -50126,7 +50126,7 @@
         "texture": false,
         "ghost": false,
         "top": 460,
-        "height": 624,
+        "height": 648,
         "pt": 96,
         "pb": 96,
         "headingLines": 2,
@@ -50146,8 +50146,8 @@
         ],
         "texture": true,
         "ghost": false,
-        "top": 1084,
-        "height": 1024,
+        "top": 1108,
+        "height": 1048,
         "pt": 96,
         "pb": 96,
         "headingLines": 2,
@@ -50166,8 +50166,8 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2108,
-        "height": 543,
+        "top": 2156,
+        "height": 567,
         "pt": 96,
         "pb": 96,
         "headingLines": 3,
@@ -50186,7 +50186,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2651,
+        "top": 2723,
         "height": 423,
         "pt": 48,
         "pb": 96,
@@ -50207,7 +50207,7 @@
         ],
         "texture": true,
         "ghost": false,
-        "top": 3074,
+        "top": 3146,
         "height": 985,
         "pt": 96,
         "pb": 96,
@@ -50227,7 +50227,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4058,
+        "top": 4130,
         "height": 372,
         "pt": 96,
         "pb": 96,
@@ -50262,7 +50262,7 @@
     "innerWidth": 768,
     "clientWidth": 768,
     "scrollWidth": 768,
-    "scrollHeight": 4786,
+    "scrollHeight": 4834,
     "bands": [
       {
         "i": 0,
@@ -50316,7 +50316,7 @@
         "texture": false,
         "ghost": false,
         "top": 1107,
-        "height": 1024,
+        "height": 1048,
         "pt": 96,
         "pb": 96,
         "headingLines": 2,
@@ -50335,8 +50335,8 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2131,
-        "height": 543,
+        "top": 2155,
+        "height": 567,
         "pt": 96,
         "pb": 96,
         "headingLines": 3,
@@ -50355,7 +50355,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2674,
+        "top": 2722,
         "height": 423,
         "pt": 48,
         "pb": 96,
@@ -50376,7 +50376,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3097,
+        "top": 3145,
         "height": 985,
         "pt": 96,
         "pb": 96,
@@ -50396,7 +50396,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4081,
+        "top": 4129,
         "height": 372,
         "pt": 96,
         "pb": 96,
@@ -50432,7 +50432,7 @@
     "innerWidth": 768,
     "clientWidth": 768,
     "scrollWidth": 768,
-    "scrollHeight": 4665,
+    "scrollHeight": 4713,
     "bands": [
       {
         "i": 0,
@@ -50486,7 +50486,7 @@
         "texture": true,
         "ghost": false,
         "top": 1092,
-        "height": 1009,
+        "height": 1033,
         "pt": 96,
         "pb": 96,
         "headingLines": 2,
@@ -50505,8 +50505,8 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2101,
-        "height": 481,
+        "top": 2125,
+        "height": 505,
         "pt": 96,
         "pb": 96,
         "headingLines": 2,
@@ -50525,7 +50525,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2582,
+        "top": 2630,
         "height": 401,
         "pt": 48,
         "pb": 96,
@@ -50546,7 +50546,7 @@
         ],
         "texture": true,
         "ghost": false,
-        "top": 2983,
+        "top": 3031,
         "height": 985,
         "pt": 96,
         "pb": 96,
@@ -50566,7 +50566,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3968,
+        "top": 4016,
         "height": 365,
         "pt": 96,
         "pb": 96,
@@ -50603,7 +50603,7 @@
     "innerWidth": 768,
     "clientWidth": 768,
     "scrollWidth": 768,
-    "scrollHeight": 4786,
+    "scrollHeight": 4834,
     "bands": [
       {
         "i": 0,
@@ -50657,7 +50657,7 @@
         "texture": false,
         "ghost": false,
         "top": 1107,
-        "height": 1024,
+        "height": 1048,
         "pt": 96,
         "pb": 96,
         "headingLines": 2,
@@ -50676,8 +50676,8 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2131,
-        "height": 543,
+        "top": 2155,
+        "height": 567,
         "pt": 96,
         "pb": 96,
         "headingLines": 3,
@@ -50696,7 +50696,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2674,
+        "top": 2722,
         "height": 423,
         "pt": 48,
         "pb": 96,
@@ -50717,7 +50717,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3097,
+        "top": 3145,
         "height": 985,
         "pt": 96,
         "pb": 96,
@@ -50737,7 +50737,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4081,
+        "top": 4129,
         "height": 372,
         "pt": 96,
         "pb": 96,
@@ -51090,6 +51090,4426 @@
       "face": "Poppins",
       "weight": 700,
       "heroPx": 54.4,
+      "widthPerEm": 10.63,
+      "ink": 0.256,
+      "sectionCase": "uppercase"
+    },
+    "fontBytes": 23740,
+    "fontFiles": [
+      "Poppins-Bold.woff2",
+      "Poppins-Regular.woff2",
+      "Poppins-SemiBold.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1024 / graphite": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1024,
+    "clientWidth": 1024,
+    "scrollWidth": 1024,
+    "scrollHeight": 5194,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 639,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 67.2
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 639,
+        "height": 702,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 53
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1342,
+        "height": 1223,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 53
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2565,
+        "height": 633,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 53
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3197,
+        "height": 472,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 50.4
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3670,
+        "height": 816,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4486,
+        "height": 415,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 700,
+        "headingSize": 53
+      }
+    ],
+    "hero": {
+      "face": "Fraunces",
+      "weight": 700,
+      "heroPx": 67.2,
+      "widthPerEm": 10.07,
+      "ink": 0.22,
+      "sectionCase": "none"
+    },
+    "fontBytes": 84992,
+    "fontFiles": [
+      "Fraunces-Regular.woff2",
+      "Inter-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1024 / walnut": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1024,
+    "clientWidth": 1024,
+    "scrollWidth": 1024,
+    "scrollHeight": 5186,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 639,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 67.2
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 639,
+        "height": 709,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 53
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1349,
+        "height": 1172,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 53
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2520,
+        "height": 640,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 53
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3160,
+        "height": 488,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 53
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3648,
+        "height": 823,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4471,
+        "height": 422,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 53
+      }
+    ],
+    "hero": {
+      "face": "Sorts Mill Goudy",
+      "weight": 400,
+      "heroPx": 67.2,
+      "widthPerEm": 8.84,
+      "ink": 0.118,
+      "sectionCase": "none"
+    },
+    "fontBytes": 70612,
+    "fontFiles": [
+      "OpenSans-Regular.woff2",
+      "SortsMillGoudy-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1024 / marble": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1024,
+    "clientWidth": 1024,
+    "scrollWidth": 1024,
+    "scrollHeight": 4855,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 643,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 67.2
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 643,
+        "height": 655,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 37.6
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1298,
+        "height": 1117,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 37.6
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2415,
+        "height": 568,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 37.6
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2983,
+        "height": 416,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 37.6
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3399,
+        "height": 779,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 25.6
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4178,
+        "height": 384,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 37.6
+      }
+    ],
+    "hero": {
+      "face": "Playfair Display",
+      "weight": 400,
+      "heroPx": 67.2,
+      "widthPerEm": 9.16,
+      "ink": 0.139,
+      "sectionCase": "uppercase"
+    },
+    "fontBytes": 67252,
+    "fontFiles": [
+      "PlayfairDisplay-Regular.woff2",
+      "SourceSans3-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1024 / dune": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1024,
+    "clientWidth": 1024,
+    "scrollWidth": 1024,
+    "scrollHeight": 5183,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 639,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 67.2
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 639,
+        "height": 699,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 50.6
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1338,
+        "height": 1217,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 50.6
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2556,
+        "height": 627,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 50.6
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3183,
+        "height": 475,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 50.6
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3657,
+        "height": 818,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4475,
+        "height": 415,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 700,
+        "headingSize": 50.6
+      }
+    ],
+    "hero": {
+      "face": "Lora",
+      "weight": 700,
+      "heroPx": 67.2,
+      "widthPerEm": 9.71,
+      "ink": 0.21,
+      "sectionCase": "none"
+    },
+    "fontBytes": 88316,
+    "fontFiles": [
+      "Lora-Regular.woff2",
+      "WorkSans-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1024 / flint": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1024,
+    "clientWidth": 1024,
+    "scrollWidth": 1024,
+    "scrollHeight": 5005,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 639,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 67.2
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 639,
+        "height": 674,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 38.1
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1313,
+        "height": 1178,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 38.1
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2491,
+        "height": 588,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 38.1
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3079,
+        "height": 432,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 37.1
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3511,
+        "height": 798,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 25.9
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4309,
+        "height": 403,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 700,
+        "headingSize": 38.1
+      }
+    ],
+    "hero": {
+      "face": "Montserrat",
+      "weight": 700,
+      "heroPx": 67.2,
+      "widthPerEm": 10.68,
+      "ink": 0.225,
+      "sectionCase": "uppercase"
+    },
+    "fontBytes": 78472,
+    "fontFiles": [
+      "Montserrat-Regular.woff2",
+      "OpenSans-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1024 / iron": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1024,
+    "clientWidth": 1024,
+    "scrollWidth": 1024,
+    "scrollHeight": 4840,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 570,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 67.2
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 570,
+        "height": 659,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 39.7
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1229,
+        "height": 1122,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 39.7
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2351,
+        "height": 575,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 39.7
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2926,
+        "height": 437,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 39.7
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3363,
+        "height": 782,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 27
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4145,
+        "height": 401,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 39.7
+      }
+    ],
+    "hero": {
+      "face": "Oswald",
+      "weight": 400,
+      "heroPx": 67.2,
+      "widthPerEm": 7.85,
+      "ink": 0.26,
+      "sectionCase": "uppercase"
+    },
+    "fontBytes": 41600,
+    "fontFiles": [
+      "Oswald-Medium.woff2",
+      "SourceSans3-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1024 / birch": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1024,
+    "clientWidth": 1024,
+    "scrollWidth": 1024,
+    "scrollHeight": 5138,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 639,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 300,
+        "headingSize": 67.2
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 639,
+        "height": 701,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 300,
+        "headingSize": 53
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1341,
+        "height": 1164,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 300,
+        "headingSize": 53
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2504,
+        "height": 632,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 300,
+        "headingSize": 53
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3136,
+        "height": 480,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 300,
+        "headingSize": 53
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3616,
+        "height": 815,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 300,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4431,
+        "height": 414,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 300,
+        "headingSize": 53
+      }
+    ],
+    "hero": {
+      "face": "DM Sans",
+      "weight": 300,
+      "heroPx": 67.2,
+      "widthPerEm": 9.34,
+      "ink": 0.13,
+      "sectionCase": "none"
+    },
+    "fontBytes": 36980,
+    "fontFiles": [
+      "DMSans-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1024 / clay": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1024,
+    "clientWidth": 1024,
+    "scrollWidth": 1024,
+    "scrollHeight": 5145,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 640,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 67.2
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 640,
+        "height": 702,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 53
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1343,
+        "height": 1165,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 53
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2507,
+        "height": 633,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 53
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3140,
+        "height": 481,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 53
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3621,
+        "height": 816,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4437,
+        "height": 415,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 700,
+        "headingSize": 53
+      }
+    ],
+    "hero": {
+      "face": "Source Sans 3",
+      "weight": 700,
+      "heroPx": 67.2,
+      "widthPerEm": 8.87,
+      "ink": 0.219,
+      "sectionCase": "none"
+    },
+    "fontBytes": 28792,
+    "fontFiles": [
+      "SourceSans3-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1024 / canyon": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1024,
+    "clientWidth": 1024,
+    "scrollWidth": 1024,
+    "scrollHeight": 5144,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 639,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 67.2
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 639,
+        "height": 702,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 53
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1342,
+        "height": 1165,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 53
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2506,
+        "height": 633,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 53
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3139,
+        "height": 481,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 53
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3620,
+        "height": 816,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4436,
+        "height": 415,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 53
+      }
+    ],
+    "hero": {
+      "face": "DM Serif Display",
+      "weight": 400,
+      "heroPx": 67.2,
+      "widthPerEm": 8.93,
+      "ink": 0.185,
+      "sectionCase": "none"
+    },
+    "fontBytes": 54824,
+    "fontFiles": [
+      "DMSans-Regular.woff2",
+      "DMSerifDisplay-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1024 / linen": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1024,
+    "clientWidth": 1024,
+    "scrollWidth": 1024,
+    "scrollHeight": 4738,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 557,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 56
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 557,
+        "height": 626,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1182,
+        "height": 1128,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2310,
+        "height": 537,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2847,
+        "height": 385,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3232,
+        "height": 816,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4048,
+        "height": 397,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 36
+      }
+    ],
+    "hero": {
+      "face": "Spectral",
+      "weight": 400,
+      "heroPx": 56,
+      "widthPerEm": 9.05,
+      "ink": 0.127,
+      "sectionCase": "none"
+    },
+    "fontBytes": 72172,
+    "fontFiles": [
+      "OpenSans-Regular.woff2",
+      "Spectral-Bold.woff2",
+      "Spectral-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1024 / valley": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1024,
+    "clientWidth": 1024,
+    "scrollWidth": 1024,
+    "scrollHeight": 5171,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 639,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 67.2
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 639,
+        "height": 697,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 50.6
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1336,
+        "height": 1215,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 50.6
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2552,
+        "height": 625,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 50.6
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3177,
+        "height": 473,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 50.6
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3649,
+        "height": 816,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4465,
+        "height": 413,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 50.6
+      }
+    ],
+    "hero": {
+      "face": "Merriweather",
+      "weight": 400,
+      "heroPx": 67.2,
+      "widthPerEm": 9.7,
+      "ink": 0.18,
+      "sectionCase": "none"
+    },
+    "fontBytes": 140572,
+    "fontFiles": [
+      "Merriweather-Regular.woff2",
+      "OpenSans-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1024 / granite": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1024,
+    "clientWidth": 1024,
+    "scrollWidth": 1024,
+    "scrollHeight": 4929,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 639,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 67.2
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 639,
+        "height": 662,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 34.4
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1301,
+        "height": 1162,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 34.4
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2463,
+        "height": 571,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 34.4
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3034,
+        "height": 417,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 33.5
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3451,
+        "height": 790,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 24.5
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4241,
+        "height": 395,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 700,
+        "headingSize": 34.4
+      }
+    ],
+    "hero": {
+      "face": "Libre Baskerville",
+      "weight": 700,
+      "heroPx": 67.2,
+      "widthPerEm": 10.83,
+      "ink": 0.193,
+      "sectionCase": "uppercase"
+    },
+    "fontBytes": 69360,
+    "fontFiles": [
+      "LibreBaskerville-Regular.woff2",
+      "Montserrat-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1024 / quartz": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1024,
+    "clientWidth": 1024,
+    "scrollWidth": 1024,
+    "scrollHeight": 5092,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 666,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 67.2
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 666,
+        "height": 683,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 42.4
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1349,
+        "height": 1192,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 42.4
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2542,
+        "height": 602,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 42.4
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3143,
+        "height": 444,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 40.6
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3587,
+        "height": 804,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 28.8
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4391,
+        "height": 408,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 700,
+        "headingSize": 42.4
+      }
+    ],
+    "hero": {
+      "face": "Poppins",
+      "weight": 700,
+      "heroPx": 67.2,
+      "widthPerEm": 10.63,
+      "ink": 0.256,
+      "sectionCase": "uppercase"
+    },
+    "fontBytes": 23740,
+    "fontFiles": [
+      "Poppins-Bold.woff2",
+      "Poppins-Regular.woff2",
+      "Poppins-SemiBold.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1279 / graphite": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1279,
+    "clientWidth": 1279,
+    "scrollWidth": 1279,
+    "scrollHeight": 5385,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 666,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 80
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 666,
+        "height": 725,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 63.2
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1391,
+        "height": 1268,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 63.2
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2659,
+        "height": 637,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 54.2
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3296,
+        "height": 472,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 50.4
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3768,
+        "height": 828,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4596,
+        "height": 496,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 63.2
+      }
+    ],
+    "hero": {
+      "face": "Fraunces",
+      "weight": 700,
+      "heroPx": 80,
+      "widthPerEm": 10.07,
+      "ink": 0.22,
+      "sectionCase": "none"
+    },
+    "fontBytes": 84992,
+    "fontFiles": [
+      "Fraunces-Regular.woff2",
+      "Inter-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1279 / walnut": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1279,
+    "clientWidth": 1279,
+    "scrollWidth": 1279,
+    "scrollHeight": 5413,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 666,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 80
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 666,
+        "height": 732,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 63.2
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1398,
+        "height": 1275,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 63.2
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2673,
+        "height": 673,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 63.2
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3346,
+        "height": 506,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 58.4
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3852,
+        "height": 835,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4687,
+        "height": 433,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 63.2
+      }
+    ],
+    "hero": {
+      "face": "Sorts Mill Goudy",
+      "weight": 400,
+      "heroPx": 80,
+      "widthPerEm": 8.84,
+      "ink": 0.118,
+      "sectionCase": "none"
+    },
+    "fontBytes": 70612,
+    "fontFiles": [
+      "OpenSans-Regular.woff2",
+      "SortsMillGoudy-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1279 / marble": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1279,
+    "clientWidth": 1279,
+    "scrollWidth": 1279,
+    "scrollHeight": 5026,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 670,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 80
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 670,
+        "height": 671,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 44.8
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1341,
+        "height": 1194,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 44.8
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2534,
+        "height": 588,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 43.6
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3122,
+        "height": 428,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 41.3
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3550,
+        "height": 790,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 25.6
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4341,
+        "height": 392,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 44.8
+      }
+    ],
+    "hero": {
+      "face": "Playfair Display",
+      "weight": 400,
+      "heroPx": 80,
+      "widthPerEm": 9.16,
+      "ink": 0.139,
+      "sectionCase": "uppercase"
+    },
+    "fontBytes": 67252,
+    "fontFiles": [
+      "PlayfairDisplay-Regular.woff2",
+      "SourceSans3-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1279 / dune": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1279,
+    "clientWidth": 1279,
+    "scrollWidth": 1279,
+    "scrollHeight": 5206,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 640,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 67.4
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 640,
+        "height": 699,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 50.6
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1339,
+        "height": 1229,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 50.6
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2568,
+        "height": 627,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 50.6
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3194,
+        "height": 475,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 50.6
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3669,
+        "height": 830,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4499,
+        "height": 415,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 700,
+        "headingSize": 50.6
+      }
+    ],
+    "hero": {
+      "face": "Lora",
+      "weight": 700,
+      "heroPx": 67.4,
+      "widthPerEm": 9.71,
+      "ink": 0.21,
+      "sectionCase": "none"
+    },
+    "fontBytes": 88316,
+    "fontFiles": [
+      "Lora-Regular.woff2",
+      "WorkSans-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1279 / flint": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1279,
+    "clientWidth": 1279,
+    "scrollWidth": 1279,
+    "scrollHeight": 5157,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 666,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 80
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 666,
+        "height": 690,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 45.5
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1356,
+        "height": 1214,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 45.5
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2570,
+        "height": 592,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 39.4
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3162,
+        "height": 432,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 37.1
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3594,
+        "height": 809,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 25.9
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4403,
+        "height": 461,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 45.5
+      }
+    ],
+    "hero": {
+      "face": "Montserrat",
+      "weight": 700,
+      "heroPx": 80,
+      "widthPerEm": 10.68,
+      "ink": 0.225,
+      "sectionCase": "uppercase"
+    },
+    "fontBytes": 78472,
+    "fontFiles": [
+      "Montserrat-Regular.woff2",
+      "OpenSans-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1279 / iron": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1279,
+    "clientWidth": 1279,
+    "scrollWidth": 1279,
+    "scrollHeight": 5105,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 667,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 80
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 667,
+        "height": 676,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 47.4
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1343,
+        "height": 1202,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 47.4
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2545,
+        "height": 600,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 47.4
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3146,
+        "height": 462,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 47.4
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3608,
+        "height": 794,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 27
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4401,
+        "height": 409,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 47.4
+      }
+    ],
+    "hero": {
+      "face": "Oswald",
+      "weight": 400,
+      "heroPx": 80,
+      "widthPerEm": 7.85,
+      "ink": 0.26,
+      "sectionCase": "uppercase"
+    },
+    "fontBytes": 41600,
+    "fontFiles": [
+      "Oswald-Medium.woff2",
+      "SourceSans3-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1279 / birch": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1279,
+    "clientWidth": 1279,
+    "scrollWidth": 1279,
+    "scrollHeight": 5335,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 666,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 300,
+        "headingSize": 80
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 666,
+        "height": 724,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 300,
+        "headingSize": 63.2
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1390,
+        "height": 1267,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 300,
+        "headingSize": 63.2
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2657,
+        "height": 650,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 300,
+        "headingSize": 58.4
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3307,
+        "height": 483,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 300,
+        "headingSize": 53.9
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3790,
+        "height": 827,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 300,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4616,
+        "height": 425,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 300,
+        "headingSize": 63.2
+      }
+    ],
+    "hero": {
+      "face": "DM Sans",
+      "weight": 300,
+      "heroPx": 80,
+      "widthPerEm": 9.34,
+      "ink": 0.13,
+      "sectionCase": "none"
+    },
+    "fontBytes": 36980,
+    "fontFiles": [
+      "DMSans-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1279 / clay": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1279,
+    "clientWidth": 1279,
+    "scrollWidth": 1279,
+    "scrollHeight": 5361,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 667,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 80
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 667,
+        "height": 725,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 63.2
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1392,
+        "height": 1268,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 63.2
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2660,
+        "height": 657,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 60.4
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3317,
+        "height": 496,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 57.7
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3814,
+        "height": 828,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4641,
+        "height": 426,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 700,
+        "headingSize": 63.2
+      }
+    ],
+    "hero": {
+      "face": "Source Sans 3",
+      "weight": 700,
+      "heroPx": 80,
+      "widthPerEm": 8.87,
+      "ink": 0.219,
+      "sectionCase": "none"
+    },
+    "fontBytes": 28792,
+    "fontFiles": [
+      "SourceSans3-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1279 / canyon": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1279,
+    "clientWidth": 1279,
+    "scrollWidth": 1279,
+    "scrollHeight": 5355,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 666,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 80
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 666,
+        "height": 725,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 63.2
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1391,
+        "height": 1268,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 63.2
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2659,
+        "height": 656,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 60.1
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3315,
+        "height": 493,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 56.6
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3808,
+        "height": 828,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4636,
+        "height": 426,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 63.2
+      }
+    ],
+    "hero": {
+      "face": "DM Serif Display",
+      "weight": 400,
+      "heroPx": 80,
+      "widthPerEm": 8.93,
+      "ink": 0.185,
+      "sectionCase": "none"
+    },
+    "fontBytes": 54824,
+    "fontFiles": [
+      "DMSans-Regular.woff2",
+      "DMSerifDisplay-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1279 / linen": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1279,
+    "clientWidth": 1279,
+    "scrollWidth": 1279,
+    "scrollHeight": 4761,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 557,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 56
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 557,
+        "height": 626,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1182,
+        "height": 1139,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2321,
+        "height": 537,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2859,
+        "height": 385,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3244,
+        "height": 828,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4071,
+        "height": 397,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 36
+      }
+    ],
+    "hero": {
+      "face": "Spectral",
+      "weight": 400,
+      "heroPx": 56,
+      "widthPerEm": 9.05,
+      "ink": 0.127,
+      "sectionCase": "none"
+    },
+    "fontBytes": 72172,
+    "fontFiles": [
+      "OpenSans-Regular.woff2",
+      "Spectral-Bold.woff2",
+      "Spectral-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1279 / valley": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1279,
+    "clientWidth": 1279,
+    "scrollWidth": 1279,
+    "scrollHeight": 5194,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 640,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 67.4
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 640,
+        "height": 697,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 50.6
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1337,
+        "height": 1227,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 50.6
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2564,
+        "height": 625,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 50.6
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3188,
+        "height": 473,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 400,
+        "headingSize": 50.6
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3661,
+        "height": 828,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 400,
+        "headingSize": 36
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4489,
+        "height": 413,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 400,
+        "headingSize": 50.6
+      }
+    ],
+    "hero": {
+      "face": "Merriweather",
+      "weight": 400,
+      "heroPx": 67.4,
+      "widthPerEm": 9.7,
+      "ink": 0.18,
+      "sectionCase": "none"
+    },
+    "fontBytes": 140572,
+    "fontFiles": [
+      "Merriweather-Regular.woff2",
+      "OpenSans-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1279 / granite": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1279,
+    "clientWidth": 1279,
+    "scrollWidth": 1279,
+    "scrollHeight": 4952,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 640,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 67.4
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 640,
+        "height": 662,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 34.4
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 1301,
+        "height": 1173,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 34.4
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2475,
+        "height": 571,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 34.4
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3046,
+        "height": 417,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 33.5
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3463,
+        "height": 802,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 24.5
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4265,
+        "height": 395,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 1,
+        "headingWeight": 700,
+        "headingSize": 34.4
+      }
+    ],
+    "hero": {
+      "face": "Libre Baskerville",
+      "weight": 700,
+      "heroPx": 67.4,
+      "widthPerEm": 10.83,
+      "ink": 0.193,
+      "sectionCase": "uppercase"
+    },
+    "fontBytes": 69360,
+    "fontFiles": [
+      "LibreBaskerville-Regular.woff2",
+      "Montserrat-Regular.woff2"
+    ]
+  },
+  "long-headings / cutBlocks.balanced / 1279 / quartz": {
+    "header": {
+      "ring": null,
+      "bg": "rgb(245, 238, 220)"
+    },
+    "headerRow": "rgb(245, 238, 220)",
+    "footer": {
+      "ring": "dark",
+      "bg": "rgb(28, 43, 74)"
+    },
+    "innerWidth": 1279,
+    "clientWidth": 1279,
+    "scrollWidth": 1279,
+    "scrollHeight": 5308,
+    "bands": [
+      {
+        "i": 0,
+        "heading": "Counsel you can call",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 0,
+        "height": 693,
+        "pt": 64,
+        "pb": 80,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 80
+      },
+      {
+        "i": 1,
+        "heading": "A practice built on answers, not guesswork",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgba(0, 0, 0, 0)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [],
+        "texture": false,
+        "ghost": false,
+        "top": 693,
+        "height": 757,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 50.5
+      },
+      {
+        "i": 2,
+        "heading": "Straight answers, a written plan, and a lawyer w",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 1450,
+        "height": 1231,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 50.5
+      },
+      {
+        "i": 3,
+        "heading": "Every matter gets a written plan, a named attorn",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 2680,
+        "height": 603,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 42.8
+      },
+      {
+        "i": 4,
+        "heading": "When a family or a business is at stake, you des",
+        "ring": null,
+        "scrim": null,
+        "bg": "rgb(245, 238, 220)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-background"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 3283,
+        "height": 444,
+        "pt": 56,
+        "pb": 112,
+        "headingLines": 3,
+        "headingWeight": 700,
+        "headingSize": 40.6
+      },
+      {
+        "i": 5,
+        "heading": "The areas of law we practice, and the people we ",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(21, 22, 25)",
+        "classes": [
+          "bg-brand-dark",
+          "divider-cut"
+        ],
+        "texture": true,
+        "ghost": false,
+        "top": 3727,
+        "height": 816,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 28.8
+      },
+      {
+        "i": 6,
+        "heading": "Talk to an attorney today",
+        "ring": "dark",
+        "scrim": null,
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
+        "classes": [
+          "bg-brand-dark"
+        ],
+        "texture": false,
+        "ghost": false,
+        "top": 4543,
+        "height": 472,
+        "pt": 112,
+        "pb": 112,
+        "headingLines": 2,
+        "headingWeight": 700,
+        "headingSize": 50.5
+      }
+    ],
+    "hero": {
+      "face": "Poppins",
+      "weight": 700,
+      "heroPx": 80,
       "widthPerEm": 10.63,
       "ink": 0.256,
       "sectionCase": "uppercase"
