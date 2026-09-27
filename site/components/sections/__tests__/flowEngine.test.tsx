@@ -28,9 +28,9 @@ vi.mock('@/components/ui/ScrollReveal', () => ({
 import {HomepageCanvas, frameOf, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomepageCta} from '@/components/layout/HomepageCta'
 import {PageSections, type PageSectionData} from '../PageSections'
-import {assignGrounds, canvasFacts, walkFrame, siteLookOf, NO_SEAM, type SiteLook} from '../sectionFrame'
+import {assignGrounds, canvasFacts, closeFrame, walkFrame, siteLookOf, NO_SEAM, type SiteLook} from '../sectionFrame'
 import {SectionShell, type SectionAppearance} from '../SectionShell'
-import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, chromeSchemes, flowById, unmetNeeds, type FlowRules, type Host} from '@/lib/flows'
+import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, chromeSchemes, closeSurface, flowById, unmetNeeds, type FlowRules, type Host} from '@/lib/flows'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {ghostSource} from '@/lib/brandMark'
 import {LOOK, themed} from './flowFixtures'
@@ -296,9 +296,21 @@ describe('each paint, gated by its data', () => {
     expect(out.map((o) => !!o.seam.ghost)).toEqual([false, true])
   })
 
-  it('a wash close is painted as the theme paints a band', () => {
-    const {container} = render(<HomepageCta data={{heading: 'Talk to us'}} surface="light" seam={{...NO_SEAM, paint: {ground: 'wash', texture: false}}} />)
+  it('a wash close is painted as the theme paints a band, through the frame the homepage renders (ADV-17D-2)', () => {
+    const sw = flowById('softWash.mostlyLight')!
+    const frame = closeFrame(closeSurface(sw, true), {...LOOK, flow: sw})
+    expect(frame).toMatchObject({surface: 'light', seam: {paint: {ground: 'wash', texture: false}}})
+    const {container} = render(<HomepageCta data={{heading: 'Talk to us'}} surface={frame.surface} seam={frame.seam} />)
     expect(container.querySelector('section')!.className.split(' ')).toContain('bg-wash')
+    // Every other close is its surface alone; a photo close without a photograph has no window.
+    expect(closeFrame('dark', LOOK)).toEqual({surface: 'dark'})
+    expect(closeFrame('photo', {...LOOK, heroPhoto: null})).toEqual({surface: 'image', seam: undefined})
+  })
+
+  it('an operator\u2019s own inset panel keeps its gutter on a full-bleed band too: a live fix, found here (ADV-17D-2)', () => {
+    // A scrolling badges band stored as an inset drew its panel to the viewport's edges at the pin.
+    const {container} = render(<SectionShell gutter={false} contained={false} appearance={{inset: true, surface: 'dark'}}>band</SectionShell>)
+    expect(container.querySelector('section')!.className.split(' ')).toContain('px-[5%]')
   })
 
   it('a light pattern textures the light bands the theme assigns, gated on the texture', () => {
@@ -350,6 +362,19 @@ describe('a divider at every change (Phase 17D, Wedges)', () => {
     // light to dark: cut; dark to muted: cut; muted to light and light to tint: none; tint to dark and dark to light: cut.
     expect(out.map((o) => o.seam.divider?.mode ?? null)).toEqual(['rise', 'cut', 'cut', null, null, 'cut', 'cut'])
     expect(out[2].seam.divider).toMatchObject({from: 'dark'})
+  })
+
+  it('never cuts into an inset panel, whose panel would paint over the wedge (ADV-17D-2)', () => {
+    // The panel takes no divider room (`SectionShell`), so a steep wedge ran 145 px into a panel that
+    // starts 112 px down at 1440 and was sliced flat. `intoDark` never cut into an inset (its ground is
+    // light, or the adopted ground of both neighbours); `everyChange` did, as the rise never has.
+    const flow = themed({divider: {shape: 'steep', at: 'everyChange'}})
+    // A dark band, the operator's panel (not bracketed, so on the light ground), then dark again.
+    const out = walkFrame([b('split', {surface: 'dark'}), b('split', {inset: true, surface: 'light'}), b('split', {surface: 'light'}), b('split', {surface: 'dark'})], resolveBand, {...LOOK, flow}, 'dark')
+    expect(out[1].seam.insetGround).toBeNull()
+    expect(out[1].seam.divider ?? null).toBeNull()
+    // Bands that are not panels still cut at the change.
+    expect(out[3].seam.divider).toMatchObject({mode: 'cut', from: 'light'})
   })
 })
 

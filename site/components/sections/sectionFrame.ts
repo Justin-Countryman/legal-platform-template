@@ -2,7 +2,7 @@ import {
   type SectionAppearance,
 } from '@/components/sections/SectionShell'
 import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
-import {flowOf, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts} from '@/lib/flows'
+import {closeSurface, flowOf, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts} from '@/lib/flows'
 import type {HeroPhoto} from '@/lib/heroGround'
 import type {HeadingFace} from '@/lib/headingFace'
 import type {DrawnStrength} from '@/lib/designTokens'
@@ -343,6 +343,9 @@ export function walkFrame<M>(
     if (shaped && out.length === 0 && hero && !inset && ground !== 'image' && !same(hero, ground)) {
       divider = {mode: 'rise', flip: alternates && placed % 2 === 1}
     } else if (shaped && out.length > 0 && prevGround && prevGround !== 'image' && ground !== 'image'
+      // Never into an inset panel, as the rise never is: the panel takes no divider room, so its own
+      // ground painted over a steep wedge at 1440 (Phase 17D, ADV-17D-2). `intoDark` never reached one.
+      && !inset
       // At every change, the muted step counts as light too: a muted wedge on white is 1.08:1 and would
       // spend the divider's room on nothing (Phase 17D, ADV-17D-B), as a tint one would.
       && (everyChange ? !same(prevGround === 'muted' ? 'light' : prevGround, ground === 'muted' ? 'light' : ground) : strong(ground) && !strong(prevGround))) {
@@ -676,6 +679,21 @@ export function assignGrounds(
     paints.forEach((p, i) => { if (p?.ground && !fixed[i]) paints[i] = {...p, spacing: 'spacious'} })
   }
   return paints
+}
+
+/** The closing call to action's surface and seam under the theme's close (`closeSurface`): a photo close
+ *  is an Image section showing the photograph's first window (`[R-531]`); a wash close is painted as the
+ *  theme paints a band (Soft wash, `[R-551]`), because the close's own appearance is the stored type;
+ *  every other close is its surface alone. `HomeBody` renders what this returns. */
+export function closeFrame(
+  close: ReturnType<typeof closeSurface>,
+  site: SiteLook,
+): {surface: 'dark' | 'saturated' | 'muted' | 'image' | 'light'; seam?: SeamProps} {
+  if (close === 'photo') {
+    return {surface: 'image', seam: site.heroPhoto ? {...NO_SEAM, site, paint: {ground: 'image', texture: false, window: photoWindows(site.heroPhoto.hotspot)[0]}} : undefined}
+  }
+  if (close === 'wash') return {surface: 'light', seam: {...NO_SEAM, paint: {ground: 'wash', texture: false}}}
+  return {surface: close}
 }
 
 /** What the canvas and the site hold, for a theme's needs (`unmetNeeds`). The ribbons are

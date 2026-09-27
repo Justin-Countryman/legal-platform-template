@@ -1,6 +1,6 @@
 import {type getHomePage} from '@/lib/sanity/fetchers'
 import {ghostSource} from '@/lib/brandMark'
-import {photoWindows, NO_SEAM} from '@/components/sections/sectionFrame'
+import {closeFrame} from '@/components/sections/sectionFrame'
 import {siteLookWithHeadingFace} from '@/lib/headingAdvances'
 import {firstBandRises} from '@/components/layout/HomepageCanvas'
 import {heroGround, heroPhotoOf} from '@/lib/heroGround'
@@ -79,7 +79,7 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
     heroPhoto: photo?.assetId && photo.assetId === approved ? photo : null,
     closeShown: !!closeData?.heading,
   }
-  const close = closeSurface(look.flow, !!look.saturated, !!site.heroPhoto)
+  const close = closeFrame(closeSurface(look.flow, !!look.saturated, !!site.heroPhoto), site)
   const ground = heroGround(hero)
   const edgeBelow = firstBandRises(home?.canvas, site, ground)
 
@@ -130,13 +130,11 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
         <HomepageCta
           data={globalCtaData}
           override={home?.ctaOverride}
-          surface={close === 'photo' ? 'image' : close === 'wash' ? 'light' : close}
+          surface={close.surface}
           headingFace={site.headingFace}
-          // A photo close is an Image section like one built by hand (`[R-531]`), showing the
-          // photograph's first window.
-          // A wash close (Soft wash, `[R-551]`) is painted as the theme paints a band, never stored.
-          seam={close === 'photo' && site.heroPhoto ? {...NO_SEAM, site, paint: {ground: 'image', texture: false, window: photoWindows(site.heroPhoto.hotspot)[0]}}
-            : close === 'wash' ? {...NO_SEAM, paint: {ground: 'wash', texture: false}} : undefined}
+          // A photo close is an Image section like one built by hand (`[R-531]`); a wash close is
+          // painted as the theme paints a band (`[R-551]`): `closeFrame`.
+          seam={close.seam}
         />
       )}
     </>
