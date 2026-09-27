@@ -2809,7 +2809,9 @@ export type DesignSettings = {
     | "typeOnBlack.allDark"
     | "editorial.mostlyLight"
     | "ribbonRhythm.mostlyLight"
-    | "photoScrims.mostlyDark";
+    | "photoScrims.mostlyDark"
+    | "floatingPanels.balanced"
+    | "floatingPanels.mostlyDark";
   flowPhoto?: string;
   headingEmphasisStyle?: "color" | "italic";
   headingRule?:
@@ -4168,6 +4170,8 @@ export type DESIGN_TOKENS_QUERY_RESULT = {
     | "cutBlocks.balanced"
     | "cutBlocks.mostlyDark"
     | "editorial.mostlyLight"
+    | "floatingPanels.balanced"
+    | "floatingPanels.mostlyDark"
     | "photoScrims.mostlyDark"
     | "quiet.mostlyLight"
     | "ribbonRhythm.mostlyLight"
@@ -19514,6 +19518,8 @@ export type SITE_CHROME_QUERY_RESULT = {
       | "cutBlocks.balanced"
       | "cutBlocks.mostlyDark"
       | "editorial.mostlyLight"
+      | "floatingPanels.balanced"
+      | "floatingPanels.mostlyDark"
       | "photoScrims.mostlyDark"
       | "quiet.mostlyLight"
       | "ribbonRhythm.mostlyLight"
@@ -20702,6 +20708,8 @@ export type PREVIEW_STORED_DESIGN_QUERY_RESULT = {
     | "cutBlocks.balanced"
     | "cutBlocks.mostlyDark"
     | "editorial.mostlyLight"
+    | "floatingPanels.balanced"
+    | "floatingPanels.mostlyDark"
     | "photoScrims.mostlyDark"
     | "quiet.mostlyLight"
     | "ribbonRhythm.mostlyLight"

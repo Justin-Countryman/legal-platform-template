@@ -281,6 +281,9 @@ function measure() {
         ghost: !!s.querySelector('[data-decor-layer]'),
         // Phase 17B session 6: the window of the hero's photograph, recorded only where a band shows one.
         ...(s.querySelector('[data-photo-window]') ? {window: s.querySelector('[data-photo-window]').getAttribute('data-photo-window')} : {}),
+        // Phase 17D: an inset band's panel, its own ground and ring, recorded only where a band draws one: the
+        // band's own box is the gutter around it (ADV-17D-A, -B: a dark panel recorded as transparent).
+        ...(s.querySelector(':scope > div.rounded-ui.overflow-hidden') ? {panel: {ring: s.querySelector(':scope > div.rounded-ui.overflow-hidden').getAttribute('data-ring-context'), bg: getComputedStyle(s.querySelector(':scope > div.rounded-ui.overflow-hidden')).backgroundColor}} : {}),
         top: Math.round(r.top - origin),
         height: Math.round(r.height),
         pt: px(cs.paddingTop),
@@ -486,7 +489,7 @@ if (UPDATE) {
     if (m.bands.length !== g.bands.length) { fail(`${key}: ${m.bands.length} bands vs golden ${g.bands.length}`); continue }
     m.bands.forEach((b, i) => {
       const gb = g.bands[i]
-      for (const f of ['heading', 'ring', 'scrim', 'bg', 'ink', 'texture', 'ghost', 'window', 'pt', 'pb']) {
+      for (const f of ['heading', 'ring', 'scrim', 'bg', 'ink', 'texture', 'ghost', 'window', 'panel', 'pt', 'pb']) {
         if (JSON.stringify(b[f]) !== JSON.stringify(gb[f])) fail(`${key}: band ${i} (${b.heading}) ${f} ${JSON.stringify(b[f])} vs golden ${JSON.stringify(gb[f])}`)
       }
       if (JSON.stringify(b.classes) !== JSON.stringify(gb.classes)) fail(`${key}: band ${i} classes ${b.classes.join(' ')} vs golden ${gb.classes.join(' ')}`)

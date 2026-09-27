@@ -214,7 +214,9 @@ export function SectionShell({
       aria-label={aria['aria-label']}
       className={[
         'relative',
-        gutter && 'px-[5%]',
+        // A panel keeps its gutter even where its section draws full-bleed (a scrolling badges band):
+        // without it the panel met the viewport's edges (Phase 17D, ADV-17D-B).
+        (gutter || isInset) && 'px-[5%]',
         // The divider, painted by this band so it survives ScrollReveal's transform
         // (Phase 13 amendment 2). Empty unless the walk placed one here.
         seam.divider?.mode === 'cut' && `divider-cut ${DIVIDER_FROM[seam.divider.from] ?? ''}`,

@@ -58,10 +58,30 @@ describe('the families and the roster', () => {
     }
   })
 
-  it('ships the three families of session 2, the three of session 5 and Photo scrims of session 6, one step each for the new ones', () => {
-    expect(FAMILIES.map((f) => f.id)).toEqual(['quiet', 'alternating', 'cutBlocks', 'typeOnBlack', 'editorial', 'ribbonRhythm', 'photoScrims'])
+  it('ships the three families of session 2, the three of session 5, Photo scrims of session 6 and Phase 17D’s', () => {
+    expect(FAMILIES.map((f) => f.id)).toEqual(['quiet', 'alternating', 'cutBlocks', 'typeOnBlack', 'editorial', 'ribbonRhythm', 'photoScrims',
+      'floatingPanels'])
     expect(FLOWS.map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
-      'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark'])
+      'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark',
+      'floatingPanels.balanced', 'floatingPanels.mostlyDark'])
+  })
+
+  it('Floating panels is the Phase 17D record’s §2.2, written out: dark panels on the light page, light panels on the dark one', () => {
+    const light = flowById('floatingPanels.balanced')!
+    expect(light.dark).toMatchObject({budget: 'third', rhythm: 'alternate', paint: 'floating', close: 'dark'})
+    expect(light.dark.hosts).toEqual(STEP_HOSTS.balanced)
+    expect(light.light.paint).toBe('plain')
+    expect(light.chrome).toEqual({header: 'light', footer: 'dark'})
+    const dark = flowById('floatingPanels.mostlyDark')!
+    expect(dark.dark).toMatchObject({budget: 'threeQuarters', rhythm: 'runs', paint: 'plain', close: 'dark'})
+    expect(dark.light.paint).toBe('floating')
+    expect(dark.chrome).toEqual({header: 'dark', footer: 'dark'})
+    for (const f of [light, dark]) {
+      expect(f).toMatchObject({ghost: 'none', overlap: 'none', spacing: 'normal', needs: []})
+      expect(f.divider).toMatchObject({shape: 'straight', at: 'none', hairline: 'none'})
+    }
+    // Only this family floats a panel.
+    expect(FLOWS.filter((f) => f.dark.paint === 'floating' || f.light.paint === 'floating').map((f) => f.id)).toEqual(['floatingPanels.balanced', 'floatingPanels.mostlyDark'])
   })
 
   it('Photo scrims is the session 6 record’s §2.9, written out: mostly dark only, the hero’s photograph, the photo close', () => {

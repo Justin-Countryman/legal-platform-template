@@ -103,6 +103,9 @@ export type Paint = {
    *  quadrant of the photograph drawn at twice the band's size. Set only with `ground: 'image'`
    *  on a band the theme filled; the shell draws the site look's `heroPhoto` through it. */
   window?: PhotoWindow
+  /** The ground a light panel the theme floats sits on (Phase 17D, `light.paint: 'floating'`): the walk
+   *  reads the band as this ground and adopts it wherever the band sits, first and last included. */
+  onGround?: 'dark'
 }
 
 /** A quadrant of the hero's photograph: `x` 0 is the left half, `y` 0 the top half. */
@@ -289,9 +292,12 @@ export function walkFrame<M>(
   survivors.forEach((r, i) => paintAt.set(r.index, paints[i]))
   const isInset = (r: {appearance: SectionAppearance | null | undefined}, paint: Paint | null) =>
     !!r.appearance?.inset || !!paint?.inset
-  const raw = survivors.map((r, i) => (isInset(r, paints[i]) ? 'light' : paints[i]?.ground ?? visibleGround(r.appearance)))
+  // A light panel the theme floats on the dark ground reads as that ground (Phase 17D), so a stored
+  // inset beside it is bracketed by what the visitor sees (ADV-17D-B: it read light, a white stripe).
+  const raw = survivors.map((r, i) => paints[i]?.onGround ?? (isInset(r, paints[i]) ? 'light' : paints[i]?.ground ?? visibleGround(r.appearance)))
   const adopted: (VisibleGround | null)[] = survivors.map((r, i) => {
     if (!isInset(r, paints[i])) return null
+    if (paints[i]?.onGround) return paints[i]!.onGround!
     if (i === 0 || i === survivors.length - 1) return null
     const above = raw[i - 1]
     const below = raw[i + 1]
@@ -576,6 +582,8 @@ export function assignGrounds(
         case 'photo': return {ground: r.photo ? 'image' : 'dark', texture: false}
         case 'pattern': return {ground: 'dark', texture: texture ? 'quiet' : false}
         case 'saturated': return {ground: site?.saturated && r.content ? 'saturated' : 'dark', texture: false}
+        // A panel on the page's light ground (Phase 17D): the walk reads an inset as light.
+        case 'floating': return {ground: 'dark', texture: false, inset: true}
         // The photograph's windows are placed below, over the whole page, because they read both
         // neighbours; every dark band starts on the dark ground.
         default: return {ground: 'dark', texture: false}
@@ -595,6 +603,10 @@ export function assignGrounds(
         break
       case 'pattern':
         paints[i] = {ground: 'light', texture: texture ? 'quiet' : false}
+        break
+      // A panel on the dark ground, wherever the band sits (Phase 17D).
+      case 'floating':
+        paints[i] = {ground: 'light', texture: false, inset: true, onGround: 'dark'}
         break
       case 'panel':
         paints[i] = i > 0 && i < n - 1 && dark[i - 1] && dark[i + 1]

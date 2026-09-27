@@ -5181,7 +5181,9 @@
               "typeOnBlack.allDark",
               "editorial.mostlyLight",
               "ribbonRhythm.mostlyLight",
-              "photoScrims.mostlyDark"
+              "photoScrims.mostlyDark",
+              "floatingPanels.balanced",
+              "floatingPanels.mostlyDark"
             ]
           },
           "path": "flow",

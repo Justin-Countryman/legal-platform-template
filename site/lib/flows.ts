@@ -63,9 +63,9 @@ export type Host = (typeof HOSTS)[number]
 
 export const DARK_BUDGETS = ['none', 'third', 'threeQuarters', 'all'] as const
 export const DARK_RHYTHMS = ['alternate', 'pairs', 'runs', 'bookends'] as const
-export const DARK_PAINTS = ['plain', 'pattern', 'gradient', 'gradientPerBand', 'photo', 'saturated', 'heroPhoto'] as const
+export const DARK_PAINTS = ['plain', 'pattern', 'gradient', 'gradientPerBand', 'photo', 'saturated', 'heroPhoto', 'floating'] as const
 export const CLOSES = ['dark', 'saturated', 'muted', 'photo'] as const
-export const LIGHT_PAINTS = ['plain', 'washes', 'pattern', 'panel'] as const
+export const LIGHT_PAINTS = ['plain', 'washes', 'pattern', 'panel', 'floating'] as const
 /** The texture's strength where a paint is `pattern` (Phase 17C session 3, `[R-538]`): the style set's
  *  one tile as it shipped, the same motif at twice the ink, or the two in turn down the page (the bands
  *  the paint textures, in order: quiet, strong, quiet). Every other paint names `quiet`. */
@@ -120,7 +120,8 @@ export type FlowRules = {
      *  has one, else the dark ground; the accent fill where the palette and the band allow it,
      *  else the dark ground; a window of the hero's own photograph on a text-led band, never
      *  beside another photograph and at most twice a page, else the dark ground (`heroPhoto`,
-     *  Phase 17B session 6, `[R-530]`). */
+     *  Phase 17B session 6, `[R-530]`); the dark ground as a panel on the page's light ground, a
+     *  gutter around it (`floating`, Phase 17D). */
     paint: (typeof DARK_PAINTS)[number]
     /** The texture's strength on the bands the `pattern` paint textures (`TEXTURE_STRENGTHS`). */
     texture: TextureStrength
@@ -129,8 +130,9 @@ export type FlowRules = {
     close: (typeof CLOSES)[number]
   }
   light: {
-    /** Light bands: one ground; light and tint alternating; textured; or, inside a dark run,
-     *  an inset panel that adopts the run (`[R-501]`) where the band stores no `inset`. */
+    /** Light bands: one ground; light and tint alternating; textured; inside a dark run, an inset
+     *  panel that adopts the run (`[R-501]`) where the band stores no `inset`; or, wherever it sits,
+     *  a panel on the dark ground, which the walk reads as dark (`floating`, Phase 17D). */
     paint: (typeof LIGHT_PAINTS)[number]
     /** The texture's strength on the light bands a `pattern` paint textures. */
     texture: TextureStrength
@@ -368,6 +370,31 @@ export const FAMILIES: readonly FlowFamily[] = [
       divider: NO_DIVIDER, spacing: 'normal',
       ghost: 'none', overlap: 'none', needs: ['heroPhoto'], chrome: STEP_CHROME[step],
     }),
+  },
+  // ─── Phase 17D session 1 (record WS-V1-PHASE17D-DESIGN §2) ──────────────────
+  {
+    id: 'floatingPanels', name: 'Floating panels',
+    sentence: 'One calm ground down the page, and the other floating on it as panels.',
+    // The study: breenandperson, curleylawfirm, hdimmigrationlaw and deliamillerattorney float dark
+    // panels on a light page; thelitbot ("documents on a desk"), lewinlawfirm and calesariclaw run one
+    // dark ground with panels on it. The step is named for what the page reads as: dark panels on the
+    // light page measure Alternating's dark share by pixels, so that step is balanced (ADV-17D-A). Its
+    // panels are the operator's own inset (`SectionShell`), placed by the theme; their corners are the
+    // style set's. `alternate` keeps a floating dark band off every dark neighbour.
+    steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: [],
+    rules: (step) => (step === 'mostlyDark'
+      ? {
+          dark: {budget: STEP_BUDGET.mostlyDark, hosts: STEP_HOSTS.mostlyDark, rhythm: 'runs', paint: 'plain', texture: 'quiet', close: 'dark'},
+          light: {paint: 'floating', texture: 'quiet'},
+          divider: NO_DIVIDER, spacing: 'normal',
+          ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.mostlyDark,
+        }
+      : {
+          dark: {budget: STEP_BUDGET.balanced, hosts: STEP_HOSTS.balanced, rhythm: 'alternate', paint: 'floating', texture: 'quiet', close: 'dark'},
+          light: {paint: 'plain', texture: 'quiet'},
+          divider: NO_DIVIDER, spacing: 'normal',
+          ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.balanced,
+        }),
   },
 ]
 

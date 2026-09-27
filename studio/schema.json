@@ -18032,6 +18032,14 @@
             {
               "type": "string",
               "value": "photoScrims.mostlyDark"
+            },
+            {
+              "type": "string",
+              "value": "floatingPanels.balanced"
+            },
+            {
+              "type": "string",
+              "value": "floatingPanels.mostlyDark"
             }
           ]
         },

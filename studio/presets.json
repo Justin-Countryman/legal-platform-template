@@ -3214,6 +3214,17 @@
       "passed": [
         "mostlyDark"
       ]
+    },
+    {
+      "id": "floatingPanels",
+      "name": "Floating panels",
+      "sentence": "One calm ground down the page, and the other floating on it as panels.",
+      "steps": [
+        "balanced",
+        "mostlyDark"
+      ],
+      "defaultStep": "balanced",
+      "passed": []
     }
   ],
   "flows": [
@@ -3564,6 +3575,94 @@
       "family": "photoScrims",
       "step": "mostlyDark",
       "passed": true
+    },
+    {
+      "dark": {
+        "budget": "third",
+        "hosts": [
+          "ribbon",
+          "testimonials",
+          "attorneys",
+          "caseResults",
+          "areas",
+          "split",
+          "narrative"
+        ],
+        "rhythm": "alternate",
+        "paint": "floating",
+        "texture": "quiet",
+        "close": "dark"
+      },
+      "light": {
+        "paint": "plain",
+        "texture": "quiet"
+      },
+      "divider": {
+        "shape": "straight",
+        "at": "none",
+        "carry": [],
+        "hairline": "none",
+        "hairlineInk": "border"
+      },
+      "spacing": "normal",
+      "ghost": "none",
+      "overlap": "none",
+      "needs": [],
+      "chrome": {
+        "header": "light",
+        "footer": "dark"
+      },
+      "id": "floatingPanels.balanced",
+      "name": "Floating panels, balanced",
+      "sentence": "One calm ground down the page, and the other floating on it as panels.",
+      "family": "floatingPanels",
+      "step": "balanced",
+      "passed": false
+    },
+    {
+      "dark": {
+        "budget": "threeQuarters",
+        "hosts": [
+          "ribbon",
+          "narrative",
+          "areas",
+          "testimonials",
+          "statement",
+          "attorneys",
+          "caseResults",
+          "split",
+          "badges"
+        ],
+        "rhythm": "runs",
+        "paint": "plain",
+        "texture": "quiet",
+        "close": "dark"
+      },
+      "light": {
+        "paint": "floating",
+        "texture": "quiet"
+      },
+      "divider": {
+        "shape": "straight",
+        "at": "none",
+        "carry": [],
+        "hairline": "none",
+        "hairlineInk": "border"
+      },
+      "spacing": "normal",
+      "ghost": "none",
+      "overlap": "none",
+      "needs": [],
+      "chrome": {
+        "header": "dark",
+        "footer": "dark"
+      },
+      "id": "floatingPanels.mostlyDark",
+      "name": "Floating panels, mostly dark",
+      "sentence": "One calm ground down the page, and the other floating on it as panels.",
+      "family": "floatingPanels",
+      "step": "mostlyDark",
+      "passed": false
     }
   ],
   "defaultFlow": "quiet.mostlyLight",
