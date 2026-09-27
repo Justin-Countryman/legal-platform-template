@@ -3235,6 +3235,16 @@
       ],
       "defaultStep": "mostlyLight",
       "passed": []
+    },
+    {
+      "id": "wedges",
+      "name": "Wedges",
+      "sentence": "Steep diagonal edges wherever the ground changes.",
+      "steps": [
+        "balanced"
+      ],
+      "defaultStep": "balanced",
+      "passed": []
     }
   ],
   "flows": [
@@ -3707,6 +3717,52 @@
       "sentence": "No dark section: the page and a warm wash of its own background in turn, and a soft close.",
       "family": "softWash",
       "step": "mostlyLight",
+      "passed": false
+    },
+    {
+      "dark": {
+        "budget": "third",
+        "hosts": [
+          "ribbon",
+          "testimonials",
+          "attorneys",
+          "caseResults",
+          "areas",
+          "split",
+          "narrative"
+        ],
+        "rhythm": "pairs",
+        "paint": "plain",
+        "texture": "quiet",
+        "close": "dark"
+      },
+      "light": {
+        "paint": "plain",
+        "texture": "quiet"
+      },
+      "divider": {
+        "shape": "steep",
+        "at": "everyChange",
+        "carry": [
+          "cards",
+          "photo"
+        ],
+        "hairline": "none",
+        "hairlineInk": "border"
+      },
+      "spacing": "normal",
+      "ghost": "none",
+      "overlap": "photo",
+      "needs": [],
+      "chrome": {
+        "header": "light",
+        "footer": "dark"
+      },
+      "id": "wedges.balanced",
+      "name": "Wedges",
+      "sentence": "Steep diagonal edges wherever the ground changes.",
+      "family": "wedges",
+      "step": "balanced",
       "passed": false
     }
   ],

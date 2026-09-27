@@ -342,6 +342,17 @@ describe('each paint, gated by its data', () => {
   })
 })
 
+describe('a divider at every change (Phase 17D, Wedges)', () => {
+  it('cuts into and out of every strong ground, folding tint and the muted step with light', () => {
+    const flow = themed({divider: {shape: 'steep', at: 'everyChange'}})
+    const bands = [b('split', {surface: 'light'}), b('split', {surface: 'dark'}), b('split', {surface: 'muted'}), b('split', {surface: 'light'}), b('split', {surface: 'tint'}), b('split', {surface: 'dark'}), b('split', {surface: 'light'})]
+    const out = walkFrame(bands, resolveBand, {...LOOK, flow}, 'dark')
+    // light to dark: cut; dark to muted: cut; muted to light and light to tint: none; tint to dark and dark to light: cut.
+    expect(out.map((o) => o.seam.divider?.mode ?? null)).toEqual(['rise', 'cut', 'cut', null, null, 'cut', 'cut'])
+    expect(out[2].seam.divider).toMatchObject({from: 'dark'})
+  })
+})
+
 describe('the all-dark page', () => {
   it('seams every join, cuts nowhere, and with gradientPerBand numbers every band as a run of one with a hairline at each', () => {
     const flow = themed({dark: {budget: 'all', hosts: ['split'], rhythm: 'runs', paint: 'gradientPerBand'}, divider: {shape: 'peak', at: 'intoDark', hairline: 'everyBand'}})

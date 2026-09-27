@@ -60,10 +60,20 @@ describe('the families and the roster', () => {
 
   it('ships the three families of session 2, the three of session 5, Photo scrims of session 6 and Phase 17D’s', () => {
     expect(FAMILIES.map((f) => f.id)).toEqual(['quiet', 'alternating', 'cutBlocks', 'typeOnBlack', 'editorial', 'ribbonRhythm', 'photoScrims',
-      'floatingPanels', 'softWash'])
+      'floatingPanels', 'softWash', 'wedges'])
     expect(FLOWS.map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
       'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark',
-      'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight'])
+      'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight', 'wedges.balanced'])
+  })
+
+  it('Wedges is the Phase 17D record\u2019s \u00a72.1, written out: balanced only, the steep angle at every change ([R-552])', () => {
+    const w = flowById('wedges.balanced')!
+    expect(familyOf(w)!.steps).toEqual(['balanced'])
+    expect(w.dark).toMatchObject({budget: 'third', rhythm: 'pairs', paint: 'plain', close: 'dark'})
+    expect(w.divider).toEqual({shape: 'steep', at: 'everyChange', carry: ['cards', 'photo'], hairline: 'none', hairlineInk: 'border'})
+    expect(w).toMatchObject({ghost: 'none', overlap: 'photo', spacing: 'normal', needs: [], chrome: {header: 'light', footer: 'dark'}})
+    // Only Wedges wears the steep angle, and only Wedges places a divider at every change.
+    expect(FLOWS.filter((f) => f.divider.shape === 'steep' || f.divider.at === 'everyChange').map((f) => f.id)).toEqual(['wedges.balanced'])
   })
 
   it('Soft wash is the Phase 17D record\u2019s \u00a72.3, written out: no dark section, the wash in turn, a wash close ([R-551])', () => {
@@ -159,8 +169,8 @@ describe('the families and the roster', () => {
     expect(GHOSTS).toContain(flow.ghost)
     expect(OVERLAPS).toContain(flow.overlap)
     for (const n of flow.needs) expect(NEEDS).toContain(n)
-    // The Studio offers every shape a theme may name.
-    expect(designRows.find((r) => r.path === 'sectionJoin')?.options?.list).toContain(flow.divider.shape)
+    // The Studio's retired list offers every shape a theme may name but the theme-only steep angle ([R-552]).
+    if (flow.divider.shape !== 'steep') expect(designRows.find((r) => r.path === 'sectionJoin')?.options?.list).toContain(flow.divider.shape)
   })
 
   it.each(FLOWS.map((f) => [f.id, f] as const))('%s: its needs match its paints and hosts, and the mark stays off ([R-488])', (_, flow) => {

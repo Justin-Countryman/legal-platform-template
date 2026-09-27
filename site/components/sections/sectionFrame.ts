@@ -343,7 +343,9 @@ export function walkFrame<M>(
     if (shaped && out.length === 0 && hero && !inset && ground !== 'image' && !same(hero, ground)) {
       divider = {mode: 'rise', flip: alternates && placed % 2 === 1}
     } else if (shaped && out.length > 0 && prevGround && prevGround !== 'image' && ground !== 'image'
-      && (everyChange ? !same(prevGround, ground) : strong(ground) && !strong(prevGround))) {
+      // At every change, the muted step counts as light too: a muted wedge on white is 1.08:1 and would
+      // spend the divider's room on nothing (Phase 17D, ADV-17D-B), as a tint one would.
+      && (everyChange ? !same(prevGround === 'muted' ? 'light' : prevGround, ground === 'muted' ? 'light' : ground) : strong(ground) && !strong(prevGround))) {
       divider = {mode: 'cut', from: prevGround, flip: alternates && placed % 2 === 1}
     }
     if (divider) {

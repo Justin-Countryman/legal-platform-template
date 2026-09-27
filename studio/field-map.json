@@ -5184,7 +5184,8 @@
               "photoScrims.mostlyDark",
               "floatingPanels.balanced",
               "floatingPanels.mostlyDark",
-              "softWash.mostlyLight"
+              "softWash.mostlyLight",
+              "wedges.balanced"
             ]
           },
           "path": "flow",

@@ -18044,6 +18044,10 @@
             {
               "type": "string",
               "value": "softWash.mostlyLight"
+            },
+            {
+              "type": "string",
+              "value": "wedges.balanced"
             }
           ]
         },

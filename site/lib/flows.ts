@@ -413,6 +413,24 @@ export const FAMILIES: readonly FlowFamily[] = [
       ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
     }),
   },
+  {
+    id: 'wedges', name: 'Wedges',
+    sentence: 'Steep diagonal edges wherever the ground changes.',
+    // The study: aswllp ("every band seam is a steep diagonal cut"), kashfianlaw and dbnimmigration
+    // (premium), familylawlakecounty, carterlaw, clintonparish, defend-texas; 8 of the 12 angled-seam
+    // sites are balanced. The slant is steep (`[R-552]`): at the shared 2.5-degree angle Wedges was Cut
+    // blocks with the peak turned (ADV-17D-A). It carries into card corners and a photo's corner, not
+    // buttons (a button's slant drops under half the style sets and notches the header's call button);
+    // a photograph crosses a cut as on the evidence. Balanced only: at mostly dark its grounds equal Cut
+    // blocks' on every canvas.
+    steps: ['balanced'], defaultStep: 'balanced', passed: [],
+    rules: (step) => ({
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark'},
+      light: {paint: 'plain', texture: 'quiet'},
+      divider: {shape: 'steep', at: 'everyChange', carry: ['cards', 'photo'], hairline: 'none', hairlineInk: 'border'}, spacing: 'normal',
+      ghost: 'none', overlap: 'photo', needs: [], chrome: STEP_CHROME[step],
+    }),
+  },
 ]
 
 export function flowId(family: string, step: Darkness): string {
