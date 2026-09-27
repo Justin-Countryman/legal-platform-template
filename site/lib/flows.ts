@@ -34,8 +34,9 @@ import type {VisibleGround} from './sectionSurface'
 // dark) is a property of a theme FAMILY, and a family ships only the steps the eye
 // has passed on real canvases through the switcher (`[R-509]`); it is never a fourth
 // click. The roster below is generated from the families, so nothing is duplicated
-// by hand and the step is never buried in a label. Seven families ship here; the rest
-// of the twelve in the vision's §3 arrive at the eye's pace, a few a session.
+// by hand and the step is never buried in a label. Ten families ship here; Gradient bloom
+// waits for a fade that carries the accent's color (`[R-553]`), and Tiles for a photograph
+// per practice area.
 //
 // THE VOCABULARY IS CLOSED. A rule it cannot say is a new word plus one engine clause,
 // never a special case in a theme: that is the discipline the divider library set.
@@ -257,6 +258,14 @@ const NO_DIVIDER: FlowRules['divider'] = {shape: 'straight', at: 'none', carry: 
 // sit near the scrim's own tone. With no approved photograph it renders a plain mostly-dark page and
 // says so. Thinner than the study's photo pages, which show a different photograph behind most dark
 // bands: that is the photo set's (backlog 365).
+//
+// THE EYE PASS OF PHASE 17D SESSION 1 (record WS-V1-PHASE17D-DESIGN §9, captures beside it): Wedges at
+// balanced, Floating panels at both steps and Soft wash passed on the three record canvases at 1440 and
+// 390, beside their neighbours: Wedges' steep slant in and out of every dark block against Cut blocks'
+// peaks; Floating panels' dark boxes on a light page against Alternating (0.20 to 0.27 of the height dark
+// by pixels, Alternating 0.23 to 0.48) and its cream cards on navy against Cut blocks at mostly dark,
+// square under Graphite and rounded under Dune; Soft wash's warm bands and soft close against Quiet and
+// Editorial, under all fifteen palettes and the placeholder.
 
 export const FAMILIES: readonly FlowFamily[] = [
   {
@@ -382,7 +391,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // light page measure Alternating's dark share by pixels, so that step is balanced (ADV-17D-A). Its
     // panels are the operator's own inset (`SectionShell`), placed by the theme; their corners are the
     // style set's. `alternate` keeps a floating dark band off every dark neighbour.
-    steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: [],
+    steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: ['balanced', 'mostlyDark'],
     rules: (step) => (step === 'mostlyDark'
       ? {
           dark: {budget: STEP_BUDGET.mostlyDark, hosts: STEP_HOSTS.mostlyDark, rhythm: 'runs', paint: 'plain', texture: 'quiet', close: 'dark'},
@@ -405,7 +414,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // Their second ground is cream, never an accent pastel (ADV-17D-A), so the wash is a warm step of
     // the page's own background (`washOf`, `[R-551]`), and no band goes dark. A light footer, as the
     // study's light pages have.
-    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: [],
+    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
     rules: () => ({
       dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: 'plain', texture: 'quiet', close: 'wash'},
       light: {paint: 'washes', texture: 'quiet'},
@@ -423,7 +432,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // buttons (a button's slant drops under half the style sets and notches the header's call button);
     // a photograph crosses a cut as on the evidence. Balanced only: at mostly dark its grounds equal Cut
     // blocks' on every canvas.
-    steps: ['balanced'], defaultStep: 'balanced', passed: [],
+    steps: ['balanced'], defaultStep: 'balanced', passed: ['balanced'],
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark'},
       light: {paint: 'plain', texture: 'quiet'},

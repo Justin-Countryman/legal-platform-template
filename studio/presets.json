@@ -3224,7 +3224,10 @@
         "mostlyDark"
       ],
       "defaultStep": "balanced",
-      "passed": []
+      "passed": [
+        "balanced",
+        "mostlyDark"
+      ]
     },
     {
       "id": "softWash",
@@ -3234,7 +3237,9 @@
         "mostlyLight"
       ],
       "defaultStep": "mostlyLight",
-      "passed": []
+      "passed": [
+        "mostlyLight"
+      ]
     },
     {
       "id": "wedges",
@@ -3244,7 +3249,9 @@
         "balanced"
       ],
       "defaultStep": "balanced",
-      "passed": []
+      "passed": [
+        "balanced"
+      ]
     }
   ],
   "flows": [
@@ -3637,7 +3644,7 @@
       "sentence": "One calm ground down the page, and the other floating on it as panels.",
       "family": "floatingPanels",
       "step": "balanced",
-      "passed": false
+      "passed": true
     },
     {
       "dark": {
@@ -3682,7 +3689,7 @@
       "sentence": "One calm ground down the page, and the other floating on it as panels.",
       "family": "floatingPanels",
       "step": "mostlyDark",
-      "passed": false
+      "passed": true
     },
     {
       "dark": {
@@ -3717,7 +3724,7 @@
       "sentence": "No dark section: the page and a warm wash of its own background in turn, and a soft close.",
       "family": "softWash",
       "step": "mostlyLight",
-      "passed": false
+      "passed": true
     },
     {
       "dark": {
@@ -3763,7 +3770,7 @@
       "sentence": "Steep diagonal edges wherever the ground changes.",
       "family": "wedges",
       "step": "balanced",
-      "passed": false
+      "passed": true
     }
   ],
   "defaultFlow": "quiet.mostlyLight",
