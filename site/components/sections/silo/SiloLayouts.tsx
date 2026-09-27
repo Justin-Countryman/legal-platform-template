@@ -53,12 +53,12 @@ export function SiloSpotlight({items, ariaLabel, hoverEffects, showArrow, iconPo
         const onImage = hasImage(item.image)
         return (
           <li key={item._key}>
-            <TileLink href={item.href ?? '#'} dark={onImage} className={`${CARD} min-h-[14rem] ${fx.container}`}>
+            <TileLink href={item.href ?? '#'} className={`${CARD} min-h-[14rem] ${fx.container}`}>
               {onImage ? <TileImage item={item} fx={fx} /> : <TileFill />}
               <TileGlow fx={fx} />
-              <div className="relative z-10 flex h-full flex-col p-6">
+              <div data-ring-context={onImage ? 'dark' : undefined} className="relative z-10 flex h-full flex-col p-6">
                 {showIcon && <TileIcon item={item} fx={fx} onImage={onImage} size="sm" />}
-                <div className="mt-auto pt-10">
+                <div className={onImage ? 'mt-auto pt-10 tile-text-scrim' : 'mt-auto pt-10'}>
                   <div className="flex items-end justify-between gap-4">
                     <TileLabel item={item} fx={fx} />
                     {showArrow && <TileArrow fx={fx} />}
@@ -133,12 +133,14 @@ export function SiloTileLayout({items, ariaLabel, hoverEffects, iconPosition}: S
           <li key={item._key}>
             <TileLink
               href={item.href ?? '#'}
-              dark={onImage}
               className={`${CARD} min-h-[12rem] items-center justify-center p-8 ${stacked ? 'text-center' : ''} ${fx.container}`}
             >
-              {onImage ? <TileImage item={item} fx={fx} /> : <TileFill />}
+              {onImage ? <TileImage item={item} fx={fx} scrim="full" /> : <TileFill />}
               <TileGlow fx={fx} />
-              <div className={`relative z-10 flex ${stacked ? 'flex-col items-center gap-4' : 'items-center gap-4'}`}>
+              <div
+                data-ring-context={onImage ? 'dark' : undefined}
+                className={`relative z-10 flex ${stacked ? 'flex-col items-center gap-4' : 'items-center gap-4'}`}
+              >
                 {pos === 'left' && <TileIcon item={item} fx={fx} onImage={onImage} />}
                 {pos === 'top' && <TileIcon item={item} fx={fx} onImage={onImage} size="lg" />}
                 <div className={stacked ? 'flex flex-col items-center' : 'min-w-0'}>

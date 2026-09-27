@@ -107,11 +107,14 @@ describe('Silo layouts — knobs', () => {
     expect(arrows(off.container).length).toBe(0)
   })
 
-  it('image layouts flip to dark context over the scrim; fill rows do not', () => {
+  it('image layouts flip their content to dark context over the scrim; fill rows do not', () => {
+    // The context sits on the card's content, never its link: the link's focus ring is drawn
+    // outside the card, on the band, and takes the band's color (Phase 17D, `[R-556]`).
     const spot = render(<SiloSpotlight {...props()} />)
     const links = within(spot.container).getAllByRole('link')
-    expect(links[0].getAttribute('data-ring-context')).toBe('dark') // item a has an image
-    expect(links[1].getAttribute('data-ring-context')).toBeNull() // item b has none
+    for (const link of links) expect(link.getAttribute('data-ring-context')).toBeNull()
+    expect(links[0].querySelector(':scope > [data-ring-context="dark"]')).not.toBeNull() // item a has an image
+    expect(links[1].querySelector('[data-ring-context]')).toBeNull() // item b has none
 
     const inline = render(<SiloInline {...props()} />)
     for (const link of within(inline.container).getAllByRole('link')) {

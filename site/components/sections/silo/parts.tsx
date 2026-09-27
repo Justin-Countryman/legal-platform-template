@@ -28,14 +28,15 @@ export function SiloNav({ariaLabel, className, children}: {ariaLabel: string; cl
 }
 
 /** Whole-tile link: the focus-ring contract + group + relative are always present.
- *  `dark` flips the ring-context (image tiles render white text over the scrim). */
+ *  A photo card's dark context sits on its content, not on this link (Phase 17D, `[R-556]`): the ring
+ *  is drawn outside the card, on the band, and must take the band's color; on the link it took the
+ *  on-dark ring, under 3:1 on a light band on 11 of 15 presets (ADV-17D-P). */
 export function TileLink({
-  href, dark, className, children, press = 'scale', card = true,
+  href, className, children, press = 'scale', card = true,
 }: {
   /** A card takes the carried corner piece (Phase 16C); a full-width list row does not. */
   card?: boolean
   href: string
-  dark?: boolean
   className: string
   children: React.ReactNode
   /** Touch press feedback. 'scale' (default) presses the whole card down — right for
@@ -54,7 +55,6 @@ export function TileLink({
     <Link
       data-card={card && press === 'scale' ? '' : undefined}
       href={href}
-      data-ring-context={dark ? 'dark' : undefined}
       className={`group relative overflow-hidden ${pressClass} ${FOCUS} ${className}`}
     >
       {children}
@@ -62,10 +62,12 @@ export function TileLink({
   )
 }
 
-/** Background photo + bottom-heavy legibility scrim (image layouts). Base transitions
- *  scale + filter so Image Zoom and Grayscale ease. Renders nothing without an image.
- *  `scrim={false}` for a photo PANEL that carries no overlaid text (Split). */
-export function TileImage({item, fx, scrim = true}: {item: SiloNavItem; fx: SiloHoverClasses; scrim?: boolean}) {
+/** Background photo + legibility scrim (image layouts). Base transitions scale + filter so Image Zoom
+ *  and Grayscale ease. Renders nothing without an image. The scrim, above the hover glow (`z-[1]`):
+ *  `tone`, a bottom-heavy tint for a card whose text block carries its own scrim (`tile-text-scrim`);
+ *  `full`, the scrim at 95% to 80% over the whole card, for a card whose text is centered (Tile);
+ *  `false` for a photo PANEL that carries no overlaid text (Feature, Split). */
+export function TileImage({item, fx, scrim = 'tone'}: {item: SiloNavItem; fx: SiloHoverClasses; scrim?: 'tone' | 'full' | false}) {
   if (!hasImage(item.image)) return null
   return (
     <>
@@ -74,10 +76,13 @@ export function TileImage({item, fx, scrim = true}: {item: SiloNavItem; fx: Silo
         mode="fill"
         alt=""
         sizes={CARD_SIZES}
-        className={`transition-[scale,filter] duration-ui-slow ease-gentle ${fx.image}`}
+        className={`transition-[scale,filter] duration-ui-slow ease-gentle ${scrim ? 'tile-photo ' : ''}${fx.image}`}
       />
-      {scrim && (
-        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-brand-dark/95 via-brand-dark/55 to-brand-dark/30" />
+      {scrim === 'tone' && (
+        <div aria-hidden="true" className="absolute inset-0 z-[1] bg-gradient-to-t from-brand-dark/95 via-brand-dark/55 to-brand-dark/30" />
+      )}
+      {scrim === 'full' && (
+        <div aria-hidden="true" className="absolute inset-0 z-[1] bg-gradient-to-t from-scrim/95 to-scrim/80" />
       )}
     </>
   )

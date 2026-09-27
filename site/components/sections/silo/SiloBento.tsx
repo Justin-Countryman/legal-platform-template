@@ -34,14 +34,13 @@ function BentoTile({
   return (
     <TileLink
       href={item.href ?? '#'}
-      dark={onImage}
       className={`@container flex h-full flex-col p-5 @sm:p-6 ${fx.container}`}
     >
       {onImage ? <TileImage item={item} fx={fx} /> : <TileFill />}
       <TileGlow fx={fx} />
-      <div className="relative z-10 flex h-full flex-col">
+      <div data-ring-context={onImage ? 'dark' : undefined} className="relative z-10 flex h-full flex-col">
         {showIcon && <TileIcon item={item} fx={fx} onImage={onImage} size="sm" />}
-        <div className="mt-auto pt-8">
+        <div className={onImage ? 'mt-auto pt-8 tile-text-scrim' : 'mt-auto pt-8'}>
           <div className="flex items-end justify-between gap-3">
             <TileLabel
               item={item}
