@@ -10,6 +10,7 @@ import {
   DEFAULT_SECTION_SURFACE,
   SECTION_SPACING,
   SECTION_SURFACES,
+  PAINTED_SURFACES,
   TIGHT_SPACING,
   sectionSurface,
   visibleGround,
@@ -141,6 +142,13 @@ describe('sectionSurface', () => {
     }
     expect(Object.keys(expected).sort()).toEqual([...SECTION_SURFACES].sort())
     for (const surface of SECTION_SURFACES) expect(sectionSurface(surface), surface).toEqual(expected[surface])
+  })
+
+  // Phase 17D (`[R-551]`): the wash is a surface the shell paints and no document stores.
+  it('the wash paints its own ground in the light context, and is never a stored surface', () => {
+    expect(sectionSurface('wash')).toEqual({surfaceClass: 'bg-wash', ringContext: undefined, buttonContext: 'light', isImage: false, textured: false})
+    expect(PAINTED_SURFACES).toEqual([...SECTION_SURFACES, 'wash'])
+    expect(SECTION_SURFACES).not.toContain('wash')
   })
 
   // The fill is a NAME for the anchored accent, not a new value (amendment 11):

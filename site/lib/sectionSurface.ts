@@ -27,6 +27,10 @@
 //             meaning under every theme since Phase 17B: the texture a theme puts on
 //             a dark band is a paint flag on the band's seam, never the surface value.
 //
+//   wash    — Soft wash's pale, warm step of the light ground (Phase 17D, `[R-551]`). Never
+//             stored and never an operator's option: only the theme's pass paints it, on the
+//             homepage, so it is a `PaintedSurface` the shell resolves, not a `SectionSurface`.
+//
 //   saturated — the accent as a full-width fill (`bg-accent-fill`), text in
 //             `accent-fg` through the `[data-ring-context="saturated"]` block,
 //             buttons in their own context (Phase 15, WS-V1-PHASE15-DESIGN §7
@@ -83,6 +87,10 @@
 export type SectionSurface = 'light' | 'tint' | 'dark' | 'muted' | 'image' | 'pattern' | 'saturated'
 /** Every surface, for the tests that must cover each one. */
 export const SECTION_SURFACES: readonly SectionSurface[] = ['light', 'tint', 'dark', 'muted', 'image', 'pattern', 'saturated']
+/** What the shell paints: a surface, or a ground only the theme's pass assigns (the wash, Phase 17D). */
+export type PaintedSurface = SectionSurface | 'wash'
+/** Every painted surface, for the tests that must cover each one the shell can draw. */
+export const PAINTED_SURFACES: readonly PaintedSurface[] = [...SECTION_SURFACES, 'wash']
 /** What a document may store: a surface, or the legacy `accent`, which renders as `muted`. */
 export type StoredSurface = SectionSurface | 'accent'
 export type SectionSpacing = 'compact' | 'normal' | 'spacious'
@@ -91,7 +99,7 @@ export type SectionSpacing = 'compact' | 'normal' | 'spacious'
  *  There is no page ground any more (Phase 16A, `[R-472]`): a `pattern` band is the
  *  light ground wearing a faint texture, and the page around an inset panel is the
  *  light ground, so both walk as `light`. */
-export type VisibleGround = 'light' | 'tint' | 'muted' | 'dark' | 'image' | 'saturated'
+export type VisibleGround = 'light' | 'tint' | 'muted' | 'dark' | 'image' | 'saturated' | 'wash'
 
 export const DEFAULT_SECTION_SURFACE: SectionSurface = 'light'
 export const DEFAULT_SECTION_SPACING: SectionSpacing = 'normal'
@@ -181,7 +189,7 @@ export type ResolvedSectionSurface = {
   isImage: boolean
 }
 
-export function sectionSurface(surface: StoredSurface | null | undefined): ResolvedSectionSurface {
+export function sectionSurface(surface: PaintedSurface | StoredSurface | null | undefined): ResolvedSectionSurface {
   switch (surface) {
     case 'dark':
       return {surfaceClass: 'bg-brand-dark', ringContext: 'dark', buttonContext: 'dark', isImage: false, textured: false}
@@ -193,6 +201,8 @@ export function sectionSurface(surface: StoredSurface | null | undefined): Resol
       return {surfaceClass: 'bg-accent-fill', ringContext: 'saturated', buttonContext: 'saturated', isImage: false, textured: false}
     case 'tint':
       return {surfaceClass: 'bg-hero-tint', ringContext: undefined, buttonContext: 'light', isImage: false, textured: false}
+    case 'wash':
+      return {surfaceClass: 'bg-wash', ringContext: undefined, buttonContext: 'light', isImage: false, textured: false}
     case 'muted':
     case 'accent': // the legacy stored value (see the header)
       return {surfaceClass: 'bg-muted', ringContext: undefined, buttonContext: 'light', isImage: false, textured: false}
@@ -254,11 +264,11 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
     s.top, s.bottom, s.seamTop, s.topOverlap, s.bottomBeforeOverlap.small, s.bottomBeforeOverlap.large,
     s.bottomBeforeOverlap.photo, s.ptVar,
   ]),
-  'bg-brand-dark', 'bg-hero-tint', 'bg-muted', 'bg-background', 'bg-accent-fill',
+  'bg-brand-dark', 'bg-hero-tint', 'bg-muted', 'bg-background', 'bg-accent-fill', 'bg-wash',
   // Phase 16C: the divider's own classes, which live in `SectionShell`'s maps and in the
   // hero's spacer, where neither checker looks.
   'divider-cut', 'divider-rise', 'divider-flip', 'mt-divider', 'h-divider',
-  'before:bg-background', 'before:bg-hero-tint', 'before:bg-muted', 'before:bg-brand-dark', 'before:bg-accent-fill',
+  'before:bg-background', 'before:bg-hero-tint', 'before:bg-muted', 'before:bg-brand-dark', 'before:bg-accent-fill', 'before:bg-wash',
   // Phase 16D: the ghost's own classes, which live in `SectionShell`'s JSX but whose
   // utility is defined in `globals.css`, so the resolution test covers them too.
   'decor-ghost', 'decor-ghost-on-light', 'decor-ghost-on-dark',

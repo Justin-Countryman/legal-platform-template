@@ -2811,7 +2811,8 @@ export type DesignSettings = {
     | "ribbonRhythm.mostlyLight"
     | "photoScrims.mostlyDark"
     | "floatingPanels.balanced"
-    | "floatingPanels.mostlyDark";
+    | "floatingPanels.mostlyDark"
+    | "softWash.mostlyLight";
   flowPhoto?: string;
   headingEmphasisStyle?: "color" | "italic";
   headingRule?:
@@ -4175,6 +4176,7 @@ export type DESIGN_TOKENS_QUERY_RESULT = {
     | "photoScrims.mostlyDark"
     | "quiet.mostlyLight"
     | "ribbonRhythm.mostlyLight"
+    | "softWash.mostlyLight"
     | "typeOnBlack.allDark"
     | null;
   flowPhoto: string | null;
@@ -19523,6 +19525,7 @@ export type SITE_CHROME_QUERY_RESULT = {
       | "photoScrims.mostlyDark"
       | "quiet.mostlyLight"
       | "ribbonRhythm.mostlyLight"
+      | "softWash.mostlyLight"
       | "typeOnBlack.allDark"
       | null;
     flowPhoto: string | null;
@@ -20713,6 +20716,7 @@ export type PREVIEW_STORED_DESIGN_QUERY_RESULT = {
     | "photoScrims.mostlyDark"
     | "quiet.mostlyLight"
     | "ribbonRhythm.mostlyLight"
+    | "softWash.mostlyLight"
     | "typeOnBlack.allDark";
   flowPhoto?: string;
   headingEmphasisStyle?: "color" | "italic";

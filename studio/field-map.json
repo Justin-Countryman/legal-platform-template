@@ -5183,7 +5183,8 @@
               "ribbonRhythm.mostlyLight",
               "photoScrims.mostlyDark",
               "floatingPanels.balanced",
-              "floatingPanels.mostlyDark"
+              "floatingPanels.mostlyDark",
+              "softWash.mostlyLight"
             ]
           },
           "path": "flow",

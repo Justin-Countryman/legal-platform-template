@@ -130,11 +130,13 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
         <HomepageCta
           data={globalCtaData}
           override={home?.ctaOverride}
-          surface={close === 'photo' ? 'image' : close}
+          surface={close === 'photo' ? 'image' : close === 'wash' ? 'light' : close}
           headingFace={site.headingFace}
           // A photo close is an Image section like one built by hand (`[R-531]`), showing the
           // photograph's first window.
-          seam={close === 'photo' && site.heroPhoto ? {...NO_SEAM, site, paint: {ground: 'image', texture: false, window: photoWindows(site.heroPhoto.hotspot)[0]}} : undefined}
+          // A wash close (Soft wash, `[R-551]`) is painted as the theme paints a band, never stored.
+          seam={close === 'photo' && site.heroPhoto ? {...NO_SEAM, site, paint: {ground: 'image', texture: false, window: photoWindows(site.heroPhoto.hotspot)[0]}}
+            : close === 'wash' ? {...NO_SEAM, paint: {ground: 'wash', texture: false}} : undefined}
         />
       )}
     </>

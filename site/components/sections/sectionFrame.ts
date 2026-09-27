@@ -91,7 +91,7 @@ export type FlowInputs = {
  *  `[R-502]`); `inset` is the `panel` paint filling an absent inset. Texture is never
  *  the surface value, so a stored `pattern` keeps its one meaning under every theme. */
 export type Paint = {
-  ground?: 'light' | 'tint' | 'dark' | 'saturated' | 'image'
+  ground?: 'light' | 'tint' | 'dark' | 'saturated' | 'image' | 'wash'
   /** The texture and its strength (Phase 17C session 3, `[R-538]`): none, or the tile drawn quiet or
    *  strong, the theme's `alternate` resolved band by band in page order. */
   texture: false | DrawnStrength
@@ -386,7 +386,7 @@ export function walkFrame<M>(
     const eligible = out.filter(({member, seam}) => {
       const a = resolve(member).appearance
       const g = groundAt.get(out.find((o) => o.member === member)!.index) ?? visibleGround(a)
-      return g !== 'saturated' && g !== 'image' && a?.surface !== 'pattern' && !seam.paint?.texture && !isInset({appearance: a}, seam.paint ?? null)
+      return g !== 'saturated' && g !== 'image' && g !== 'wash' && a?.surface !== 'pattern' && !seam.paint?.texture && !isInset({appearance: a}, seam.paint ?? null)
     })
     const host =
       eligible.find(({index}) => groundAt.get(index) === 'dark') ??
@@ -592,14 +592,20 @@ export function assignGrounds(
     return null
   })
   // Light bands: the theme's light paint, over every fillable band the rhythm left light.
-  let wash = 0
+  // `washes` (Phase 17D, `[R-551]`): the light ground and the wash in turn, counted up from the foot of
+  // each light stretch, so the band before the close, a stored band or a dark one is light and a wash
+  // close never meets a wash band (ADV-17D-B, -C). It alternated light and a tint nobody saw (ΔE 1.0).
+  const fromFoot: number[] = new Array(n).fill(0)
+  for (let i = n - 1, k = 0; i >= 0; i--) {
+    if (fixed[i] || dark[i]) { k = 0; continue }
+    fromFoot[i] = k++
+  }
   survivors.forEach((r, i) => {
-    if (fixed[i]) { wash = 0; return }
-    if (dark[i]) { wash = 0; return }
+    if (fixed[i]) return
+    if (dark[i]) return
     switch (flow.light.paint) {
       case 'washes':
-        paints[i] = {ground: wash % 2 === 1 ? 'tint' : 'light', texture: false}
-        wash++
+        paints[i] = {ground: fromFoot[i] % 2 === 1 ? 'wash' : 'light', texture: false}
         break
       case 'pattern':
         paints[i] = {ground: 'light', texture: texture ? 'quiet' : false}

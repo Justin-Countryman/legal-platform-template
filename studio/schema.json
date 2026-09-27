@@ -18040,6 +18040,10 @@
             {
               "type": "string",
               "value": "floatingPanels.mostlyDark"
+            },
+            {
+              "type": "string",
+              "value": "softWash.mostlyLight"
             }
           ]
         },

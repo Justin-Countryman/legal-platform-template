@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest'
-import {converter, wcagContrast} from 'culori'
+import {converter, differenceCiede2000, wcagContrast} from 'culori'
 import {
   COLOR_DEFAULTS,
   acceptDarkGround,
@@ -17,6 +17,8 @@ import {
   hexToRgbTriplet,
   mutedOf,
   resolvePalette,
+  washOf,
+  WASH_DE,
   retoneFill,
   validateWcag,
   textureOnDark,
@@ -70,6 +72,39 @@ describe('the derivation, row by row', () => {
     // A cream ground's steps stay cream, not the grey today's recipe produced.
     expect(Math.abs(deltaH(mutedOf(cream), cream))).toBeLessThan(0.005)
     expect(oklch(heroTintOf(cream)).c).toBeGreaterThan(0.01)
+  })
+
+  // Phase 17D (`[R-551]`): Soft wash's ground. A warm step of the light ground, its own hue where it has
+  // one and cream on white, at WASH_DE from the ground, and never darker than the muted step, drawn a
+  // level of 255 darker in every channel: every pair that holds on the muted step holds on it.
+  it('the wash stands WASH_DE from the ground, warm, and never darker than muted, on every preset and the placeholder', () => {
+    const toRgb = converter('rgb')
+    const darker = (hex: string) => {
+      const c = toRgb(hex) as unknown as {r: number; g: number; b: number}
+      const d = (v: number) => Math.max(0, Math.round(v * 255) - 1).toString(16).padStart(2, '0')
+      return `#${d(c.r)}${d(c.g)}${d(c.b)}`
+    }
+    const de = differenceCiede2000()
+    for (const inputs of [{}, ...PALETTE_PRESETS.map((p) => presetInputs(p))]) {
+      const p = resolvePalette(inputs)
+      const t = p.tokens
+      const wash = t['--color-wash']
+      expect(wash).toBe(washOf(t['--color-background'], t['--color-muted']))
+      expect(de(t['--color-background'], wash), wash).toBeGreaterThanOrEqual(WASH_DE - 0.01)
+      expect(de(t['--color-background'], wash), wash).toBeLessThan(WASH_DE + 0.5)
+      expect(ratio(darker(wash), '#000000')).toBeGreaterThanOrEqual(ratio(t['--color-muted'], '#000000'))
+      const ground = oklch(t['--color-background'])
+      const hue = oklch(wash).h
+      if (ground.c >= 0.01) expect(Math.abs(deltaH(wash, t['--color-background']))).toBeLessThan(0.01)
+      else expect(Math.abs(hue - 85)).toBeLessThan(6)
+      const pairs = validateWcag(p).filter((r) => r.pair.endsWith(' on wash'))
+      expect(pairs.length).toBe(9)
+      for (const r of pairs) expect(r.passes, r.pair).toBe(true)
+    }
+  })
+
+  it('the wash carries no accent: a red accent leaves it exactly as a grey one does', () => {
+    expect(resolvePalette({accent: '#a12a2f'}).tokens['--color-wash']).toBe(resolvePalette({}).tokens['--color-wash'])
   })
 
   it('muted and hero-tint carry no accent hue: a red accent leaves every surface exactly as a grey one does', () => {

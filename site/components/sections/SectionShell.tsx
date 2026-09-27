@@ -63,11 +63,11 @@ export type SectionAppearance = {
 // design system, as the frame's classes already are.
 const DIVIDER_FROM: Record<string, string> = {
   light: 'before:bg-background', tint: 'before:bg-hero-tint', muted: 'before:bg-muted',
-  dark: 'before:bg-brand-dark', saturated: 'before:bg-accent-fill',
+  dark: 'before:bg-brand-dark', saturated: 'before:bg-accent-fill', wash: 'before:bg-wash',
 }
 const DIVIDER_OWN: Record<string, string> = {
   'bg-background': 'before:bg-background', 'bg-hero-tint': 'before:bg-hero-tint', 'bg-muted': 'before:bg-muted',
-  'bg-brand-dark': 'before:bg-brand-dark', 'bg-accent-fill': 'before:bg-accent-fill',
+  'bg-brand-dark': 'before:bg-brand-dark', 'bg-accent-fill': 'before:bg-accent-fill', 'bg-wash': 'before:bg-wash',
 }
 
 const OVERLAP_CLASS: Record<'none' | 'small' | 'large' | 'photo', string> = {

@@ -64,7 +64,7 @@ export type Host = (typeof HOSTS)[number]
 export const DARK_BUDGETS = ['none', 'third', 'threeQuarters', 'all'] as const
 export const DARK_RHYTHMS = ['alternate', 'pairs', 'runs', 'bookends'] as const
 export const DARK_PAINTS = ['plain', 'pattern', 'gradient', 'gradientPerBand', 'photo', 'saturated', 'heroPhoto', 'floating'] as const
-export const CLOSES = ['dark', 'saturated', 'muted', 'photo'] as const
+export const CLOSES = ['dark', 'saturated', 'muted', 'photo', 'wash'] as const
 export const LIGHT_PAINTS = ['plain', 'washes', 'pattern', 'panel', 'floating'] as const
 /** The texture's strength where a paint is `pattern` (Phase 17C session 3, `[R-538]`): the style set's
  *  one tile as it shipped, the same motif at twice the ink, or the two in turn down the page (the bands
@@ -126,11 +126,12 @@ export type FlowRules = {
     /** The texture's strength on the bands the `pattern` paint textures (`TEXTURE_STRENGTHS`). */
     texture: TextureStrength
     /** The closing call to action's ground; `photo` is a window of the hero's photograph where
-     *  the site has an approved one, else the dark ground. */
+     *  the site has an approved one, else the dark ground; `wash` is Soft wash's ground. */
     close: (typeof CLOSES)[number]
   }
   light: {
-    /** Light bands: one ground; light and tint alternating; textured; inside a dark run, an inset
+    /** Light bands: one ground; the light ground and the wash in turn, counted from the foot of each
+     *  light stretch (`washes`, Phase 17D, `[R-551]`); textured; inside a dark run, an inset
      *  panel that adopts the run (`[R-501]`) where the band stores no `inset`; or, wherever it sits,
      *  a panel on the dark ground, which the walk reads as dark (`floating`, Phase 17D). */
     paint: (typeof LIGHT_PAINTS)[number]
@@ -396,6 +397,22 @@ export const FAMILIES: readonly FlowFamily[] = [
           ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.balanced,
         }),
   },
+  {
+    id: 'softWash', name: 'Soft wash',
+    sentence: 'No dark section: the page and a warm wash of its own background in turn, and a soft close.',
+    // The study: eternalaw and bdgfirm (both premium) run white bands and cream ones in turn;
+    // veronicagarzalaw (premium) is cream all the way; duparlaw and connieyilaw are light with texture.
+    // Their second ground is cream, never an accent pastel (ADV-17D-A), so the wash is a warm step of
+    // the page's own background (`washOf`, `[R-551]`), and no band goes dark. A light footer, as the
+    // study's light pages have.
+    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: [],
+    rules: () => ({
+      dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: 'plain', texture: 'quiet', close: 'wash'},
+      light: {paint: 'washes', texture: 'quiet'},
+      divider: NO_DIVIDER, spacing: 'normal',
+      ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
+    }),
+  },
 ]
 
 export function flowId(family: string, step: Darkness): string {
@@ -619,7 +636,7 @@ export function saturatedFillOk(inputs: ColorInputs | Record<string, unknown> | 
 
 /** The closing call to action's ground under a theme, with the saturated gate and the photograph's
  *  gate applied: `photo` needs an approved hero photograph (`[R-532]`), else the dark ground. */
-export function closeSurface(flow: FlowRules | null | undefined, saturatedOk: boolean, heroPhoto = false): 'dark' | 'saturated' | 'muted' | 'photo' {
+export function closeSurface(flow: FlowRules | null | undefined, saturatedOk: boolean, heroPhoto = false): (typeof CLOSES)[number] {
   const close = flow?.dark.close ?? 'muted'
   if (close === 'photo') return heroPhoto ? 'photo' : 'dark'
   return close === 'saturated' && !saturatedOk ? 'dark' : close

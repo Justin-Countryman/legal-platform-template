@@ -60,10 +60,21 @@ describe('the families and the roster', () => {
 
   it('ships the three families of session 2, the three of session 5, Photo scrims of session 6 and Phase 17D’s', () => {
     expect(FAMILIES.map((f) => f.id)).toEqual(['quiet', 'alternating', 'cutBlocks', 'typeOnBlack', 'editorial', 'ribbonRhythm', 'photoScrims',
-      'floatingPanels'])
+      'floatingPanels', 'softWash'])
     expect(FLOWS.map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
       'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark',
-      'floatingPanels.balanced', 'floatingPanels.mostlyDark'])
+      'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight'])
+  })
+
+  it('Soft wash is the Phase 17D record\u2019s \u00a72.3, written out: no dark section, the wash in turn, a wash close ([R-551])', () => {
+    const sw = flowById('softWash.mostlyLight')!
+    expect(sw.dark).toMatchObject({budget: 'none', hosts: [], rhythm: 'bookends', paint: 'plain', close: 'wash'})
+    expect(sw.light.paint).toBe('washes')
+    expect(sw).toMatchObject({ghost: 'none', overlap: 'none', spacing: 'normal', needs: [], chrome: {header: 'light', footer: 'light'}})
+    expect(sw.divider).toMatchObject({shape: 'straight', at: 'none', hairline: 'none'})
+    expect(closeSurface(sw, true)).toBe('wash')
+    // Only Soft wash washes, and only its close is the wash.
+    expect(FLOWS.filter((f) => f.light.paint === 'washes' || f.dark.close === 'wash').map((f) => f.id)).toEqual(['softWash.mostlyLight'])
   })
 
   it('Floating panels is the Phase 17D record’s §2.2, written out: dark panels on the light page, light panels on the dark one', () => {
@@ -371,9 +382,9 @@ describe('the header and the footer (Phase 17B session 4, [R-518])', () => {
       mostlyDark: {header: 'dark', footer: 'dark'},
       allDark: {header: 'dark', footer: 'dark'},
     })
-    // Every family takes its step's chrome but one that names its own: Editorial's light footer,
-    // from its evidence sites (session 5 record §2.4).
-    for (const f of FLOWS) expect(f.chrome, f.id).toEqual(f.family === 'editorial' ? {header: 'light', footer: 'light'} : STEP_CHROME[f.step])
+    // Every family takes its step's chrome but those that name their own: Editorial's and Soft wash's
+    // light footer, from their evidence sites (session 5 record §2.4; Phase 17D record §2.3).
+    for (const f of FLOWS) expect(f.chrome, f.id).toEqual(['editorial', 'softWash'].includes(f.family) ? {header: 'light', footer: 'light'} : STEP_CHROME[f.step])
   })
 
   it('the bridge and the platform default give what every client renders today: a light header, a dark footer', () => {

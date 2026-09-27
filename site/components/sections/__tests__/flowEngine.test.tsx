@@ -26,6 +26,7 @@ vi.mock('@/components/ui/ScrollReveal', () => ({
 }))
 
 import {HomepageCanvas, frameOf, type HomepageBlock} from '@/components/layout/HomepageCanvas'
+import {HomepageCta} from '@/components/layout/HomepageCta'
 import {PageSections, type PageSectionData} from '../PageSections'
 import {assignGrounds, canvasFacts, walkFrame, siteLookOf, NO_SEAM, type SiteLook} from '../sectionFrame'
 import {SectionShell, type SectionAppearance} from '../SectionShell'
@@ -279,10 +280,25 @@ describe('each paint, gated by its data', () => {
     expect(container.querySelector('section')!.className.split(' ')).toEqual(expect.arrayContaining(['bg-brand-dark', 'band-gradient', 'grad-i-0', 'grad-n-1']))
   })
 
-  it('washes alternates light and tint along the light stretches, and restarts after a dark or stored band', () => {
+  it('washes alternates the light ground and the wash, counted up from the foot of each light stretch (Phase 17D, [R-551])', () => {
+    // The band before a dark or stored band, or before the close, is light, so a wash close never
+    // meets a wash band, whatever the count (ADV-17D-B, -C).
     const flow = themed({dark: {budget: 'third', hosts: ['ribbon'], rhythm: 'pairs'}, light: {paint: 'washes'}})
     const bands = [b('split'), b('split'), b('ribbon'), b('split'), b('split', {surface: 'light'}), b('split'), b('split')]
-    expect(grounds(bands, flow)).toEqual(['light', 'tint', 'dark', 'light', 'light', 'light', 'tint'])
+    expect(grounds(bands, flow)).toEqual(['wash', 'light', 'dark', 'light', 'light', 'wash', 'light'])
+    for (const n of [4, 5, 6]) expect(grounds(Array.from({length: n}, () => b('split')), flow).at(-1), `${n} bands`).toBe('light')
+  })
+
+  it('the ghost never draws on a wash, whose blend with its ink the sweep does not cover', () => {
+    const flow = themed({light: {paint: 'washes'}, ghost: 'once'})
+    const out = walkFrame([b('split'), b('split')], resolveBand, {...LOOK, flow, ghost: {text: 'AB'}}, 'dark')
+    expect(out.map((o) => o.seam.paint?.ground)).toEqual(['wash', 'light'])
+    expect(out.map((o) => !!o.seam.ghost)).toEqual([false, true])
+  })
+
+  it('a wash close is painted as the theme paints a band', () => {
+    const {container} = render(<HomepageCta data={{heading: 'Talk to us'}} surface="light" seam={{...NO_SEAM, paint: {ground: 'wash', texture: false}}} />)
+    expect(container.querySelector('section')!.className.split(' ')).toContain('bg-wash')
   })
 
   it('a light pattern textures the light bands the theme assigns, gated on the texture', () => {
@@ -481,7 +497,7 @@ describe('the decision golden', () => {
     // Held over the VOCABULARY, not the shipped themes (ADV-17B-2 F4): every dark paint by
     // every light paint, on a list that offers a photo, a content section, a texture and a
     // palette that passes the saturated gate, so every paint's ground is reached.
-    const swept = new Set(['light', 'tint', 'dark', 'saturated', 'image'])
+    const swept = new Set(['light', 'tint', 'dark', 'saturated', 'image', 'wash'])
     const seen = new Set<string>()
     const list: Band[] = [b('ribbon', null, {photo: true, content: true}), b('split'), b('split', null, {content: true}), b('ribbon'), b('split'), b('ribbon')]
     for (const paint of DARK_PAINTS) {
@@ -493,7 +509,9 @@ describe('the decision golden', () => {
       }
     }
     for (const g of seen) expect(swept.has(g), g).toBe(true)
-    expect([...seen].sort()).toEqual(['dark', 'image', 'light', 'saturated', 'tint'])
+    // Since Phase 17D `washes` paints the wash (`[R-551]`), which `validateWcag` holds as a light ground;
+    // no paint assigns the tint any more, though an operator may store it.
+    expect([...seen].sort()).toEqual(['dark', 'image', 'light', 'saturated', 'wash'])
   })
 
   it('every theme renders every homepage member type, no throw, and no <img> where a photo paint fell back', () => {
