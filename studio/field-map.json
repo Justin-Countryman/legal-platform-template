@@ -9963,7 +9963,7 @@
           "type": "image"
         },
         {
-          "description": "Defaults to the page hero image — used by image-based layouts",
+          "description": "Defaults to the practice area’s Card Photo — used by image-based layouts",
           "jsonType": "object",
           "path": "canvas[]<practiceAreaNavInline>.items[]<practiceAreaNavItem>.image",
           "title": "Image (override)",
@@ -13260,6 +13260,13 @@
           "type": "boolean"
         },
         {
+          "description": "Optional. Shown on this practice area’s card wherever the practice areas are listed, on the homepage and the About page. A list shows photos once every area in it has one. Use a landscape photo at least 1,600 px wide and set its focal point.",
+          "jsonType": "object",
+          "path": "cardImage",
+          "title": "Card Photo",
+          "type": "image"
+        },
+        {
           "jsonType": "array",
           "of": [
             "block",
@@ -13719,7 +13726,7 @@
           "type": "image"
         },
         {
-          "description": "Defaults to the page hero image — used by image-based layouts",
+          "description": "Defaults to the practice area’s Card Photo — used by image-based layouts",
           "jsonType": "object",
           "path": "items[]<practiceAreaNavItem>.image",
           "title": "Image (override)",

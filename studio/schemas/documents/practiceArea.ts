@@ -171,6 +171,16 @@ export const practiceArea = defineType({
       description: 'The heading inside the hero is the H1 for this page',
     },
     {
+      // Phase 17D (`[R-556]`): one photo per practice area, on its card wherever the practice areas are
+      // listed, under every theme. No platform writer and no default: an operator adds it after the build.
+      name: 'cardImage',
+      title: 'Card Photo',
+      type: 'image',
+      options: {hotspot: true},
+      description:
+        'Optional. Shown on this practice area\u2019s card wherever the practice areas are listed, on the homepage and the About page. A list shows photos once every area in it has one. Use a landscape photo at least 1,600 px wide and set its focal point.',
+    },
+    {
       name: 'body',
       title: 'Body Content',
       type: 'blockContent',
@@ -245,9 +255,9 @@ export const practiceArea = defineType({
   ],
 
   preview: {
-    select: {title: 'title', subtitle: 'slug.current'},
-    prepare({title, subtitle}) {
-      return {title: title ?? 'Practice Area', subtitle: subtitle ? `/${subtitle}` : ''}
+    select: {title: 'title', subtitle: 'slug.current', media: 'cardImage'},
+    prepare({title, subtitle, media}) {
+      return {title: title ?? 'Practice Area', subtitle: subtitle ? `/${subtitle}` : '', media}
     },
   },
 })

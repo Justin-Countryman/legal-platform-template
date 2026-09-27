@@ -47,7 +47,7 @@ export const practiceAreaNavItem = defineType({
       name: 'image',
       title: 'Image (override)',
       type: 'image',
-      description: 'Defaults to the page hero image — used by image-based layouts',
+      description: 'Defaults to the practice area\u2019s Card Photo \u2014 used by image-based layouts',
     },
   ],
   preview: {
