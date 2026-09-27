@@ -178,7 +178,7 @@ export const practiceArea = defineType({
       type: 'image',
       options: {hotspot: true},
       description:
-        'Optional. Shown on this practice area\u2019s card wherever the practice areas are listed, on the homepage and the About page. A list shows photos once every area in it has one. Use a landscape photo at least 1,600 px wide and set its focal point.',
+        'Optional. Shown on this practice area\u2019s card in the lists of practice areas on the homepage and the About page: the top-level areas, or any area a list picks by hand. A list shows photos once every card in it has one. Use a landscape photo at least 1,600 px wide and set its focal point.',
     },
     {
       name: 'body',

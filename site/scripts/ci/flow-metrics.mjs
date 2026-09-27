@@ -235,15 +235,22 @@ function measure() {
   const chromeOf = (el) => (el ? {ring: el.getAttribute('data-ring-context'), bg: getComputedStyle(el).backgroundColor} : null)
   // The mobile row, the header's first child, paints its own ground (ADV-17B4-2: the header's
   // alone did not see a change on phones).
+  // A card photo is the card's own fill image (an icon is not; ADV-17D-P2); one under text carries
+  // `tile-photo`, a Feature or Split photo panel does not. `corner` is the carried piece's layer on the
+  // first photo card, where a theme carries one (a scrim once covered it, ADV-17D-P2).
   function cardPhotos(s) {
     const cards = [...s.querySelectorAll('nav a')].filter((a) => a.getClientRects().length > 0)
-    const photos = cards.filter((a) => a.querySelector('img'))
+    const photos = cards.filter((a) => a.querySelector(':scope img[data-nimg="fill"]'))
     if (!photos.length) return null
+    const underText = photos.filter((a) => a.querySelector(':scope > img.tile-photo'))
+    const after = getComputedStyle(photos[0], '::after')
     return {
       cards: cards.length,
       photos: photos.length,
-      scrimmed: photos.filter((a) => a.querySelector('.tile-text-scrim') || [...a.children].some((c) => c.classList.contains('from-scrim/95'))).length,
+      underText: underText.length,
+      scrimmed: underText.filter((a) => a.querySelector('.tile-text-scrim')).length,
       darkLinks: cards.filter((a) => a.hasAttribute('data-ring-context')).length,
+      corner: after.content !== 'none' && after.content !== 'normal' ? after.zIndex : null,
     }
   }
   const header = document.querySelector('header')
@@ -388,7 +395,8 @@ try {
         for (const b of m.bands.filter((x) => x.cards)) {
           const c = b.cards
           if (c.photos !== c.cards) fail(`${key}: band ${b.i} shows ${c.photos} card photos among ${c.cards} cards (all or none)`)
-          if (c.scrimmed !== c.photos) fail(`${key}: band ${b.i}: ${c.photos - c.scrimmed} card photo(s) without the scrim under their text`)
+          if (c.scrimmed !== c.underText) fail(`${key}: band ${b.i}: ${c.underText - c.scrimmed} card photo(s) without the scrim under their text`)
+          if (c.corner !== null && c.corner !== '15') fail(`${key}: band ${b.i}: the carried piece's layer is ${c.corner} on a photo card; its scrims cover it`)
           if (c.darkLinks) fail(`${key}: band ${b.i}: ${c.darkLinks} card link(s) carry a dark context; the ring is drawn on the band`)
         }
         await page.screenshot({path: resolve(OUT, `${canvas}--${flow}--${width}.jpg`), fullPage: true, type: 'jpeg', quality: 60})

@@ -163,7 +163,7 @@ describe('PracticeAreaNavBlock — card photos', () => {
     expect(container.querySelectorAll('[data-slide] [data-ring-context="dark"]')).toHaveLength(2)
   })
 
-  it('Spotlight, Bento and the carousel put the scrim behind the text block; Tile scrims the whole card', () => {
+  it('every layout that sets text on a photo puts the scrim behind its text block', () => {
     const spot = render(<PracticeAreaNavBlock data={data({layout: 'spotlight', items: PHOTOGRAPHED})} />)
     expect(gridOf(spot.container).querySelectorAll('.tile-text-scrim')).toHaveLength(2)
     expect(spot.container.querySelectorAll('[data-slide] .tile-text-scrim')).toHaveLength(2)
@@ -171,10 +171,15 @@ describe('PracticeAreaNavBlock — card photos', () => {
     const bento = render(<PracticeAreaNavBlock data={data({gridMode: 'bentoLeft', items: PHOTOGRAPHED})} />)
     expect(gridOf(bento.container).querySelectorAll('.tile-text-scrim')).toHaveLength(2)
     bento.unmount()
+    // Tile sets its text at the card's foot on a photo, so the photo shows above it (ADV-17D-P2: a
+    // whole-card scrim left it a dim texture); centered on a plain card, as it was.
     const tile = render(<PracticeAreaNavBlock data={data({layout: 'tile', items: PHOTOGRAPHED})} />)
     const grid = gridOf(tile.container)
-    expect(grid.querySelectorAll('.tile-text-scrim')).toHaveLength(0)
-    expect(grid.querySelectorAll('.from-scrim\\/95.to-scrim\\/80')).toHaveLength(2)
+    expect(grid.querySelectorAll('.tile-text-scrim')).toHaveLength(2)
+    for (const a of grid.querySelectorAll('a')) expect(a.className).toContain('justify-end')
+    tile.unmount()
+    const plain = render(<PracticeAreaNavBlock data={data({layout: 'tile'})} />)
+    for (const a of gridOf(plain.container).querySelectorAll('a')) expect(a.className).toContain('justify-center')
   })
 
   it('a photo card’s scrims sit above the hover glow', () => {

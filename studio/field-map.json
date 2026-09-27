@@ -9963,7 +9963,7 @@
           "type": "image"
         },
         {
-          "description": "Defaults to the practice area’s Card Photo — used by image-based layouts",
+          "description": "Defaults to the practice area’s Card Photo. A list shows photos once every card in it has one; a Geo Practice Area or Service Area Page has no Card Photo, so give its card a photo here.",
           "jsonType": "object",
           "path": "canvas[]<practiceAreaNavInline>.items[]<practiceAreaNavItem>.image",
           "title": "Image (override)",
@@ -13260,7 +13260,7 @@
           "type": "boolean"
         },
         {
-          "description": "Optional. Shown on this practice area’s card wherever the practice areas are listed, on the homepage and the About page. A list shows photos once every area in it has one. Use a landscape photo at least 1,600 px wide and set its focal point.",
+          "description": "Optional. Shown on this practice area’s card in the lists of practice areas on the homepage and the About page: the top-level areas, or any area a list picks by hand. A list shows photos once every card in it has one. Use a landscape photo at least 1,600 px wide and set its focal point.",
           "jsonType": "object",
           "path": "cardImage",
           "title": "Card Photo",
@@ -13726,7 +13726,7 @@
           "type": "image"
         },
         {
-          "description": "Defaults to the practice area’s Card Photo — used by image-based layouts",
+          "description": "Defaults to the practice area’s Card Photo. A list shows photos once every card in it has one; a Geo Practice Area or Service Area Page has no Card Photo, so give its card a photo here.",
           "jsonType": "object",
           "path": "items[]<practiceAreaNavItem>.image",
           "title": "Image (override)",

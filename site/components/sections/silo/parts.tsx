@@ -63,11 +63,11 @@ export function TileLink({
 }
 
 /** Background photo + legibility scrim (image layouts). Base transitions scale + filter so Image Zoom
- *  and Grayscale ease. Renders nothing without an image. The scrim, above the hover glow (`z-[1]`):
- *  `tone`, a bottom-heavy tint for a card whose text block carries its own scrim (`tile-text-scrim`);
- *  `full`, the scrim at 95% to 80% over the whole card, for a card whose text is centered (Tile);
- *  `false` for a photo PANEL that carries no overlaid text (Feature, Split). */
-export function TileImage({item, fx, scrim = 'tone'}: {item: SiloNavItem; fx: SiloHoverClasses; scrim?: 'tone' | 'full' | false}) {
+ *  and Grayscale ease. Renders nothing without an image. `scrim` (default): a bottom-heavy tint, above
+ *  the hover glow (`z-[1]`), for a card whose text block carries the photo bound itself
+ *  (`tile-text-scrim`, Phase 17D, `[R-556]`); `false` for a photo PANEL that carries no overlaid text
+ *  (Feature, Split). */
+export function TileImage({item, fx, scrim = true}: {item: SiloNavItem; fx: SiloHoverClasses; scrim?: boolean}) {
   if (!hasImage(item.image)) return null
   return (
     <>
@@ -78,11 +78,8 @@ export function TileImage({item, fx, scrim = 'tone'}: {item: SiloNavItem; fx: Si
         sizes={CARD_SIZES}
         className={`transition-[scale,filter] duration-ui-slow ease-gentle ${scrim ? 'tile-photo ' : ''}${fx.image}`}
       />
-      {scrim === 'tone' && (
+      {scrim && (
         <div aria-hidden="true" className="absolute inset-0 z-[1] bg-gradient-to-t from-brand-dark/95 via-brand-dark/55 to-brand-dark/30" />
-      )}
-      {scrim === 'full' && (
-        <div aria-hidden="true" className="absolute inset-0 z-[1] bg-gradient-to-t from-scrim/95 to-scrim/80" />
       )}
     </>
   )

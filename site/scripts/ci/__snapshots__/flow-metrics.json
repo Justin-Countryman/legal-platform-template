@@ -69413,8 +69413,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 1256,
         "height": 682,
@@ -69670,8 +69672,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 1256,
         "height": 682,
@@ -69927,8 +69931,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": "15"
         },
         "top": 1256,
         "height": 682,
@@ -70187,8 +70193,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": "15"
         },
         "top": 1320,
         "height": 682,
@@ -70447,8 +70455,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 1256,
         "height": 682,
@@ -70719,8 +70729,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 1352,
         "height": 754,
@@ -70983,8 +70995,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 1256,
         "height": 682,
@@ -71240,8 +71254,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 1256,
         "height": 682,
@@ -71499,8 +71515,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 1256,
         "height": 810,
@@ -71760,8 +71778,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 1256,
         "height": 682,
@@ -72029,8 +72049,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 1256,
         "height": 738,
@@ -72286,8 +72308,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": "15"
         },
         "top": 1256,
         "height": 682,
@@ -72547,8 +72571,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 803,
         "height": 1466,
@@ -72804,8 +72830,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 803,
         "height": 1466,
@@ -73061,8 +73089,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": "15"
         },
         "top": 803,
         "height": 1466,
@@ -73321,8 +73351,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": "15"
         },
         "top": 820,
         "height": 1466,
@@ -73581,8 +73613,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 803,
         "height": 1466,
@@ -73853,8 +73887,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 867,
         "height": 1514,
@@ -74117,8 +74153,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 803,
         "height": 1466,
@@ -74374,8 +74412,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 803,
         "height": 1466,
@@ -74633,8 +74673,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 803,
         "height": 1562,
@@ -74894,8 +74936,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 803,
         "height": 1466,
@@ -75163,8 +75207,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": null
         },
         "top": 803,
         "height": 1498,
@@ -75420,8 +75466,10 @@
         "cards": {
           "cards": 6,
           "photos": 6,
+          "underText": 6,
           "scrimmed": 6,
-          "darkLinks": 0
+          "darkLinks": 0,
+          "corner": "15"
         },
         "top": 803,
         "height": 1466,

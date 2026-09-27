@@ -47,7 +47,7 @@ export const practiceAreaNavItem = defineType({
       name: 'image',
       title: 'Image (override)',
       type: 'image',
-      description: 'Defaults to the practice area\u2019s Card Photo \u2014 used by image-based layouts',
+      description: 'Defaults to the practice area\u2019s Card Photo. A list shows photos once every card in it has one; a Geo Practice Area or Service Area Page has no Card Photo, so give its card a photo here.',
     },
   ],
   preview: {
