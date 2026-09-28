@@ -3249,7 +3249,9 @@
         "mostlyDark"
       ],
       "defaultStep": "mostlyDark",
-      "passed": []
+      "passed": [
+        "mostlyDark"
+      ]
     },
     {
       "id": "wedges",
@@ -3781,7 +3783,7 @@
       "sentence": "Dark runs lit by a soft glow, behind the attorney where a section has a cutout.",
       "family": "gradientBloom",
       "step": "mostlyDark",
-      "passed": false
+      "passed": true
     },
     {
       "dark": {

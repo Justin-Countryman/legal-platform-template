@@ -435,7 +435,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // the figure, as calesariclaw, bardine and lewin draw it) else the run's middle band; a glowing band takes the photo
     // band's colors. Mostly dark only, on Cut blocks' hosts and runs, with no divider, texture or ghost: the glow is the
     // one device, and where the palette has no room the page is Photo scrims' fallback, which the need names.
-    steps: ['mostlyDark'], defaultStep: 'mostlyDark', passed: [],
+    steps: ['mostlyDark'], defaultStep: 'mostlyDark', passed: ['mostlyDark'],
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'glow', texture: 'quiet', close: 'dark'},
       light: {paint: 'plain', texture: 'quiet'},
