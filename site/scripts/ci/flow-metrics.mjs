@@ -259,7 +259,8 @@ function measure() {
   const bands = [...main.querySelectorAll('section')].filter((s) => !s.parentElement.closest('section'))
   const origin = bands[0] ? bands[0].getBoundingClientRect().top : 0
   const px = (v) => Math.round(parseFloat(v) || 0)
-  const keep = (cls) => /^(divider-|hairline-top$|hairline-accent$|band-gradient$|grad-[in]-|bg-)/.test(cls)
+  // Phase 17D session 2 (`[R-557]`): Gradient bloom's glow, its peak and its side, kept beside the gradient's own.
+  const keep = (cls) => /^(divider-|hairline-top$|hairline-accent$|band-gradient$|band-glow$|glow-from-left$|grad-[inp]-|bg-)/.test(cls)
   // Phase 17B session 4 (`[R-518]`): the site header and footer, whose schemes the theme now
   // sets. The ground at 390 is the header's own: the mobile row shows it and paints none.
   const chromeOf = (el) => (el ? {ring: el.getAttribute('data-ring-context'), bg: getComputedStyle(el).backgroundColor} : null)
@@ -323,6 +324,8 @@ function measure() {
         heading: (heading?.textContent ?? '').trim().replace(/\s+/g, ' ').slice(0, 48) || null,
         ring: s.getAttribute('data-ring-context'),
         scrim: s.getAttribute('data-scrim'),
+        // Phase 17D session 2 (`[R-557]`): a glowing band takes the photo band's colors; recorded only where one does.
+        ...(s.getAttribute('data-glow') ? {glow: s.getAttribute('data-glow')} : {}),
         bg: cs.backgroundColor,
         ink: cs.color,
         classes: [...s.classList].filter(keep).sort(),
@@ -574,7 +577,7 @@ if (UPDATE) {
     if (m.bands.length !== g.bands.length) { fail(`${key}: ${m.bands.length} bands vs golden ${g.bands.length}`); continue }
     m.bands.forEach((b, i) => {
       const gb = g.bands[i]
-      for (const f of ['heading', 'ring', 'scrim', 'bg', 'ink', 'texture', 'ghost', 'window', 'panel', 'cards', 'pt', 'pb']) {
+      for (const f of ['heading', 'ring', 'scrim', 'glow', 'bg', 'ink', 'texture', 'ghost', 'window', 'panel', 'cards', 'pt', 'pb']) {
         if (JSON.stringify(b[f]) !== JSON.stringify(gb[f])) fail(`${key}: band ${i} (${b.heading}) ${f} ${JSON.stringify(b[f])} vs golden ${JSON.stringify(gb[f])}`)
       }
       if (JSON.stringify(b.classes) !== JSON.stringify(gb.classes)) fail(`${key}: band ${i} classes ${b.classes.join(' ')} vs golden ${gb.classes.join(' ')}`)
