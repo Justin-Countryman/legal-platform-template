@@ -113,6 +113,8 @@ const CANVASES = [
   ['multi-practice-photo-hero', 'scripts/ci/record-multi-practice-photo-hero.ndjson'],
   // Phase 17C session 3: section headings of 42 to 89 characters in narrow columns.
   ['long-headings', 'scripts/ci/record-long-headings.ndjson'],
+  // Phase 17D (`[R-556]`): the multi-practice record with a stand-in Card Photo on every practice area.
+  ['multi-practice-area-photos', 'scripts/ci/record-multi-practice-area-photos.ndjson'],
 ]
 // The stand-in photographs (Phase 17B session 6), served from disk to the browser: the hero's own
 // optimizer address (`/_next/image?url=/stand-ins/...`) and the image CDN's address for a band's photo
@@ -233,6 +235,24 @@ function measure() {
   const chromeOf = (el) => (el ? {ring: el.getAttribute('data-ring-context'), bg: getComputedStyle(el).backgroundColor} : null)
   // The mobile row, the header's first child, paints its own ground (ADV-17B4-2: the header's
   // alone did not see a change on phones).
+  // A card photo is the card's own fill image (an icon is not; ADV-17D-P2); one under text carries
+  // `tile-photo`, a Feature or Split photo panel does not. `corner` is the carried piece's layer on the
+  // first photo card, where a theme carries one (a scrim once covered it, ADV-17D-P2).
+  function cardPhotos(s) {
+    const cards = [...s.querySelectorAll('nav a')].filter((a) => a.getClientRects().length > 0)
+    const photos = cards.filter((a) => a.querySelector(':scope img[data-nimg="fill"]'))
+    if (!photos.length) return null
+    const underText = photos.filter((a) => a.querySelector(':scope > img.tile-photo'))
+    const after = getComputedStyle(photos[0], '::after')
+    return {
+      cards: cards.length,
+      photos: photos.length,
+      underText: underText.length,
+      scrimmed: underText.filter((a) => a.querySelector('.tile-text-scrim')).length,
+      darkLinks: cards.filter((a) => a.hasAttribute('data-ring-context')).length,
+      corner: after.content !== 'none' && after.content !== 'normal' ? after.zIndex : null,
+    }
+  }
   const header = document.querySelector('header')
   return {
     header: chromeOf(header),
@@ -284,6 +304,10 @@ function measure() {
         // Phase 17D: an inset band's panel, its own ground and ring, recorded only where a band draws one: the
         // band's own box is the gutter around it (ADV-17D-A, -B: a dark panel recorded as transparent).
         ...(s.querySelector(':scope > div.rounded-ui.overflow-hidden') ? {panel: {ring: s.querySelector(':scope > div.rounded-ui.overflow-hidden').getAttribute('data-ring-context'), bg: getComputedStyle(s.querySelector(':scope > div.rounded-ui.overflow-hidden')).backgroundColor}} : {}),
+        // Phase 17D (`[R-556]`): a band's card photos, recorded only where it shows them: the visible cards, how many
+        // draw a photo and hold their text over the photo scrim, and how many links carry a dark context (none may:
+        // a card's focus ring is drawn outside it, on the band).
+        ...(cardPhotos(s) ? {cards: cardPhotos(s)} : {}),
         top: Math.round(r.top - origin),
         height: Math.round(r.height),
         pt: px(cs.paddingTop),
@@ -353,8 +377,11 @@ try {
           const h = document.documentElement.scrollHeight
           for (let y = 0; y <= h; y += 400) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 30)) }
           window.scrollTo(0, 0)
-          // Every photograph decoded before the measure and the capture (Phase 17B session 6).
-          await Promise.all([...document.images].map((i) => i.decode().catch(() => {})))
+          // Every photograph decoded before the measure and the capture (Phase 17B session 6); only the shown
+          // ones, and none waited on past 5 s: a lazy image in a hidden rendering (the phone carousel at 1440),
+          // or off to the side in a carousel's scroller at 390, never loads, and its decode never settles
+          // (Phase 17D, found on a card-photo canvas).
+          await Promise.all([...document.images].filter((i) => i.getClientRects().length).map((i) => Promise.race([i.decode().catch(() => {}), new Promise((r) => setTimeout(r, 5000))])))
           // Let the header's measured height and the last transitions settle.
           await new Promise((r) => setTimeout(r, 400))
           await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
@@ -364,6 +391,14 @@ try {
         if (m.innerWidth !== device.viewport.width) fail(`${key}: innerWidth is ${m.innerWidth}, not ${device.viewport.width} (the layout is not at this width)`)
         if (m.scrollWidth > m.clientWidth) fail(`${key}: horizontal scroll: scrollWidth ${m.scrollWidth} over ${m.clientWidth}`)
         if (width === '390') for (const b of m.bands) if (b.headingLines > 4 && !atFloor(b, 4)) fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at 390: ${b.heading}`)
+        // Card photos (`[R-556]`): all or none per list, every one under the scrim, no dark context on a link.
+        for (const b of m.bands.filter((x) => x.cards)) {
+          const c = b.cards
+          if (c.photos !== c.cards) fail(`${key}: band ${b.i} shows ${c.photos} card photos among ${c.cards} cards (all or none)`)
+          if (c.scrimmed !== c.underText) fail(`${key}: band ${b.i}: ${c.underText - c.scrimmed} card photo(s) without the scrim under their text`)
+          if (c.corner !== null && c.corner !== '15') fail(`${key}: band ${b.i}: the carried piece's layer is ${c.corner} on a photo card; its scrims cover it`)
+          if (c.darkLinks) fail(`${key}: band ${b.i}: ${c.darkLinks} card link(s) carry a dark context; the ring is drawn on the band`)
+        }
         await page.screenshot({path: resolve(OUT, `${canvas}--${flow}--${width}.jpg`), fullPage: true, type: 'jpeg', quality: 60})
         // The header scrolled (Phase 17B session 4): prerendered HTML only ever holds the state
         // at the top, so this is the one check that sees the scrolled bar, its ground and its rule.
@@ -409,7 +444,7 @@ try {
           const h = document.documentElement.scrollHeight
           for (let y = 0; y <= h; y += 400) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 30)) }
           window.scrollTo(0, 0)
-          await Promise.all([...document.images].map((i) => i.decode().catch(() => {})))
+          await Promise.all([...document.images].filter((i) => i.getClientRects().length).map((i) => Promise.race([i.decode().catch(() => {}), new Promise((r) => setTimeout(r, 5000))])))
           await new Promise((r) => setTimeout(r, 400))
           await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
         })
@@ -489,7 +524,7 @@ if (UPDATE) {
     if (m.bands.length !== g.bands.length) { fail(`${key}: ${m.bands.length} bands vs golden ${g.bands.length}`); continue }
     m.bands.forEach((b, i) => {
       const gb = g.bands[i]
-      for (const f of ['heading', 'ring', 'scrim', 'bg', 'ink', 'texture', 'ghost', 'window', 'panel', 'pt', 'pb']) {
+      for (const f of ['heading', 'ring', 'scrim', 'bg', 'ink', 'texture', 'ghost', 'window', 'panel', 'cards', 'pt', 'pb']) {
         if (JSON.stringify(b[f]) !== JSON.stringify(gb[f])) fail(`${key}: band ${i} (${b.heading}) ${f} ${JSON.stringify(b[f])} vs golden ${JSON.stringify(gb[f])}`)
       }
       if (JSON.stringify(b.classes) !== JSON.stringify(gb.classes)) fail(`${key}: band ${i} classes ${b.classes.join(' ')} vs golden ${gb.classes.join(' ')}`)

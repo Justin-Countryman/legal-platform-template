@@ -79,3 +79,39 @@ describe.skipIf(!present)('scripts/ci photo canvases and stand-in photographs (s
     expect(c.heroPhoto?.assetId).toMatch(/^image-fxstandin[a-z]+-\d+x\d+-jpg$/)
   })
 })
+
+// Phase 17D (`[R-556]`, monorepo WS-V1-PHASE17D-DESIGN §10): the multi-practice record with a stand-in Card Photo on
+// every practice area (`compose_from_record.py --area-photos`), so a list of photo cards is measured under every theme.
+const AREA_PHOTOS = 'record-multi-practice-area-photos.ndjson'
+const areaPresent = fs.existsSync(PHOTOS) && fs.existsSync(path.join(CI, AREA_PHOTOS))
+
+describe.skipIf(!areaPresent)('scripts/ci area-photo canvas (skipped on a client tree: scripts/ci is pruned by the press)', () => {
+  const schema = JSON.parse(fs.readFileSync(SCHEMA, 'utf8')) as Array<{name: string; type: string; attributes?: Record<string, unknown>}>
+  const byName = new Map(schema.map((t) => [t.name, t]))
+
+  it('every practice area carries a declared Card Photo that is a stand-in at its real size, with no alt', () => {
+    const docs = read(AREA_PHOTOS)
+    const byId = new Map(docs.map((d) => [d._id, d]))
+    const areas = docs.filter((d) => d._type === 'practiceArea')
+    expect(areas.length).toBeGreaterThan(0)
+    expect('cardImage' in (byName.get('practiceArea')?.attributes ?? {})).toBe(true)
+    for (const area of areas) {
+      const image = area.cardImage as {asset: {_ref: string}; alt?: string}
+      expect(image, area._id).toBeTruthy()
+      expect(image.alt, area._id).toBeUndefined()
+      const asset = byId.get(image.asset._ref)
+      expect(asset?._type, area._id).toBe('sanity.imageAsset')
+      const name = String(asset?.url).replace(/^\/stand-ins\//, '')
+      expect(Object.keys(PINNED)).toContain(name)
+      expect((asset?.metadata as {dimensions: unknown}).dimensions).toMatchObject(jpegSize(path.join(PHOTOS, name)))
+    }
+    for (const ref of JSON.stringify(docs).matchAll(/"_ref":"([^"]+)"/g)) expect(byId.has(ref[1]), ref[1]).toBe(true)
+  })
+
+  it('apart from the card photos and their assets, it is the multi-practice balanced canvas', () => {
+    const plain = read(AREA_PHOTOS)
+      .filter((d) => d._type !== 'sanity.imageAsset')
+      .map((d) => Object.fromEntries(Object.entries(d).filter(([k]) => k !== 'cardImage')))
+    expect(plain).toEqual(read('record-multi-practice-balanced.ndjson'))
+  })
+})

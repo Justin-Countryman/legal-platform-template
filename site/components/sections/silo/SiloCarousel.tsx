@@ -86,12 +86,12 @@ export function SiloCarousel({
               aria-label={`${i + 1} of ${items.length}`}
               className={`shrink-0 snap-start ${CAROUSEL_SLIDE_BASIS}`}
             >
-              <TileLink href={item.href ?? '#'} dark={onImage} className={`${CARD} min-h-[15rem] ${fx.container}`}>
+              <TileLink href={item.href ?? '#'} className={`${CARD} min-h-[15rem] ${fx.container}`}>
                 {onImage ? <TileImage item={item} fx={fx} /> : <TileFill />}
                 <TileGlow fx={fx} />
-                <div className="relative z-10 flex h-full flex-col p-6">
+                <div data-ring-context={onImage ? 'dark' : undefined} className="relative z-10 flex h-full flex-col p-6">
                   <TileIcon item={item} fx={fx} onImage={onImage} size="sm" />
-                  <div className="mt-auto pt-10">
+                  <div className={onImage ? 'mt-auto pt-10 tile-text-scrim' : 'mt-auto pt-10'}>
                     <div className="flex items-end justify-between gap-4">
                       <TileLabel item={item} fx={fx} />
                       {showArrow && <TileArrow fx={fx} />}

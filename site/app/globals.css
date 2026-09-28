@@ -1227,6 +1227,10 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   border-end-end-radius: var(--radius-ui);
   pointer-events: none;
 }
+/* A photo card's scrims are layers over its photo (Phase 17D, `[R-556]`), and they covered the piece
+   (ADV-17D-P2, measured): on a photo card it rides above them and the card's content, under the accent
+   border (`z-20`), clear of the text, which the card's padding keeps wider than the piece. */
+[data-carry-cards] [data-card]:has(> img.tile-photo)::after { z-index: 15; }
 /* Buttons (Sharp and Crisp only; the layout withholds the attribute otherwise), in the
    button's own text color, which is guaranteed on its fill. */
 [data-carry-buttons] [data-button-animatable="true"] { position: relative; }
@@ -1327,6 +1331,31 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   width: 200%;
   height: 200%;
   max-width: none;
+  dynamic-range-limit: standard;
+}
+/* A card photo under text (Phase 17D, `[R-556]`): text on it sits over `--color-scrim` at 80% or more,
+   the bound `validateWcag` proves over the lightest pixel (`[R-533]`), and the photo is held to the
+   standard range for the same reason. `tile-text-scrim` goes on a card's text block and draws the
+   scrim behind the block itself: 95% at the card's foot, 80% at the block's top edge, fading out over
+   the 3rem above it, so every word in the block, however it wraps, sits on the bound while the photo
+   above stays light. The card's own edges clip it (`overflow-hidden`); `--tile-scrim-pad` meets the
+   card's padding (1.5rem, 2rem on Tile). The block sits in the card's `z-10` content, so the scrim
+   paints above the hover glow. */
+@utility tile-text-scrim {
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -3rem calc(-1 * var(--tile-scrim-pad, 1.5rem)) calc(-1 * var(--tile-scrim-pad, 1.5rem));
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(to top,
+      color-mix(in srgb, var(--color-scrim) 95%, transparent) 0,
+      color-mix(in srgb, var(--color-scrim) 80%, transparent) calc(100% - 3rem),
+      transparent 100%);
+  }
+}
+@utility tile-photo {
   dynamic-range-limit: standard;
 }
 /* The rule under a docked dark header when scrolled (Phase 17B session 4): the header's shadow

@@ -13,7 +13,7 @@ vi.mock('next/image', () => ({
   default: ({src, alt}: {src: string; alt: string}) => <img src={src} alt={alt} />,
 }))
 
-import {PracticeAreaNavBlock, type PracticeAreaNavBlockData} from '../PracticeAreaNavBlock'
+import {PracticeAreaNavBlock, photosAllOrNone, type PracticeAreaNavBlockData} from '../PracticeAreaNavBlock'
 
 const ITEMS = [
   {_key: 'a', label: 'Family Law', href: '/family-law/', description: 'Divorce and custody.'},
@@ -117,5 +117,85 @@ describe('PracticeAreaNavBlock — mobile display axis', () => {
     expect(mobileNav?.querySelector('ul.divide-y')).not.toBeNull()
     // no full-bleed photos in the list
     expect(container.querySelector('nav.md\\:hidden [class*="object-cover"]')).toBeNull()
+  })
+})
+
+// ─── A photo per practice area (Phase 17D, `[R-556]`) ─────────────────────────
+const photo = (ref: string) => ({asset: {_type: 'reference', _ref: ref}})
+const PHOTOGRAPHED = [
+  {...ITEMS[0], image: photo('image-family-1600x900-jpg')},
+  {...ITEMS[1], image: photo('image-estate-1600x900-jpg')},
+]
+const gridOf = (container: HTMLElement) => container.querySelector('nav.\\@container') as HTMLElement
+
+describe('PracticeAreaNavBlock — card photos', () => {
+  it('a list shows photos only once every area in it has one', () => {
+    const half = render(<PracticeAreaNavBlock data={data({layout: 'spotlight', items: [PHOTOGRAPHED[0], ITEMS[1]]})} />)
+    expect(gridOf(half.container).querySelectorAll('img')).toHaveLength(0)
+    half.unmount()
+    const all = render(<PracticeAreaNavBlock data={data({layout: 'spotlight', items: PHOTOGRAPHED})} />)
+    expect(gridOf(all.container).querySelectorAll('img')).toHaveLength(2)
+  })
+
+  it('photosAllOrNone leaves a fully photographed list alone and strips a partial one', () => {
+    expect(photosAllOrNone(PHOTOGRAPHED)).toBe(PHOTOGRAPHED)
+    expect(photosAllOrNone([PHOTOGRAPHED[0], ITEMS[1]]).map((i) => i.image ?? null)).toEqual([null, null])
+    // An image object with no asset counts as no photo.
+    expect(photosAllOrNone([PHOTOGRAPHED[0], {...ITEMS[1], image: {asset: null}}]).every((i) => !i.image)).toBe(true)
+  })
+
+  // The focus ring is drawn outside the card, on the band, so it must take the band's color:
+  // the dark context sits on the card's content, never on its link (ADV-17D-P).
+  it.each(['spotlight', 'tile'] as const)('%s: the dark context is on the content, not the link', (layout) => {
+    const {container} = render(<PracticeAreaNavBlock data={data({layout, items: PHOTOGRAPHED})} />)
+    const grid = gridOf(container)
+    for (const a of grid.querySelectorAll('a')) {
+      expect(a.getAttribute('data-ring-context')).toBeNull()
+      expect(a.querySelector(':scope > [data-ring-context="dark"]')).not.toBeNull()
+    }
+  })
+
+  it('bento and the carousel keep the dark context off the link too', () => {
+    const {container} = render(<PracticeAreaNavBlock data={data({gridMode: 'bentoLeft', items: PHOTOGRAPHED})} />)
+    const links = container.querySelectorAll('a')
+    expect(links.length).toBeGreaterThan(0)
+    for (const a of links) expect(a.getAttribute('data-ring-context')).toBeNull()
+    expect(container.querySelectorAll('[data-slide] [data-ring-context="dark"]')).toHaveLength(2)
+  })
+
+  it('every layout that sets text on a photo puts the scrim behind its text block', () => {
+    const spot = render(<PracticeAreaNavBlock data={data({layout: 'spotlight', items: PHOTOGRAPHED})} />)
+    expect(gridOf(spot.container).querySelectorAll('.tile-text-scrim')).toHaveLength(2)
+    expect(spot.container.querySelectorAll('[data-slide] .tile-text-scrim')).toHaveLength(2)
+    spot.unmount()
+    const bento = render(<PracticeAreaNavBlock data={data({gridMode: 'bentoLeft', items: PHOTOGRAPHED})} />)
+    expect(gridOf(bento.container).querySelectorAll('.tile-text-scrim')).toHaveLength(2)
+    bento.unmount()
+    // Tile sets its text at the card's foot on a photo, so the photo shows above it (ADV-17D-P2: a
+    // whole-card scrim left it a dim texture); centered on a plain card, as it was.
+    const tile = render(<PracticeAreaNavBlock data={data({layout: 'tile', items: PHOTOGRAPHED})} />)
+    const grid = gridOf(tile.container)
+    expect(grid.querySelectorAll('.tile-text-scrim')).toHaveLength(2)
+    for (const a of grid.querySelectorAll('a')) expect(a.className).toContain('justify-end')
+    tile.unmount()
+    const plain = render(<PracticeAreaNavBlock data={data({layout: 'tile'})} />)
+    for (const a of gridOf(plain.container).querySelectorAll('a')) expect(a.className).toContain('justify-center')
+  })
+
+  it('a photo card’s scrims sit above the hover glow', () => {
+    const {container} = render(<PracticeAreaNavBlock data={data({layout: 'spotlight', items: PHOTOGRAPHED})} />)
+    const card = gridOf(container).querySelector('a') as HTMLElement
+    const layers = [...card.children] as HTMLElement[]
+    const glow = layers.findIndex((el) => el.className.includes('from-cue/30'))
+    const tone = layers.find((el) => el.className.includes('from-brand-dark/95'))
+    expect(glow).toBeGreaterThan(-1)
+    // The tone layer is lifted over the glow; the text scrim lives in the z-10 content.
+    expect(tone?.className).toContain('z-[1]')
+    expect(card.querySelector('.z-10 .tile-text-scrim')).not.toBeNull()
+  })
+
+  it('without photos nothing changes: no scrim, no dark context', () => {
+    const {container} = render(<PracticeAreaNavBlock data={data({layout: 'spotlight'})} />)
+    expect(container.querySelectorAll('.tile-text-scrim, [data-ring-context]')).toHaveLength(0)
   })
 })

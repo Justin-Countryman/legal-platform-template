@@ -13,6 +13,7 @@ import {SiloCompactList} from './silo/SiloCompactList'
 import {isBentoMode} from './silo/bento'
 import type {SiloNavItem, SiloLayout, SiloIconPosition, SiloSectionLayout, SiloGridMode, SiloMobileDisplay} from './silo/types'
 import {headingFit, type HeadingFit} from '@/lib/headingFit'
+import {hasImage} from '@/lib/sanity/image'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -72,6 +73,14 @@ export function visibleItems(data: PracticeAreaNavBlockData): SiloNavItem[] {
   return (data.items ?? []).filter((i): i is SiloNavItem => !!i?.href)
 }
 
+/** A list shows photos once every area in it has one (Phase 17D, `[R-556]`): a half-photographed grid
+ *  reads as a checkerboard of light and dark cards, and the ruling has photos added as they come. Until
+ *  the last one arrives, every card draws as it does with none. */
+export function photosAllOrNone(items: SiloNavItem[]): SiloNavItem[] {
+  if (items.every((i) => hasImage(i.image))) return items
+  return items.map((i) => (i.image ? {...i, image: null} : i))
+}
+
 /** True when this section renders nothing, so the walk skips it and it never
  *  becomes the "previous band" for the one after it (item 312). */
 export function isEmpty(data: PracticeAreaNavBlockData): boolean {
@@ -87,7 +96,7 @@ export function PracticeAreaNavBlock({
   napTokens?: NapTokens | null
   seam?: SeamProps
 }) {
-  const items = visibleItems(data)
+  const items = photosAllOrNone(visibleItems(data))
   if (items.length === 0) return null
 
   const tagline = resolveTokenString(data.tagline, napTokens)

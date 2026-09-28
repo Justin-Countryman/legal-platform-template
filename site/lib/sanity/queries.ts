@@ -148,7 +148,7 @@ const PRACTICE_AREA_SECTION_ITEM = `{
   "href": "/" + slug.current + "/",
   "description": metaDescription,
   "icon": null,
-  "image": null,
+  "image": cardImage ${IMAGE_FRAGMENT},
   "featured": false
 }`
 const PRACTICE_AREA_LINK_ITEM = `{
@@ -253,7 +253,9 @@ export const SECTION_BODY = `
         "href": "/" + page->slug.current + "/",
         "description": coalesce(description, page->metaDescription),
         "icon": icon ${IMAGE_FRAGMENT},
-        "image": image ${IMAGE_FRAGMENT},
+        // The item's own photo, else the practice area's Card Photo (Phase 17D, R-556); select, not
+        // coalesce: an image object with no asset would win a coalesce and hide the page's photo.
+        "image": select(defined(image.asset) => image ${IMAGE_FRAGMENT}, page->cardImage ${IMAGE_FRAGMENT}),
         "featured": featured
       },
     // contentSection's items: a title and a body (on a stat row, the number
