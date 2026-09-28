@@ -1,0 +1,35 @@
+[
+  {
+    "key": "p11-t3-statement",
+    "index": 0,
+    "seamTop": false,
+    "previousGround": null,
+    "nextOverlap": "none",
+    "divider": {
+      "mode": "rise",
+      "flip": false
+    },
+    "ghost": false,
+    "raisePhoto": false,
+    "insetGround": null,
+    "run": {
+      "index": 0,
+      "length": 1
+    }
+  },
+  {
+    "key": "p11-t2-twocol",
+    "index": 1,
+    "seamTop": false,
+    "previousGround": "dark",
+    "nextOverlap": "none",
+    "divider": null,
+    "ghost": false,
+    "raisePhoto": false,
+    "insetGround": null,
+    "run": {
+      "index": 0,
+      "length": 1
+    }
+  }
+]
