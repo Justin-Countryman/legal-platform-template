@@ -657,12 +657,15 @@ export function gradientStopOn(dark: string, _lightGround: string, accent: strin
 // channel, twice: sampled at 17 or 33 points a ramp slipped between the samples on 54 to 87 palettes (ADV-17D2-C).
 // `scripts/ci/ramp-pixels.mjs` holds what three engines actually draw against it.
 
-const LEVEL = Array.from({length: 256}, (_, i) => { const v = i / 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4 })
+// Built on first use: this module reaches a client chunk (the Studio's sidebar context), and a page that never walks a
+// ramp should not pay 256 powers at load (ADV-17D2-P).
+let levels: number[] | null = null
+const level = (i: number) => (levels ??= Array.from({length: 256}, (_, k) => { const v = k / 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4 }))[i]
 const channelsOf = (hex: string): number[] => {
   const c = toRgb(hex) as unknown as {r: number; g: number; b: number}
   return [c.r, c.g, c.b].map((v) => Math.min(255, Math.max(0, Math.round(v * 255))))
 }
-const luminanceOf = (c: number[]) => 0.2126 * LEVEL[c[0]] + 0.7152 * LEVEL[c[1]] + 0.0722 * LEVEL[c[2]]
+const luminanceOf = (c: number[]) => 0.2126 * level(c[0]) + 0.7152 * level(c[1]) + 0.0722 * level(c[2])
 
 /** A pair's foreground and the ratio it must keep. */
 export type RampPair = [fg: string, min: number]
