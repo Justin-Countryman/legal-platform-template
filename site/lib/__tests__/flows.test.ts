@@ -4,7 +4,7 @@ import {resolve} from 'node:path'
 import {
   CLOSES, DARKNESS, DARK_BUDGETS, DARK_PAINTS, DARK_RHYTHMS, DEFAULT_FLOW, DIVIDER_ATS, FAMILIES, FLOWS, GHOSTS, HAIRLINES, HAIRLINE_INKS, HIDDEN_FIELDS,
   HOSTS, LIGHT_PAINTS, NEEDS, SPACINGS, STEP_HOSTS, bridgeOf, closeSurface, darkBudget, flowById, flowOf, hostOf, impliedNeeds, needLabel, saturatedFillOk,
-  storesHiddenFields, unmetNeeds, CHROME_SCHEMES, STEP_CHROME, chromeSchemes, darkHeaderReady, drawsHeroPhoto, familyOf, TEXTURE_STRENGTHS,} from '../flows'
+  storesHiddenFields, unmetNeeds, CHROME_SCHEMES, STEP_CHROME, chromeSchemes, darkHeaderReady, drawsHeroPhoto, familyOf, TEXTURE_STRENGTHS, fadeOf,} from '../flows'
 import {DIVIDERS, CARRY_PIECES} from '../dividers'
 import {OVERLAPS} from '../overlaps'
 import {PALETTE_PRESETS, presetInputs} from '../palettes'
@@ -61,10 +61,34 @@ describe('the families and the roster', () => {
 
   it('ships the three families of session 2, the three of session 5, Photo scrims of session 6 and Phase 17D’s', () => {
     expect(FAMILIES.map((f) => f.id)).toEqual(['quiet', 'alternating', 'cutBlocks', 'typeOnBlack', 'editorial', 'ribbonRhythm', 'photoScrims',
-      'floatingPanels', 'softWash', 'wedges'])
+      'floatingPanels', 'softWash', 'gradientBloom', 'wedges'])
     expect(FLOWS.map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
       'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark',
-      'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight', 'wedges.balanced'])
+      'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight', 'gradientBloom.mostlyDark', 'wedges.balanced'])
+  })
+
+  it('Gradient bloom is the Phase 17D session 2 record\u2019s \u00a72.4, written out: mostly dark, the glow, the need of room ([R-557])', () => {
+    const gb = flowById('gradientBloom.mostlyDark')!
+    expect(familyOf(gb)!.steps).toEqual(['mostlyDark'])
+    expect(gb.dark).toMatchObject({budget: 'threeQuarters', rhythm: 'runs', paint: 'glow', texture: 'quiet', close: 'dark'})
+    expect(gb.dark.hosts).toEqual(flowById('cutBlocks.mostlyDark')!.dark.hosts)
+    expect(gb.light).toEqual({paint: 'plain', texture: 'quiet'})
+    expect(gb.divider).toEqual({shape: 'straight', at: 'none', carry: [], hairline: 'none', hairlineInk: 'border'})
+    expect(gb).toMatchObject({ghost: 'none', overlap: 'photo', spacing: 'normal', needs: ['glow'], chrome: {header: 'dark', footer: 'dark'}})
+    // Only Gradient bloom glows, and the glow is a need of the palette the switcher says on its own.
+    expect(FLOWS.filter((f) => f.dark.paint === 'glow').map((f) => f.id)).toEqual(['gradientBloom.mostlyDark'])
+    expect(needLabel('glow')).toBe('a palette whose dark sections have room to glow')
+    expect(unmetNeeds(gb, {hosts: [], photos: 0, texture: false, initials: false, glow: false})).toEqual(['glow'])
+    expect(unmetNeeds(gb, {hosts: [], photos: 0, texture: false, initials: false, glow: true})).toEqual([])
+  })
+
+  it('what a dark band draws over its ground: the bridge\u2019s ramp, the glow where the palette has room, or nothing', () => {
+    const gb = flowById('gradientBloom.mostlyDark')!
+    expect(fadeOf(gb, true)).toBe('glow')
+    expect(fadeOf(gb, false)).toBeNull()
+    expect(fadeOf(flowOf({sectionGradient: 'deep'}), true)).toBe('gradient')
+    expect(fadeOf(flowById('cutBlocks.mostlyDark'), true)).toBeNull()
+    expect(fadeOf(null, true)).toBeNull()
   })
 
   it('Wedges is the Phase 17D record\u2019s \u00a72.1, written out: balanced only, the steep angle at every change ([R-552])', () => {

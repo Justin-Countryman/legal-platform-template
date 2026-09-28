@@ -18094,6 +18094,10 @@
             },
             {
               "type": "string",
+              "value": "gradientBloom.mostlyDark"
+            },
+            {
+              "type": "string",
               "value": "wedges.balanced"
             }
           ]

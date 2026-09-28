@@ -7,7 +7,6 @@ import {
   type ResolvedSectionSurface, type SectionSpacingSteps,
 } from '@/lib/sectionSurface'
 import {type SeamProps, NO_SEAM, overlapOf} from './sectionFrame'
-import {fadesUnder} from '@/lib/flows'
 import {HERO_BACKDROP_SIZES} from '@/lib/heroSurface'
 
 // ─── SectionShell ───────────────────────────────────────────────────────────────
@@ -160,6 +159,8 @@ export function SectionShell({
   const ADOPTED: Record<string, string> = {dark: 'bg-brand-dark', saturated: 'bg-accent-fill'}
   const adoptedClass = isInset && seam.insetGround ? ADOPTED[seam.insetGround] ?? '' : ''
   const paintsDark = isInset ? adoptedClass === 'bg-brand-dark' : resolved.surfaceClass === 'bg-brand-dark'
+  // What the band draws over its dark ground (Phase 17D session 2, `seam.fade`): only where it paints the dark ground.
+  const fade = paintsDark && !resolved.isImage ? seam.fade ?? null : null
 
   // The site's section texture, on a Pattern band only (Phase 16A, `[R-472]`). One
   // decorative child, absolutely placed BEFORE the content container, which is
@@ -210,6 +211,9 @@ export function SectionShell({
       // body text color here (globals.css, the scrim block), because neither is
       // guaranteed 4.5:1 or 3:1 over the lightest photo pixel.
       data-scrim={showImage || showWindow ? 'true' : undefined}
+      // A band Gradient bloom lights takes the photo band's colors, its glow being solved under them (`[R-557]`); an
+      // inset's section glows in its gutter only, and its panel keeps its own colors, so it takes none.
+      data-glow={fade === 'glow' && !isInset ? 'true' : undefined}
       aria-labelledby={aria['aria-labelledby']}
       aria-label={aria['aria-label']}
       className={[
@@ -236,10 +240,15 @@ export function SectionShell({
         // Phase 16F: a dark band's ground fades into the palette's deep stop. Per band,
         // and only where the band really paints the dark ground -- an image band paints
         // a photo over it and a saturated band is the accent, and neither has a swept pair.
-        // Since Phase 17B the theme says whether it fades (`dark.paint`, `lib/flows.ts`).
-        fadesUnder(seam.site?.flow) && paintsDark && !resolved.isImage && 'band-gradient',
-        fadesUnder(seam.site?.flow) && paintsDark && !resolved.isImage && `grad-i-${Math.min(seam.run?.index ?? 0, 7)}`,
-        fadesUnder(seam.site?.flow) && paintsDark && !resolved.isImage && `grad-n-${Math.min(seam.run?.length ?? 1, 8)}`,
+        // Since Phase 17B the theme says whether it fades (`dark.paint`, `lib/flows.ts`); since Phase 17D session 2 the
+        // walk carries what the band draws (`seam.fade`): the bridge's ramp, or Gradient bloom's glow (`[R-557]`), its
+        // peak's band and the side its light comes from.
+        fade === 'gradient' && 'band-gradient',
+        fade === 'glow' && 'band-glow',
+        fade && `grad-i-${Math.min(seam.run?.index ?? 0, 7)}`,
+        fade && `grad-n-${Math.min(seam.run?.length ?? 1, 8)}`,
+        fade === 'glow' && `grad-p-${Math.min(seam.run?.peak ?? 0, 7)}`,
+        fade === 'glow' && seam.run?.side === 'left' && 'glow-from-left',
         // Phase 17B: the theme's hairline, a decorative line at the top of this band; in the
         // accent where the theme says so (session 5, `[R-524]`).
         seam.hairline && 'hairline-top',

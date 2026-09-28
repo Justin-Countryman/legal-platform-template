@@ -93,7 +93,10 @@ export function HomepageCta({
           <p className="mt-4 text-foreground-muted md:text-md">{merged.description}</p>
         ) : null}
 
-        {items.length > 0 ? <ButtonGroup items={items} align="center" className="mt-6 md:mt-8" /> : null}
+        {/* A close Gradient bloom lights (Phase 17D session 2) takes the dark band's button context, so a secondary
+            button's outline is the body text, which the glow is solved under; every other close is as it was
+            (backlog 367 is the accessibility phase's). */}
+        {items.length > 0 ? <ButtonGroup items={items} align="center" className="mt-6 md:mt-8" context={seam.fade === 'glow' && surface === 'dark' ? 'dark' : undefined} /> : null}
 
         {merged.formEmbed ? (
           <div className="mt-8">

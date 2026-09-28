@@ -290,6 +290,8 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
   // resolution test reads.
   'grad-i-0', 'grad-i-1', 'grad-i-2', 'grad-i-3', 'grad-i-4', 'grad-i-5', 'grad-i-6', 'grad-i-7',
   'grad-n-1', 'grad-n-2', 'grad-n-3', 'grad-n-4', 'grad-n-5', 'grad-n-6', 'grad-n-7', 'grad-n-8',
+  // Phase 17D session 2 (`[R-557]`): Gradient bloom's glow, the band its peak sits in and the side its light comes from.
+  'band-glow', 'glow-from-left', 'grad-p-0', 'grad-p-1', 'grad-p-2', 'grad-p-3', 'grad-p-4', 'grad-p-5', 'grad-p-6', 'grad-p-7',
 ]
   .join(' ')
   .split(/\s+/)
