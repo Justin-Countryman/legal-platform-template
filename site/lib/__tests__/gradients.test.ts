@@ -20,7 +20,7 @@
 import {describe, expect, it} from 'vitest'
 import {converter, differenceCiede2000, formatHex, wcagContrast} from 'culori'
 import fieldMap from '../../../studio/field-map.json'
-import {GRADIENT_DEPTH_DE, resolvePalette, validateWcag} from '../designTokens'
+import {GRADIENT_DEPTH_DE, gradientStart, gradientStopOn, heldRamp, onDarkPairs, rampDrawnMax, resolvePalette, validateWcag} from '../designTokens'
 import {SECTION_GRADIENTS, fadesDark, readGradient} from '../gradients'
 import {PALETTE_PRESETS, presetInputs} from '../palettes'
 
@@ -115,4 +115,65 @@ describe('the stop, on every shipped palette', () => {
     expect(pairs.every((p) => p.blocking)).toBe(true)
     expect(pairs.some((p) => p.pair.includes('ramp')), 'the ramp itself must be swept, not only the stop').toBe(true)
   })
+})
+
+// ─── The ramp held as drawn (Phase 17D session 2, `[R-553]`; monorepo WS-V1-PHASE17D2-DESIGN §2.2) ─────────
+// A browser draws a gradient a level of 255 past the model (ADV-17D-C: the control border under 3:1 on up to 141 of
+// 432 palettes in three engines, Black & Gold at 2.998 in Chromium). The ramp now starts a level below the ground and
+// no level of it, drawn a level lighter, is lighter than the ground or past any on-dark pair.
+
+const LUM = (hex: string) => {
+  const c = converter('rgb')(hex) as unknown as {r: number; g: number; b: number}
+  const f = (v: number) => { const x = Math.round(v * 255) / 255; return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4 }
+  return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b)
+}
+
+describe('the ramp held as drawn', () => {
+  it.each(CONTEXTS)('$id starts a level below its ground', ({inputs}) => {
+    const {tokens} = resolvePalette(inputs)
+    const g = converter('rgb')(tokens['--color-brand-dark']) as unknown as {r: number; g: number; b: number}
+    const s0 = converter('rgb')(tokens['--color-gradient-start']) as unknown as {r: number; g: number; b: number}
+    for (const k of ['r', 'g', 'b'] as const) expect(Math.round(g[k] * 255) - Math.round(s0[k] * 255), k).toBe(1)
+  })
+
+  it.each(CONTEXTS)('$id draws no level lighter than its ground, and every on-dark pair and mark holds on the lightest', ({inputs}) => {
+    const {tokens} = resolvePalette(inputs)
+    const drawn = rampDrawnMax(tokens['--color-gradient-start'], tokens['--color-gradient-stop'])
+    expect(drawn).toBeLessThanOrEqual(LUM(tokens['--color-brand-dark']) + 1e-12)
+    for (const [fg, min] of onDarkPairs(tokens)) expect((LUM(fg) + 0.05) / (drawn + 0.05), fg).toBeGreaterThanOrEqual(min)
+    expect(validateWcag(resolvePalette(inputs)).filter((r) => r.pair.includes('as drawn') && !r.passes)).toEqual([])
+  })
+
+  it('keeps every preset\'s stop but Black & Crimson\'s, whose ramp drew lighter than its ground', () => {
+    const moved = CONTEXTS.filter(({inputs}) => {
+      const {tokens} = resolvePalette(inputs)
+      const derived = gradientStopOn(tokens['--color-brand-dark'], tokens['--color-background'], tokens['--color-accent'], [
+        tokens['--color-foreground-on-dark'], tokens['--color-foreground-muted-on-dark'],
+        tokens['--color-foreground-subtle-on-dark'], tokens['--color-accent-on-dark'], tokens['--color-action-text-on-dark'],
+      ])
+      return derived !== tokens['--color-gradient-stop']
+    }).map((c) => c.id)
+    expect(moved).toEqual(['black-crimson'])
+  })
+
+  it('draws flat where the ground has no level below it', () => {
+    expect(gradientStart('#000000')).toBeNull()
+    expect(heldRamp('#000001', '#000000', 1)).toEqual({start: '#000001', stop: '#000001'})
+    expect(rampDrawnMax('#000001', '#000001')).toBe(LUM('#000001'))
+  })
+
+  it('reads every pair as one ceiling because every on-dark foreground is lighter than its ground', () => {
+    // The premise `pairsCeiling` rests on, over the presets and a seeded sweep: an accepted dark ground has white at
+    // 7:1, so nothing darker than it can reach 3:1 against it.
+    let s = 20260928 >>> 0
+    const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 2 ** 32
+    const hex = () => '#' + Math.floor(rnd() * 0x1000000).toString(16).padStart(6, '0')
+    const all = [...CONTEXTS.map((c) => c.inputs), ...Array.from({length: 500}, () => ({darkGround: hex(), lightGround: hex(), accent: hex(), action: rnd() < 0.5 ? hex() : null}))]
+    for (const inputs of all) {
+      const {tokens} = resolvePalette(inputs)
+      const ground = LUM(tokens['--color-brand-dark'])
+      for (const [fg] of onDarkPairs(tokens)) expect(LUM(fg), JSON.stringify(inputs)).toBeGreaterThan(ground)
+      if (tokens['--color-action-state-cue-on-dark'] !== 'transparent') expect(LUM(tokens['--color-action-state-cue-on-dark'])).toBeGreaterThan(ground)
+    }
+  }, 60_000)
 })

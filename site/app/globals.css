@@ -1181,9 +1181,11 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
    is needed -- which matters, because Lightning CSS rewrites a `color-mix()` to a
    static fallback and an @supports rule (measured through this repo's own PostCSS),
    while an `in oklab` gradient passes through verbatim. */
+/* Phase 17D session 2 (`[R-553]`): the ramp starts a level of 255 below the ground, so that a level drawn lighter is
+   no lighter than it (`heldRamp`, `lib/designTokens.ts`; `scripts/ci/ramp-pixels.mjs`). */
 @utility band-gradient {
   background-image: linear-gradient(in oklab,
-    var(--color-brand-dark) calc(var(--grad-i, 0) * -100%),
+    var(--color-gradient-start) calc(var(--grad-i, 0) * -100%),
     var(--color-gradient-stop) calc((var(--grad-n, 1) - var(--grad-i, 0)) * 100%));
 }
 /* The band's position in its run, as real utilities rather than arbitrary values

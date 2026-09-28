@@ -1,0 +1,32 @@
+[
+  {
+    "key": "fx-content-stats",
+    "index": 1,
+    "seamTop": false,
+    "previousGround": null,
+    "nextOverlap": "none",
+    "divider": null,
+    "ghost": false,
+    "raisePhoto": false,
+    "insetGround": null,
+    "run": {
+      "index": 0,
+      "length": 2
+    }
+  },
+  {
+    "key": "fx-content-ribbon",
+    "index": 2,
+    "seamTop": true,
+    "previousGround": "light",
+    "nextOverlap": "none",
+    "divider": null,
+    "ghost": false,
+    "raisePhoto": false,
+    "insetGround": null,
+    "run": {
+      "index": 1,
+      "length": 2
+    }
+  }
+]

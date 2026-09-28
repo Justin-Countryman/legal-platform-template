@@ -629,6 +629,12 @@ jobs:
         timeout-minutes: 10
         working-directory: site
         run: node scripts/ci/texture-pixels.mjs
+      # Phase 17D session 2 (monorepo WS-V1-PHASE17D2-DESIGN §2.2, `[R-553]`): every gradient ramp, as the headless
+      # shell, full Chromium and WebKit draw it at DPR 1 and 3, no lighter than its ceiling; a calibration strip is printed.
+      - name: The ramp pixels (three engines)
+        timeout-minutes: 10
+        working-directory: site
+        run: node scripts/ci/ramp-pixels.mjs
       - name: The flow metrics golden at 1440 and 390 (built and served)
         timeout-minutes: 25
         working-directory: site

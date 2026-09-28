@@ -95,6 +95,11 @@ const CANVASES: Array<[name: string, blocks: HomepageBlock[], hero: VisibleGroun
 const LOOKS: Array<[name: string, designTokens: Record<string, unknown>]> = [
   ['graphite', GRAPHITE_STORED],
   ['nothing', {}],
+  // Phase 17D session 2 (ADV-17D2-B): the one wearer of the gradient, a client storing `sectionGradient: 'deep'` (a style
+  // set that carried the gradient, Granite or Canyon, applied before the engine) and no theme. Pinned at this session,
+  // not at a164ce0 (no such client was captured then): where its ramp draws, band by band. Its colors are CSS, held by
+  // `gradients.test.ts` and `scripts/ci/ramp-pixels.mjs`; this holds the placement.
+  ['deep', {...GRAPHITE_STORED, sectionGradient: 'deep'}],
 ]
 
 /** Every decision the walk makes, without the site look (whose shape the engine changes). */
