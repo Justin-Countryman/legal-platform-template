@@ -46,7 +46,8 @@ vi.mock('@/components/ui/ScrollReveal', () => ({
 }))
 
 import {HomepageCanvas, frameOf, type HomepageBlock} from '@/components/layout/HomepageCanvas'
-import {walkFrame, siteLookOf, type SiteLook} from '../sectionFrame'
+import {closeGround, walkPage, siteLookOf, type SiteLook} from '../sectionFrame'
+import {closeSurface} from '@/lib/flows'
 import {ghostSource} from '@/lib/brandMark'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import planted from './fixtures/fixture-shaped-canvas.json'
@@ -87,19 +88,39 @@ function stubCanvas(): HomepageBlock[] | null {
 }
 const STUB = stubCanvas()
 
+/** Phase 17D session 2 (ADV-17D2-P): a last band inset under a dark close. Since the walk takes the close as a ground
+ *  (`walkPage`), the inset adopts the dark run above it (`[R-501]`) under every theme whose close is dark, the default
+ *  Quiet among them: its gutter turns dark and its top padding halves, a change to a stored client's page that the
+ *  canvases above do not carry. Pinned at this session, not at a164ce0. */
+const plantedDocs = planted as unknown as HomepageBlock[]
+const LAST_INSET: HomepageBlock[] = [
+  {...plantedDocs.find((b) => b._key === 'p11-t3-statement')!, appearance: {surface: 'dark'}} as HomepageBlock,
+  plantedDocs.find((b) => b._key === 'p11-t2-twocol')!,
+]
+
 const CANVASES: Array<[name: string, blocks: HomepageBlock[], hero: VisibleGround]> = [
   ['planted', planted as unknown as HomepageBlock[], 'dark'],
   ['migrated', migrated as unknown as HomepageBlock[], 'dark'],
   ...(STUB ? [['stub', STUB, 'light'] as [string, HomepageBlock[], VisibleGround]] : []),
+  ['last-inset', LAST_INSET, 'light'],
 ]
 const LOOKS: Array<[name: string, designTokens: Record<string, unknown>]> = [
   ['graphite', GRAPHITE_STORED],
   ['nothing', {}],
+  // Phase 17D session 2 (ADV-17D2-B): the one wearer of the gradient, a client storing `sectionGradient: 'deep'` (a style
+  // set that carried the gradient, Granite or Canyon, applied before the engine) and no theme. Pinned at this session,
+  // not at a164ce0 (no such client was captured then): where its ramp draws, band by band. Its colors are CSS, held by
+  // `gradients.test.ts` and `scripts/ci/ramp-pixels.mjs`; this holds the placement.
+  ['deep', {...GRAPHITE_STORED, sectionGradient: 'deep'}],
 ]
+
+/** The ground below the last band, as `HomeBody` hands it to the walk and the canvas: the close, shown (ADV-17D2-P: the
+ *  gate walked without it, and so could not see a change the close makes). */
+const closeOf = (site: SiteLook) => closeGround(closeSurface(site.flow, !!site.saturated, !!site.heroPhoto), true)
 
 /** Every decision the walk makes, without the site look (whose shape the engine changes). */
 function decisions(blocks: HomepageBlock[], site: SiteLook, hero: VisibleGround) {
-  return walkFrame(blocks, frameOf, site, hero).map(({member, index, seam}) => ({
+  return walkPage(blocks, frameOf, site, hero, closeOf(site)).bands.map(({member, index, seam}) => ({
     key: member._key,
     index,
     seamTop: seam.seamTop,
@@ -125,7 +146,7 @@ describe('the compat bridge reproduces the a164ce0 walk and canvas byte for byte
       it(`${canvasName} canvas, ${lookName} stored: the HTML`, async () => {
         const site = lookOf(designTokens)
         const {container} = render(
-          <HomepageCanvas blocks={blocks} site={site} hero={hero} napTokens={tokens} resultsDisclaimer="Past results do not guarantee a future outcome." />,
+          <HomepageCanvas blocks={blocks} site={site} hero={hero} close={closeOf(site)} napTokens={tokens} resultsDisclaimer="Past results do not guarantee a future outcome." />,
         )
         await expect(withoutHeadingFit(container.innerHTML)).toMatchFileSnapshot(`./__snapshots__/flow-reproduction/${canvasName}-${lookName}.html`)
       })

@@ -322,6 +322,9 @@ export type ResolvedPalette = {
   acceptance: {darkGround: Acceptance; lightGround: Acceptance; accent: Acceptance; action: Acceptance}
   /** Every color token by its CSS custom property name. */
   tokens: Record<string, string>
+  /** The palette's dark ground has room to glow (`glowOf`, Phase 17D session 2, `[R-557]`): Gradient bloom draws its
+   *  glow only where this holds, and the plain ground elsewhere. Not a token: nothing in CSS reads it. */
+  glowOk: boolean
 }
 
 export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
@@ -536,10 +539,19 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
     tokens['--color-foreground-on-dark'], tokens['--color-foreground-muted-on-dark'],
     tokens['--color-foreground-subtle-on-dark'], tokens['--color-accent-on-dark'], tokens['--color-action-text-on-dark'],
   ])
-  tokens['--color-gradient-stop'] = gradientStopOn(brandDark, background, accent, [
-    tokens['--color-foreground-on-dark'], tokens['--color-foreground-muted-on-dark'],
-    tokens['--color-foreground-subtle-on-dark'], tokens['--color-accent-on-dark'], tokens['--color-action-text-on-dark'],
-  ])
+  // The ramp held as drawn (Phase 17D session 2, `[R-553]`): it starts a level of 255 below the ground and no level of
+  // it, drawn a level lighter, is lighter than the ground or past any on-dark pair's ceiling (`heldRamp`).
+  {
+    const held = heldRamp(brandDark, gradientStopOn(brandDark, background, accent, [
+      tokens['--color-foreground-on-dark'], tokens['--color-foreground-muted-on-dark'],
+      tokens['--color-foreground-subtle-on-dark'], tokens['--color-accent-on-dark'], tokens['--color-action-text-on-dark'],
+    ]), onDarkCeiling(tokens))
+    tokens['--color-gradient-start'] = held.start
+    tokens['--color-gradient-stop'] = held.stop
+  }
+  // Gradient bloom's glow (Phase 17D session 2, `[R-557]`): the plain ground where the palette has no room.
+  const glow = glowOf(brandDark, accent, tokens)
+  tokens['--color-glow'] = glow.ok ? glow.glow : brandDark
   tokens['--color-texture-ink-on-dark'] = texture.ink
   tokens['--section-texture-opacity-on-dark'] = String(texture.opacity)
   // Phase 17C session 3: the render margin applies on a dark band only where its ink is lighter than
@@ -561,6 +573,7 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
     inputs: {darkGround: darkIn, lightGround: lightIn, accent: accentIn, action: actionIn},
     acceptance: {darkGround: darkA, lightGround: lightA, accent: accentA, action: actionA},
     tokens,
+    glowOk: glow.ok,
   }
 }
 
@@ -628,6 +641,155 @@ export function gradientStopOn(dark: string, _lightGround: string, accent: strin
   }
   while (alpha > 0 && !holds(alpha)) alpha = Math.round((alpha - 0.005) * 1000) / 1000
   return blendOver(dark, ink, Math.max(0, alpha))
+}
+
+// ─── The ramp held as drawn (Phase 17D session 2, `[R-553]`; monorepo WS-V1-PHASE17D2-DESIGN §2.2) ──────────
+//
+// `validateWcag` held the ramp's text tiers as MODELLED, and a browser draws a gradient a level of 255 past the
+// model: in the headless shell, full Chromium and WebKit the control border fell under 3:1 on 115 to 141 of the 432
+// tightest palettes (Black & Gold 2.998 in Chromium) and a text tier to 4.483:1, and the four marks on a dark band
+// (the focus ring, the control border, the star outline, the state cue) were not in the ramp's loop at all
+// (ADV-17D-C, reproduced). So the ramp starts a level below the ground and no level of it, drawn a level lighter in
+// every channel, passes one CEILING: the lightest a ground may be for every on-dark pair to hold. One ceiling serves
+// every pair because every foreground that can reach 3:1 against an accepted dark ground is lighter than it (white
+// reaches 7:1 on it, so its luminance is at most 0.1, and nothing darker can reach 3:1 against that), and contrast
+// against a lighter foreground falls as the ground lightens. The walk visits every level of the ramp's widest
+// channel, twice: sampled at 17 or 33 points a ramp slipped between the samples on 54 to 87 palettes (ADV-17D2-C).
+// `scripts/ci/ramp-pixels.mjs` holds what three engines actually draw against it.
+
+// Built on first use: this module reaches a client chunk (the Studio's sidebar context), and a page that never walks a
+// ramp should not pay 256 powers at load (ADV-17D2-P).
+let levels: number[] | null = null
+const level = (i: number) => (levels ??= Array.from({length: 256}, (_, k) => { const v = k / 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4 }))[i]
+const channelsOf = (hex: string): number[] => {
+  const c = toRgb(hex) as unknown as {r: number; g: number; b: number}
+  return [c.r, c.g, c.b].map((v) => Math.min(255, Math.max(0, Math.round(v * 255))))
+}
+const luminanceOf = (c: number[]) => 0.2126 * level(c[0]) + 0.7152 * level(c[1]) + 0.0722 * level(c[2])
+
+/** A pair's foreground and the ratio it must keep. */
+export type RampPair = [fg: string, min: number]
+
+/** The lightest luminance a dark ground may be drawn at for every pair to hold, and the state cue: a selected control
+ *  is told by its action fill or, where the palette draws one, its ring, so the cue holds where either does. */
+export function pairsCeiling(pairs: readonly RampPair[], action: string, cue: string): number {
+  const at = (fg: string, min: number) => (luminanceOf(channelsOf(fg)) + 0.05) / min - 0.05
+  const cueCeiling = Math.max(at(action, 3), cue === 'transparent' ? -1 : at(cue, 3))
+  return Math.min(cueCeiling, ...pairs.map(([fg, min]) => at(fg, min)))
+}
+
+/** Every pair on a dark band: the five on-dark text tiers at 4.5:1, the focus ring, the control border and the star
+ *  outline at 3:1, and the state cue. */
+export function onDarkPairs(t: Record<string, string>): RampPair[] {
+  return [
+    [t['--color-foreground-on-dark'], 4.5], [t['--color-foreground-muted-on-dark'], 4.5], [t['--color-foreground-subtle-on-dark'], 4.5],
+    [t['--color-accent-on-dark'], 4.5], [t['--color-action-text-on-dark'], 4.5],
+    [t['--color-ring-focus-on-dark'], 3], [t['--color-border-control-on-dark'], 3], [t['--color-star-outline-on-dark'], 3],
+  ]
+}
+
+function onDarkCeiling(t: Record<string, string>): number {
+  return pairsCeiling(onDarkPairs(t), t['--color-action'], t['--color-action-state-cue-on-dark'])
+}
+
+/** The lightest luminance any level of the ramp `a` to `b` draws at, interpolated in OKLab as `linear-gradient(in oklab)`
+ *  does and each level drawn a level of 255 lighter in every channel. */
+export function rampDrawnMax(a0: string, b0: string): number {
+  // A ramp of one color is that color: there is nothing between its ends to round or dither (a flat ramp, where the
+  // ground has no level below it; `ramp-pixels.mjs` holds that engines draw it exactly).
+  if (channelsOf(a0).every((v, i) => v === channelsOf(b0)[i])) return luminanceOf(channelsOf(a0))
+  type Lab = {l: number; a: number; b: number}
+  const a = toOklab(a0) as unknown as Lab
+  const b = toOklab(b0) as unknown as Lab
+  const ca = channelsOf(a0)
+  const cb = channelsOf(b0)
+  const n = Math.max(8, 2 * Math.max(...ca.map((v, i) => Math.abs(v - cb[i]))))
+  let max = 0
+  for (let i = 0; i <= n; i++) {
+    const t = i / n
+    const c = toRgb({mode: 'oklab', l: a.l + (b.l - a.l) * t, a: a.a + (b.a - a.a) * t, b: a.b + (b.b - a.b) * t}) as unknown as {r: number; g: number; b: number}
+    const drawn = [c.r, c.g, c.b].map((v) => Math.min(255, Math.round(Math.min(1, Math.max(0, v)) * 255) + 1))
+    max = Math.max(max, luminanceOf(drawn))
+  }
+  return max
+}
+
+/** The ground a level of 255 lower in every channel, two or three where a channel at 0 cannot fall and the others must
+ *  make up for it, so that the start drawn a level lighter is no lighter than the ground; null where none is. */
+export function gradientStart(ground: string): string | null {
+  const g = channelsOf(ground)
+  for (let k = 1; k <= 3; k++) {
+    const s = g.map((v) => Math.max(0, v - k))
+    if (luminanceOf(s.map((v) => v + 1)) <= luminanceOf(g) + 1e-12) return '#' + s.map((v) => v.toString(16).padStart(2, '0')).join('')
+  }
+  return null
+}
+
+/** The bridge's ramp as it may be drawn: from the start, to the stop the derivation gives wherever its every level,
+ *  drawn a level lighter, is under the lower of the ground's luminance and the pairs' ceiling; else that stop stepped
+ *  down in OKLab lightness at its own a and b until it is. Where the ground has no level below it, the ramp is flat. */
+export function heldRamp(ground: string, stop: string, ceiling: number): {start: string; stop: string} {
+  const start = gradientStart(ground)
+  if (!start) return {start: ground, stop: ground}
+  const ceil = Math.min(ceiling, luminanceOf(channelsOf(ground)))
+  if (rampDrawnMax(start, stop) <= ceil + 1e-12) return {start, stop}
+  const o = toOklab(stop) as unknown as {l: number; a: number; b: number}
+  for (let l = round6(o.l - 0.005); l > 0; l = round6(l - 0.005)) {
+    const s = formatHex({mode: 'oklab', l, a: o.a, b: o.b})
+    if (rampDrawnMax(start, s) <= ceil + 1e-12) return {start, stop: s}
+  }
+  return {start, stop: start}
+}
+
+// ─── The glow (Phase 17D session 2, `[R-557]`; monorepo WS-V1-PHASE17D2-DESIGN §2.3) ─────────────────────────
+//
+// Gradient bloom's dark runs glow LIGHTER than their ground, as every studied dark-ground gradient does (13 sites
+// live, none deeper): in the accent's own hue on a near-neutral ground (gold on black is bronze), and in the ground's own
+// hue, lighter, on a colored one (every studied navy site; a brass glow on navy washes brown). Lightness first, to OKLab
+// L +0.16 (the evidence lifts 0.125 to 0.21), at a chroma cap; held to the PHOTO BAND's pairs (`[R-531]`, `[R-533]`),
+// whose colors a glowing band takes (`data-glow`, `globals.css`): its every level, drawn a level lighter, under their
+// one ceiling, walked at every level. A glow only where it lifts: a sideways shift of hue at the ground's own lightness
+// is not one (ADV-17D2-A, -B, -C).
+
+/** Every pair on a photo band, as a glowing band draws them: the on-dark text tiers (the link and the focus ring are the
+ *  body text there), the star outline and fill, and the photo band's control border. The cue is its own. */
+export function photoBandPairs(t: Record<string, string>): RampPair[] {
+  return [
+    [t['--color-foreground-on-dark'], 4.5], [t['--color-foreground-muted-on-dark'], 4.5], [t['--color-foreground-subtle-on-dark'], 4.5],
+    [t['--color-accent-on-dark'], 4.5], [t['--color-star-outline-on-dark'], 3], [t['--color-star-fill'], 3],
+    [t['--color-border-control-on-scrim'], 3],
+  ]
+}
+
+/** The lift, the chroma caps and the strength the glow is solved to; `GLOW_DE` is the eye pass's (as `WASH_DE` was). */
+export const GLOW_LIFT = 0.16
+export const GLOW_CHROMA_NEUTRAL = 0.07
+export const GLOW_CHROMA_COLORED = 0.05
+export const GLOW_DE = 24
+/** A glow reads only where it lifts: at least this much OKLab lightness and this ΔE2000 from the ground. */
+export const GLOW_MIN_LIFT = 0.05
+export const GLOW_MIN_DE = 6
+
+export function glowOf(ground: string, accent: string, t: Record<string, string>): {glow: string; ok: boolean} {
+  const g = parseOklch(ground)
+  const a = parseOklch(accent)
+  const neutral = g.c < 0.03
+  const hue = neutral ? (a.c >= 0.02 ? a.h : null) : g.h
+  const cap = hue === null ? 0 : neutral ? GLOW_CHROMA_NEUTRAL : Math.max(g.c, GLOW_CHROMA_COLORED)
+  const ceiling = pairsCeiling(photoBandPairs(t), t['--color-action'], t['--color-action-state-cue-on-scrim'])
+  const at = (l: number, c: number) => mapped(l, c, hue ?? 0)
+  const holds = (hex: string) => rampDrawnMax(ground, hex) <= ceiling + 1e-12 && deltaE(ground, hex) <= GLOW_DE
+  // The most chroma to the cap that holds at the ground's own lightness, then the lightest point that holds.
+  for (let c = cap; c >= 0; c = round6(c - 0.005)) {
+    if (!holds(at(g.l, c))) continue
+    let lo = g.l
+    let hi = Math.min(1, g.l + GLOW_LIFT)
+    if (holds(at(hi, c))) lo = hi
+    else for (let i = 0; i < 12; i++) { const mid = (lo + hi) / 2; if (holds(at(mid, c))) lo = mid; else hi = mid }
+    const glow = at(lo, c)
+    return {glow, ok: parseOklch(glow).l - g.l >= GLOW_MIN_LIFT && deltaE(ground, glow) >= GLOW_MIN_DE}
+  }
+  return {glow: ground, ok: false}
 }
 
 /** The texture on a light band (Phase 17C session 3, `[R-538]`): the dark ground as its ink, at the
@@ -753,6 +915,39 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
     let worst = Infinity
     for (let i = 1; i < 100; i++) worst = Math.min(worst, contrast(fg, mixOklab(dark, stop, i / 100)))
     results.push({pair: `${name} on the gradient ramp`, ratio: Math.round(worst * 100) / 100, min: 4.5, passes: worst >= 4.5, blocking: true})
+  }
+  // Phase 17D session 2 (`[R-553]`): the ramp AS DRAWN, from its start a level below the ground, every level a level
+  // lighter, against every pair on a dark band, the four marks included, which the samples above never held.
+  {
+    const drawn = rampDrawnMax(t['--color-gradient-start'], stop)
+    const pairs: Array<[string, RampPair]> = [
+      ['foreground-on-dark', onDarkPairs(t)[0]], ['foreground-muted-on-dark', onDarkPairs(t)[1]], ['foreground-subtle-on-dark', onDarkPairs(t)[2]],
+      ['accent-on-dark', onDarkPairs(t)[3]], ['action-text-on-dark', onDarkPairs(t)[4]], ['ring-focus-on-dark', onDarkPairs(t)[5]],
+      ['border-control-on-dark', onDarkPairs(t)[6]], ['star-outline-on-dark', onDarkPairs(t)[7]],
+    ]
+    for (const [name, [fg, min]] of pairs) {
+      const ratio = (luminanceOf(channelsOf(fg)) + 0.05) / (drawn + 0.05)
+      results.push({pair: `${name} on the gradient ramp as drawn`, ratio: Math.round(ratio * 100) / 100, min, passes: ratio >= min, blocking: true})
+    }
+    const cue = t['--color-action-state-cue-on-dark']
+    const cueRatio = Math.max((luminanceOf(channelsOf(t['--color-action'])) + 0.05) / (drawn + 0.05), cue === 'transparent' ? 0 : (luminanceOf(channelsOf(cue)) + 0.05) / (drawn + 0.05))
+    results.push({pair: 'the active state (action fill or cue) on the gradient ramp as drawn', ratio: Math.round(cueRatio * 100) / 100, min: 3, passes: cueRatio >= 3, blocking: true})
+    const ground = luminanceOf(channelsOf(dark))
+    results.push({pair: 'the gradient ramp as drawn is no lighter than the dark ground', ratio: Math.round(((ground + 0.05) / (drawn + 0.05)) * 1000) / 1000, min: 1, passes: drawn <= ground + 1e-12, blocking: true})
+  }
+  // Phase 17D session 2 (`[R-557]`): Gradient bloom's glow, from the ground to the glow and back, every level drawn a
+  // level lighter, against every pair a glowing band draws (the photo band's, `data-glow`). The plain ground where the
+  // palette has no room, which the flat checks already hold.
+  {
+    const drawn = rampDrawnMax(dark, t['--color-glow'])
+    const names = ['foreground-on-dark', 'foreground-muted-on-dark', 'foreground-subtle-on-dark', 'accent-on-dark', 'star-outline-on-dark', 'star-fill', 'border-control-on-scrim']
+    photoBandPairs(t).forEach(([fg, min], i) => {
+      const ratio = (luminanceOf(channelsOf(fg)) + 0.05) / (drawn + 0.05)
+      results.push({pair: `${names[i]} on the glow as drawn`, ratio: Math.round(ratio * 100) / 100, min, passes: ratio >= min, blocking: true})
+    })
+    const cue = t['--color-action-state-cue-on-scrim']
+    const cueRatio = Math.max((luminanceOf(channelsOf(t['--color-action'])) + 0.05) / (drawn + 0.05), cue === 'transparent' ? 0 : (luminanceOf(channelsOf(cue)) + 0.05) / (drawn + 0.05))
+    results.push({pair: 'the active state (action fill or cue) on the glow as drawn', ratio: Math.round(cueRatio * 100) / 100, min: 3, passes: cueRatio >= 3, blocking: true})
   }
   // Phase 17B session 6 (`[R-533]`, record §2.4): a photo band, hand-built or a theme's, measured
   // at its lightest point: the scrim over pure white. It is a bound, not a sample: the scrim is at

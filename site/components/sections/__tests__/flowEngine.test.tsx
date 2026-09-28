@@ -28,7 +28,7 @@ vi.mock('@/components/ui/ScrollReveal', () => ({
 import {HomepageCanvas, frameOf, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomepageCta} from '@/components/layout/HomepageCta'
 import {PageSections, type PageSectionData} from '../PageSections'
-import {assignGrounds, canvasFacts, closeFrame, walkFrame, siteLookOf, NO_SEAM, type SiteLook} from '../sectionFrame'
+import {assignGrounds, canvasFacts, closeFrame, closeGround, walkFrame, walkPage, siteLookOf, NO_SEAM, type SiteLook} from '../sectionFrame'
 import {SectionShell, type SectionAppearance} from '../SectionShell'
 import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, chromeSchemes, closeSurface, flowById, unmetNeeds, type FlowRules, type Host} from '@/lib/flows'
 import {type VisibleGround} from '@/lib/sectionSurface'
@@ -42,9 +42,9 @@ import {RECORD_CANVASES, stubCanvas} from './stubCanvases'
 import planted from './fixtures/fixture-shaped-canvas.json'
 import migrated from '@/components/layout/__tests__/fixtures/migrated-canvas.json'
 
-type Band = {host: Host | null; appearance?: SectionAppearance | null; photo?: boolean; content?: boolean}
+type Band = {host: Host | null; appearance?: SectionAppearance | null; photo?: boolean; content?: boolean; cutout?: 'left' | 'right' | null}
 const b = (host: Host | null, appearance?: SectionAppearance | null, extra: Partial<Band> = {}): Band => ({host, appearance, ...extra})
-const resolveBand = (m: Band) => ({appearance: m.appearance, empty: false, stored: !!m.appearance?.surface, host: m.host, photo: m.photo, content: m.content})
+const resolveBand = (m: Band) => ({appearance: m.appearance, empty: false, stored: !!m.appearance?.surface, host: m.host, photo: m.photo, content: m.content, cutout: m.cutout})
 const grounds = (bands: Band[], flow: FlowRules, site: Partial<SiteLook> = {}) =>
   walkFrame(bands, resolveBand, {...LOOK, ...site, flow}, 'dark').map((o) => o.seam.paint?.ground ?? (o.seam.paint?.inset ? 'panel' : o.member.appearance?.surface ?? 'stored?'))
 
@@ -460,6 +460,87 @@ describe('floating panels', () => {
   })
 })
 
+describe('Gradient bloom (Phase 17D session 2, [R-557])', () => {
+  const gb = flowById('gradientBloom.mostlyDark')!
+  const statement = (key: string, appearance?: SectionAppearance) =>
+    ({_type: 'contentSectionInline', _key: key, layout: 'statement', heading: `Heading ${key}`, ...(appearance ? {appearance} : {})}) as unknown as HomepageBlock
+  const sections = (blocks: HomepageBlock[], site: Partial<SiteLook>, close: VisibleGround | null = null) =>
+    [...render(<HomepageCanvas blocks={blocks} site={{...LOOK, flow: gb, glow: true, ...site}} hero="dark" close={close} />).container.querySelectorAll('section')]
+  const cls = (el: Element) => el.className.split(' ')
+
+  it('lights the dark bands it fills and an operator\u2019s stored dark band alike, and takes the photo band\u2019s colors there', () => {
+    const [filled, stored, light] = sections([statement('a'), statement('b', {surface: 'dark'}), statement('c', {surface: 'light'})], {})
+    for (const el of [filled, stored]) {
+      expect(cls(el)).toEqual(expect.arrayContaining(['bg-brand-dark', 'band-glow']))
+      expect(el.getAttribute('data-glow')).toBe('true')
+      expect(el.getAttribute('data-scrim')).toBeNull()
+    }
+    expect(cls(light)).not.toContain('band-glow')
+    expect(light.getAttribute('data-glow')).toBeNull()
+  })
+
+  it('never lights a saturated or an image band, and draws the plain ground where the palette has no room', () => {
+    const [sat] = sections([statement('s', {surface: 'saturated'})], {saturated: true})
+    expect(cls(sat)).not.toContain('band-glow')
+    const plain = sections([statement('a'), statement('b')], {glow: false})
+    for (const el of plain) { expect(cls(el)).not.toContain('band-glow'); expect(el.getAttribute('data-glow')).toBeNull() }
+    expect(unmetNeeds(gb, canvasFacts([], {...LOOK, flow: gb, glow: false}))).toEqual(['glow'])
+  })
+
+  it('lights an adopted inset\u2019s gutter and leaves its light panel its own colors', () => {
+    const [, inset] = sections([statement('a', {surface: 'dark'}), statement('p', {inset: true}), statement('c', {surface: 'dark'})], {})
+    expect(cls(inset)).toEqual(expect.arrayContaining(['bg-brand-dark', 'band-glow']))
+    expect(inset.getAttribute('data-glow')).toBeNull()
+  })
+
+  it('peaks on the band carrying a cutout figure, lit from the figure\u2019s side; else on the run\u2019s middle band, lit from the right', () => {
+    const run = (bands: Band[]) => walkPage(bands, resolveBand, {...LOOK, flow: themed({dark: {budget: 'all', hosts: ['split'], rhythm: 'runs', paint: 'glow'}}), glow: true}, 'dark').bands.map((o) => o.seam.run)
+    expect(run([b('split'), b('split'), b('split'), b('split')]).map((r) => [r?.peak, r?.side])).toEqual(Array(4).fill([2, 'right']))
+    expect(run([b('split'), b('split'), b('split', null, {cutout: 'left'}), b('split')]).map((r) => [r?.peak, r?.side])).toEqual(Array(4).fill([2, 'left']))
+    expect(run([b('split', null, {cutout: 'right'}), b('split')]).map((r) => [r?.peak, r?.side])).toEqual(Array(2).fill([0, 'right']))
+    // No other theme's run carries a peak or a side.
+    const other = walkPage([b('split'), b('split')], resolveBand, {...LOOK, flow: themed({dark: {budget: 'all', hosts: ['split'], rhythm: 'runs', paint: 'pattern'}}), glow: true}, 'dark').bands
+    expect(other.map((o) => o.seam.run)).toEqual([{index: 0, length: 2}, {index: 1, length: 2}])
+  })
+
+  it('draws the peak and the side on the band', () => {
+    const blocks = [statement('a', {surface: 'dark'}), {_type: 'contentSectionInline', _key: 'f', layout: 'split', heading: 'With a figure', appearance: {surface: 'dark'}, mediaSide: 'left', media: {kind: 'cutout', image: {asset: {_ref: 'image-fxfigure-900x1200-png'}, alt: 'The attorney'}}} as unknown as HomepageBlock]
+    const els = sections(blocks, {})
+    expect(els.map((el) => cls(el).filter((c) => c.startsWith('grad-p-') || c === 'glow-from-left'))).toEqual([['grad-p-1', 'glow-from-left'], ['grad-p-1', 'glow-from-left']])
+  })
+
+  it('runs on into a dark close, which glows as the run\u2019s last band and puts its buttons in the dark context', () => {
+    const page = walkPage([b('split'), b('split')], resolveBand, {...LOOK, flow: themed({dark: {budget: 'all', hosts: ['split'], rhythm: 'runs', paint: 'glow'}}), glow: true}, 'dark', 'dark')
+    expect(page.bands.map((o) => o.seam.run)).toEqual([{index: 0, length: 3, peak: 1, side: 'right'}, {index: 1, length: 3, peak: 1, side: 'right'}])
+    expect(page.close).toEqual({run: {index: 2, length: 3, peak: 1, side: 'right'}, fade: 'glow'})
+    const frame = closeFrame('dark', {...LOOK, flow: gb, glow: true}, page.close)
+    const {container} = render(<HomepageCta data={{heading: 'Talk to us', buttons: [{title: 'Call', url: '/contact/', variant: 'secondary'}]}} surface={frame.surface} seam={frame.seam} />)
+    const close = container.querySelector('section')!
+    expect(cls(close)).toEqual(expect.arrayContaining(['bg-brand-dark', 'band-glow', 'grad-i-2', 'grad-n-3', 'grad-p-1']))
+    expect(close.getAttribute('data-glow')).toBe('true')
+    expect(close.querySelector('a')!.className.split(' ')).toEqual(expect.arrayContaining(['border-current', 'text-foreground']))
+    // After a light band the close is a run of its own, glowing in its middle; under any other theme it joins nothing.
+    expect(walkPage([b('split', {surface: 'light'})], resolveBand, {...LOOK, flow: gb, glow: true}, 'dark', 'dark').close.run).toEqual({index: 0, length: 1, peak: 0, side: 'right'})
+    expect(walkPage([b('split'), b('split')], resolveBand, {...LOOK, flow: flowById('cutBlocks.mostlyDark')!}, 'dark', 'dark').close).toEqual({fade: null})
+  })
+
+  it('under every theme, a last inset between a dark band and a dark close sits on the dark ground ([R-501], found here)', () => {
+    const bands = [b('split', {surface: 'dark'}), b('split', {inset: true})]
+    for (const flow of [flowById('quiet.mostlyLight')!, flowById('cutBlocks.mostlyDark')!, gb]) {
+      expect(walkPage(bands, resolveBand, {...LOOK, flow, glow: true}, 'dark', 'dark').bands[1].seam.insetGround, flow.id).toBe('dark')
+      expect(walkPage(bands, resolveBand, {...LOOK, flow, glow: true}, 'dark', 'muted').bands[1].seam.insetGround, flow.id).toBeNull()
+      expect(walkPage(bands, resolveBand, {...LOOK, flow, glow: true}, 'dark', null).bands[1].seam.insetGround, flow.id).toBeNull()
+    }
+  })
+
+  it('never reaches an interior page', () => {
+    const {container} = render(<PageSections sections={[{_type: 'contentSection', _id: 'x', layout: 'statement', heading: 'Hi', appearance: {surface: 'dark'}} as unknown as PageSectionData]} site={{...LOOK, flow: gb, glow: true}} />)
+    const el = container.querySelector('section')!
+    expect(cls(el)).not.toContain('band-glow')
+    expect(el.getAttribute('data-glow')).toBeNull()
+  })
+})
+
 // ─── The decision golden ──────────────────────────────────────────────────────
 //
 // Every theme on every fixture canvas: what the engine decides per band, and what
@@ -491,9 +572,12 @@ describe('the decision golden', () => {
     const golden: Record<string, unknown> = {}
     for (const [name, blocks, hero, heroPhoto] of canvases) {
       for (const flow of themes) {
-        const site: SiteLook = {...LOOK, flow, patternTexture: 'diagonalHatch', saturated: true, ghost: ghostSource(FIRM, flow.ghost === 'once'), heroPhoto}
+        // Phase 17D session 2: a palette with room to glow (`glow`, as `saturated` passes its gate), and the walk with the
+        // close's ground below the last band, as the homepage walks it (`walkPage`).
+        const site: SiteLook = {...LOOK, flow, patternTexture: 'diagonalHatch', saturated: true, glow: true, ghost: ghostSource(FIRM, flow.ghost === 'once'), heroPhoto}
         const survivors = blocks.map(frameOf).filter((r) => !r.empty)
-        const out = walkFrame(blocks, frameOf, site, hero)
+        const page = walkPage(blocks, frameOf, site, hero, closeGround(closeSurface(flow, true, !!heroPhoto), true))
+        const out = page.bands
         golden[`${name} / ${flow.id}`] = {
           unmetNeeds: unmetNeeds(flow, canvasFacts(survivors, site, hero)),
           // Phase 17B session 4 (`[R-518]`): the header and footer the theme gives when Header
@@ -518,7 +602,11 @@ describe('the decision golden', () => {
             ...(seam.paint?.spacing ? {spacing: seam.paint.spacing} : {}),
             // Phase 17B session 6: the window of the hero's photograph, where a band shows one.
             ...(seam.paint?.window ? {window: seam.paint.window} : {}),
+            // Phase 17D session 2: what the band draws over a dark ground, where the theme draws anything.
+            ...(seam.fade ? {fade: seam.fade} : {}),
           })),
+          // Phase 17D session 2: the close's place in the run, where the theme lights it.
+          ...(page.close.run ? {close: page.close} : {}),
         }
       }
     }

@@ -9,6 +9,8 @@ set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
+# The server is started by its own binary, not `npx`, so APP_PID is the server itself and the trap below
+# stops it (backlog 371: `npx` left `next-server` running on the runner).
 STUB_PORT="${STUB_PORT:-4011}"
 APP_PORT="${APP_PORT:-3117}"
 COUNT_FILE="$(mktemp)"
@@ -36,7 +38,7 @@ NEXT_PUBLIC_SANITY_PROJECT_ID=TEMPLATE_SANITY_PROJECT_ID \
 NEXT_PUBLIC_SANITY_DATASET=production \
 NEXT_PUBLIC_SITE_DOMAIN=example.com \
 NEXT_TELEMETRY_DISABLED=1 \
-  npx next start -p "$APP_PORT" > "$SERVER_LOG" 2>&1 &
+  node_modules/.bin/next start -p "$APP_PORT" > "$SERVER_LOG" 2>&1 &
 APP_PID=$!
 
 for _ in $(seq 1 100); do

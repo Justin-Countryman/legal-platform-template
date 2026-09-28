@@ -15,8 +15,10 @@ const CI = path.resolve(__dirname, '..')
 const PHOTOS = path.join(CI, 'photos')
 const SCHEMA = path.resolve(__dirname, '../../../../studio/schema.json')
 const FILES = ['record-adversarial-photo-hero.ndjson', 'record-planning-photo-hero.ndjson', 'record-multi-practice-photo-hero.ndjson']
-// SHA-256 of each stand-in as committed. Places only; sources in the monorepo record, §9.1.
+// SHA-256 of each stand-in as committed. Places and objects only, never a person (`[R-533]`, `[R-558]`); sources in the
+// monorepo records (WS-V1-PHASE17B6-DESIGN §9.1; the bust, WS-V1-PHASE17D2-DESIGN §9).
 const PINNED: Record<string, string> = {
+  'stand-in-bust.png': 'fe9384ea78406f51d00c27a714ebfabb520a51da90c924ff06be1102dfcca8ef',
   'stand-in-city.jpg': 'c245c2525f45322999406b09764fec11736ad3a9cb0165ea0b140e03af021538',
   'stand-in-lake.jpg': 'baffbcb4f740e39c397e063b75e27a2f7580afdade5c5855d2f544fdfedb4ee1',
   'stand-in-courthouse.jpg': 'a54524e47cbcd84773d5e5c635558a717c25e0294618b357315e0dd1da5af543',
@@ -26,6 +28,12 @@ const PINNED: Record<string, string> = {
 type Doc = Record<string, unknown> & {_id: string; _type: string}
 const present = fs.existsSync(PHOTOS) && FILES.every((f) => fs.existsSync(path.join(CI, f)))
 const read = (f: string): Doc[] => fs.readFileSync(path.join(CI, f), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))
+
+/** A PNG's pixel size, from its header. */
+function pngSize(file: string): {width: number; height: number} {
+  const b = fs.readFileSync(file)
+  return {width: b.readUInt32BE(16), height: b.readUInt32BE(20)}
+}
 
 /** A baseline or progressive JPEG's pixel size, from its frame header. */
 function jpegSize(file: string): {width: number; height: number} {
@@ -70,6 +78,22 @@ describe.skipIf(!present)('scripts/ci photo canvases and stand-in photographs (s
       }
     }
     for (const ref of JSON.stringify(docs).matchAll(/"_ref":"([^"]+)"/g)) expect(byId.has(ref[1]), ref[1]).toBe(true)
+  })
+
+  // Phase 17D session 2 (`[R-558]`): the cutout canvas, the adversarial record with a figure on a transparent ground in
+  // every split band.
+  it('the cutout canvas: its splits carry the stand-in cutout, a transparent PNG at its real size', () => {
+    const file = 'record-adversarial-cutout.ndjson'
+    const docs = read(file)
+    const asset = docs.find((d) => d._type === 'sanity.imageAsset')!
+    expect(asset.url).toBe('/stand-ins/stand-in-bust.png')
+    expect((asset.metadata as {dimensions: unknown}).dimensions).toMatchObject(pngSize(path.join(PHOTOS, 'stand-in-bust.png')))
+    expect((asset.metadata as {isOpaque: boolean}).isOpaque).toBe(false)
+    expect(asset._id).toBe('image-fxstandinbust-400x624-png')
+    const home = docs.find((d) => d._type === 'homePage') as unknown as {canvas: Array<{layout?: string; media?: {kind: string; image: {asset: {_ref: string}}}}>}
+    const splits = home.canvas.filter((m) => m.layout === 'split')
+    expect(splits.length).toBeGreaterThan(0)
+    for (const m of splits) expect(m.media).toMatchObject({kind: 'cutout', image: {asset: {_ref: asset._id}}})
   })
 
   it.each(FILES)('%s: the hero is a photograph a page can be made of, as the page reads it', (file) => {

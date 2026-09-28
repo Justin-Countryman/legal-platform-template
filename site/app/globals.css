@@ -783,6 +783,7 @@ h1, h2, h3, h4, h5, h6 {
    so both resolve to the on-dark body text color here, as the image hero's
    secondary button already did (Phase 14, §7 amendment 21). */
 [data-scrim="true"],
+[data-glow="true"],
 [data-hero-image="true"] {
   --color-action-text:       var(--color-foreground-on-dark);
   --color-action-text-hover: var(--color-foreground-on-dark);
@@ -792,7 +793,10 @@ h1, h2, h3, h4, h5, h6 {
    empty star or an inactive carousel dot, and the ring on the active dot, reach 3:1 over the
    photograph's lightest point. Each scrim value equals the on-dark one wherever that already
    holds there, so only a palette that failed moves. Photo bands only: a hero draws neither mark. */
-[data-scrim="true"] {
+/* A band Gradient bloom lights (`data-glow`, Phase 17D session 2, `[R-557]`) takes the same colors: its glow is solved
+   under every one of them (`glowOf`), so the proof is the photo band's. */
+[data-scrim="true"],
+[data-glow="true"] {
   --color-border-control:    var(--color-border-control-on-scrim);
   --color-action-state-cue:  var(--color-action-state-cue-on-scrim);
 }
@@ -1181,9 +1185,11 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
    is needed -- which matters, because Lightning CSS rewrites a `color-mix()` to a
    static fallback and an @supports rule (measured through this repo's own PostCSS),
    while an `in oklab` gradient passes through verbatim. */
+/* Phase 17D session 2 (`[R-553]`): the ramp starts a level of 255 below the ground, so that a level drawn lighter is
+   no lighter than it (`heldRamp`, `lib/designTokens.ts`; `scripts/ci/ramp-pixels.mjs`). */
 @utility band-gradient {
   background-image: linear-gradient(in oklab,
-    var(--color-brand-dark) calc(var(--grad-i, 0) * -100%),
+    var(--color-gradient-start) calc(var(--grad-i, 0) * -100%),
     var(--color-gradient-stop) calc((var(--grad-n, 1) - var(--grad-i, 0)) * 100%));
 }
 /* The band's position in its run, as real utilities rather than arbitrary values
@@ -1211,6 +1217,38 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
    ground behind. Dropping the image alone does exactly that. */
 @media (forced-colors: active) { .band-gradient { background-image: none; } }
 @media print { .band-gradient { background-image: none; } }
+
+/* ─── The glow (Phase 17D session 2, `[R-557]`) ─────────────────────────────────── */
+/* Gradient bloom lights a run of dark bands: from the ground, to the glow, back to the ground, one ramp per run sliced
+   per band as `band-gradient` is (`grad-i-*`, `grad-n-*`), its peak in the middle of a band (`grad-p-*`: the band
+   carrying a cutout figure, else the run's middle band), so no seam carries it and every run meets the hero, a light
+   band and the dark footer on the ground. Over it, the ground at one edge fading out by 70% of the width, so the light
+   comes from one side (the figure's, `glow-from-left`, else the right) rather than across the page as a bar. The glow
+   is solved under every pair the band draws, as drawn (`glowOf`, `lib/designTokens.ts`; `scripts/ci/ramp-pixels.mjs`),
+   and the band takes the photo band's colors (`data-glow`, above). */
+@utility band-glow {
+  background-image:
+    linear-gradient(to var(--glow-side, right), var(--color-brand-dark) 0%, transparent 70%),
+    linear-gradient(in oklab,
+      var(--color-brand-dark) calc(var(--grad-i, 0) * -100%),
+      var(--color-glow) calc((var(--grad-p, 0.5) - var(--grad-i, 0)) * 100%),
+      var(--color-brand-dark) calc((var(--grad-n, 1) - var(--grad-i, 0)) * 100%));
+}
+@utility glow-from-left { --glow-side: left; }
+/* The peak's band in its run, as real utilities written out (the Tailwind scanner cannot see a built name). */
+@utility grad-p-0 { --grad-p: 0.5; }
+@utility grad-p-1 { --grad-p: 1.5; }
+@utility grad-p-2 { --grad-p: 2.5; }
+@utility grad-p-3 { --grad-p: 3.5; }
+@utility grad-p-4 { --grad-p: 4.5; }
+@utility grad-p-5 { --grad-p: 5.5; }
+@utility grad-p-6 { --grad-p: 6.5; }
+@utility grad-p-7 { --grad-p: 7.5; }
+/* The ground stays: forced colors and print drop the image, and a visitor asking for more contrast gets the plain
+   ground, the glow being the ground a pair holds on with the least room (ADV-17D2-C). */
+@media (forced-colors: active) { .band-glow { background-image: none; } }
+@media print { .band-glow { background-image: none; } }
+@media (prefers-contrast: more) { .band-glow { background-image: none; } }
 
 /* ─── The carried pieces (Phase 16C, `[R-483]`) ──────────────────────────────── */
 /* Cards: a small piece in the bottom corner, following the card's own radius. */

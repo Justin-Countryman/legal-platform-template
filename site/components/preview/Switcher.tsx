@@ -108,6 +108,9 @@ export function chromeNote(flow: Pick<FlowRules, 'chrome'>, chrome: StoredChrome
   return out
 }
 
+/** What the switcher says where Gradient bloom's palette has no room to glow (`glowOk`, `[R-557]`). */
+export const NO_GLOW = 'On this palette the dark sections have no room to glow, so they show plain.'
+
 /** A family's button label: its name, and, for a family with one step the eye has not passed,
  *  that it is not yet judged (Phase 17B session 5: the step line that carries the mark only
  *  appears for a family with two steps). */
@@ -217,7 +220,11 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
   const approved = (chrome?.designTokens as {flowPhoto?: unknown} | null | undefined)?.flowPhoto
   const photoChanged = drawsHeroPhoto(shown) && !!heroPhoto?.assetId && approved !== heroPhoto.assetId
   // Facts per theme: the ribbons a theme fills are read from that theme's own pass.
-  const lacks = (f: FlowRules | null) => (f ? unmetNeeds(f, canvasFacts(survivors, site, hero, f)).map(needLabel) : [])
+  // A need of the palette, not of the page (Phase 17D session 2): Gradient bloom's room to glow is said on its own, so the
+  // page is not blamed for the palette (ADV-17D2-C).
+  const unmetOf = (f: FlowRules | null) => (f ? unmetNeeds(f, canvasFacts(survivors, site, hero, f)) : [])
+  const lacks = (f: FlowRules | null) => unmetOf(f).filter((n) => n !== 'glow').map(needLabel)
+  const noGlow = (f: FlowRules | null) => unmetOf(f).includes('glow')
   const unmet = lacks(shown)
   const headerNote = chromeNote(shown, chrome)
 
@@ -264,7 +271,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
             return (
               <Choice key={f.id} href={at({flow: flowId(f.id, f.defaultStep)})} active={choices.flow !== AS_THE_SITE_IS && family?.id === f.id} className="sw-family">
                 <strong>{familyLabel(f)}</strong>
-                <span className="sw-sentence">{f.sentence}{missing.length > 0 && ` Needs ${missing.join(', ')} this page lacks.`}</span>
+                <span className="sw-sentence">{f.sentence}{missing.length > 0 && ` Needs ${missing.join(', ')} this page lacks.`}{noGlow(first) && ` ${NO_GLOW}`}</span>
               </Choice>
             )
           })}
@@ -282,6 +289,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
         <p className="sw-note">
           Theme: {shown.name}. {shown.sentence}
           {unmet.length > 0 && ` Needs this page lacks: ${unmet.join(', ')}; it renders without them.`}
+          {noGlow(shown) && ` ${NO_GLOW}`}
           {grounds.length > 0 && ` ${grounds.length} ${grounds.length === 1 ? 'section keeps' : 'sections keep'} their own ground, whatever the theme: ${keptLine(grounds)}.`}
           {photoChanged && ` The hero photograph changed since ${shown.name} was applied, so its photo sections show none: choose ${shown.name} and Apply to approve this one.`}
         </p>

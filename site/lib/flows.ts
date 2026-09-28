@@ -34,9 +34,8 @@ import type {VisibleGround} from './sectionSurface'
 // dark) is a property of a theme FAMILY, and a family ships only the steps the eye
 // has passed on real canvases through the switcher (`[R-509]`); it is never a fourth
 // click. The roster below is generated from the families, so nothing is duplicated
-// by hand and the step is never buried in a label. Ten families ship here; Gradient bloom
-// waits for a fade that carries the accent's color (`[R-553]`), and Tiles for a photograph
-// per practice area.
+// by hand and the step is never buried in a label. Eleven families ship here (Gradient bloom since Phase 17D
+// session 2, `[R-557]`); Tiles became a card photo per practice area under every theme (`[R-556]`).
 //
 // THE VOCABULARY IS CLOSED. A rule it cannot say is a new word plus one engine clause,
 // never a special case in a theme: that is the discipline the divider library set.
@@ -64,7 +63,7 @@ export type Host = (typeof HOSTS)[number]
 
 export const DARK_BUDGETS = ['none', 'third', 'threeQuarters', 'all'] as const
 export const DARK_RHYTHMS = ['alternate', 'pairs', 'runs', 'bookends'] as const
-export const DARK_PAINTS = ['plain', 'pattern', 'gradient', 'gradientPerBand', 'photo', 'saturated', 'heroPhoto', 'floating'] as const
+export const DARK_PAINTS = ['plain', 'pattern', 'gradient', 'gradientPerBand', 'photo', 'saturated', 'heroPhoto', 'floating', 'glow'] as const
 export const CLOSES = ['dark', 'saturated', 'muted', 'photo', 'wash'] as const
 export const LIGHT_PAINTS = ['plain', 'washes', 'pattern', 'panel', 'floating'] as const
 /** The texture's strength where a paint is `pattern` (Phase 17C session 3, `[R-538]`): the style set's
@@ -92,8 +91,9 @@ export type ChromeScheme = (typeof CHROME_SCHEMES)[number]
 /** `ribbons`: the theme fills two ribbons on this page (read from the pass, so two adjacent or a
  *  stored one do not count); `darkHero`: the hero is dark or a photo (Phase 17B session 5);
  *  `heroPhoto`: the hero's backdrop is a photograph a page can be made of, approved with this theme
- *  (Phase 17B session 6, `heroPhotoOf`, `[R-532]`). */
-export const NEEDS = ['photos', 'texture', 'initials', 'ribbons', 'darkHero', 'heroPhoto', ...HOSTS] as const
+ *  (Phase 17B session 6, `heroPhotoOf`, `[R-532]`); `glow`: the palette's dark ground has room to glow
+ *  (Phase 17D session 2, `glowOk`, `[R-557]`), a need of the palette rather than of the page. */
+export const NEEDS = ['photos', 'texture', 'initials', 'ribbons', 'darkHero', 'heroPhoto', 'glow', ...HOSTS] as const
 export type Need = (typeof NEEDS)[number]
 
 export type FlowRules = {
@@ -122,7 +122,9 @@ export type FlowRules = {
      *  else the dark ground; a window of the hero's own photograph on a text-led band, never
      *  beside another photograph and at most twice a page, else the dark ground (`heroPhoto`,
      *  Phase 17B session 6, `[R-530]`); the dark ground as a panel on the page's light ground, a
-     *  gutter around it (`floating`, Phase 17D). */
+     *  gutter around it (`floating`, Phase 17D); the dark ground lit by one glow per run of dark bands,
+     *  the dark close part of the run, where the palette has room, else the dark ground (`glow`, Phase 17D
+     *  session 2, `[R-557]`). */
     paint: (typeof DARK_PAINTS)[number]
     /** The texture's strength on the bands the `pattern` paint textures (`TEXTURE_STRENGTHS`). */
     texture: TextureStrength
@@ -422,6 +424,25 @@ export const FAMILIES: readonly FlowFamily[] = [
       ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
     }),
   },
+  // ─── Phase 17D session 2 (record WS-V1-PHASE17D2-DESIGN §2) ─────────────────
+  {
+    id: 'gradientBloom', name: 'Gradient bloom',
+    sentence: 'Dark runs lit by a soft glow, behind the attorney where a section has a cutout.',
+    // The study: calesariclaw and lewinlawfirm (premium), bowlesverna and bardinelawfirm, all mostly dark, glow lighter
+    // than their ground, and so do the nine other dark-ground gradients checked live; none fades deeper (`[R-557]`,
+    // amending `[R-502]`). The glow is the accent's color on a near-neutral ground and the ground's own, lighter, on a
+    // colored one (`glowOf`); one per run, in and out, its peak on the band carrying a cutout figure (the glow behind
+    // the figure, as calesariclaw, bardine and lewin draw it) else the run's middle band; a glowing band takes the photo
+    // band's colors. Mostly dark only, on Cut blocks' hosts and runs, with no divider, texture or ghost: the glow is the
+    // one device, and where the palette has no room the page is Photo scrims' fallback, which the need names.
+    steps: ['mostlyDark'], defaultStep: 'mostlyDark', passed: ['mostlyDark'],
+    rules: (step) => ({
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'glow', texture: 'quiet', close: 'dark'},
+      light: {paint: 'plain', texture: 'quiet'},
+      divider: NO_DIVIDER, spacing: 'normal',
+      ghost: 'none', overlap: 'photo', needs: ['glow'], chrome: STEP_CHROME[step],
+    }),
+  },
   {
     id: 'wedges', name: 'Wedges',
     sentence: 'Steep diagonal edges wherever the ground changes.',
@@ -591,6 +612,8 @@ export type CanvasFacts = {
   /** The hero's backdrop is a photograph the `heroPhoto` paint can use (`heroPhotoOf`), approved
    *  with the theme on a live page (`[R-532]`). */
   heroPhoto?: boolean
+  /** The palette's dark ground has room to glow (`glowOk`, Phase 17D session 2). */
+  glow?: boolean
 }
 
 /** The needs a theme's own rules imply, for the test that holds `needs` to them. */
@@ -600,6 +623,7 @@ export function impliedNeeds(rules: Pick<FlowRules, 'dark' | 'light' | 'ghost'>)
   if (rules.dark.paint === 'photo') out.push('photos')
   if (rules.dark.paint === 'heroPhoto' || rules.dark.close === 'photo') out.push('heroPhoto')
   if (rules.ghost === 'once') out.push('initials')
+  if (rules.dark.paint === 'glow') out.push('glow')
   return out
 }
 
@@ -612,6 +636,7 @@ export function needLabel(need: Need): string {
     case 'ribbons': return 'two ribbon sections the theme can fill'
     case 'darkHero': return 'a dark or photo hero'
     case 'heroPhoto': return 'a landscape hero photograph of a place, approved with this theme'
+    case 'glow': return 'a palette whose dark sections have room to glow'
     default: return `a ${need} section`
   }
 }
@@ -626,6 +651,7 @@ export function unmetNeeds(flow: FlowRules, facts: CanvasFacts): Need[] {
     if (need === 'ribbons') return (facts.ribbonsFilled ?? 0) < 2
     if (need === 'darkHero') return !(facts.hero === 'dark' || facts.hero === 'image')
     if (need === 'heroPhoto') return !facts.heroPhoto
+    if (need === 'glow') return !facts.glow
     return !facts.hosts.includes(need)
   })
 }
@@ -638,9 +664,17 @@ export function drawsHeroPhoto(flow: Pick<FlowRules, 'dark'> | null | undefined)
   return flow?.dark.paint === 'heroPhoto' || flow?.dark.close === 'photo'
 }
 
-/** A dark band's ground fades under this theme. */
+/** A dark band's ground fades under this theme: the bridge's ramp (`gradient`, `gradientPerBand`). */
 export function fadesUnder(flow: FlowRules | null | undefined): boolean {
   return flow?.dark.paint === 'gradient' || flow?.dark.paint === 'gradientPerBand'
+}
+
+/** What a dark band this theme paints draws over its ground (Phase 17D session 2): the bridge's ramp, Gradient bloom's
+ *  glow where the palette has room (`glow`, from `glowFillOk`), or nothing. The shell draws it only where the band paints
+ *  the dark ground; the walk carries it on every band's seam (`seam.fade`). */
+export function fadeOf(flow: FlowRules | null | undefined, glow: boolean | undefined): 'gradient' | 'glow' | null {
+  if (fadesUnder(flow)) return 'gradient'
+  return flow?.dark.paint === 'glow' && glow ? 'glow' : null
 }
 
 const toOklch = converter('oklch')
@@ -650,12 +684,31 @@ const deltaE = differenceCiede2000()
  *  0.05 and stands at least dE2000 20 from both grounds (ADV-P15's measured rule; every
  *  shipped preset passes, the grey placeholder does not). Read on the RESOLVED palette,
  *  because acceptance may re-tone the accent. */
-export function saturatedFillOk(inputs: ColorInputs | Record<string, unknown> | null | undefined): boolean {
+/** The palette the four stored roles resolve to, memoized: the site look asks both gates of the same palette on every
+ *  page, and each would resolve it again (ADV-17D2-B). */
+const resolved = new Map<string, ReturnType<typeof resolvePalette>>()
+function paletteOf(inputs: ColorInputs | Record<string, unknown> | null | undefined) {
   const raw = (inputs ?? {}) as Record<string, unknown>
-  const t = resolvePalette({
-    darkGround: parseHexInput(raw.darkGround), lightGround: parseHexInput(raw.lightGround),
-    accent: parseHexInput(raw.accent), action: parseHexInput(raw.action),
-  }).tokens
+  const roles = {darkGround: parseHexInput(raw.darkGround), lightGround: parseHexInput(raw.lightGround), accent: parseHexInput(raw.accent), action: parseHexInput(raw.action)}
+  const key = JSON.stringify(roles)
+  let p = resolved.get(key)
+  if (!p) {
+    p = resolvePalette(roles)
+    if (resolved.size >= 64) resolved.delete(resolved.keys().next().value!)
+    resolved.set(key, p)
+  }
+  return p
+}
+
+/** The palette's dark ground has room for Gradient bloom's glow (`glowOf`, Phase 17D session 2, `[R-557]`): it lifts at
+ *  least OKLab L 0.05 and ΔE2000 6 under every pair a glowing band draws. Nine presets and the placeholder do; the six
+ *  whose dark ground is already as light as white text allows do not. */
+export function glowFillOk(inputs: ColorInputs | Record<string, unknown> | null | undefined): boolean {
+  return paletteOf(inputs).glowOk
+}
+
+export function saturatedFillOk(inputs: ColorInputs | Record<string, unknown> | null | undefined): boolean {
+  const t = paletteOf(inputs).tokens
   const fill = t['--color-accent']
   const chroma = toOklch(fill)?.c ?? 0
   return chroma >= 0.05 && deltaE(fill, t['--color-brand-dark']) >= 20 && deltaE(fill, t['--color-background']) >= 20

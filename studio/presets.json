@@ -3242,6 +3242,18 @@
       ]
     },
     {
+      "id": "gradientBloom",
+      "name": "Gradient bloom",
+      "sentence": "Dark runs lit by a soft glow, behind the attorney where a section has a cutout.",
+      "steps": [
+        "mostlyDark"
+      ],
+      "defaultStep": "mostlyDark",
+      "passed": [
+        "mostlyDark"
+      ]
+    },
+    {
       "id": "wedges",
       "name": "Wedges",
       "sentence": "Steep diagonal edges wherever the ground changes.",
@@ -3724,6 +3736,53 @@
       "sentence": "No dark section: the page and a warm wash of its own background in turn, and a soft close.",
       "family": "softWash",
       "step": "mostlyLight",
+      "passed": true
+    },
+    {
+      "dark": {
+        "budget": "threeQuarters",
+        "hosts": [
+          "ribbon",
+          "narrative",
+          "areas",
+          "testimonials",
+          "statement",
+          "attorneys",
+          "caseResults",
+          "split",
+          "badges"
+        ],
+        "rhythm": "runs",
+        "paint": "glow",
+        "texture": "quiet",
+        "close": "dark"
+      },
+      "light": {
+        "paint": "plain",
+        "texture": "quiet"
+      },
+      "divider": {
+        "shape": "straight",
+        "at": "none",
+        "carry": [],
+        "hairline": "none",
+        "hairlineInk": "border"
+      },
+      "spacing": "normal",
+      "ghost": "none",
+      "overlap": "photo",
+      "needs": [
+        "glow"
+      ],
+      "chrome": {
+        "header": "dark",
+        "footer": "dark"
+      },
+      "id": "gradientBloom.mostlyDark",
+      "name": "Gradient bloom",
+      "sentence": "Dark runs lit by a soft glow, behind the attorney where a section has a cutout.",
+      "family": "gradientBloom",
+      "step": "mostlyDark",
       "passed": true
     },
     {

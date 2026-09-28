@@ -2820,6 +2820,7 @@ export type DesignSettings = {
     | "floatingPanels.balanced"
     | "floatingPanels.mostlyDark"
     | "softWash.mostlyLight"
+    | "gradientBloom.mostlyDark"
     | "wedges.balanced";
   flowPhoto?: string;
   headingEmphasisStyle?: "color" | "italic";
@@ -4181,6 +4182,7 @@ export type DESIGN_TOKENS_QUERY_RESULT = {
     | "editorial.mostlyLight"
     | "floatingPanels.balanced"
     | "floatingPanels.mostlyDark"
+    | "gradientBloom.mostlyDark"
     | "photoScrims.mostlyDark"
     | "quiet.mostlyLight"
     | "ribbonRhythm.mostlyLight"
@@ -19549,6 +19551,7 @@ export type SITE_CHROME_QUERY_RESULT = {
       | "editorial.mostlyLight"
       | "floatingPanels.balanced"
       | "floatingPanels.mostlyDark"
+      | "gradientBloom.mostlyDark"
       | "photoScrims.mostlyDark"
       | "quiet.mostlyLight"
       | "ribbonRhythm.mostlyLight"
@@ -20750,6 +20753,7 @@ export type PREVIEW_STORED_DESIGN_QUERY_RESULT = {
     | "editorial.mostlyLight"
     | "floatingPanels.balanced"
     | "floatingPanels.mostlyDark"
+    | "gradientBloom.mostlyDark"
     | "photoScrims.mostlyDark"
     | "quiet.mostlyLight"
     | "ribbonRhythm.mostlyLight"

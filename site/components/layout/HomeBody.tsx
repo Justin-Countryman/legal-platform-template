@@ -1,8 +1,8 @@
 import {type getHomePage} from '@/lib/sanity/fetchers'
 import {ghostSource} from '@/lib/brandMark'
-import {closeFrame} from '@/components/sections/sectionFrame'
+import {closeFrame, closeGround, walkPage} from '@/components/sections/sectionFrame'
 import {siteLookWithHeadingFace} from '@/lib/headingAdvances'
-import {firstBandRises} from '@/components/layout/HomepageCanvas'
+import {firstBandRises, frameOf} from '@/components/layout/HomepageCanvas'
 import {heroGround, heroPhotoOf} from '@/lib/heroGround'
 import {closeSurface} from '@/lib/flows'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
@@ -79,9 +79,14 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
     heroPhoto: photo?.assetId && photo.assetId === approved ? photo : null,
     closeShown: !!closeData?.heading,
   }
-  const close = closeFrame(closeSurface(look.flow, !!look.saturated, !!site.heroPhoto), site)
   const ground = heroGround(hero)
   const edgeBelow = firstBandRises(home?.canvas, site, ground)
+  // Phase 17D session 2: the close is the ground below the last band, so an inset last band between a dark run and a dark
+  // close adopts the run (`[R-501]`) and a run Gradient bloom lights runs on into a dark close. The canvas walks the same
+  // list with the same inputs (`HomepageCanvas`, `close`), so both read one walk.
+  const closeSurf = closeSurface(look.flow, !!look.saturated, !!site.heroPhoto)
+  const closeG = home?.hideCtaForm ? null : closeGround(closeSurf, site.closeShown)
+  const close = closeFrame(closeSurf, site, walkPage(home?.canvas ?? [], frameOf, site, ground, closeG).close)
 
   return (
     <>
@@ -118,6 +123,7 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
       <HomepageCanvas
         site={site}
         hero={ground}
+        close={closeG}
         blocks={home?.canvas}
         napTokens={tokens}
         resultsDisclaimer={home?.resultsDisclaimer}

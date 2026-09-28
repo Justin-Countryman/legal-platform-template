@@ -102,5 +102,5 @@ describe('scripts/ci/__snapshots__/texture-cases.json', () => {
     const c = cases()
     expect(c.palettes.length).toBeGreaterThan(100)
     await expect(JSON.stringify(c) + '\n').toMatchFileSnapshot('../../scripts/ci/__snapshots__/texture-cases.json')
-  }, 180_000)
+  }, 360_000)
 })

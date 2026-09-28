@@ -1,0 +1,32 @@
+[
+  {
+    "key": "p11-t3-statement",
+    "index": 0,
+    "seamTop": false,
+    "previousGround": null,
+    "nextOverlap": "none",
+    "divider": null,
+    "ghost": false,
+    "raisePhoto": false,
+    "insetGround": null,
+    "run": {
+      "index": 0,
+      "length": 2
+    }
+  },
+  {
+    "key": "p11-t2-twocol",
+    "index": 1,
+    "seamTop": true,
+    "previousGround": "dark",
+    "nextOverlap": "none",
+    "divider": null,
+    "ghost": false,
+    "raisePhoto": false,
+    "insetGround": "dark",
+    "run": {
+      "index": 1,
+      "length": 2
+    }
+  }
+]

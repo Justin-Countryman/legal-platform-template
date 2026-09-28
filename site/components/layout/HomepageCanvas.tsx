@@ -11,7 +11,7 @@ import {ReviewsSectionBlock, type ReviewsSectionBlockData} from '@/components/se
 import {resolveResultsDisclaimer} from '@/lib/legal'
 import {type NapTokens} from '@/lib/tokens'
 import {type SectionAppearance} from '@/components/sections/SectionShell'
-import {walkFrame, type SeamProps, type SiteLook, type FlowInputs, NO_SEAM} from '@/components/sections/sectionFrame'
+import {walkFrame, walkPage, type SeamProps, type SiteLook, type FlowInputs, NO_SEAM} from '@/components/sections/sectionFrame'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {hostOf} from '@/lib/flows'
 import {hasImage} from '@/lib/sanity/image'
@@ -163,9 +163,20 @@ export function frameOf(block: HomepageBlock): {appearance: SectionAppearance | 
     host: hostOf(block),
     photo: hasImage(block.appearance?.backgroundImage),
     content: block._type === 'contentSectionInline',
+    // Phase 17D session 2: a split whose media is a cutout figure, on the side it sits, so Gradient bloom can put its
+    // run's glow behind the figure. `raisesPhoto` answers true for exactly the splits whose media renders an image.
+    cutout: cutoutSide(block),
   }
   const frame = frameInputs(block)
   return {...frame, ...inputs}
+}
+
+/** The side a split's cutout figure sits on (`mediaSide`, right by default), or null where the band draws none. */
+function cutoutSide(block: HomepageBlock): 'left' | 'right' | null {
+  if (block._type !== 'contentSectionInline') return null
+  const b = block as {layout?: string | null; mediaSide?: string | null; media?: {kind?: string | null} | null}
+  if (b.media?.kind !== 'cutout' || !ContentFrame.raisesPhoto(block as ContentSectionData)) return null
+  return b.mediaSide === 'left' ? 'left' : 'right'
 }
 
 function frameInputs(block: HomepageBlock): {appearance: SectionAppearance | null | undefined; empty: boolean; raisesPhoto?: boolean} {
@@ -199,9 +210,13 @@ export function HomepageCanvas({
   resultsDisclaimer,
   site,
   hero,
+  close = null,
 }: {
   /** The hero's bottom ground (`heroGround`), so the first band can rise into it (Phase 16C). */
   hero?: VisibleGround | null
+  /** The closing call to action's ground where it renders (`closeGround`), so the walk sees the band below the last
+   *  one (Phase 17D session 2, `walkPage`). */
+  close?: VisibleGround | null
   blocks?: HomepageBlock[] | null
   napTokens?: NapTokens | null
   /** The site's look from Design Settings (`siteLookOf`), carried to every band on
@@ -215,7 +230,7 @@ export function HomepageCanvas({
 
   return (
     <>
-      {walkFrame(blocks, frameOf, site ?? null, hero ?? null).map(({member, seam}, surviving) => {
+      {walkPage(blocks, frameOf, site ?? null, hero ?? null, close).bands.map(({member, seam}, surviving) => {
         const rendered = renderBlock(member, napTokens, resultsDisclaimer, seam)
         if (!rendered) return null
         // THE FIRST SURVIVING BAND, not the member at index 0. `i === 0` on the

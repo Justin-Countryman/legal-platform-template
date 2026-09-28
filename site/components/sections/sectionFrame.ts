@@ -2,7 +2,7 @@ import {
   type SectionAppearance,
 } from '@/components/sections/SectionShell'
 import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
-import {closeSurface, flowOf, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts} from '@/lib/flows'
+import {closeSurface, fadeOf, flowOf, glowFillOk, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts} from '@/lib/flows'
 import type {HeroPhoto} from '@/lib/heroGround'
 import type {HeadingFace} from '@/lib/headingFace'
 import type {DrawnStrength} from '@/lib/designTokens'
@@ -83,6 +83,9 @@ export type FlowInputs = {
   photo?: boolean
   /** The member is a content section, the one type that offers the saturated fill. */
   content?: boolean
+  /** The member's split draws a cutout figure, on this side (Phase 17D session 2): Gradient bloom puts its run's glow
+   *  behind it. */
+  cutout?: 'left' | 'right' | null
 }
 
 /** What the ground pass assigned to a band, or nothing where the band's own surface
@@ -140,6 +143,9 @@ export type SiteLook = {
   patternTexture?: string | null
   /** The palette passes the saturated gate, so a theme may paint the accent fill. */
   saturated?: boolean
+  /** The palette's dark ground has room to glow (`glowFillOk`, Phase 17D session 2, `[R-557]`), so Gradient bloom may
+   *  light its dark runs. */
+  glow?: boolean
   /** The initials the ghost draws (Phase 16D, `[R-492]`), or null when the theme draws
    *  none. Derived from the firm's name, never stored; set by `HomeBody`. */
   ghost?: {text: string} | null
@@ -166,6 +172,7 @@ export function siteLookOf(d: Record<string, unknown> | null | undefined): SiteL
     flow: flowOf(d),
     patternTexture: s('patternTexture'),
     saturated: saturatedFillOk(d),
+    glow: glowFillOk(d),
     ghost: null,
   }
 }
@@ -211,8 +218,14 @@ export type SeamProps = {
    *  stands alone is a run of one and takes the whole ramp, which is the per-band device
    *  the field study and the live census both record. A run longer than eight starts a
    *  new run at the ninth band (Phase 17B), and a theme whose paint restarts the ramp
-   *  per band numbers every band as a run of one. */
-  run?: {index: number; length: number}
+   *  per band numbers every band as a run of one. Since Phase 17D session 2 the run also
+   *  names where Gradient bloom's glow peaks (`peak`, the band carrying a cutout figure,
+   *  else the run's middle band) and the side its light comes from (`side`, the figure's). */
+  run?: {index: number; length: number; peak?: number; side?: 'left' | 'right'}
+  /** What this band draws over a dark ground, from the theme (Phase 17D session 2, `fadeOf`): the bridge's ramp,
+   *  Gradient bloom's glow where the palette has room, or nothing. The shell reads it, and draws it only where the band
+   *  paints the dark ground. */
+  fade?: 'gradient' | 'glow' | null
   /** What the theme's ground pass assigned this band (Phase 17B), or null where the
    *  band's own stored surface stands. The shell reads the ground and the texture. */
   paint?: Paint | null
@@ -253,8 +266,28 @@ export function walkFrame<M>(
   site: SiteLook | null = null,
   hero: VisibleGround | null = null,
 ): Array<{member: M; index: number; seam: SeamProps}> {
+  return walkPage(members, resolve, site, hero, null).bands
+}
+
+/**
+ * The walk, with the closing call to action as one more ground (Phase 17D session 2, record §2.4). The close is not a
+ * member of the list, but the band above it meets it: an inset last band between a dark run and a dark close is
+ * bracketed by one strong ground and adopts it (`[R-501]`), and a run Gradient bloom lights runs on into a dark close.
+ * It takes part in the adoption and the run passes only: the close's own seam, and so its padding, are what they were;
+ * an inset last band it makes adopt the run takes an adopted band's top padding, halved, under every theme whose close
+ * is dark, the default Quiet among them (ADV-17D2-P; pinned by `flowReproduction.test.tsx`'s last-inset canvas).
+ * `close` is the close's ground where it renders, else null; the close's own seam comes back beside the bands.
+ */
+export function walkPage<M>(
+  members: readonly M[],
+  resolve: (member: M) => {appearance: SectionAppearance | null | undefined; empty: boolean} & Raisable & FlowInputs,
+  site: SiteLook | null = null,
+  hero: VisibleGround | null = null,
+  close: VisibleGround | null = null,
+): {bands: Array<{member: M; index: number; seam: SeamProps}>; close: {run?: SeamProps['run']; fade: SeamProps['fade']}} {
   // The theme (Phase 17B). Null on an interior page, where no page-level device fires.
   const flow = site?.flow ?? null
+  const fade = fadeOf(flow, site?.glow)
   // Where a divider goes: the theme's placement (`flow.divider.at`). `intoDark` is
   // `[R-481]`'s law: under the hero, and wherever the page enters a strong ground — dark
   // or saturated. `everyChange` fires at every change of ground. Never into a photo
@@ -298,9 +331,10 @@ export function walkFrame<M>(
   const adopted: (VisibleGround | null)[] = survivors.map((r, i) => {
     if (!isInset(r, paints[i])) return null
     if (paints[i]?.onGround) return paints[i]!.onGround!
-    if (i === 0 || i === survivors.length - 1) return null
+    // The last band's ground below is the close's, where it renders (Phase 17D session 2).
+    const below = i === survivors.length - 1 ? close : raw[i + 1]
+    if (i === 0 || !below) return null
     const above = raw[i - 1]
-    const below = raw[i + 1]
     return above === below && HOSTS.includes(above) ? above : null
   })
   const groundAt = new Map<number, VisibleGround>()
@@ -326,7 +360,7 @@ export function walkFrame<M>(
 
     const seam: SeamProps =
       out.length === 0
-        ? {...NO_SEAM, site, insetGround: adoptAt.get(index) ?? null, paint}
+        ? {...NO_SEAM, site, insetGround: adoptAt.get(index) ?? null, paint, ...(fade ? {fade} : {})}
         : {
             site,
             seamTop: !overlapping && prevGround === ground,
@@ -334,6 +368,7 @@ export function walkFrame<M>(
             nextOverlap: 'none',
             insetGround: adoptAt.get(index) ?? null,
             paint,
+            ...(fade ? {fade} : {}),
           }
 
     // An inset first band takes none: the wedge crossed an overlapping panel to two
@@ -435,27 +470,45 @@ export function walkFrame<M>(
   // bands on a thirteen-band run); and a theme whose paint restarts the ramp on every
   // band (`gradientPerBand`, the all-dark page's seam) numbers every band as a run of
   // one.
+  //
+  // Phase 17D session 2: where the theme glows, the close is one more ground at the foot (where it renders), so a run
+  // Gradient bloom lights runs on into a dark close; and a run names where the glow peaks, the band carrying a cutout
+  // figure, lit from the figure's side, else the run's middle band, lit from the right. Under every other theme the runs
+  // are numbered as they were.
   const RUN_CAP = 8
   const perBand = flow?.dark.paint === 'gradientPerBand'
+  const glows = fade === 'glow'
+  const grounds: (VisibleGround | null)[] = out.map((o) => groundAt.get(o.index) ?? null)
+  const figures: ('left' | 'right' | null)[] = out.map((o) => resolve(o.member).cutout ?? null)
+  // The close joins the run only where the theme glows: no other theme draws anything a run's numbering moves.
+  const closeJoins = glows && !!close
+  if (closeJoins) { grounds.push(close); figures.push(null) }
+  const runs: NonNullable<SeamProps['run']>[] = new Array(grounds.length)
   {
     let start = 0
-    for (let i = 1; i <= out.length; i++) {
-      const same2 = i < out.length && groundAt.get(out[i].index) === groundAt.get(out[start].index)
+    for (let i = 1; i <= grounds.length; i++) {
+      const same2 = i < grounds.length && grounds[i] === grounds[start]
       if (!same2) {
         if (perBand) {
-          for (let k = start; k < i; k++) out[k].seam = {...out[k].seam, run: {index: 0, length: 1}}
+          for (let k = start; k < i; k++) runs[k] = {index: 0, length: 1}
         } else {
           for (let chunk = start; chunk < i; chunk += RUN_CAP) {
             const length = Math.min(RUN_CAP, i - chunk)
-            for (let k = chunk; k < chunk + length; k++) out[k].seam = {...out[k].seam, run: {index: k - chunk, length}}
+            let lit: {peak: number; side: 'left' | 'right'} | null = null
+            if (glows) {
+              lit = {peak: Math.floor(length / 2), side: 'right'}
+              for (let k = chunk; k < chunk + length; k++) if (figures[k]) { lit = {peak: k - chunk, side: figures[k]!}; break }
+            }
+            for (let k = chunk; k < chunk + length; k++) runs[k] = {index: k - chunk, length, ...(lit ?? {})}
           }
         }
         start = i
       }
     }
   }
+  out.forEach((o, k) => { o.seam = {...o.seam, run: runs[k]} })
 
-  return out
+  return {bands: out, close: {...(closeJoins ? {run: runs[grounds.length - 1]} : {}), fade}}
 }
 
 // ─── The ground pass (Phase 17B, record §2.3) ─────────────────────────────────
@@ -688,12 +741,24 @@ export function assignGrounds(
 export function closeFrame(
   close: ReturnType<typeof closeSurface>,
   site: SiteLook,
+  walked?: {run?: SeamProps['run']; fade: SeamProps['fade']},
 ): {surface: 'dark' | 'saturated' | 'muted' | 'image' | 'light'; seam?: SeamProps} {
   if (close === 'photo') {
     return {surface: 'image', seam: site.heroPhoto ? {...NO_SEAM, site, paint: {ground: 'image', texture: false, window: photoWindows(site.heroPhoto.hotspot)[0]}} : undefined}
   }
   if (close === 'wash') return {surface: 'light', seam: {...NO_SEAM, paint: {ground: 'wash', texture: false}}}
+  // A dark close Gradient bloom lights (Phase 17D session 2): its place in the run above it, from the walk. Every other
+  // close is its surface alone, as it was.
+  if (close === 'dark' && walked?.fade === 'glow' && walked.run) return {surface: 'dark', seam: {...NO_SEAM, site, run: walked.run, fade: 'glow'}}
   return {surface: close}
+}
+
+/** The ground the close shows the walk (`walkPage`): where it renders, its surface as a visible ground. */
+export function closeGround(close: ReturnType<typeof closeSurface>, shown: boolean): VisibleGround | null {
+  if (!shown) return null
+  if (close === 'photo') return 'image'
+  if (close === 'wash') return 'wash'
+  return close
 }
 
 /** What the canvas and the site hold, for a theme's needs (`unmetNeeds`). The ribbons are
@@ -712,6 +777,7 @@ export function canvasFacts(
     texture: !!site?.patternTexture,
     initials: !!site?.ghost?.text,
     heroPhoto: !!site?.heroPhoto,
+    glow: !!site?.glow,
     hero,
     ribbonsFilled: survivors.filter((r, i) => r.host === 'ribbon' && (paints[i]?.ground === 'saturated' || paints[i]?.ground === 'dark')).length,
   }

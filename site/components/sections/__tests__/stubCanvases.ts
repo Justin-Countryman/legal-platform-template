@@ -23,9 +23,13 @@ export const CI_DIR = resolve(__dirname, '../../../scripts/ci')
 // Phase 17B session 5: the ribbon evidence canvas, for a family whose need the other three do not meet.
 // Phase 17B session 6: the three record canvases again with a stand-in photograph behind the hero and
 // in every split band, for Photo scrims (the photographs under `photos/`).
+// Phase 17D session 2: the adversarial record with a cutout figure in its splits (`[R-558]`).
 export const RECORD_CANVASES = [
   'record-adversarial-mostly-dark.ndjson', 'record-planning-mostly-light.ndjson', 'record-multi-practice-balanced.ndjson', 'record-ribbons-mostly-light.ndjson',
   'record-adversarial-photo-hero.ndjson', 'record-planning-photo-hero.ndjson', 'record-multi-practice-photo-hero.ndjson',
+  // Phase 17D session 2: the adversarial record with a stand-in cutout figure (a marble bust) in every split band, for
+  // Gradient bloom's glow behind a figure.
+  'record-adversarial-cutout.ndjson',
 ] as const
 
 export function stubDataset(file: string): Doc[] | null {
