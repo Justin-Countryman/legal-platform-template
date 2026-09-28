@@ -115,6 +115,8 @@ const CANVASES = [
   ['long-headings', 'scripts/ci/record-long-headings.ndjson'],
   // Phase 17D (`[R-556]`): the multi-practice record with a stand-in Card Photo on every practice area.
   ['multi-practice-area-photos', 'scripts/ci/record-multi-practice-area-photos.ndjson'],
+  // Phase 17D session 2 (`[R-558]`): the adversarial record with a stand-in cutout figure in every split band.
+  ['adversarial-cutout', 'scripts/ci/record-adversarial-cutout.ndjson'],
 ]
 // The stand-in photographs (Phase 17B session 6), served from disk to the browser: the hero's own
 // optimizer address (`/_next/image?url=/stand-ins/...`) and the image CDN's address for a band's photo
@@ -122,21 +124,23 @@ const CANVASES = [
 // local host, so the optimizer is bypassed here; its bytes are measured once and recorded (monorepo
 // WS-V1-PHASE17B6-DESIGN §2.11).
 const PHOTOS = resolve('scripts/ci/photos')
-const STAND_INS = existsSync(PHOTOS) ? readdirSync(PHOTOS).filter((f) => f.endsWith('.jpg')) : []
-const compact = (f) => 'fx' + f.replace(/\.jpg$/, '').replace(/[^a-z0-9]/g, '')
+// A photograph (`.jpg`) or, since Phase 17D session 2, a cutout figure on a transparent ground (`.png`).
+const STAND_INS = existsSync(PHOTOS) ? readdirSync(PHOTOS).filter((f) => f.endsWith('.jpg') || f.endsWith('.png')) : []
+const compact = (f) => 'fx' + f.replace(/\.(jpg|png)$/, '').replace(/[^a-z0-9]/g, '')
+const typeOf = (f) => (f.endsWith('.png') ? 'image/png' : 'image/jpeg')
 async function servePhotos(context) {
   if (!STAND_INS.length) return
   await context.route('**/_next/image?**', (route) => {
     const src = new URL(route.request().url()).searchParams.get('url') ?? ''
     const file = src.startsWith('/stand-ins/') ? src.slice('/stand-ins/'.length) : null
     return file && STAND_INS.includes(file)
-      ? route.fulfill({path: resolve(PHOTOS, file), contentType: 'image/jpeg'})
+      ? route.fulfill({path: resolve(PHOTOS, file), contentType: typeOf(file)})
       : route.continue()
   })
   await context.route('https://cdn.sanity.io/images/**', (route) => {
     const name = new URL(route.request().url()).pathname.split('/').pop() ?? ''
     const file = STAND_INS.find((f) => name.startsWith(compact(f) + '-'))
-    return file ? route.fulfill({path: resolve(PHOTOS, file), contentType: 'image/jpeg'}) : route.abort()
+    return file ? route.fulfill({path: resolve(PHOTOS, file), contentType: typeOf(file)}) : route.abort()
   })
 }
 const WIDTHS = [
