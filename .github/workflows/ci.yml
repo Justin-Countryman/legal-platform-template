@@ -590,6 +590,7 @@ jobs:
         working-directory: site
         run: npm ci
       - name: Build against the stub Content Lake
+        id: build
         timeout-minutes: 10
         working-directory: site
         run: bash scripts/ci/build-against-stub.sh
@@ -613,12 +614,16 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('site/package-lock.json') }}
       - name: Install the Playwright browser
+        id: browsers
         timeout-minutes: 10
         working-directory: site
         run: npx playwright install --with-deps chromium webkit
+      # The four checks below read the same build and browsers and answer separate questions, so each runs whatever the
+      # others did (monorepo ADV-17D2-P: a red ramp step on the first Linux run would have hidden the metrics golden).
       # Phase 17C session 3 (monorepo WS-V1-PHASE17C3-DESIGN §2.1): the heading width table a
       # heading's fit reads, re-measured from the committed faces; a changed font file is red here.
       - name: The heading width table matches the committed faces
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.browsers.outcome == 'success' }}
         timeout-minutes: 5
         working-directory: site
         run: node scripts/ci/heading-advances.mjs
@@ -626,16 +631,19 @@ jobs:
       # strength and the ghost, as the headless shell, full Chromium and WebKit draw them, no darker
       # than the blend validateWcag sweeps, over the presets and the near-threshold palettes.
       - name: The texture pixels (both raster paths)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.browsers.outcome == 'success' }}
         timeout-minutes: 10
         working-directory: site
         run: node scripts/ci/texture-pixels.mjs
       # Phase 17D session 2 (monorepo WS-V1-PHASE17D2-DESIGN §2.2, `[R-553]`): every gradient ramp, as the headless
       # shell, full Chromium and WebKit draw it at DPR 1 and 3, no lighter than its ceiling; a calibration strip is printed.
       - name: The ramp pixels (three engines)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.browsers.outcome == 'success' }}
         timeout-minutes: 10
         working-directory: site
         run: node scripts/ci/ramp-pixels.mjs
       - name: The flow metrics golden at 1440 and 390 (built and served)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.browsers.outcome == 'success' }}
         timeout-minutes: 25
         working-directory: site
         run: node scripts/ci/flow-metrics.mjs --out flow-captures
