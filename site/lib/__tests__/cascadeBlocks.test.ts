@@ -88,8 +88,17 @@ describe('the saturated band', () => {
 })
 
 describe('the photo band block (Phase 17B session 6, `[R-533]`)', () => {
-  const photo = block('[data-scrim="true"] {')
-  const shared = block('[data-scrim="true"],\n[data-hero-image="true"]')
+  // Since Phase 17D session 2 (`[R-557]`) a band Gradient bloom lights (`data-glow`) takes both blocks: its glow is solved
+  // under the photo band's pairs, so it draws the photo band's colors.
+  const photo = block('[data-scrim="true"],\n[data-glow="true"] {')
+  const shared = block('[data-scrim="true"],\n[data-glow="true"],\n[data-hero-image="true"]')
+
+  it('a glowing band shares both of the photo band\'s blocks, and nothing else of it (not its image rule)', () => {
+    expect(CSS).toContain('[data-scrim="true"],\n[data-glow="true"] {')
+    expect(CSS).toContain('[data-scrim="true"],\n[data-glow="true"],\n[data-hero-image="true"] {')
+    expect(CSS).toContain('[data-scrim="true"] img {')
+    expect(CSS).not.toContain('[data-glow="true"] img')
+  })
 
   it('a photo band reads the scrim values of the two marks that are not text, and nothing else', () => {
     expect([...photo.entries()]).toEqual([

@@ -322,6 +322,9 @@ export type ResolvedPalette = {
   acceptance: {darkGround: Acceptance; lightGround: Acceptance; accent: Acceptance; action: Acceptance}
   /** Every color token by its CSS custom property name. */
   tokens: Record<string, string>
+  /** The palette's dark ground has room to glow (`glowOf`, Phase 17D session 2, `[R-557]`): Gradient bloom draws its
+   *  glow only where this holds, and the plain ground elsewhere. Not a token: nothing in CSS reads it. */
+  glowOk: boolean
 }
 
 export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
@@ -546,6 +549,9 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
     tokens['--color-gradient-start'] = held.start
     tokens['--color-gradient-stop'] = held.stop
   }
+  // Gradient bloom's glow (Phase 17D session 2, `[R-557]`): the plain ground where the palette has no room.
+  const glow = glowOf(brandDark, accent, tokens)
+  tokens['--color-glow'] = glow.ok ? glow.glow : brandDark
   tokens['--color-texture-ink-on-dark'] = texture.ink
   tokens['--section-texture-opacity-on-dark'] = String(texture.opacity)
   // Phase 17C session 3: the render margin applies on a dark band only where its ink is lighter than
@@ -567,6 +573,7 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
     inputs: {darkGround: darkIn, lightGround: lightIn, accent: accentIn, action: actionIn},
     acceptance: {darkGround: darkA, lightGround: lightA, accent: accentA, action: actionA},
     tokens,
+    glowOk: glow.ok,
   }
 }
 
@@ -731,6 +738,57 @@ export function heldRamp(ground: string, stop: string, ceiling: number): {start:
   return {start, stop: start}
 }
 
+// ─── The glow (Phase 17D session 2, `[R-557]`; monorepo WS-V1-PHASE17D2-DESIGN §2.3) ─────────────────────────
+//
+// Gradient bloom's dark runs glow LIGHTER than their ground, as every studied dark-ground gradient does (13 sites
+// live, none deeper): in the accent's own hue on a near-neutral ground (gold on black is bronze), and in the ground's own
+// hue, lighter, on a colored one (every studied navy site; a brass glow on navy washes brown). Lightness first, to OKLab
+// L +0.16 (the evidence lifts 0.125 to 0.21), at a chroma cap; held to the PHOTO BAND's pairs (`[R-531]`, `[R-533]`),
+// whose colors a glowing band takes (`data-glow`, `globals.css`): its every level, drawn a level lighter, under their
+// one ceiling, walked at every level. A glow only where it lifts: a sideways shift of hue at the ground's own lightness
+// is not one (ADV-17D2-A, -B, -C).
+
+/** Every pair on a photo band, as a glowing band draws them: the on-dark text tiers (the link and the focus ring are the
+ *  body text there), the star outline and fill, and the photo band's control border. The cue is its own. */
+export function photoBandPairs(t: Record<string, string>): RampPair[] {
+  return [
+    [t['--color-foreground-on-dark'], 4.5], [t['--color-foreground-muted-on-dark'], 4.5], [t['--color-foreground-subtle-on-dark'], 4.5],
+    [t['--color-accent-on-dark'], 4.5], [t['--color-star-outline-on-dark'], 3], [t['--color-star-fill'], 3],
+    [t['--color-border-control-on-scrim'], 3],
+  ]
+}
+
+/** The lift, the chroma caps and the strength the glow is solved to; `GLOW_DE` is the eye pass's (as `WASH_DE` was). */
+export const GLOW_LIFT = 0.16
+export const GLOW_CHROMA_NEUTRAL = 0.07
+export const GLOW_CHROMA_COLORED = 0.05
+export const GLOW_DE = 24
+/** A glow reads only where it lifts: at least this much OKLab lightness and this ΔE2000 from the ground. */
+export const GLOW_MIN_LIFT = 0.05
+export const GLOW_MIN_DE = 6
+
+export function glowOf(ground: string, accent: string, t: Record<string, string>): {glow: string; ok: boolean} {
+  const g = parseOklch(ground)
+  const a = parseOklch(accent)
+  const neutral = g.c < 0.03
+  const hue = neutral ? (a.c >= 0.02 ? a.h : null) : g.h
+  const cap = hue === null ? 0 : neutral ? GLOW_CHROMA_NEUTRAL : Math.max(g.c, GLOW_CHROMA_COLORED)
+  const ceiling = pairsCeiling(photoBandPairs(t), t['--color-action'], t['--color-action-state-cue-on-scrim'])
+  const at = (l: number, c: number) => mapped(l, c, hue ?? 0)
+  const holds = (hex: string) => rampDrawnMax(ground, hex) <= ceiling + 1e-12 && deltaE(ground, hex) <= GLOW_DE
+  // The most chroma to the cap that holds at the ground's own lightness, then the lightest point that holds.
+  for (let c = cap; c >= 0; c = round6(c - 0.005)) {
+    if (!holds(at(g.l, c))) continue
+    let lo = g.l
+    let hi = Math.min(1, g.l + GLOW_LIFT)
+    if (holds(at(hi, c))) lo = hi
+    else for (let i = 0; i < 12; i++) { const mid = (lo + hi) / 2; if (holds(at(mid, c))) lo = mid; else hi = mid }
+    const glow = at(lo, c)
+    return {glow, ok: parseOklch(glow).l - g.l >= GLOW_MIN_LIFT && deltaE(ground, glow) >= GLOW_MIN_DE}
+  }
+  return {glow: ground, ok: false}
+}
+
 /** The texture on a light band (Phase 17C session 3, `[R-538]`): the dark ground as its ink, at the
  *  opacity every light text tier holds 4.5:1 over for any palette (Phase 16A). Beside
  *  `textureOnDark`, so both grounds' textures come from one place; `validateWcag` sweeps this blend,
@@ -873,6 +931,20 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
     results.push({pair: 'the active state (action fill or cue) on the gradient ramp as drawn', ratio: Math.round(cueRatio * 100) / 100, min: 3, passes: cueRatio >= 3, blocking: true})
     const ground = luminanceOf(channelsOf(dark))
     results.push({pair: 'the gradient ramp as drawn is no lighter than the dark ground', ratio: Math.round(((ground + 0.05) / (drawn + 0.05)) * 1000) / 1000, min: 1, passes: drawn <= ground + 1e-12, blocking: true})
+  }
+  // Phase 17D session 2 (`[R-557]`): Gradient bloom's glow, from the ground to the glow and back, every level drawn a
+  // level lighter, against every pair a glowing band draws (the photo band's, `data-glow`). The plain ground where the
+  // palette has no room, which the flat checks already hold.
+  {
+    const drawn = rampDrawnMax(dark, t['--color-glow'])
+    const names = ['foreground-on-dark', 'foreground-muted-on-dark', 'foreground-subtle-on-dark', 'accent-on-dark', 'star-outline-on-dark', 'star-fill', 'border-control-on-scrim']
+    photoBandPairs(t).forEach(([fg, min], i) => {
+      const ratio = (luminanceOf(channelsOf(fg)) + 0.05) / (drawn + 0.05)
+      results.push({pair: `${names[i]} on the glow as drawn`, ratio: Math.round(ratio * 100) / 100, min, passes: ratio >= min, blocking: true})
+    })
+    const cue = t['--color-action-state-cue-on-scrim']
+    const cueRatio = Math.max((luminanceOf(channelsOf(t['--color-action'])) + 0.05) / (drawn + 0.05), cue === 'transparent' ? 0 : (luminanceOf(channelsOf(cue)) + 0.05) / (drawn + 0.05))
+    results.push({pair: 'the active state (action fill or cue) on the glow as drawn', ratio: Math.round(cueRatio * 100) / 100, min: 3, passes: cueRatio >= 3, blocking: true})
   }
   // Phase 17B session 6 (`[R-533]`, record §2.4): a photo band, hand-built or a theme's, measured
   // at its lightest point: the scrim over pure white. It is a bound, not a sample: the scrim is at

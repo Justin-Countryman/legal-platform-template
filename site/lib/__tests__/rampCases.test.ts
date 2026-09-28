@@ -12,7 +12,7 @@ import {describe, expect, it} from 'vitest'
 import {existsSync} from 'node:fs'
 import {resolve} from 'node:path'
 import {converter} from 'culori'
-import {onDarkPairs, pairsCeiling, rampDrawnMax, resolvePalette, type ColorInputs} from '../designTokens'
+import {onDarkPairs, pairsCeiling, photoBandPairs, rampDrawnMax, resolvePalette, type ColorInputs} from '../designTokens'
 import {PALETTE_PRESETS, presetInputs} from '../palettes'
 import {nearBlack} from './sweeps'
 
@@ -40,13 +40,23 @@ function bridgeCase(label: string, inputs: ColorInputs) {
   return {label, ramp: 'bridge', ground, from: t['--color-gradient-start'], to: t['--color-gradient-stop'], ceiling, model}
 }
 
+/** Gradient bloom's glow (`[R-557]`): the ground to the glow and back, under the side layer, against the photo band's
+ *  ceiling, where the palette has room. */
+function glowCase(label: string, inputs: ColorInputs) {
+  const p = resolvePalette(inputs)
+  const t = p.tokens
+  const ground = t['--color-brand-dark']
+  const ceiling = pairsCeiling(photoBandPairs(t), t['--color-action'], t['--color-action-state-cue-on-scrim'])
+  return {label, ramp: 'glow', ground, from: ground, to: t['--color-glow'], ceiling, model: rampDrawnMax(ground, t['--color-glow']), ok: p.glowOk}
+}
+
 function cases() {
   const margin = (c: ReturnType<typeof bridgeCase>) => (c.ceiling + 0.05) / (c.model + 0.05)
   const swept = [
     ...seeded(5000, 20260916).map((inputs, i) => bridgeCase(`s20260916#${i}`, inputs)),
     ...nearBlack(4000, 17).map((inputs, i) => bridgeCase(`nb17#${i}`, inputs)),
   ]
-  const ramps = [
+  const ramps: Array<ReturnType<typeof bridgeCase> | ReturnType<typeof glowCase>> = [
     bridgeCase('placeholder', {}),
     ...PALETTE_PRESETS.map((p) => bridgeCase(p.id, presetInputs(p))),
     // A ground with no level below it draws a flat ramp, which must draw exactly.
@@ -55,10 +65,20 @@ function cases() {
     // The ramps nearest their ceiling, where a level drawn past the model shows first.
     ...swept.filter((c) => c.from !== c.to).sort((a, b) => margin(a) - margin(b)).slice(0, 150),
   ]
+  const glowMargin = (c: ReturnType<typeof glowCase>) => (c.ceiling + 0.05) / (c.model + 0.05)
+  const glowing = [
+    ...seeded(5000, 20260916).map((inputs, i) => glowCase(`s20260916#${i}`, inputs)),
+    ...nearBlack(4000, 17).map((inputs, i) => glowCase(`nb17#${i}`, inputs)),
+  ].filter((c) => c.ok)
+  ramps.push(
+    ...[glowCase('placeholder', {}), ...PALETTE_PRESETS.map((p) => glowCase(p.id, presetInputs(p)))].filter((c) => c.ok),
+    // The glows nearest the photo band's ceiling.
+    ...glowing.sort((a, b) => glowMargin(a) - glowMargin(b)).slice(0, 100),
+  )
   // A calibration strip, reported and not asserted: what each engine draws against the model on plain ramps, so a new
   // engine's drawing is read before it is trusted (`[R-550]` found WebKit on Linux a level past the model).
   const calibration = [['#000000', '#ffffff'], ['#141414', '#000000'], ['#1c2b4a', '#201a2c'], ['#0b2545', '#2f496c'], ['#111111', '#473400']]
-  return {method: 'the bridge ramp for the presets, the placeholder, two flat grounds and the 150 nearest their ceiling over two seeded sweeps; a calibration strip; written by lib/__tests__/rampCases.test.ts, drawn by scripts/ci/ramp-pixels.mjs', ramps, calibration}
+  return {method: 'the bridge ramp for the presets, the placeholder, two flat grounds and the 150 nearest their ceiling over two seeded sweeps; the glow, from the ground to the glow and back under its side layer, for every glowing preset, the placeholder and the 100 nearest the photo band ceiling; a calibration strip; written by lib/__tests__/rampCases.test.ts, drawn by scripts/ci/ramp-pixels.mjs', ramps, calibration}
 }
 
 // The cases live beside the script that reads them, under `scripts/ci/`, which the press prunes from a client's

@@ -27,6 +27,11 @@ const channels = (hex) => { const c = toRgb(hex); return [c.r, c.g, c.b].map((v)
 const modelAt = (a0, b0, t) => { const a = toOklab(a0), b = toOklab(b0); return channels(formatHex({mode: 'oklab', l: a.l + (b.l - a.l) * t, a: a.a + (b.a - a.a) * t, b: a.b + (b.b - a.b) * t})) }
 
 const W = 16, H = 240, COLS = 60, PER = 120
+// A glow is drawn as `band-glow` draws a run of one (`globals.css`): the ground at one edge fading out by 70% of the
+// width, over the ground to the glow at the middle and back; four cells wide, so the side layer spans a real width.
+const imageOf = (x) => x.ramp === 'glow'
+  ? `linear-gradient(to right,${x.ground} 0%,transparent 70%),linear-gradient(in oklab,${x.from} 0%,${x.to} 50%,${x.from} 100%)`
+  : `linear-gradient(in oklab,${x.from} 0%,${x.to} 100%)`
 const failures = []
 async function drawCells(page, dpr, cells) {
   const out = []
@@ -34,17 +39,23 @@ async function drawCells(page, dpr, cells) {
     const batch = cells.slice(b0, b0 + PER)
     // A doctype: without one, quirks mode stretches the grid's rows and every cell is misread (as texture-pixels.mjs found).
     await page.setContent(`<!doctype html><html><body style="margin:0;display:grid;align-content:start;grid-template-columns:repeat(${COLS},${W}px)">` +
-      batch.map((x) => `<div style="width:${W}px;height:${H}px;background-color:${x.ground};background-image:linear-gradient(in oklab,${x.from} 0%,${x.to} 100%)"></div>`).join('') +
+      batch.map((x) => `<div style="width:${W * (x.ramp === 'glow' ? 4 : 1)}px;height:${H}px;grid-column:span ${x.ramp === 'glow' ? 4 : 1};background-color:${x.ground};background-image:${imageOf(x)}"></div>`).join('') +
       '</body></html>')
-    const png = await page.screenshot({clip: {x: 0, y: 0, width: COLS * W, height: Math.ceil(batch.length / COLS) * H}, animations: 'disabled'})
+    const slots = batch.reduce((n, x) => { const span = x.ramp === 'glow' ? 4 : 1; if ((n % COLS) + span > COLS) n += COLS - (n % COLS); return n + span }, 0)
+    const png = await page.screenshot({clip: {x: 0, y: 0, width: COLS * W, height: Math.ceil(slots / COLS) * H}, animations: 'disabled'})
     const {data: px, info} = await sharp(png).raw().toBuffer({resolveWithObject: true})
-    batch.forEach((x, i) => {
-      const cx = (i % COLS) * W * dpr, cy = Math.floor(i / COLS) * H * dpr
+    let slot = 0
+    batch.forEach((x) => {
+      const span = x.ramp === 'glow' ? 4 : 1
+      if ((slot % COLS) + span > COLS) slot += COLS - (slot % COLS)
+      const cx = (slot % COLS) * W * dpr, cy = Math.floor(slot / COLS) * H * dpr
+      slot += span
+      const wide = W * span * dpr
       let max = 0, excess = 0, lumExcess = -Infinity
       // The cell's edge pixels are left out: the cells abut, and a neighbour may bleed in.
       for (let y = cy + 1; y < cy + H * dpr - 1; y++) {
         const m = modelAt(x.from, x.to, (y - cy + 0.5) / (H * dpr))
-        for (let xx = cx + 1; xx < cx + W * dpr - 1; xx++) {
+        for (let xx = cx + 1; xx < cx + wide - 1; xx++) {
           const o = (y * info.width + xx) * info.channels
           const L = lum(px[o], px[o + 1], px[o + 2])
           if (L > max) max = L
@@ -61,7 +72,8 @@ async function drawCells(page, dpr, cells) {
 for (const path of ['headless shell', 'full Chromium', 'WebKit']) {
   const browser = path === 'WebKit' ? await webkit.launch() : await chromium.launch(path === 'full Chromium' ? {channel: 'chromium'} : {})
   for (const dpr of [1, 3]) {
-    const context = await browser.newContext({viewport: {width: COLS * W, height: Math.ceil(PER / COLS) * H}, deviceScaleFactor: dpr})
+    // Tall enough for a batch of glows, each four cells wide.
+    const context = await browser.newContext({viewport: {width: COLS * W, height: Math.ceil((4 * PER) / COLS) * H}, deviceScaleFactor: dpr})
     const page = await context.newPage()
     const drawn = await drawCells(page, dpr, data.ramps)
     let past = 0
