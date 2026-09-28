@@ -3214,6 +3214,44 @@
       "passed": [
         "mostlyDark"
       ]
+    },
+    {
+      "id": "floatingPanels",
+      "name": "Floating panels",
+      "sentence": "One calm ground down the page, and the other floating on it as panels.",
+      "steps": [
+        "balanced",
+        "mostlyDark"
+      ],
+      "defaultStep": "balanced",
+      "passed": [
+        "balanced",
+        "mostlyDark"
+      ]
+    },
+    {
+      "id": "softWash",
+      "name": "Soft wash",
+      "sentence": "No dark section: the page and a warm wash of its own background in turn, and a soft close.",
+      "steps": [
+        "mostlyLight"
+      ],
+      "defaultStep": "mostlyLight",
+      "passed": [
+        "mostlyLight"
+      ]
+    },
+    {
+      "id": "wedges",
+      "name": "Wedges",
+      "sentence": "Steep diagonal edges wherever the ground changes.",
+      "steps": [
+        "balanced"
+      ],
+      "defaultStep": "balanced",
+      "passed": [
+        "balanced"
+      ]
     }
   ],
   "flows": [
@@ -3563,6 +3601,175 @@
       "sentence": "Dark-led: a toned piece of the hero’s own photograph behind two sections and the close.",
       "family": "photoScrims",
       "step": "mostlyDark",
+      "passed": true
+    },
+    {
+      "dark": {
+        "budget": "third",
+        "hosts": [
+          "ribbon",
+          "testimonials",
+          "attorneys",
+          "caseResults",
+          "areas",
+          "split",
+          "narrative"
+        ],
+        "rhythm": "alternate",
+        "paint": "floating",
+        "texture": "quiet",
+        "close": "dark"
+      },
+      "light": {
+        "paint": "plain",
+        "texture": "quiet"
+      },
+      "divider": {
+        "shape": "straight",
+        "at": "none",
+        "carry": [],
+        "hairline": "none",
+        "hairlineInk": "border"
+      },
+      "spacing": "normal",
+      "ghost": "none",
+      "overlap": "none",
+      "needs": [],
+      "chrome": {
+        "header": "light",
+        "footer": "dark"
+      },
+      "id": "floatingPanels.balanced",
+      "name": "Floating panels, balanced",
+      "sentence": "One calm ground down the page, and the other floating on it as panels.",
+      "family": "floatingPanels",
+      "step": "balanced",
+      "passed": true
+    },
+    {
+      "dark": {
+        "budget": "threeQuarters",
+        "hosts": [
+          "ribbon",
+          "narrative",
+          "areas",
+          "testimonials",
+          "statement",
+          "attorneys",
+          "caseResults",
+          "split",
+          "badges"
+        ],
+        "rhythm": "runs",
+        "paint": "plain",
+        "texture": "quiet",
+        "close": "dark"
+      },
+      "light": {
+        "paint": "floating",
+        "texture": "quiet"
+      },
+      "divider": {
+        "shape": "straight",
+        "at": "none",
+        "carry": [],
+        "hairline": "none",
+        "hairlineInk": "border"
+      },
+      "spacing": "normal",
+      "ghost": "none",
+      "overlap": "none",
+      "needs": [],
+      "chrome": {
+        "header": "dark",
+        "footer": "dark"
+      },
+      "id": "floatingPanels.mostlyDark",
+      "name": "Floating panels, mostly dark",
+      "sentence": "One calm ground down the page, and the other floating on it as panels.",
+      "family": "floatingPanels",
+      "step": "mostlyDark",
+      "passed": true
+    },
+    {
+      "dark": {
+        "budget": "none",
+        "hosts": [],
+        "rhythm": "bookends",
+        "paint": "plain",
+        "texture": "quiet",
+        "close": "wash"
+      },
+      "light": {
+        "paint": "washes",
+        "texture": "quiet"
+      },
+      "divider": {
+        "shape": "straight",
+        "at": "none",
+        "carry": [],
+        "hairline": "none",
+        "hairlineInk": "border"
+      },
+      "spacing": "normal",
+      "ghost": "none",
+      "overlap": "none",
+      "needs": [],
+      "chrome": {
+        "header": "light",
+        "footer": "light"
+      },
+      "id": "softWash.mostlyLight",
+      "name": "Soft wash",
+      "sentence": "No dark section: the page and a warm wash of its own background in turn, and a soft close.",
+      "family": "softWash",
+      "step": "mostlyLight",
+      "passed": true
+    },
+    {
+      "dark": {
+        "budget": "third",
+        "hosts": [
+          "ribbon",
+          "testimonials",
+          "attorneys",
+          "caseResults",
+          "areas",
+          "split",
+          "narrative"
+        ],
+        "rhythm": "pairs",
+        "paint": "plain",
+        "texture": "quiet",
+        "close": "dark"
+      },
+      "light": {
+        "paint": "plain",
+        "texture": "quiet"
+      },
+      "divider": {
+        "shape": "steep",
+        "at": "everyChange",
+        "carry": [
+          "cards",
+          "photo"
+        ],
+        "hairline": "none",
+        "hairlineInk": "border"
+      },
+      "spacing": "normal",
+      "ghost": "none",
+      "overlap": "photo",
+      "needs": [],
+      "chrome": {
+        "header": "light",
+        "footer": "dark"
+      },
+      "id": "wedges.balanced",
+      "name": "Wedges",
+      "sentence": "Steep diagonal edges wherever the ground changes.",
+      "family": "wedges",
+      "step": "balanced",
       "passed": true
     }
   ],

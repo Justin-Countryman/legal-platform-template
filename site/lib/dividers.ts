@@ -19,7 +19,9 @@
 
 type Point = readonly [x: string, y: number]
 
-export const DIVIDERS = ['straight', 'angled', 'angledAlternating', 'arc', 'notch', 'arrow', 'wave', 'peak'] as const
+// `steep` (Phase 17D, `[R-552]`): the angled line at a depth near the evidence's slants, worn by Wedges
+// only. The eight before it are what a style set could once store (the retired `sectionJoin`).
+export const DIVIDERS = ['straight', 'angled', 'angledAlternating', 'arc', 'notch', 'arrow', 'wave', 'peak', 'steep'] as const
 export type Divider = (typeof DIVIDERS)[number]
 
 /** What the carried pieces repeat, one per shape family (`[R-483]`). */
@@ -29,8 +31,9 @@ export type Motif = (typeof MOTIFS)[number]
 export type DividerShape = {
   label: string
   boundary: readonly Point[]
-  /** `band`: scales with the viewport so the angle holds; `notch`: a small fixed V. */
-  depth: 'band' | 'notch'
+  /** `band`: scales with the viewport so the angle holds; `notch`: a small fixed V; `steep`: the band's
+   *  rule at a steeper angle. */
+  depth: 'band' | 'notch' | 'steep'
   /** Every second divider on the page is mirrored. */
   alternates?: true
   motif: Motif
@@ -48,10 +51,13 @@ export const DIVIDER_SHAPES: Record<Exclude<Divider, 'straight'>, DividerShape> 
   arrow: {label: 'Arrow', boundary: [['0%', 0], ['50%', 1], ['100%', 0]], depth: 'band', motif: 'point'},
   wave: {label: 'Gentle wave', boundary: sample(48, (t) => 0.5 - 0.5 * Math.cos(2 * Math.PI * 2 * t)), depth: 'band', motif: 'round'},
   peak: {label: 'Peak', boundary: [['0%', 1], ['50%', 0], ['100%', 1]], depth: 'band', motif: 'peak'},
+  steep: {label: 'Steep angle', boundary: [['0%', 1], ['100%', 0]], depth: 'steep', motif: 'slant'},
 }
 
-/** How deep a divider is. `band` holds a 2.5-degree angle from 390px to 1440px. */
-export const DIVIDER_DEPTH = {band: 'clamp(1rem, 4.5vw, 4rem)', notch: '1.25rem'} as const
+/** How deep a divider is. `band` holds a 2.5-degree angle from 390px to 1440px; `steep` about 5.7
+ *  degrees across the same range (Phase 17D, `[R-552]`): at 2.5 degrees a slant could not be told from
+ *  the peak on a phone (ADV-17D-A), and the evidence's slants run a median 6.1 degrees at 1440. */
+export const DIVIDER_DEPTH = {band: 'clamp(1rem, 4.5vw, 4rem)', notch: '1.25rem', steep: 'clamp(2.25rem, 10vw, 9rem)'} as const
 
 /** The region above the line (painted by a cut, in the upper band's ground) or below it (a rise, in the lower band's). */
 export function dividerPolygon(shape: DividerShape, side: 'above' | 'below'): string {

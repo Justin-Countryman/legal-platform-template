@@ -34,8 +34,9 @@ import type {VisibleGround} from './sectionSurface'
 // dark) is a property of a theme FAMILY, and a family ships only the steps the eye
 // has passed on real canvases through the switcher (`[R-509]`); it is never a fourth
 // click. The roster below is generated from the families, so nothing is duplicated
-// by hand and the step is never buried in a label. Seven families ship here; the rest
-// of the twelve in the vision's §3 arrive at the eye's pace, a few a session.
+// by hand and the step is never buried in a label. Ten families ship here; Gradient bloom
+// waits for a fade that carries the accent's color (`[R-553]`), and Tiles for a photograph
+// per practice area.
 //
 // THE VOCABULARY IS CLOSED. A rule it cannot say is a new word plus one engine clause,
 // never a special case in a theme: that is the discipline the divider library set.
@@ -63,9 +64,9 @@ export type Host = (typeof HOSTS)[number]
 
 export const DARK_BUDGETS = ['none', 'third', 'threeQuarters', 'all'] as const
 export const DARK_RHYTHMS = ['alternate', 'pairs', 'runs', 'bookends'] as const
-export const DARK_PAINTS = ['plain', 'pattern', 'gradient', 'gradientPerBand', 'photo', 'saturated', 'heroPhoto'] as const
-export const CLOSES = ['dark', 'saturated', 'muted', 'photo'] as const
-export const LIGHT_PAINTS = ['plain', 'washes', 'pattern', 'panel'] as const
+export const DARK_PAINTS = ['plain', 'pattern', 'gradient', 'gradientPerBand', 'photo', 'saturated', 'heroPhoto', 'floating'] as const
+export const CLOSES = ['dark', 'saturated', 'muted', 'photo', 'wash'] as const
+export const LIGHT_PAINTS = ['plain', 'washes', 'pattern', 'panel', 'floating'] as const
 /** The texture's strength where a paint is `pattern` (Phase 17C session 3, `[R-538]`): the style set's
  *  one tile as it shipped, the same motif at twice the ink, or the two in turn down the page (the bands
  *  the paint textures, in order: quiet, strong, quiet). Every other paint names `quiet`. */
@@ -120,17 +121,20 @@ export type FlowRules = {
      *  has one, else the dark ground; the accent fill where the palette and the band allow it,
      *  else the dark ground; a window of the hero's own photograph on a text-led band, never
      *  beside another photograph and at most twice a page, else the dark ground (`heroPhoto`,
-     *  Phase 17B session 6, `[R-530]`). */
+     *  Phase 17B session 6, `[R-530]`); the dark ground as a panel on the page's light ground, a
+     *  gutter around it (`floating`, Phase 17D). */
     paint: (typeof DARK_PAINTS)[number]
     /** The texture's strength on the bands the `pattern` paint textures (`TEXTURE_STRENGTHS`). */
     texture: TextureStrength
     /** The closing call to action's ground; `photo` is a window of the hero's photograph where
-     *  the site has an approved one, else the dark ground. */
+     *  the site has an approved one, else the dark ground; `wash` is Soft wash's ground. */
     close: (typeof CLOSES)[number]
   }
   light: {
-    /** Light bands: one ground; light and tint alternating; textured; or, inside a dark run,
-     *  an inset panel that adopts the run (`[R-501]`) where the band stores no `inset`. */
+    /** Light bands: one ground; the light ground and the wash in turn, counted from the foot of each
+     *  light stretch (`washes`, Phase 17D, `[R-551]`); textured; inside a dark run, an inset
+     *  panel that adopts the run (`[R-501]`) where the band stores no `inset`; or, wherever it sits,
+     *  a panel on the dark ground, which the walk reads as dark (`floating`, Phase 17D). */
     paint: (typeof LIGHT_PAINTS)[number]
     /** The texture's strength on the light bands a `pattern` paint textures. */
     texture: TextureStrength
@@ -254,6 +258,14 @@ const NO_DIVIDER: FlowRules['divider'] = {shape: 'straight', at: 'none', carry: 
 // sit near the scrim's own tone. With no approved photograph it renders a plain mostly-dark page and
 // says so. Thinner than the study's photo pages, which show a different photograph behind most dark
 // bands: that is the photo set's (backlog 365).
+//
+// THE EYE PASS OF PHASE 17D SESSION 1 (record WS-V1-PHASE17D-DESIGN §9, captures beside it): Wedges at
+// balanced, Floating panels at both steps and Soft wash passed on the three record canvases at 1440 and
+// 390, beside their neighbours: Wedges' steep slant in and out of every dark block against Cut blocks'
+// peaks; Floating panels' dark boxes on a light page against Alternating (0.20 to 0.27 of the height dark
+// by pixels, Alternating 0.23 to 0.48) and its cream cards on navy against Cut blocks at mostly dark,
+// square under Graphite and rounded under Dune; Soft wash's warm bands and soft close against Quiet and
+// Editorial, under all fifteen palettes and the placeholder.
 
 export const FAMILIES: readonly FlowFamily[] = [
   {
@@ -367,6 +379,65 @@ export const FAMILIES: readonly FlowFamily[] = [
       light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
       ghost: 'none', overlap: 'none', needs: ['heroPhoto'], chrome: STEP_CHROME[step],
+    }),
+  },
+  // ─── Phase 17D session 1 (record WS-V1-PHASE17D-DESIGN §2) ──────────────────
+  {
+    id: 'floatingPanels', name: 'Floating panels',
+    sentence: 'One calm ground down the page, and the other floating on it as panels.',
+    // The study: breenandperson, curleylawfirm, hdimmigrationlaw and deliamillerattorney float dark
+    // panels on a light page; thelitbot ("documents on a desk"), lewinlawfirm and calesariclaw run one
+    // dark ground with panels on it. The step is named for what the page reads as: dark panels on the
+    // light page measure Alternating's dark share by pixels, so that step is balanced (ADV-17D-A). Its
+    // panels are the operator's own inset (`SectionShell`), placed by the theme; their corners are the
+    // style set's. `alternate` keeps a floating dark band off every dark neighbour.
+    steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: ['balanced', 'mostlyDark'],
+    rules: (step) => (step === 'mostlyDark'
+      ? {
+          dark: {budget: STEP_BUDGET.mostlyDark, hosts: STEP_HOSTS.mostlyDark, rhythm: 'runs', paint: 'plain', texture: 'quiet', close: 'dark'},
+          light: {paint: 'floating', texture: 'quiet'},
+          divider: NO_DIVIDER, spacing: 'normal',
+          ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.mostlyDark,
+        }
+      : {
+          dark: {budget: STEP_BUDGET.balanced, hosts: STEP_HOSTS.balanced, rhythm: 'alternate', paint: 'floating', texture: 'quiet', close: 'dark'},
+          light: {paint: 'plain', texture: 'quiet'},
+          divider: NO_DIVIDER, spacing: 'normal',
+          ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.balanced,
+        }),
+  },
+  {
+    id: 'softWash', name: 'Soft wash',
+    sentence: 'No dark section: the page and a warm wash of its own background in turn, and a soft close.',
+    // The study: eternalaw and bdgfirm (both premium) run white bands and cream ones in turn;
+    // veronicagarzalaw (premium) is cream all the way; duparlaw and connieyilaw are light with texture.
+    // Their second ground is cream, never an accent pastel (ADV-17D-A), so the wash is a warm step of
+    // the page's own background (`washOf`, `[R-551]`), and no band goes dark. A light footer, as the
+    // study's light pages have.
+    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
+    rules: () => ({
+      dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: 'plain', texture: 'quiet', close: 'wash'},
+      light: {paint: 'washes', texture: 'quiet'},
+      divider: NO_DIVIDER, spacing: 'normal',
+      ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
+    }),
+  },
+  {
+    id: 'wedges', name: 'Wedges',
+    sentence: 'Steep diagonal edges wherever the ground changes.',
+    // The study: aswllp ("every band seam is a steep diagonal cut"), kashfianlaw and dbnimmigration
+    // (premium), familylawlakecounty, carterlaw, clintonparish, defend-texas; 8 of the 12 angled-seam
+    // sites are balanced. The slant is steep (`[R-552]`): at the shared 2.5-degree angle Wedges was Cut
+    // blocks with the peak turned (ADV-17D-A). It carries into card corners and a photo's corner, not
+    // buttons (a button's slant drops under half the style sets and notches the header's call button);
+    // a photograph crosses a cut as on the evidence. Balanced only: at mostly dark its grounds equal Cut
+    // blocks' on every canvas.
+    steps: ['balanced'], defaultStep: 'balanced', passed: ['balanced'],
+    rules: (step) => ({
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark'},
+      light: {paint: 'plain', texture: 'quiet'},
+      divider: {shape: 'steep', at: 'everyChange', carry: ['cards', 'photo'], hairline: 'none', hairlineInk: 'border'}, spacing: 'normal',
+      ghost: 'none', overlap: 'photo', needs: [], chrome: STEP_CHROME[step],
     }),
   },
 ]
@@ -592,7 +663,7 @@ export function saturatedFillOk(inputs: ColorInputs | Record<string, unknown> | 
 
 /** The closing call to action's ground under a theme, with the saturated gate and the photograph's
  *  gate applied: `photo` needs an approved hero photograph (`[R-532]`), else the dark ground. */
-export function closeSurface(flow: FlowRules | null | undefined, saturatedOk: boolean, heroPhoto = false): 'dark' | 'saturated' | 'muted' | 'photo' {
+export function closeSurface(flow: FlowRules | null | undefined, saturatedOk: boolean, heroPhoto = false): (typeof CLOSES)[number] {
   const close = flow?.dark.close ?? 'muted'
   if (close === 'photo') return heroPhoto ? 'photo' : 'dark'
   return close === 'saturated' && !saturatedOk ? 'dark' : close

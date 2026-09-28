@@ -39,9 +39,10 @@ describe('the families and the roster', () => {
     }
   })
 
-  it('the passed steps are the eye pass verdicts: session 3 passed four; session 5 passed three and retired Alternating at mostly dark ([R-523]); session 6 passed Photo scrims', () => {
+  it('the passed steps are the eye pass verdicts: session 3 passed four; session 5 passed three and retired Alternating at mostly dark ([R-523]); session 6 passed Photo scrims; Phase 17D passed four', () => {
     expect(FLOWS.filter((f) => f.passed).map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
-      'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark'])
+      'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark',
+      'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight', 'wedges.balanced'])
     // Dark-led pages are runs, not alternation: the step left the roster, it is not merely unpassed.
     expect(flowById('alternating.mostlyDark')).toBeNull()
     expect(FAMILIES.find((f) => f.id === 'alternating')!.steps).toEqual(['balanced'])
@@ -58,10 +59,51 @@ describe('the families and the roster', () => {
     }
   })
 
-  it('ships the three families of session 2, the three of session 5 and Photo scrims of session 6, one step each for the new ones', () => {
-    expect(FAMILIES.map((f) => f.id)).toEqual(['quiet', 'alternating', 'cutBlocks', 'typeOnBlack', 'editorial', 'ribbonRhythm', 'photoScrims'])
+  it('ships the three families of session 2, the three of session 5, Photo scrims of session 6 and Phase 17D’s', () => {
+    expect(FAMILIES.map((f) => f.id)).toEqual(['quiet', 'alternating', 'cutBlocks', 'typeOnBlack', 'editorial', 'ribbonRhythm', 'photoScrims',
+      'floatingPanels', 'softWash', 'wedges'])
     expect(FLOWS.map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
-      'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark'])
+      'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark',
+      'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight', 'wedges.balanced'])
+  })
+
+  it('Wedges is the Phase 17D record\u2019s \u00a72.1, written out: balanced only, the steep angle at every change ([R-552])', () => {
+    const w = flowById('wedges.balanced')!
+    expect(familyOf(w)!.steps).toEqual(['balanced'])
+    expect(w.dark).toMatchObject({budget: 'third', rhythm: 'pairs', paint: 'plain', close: 'dark'})
+    expect(w.divider).toEqual({shape: 'steep', at: 'everyChange', carry: ['cards', 'photo'], hairline: 'none', hairlineInk: 'border'})
+    expect(w).toMatchObject({ghost: 'none', overlap: 'photo', spacing: 'normal', needs: [], chrome: {header: 'light', footer: 'dark'}})
+    // Only Wedges wears the steep angle, and only Wedges places a divider at every change.
+    expect(FLOWS.filter((f) => f.divider.shape === 'steep' || f.divider.at === 'everyChange').map((f) => f.id)).toEqual(['wedges.balanced'])
+  })
+
+  it('Soft wash is the Phase 17D record\u2019s \u00a72.3, written out: no dark section, the wash in turn, a wash close ([R-551])', () => {
+    const sw = flowById('softWash.mostlyLight')!
+    expect(sw.dark).toMatchObject({budget: 'none', hosts: [], rhythm: 'bookends', paint: 'plain', close: 'wash'})
+    expect(sw.light.paint).toBe('washes')
+    expect(sw).toMatchObject({ghost: 'none', overlap: 'none', spacing: 'normal', needs: [], chrome: {header: 'light', footer: 'light'}})
+    expect(sw.divider).toMatchObject({shape: 'straight', at: 'none', hairline: 'none'})
+    expect(closeSurface(sw, true)).toBe('wash')
+    // Only Soft wash washes, and only its close is the wash.
+    expect(FLOWS.filter((f) => f.light.paint === 'washes' || f.dark.close === 'wash').map((f) => f.id)).toEqual(['softWash.mostlyLight'])
+  })
+
+  it('Floating panels is the Phase 17D record’s §2.2, written out: dark panels on the light page, light panels on the dark one', () => {
+    const light = flowById('floatingPanels.balanced')!
+    expect(light.dark).toMatchObject({budget: 'third', rhythm: 'alternate', paint: 'floating', close: 'dark'})
+    expect(light.dark.hosts).toEqual(STEP_HOSTS.balanced)
+    expect(light.light.paint).toBe('plain')
+    expect(light.chrome).toEqual({header: 'light', footer: 'dark'})
+    const dark = flowById('floatingPanels.mostlyDark')!
+    expect(dark.dark).toMatchObject({budget: 'threeQuarters', rhythm: 'runs', paint: 'plain', close: 'dark'})
+    expect(dark.light.paint).toBe('floating')
+    expect(dark.chrome).toEqual({header: 'dark', footer: 'dark'})
+    for (const f of [light, dark]) {
+      expect(f).toMatchObject({ghost: 'none', overlap: 'none', spacing: 'normal', needs: []})
+      expect(f.divider).toMatchObject({shape: 'straight', at: 'none', hairline: 'none'})
+    }
+    // Only this family floats a panel.
+    expect(FLOWS.filter((f) => f.dark.paint === 'floating' || f.light.paint === 'floating').map((f) => f.id)).toEqual(['floatingPanels.balanced', 'floatingPanels.mostlyDark'])
   })
 
   it('Photo scrims is the session 6 record’s §2.9, written out: mostly dark only, the hero’s photograph, the photo close', () => {
@@ -128,8 +170,8 @@ describe('the families and the roster', () => {
     expect(GHOSTS).toContain(flow.ghost)
     expect(OVERLAPS).toContain(flow.overlap)
     for (const n of flow.needs) expect(NEEDS).toContain(n)
-    // The Studio offers every shape a theme may name.
-    expect(designRows.find((r) => r.path === 'sectionJoin')?.options?.list).toContain(flow.divider.shape)
+    // The Studio's retired list offers every shape a theme may name but the theme-only steep angle ([R-552]).
+    if (flow.divider.shape !== 'steep') expect(designRows.find((r) => r.path === 'sectionJoin')?.options?.list).toContain(flow.divider.shape)
   })
 
   it.each(FLOWS.map((f) => [f.id, f] as const))('%s: its needs match its paints and hosts, and the mark stays off ([R-488])', (_, flow) => {
@@ -351,9 +393,9 @@ describe('the header and the footer (Phase 17B session 4, [R-518])', () => {
       mostlyDark: {header: 'dark', footer: 'dark'},
       allDark: {header: 'dark', footer: 'dark'},
     })
-    // Every family takes its step's chrome but one that names its own: Editorial's light footer,
-    // from its evidence sites (session 5 record §2.4).
-    for (const f of FLOWS) expect(f.chrome, f.id).toEqual(f.family === 'editorial' ? {header: 'light', footer: 'light'} : STEP_CHROME[f.step])
+    // Every family takes its step's chrome but those that name their own: Editorial's and Soft wash's
+    // light footer, from their evidence sites (session 5 record §2.4; Phase 17D record §2.3).
+    for (const f of FLOWS) expect(f.chrome, f.id).toEqual(['editorial', 'softWash'].includes(f.family) ? {header: 'light', footer: 'light'} : STEP_CHROME[f.step])
   })
 
   it('the bridge and the platform default give what every client renders today: a light header, a dark footer', () => {

@@ -2,7 +2,7 @@ import {
   type SectionAppearance,
 } from '@/components/sections/SectionShell'
 import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
-import {flowOf, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts} from '@/lib/flows'
+import {closeSurface, flowOf, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts} from '@/lib/flows'
 import type {HeroPhoto} from '@/lib/heroGround'
 import type {HeadingFace} from '@/lib/headingFace'
 import type {DrawnStrength} from '@/lib/designTokens'
@@ -91,7 +91,7 @@ export type FlowInputs = {
  *  `[R-502]`); `inset` is the `panel` paint filling an absent inset. Texture is never
  *  the surface value, so a stored `pattern` keeps its one meaning under every theme. */
 export type Paint = {
-  ground?: 'light' | 'tint' | 'dark' | 'saturated' | 'image'
+  ground?: 'light' | 'tint' | 'dark' | 'saturated' | 'image' | 'wash'
   /** The texture and its strength (Phase 17C session 3, `[R-538]`): none, or the tile drawn quiet or
    *  strong, the theme's `alternate` resolved band by band in page order. */
   texture: false | DrawnStrength
@@ -103,6 +103,9 @@ export type Paint = {
    *  quadrant of the photograph drawn at twice the band's size. Set only with `ground: 'image'`
    *  on a band the theme filled; the shell draws the site look's `heroPhoto` through it. */
   window?: PhotoWindow
+  /** The ground a light panel the theme floats sits on (Phase 17D, `light.paint: 'floating'`): the walk
+   *  reads the band as this ground and adopts it wherever the band sits, first and last included. */
+  onGround?: 'dark'
 }
 
 /** A quadrant of the hero's photograph: `x` 0 is the left half, `y` 0 the top half. */
@@ -289,9 +292,12 @@ export function walkFrame<M>(
   survivors.forEach((r, i) => paintAt.set(r.index, paints[i]))
   const isInset = (r: {appearance: SectionAppearance | null | undefined}, paint: Paint | null) =>
     !!r.appearance?.inset || !!paint?.inset
-  const raw = survivors.map((r, i) => (isInset(r, paints[i]) ? 'light' : paints[i]?.ground ?? visibleGround(r.appearance)))
+  // A light panel the theme floats on the dark ground reads as that ground (Phase 17D), so a stored
+  // inset beside it is bracketed by what the visitor sees (ADV-17D-B: it read light, a white stripe).
+  const raw = survivors.map((r, i) => paints[i]?.onGround ?? (isInset(r, paints[i]) ? 'light' : paints[i]?.ground ?? visibleGround(r.appearance)))
   const adopted: (VisibleGround | null)[] = survivors.map((r, i) => {
     if (!isInset(r, paints[i])) return null
+    if (paints[i]?.onGround) return paints[i]!.onGround!
     if (i === 0 || i === survivors.length - 1) return null
     const above = raw[i - 1]
     const below = raw[i + 1]
@@ -337,7 +343,12 @@ export function walkFrame<M>(
     if (shaped && out.length === 0 && hero && !inset && ground !== 'image' && !same(hero, ground)) {
       divider = {mode: 'rise', flip: alternates && placed % 2 === 1}
     } else if (shaped && out.length > 0 && prevGround && prevGround !== 'image' && ground !== 'image'
-      && (everyChange ? !same(prevGround, ground) : strong(ground) && !strong(prevGround))) {
+      // Never into an inset panel, as the rise never is: the panel takes no divider room, so its own
+      // ground painted over a steep wedge at 1440 (Phase 17D, ADV-17D-2). `intoDark` never reached one.
+      && !inset
+      // At every change, the muted step counts as light too: a muted wedge on white is 1.08:1 and would
+      // spend the divider's room on nothing (Phase 17D, ADV-17D-B), as a tint one would.
+      && (everyChange ? !same(prevGround === 'muted' ? 'light' : prevGround, ground === 'muted' ? 'light' : ground) : strong(ground) && !strong(prevGround))) {
       divider = {mode: 'cut', from: prevGround, flip: alternates && placed % 2 === 1}
     }
     if (divider) {
@@ -380,7 +391,7 @@ export function walkFrame<M>(
     const eligible = out.filter(({member, seam}) => {
       const a = resolve(member).appearance
       const g = groundAt.get(out.find((o) => o.member === member)!.index) ?? visibleGround(a)
-      return g !== 'saturated' && g !== 'image' && a?.surface !== 'pattern' && !seam.paint?.texture && !isInset({appearance: a}, seam.paint ?? null)
+      return g !== 'saturated' && g !== 'image' && g !== 'wash' && a?.surface !== 'pattern' && !seam.paint?.texture && !isInset({appearance: a}, seam.paint ?? null)
     })
     const host =
       eligible.find(({index}) => groundAt.get(index) === 'dark') ??
@@ -576,6 +587,8 @@ export function assignGrounds(
         case 'photo': return {ground: r.photo ? 'image' : 'dark', texture: false}
         case 'pattern': return {ground: 'dark', texture: texture ? 'quiet' : false}
         case 'saturated': return {ground: site?.saturated && r.content ? 'saturated' : 'dark', texture: false}
+        // A panel on the page's light ground (Phase 17D): the walk reads an inset as light.
+        case 'floating': return {ground: 'dark', texture: false, inset: true}
         // The photograph's windows are placed below, over the whole page, because they read both
         // neighbours; every dark band starts on the dark ground.
         default: return {ground: 'dark', texture: false}
@@ -584,17 +597,27 @@ export function assignGrounds(
     return null
   })
   // Light bands: the theme's light paint, over every fillable band the rhythm left light.
-  let wash = 0
+  // `washes` (Phase 17D, `[R-551]`): the light ground and the wash in turn, counted up from the foot of
+  // each light stretch, so the band before the close, a stored band or a dark one is light and a wash
+  // close never meets a wash band (ADV-17D-B, -C). It alternated light and a tint nobody saw (ΔE 1.0).
+  const fromFoot: number[] = new Array(n).fill(0)
+  for (let i = n - 1, k = 0; i >= 0; i--) {
+    if (fixed[i] || dark[i]) { k = 0; continue }
+    fromFoot[i] = k++
+  }
   survivors.forEach((r, i) => {
-    if (fixed[i]) { wash = 0; return }
-    if (dark[i]) { wash = 0; return }
+    if (fixed[i]) return
+    if (dark[i]) return
     switch (flow.light.paint) {
       case 'washes':
-        paints[i] = {ground: wash % 2 === 1 ? 'tint' : 'light', texture: false}
-        wash++
+        paints[i] = {ground: fromFoot[i] % 2 === 1 ? 'wash' : 'light', texture: false}
         break
       case 'pattern':
         paints[i] = {ground: 'light', texture: texture ? 'quiet' : false}
+        break
+      // A panel on the dark ground, wherever the band sits (Phase 17D).
+      case 'floating':
+        paints[i] = {ground: 'light', texture: false, inset: true, onGround: 'dark'}
         break
       case 'panel':
         paints[i] = i > 0 && i < n - 1 && dark[i - 1] && dark[i + 1]
@@ -656,6 +679,21 @@ export function assignGrounds(
     paints.forEach((p, i) => { if (p?.ground && !fixed[i]) paints[i] = {...p, spacing: 'spacious'} })
   }
   return paints
+}
+
+/** The closing call to action's surface and seam under the theme's close (`closeSurface`): a photo close
+ *  is an Image section showing the photograph's first window (`[R-531]`); a wash close is painted as the
+ *  theme paints a band (Soft wash, `[R-551]`), because the close's own appearance is the stored type;
+ *  every other close is its surface alone. `HomeBody` renders what this returns. */
+export function closeFrame(
+  close: ReturnType<typeof closeSurface>,
+  site: SiteLook,
+): {surface: 'dark' | 'saturated' | 'muted' | 'image' | 'light'; seam?: SeamProps} {
+  if (close === 'photo') {
+    return {surface: 'image', seam: site.heroPhoto ? {...NO_SEAM, site, paint: {ground: 'image', texture: false, window: photoWindows(site.heroPhoto.hotspot)[0]}} : undefined}
+  }
+  if (close === 'wash') return {surface: 'light', seam: {...NO_SEAM, paint: {ground: 'wash', texture: false}}}
+  return {surface: close}
 }
 
 /** What the canvas and the site hold, for a theme's needs (`unmetNeeds`). The ribbons are

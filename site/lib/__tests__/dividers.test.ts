@@ -28,7 +28,8 @@ function xAt(x: string, width: number): number {
 
 describe('the divider library', () => {
   it('is what the Studio offers, and Straight is the absence of a shape', () => {
-    expect([...DIVIDERS]).toEqual(optionsOf('sectionJoin'))
+    // The retired field lists what a style set could store; `steep` is a theme's alone ([R-552]).
+    expect(DIVIDERS.filter((d) => d !== 'steep')).toEqual(optionsOf('sectionJoin'))
     expect(DIVIDERS[0]).toBe('straight')
     expect(Object.keys(DIVIDER_SHAPES).sort()).toEqual(DIVIDERS.filter((d) => d !== 'straight').sort())
     expect(dividerShape('straight')).toBeNull()
@@ -36,8 +37,8 @@ describe('the divider library', () => {
     expect(dividerShape(null)).toBeNull()
   })
 
-  it('holds the eight [R-482] names, and neither of the two Justin struck', () => {
-    expect([...DIVIDERS]).toEqual(['straight', 'angled', 'angledAlternating', 'arc', 'notch', 'arrow', 'wave', 'peak'])
+  it('holds the eight [R-482] names and the steep angle of [R-552], and neither of the two Justin struck', () => {
+    expect([...DIVIDERS]).toEqual(['straight', 'angled', 'angledAlternating', 'arc', 'notch', 'arrow', 'wave', 'peak', 'steep'])
     expect(DIVIDERS).not.toContain('offset')
     expect(DIVIDERS).not.toContain('zigzag')
   })
@@ -93,6 +94,13 @@ describe('the divider library', () => {
     expect(DIVIDER_DEPTH.band).toBe('clamp(1rem, 4.5vw, 4rem)')
     const angle = (w: number) => (Math.atan(Math.min(Math.max(16, 0.045 * w), 64) / w) * 180) / Math.PI
     expect(Math.abs(angle(390) - angle(1440))).toBeLessThan(0.2)
+    // The steep angle ([R-552]): about 5.7° at both ends, twice the band's and past the peak's 5.1°.
+    expect(DIVIDER_DEPTH.steep).toBe('clamp(2.25rem, 10vw, 9rem)')
+    const steep = (w: number) => (Math.atan(Math.min(Math.max(36, 0.1 * w), 144) / w) * 180) / Math.PI
+    expect(steep(390)).toBeGreaterThan(5.5)
+    expect(Math.abs(steep(390) - steep(1440))).toBeLessThan(0.2)
+    expect(DIVIDER_SHAPES.steep).toMatchObject({depth: 'steep', motif: 'slant'})
+    expect(DIVIDER_SHAPES.steep.boundary).toEqual(DIVIDER_SHAPES.angled.boundary)
     // The notch is a fixed tab, not a slope, so it does not scale.
     expect(DIVIDER_DEPTH.notch).toBe('1.25rem')
     expect(DIVIDER_SHAPES.notch.depth).toBe('notch')

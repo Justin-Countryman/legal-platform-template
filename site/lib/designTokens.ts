@@ -203,6 +203,43 @@ export const mutedOf = (ground: string) => lightStep(ground, 0.03)
 /** The tint band step: L −0.015 on the same rule. */
 export const heroTintOf = (ground: string) => lightStep(ground, 0.015)
 
+// ─── The wash (Phase 17D, `[R-551]`) ──────────────────────────────────────────
+//
+// Soft wash's second light ground: a pale, warm step of the page's own background. The tint above is
+// ΔE2000 1.0 from the ground on every preset, which nobody sees; the evidence's second ground is cream
+// (eternalaw, bdgfirm, veronicagarzalaw), never a pastel of the accent, which measured faint or loud
+// (ΔE 2.3 to 29 over 11,172 palettes, ADV-17D-C). So: the ground's own hue where it has one, else cream
+// (hue 85); the chroma that stands WASH_DE from the ground; at the lowest lightness whose luminance,
+// drawn a level of 255 darker in every channel, is no lower than the muted step's. The muted step is the
+// darkest light ground every light tier is solved against (`lightGrounds` below), and contrast with
+// darker text rises with a ground's luminance, so every pair that holds on the muted step holds on the
+// wash and no other token moves on any palette. `validateWcag` holds it anyway, as a blocking ground.
+export const WASH_DE = 6.5
+const WASH_HUE = 85
+export function washOf(ground: string, muted: string): string {
+  const g = parseOklch(ground)
+  const h = g.c >= 0.01 ? g.h : WASH_HUE
+  const floor = contrast(muted, '#000000')
+  const darker = (hex: string) => {
+    const c = toRgb(hex) as unknown as {r: number; g: number; b: number}
+    const d = (v: number) => Math.max(0, v - 1 / 255)
+    return formatHex({mode: 'rgb', r: d(c.r), g: d(c.g), b: d(c.b)})
+  }
+  const de = differenceCiede2000()
+  for (let l = parseOklch(muted).l; l <= 1.0000001; l = round6(l + 0.0025)) {
+    let lo = 0
+    let hi = 0.08
+    for (let i = 0; i < 30; i++) {
+      const mid = (lo + hi) / 2
+      if (de(ground, mapped(l, mid, h)) < WASH_DE) lo = mid
+      else hi = mid
+    }
+    const candidate = mapped(l, hi, h)
+    if (contrast(darker(candidate), '#000000') >= floor) return candidate
+  }
+  return muted
+}
+
 // The lightest text tier must be able to sit at 4.5:1 on the ground's own muted
 // step. A neutral at L 0.50 is the floor that keeps foreground-subtle visibly
 // apart from foreground-muted (at 0.45 the two collapsed on 495 of 513 grounds).
@@ -432,6 +469,7 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
     '--color-background':               background,
     '--color-muted':                    muted,
     '--color-hero-tint':                heroTint,
+    '--color-wash':                     washOf(background, muted),
     '--color-brand-dark':               brandDark,
     '--color-scrim':                    scrim,
     '--shadow-rgb':                     hexToRgbTriplet(foreground),
@@ -671,6 +709,8 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
     ['background', t['--color-background']],
     ['hero-tint', t['--color-hero-tint']],
     ['muted', t['--color-muted']],
+    // Soft wash's ground (Phase 17D, `[R-551]`): no darker than muted by construction, held here anyway.
+    ['wash', t['--color-wash']],
     // A Pattern band's darkest pixel: its ink line at the texture's opacity over the
     // light ground. WCAG measures text against the lowest-contrast part of what is
     // behind it (F83), so every light tier must hold here too (Phase 16A).

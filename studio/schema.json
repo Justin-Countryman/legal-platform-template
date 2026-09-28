@@ -18032,6 +18032,22 @@
             {
               "type": "string",
               "value": "photoScrims.mostlyDark"
+            },
+            {
+              "type": "string",
+              "value": "floatingPanels.balanced"
+            },
+            {
+              "type": "string",
+              "value": "floatingPanels.mostlyDark"
+            },
+            {
+              "type": "string",
+              "value": "softWash.mostlyLight"
+            },
+            {
+              "type": "string",
+              "value": "wedges.balanced"
             }
           ]
         },

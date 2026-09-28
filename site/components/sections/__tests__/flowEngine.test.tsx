@@ -26,10 +26,11 @@ vi.mock('@/components/ui/ScrollReveal', () => ({
 }))
 
 import {HomepageCanvas, frameOf, type HomepageBlock} from '@/components/layout/HomepageCanvas'
+import {HomepageCta} from '@/components/layout/HomepageCta'
 import {PageSections, type PageSectionData} from '../PageSections'
-import {assignGrounds, canvasFacts, walkFrame, siteLookOf, type SiteLook} from '../sectionFrame'
-import {type SectionAppearance} from '../SectionShell'
-import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, chromeSchemes, flowById, unmetNeeds, type FlowRules, type Host} from '@/lib/flows'
+import {assignGrounds, canvasFacts, closeFrame, walkFrame, siteLookOf, NO_SEAM, type SiteLook} from '../sectionFrame'
+import {SectionShell, type SectionAppearance} from '../SectionShell'
+import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, chromeSchemes, closeSurface, flowById, unmetNeeds, type FlowRules, type Host} from '@/lib/flows'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {ghostSource} from '@/lib/brandMark'
 import {LOOK, themed} from './flowFixtures'
@@ -279,10 +280,37 @@ describe('each paint, gated by its data', () => {
     expect(container.querySelector('section')!.className.split(' ')).toEqual(expect.arrayContaining(['bg-brand-dark', 'band-gradient', 'grad-i-0', 'grad-n-1']))
   })
 
-  it('washes alternates light and tint along the light stretches, and restarts after a dark or stored band', () => {
+  it('washes alternates the light ground and the wash, counted up from the foot of each light stretch (Phase 17D, [R-551])', () => {
+    // The band before a dark or stored band, or before the close, is light, so a wash close never
+    // meets a wash band, whatever the count (ADV-17D-B, -C).
     const flow = themed({dark: {budget: 'third', hosts: ['ribbon'], rhythm: 'pairs'}, light: {paint: 'washes'}})
     const bands = [b('split'), b('split'), b('ribbon'), b('split'), b('split', {surface: 'light'}), b('split'), b('split')]
-    expect(grounds(bands, flow)).toEqual(['light', 'tint', 'dark', 'light', 'light', 'light', 'tint'])
+    expect(grounds(bands, flow)).toEqual(['wash', 'light', 'dark', 'light', 'light', 'wash', 'light'])
+    for (const n of [4, 5, 6]) expect(grounds(Array.from({length: n}, () => b('split')), flow).at(-1), `${n} bands`).toBe('light')
+  })
+
+  it('the ghost never draws on a wash, whose blend with its ink the sweep does not cover', () => {
+    const flow = themed({light: {paint: 'washes'}, ghost: 'once'})
+    const out = walkFrame([b('split'), b('split')], resolveBand, {...LOOK, flow, ghost: {text: 'AB'}}, 'dark')
+    expect(out.map((o) => o.seam.paint?.ground)).toEqual(['wash', 'light'])
+    expect(out.map((o) => !!o.seam.ghost)).toEqual([false, true])
+  })
+
+  it('a wash close is painted as the theme paints a band, through the frame the homepage renders (ADV-17D-2)', () => {
+    const sw = flowById('softWash.mostlyLight')!
+    const frame = closeFrame(closeSurface(sw, true), {...LOOK, flow: sw})
+    expect(frame).toMatchObject({surface: 'light', seam: {paint: {ground: 'wash', texture: false}}})
+    const {container} = render(<HomepageCta data={{heading: 'Talk to us'}} surface={frame.surface} seam={frame.seam} />)
+    expect(container.querySelector('section')!.className.split(' ')).toContain('bg-wash')
+    // Every other close is its surface alone; a photo close without a photograph has no window.
+    expect(closeFrame('dark', LOOK)).toEqual({surface: 'dark'})
+    expect(closeFrame('photo', {...LOOK, heroPhoto: null})).toEqual({surface: 'image', seam: undefined})
+  })
+
+  it('an operator\u2019s own inset panel keeps its gutter on a full-bleed band too: a live fix, found here (ADV-17D-2)', () => {
+    // A scrolling badges band stored as an inset drew its panel to the viewport's edges at the pin.
+    const {container} = render(<SectionShell gutter={false} contained={false} appearance={{inset: true, surface: 'dark'}}>band</SectionShell>)
+    expect(container.querySelector('section')!.className.split(' ')).toContain('px-[5%]')
   })
 
   it('a light pattern textures the light bands the theme assigns, gated on the texture', () => {
@@ -326,6 +354,30 @@ describe('each paint, gated by its data', () => {
   })
 })
 
+describe('a divider at every change (Phase 17D, Wedges)', () => {
+  it('cuts into and out of every strong ground, folding tint and the muted step with light', () => {
+    const flow = themed({divider: {shape: 'steep', at: 'everyChange'}})
+    const bands = [b('split', {surface: 'light'}), b('split', {surface: 'dark'}), b('split', {surface: 'muted'}), b('split', {surface: 'light'}), b('split', {surface: 'tint'}), b('split', {surface: 'dark'}), b('split', {surface: 'light'})]
+    const out = walkFrame(bands, resolveBand, {...LOOK, flow}, 'dark')
+    // light to dark: cut; dark to muted: cut; muted to light and light to tint: none; tint to dark and dark to light: cut.
+    expect(out.map((o) => o.seam.divider?.mode ?? null)).toEqual(['rise', 'cut', 'cut', null, null, 'cut', 'cut'])
+    expect(out[2].seam.divider).toMatchObject({from: 'dark'})
+  })
+
+  it('never cuts into an inset panel, whose panel would paint over the wedge (ADV-17D-2)', () => {
+    // The panel takes no divider room (`SectionShell`), so a steep wedge ran 145 px into a panel that
+    // starts 112 px down at 1440 and was sliced flat. `intoDark` never cut into an inset (its ground is
+    // light, or the adopted ground of both neighbours); `everyChange` did, as the rise never has.
+    const flow = themed({divider: {shape: 'steep', at: 'everyChange'}})
+    // A dark band, the operator's panel (not bracketed, so on the light ground), then dark again.
+    const out = walkFrame([b('split', {surface: 'dark'}), b('split', {inset: true, surface: 'light'}), b('split', {surface: 'light'}), b('split', {surface: 'dark'})], resolveBand, {...LOOK, flow}, 'dark')
+    expect(out[1].seam.insetGround).toBeNull()
+    expect(out[1].seam.divider ?? null).toBeNull()
+    // Bands that are not panels still cut at the change.
+    expect(out[3].seam.divider).toMatchObject({mode: 'cut', from: 'light'})
+  })
+})
+
 describe('the all-dark page', () => {
   it('seams every join, cuts nowhere, and with gradientPerBand numbers every band as a run of one with a hairline at each', () => {
     const flow = themed({dark: {budget: 'all', hosts: ['split'], rhythm: 'runs', paint: 'gradientPerBand'}, divider: {shape: 'peak', at: 'intoDark', hairline: 'everyBand'}})
@@ -342,6 +394,69 @@ describe('the all-dark page', () => {
     const out = walkFrame([b('split', {surface: 'light'}), b('split', {surface: 'dark'}), b('split', {surface: 'dark'}), b('split', {surface: 'tint'}), b('split', {surface: 'light'})], resolveBand, {...LOOK, flow}, 'dark')
     // light to dark: yes; dark to dark: no; dark to tint: yes; tint to light: a wash, no.
     expect(out.map((o) => !!o.seam.hairline)).toEqual([false, true, false, true, false])
+  })
+})
+
+// ─── Floating panels (Phase 17D, record WS-V1-PHASE17D-DESIGN §2.2) ─────────────
+//
+// Two paint values, one case each in the switches that exist: a dark band the pass fills is a panel on
+// the page's light ground; a light band it leaves is a panel on the dark ground wherever it sits, which
+// the walk reads as that ground. Paints exclude each other, so a floating panel cannot also fade, wash
+// or carry a photograph window.
+describe('floating panels', () => {
+  const lightPage = themed({dark: {budget: 'third', hosts: ['ribbon', 'split'], rhythm: 'alternate', paint: 'floating'}})
+  const darkPage = themed({dark: {budget: 'threeQuarters', hosts: ['ribbon', 'narrative'], rhythm: 'runs'}, light: {paint: 'floating'}})
+
+  it('a dark band the pass fills floats as a panel on the light page, which the walk reads as light', () => {
+    const out = walkFrame([b('ribbon'), b('differentiators'), b('split'), b('differentiators'), b('split'), b('differentiators')], resolveBand, {...LOOK, flow: lightPage}, 'dark')
+    expect(out.map((o) => o.seam.paint)).toEqual([
+      {ground: 'dark', texture: false, inset: true}, {ground: 'light', texture: false}, {ground: 'dark', texture: false, inset: true},
+      {ground: 'light', texture: false}, {ground: 'light', texture: false}, {ground: 'light', texture: false},
+    ])
+    // The page's ground is whole: every join is light to light, so every join after the first seams.
+    expect(out.slice(1).every((o) => o.seam.seamTop)).toBe(true)
+    expect(out.every((o) => o.seam.insetGround === null)).toBe(true)
+  })
+
+  it('a light band the pass leaves floats on the dark ground, first and last included', () => {
+    const out = walkFrame([b('differentiators'), b('ribbon'), b('differentiators'), b('narrative'), b('differentiators')], resolveBand, {...LOOK, flow: darkPage}, 'dark')
+    expect(out.map((o) => o.seam.paint?.ground)).toEqual(['light', 'dark', 'light', 'dark', 'light'])
+    expect(out.map((o) => o.seam.insetGround)).toEqual(['dark', null, 'dark', null, 'dark'])
+    expect(out.filter((_, i) => i % 2 === 0).every((o) => o.seam.paint?.inset && o.seam.paint.onGround === 'dark')).toBe(true)
+    // One dark ground down the page: every join seams.
+    expect(out.slice(1).every((o) => o.seam.seamTop)).toBe(true)
+  })
+
+  it('a stored inset beside a floating light panel is bracketed by the dark it sees (ADV-17D-B: it read light)', () => {
+    const out = walkFrame([b('ribbon'), b('differentiators'), b('split', {inset: true, surface: 'light'}), b('narrative'), b('areas')], resolveBand, {...LOOK, flow: darkPage}, 'dark')
+    expect(out[1].seam.insetGround).toBe('dark')
+    expect(out[2].seam.paint).toBeNull()
+    expect(out[2].seam.insetGround).toBe('dark')
+    expect(out[3].seam.previousGround).toBe('dark')
+  })
+
+  it('a stored surface stands and a stored inset is never assigned', () => {
+    const out = walkFrame([b('ribbon', {surface: 'tint'}), b('split', {inset: true, surface: 'dark'}), b('differentiators')], resolveBand, {...LOOK, flow: darkPage}, 'dark')
+    expect(out[0].seam.paint).toBeNull()
+    expect(out[1].seam.paint).toBeNull()
+    expect(out[2].seam.paint).toEqual({ground: 'light', texture: false, inset: true, onGround: 'dark'})
+  })
+
+  it('under alternate a floating dark band never sits beside a dark band, stored or filled (ADV-17D-C)', () => {
+    const bands = [b('split', {surface: 'dark'}), b('ribbon'), b('split', {surface: 'dark'}), b('ribbon'), b('split'), b('ribbon'), b('split')]
+    const out = walkFrame(bands, resolveBand, {...LOOK, flow: lightPage}, 'dark')
+    const darkAt = out.map((o) => (o.seam.paint ? o.seam.paint.ground === 'dark' : o.member.appearance?.surface === 'dark'))
+    for (let i = 0; i < out.length; i++) {
+      if (out[i].seam.paint?.inset && out[i].seam.paint?.ground === 'dark') expect(!!darkAt[i - 1] || !!darkAt[i + 1], `band ${i}`).toBe(false)
+    }
+    expect(out[1].seam.paint?.ground).not.toBe('dark')
+  })
+
+  it('a panel keeps its gutter where its section draws full-bleed, as a scrolling badges band does', () => {
+    const {container} = render(<SectionShell gutter={false} contained={false} seam={{...NO_SEAM, site: LOOK, paint: {ground: 'light', texture: false, inset: true, onGround: 'dark'}, insetGround: 'dark'}}>band</SectionShell>)
+    expect(container.querySelector('section')!.className.split(' ')).toEqual(expect.arrayContaining(['px-[5%]', 'bg-brand-dark']))
+    const band = render(<SectionShell gutter={false} contained={false}>band</SectionShell>)
+    expect(band.container.querySelector('section')!.className.split(' ')).not.toContain('px-[5%]')
   })
 })
 
@@ -418,7 +533,7 @@ describe('the decision golden', () => {
     // Held over the VOCABULARY, not the shipped themes (ADV-17B-2 F4): every dark paint by
     // every light paint, on a list that offers a photo, a content section, a texture and a
     // palette that passes the saturated gate, so every paint's ground is reached.
-    const swept = new Set(['light', 'tint', 'dark', 'saturated', 'image'])
+    const swept = new Set(['light', 'tint', 'dark', 'saturated', 'image', 'wash'])
     const seen = new Set<string>()
     const list: Band[] = [b('ribbon', null, {photo: true, content: true}), b('split'), b('split', null, {content: true}), b('ribbon'), b('split'), b('ribbon')]
     for (const paint of DARK_PAINTS) {
@@ -430,7 +545,9 @@ describe('the decision golden', () => {
       }
     }
     for (const g of seen) expect(swept.has(g), g).toBe(true)
-    expect([...seen].sort()).toEqual(['dark', 'image', 'light', 'saturated', 'tint'])
+    // Since Phase 17D `washes` paints the wash (`[R-551]`), which `validateWcag` holds as a light ground;
+    // no paint assigns the tint any more, though an operator may store it.
+    expect([...seen].sort()).toEqual(['dark', 'image', 'light', 'saturated', 'wash'])
   })
 
   it('every theme renders every homepage member type, no throw, and no <img> where a photo paint fell back', () => {
