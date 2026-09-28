@@ -273,8 +273,10 @@ export function walkFrame<M>(
  * The walk, with the closing call to action as one more ground (Phase 17D session 2, record §2.4). The close is not a
  * member of the list, but the band above it meets it: an inset last band between a dark run and a dark close is
  * bracketed by one strong ground and adopts it (`[R-501]`), and a run Gradient bloom lights runs on into a dark close.
- * It takes part in the adoption and the run passes only: its seam, and so its padding, are what they were. `close` is
- * the close's ground where it renders, else null; the close's own seam comes back beside the bands.
+ * It takes part in the adoption and the run passes only: the close's own seam, and so its padding, are what they were;
+ * an inset last band it makes adopt the run takes an adopted band's top padding, halved, under every theme whose close
+ * is dark, the default Quiet among them (ADV-17D2-P; pinned by `flowReproduction.test.tsx`'s last-inset canvas).
+ * `close` is the close's ground where it renders, else null; the close's own seam comes back beside the bands.
  */
 export function walkPage<M>(
   members: readonly M[],
