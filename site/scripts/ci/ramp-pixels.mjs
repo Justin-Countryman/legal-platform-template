@@ -77,15 +77,17 @@ for (const path of ['headless shell', 'full Chromium', 'WebKit']) {
     const page = await context.newPage()
     const drawn = await drawCells(page, dpr, data.ramps)
     let past = 0
-    let lowest = Infinity
+    // The lowest margin per kind of ramp: the bridge's first row, drawn a level lighter, meets its ground by
+    // construction (1.0000), which would hide the glow's own slack in one number (ADV-17D2-P).
+    const lowest = {bridge: Infinity, glow: Infinity}
     for (const {x, max} of drawn) {
       const margin = (x.ceiling + 0.05) / (max + 0.05)
-      lowest = Math.min(lowest, margin)
+      lowest[x.ramp] = Math.min(lowest[x.ramp], margin)
       if (max > x.ceiling + 1e-12) { past++; failures.push(`${path}, DPR ${dpr}: ${x.label} (${x.ramp}, ${x.from} to ${x.to}): drew a pixel at luminance ${max.toFixed(5)}, past its ceiling ${x.ceiling.toFixed(5)}`) }
     }
     const cal = await drawCells(page, dpr, data.calibration.map(([from, to]) => ({from, to, ground: from})))
     const calText = cal.map(({x, excess, lumExcess}) => `${x.from}->${x.to} +${excess} levels, luminance ${lumExcess >= 0 ? '+' : ''}${lumExcess.toFixed(5)}`).join('; ')
-    console.log(`ramp-pixels: ${path}, DPR ${dpr}: ${drawn.length} ramps, ${past} past their ceiling, the lowest margin ${lowest.toFixed(4)}; calibration (drawn past the model at a row): ${calText}`)
+    console.log(`ramp-pixels: ${path}, DPR ${dpr}: ${drawn.length} ramps, ${past} past their ceiling, the lowest margin ${lowest.bridge.toFixed(4)} on a bridge ramp and ${lowest.glow.toFixed(4)} on a glow; calibration (drawn past the model at a row): ${calText}`)
     await context.close()
   }
   await browser.close()
