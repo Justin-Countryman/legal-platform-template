@@ -40,6 +40,12 @@ name: CI
 # deployed). Correctness is enforced HERE, upstream, before anything reaches a
 # client.
 
+# EVERY JOB AND EVERY LONG STEP HAS A TIMEOUT (monorepo backlog 371, 2026-09-28). GitHub's default is six
+# hours: on PR #53 the flow metrics step went silent for four and a half hours until cancelled, and the
+# rerun passed in 8.2 minutes. Each budget is several times the job's or step's measured time on the
+# runner (the longest, the stub build, 10 to 13 minutes, the metrics step 8.2); a timeout fails the check,
+# so a hang costs minutes and names itself.
+
 on:
   pull_request:
     branches: [main]
@@ -50,6 +56,7 @@ jobs:
   template-scrub-guard:
     name: Template scrub guard
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     # REPLACED the hardcoded blocklist 2026-07-27. The old guard grepped for one
     # RETIRED client's name fragments and Sanity project ID, so it only ever
     # caught the clients someone had remembered to add -- a CURRENT client's
@@ -100,6 +107,7 @@ jobs:
     # `studio/seedData/regenerate.md`.
     name: Seed carries no create-only singletons
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - name: Report whether a seed is committed (asserts nothing)
@@ -202,6 +210,7 @@ jobs:
   typegen-freshness:
     name: Sanity types freshness
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     # Guards against generated Sanity types drifting from the schema + GROQ
     # queries — the failure that let the footerSettings socials types (sameAs /
     # superLawyers / lawInfo) go stale: a query or schema field changes and
@@ -334,6 +343,7 @@ jobs:
   lint:
     name: Lint (eslint)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     # The platform ships 17 custom `platform/*` rules encoding locked doctrine —
     # cascade discipline, token-first color, heading semantics, footer landmark
     # naming, the mobile h1 cap. Until this job existed NONE of them could block
@@ -362,6 +372,7 @@ jobs:
   typecheck:
     name: Typecheck (tsc)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     # `next build` runs tsc, but the build cannot complete on a clean template:
     # page-data collection instantiates the Sanity client and dies on the
     # scrubbed sentinel projectId. So the type check that the build would have
@@ -384,6 +395,7 @@ jobs:
   unknown-utility-classes:
     name: Tailwind utility names resolve
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     # Tailwind emits no CSS for a class it does not recognise, and raises no
     # error. A misspelled utility therefore type-checks, lints, builds and tests
     # green, and the only symptom is a style silently absent from the rendered
@@ -425,6 +437,7 @@ jobs:
   a11y-shared-components:
     name: Shared component a11y invariants
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     # Fleet-wide accessibility contracts for the shared blog collection
     # components (RelatedPosts / BlogIndexFallback / BlogIndexClient): explicit
     # role="list" collection semantics, and unique "Read More" link names that
@@ -449,6 +462,7 @@ jobs:
   redirects-wiring:
     name: "Redirects: one source, and nothing it drops is dropped in silence"
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     # TECH-9's guard, made a gate rather than a habit. `CS/redirects.csv` is the
     # only store; the build flattens a chain, keeps the first of two rows
     # claiming one source, and emits NO rule for a loop. Every one of those is a
@@ -479,6 +493,7 @@ jobs:
   office-hours-display:
     name: "Office hours: 12-hour in the footer, 24-hour in the JSON-LD"
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     # ONE stored field, TWO consumers that want different things from it. Office
     # hours are stored zero-padded 24-hour (`08:00`); Zite's client portal parses
     # that string and `openingHoursSpecification` requires 24-hour ISO, so the
@@ -516,6 +531,7 @@ jobs:
   site-vitest:
     name: "Site: full vitest suite"
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     # Until 2026-09-11 CI ran four of the suite's 115 files, each by name in a
     # job of its own, because vitest was never wired as a whole. A test file
     # that nobody added to a job was a test that could not fail here. The four
@@ -538,6 +554,7 @@ jobs:
   site-build:
     name: "Site: next build against a stub Content Lake"
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     # THE GATE THE PLATFORM WAS MISSING — monorepo OUTSTANDING item 255. Nothing
     # compiled the site end to end: `tsc --noEmit` does not run the bundler,
     # does not execute module top-level code and does not collect page data,
@@ -573,6 +590,7 @@ jobs:
         working-directory: site
         run: npm ci
       - name: Build against the stub Content Lake
+        timeout-minutes: 10
         working-directory: site
         run: bash scripts/ci/build-against-stub.sh
       # Phase 17A (monorepo WS-V1-PHASE17A-DESIGN §4): the preview address reaches
@@ -582,6 +600,7 @@ jobs:
       # forged router header), links and cookie as designed, / unchanged for a
       # browser holding the cookie, the client view bound to its choices.
       - name: The preview reaches no visitor (built and served)
+        timeout-minutes: 10
         working-directory: site
         run: bash scripts/ci/check-preview.sh
       # Phase 17B session 3 (monorepo WS-V1-PHASE17B-DESIGN §2.11 point 4): every roster
@@ -594,20 +613,24 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('site/package-lock.json') }}
       - name: Install the Playwright browser
+        timeout-minutes: 10
         working-directory: site
         run: npx playwright install --with-deps chromium webkit
       # Phase 17C session 3 (monorepo WS-V1-PHASE17C3-DESIGN §2.1): the heading width table a
       # heading's fit reads, re-measured from the committed faces; a changed font file is red here.
       - name: The heading width table matches the committed faces
+        timeout-minutes: 5
         working-directory: site
         run: node scripts/ci/heading-advances.mjs
       # Phase 17C session 3 (monorepo WS-V1-PHASE17C3-DESIGN §2.3): every texture tile at every
       # strength and the ghost, as the headless shell, full Chromium and WebKit draw them, no darker
       # than the blend validateWcag sweeps, over the presets and the near-threshold palettes.
       - name: The texture pixels (both raster paths)
+        timeout-minutes: 10
         working-directory: site
         run: node scripts/ci/texture-pixels.mjs
       - name: The flow metrics golden at 1440 and 390 (built and served)
+        timeout-minutes: 25
         working-directory: site
         run: node scripts/ci/flow-metrics.mjs --out flow-captures
       - name: Upload the captures for the eye
@@ -622,6 +645,7 @@ jobs:
   studio-build:
     name: "Studio: sanity build"
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     # `sanity build` bundles the Studio with Vite. The sentinel project id in
     # sanity.config.ts is a string the bundle carries and never validates, so the
     # build runs offline with no env at all (measured 2026-09-11: exit 0 in 9 s).

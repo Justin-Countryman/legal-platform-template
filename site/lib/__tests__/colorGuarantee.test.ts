@@ -67,6 +67,9 @@ function expectNone(found: string[]) {
   expect(found.length, `${found.length} failing pairs. First:\n${found.slice(0, 20).join('\n')}`).toBe(0)
 }
 
+// Every sweep carries a budget of about four times its time on the CI runner (monorepo backlog 371): at
+// `d4c59cd` the grid took 32.7 s, the seeded palettes 27.3 s and the near-black ones 25.2 s against 60 s,
+// and the texture cap's sweep, which had none, timed out at vitest's 5 s on `main`'s push run three times.
 describe('color guarantee: every blocking pair passes for any operator input', () => {
   it('each role alone over the OKLCH grid, at the placeholder and two stress presets', () => {
     const found: string[] = []
@@ -76,11 +79,11 @@ describe('color guarantee: every blocking pair passes for any operator input', (
       }
     }
     expectNone(found)
-  }, 60_000)
+  }, 120_000)
 
   it('all four roles at once, 5,000 seeded palettes', () => {
     expectNone(seeded(5000, 20260916).flatMap((inputs, i) => failures(`sample#${i}`, inputs)))
-  }, 60_000)
+  }, 120_000)
 
   it('the placeholder default, the migrated fixture and every preset', () => {
     const named: Record<string, ColorInputs> = {placeholder: {}, editedAccent: {accent: '#a12a2f'}}
@@ -96,7 +99,7 @@ describe('color guarantee: every blocking pair passes for any operator input', (
     // Near-black grounds with saturated accents: 35 of 24,066 failed on the texture's blend before the
     // solve took it as a ground (ADV-17C3-PRB), and the uniform sweeps above never generate them.
     expectNone(nearBlack(5000, 17).flatMap((inputs, i) => failures(`near-black#${i}`, inputs)))
-  }, 60_000)
+  }, 120_000)
 
   it('the light texture never renders above the step an engine one level darker than Chromium draws within the swept blend', () => {
     // WebKit on Linux (PR #52's CI) draws a layer one level darker than Chromium; under the harshest model
@@ -122,7 +125,7 @@ describe('color guarantee: every blocking pair passes for any operator input', (
     }
     expect(nearBlack(2000, 17).filter((inputs) => !within(inputs))).toEqual([])
     expect(lightTextureCap('#ffffff', '#13294b')).toBe(0.03294)
-  })
+  }, 60_000)
 
   it('the render margin reaches a dark band only where its ink is lighter than the ground', () => {
     // Every preset solves a black ink, which only raises contrast, so its dark bands render as solved.

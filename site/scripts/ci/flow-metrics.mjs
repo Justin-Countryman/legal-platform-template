@@ -159,18 +159,27 @@ const STYLE_SETS = [...OFFERED, ...RETIRED]
 // ─── Servers ──────────────────────────────────────────────────────────────────
 const wait = async (url, tries = 100, ms = 100) => {
   for (let i = 0; i < tries; i++) {
-    try { const r = await fetch(url); if (r.ok || r.status === 404) return } catch {}
+    try { const r = await fetch(url, {signal: AbortSignal.timeout(5_000)}); if (r.ok || r.status === 404) return } catch {}
     await new Promise((r) => setTimeout(r, ms))
   }
   throw new Error(`${url} did not answer`)
 }
 let stub = null
 async function startStub(file) {
-  if (stub) { stub.kill('SIGTERM'); await new Promise((r) => stub.once('exit', r)); stub = null }
+  // The old stub's exit is awaited for at most ten seconds, then it is killed outright (backlog 371).
+  if (stub) {
+    const old = stub
+    old.kill('SIGTERM')
+    await Promise.race([new Promise((r) => old.once('exit', r)), new Promise((r) => setTimeout(r, 10_000))])
+    if (old.exitCode === null && old.signalCode === null) old.kill('SIGKILL')
+    stub = null
+  }
   stub = spawn('node', ['scripts/ci/content-lake-stub.mjs'], {env: {...process.env, PORT: String(STUB_PORT), MOCK_DATASET_NDJSON: file}, stdio: ['ignore', 'ignore', 'inherit']})
   await wait(`http://127.0.0.1:${STUB_PORT}/v2024-01-01/data/query/production?query=count(*)`)
 }
-const app = spawn('npx', ['next', 'start', '-p', String(APP_PORT)], {
+// The server's own binary, not `npx`: `npx` runs it under `npm exec` and a shell, so killing the pid it returns
+// left `next-server` running on the runner (backlog 371, measured on PR #53's logs).
+const app = spawn(resolve('node_modules/.bin/next'), ['start', '-p', String(APP_PORT)], {
   env: {
     ...process.env, SITE_PREVIEW_SECRET: SECRET, SANITY_API_HOST_OVERRIDE: `http://127.0.0.1:${STUB_PORT}`,
     NEXT_PUBLIC_SANITY_PROJECT_ID: 'TEMPLATE_SANITY_PROJECT_ID', NEXT_PUBLIC_SANITY_DATASET: 'production',
@@ -181,6 +190,23 @@ const app = spawn('npx', ['next', 'start', '-p', String(APP_PORT)], {
 const stop = () => { app.kill('SIGTERM'); if (stub) stub.kill('SIGTERM') }
 process.on('exit', stop)
 process.on('SIGINT', () => { stop(); process.exit(130) })
+
+// A PAGE THAT HANGS FAILS IN MINUTES AND NAMES ITSELF (monorepo backlog 371). On PR #53 this step went
+// silent for four and a half hours after 113 captures: `page.goto` is bounded, and nothing after it was
+// (the fonts, the sweep, the measure, the screenshot, the scrolled header). Every page and every browser
+// context runs under a watchdog: past PAGE_BUDGET it prints the page, and the phase it was in, as an
+// error and exits, which stops the servers. A normal page takes one to three seconds.
+const PAGE_BUDGET = 120_000
+let watched = null
+const watch = (key, phase = 'load') => { watched = {key, phase, since: Date.now()} }
+const phase = (name) => { if (watched) watched.phase = name }
+const unwatch = () => { watched = null }
+setInterval(() => {
+  if (!watched || Date.now() - watched.since <= PAGE_BUDGET) return
+  for (const f of failures) console.log(`::error::${f}`)
+  console.log(`::error::${watched.key}: did not finish in ${PAGE_BUDGET / 1000} s (hung at ${watched.phase})`)
+  process.exit(1)
+}, 5_000).unref()
 
 const sign = (payload) => {
   const body = Buffer.from(JSON.stringify(payload)).toString('base64url')
@@ -338,12 +364,14 @@ try {
     if (!existsSync(file)) { console.log(`flow-metrics: ${file} absent, skipped`); continue }
     await startStub(file)
     for (const [width, device] of STYLE_SET_ONLY.includes(canvas) ? [] : WIDTHS) {
+      watch(`${canvas} / ${width}`, 'opening a browser context')
       const context = await browser.newContext({...device, reducedMotion: 'reduce', colorScheme: 'light'})
       await context.addCookies([{name: 'lp-preview', value: operator, url: `${BASE}/site-preview`}])
       await servePhotos(context)
       const page = await context.newPage()
       for (const flow of FLOWS) {
         const key = `${canvas} / ${flow} / ${width}`
+        watch(key)
         const url = `${BASE}/site-preview/${STYLE_SET}/${PALETTE}/${flow}/design`
         // `load`, then the fonts: `networkidle` never settled on some pages (a kept-alive
         // connection is enough to hold it), and what the measure needs is the layout.
@@ -356,6 +384,7 @@ try {
         // must be the address asked for, and must say it wears the theme asked for.
         if (page.url() !== url) { fail(`${key}: landed on ${page.url()}, not ${url}`); continue }
         const flowName = presets.flows.find((f) => f.id === flow)?.name
+        phase('reading the switcher')
         const bar = await page.evaluate(() => document.querySelector('.sw summary')?.textContent ?? '')
         if (!flowName || !bar.includes(flowName)) { fail(`${key}: the page's bar reads "${bar}", not the theme "${flowName}"`); continue }
         // The hero reaches the switcher (Phase 17B session 5, ADV-17B5-2 F2b): a theme that wants a
@@ -369,10 +398,12 @@ try {
             && (design?.schemeOverride === 'dark' || design?.backdrop === 'image')
           if (note.includes('a dark or photo hero') === heroDark) fail(`${key}: the switcher ${heroDark ? 'names' : 'does not name'} the dark-hero need under a ${heroDark ? 'dark' : 'light'} hero`)
         }
+        phase('the fonts')
         await page.evaluate(() => document.fonts.ready)
         // The switcher is the operator's bar, not the page: hidden for the measure and the eye.
         await page.addStyleTag({content: '.sw{display:none !important}'})
         // Reveal-on-scroll wrappers: sweep the page once so every band has entered view.
+        phase('the scroll sweep and the images')
         await page.evaluate(async () => {
           const h = document.documentElement.scrollHeight
           for (let y = 0; y <= h; y += 400) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 30)) }
@@ -386,6 +417,7 @@ try {
           await new Promise((r) => setTimeout(r, 400))
           await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
         })
+        phase('the measure')
         const m = await page.evaluate(measure)
         results[key] = m
         if (m.innerWidth !== device.viewport.width) fail(`${key}: innerWidth is ${m.innerWidth}, not ${device.viewport.width} (the layout is not at this width)`)
@@ -399,7 +431,9 @@ try {
           if (c.corner !== null && c.corner !== '15') fail(`${key}: band ${b.i}: the carried piece's layer is ${c.corner} on a photo card; its scrims cover it`)
           if (c.darkLinks) fail(`${key}: band ${b.i}: ${c.darkLinks} card link(s) carry a dark context; the ring is drawn on the band`)
         }
+        phase('the screenshot')
         await page.screenshot({path: resolve(OUT, `${canvas}--${flow}--${width}.jpg`), fullPage: true, type: 'jpeg', quality: 60})
+        phase('the scrolled header')
         // The header scrolled (Phase 17B session 4): prerendered HTML only ever holds the state
         // at the top, so this is the one check that sees the scrolled bar, its ground and its rule.
         m.headerScrolled = await page.evaluate(async () => {
@@ -413,13 +447,17 @@ try {
           window.scrollTo(0, 0)
           return out
         })
+        unwatch()
       }
+      watch(`${canvas} / ${width}`, 'closing the browser context')
       await context.close()
+      unwatch()
     }
     if (!STYLE_SET_CANVASES.includes(canvas)) continue
     for (const [width, device] of canvas === 'long-headings' ? [...WIDTHS, TABLET, LAPTOP, LAPTOP_WIDE] : WIDTHS) {
       for (const styleSet of STYLE_SETS) {
         // A fresh context per page: the font bytes are what one visitor's first page fetches.
+        watch(`${canvas} / ${STYLE_SET_FLOW} / ${width} / ${styleSet}`, 'opening a browser context')
         const context = await browser.newContext({...device, reducedMotion: 'reduce', colorScheme: 'light'})
         await context.addCookies([{name: 'lp-preview', value: operator, url: `${BASE}/site-preview`}])
         await servePhotos(context)
@@ -432,14 +470,17 @@ try {
         })
         const key = `${canvas} / ${STYLE_SET_FLOW} / ${width} / ${styleSet}`
         const url = `${BASE}/site-preview/${styleSet}/${PALETTE}/${STYLE_SET_FLOW}/design`
+        phase('load')
         let res = null
         for (let attempt = 0; attempt < 2 && !res; attempt++) {
           try { res = await page.goto(url, {waitUntil: 'load', timeout: 60_000}) } catch (e) { if (attempt === 1) throw e }
         }
         if (!res || res.status() !== 200) { fail(`${key}: ${url} answered ${res?.status()}`); await context.close(); continue }
         if (page.url() !== url) { fail(`${key}: landed on ${page.url()}, not ${url}`); await context.close(); continue }
+        phase('the fonts')
         await page.evaluate(() => document.fonts.ready)
         await page.addStyleTag({content: '.sw{display:none !important}'})
+        phase('the scroll sweep and the images')
         await page.evaluate(async () => {
           const h = document.documentElement.scrollHeight
           for (let y = 0; y <= h; y += 400) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 30)) }
@@ -448,6 +489,7 @@ try {
           await new Promise((r) => setTimeout(r, 400))
           await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
         })
+        phase('the measure')
         const m = await page.evaluate(measure)
         m.fontBytes = fontBytes
         m.fontFiles = fontFiles.sort()
@@ -456,6 +498,7 @@ try {
         if (m.scrollWidth > m.clientWidth) fail(`${key}: horizontal scroll: scrollWidth ${m.scrollWidth} over ${m.clientWidth}`)
         const limit = Number(width) >= 992 ? 3 : 4
         const stacked = ['768', '1024', '1279'].includes(width)
+        phase('the stacked checks')
         for (const b of m.bands) {
           if (b.headingLines <= limit) continue
           if (!stacked && atFloor(b, limit)) console.log(`flow-metrics: ${key}: band ${b.i} at the readable floor (${b.headingSize} px) takes ${b.headingLines} lines, as [R-544] allows: ${b.heading}`)
@@ -488,8 +531,11 @@ try {
           if (tall.length) fail(`${key}: ${tall.length} stacked photo(s) taller than the cap at ${width} (tallest ${Math.round(Math.max(...tall))} px)`)
         }
         if (fontBytes > FONT_BUDGET) fail(`${key}: ${fontBytes} font bytes over the budget of ${FONT_BUDGET}: ${fontFiles.join(', ')}`)
+        phase('the screenshot')
         await page.screenshot({path: resolve(OUT, `${canvas}--${STYLE_SET_FLOW}--${width}--${styleSet}.jpg`), fullPage: true, type: 'jpeg', quality: 60})
+        phase('closing the browser context')
         await context.close()
+        unwatch()
       }
     }
   }
