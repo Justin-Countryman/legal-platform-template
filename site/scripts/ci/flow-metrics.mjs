@@ -18,7 +18,7 @@
 // <main>: the hero, the canvas bands, the close), the computed ground and ink, the ring
 // context, the top (from the first band's top: the header above it is Main
 // Navigation's, not the theme's, and its measured height settles after hydration), the
-// height and paddings, the divider, hairline and gradient classes,
+// height and paddings, the divider, hairline, ribbon-edge (Phase 17E) and gradient classes,
 // the texture and ghost layers, and the tallest heading's line count; per page, the
 // inner width, the scroll width (no horizontal scroll) and the band count. Compared to
 // the committed JSON: the discrete facts exactly, the lengths within a tolerance, because
@@ -123,6 +123,9 @@ const CANVASES = [
   ['planning-photo-set', 'scripts/ci/record-planning-photo-set.ndjson'],
   ['multi-practice-photo-set', 'scripts/ci/record-multi-practice-photo-set.ndjson'],
   ['planning-photo-set-no-hero-photo', 'scripts/ci/record-planning-photo-set-no-hero-photo.ndjson'],
+  // Phase 17E (`[R-575]`, `[R-576]`): the composer's own canvas for a synthetic firm, a ribbon after the hero and one before
+  // the close, under every theme.
+  ['composed-ribbons', 'scripts/ci/record-composed-ribbons.ndjson'],
 ]
 // The set canvases are measured under the theme that draws the set and its dark-led neighbour only: every other theme
 // draws them as it draws the photo-hero canvases, whose rows the golden already holds (Phase 17E).
@@ -274,7 +277,7 @@ function measure() {
   const origin = bands[0] ? bands[0].getBoundingClientRect().top : 0
   const px = (v) => Math.round(parseFloat(v) || 0)
   // Phase 17D session 2 (`[R-557]`): Gradient bloom's glow, its peak and its side, kept beside the gradient's own.
-  const keep = (cls) => /^(divider-|hairline-top$|hairline-accent$|band-gradient$|band-glow$|glow-from-left$|grad-[inp]-|bg-)/.test(cls)
+  const keep = (cls) => /^(divider-|hairline-top$|hairline-accent$|ribbon-edge-|band-gradient$|band-glow$|glow-from-left$|grad-[inp]-|bg-)/.test(cls)
   // Phase 17B session 4 (`[R-518]`): the site header and footer, whose schemes the theme now
   // sets. The ground at 390 is the header's own: the mobile row shows it and paints none.
   const chromeOf = (el) => (el ? {ring: el.getAttribute('data-ring-context'), bg: getComputedStyle(el).backgroundColor} : null)

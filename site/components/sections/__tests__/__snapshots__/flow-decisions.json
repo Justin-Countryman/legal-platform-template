@@ -57,6 +57,10 @@
         "run": {
           "index": 2,
           "length": 3
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       }
     ]
@@ -119,6 +123,10 @@
         "run": {
           "index": 0,
           "length": 1
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       }
     ]
@@ -185,6 +193,10 @@
         "run": {
           "index": 0,
           "length": 1
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       }
     ]
@@ -254,6 +266,10 @@
         "run": {
           "index": 0,
           "length": 1
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       }
     ]
@@ -511,6 +527,10 @@
         "run": {
           "index": 0,
           "length": 1
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       }
     ]
@@ -573,6 +593,10 @@
         "run": {
           "index": 2,
           "length": 3
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       }
     ]
@@ -635,6 +659,10 @@
         "run": {
           "index": 2,
           "length": 3
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       }
     ]
@@ -768,7 +796,11 @@
           "peak": 1,
           "side": "right"
         },
-        "fade": "glow"
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
+        }
       }
     ],
     "close": {
@@ -843,6 +875,10 @@
         "run": {
           "index": 0,
           "length": 1
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       }
     ]
@@ -905,6 +941,10 @@
         "run": {
           "index": 2,
           "length": 3
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       }
     ]
@@ -1966,6 +2006,10 @@
         "run": {
           "index": 3,
           "length": 4
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -2198,6 +2242,10 @@
         "run": {
           "index": 3,
           "length": 4
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -2441,6 +2489,10 @@
         "run": {
           "index": 3,
           "length": 4
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -2684,6 +2736,10 @@
         "run": {
           "index": 4,
           "length": 5
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -3385,6 +3441,10 @@
         "run": {
           "index": 3,
           "length": 4
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -3619,6 +3679,10 @@
         "run": {
           "index": 4,
           "length": 5
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -3851,6 +3915,10 @@
         "run": {
           "index": 3,
           "length": 4
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -4083,6 +4151,10 @@
         "run": {
           "index": 6,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -4315,6 +4387,10 @@
         "run": {
           "index": 3,
           "length": 4
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -4571,7 +4647,11 @@
           "peak": 2,
           "side": "right"
         },
-        "fade": "glow"
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
+        }
       },
       {
         "key": "p11-t5-stats",
@@ -4842,6 +4922,10 @@
         "run": {
           "index": 3,
           "length": 4
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -5085,6 +5169,10 @@
         "run": {
           "index": 3,
           "length": 4
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -5198,6 +5286,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -5328,6 +5420,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -5458,6 +5554,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -5592,6 +5692,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -6127,6 +6231,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -6257,6 +6365,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -6387,6 +6499,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -6650,7 +6766,11 @@
           "peak": 1,
           "side": "right"
         },
-        "fade": "glow"
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
+        }
       },
       {
         "key": "hp-siloNavBlock",
@@ -6807,6 +6927,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -6952,6 +7076,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -7082,6 +7210,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -7482,6 +7614,10 @@
         "run": {
           "index": 0,
           "length": 4
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -8019,6 +8155,10 @@
         "run": {
           "index": 0,
           "length": 4
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -8149,6 +8289,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -8279,6 +8423,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -8409,6 +8557,10 @@
         "run": {
           "index": 0,
           "length": 1
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -8542,7 +8694,11 @@
           "peak": 2,
           "side": "right"
         },
-        "fade": "glow"
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
+        }
       },
       {
         "key": "hp-narrativeBlock",
@@ -8844,6 +9000,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -11352,6 +11512,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -11454,6 +11618,10 @@
         "run": {
           "index": 6,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       }
     ]
@@ -11482,6 +11650,10 @@
         "run": {
           "index": 0,
           "length": 1
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -11584,6 +11756,10 @@
         "run": {
           "index": 0,
           "length": 1
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       }
     ]
@@ -11612,6 +11788,10 @@
         "run": {
           "index": 0,
           "length": 1
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -11722,6 +11902,10 @@
         "run": {
           "index": 0,
           "length": 1
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       }
     ]
@@ -11750,6 +11934,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -11856,6 +12044,10 @@
         "run": {
           "index": 2,
           "length": 3
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       }
     ]
@@ -12283,6 +12475,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -12385,6 +12581,10 @@
         "run": {
           "index": 2,
           "length": 3
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       }
     ]
@@ -12413,6 +12613,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -12515,6 +12719,10 @@
         "run": {
           "index": 6,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       }
     ]
@@ -12543,6 +12751,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -12645,6 +12857,10 @@
         "run": {
           "index": 6,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       }
     ]
@@ -12806,7 +13022,11 @@
           "peak": 1,
           "side": "right"
         },
-        "fade": "glow"
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
+        }
       },
       {
         "key": "hp-siloNavBlock",
@@ -12926,7 +13146,11 @@
           "peak": 2,
           "side": "right"
         },
-        "fade": "glow"
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
+        }
       }
     ],
     "close": {
@@ -12963,6 +13187,10 @@
         "run": {
           "index": 0,
           "length": 1
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -13081,6 +13309,10 @@
         "run": {
           "index": 0,
           "length": 1
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       }
     ]
@@ -13112,6 +13344,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -13214,6 +13450,10 @@
         "run": {
           "index": 6,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       }
     ]
@@ -13242,6 +13482,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -13372,6 +13616,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -13505,6 +13753,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -13642,6 +13894,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -14175,6 +14431,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -14309,6 +14569,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -14439,6 +14703,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -14702,7 +14970,11 @@
           "peak": 1,
           "side": "right"
         },
-        "fade": "glow"
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
+        }
       },
       {
         "key": "hp-siloNavBlock",
@@ -14862,6 +15134,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -15007,6 +15283,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -15137,6 +15417,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -15537,6 +15821,10 @@
         "run": {
           "index": 0,
           "length": 4
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -16208,6 +16496,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -16338,6 +16630,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -16601,7 +16897,11 @@
           "peak": 2,
           "side": "right"
         },
-        "fade": "glow"
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
+        }
       },
       {
         "key": "hp-narrativeBlock",
@@ -16906,6 +17206,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -19427,6 +19731,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -19557,6 +19865,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -19687,6 +19999,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -19821,6 +20137,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -20356,6 +20676,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -20486,6 +20810,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -20616,6 +20944,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -20879,7 +21211,11 @@
           "peak": 1,
           "side": "right"
         },
-        "fade": "glow"
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
+        }
       },
       {
         "key": "hp-siloNavBlock",
@@ -21036,6 +21372,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -21181,6 +21521,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -21311,6 +21655,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -21441,6 +21789,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -21574,6 +21926,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -21711,6 +22067,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -22244,6 +22604,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -22387,6 +22751,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -22517,6 +22885,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -22780,7 +23152,11 @@
           "peak": 1,
           "side": "right"
         },
-        "fade": "glow"
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
+        }
       },
       {
         "key": "hp-siloNavBlock",
@@ -22940,6 +23316,10 @@
         "run": {
           "index": 0,
           "length": 2
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -23085,6 +23465,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -23215,6 +23599,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -23615,6 +24003,10 @@
         "run": {
           "index": 0,
           "length": 4
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -24297,6 +24689,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -24427,6 +24823,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -24690,7 +25090,11 @@
           "peak": 2,
           "side": "right"
         },
-        "fade": "glow"
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
+        }
       },
       {
         "key": "hp-narrativeBlock",
@@ -24995,6 +25399,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -27527,6 +27935,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -27927,6 +28339,10 @@
         "run": {
           "index": 0,
           "length": 4
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -28464,6 +28880,10 @@
         "run": {
           "index": 0,
           "length": 4
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -28594,6 +29014,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -28724,6 +29148,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       },
       {
@@ -28854,6 +29282,10 @@
         "run": {
           "index": 0,
           "length": 1
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -28987,7 +29419,11 @@
           "peak": 2,
           "side": "right"
         },
-        "fade": "glow"
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
+        }
       },
       {
         "key": "hp-narrativeBlock",
@@ -29289,6 +29725,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
         }
       },
       {
@@ -29391,6 +29831,1480 @@
         "run": {
           "index": 6,
           "length": 7
+        }
+      }
+    ]
+  },
+  "composed-ribbons / quiet.mostlyLight": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "hp-openingRibbonBlock",
+        "host": "ribbon",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 5
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 5
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
+        }
+      }
+    ]
+  },
+  "composed-ribbons / alternating.balanced": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "hp-openingRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
+        }
+      }
+    ]
+  },
+  "composed-ribbons / cutBlocks.balanced": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "hp-openingRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": "quiet",
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": "strong",
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "cut",
+          "from": "light",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
+        }
+      }
+    ]
+  },
+  "composed-ribbons / cutBlocks.mostlyDark": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "hp-openingRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": "quiet",
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": "strong",
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "cut",
+          "from": "light",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": "quiet",
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
+        }
+      }
+    ]
+  },
+  "composed-ribbons / typeOnBlack.allDark": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "hp-openingRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 5
+        }
+      }
+    ]
+  },
+  "composed-ribbons / editorial.mostlyLight": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "light",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "hp-openingRibbonBlock",
+        "host": "ribbon",
+        "ground": "light",
+        "texture": "quiet",
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 5
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": "quiet",
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 5
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": "quiet",
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 5
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "light",
+        "texture": "quiet",
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 5
+        },
+        "spacing": "spacious"
+      },
+      {
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
+        "ground": "light",
+        "texture": "quiet",
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": true,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 5
+        },
+        "spacing": "spacious"
+      }
+    ]
+  },
+  "composed-ribbons / ribbonRhythm.mostlyLight": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "hp-openingRibbonBlock",
+        "host": "ribbon",
+        "ground": "saturated",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
+        "ground": "saturated",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      }
+    ]
+  },
+  "composed-ribbons / photoScrims.mostlyDark": {
+    "unmetNeeds": [
+      "heroPhoto"
+    ],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "hp-openingRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2
+        }
+      },
+      {
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
+        }
+      }
+    ]
+  },
+  "composed-ribbons / floatingPanels.balanced": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "hp-openingRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": true,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 5
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": true,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 5
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
+        }
+      }
+    ]
+  },
+  "composed-ribbons / floatingPanels.mostlyDark": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "hp-openingRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 5
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": true,
+        "adopted": "dark",
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": true,
+        "adopted": "dark",
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 5
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
+        }
+      }
+    ]
+  },
+  "composed-ribbons / softWash.mostlyLight": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "light",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "hp-openingRibbonBlock",
+        "host": "ribbon",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "wash",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "wash",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      }
+    ]
+  },
+  "composed-ribbons / gradientBloom.mostlyDark": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "dark",
+      "scrolled": "dark",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "hp-openingRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1,
+          "peak": 0,
+          "side": "right"
+        },
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 2,
+          "peak": 1,
+          "side": "right"
+        },
+        "fade": "glow"
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2,
+          "peak": 1,
+          "side": "right"
+        },
+        "fade": "glow"
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 3,
+          "peak": 1,
+          "side": "right"
+        },
+        "fade": "glow"
+      },
+      {
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 3,
+          "peak": 1,
+          "side": "right"
+        },
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": true,
+          "bottom": true
+        }
+      }
+    ],
+    "close": {
+      "run": {
+        "index": 2,
+        "length": 3,
+        "peak": 1,
+        "side": "right"
+      },
+      "fade": "glow"
+    }
+  },
+  "composed-ribbons / wedges.balanced": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "hp-openingRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "cut",
+          "from": "dark",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 3
+        }
+      },
+      {
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "cut",
+          "from": "light",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
+        }
+      }
+    ]
+  },
+  "composed-ribbons / stored.bridge": {
+    "unmetNeeds": [],
+    "chrome": {
+      "top": "light",
+      "scrolled": "light",
+      "footer": "dark",
+      "darkLogoMissing": false
+    },
+    "bands": [
+      {
+        "key": "hp-openingRibbonBlock",
+        "host": "ribbon",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": {
+          "mode": "rise",
+          "flip": false
+        },
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 5
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
+        }
+      },
+      {
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 2,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 3,
+          "length": 5
+        }
+      },
+      {
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
+        "ground": "light",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 4,
+          "length": 5
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       }
     ]

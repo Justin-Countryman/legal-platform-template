@@ -49,8 +49,8 @@ export function MarqueeRibbon({children}: {children: ReactNode}) {
               className={
                 i === 0
                   // Centred when it stands still, as a still ribbon is (Phase 16A).
-                  ? 'whitespace-nowrap text-lg font-semibold text-foreground motion-reduce:whitespace-normal motion-reduce:text-center'
-                  : 'whitespace-nowrap text-lg font-semibold text-foreground motion-reduce:hidden'
+                  ? 'ribbon-line whitespace-nowrap font-heading font-bold text-foreground motion-reduce:whitespace-normal motion-reduce:text-center'
+                  : 'ribbon-line whitespace-nowrap font-heading font-bold text-foreground motion-reduce:hidden'
               }
             >
               {children}
