@@ -1983,5 +1983,6 @@ export const HOME_PAGE_QUERY = groq`{
 // against it (monorepo WS-V1-PHASE17A-DESIGN §2.3). It selects the document exactly
 // as the settings the layout reads do, so the plan is computed on what the site
 // renders; Apply refuses when that is not the singleton it writes. No live route
-// reads it.
-export const PREVIEW_STORED_DESIGN_QUERY = groq`*[_type == "designSettings"][0]`
+// reads it. Phase 17E: each photograph of the theme's set with its asset's size and
+// opacity, so the plan approves only the photographs the theme may draw (`setApprovalKeys`).
+export const PREVIEW_STORED_DESIGN_QUERY = groq`*[_type == "designSettings"][0]{..., "themePhotos": themePhotos[]{..., "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height, "isOpaque": asset->metadata.isOpaque}}`

@@ -1392,6 +1392,14 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
     mask-image: linear-gradient(to bottom, #000 55%, transparent);
   }
 }
+/* No hover glow on a photograph or a lit ground (Phase 17E, the pre-PR break pass; monorepo WS-V1-PHASE17E-DESIGN §9):
+   the accent glow over a card's fill takes the muted line under 4.5:1 at its brightest corner, over the scrim's floor
+   on 8 of the 15 presets and over Gradient bloom's glow on 2 of 9 (measured). A practice grid first sits on a
+   photograph in a run of the theme's set; an Image band built by hand and a glowing band are the same case. The card
+   keeps its fill, its words, its arrow and its link's focus ring. */
+:is([data-scrim="true"], [data-glow="true"]) [data-tile-glow] {
+  display: none;
+}
 /* A card photo under text (Phase 17D, `[R-556]`): text on it sits over `--color-scrim` at 80% or more,
    the bound `validateWcag` proves over the lightest pixel (`[R-533]`), and the photo is held to the
    standard range for the same reason. `tile-text-scrim` goes on a card's text block and draws the

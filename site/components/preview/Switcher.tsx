@@ -2,7 +2,7 @@ import Link from 'next/link'
 import {STYLE_SETS} from '@/lib/styleSets'
 import {PALETTE_PRESETS} from '@/lib/palettes'
 import {DARKNESS_LABELS, FAMILIES, chromeSchemes, drawsHeroPhoto, familyOf, flowById, flowId, needLabel, unmetNeeds, type FlowFamily, type FlowRules} from '@/lib/flows'
-import {photoSetOf, type HeroPhoto, type SetPhotoEntry, type SetPhotoStatus} from '@/lib/heroGround'
+import {photoSetOf, type HeroPhoto, type SetPhoto, type SetPhotoEntry, type SetPhotoStatus} from '@/lib/heroGround'
 import {urlForImage} from '@/lib/sanity/image'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {ghostSource} from '@/lib/brandMark'
@@ -78,7 +78,7 @@ const SET_STATUS: Record<SetPhotoStatus, string> = {
 }
 
 /** The set as the switcher lists it: each photograph, its thumbnail, whether this page shows it and why not. */
-function SetPhotos({entries, shown, placed, heroPhoto, closeShown}: {entries: readonly SetPhotoEntry[]; shown: FlowRules; placed: Set<string>; heroPhoto: boolean; closeShown: boolean}) {
+function SetPhotos({entries, shown, placed, plain, heroPhoto, heroWaits, closeShown}: {entries: readonly SetPhotoEntry[]; shown: FlowRules; placed: Set<string>; plain: number; heroPhoto: boolean; heroWaits: boolean; closeShown: boolean}) {
   const usable = entries.filter((e) => e.status === 'approved' || e.status === 'notApproved').length
   return (
     <div className="sw-row">
@@ -86,13 +86,20 @@ function SetPhotos({entries, shown, placed, heroPhoto, closeShown}: {entries: re
       <p className="sw-note">
         {!heroPhoto
           ? `${shown.name} draws its set only with a hero photograph of a place, and this homepage has none.`
-          : `This page shows ${placed.size} of the ${usable} photographs it can use${closeShown ? ', the first behind the closing call to action' : ''}; a photograph with no section to go behind waits for a longer page.`}
+          : heroWaits
+            ? `The set shows only beside the approved hero photograph, which waits for ${shown.name} to be applied.`
+            : `This page shows ${placed.size} of the ${usable} photographs it can use${closeShown && placed.size > 0 ? ', the first behind the closing call to action' : ''}${placed.size < usable ? '; a photograph with no section to go behind waits for a longer page' : ''}.`}
+        {heroPhoto && !heroWaits && plain > 0 && ` ${plain} more ${plain === 1 ? 'place' : 'places'} on this page could take a photograph and ${plain === 1 ? 'stays' : 'stay'} plain until the set has more.`}
       </p>
       <div className="sw-photos">
         {entries.map((e, i) => (
           <figure key={`${e.photo.assetId}-${i}`} className="sw-photo">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={urlForImage(e.photo.image).width(240).height(150).fit('crop').url()} alt="" width={120} height={75} />
+            {/* The whole photograph as cropped, every pixel that can draw on any screen, and a link to it at 1,600
+                pixels: approval is given from this (the pre-PR break pass, record §9). */}
+            <a href={urlForImage(e.photo.image).width(1600).fit('max').url()} target="_blank" rel="noopener noreferrer" aria-label={`Photograph ${i + 1}, full size`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={urlForImage(e.photo.image).width(240).fit('max').url()} alt="" width={120} height={75} />
+            </a>
             <figcaption>
               {i + 1}. {e.status === 'approved' || e.status === 'notApproved' ? (placed.has(e.photo.assetId) ? 'shown on this page' : 'not used on this page') : SET_STATUS[e.status]}
               {e.status === 'notApproved' && `; ${SET_STATUS.notApproved}`}
@@ -271,16 +278,25 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
   const unmet = lacks(shown)
   const headerNote = chromeNote(shown, chrome)
   // The set as this preview draws it (Phase 17E): choosing the theme approves every photograph of the set in the preview,
-  // so the photographs the page places are read from the preview's own walk, with the preview's own look.
-  const drawnSet = drawsHeroPhoto(shown) && heroPhoto ? photoSetOf(chrome?.designTokens as Record<string, unknown> | null, heroPhoto.assetId) : []
+  // so the photographs the page places are read from the preview's own walk, with the preview's own look; beside the
+  // approved hero photograph only, as the page draws it (none while the hero photograph waits for approval).
+  const drawnSet = drawsHeroPhoto(shown) && heroPhoto && !photoChanged ? photoSetOf(chrome?.designTokens as Record<string, unknown> | null, heroPhoto.assetId) : []
   const placedSet = new Set<string>()
+  // And how many places the page has for a photograph that the set leaves plain (record §2.2, amendment 11): the walk
+  // again with a set longer than any page can use.
+  let plainPlaces = 0
   if (drawnSet.length > 0) {
-    const setSite = {...site, flow: shown, photoSet: drawnSet, closeShown}
-    for (const b of walkPage(blocks, frameOf, setSite, hero, closeShown ? 'image' : null).bands) {
-      const i = b.seam.paint?.photo?.index
-      if (i !== undefined && drawnSet[i]) placedSet.add(drawnSet[i].assetId)
+    const photoPlaces = (set: SetPhoto[]) => {
+      const setSite = {...site, flow: shown, photoSet: set, closeShown}
+      const used = new Set<number>(closeShown && shown.dark.close === 'photo' ? [0] : [])
+      for (const b of walkPage(blocks, frameOf, setSite, hero, closeShown ? 'image' : null).bands) {
+        const i = b.seam.paint?.photo?.index
+        if (i !== undefined && set[i]) used.add(i)
+      }
+      return used
     }
-    if (closeShown && shown.dark.close === 'photo') placedSet.add(drawnSet[0].assetId)
+    for (const i of photoPlaces(drawnSet)) placedSet.add(drawnSet[i].assetId)
+    plainPlaces = Math.max(0, photoPlaces(Array.from({length: 12}, (_, k) => drawnSet[k % drawnSet.length])).size - placedSet.size)
   }
 
   return (
@@ -349,7 +365,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
           {photoChanged && ` The hero photograph changed since ${shown.name} was applied, so its photo sections show none: choose ${shown.name} and Apply to approve this one.`}
         </p>
         {drawsHeroPhoto(shown) && photoSet && photoSet.length > 0 && (
-          <SetPhotos entries={photoSet} shown={shown} placed={placedSet} heroPhoto={!!heroPhoto} closeShown={closeShown} />
+          <SetPhotos entries={photoSet} shown={shown} placed={placedSet} plain={plainPlaces} heroPhoto={!!heroPhoto} heroWaits={photoChanged} closeShown={closeShown} />
         )}
         <p className="sw-note">{headerNote}</p>
         {keep.length > 0 && (
@@ -405,6 +421,6 @@ const SWITCHER_CSS = `
 .sw-why{margin-top:4px}
 .sw-photos{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 0;flex-basis:100%}
 .sw-photo{margin:0;display:flex;flex-direction:column;gap:4px;max-width:130px;font-size:11px;line-height:1.3;color:#bbb}
-.sw-photo img{display:block;width:120px;height:75px;object-fit:cover;border:1px solid #8a8a8a;border-radius:2px}
+.sw-photo img{display:block;width:120px;height:75px;object-fit:contain;background:#000;border:1px solid #8a8a8a;border-radius:2px}
 .sw-input{flex:1;min-width:240px;background:#222;color:#f5f5f5;border:1px solid #8a8a8a;border-radius:4px;padding:4px 6px;font-size:12px}
 `

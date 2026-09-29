@@ -5202,7 +5202,7 @@
           "type": "string"
         },
         {
-          "description": "Photographs of one place for Photo scrims: your city or town, its landmarks, the courthouse, your building. Three is enough for most homepages; up to six. Landscape, at least 1,600 pixels wide, with a clear subject (a building, a skyline, a landmark); a dark landscape or open sky shows as texture. Set the focal point. No people. They show only with a hero photograph, and only after they are approved by choosing Photo scrims in the design preview and applying it. The first goes behind the closing call to action (behind the first section when the close is hidden); the rest go down the page in order.",
+          "description": "Photographs of one place for Photo scrims: your city or town, its landmarks, the courthouse, your building. Three is enough for most homepages; up to six. Landscape, at least 1,600 pixels wide, with a clear subject (a building, a skyline, a landmark); a dark landscape or open sky shows as texture. Set the focal point. No people. They show only with a hero photograph, and only after they are approved by choosing Photo scrims in the design preview and applying it. The first goes behind the closing call to action (where the page has none, behind the first group of dark sections); the rest go down the page in order. A photograph whose crop changes waits for approval again.",
           "jsonType": "array",
           "of": [
             "image"

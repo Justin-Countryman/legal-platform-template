@@ -178,7 +178,7 @@ export const designSettings = defineType({
       type: 'array',
       fieldset: 'theme',
       description:
-        'Photographs of one place for Photo scrims: your city or town, its landmarks, the courthouse, your building. Three is enough for most homepages; up to six. Landscape, at least 1,600 pixels wide, with a clear subject (a building, a skyline, a landmark); a dark landscape or open sky shows as texture. Set the focal point. No people. They show only with a hero photograph, and only after they are approved by choosing Photo scrims in the design preview and applying it. The first goes behind the closing call to action (behind the first section when the close is hidden); the rest go down the page in order.',
+        'Photographs of one place for Photo scrims: your city or town, its landmarks, the courthouse, your building. Three is enough for most homepages; up to six. Landscape, at least 1,600 pixels wide, with a clear subject (a building, a skyline, a landmark); a dark landscape or open sky shows as texture. Set the focal point. No people. They show only with a hero photograph, and only after they are approved by choosing Photo scrims in the design preview and applying it. The first goes behind the closing call to action (where the page has none, behind the first group of dark sections); the rest go down the page in order. A photograph whose crop changes waits for approval again.',
       of: [defineArrayMember({type: 'image', options: {hotspot: true}})],
       validation: (Rule) => [
         Rule.max(6).warning('Up to six photographs: a homepage has places for two or three.'),
@@ -188,11 +188,24 @@ export const designSettings = defineType({
             .filter((r): r is string => typeof r === 'string')
           return new Set(refs).size === refs.length ? true : 'The same photograph is here twice; it shows once.'
         }).warning(),
+        // The hero's own photograph behind a section shows the hero again, so the site never draws it (record §2.1).
+        Rule.custom(async (photos, context) => {
+          const refs = (Array.isArray(photos) ? photos : [])
+            .map((p) => (p as {asset?: {_ref?: string}} | null)?.asset?._ref)
+            .filter((r): r is string => typeof r === 'string')
+          if (!refs.length) return true
+          const heroes = await context
+            .getClient({apiVersion: '2024-01-01'})
+            .fetch<unknown>(`*[_type == "heroSettings"].homepageHero.backgroundImage.asset._ref`)
+          const hero = new Set(Array.isArray(heroes) ? heroes.filter((r): r is string => typeof r === 'string') : [])
+          return refs.some((r) => hero.has(r)) ? 'The homepage hero\u2019s own photograph is here; it never shows behind a section, because it would show the hero again.' : true
+        }).warning(),
       ],
     }),
-    // The photographs of the set Photo scrims was approved with, as sorted asset ids: Apply writes it
-    // beside that theme and clears it with any other; the site draws a photograph of the set only while
-    // its id is here, so one added or replaced later shows nowhere until approved (`[R-574]`). Hidden by a
+    // The photographs of the set Photo scrims was approved with, as sorted keys (the asset id, and where the
+    // photograph is cropped the rectangle drawn, `site/lib/heroGround.ts` `setPhotoKey`): Apply writes it beside
+    // that theme and clears it with any other; the site draws a photograph of the set only while its key is
+    // here, so one added, replaced or cropped anew later shows nowhere until approved (`[R-574]`). Hidden by a
     // predicate, not a literal `true` (the field map reads a literal as a retired field).
     defineField({
       name: 'flowPhotos',

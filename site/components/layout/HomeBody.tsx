@@ -47,6 +47,12 @@ export function homeHeroOf(all: HomePageData | null | undefined): HomeHeroData |
   return content?.heading && design ? {...design, ...content} : null
 }
 
+/** Whether the homepage's closing call to action renders: the site's, with the homepage's own words over it, and a
+ *  heading. The preview's switcher reads the same answer (Phase 17E), so it counts the photographs the page places. */
+export function closeShownOf(globalCta: HomepageCtaData | null | undefined, home: Pick<HomeData, 'hideCtaForm' | 'ctaOverride'> | null | undefined): boolean {
+  return !!globalCta && !home?.hideCtaForm && !!{...globalCta, ...(home?.ctaOverride ?? {})}.heading
+}
+
 export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData}) {
   const header = chrome?.header ?? null
   const tokens = (chrome?.nap ?? null) as NapTokens
@@ -72,7 +78,6 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
   // renders, so a photo close counts as the last band's neighbour.
   const photo = heroPhotoOf(hero)
   const approved = (chrome?.designTokens as {flowPhoto?: unknown} | null | undefined)?.flowPhoto
-  const closeData = globalCtaData && !home?.hideCtaForm ? {...globalCtaData, ...(home?.ctaOverride ?? {})} : null
   const heroPhoto = photo?.assetId && photo.assetId === approved ? photo : null
   const site = {
     ...look,
@@ -81,7 +86,7 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
     // Phase 17E (`[R-573]`, `[R-574]`): the theme's set of photographs, beside the approved hero photograph only, each
     // photograph only while approved.
     photoSet: heroPhoto ? photoSetOf(chrome?.designTokens as Record<string, unknown> | null, heroPhoto.assetId) : null,
-    closeShown: !!closeData?.heading,
+    closeShown: closeShownOf(globalCtaData, home),
   }
   const ground = heroGround(hero)
   const edgeBelow = firstBandRises(home?.canvas, site, ground)

@@ -4,7 +4,7 @@ import {SiteShell} from '@/components/layout/SiteShell'
 import {Switcher} from '@/components/preview/Switcher'
 import {analyticsOff} from '@/lib/preview/analytics'
 import {loadPreview} from '@/lib/preview/load'
-import {homeHeroOf} from '@/components/layout/HomeBody'
+import {closeShownOf, homeHeroOf} from '@/components/layout/HomeBody'
 import {heroGround, heroPhotoOf, setPhotoEntries} from '@/lib/heroGround'
 
 // ─── The preview address ──────────────────────────────────────────────────────
@@ -50,8 +50,8 @@ export default async function PreviewLayout({children, params}: {children: React
   const heroPhoto = heroPhotoOf(homeHeroOf(state.home))
   // The theme's set as the site has approved it (Phase 17E, `[R-574]`), and whether the close renders to take its first.
   const photoSet = setPhotoEntries(state.liveChrome?.designTokens as Record<string, unknown> | null, heroPhoto?.assetId)
-  const page = state.home?.page as {hideCtaForm?: boolean | null} | null | undefined
-  const closeShown = !page?.hideCtaForm && !!(state.chrome?.globalCta as {heading?: string | null} | null | undefined)?.heading
+  // The homepage's own words over the site's, as the page merges them (`closeShownOf`, the pre-PR break pass).
+  const closeShown = closeShownOf(state.chrome?.globalCta as Parameters<typeof closeShownOf>[0], state.home?.page as Parameters<typeof closeShownOf>[1])
   const switcher = (
     <Switcher grant={state.grant} choices={state.choices} plan={state.plan} canvas={state.home?.page?.canvas} chrome={state.chrome} origin={`${proto}://${host}`} hero={heroGround(homeHeroOf(state.home))} heroPhoto={heroPhoto} photoSet={photoSet} closeShown={closeShown} />
   )

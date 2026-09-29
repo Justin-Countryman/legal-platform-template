@@ -38,8 +38,7 @@ export function setPhotoUrls(photo: SetPhoto): {phone: string; wide: string} {
  *  cover-fitted to it shows a magnified strip of 14% of itself (delllawfirm draws a head, ADV-17E-A). */
 export function SetPhotoLayer({photo, head = false}: {photo: SetPhoto; head?: boolean}) {
   const {phone, wide} = setPhotoUrls(photo)
-  const h = photo.image.hotspot
-  const position = h && typeof h.x === 'number' && typeof h.y === 'number' ? `${(h.x * 100).toFixed(2)}% ${(h.y * 100).toFixed(2)}%` : '50% 50%'
+  const scrim = <div className="absolute inset-0 bg-scrim/80" aria-hidden="true" />
   return (
     <>
       <div aria-hidden="true" data-photo-set={photo.assetId} className={head ? 'photo-run-head absolute inset-0 overflow-hidden' : 'absolute inset-0 overflow-hidden'}>
@@ -52,11 +51,28 @@ export function SetPhotoLayer({photo, head = false}: {photo: SetPhoto; head?: bo
             fetchPriority="low"
             decoding="async"
             className="set-photo absolute inset-0 h-full w-full object-cover grayscale"
-            style={{objectPosition: position}}
+            style={{objectPosition: focalPosition(photo.image)}}
           />
         </picture>
+        {/* At a run's head the scrim fades out with the photograph (the pre-PR break pass): below the head a phone shows
+            the run's own dark ground, the shade of the dark bands around it. Every point of the fade is a mix of the
+            scrim over the photograph and the dark ground, each proven under the band's text, and no lighter than the
+            lighter of the two. From 768 px the head is the whole run, as before. */}
+        {head && scrim}
       </div>
-      <div className="absolute inset-0 bg-scrim/80" aria-hidden="true" />
+      {!head && scrim}
     </>
   )
+}
+
+/** The focal point as a position in the photograph as cropped: the Studio stores it in the whole image's fractions,
+ *  and the source is cut to the crop first, so an uncorrected hotspot frames a cropped photograph off its point. */
+export function focalPosition(image: SetPhoto['image']): string {
+  const h = image.hotspot
+  if (!h || typeof h.x !== 'number' || typeof h.y !== 'number') return '50% 50%'
+  const c = image.crop
+  const along = (v: number, a = 0, b = 0) => Math.min(1, Math.max(0, (v - a) / Math.max(1e-6, 1 - a - b)))
+  const x = c ? along(h.x, c.left, c.right) : h.x
+  const y = c ? along(h.y, c.top, c.bottom) : h.y
+  return `${(x * 100).toFixed(2)}% ${(y * 100).toFixed(2)}%`
 }

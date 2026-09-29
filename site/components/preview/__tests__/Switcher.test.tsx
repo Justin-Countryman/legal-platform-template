@@ -226,13 +226,17 @@ describe('Switcher, the theme photographs (Phase 17E, `[R-574]`)', () => {
   const scrims = {...choices, flow: 'photoScrims.mostlyDark'}
   const raw = (n: string, over: Record<string, unknown> = {}) => ({asset: {_ref: `image-${n}-2400x1600-jpg`}, width: 2400, height: 1600, isOpaque: true, assetId: `image-${n}-2400x1600-jpg`, ...over})
   const tokens = {patternTexture: 'diagonalHatch', themePhotos: [raw('a'), raw('b'), raw('a'), raw('small', {width: 1200, height: 800})], flowPhotos: ['image-a-2400x1600-jpg']}
-  const draw = (heroPhoto: typeof HERO | null, c = scrims) => {
+  const draw = (heroPhoto: typeof HERO | null, c = scrims, canvas: unknown[] = [], over: Record<string, unknown> = {}) => {
     const doc: StoredDesign = {...stored, ...tokens}
     const plan = planPreview(doc, c, heroPhoto?.assetId ?? null)
-    const chrome = {...chromeWithTexture, designTokens: {...tokens, ...plan.set}} as unknown as SiteChrome
+    const chrome = {...chromeWithTexture, designTokens: {...tokens, ...plan.set, ...over}} as unknown as SiteChrome
     const entries = setPhotoEntries(tokens, heroPhoto?.assetId)
-    return render(<Switcher grant={operator} choices={c} plan={plan} canvas={[]} chrome={chrome} origin="https://example.com" hero="image" heroPhoto={heroPhoto} photoSet={entries} closeShown />).container
+    return render(<Switcher grant={operator} choices={c} plan={plan} canvas={canvas as never} chrome={chrome} origin="https://example.com" hero="image" heroPhoto={heroPhoto} photoSet={entries} closeShown />).container
   }
+  // Text bands a mostly dark page fills, each a run of its own between ribbons.
+  const text = (k: string) => ({_type: 'contentSectionInline', _key: k, layout: 'twoColumnText', heading: `Band ${k}`, body: [{_type: 'block', _key: `${k}b`, children: [{_type: 'span', _key: `${k}s`, text: 'Words.'}]}]})
+  const ribbon = (k: string) => ({_type: 'contentSectionInline', _key: k, layout: 'ribbon', heading: `Line ${k}`})
+  const long = [text('a'), ribbon('r1'), text('b'), ribbon('r2'), text('c'), ribbon('r3'), text('d')]
 
   it('lists every photograph with a thumbnail and says why one does not show, or waits for approval', () => {
     const c = draw(HERO)
@@ -244,6 +248,27 @@ describe('Switcher, the theme photographs (Phase 17E, `[R-574]`)', () => {
     expect(text).toContain('not shown: under 1,600 pixels wide')
     // The close renders and takes the first photograph; the canvas is empty, so nothing else is placed.
     expect(text).toContain('This page shows 1 of the 2 photographs it can use')
+  })
+
+  it('shows each photograph whole as cropped, with a link to it at full size', () => {
+    const img = draw(HERO).querySelector('.sw-photo img')!
+    const thumb = new URL(img.getAttribute('src')!)
+    expect([thumb.searchParams.get('w'), thumb.searchParams.get('h'), thumb.searchParams.get('fit')]).toEqual(['240', null, 'max'])
+    const link = img.closest('a')!
+    expect(new URL(link.getAttribute('href')!).searchParams.get('w')).toBe('1600')
+    expect([link.getAttribute('target'), link.getAttribute('rel')]).toEqual(['_blank', 'noopener noreferrer'])
+  })
+
+  it('says how many places on the page stay plain when the set is shorter', () => {
+    const t = draw(HERO, scrims, long).textContent ?? ''
+    expect(t).toContain('This page shows 2 of the 2 photographs it can use, the first behind the closing call to action. 1 more place on this page could take a photograph and stays plain until the set has more.')
+    expect(t).not.toContain('waits for a longer page')
+  })
+
+  it('places nothing beside a hero photograph that waits for approval, and says so', () => {
+    const t = draw(HERO, scrims, long, {flowPhoto: 'image-older-2400x1600-jpg'}).textContent ?? ''
+    expect(t).toContain('The set shows only beside the approved hero photograph, which waits for Photo scrims to be applied.')
+    expect(t).not.toContain('shown on this page')
   })
 
   it('says the set needs a hero photograph where the homepage has none, and lists nothing under another theme', () => {

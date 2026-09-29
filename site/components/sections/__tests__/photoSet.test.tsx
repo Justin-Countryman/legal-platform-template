@@ -29,16 +29,20 @@ vi.mock('@/components/ui/ScrollReveal', () => ({
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomeBody} from '@/components/layout/HomeBody'
 import {walkFrame, interiorLook, closeFrame, type SiteLook} from '../sectionFrame'
-import {setPhotoUrls} from '../SetPhoto'
+import {setPhotoUrls, focalPosition} from '../SetPhoto'
+import {TileGlow} from '../silo/parts'
+import {closeShownOf} from '@/components/layout/HomeBody'
+import {readFileSync} from 'node:fs'
+import {resolve} from 'node:path'
 import {type SectionAppearance} from '../SectionShell'
 import {flowById, type Host} from '@/lib/flows'
-import {photoSetOf, setAssetIds, setPhotoEntries, type HeroPhoto, type SetPhoto} from '@/lib/heroGround'
+import {photoSetOf, setApprovalKeys, setPhotoEntries, setPhotoKey, type HeroPhoto, type SetPhoto} from '@/lib/heroGround'
 import {planPreview} from '@/lib/preview/plan'
 import {LOOK} from './flowFixtures'
 
 const HERO: HeroPhoto = {src: 'https://cdn.example.com/hero.jpg', width: 2400, height: 1600, hotspot: null, assetId: 'image-hero-2400x1600-jpg'}
 const SCRIMS = flowById('photoScrims.mostlyDark')!
-const photo = (name: string, w = 2400, h = 1600): SetPhoto => ({image: {asset: {_ref: `image-${name}-${w}x${h}-jpg`}}, assetId: `image-${name}-${w}x${h}-jpg`, width: w, height: h})
+const photo = (name: string, w = 2400, h = 1600): SetPhoto => ({image: {asset: {_ref: `image-${name}-${w}x${h}-jpg`}}, assetId: `image-${name}-${w}x${h}-jpg`, key: `image-${name}-${w}x${h}-jpg`, width: w, height: h})
 const SET = ['a', 'b', 'c', 'd'].map((n) => photo(n))
 
 type Band = {host: Host | null; appearance?: SectionAppearance | null; cardPhotos?: boolean}
@@ -68,15 +72,35 @@ describe('the set, read from Design Settings', () => {
         // Cropped to a portrait by the operator: its size once cropped is what the guard reads.
         raw('image-crop-4000x2000-jpg', {width: 4000, height: 2000, crop: {top: 0, bottom: 0, left: 0.25, right: 0.25}}),
       ],
-      flowPhotos: ['image-a-2400x1600-jpg', 'image-small-1200x800-jpg', 'image-crop-4000x2000-jpg'],
+      flowPhotos: ['image-a-2400x1600-jpg', 'image-small-1200x800-jpg', 'image-crop-4000x2000-jpg#1000,0,2000,2000'],
     }
     expect(setPhotoEntries(tokens, HERO.assetId).map((e) => e.status)).toEqual(['approved', 'notApproved', 'duplicate', 'hero', 'small', 'portrait', 'transparent', 'portrait'])
     expect(photoSetOf(tokens, HERO.assetId).map((p) => p.assetId)).toEqual(['image-a-2400x1600-jpg'])
     expect(photoSetOf({}, HERO.assetId)).toEqual([])
   })
-  it('the preview approves every photograph of the set, sorted and each once', () => {
-    expect(setAssetIds({themePhotos: [raw('image-z-1-jpg'), raw('image-a-1-jpg'), raw('image-z-1-jpg')]})).toEqual(['image-a-1-jpg', 'image-z-1-jpg'])
-    expect(setAssetIds({})).toEqual([])
+  it('the preview approves every photograph the theme may draw, sorted and each once, never a refused one', () => {
+    const photos = [raw('image-z-2400x1600-jpg'), raw('image-a-2400x1600-jpg'), raw('image-z-2400x1600-jpg'),
+      raw('image-hero-2400x1600-jpg'), raw('image-small-1200x800-jpg', {width: 1200, height: 800}), raw('image-png-2400x1600-png', {isOpaque: false})]
+    expect(setApprovalKeys({themePhotos: photos}, HERO.assetId)).toEqual(['image-a-2400x1600-jpg', 'image-z-2400x1600-jpg'])
+    expect(setApprovalKeys({}, HERO.assetId)).toEqual([])
+    // A photograph refused for its size, approved anyway, would draw unseen once its crop was lifted (the pre-PR pass).
+    const cropped = raw('image-big-4000x2000-jpg', {width: 4000, height: 2000, crop: {top: 0, bottom: 0, left: 0.4, right: 0.4}})
+    expect(setApprovalKeys({themePhotos: [cropped]}, HERO.assetId)).toEqual([])
+  })
+
+  it('an approval names the photograph and the pixels it draws: a crop changed after Apply waits again', () => {
+    const image = (crop?: {top: number; bottom: number; left: number; right: number}) => ({asset: {_ref: 'image-p-4000x2000-jpg'}, crop})
+    expect(setPhotoKey(image())).toBe('image-p-4000x2000-jpg')
+    // The Studio writes a zero crop with the focal point: the same pixels, the same key.
+    expect(setPhotoKey(image({top: 0, bottom: 0, left: 0, right: 0}))).toBe('image-p-4000x2000-jpg')
+    // The rectangle the image CDN cuts, in the asset's pixels; a change under a pixel is the same rectangle.
+    expect(setPhotoKey(image({top: 0.1, bottom: 0, left: 0.25, right: 0.25}))).toBe('image-p-4000x2000-jpg#1000,200,2000,1800')
+    expect(setPhotoKey(image({top: 0.10001, bottom: 0, left: 0.25, right: 0.25}))).toBe('image-p-4000x2000-jpg#1000,200,2000,1800')
+    const approved = {themePhotos: [raw('image-p-4000x2000-jpg', {width: 4000, height: 2000, crop: {top: 0.1, bottom: 0, left: 0.1, right: 0.1}})], flowPhotos: ['image-p-4000x2000-jpg#400,200,3200,1800']}
+    expect(photoSetOf(approved, HERO.assetId)).toHaveLength(1)
+    const widened = {...approved, themePhotos: [raw('image-p-4000x2000-jpg', {width: 4000, height: 2000, crop: {top: 0, bottom: 0, left: 0.2, right: 0.2}})]}
+    expect(setPhotoEntries(widened, HERO.assetId).map((e) => e.status)).toEqual(['notApproved'])
+    expect(photoSetOf(widened, HERO.assetId)).toEqual([])
   })
 })
 
@@ -166,8 +190,9 @@ describe('a run, as the canvas draws it', () => {
     expect(runs[0].querySelector('.bg-scrim\\/80')).not.toBeNull()
   })
 
-  it('its photograph is drawn at the run’s head on a phone', () => {
+  it('its photograph is drawn at the run’s head on a phone, the scrim fading out with it (no darker step below)', () => {
     expect(runs[0].querySelector('[data-photo-set]')!.className.split(' ')).toContain('photo-run-head')
+    expect(runs[0].querySelector('[data-photo-set] .bg-scrim\\/80')).not.toBeNull()
   })
 
   it('outside a run nothing is drawn: the bands under the hero and beside the close are the plain dark ground', () => {
@@ -183,10 +208,20 @@ describe('the photograph, as served', () => {
   const {container} = render(<HomepageCanvas blocks={blocks} site={one} hero="image" />)
   const band = [...container.querySelectorAll('section')].find((s) => s.querySelector('[data-photo-set]'))!
 
-  it('a run of one draws in its own section, not a wrapper', () => {
+  it('a run of one draws in its own section, not a wrapper, its scrim over the whole band', () => {
     expect(container.querySelector('[data-photo-run]')).toBeNull()
     expect(band.getAttribute('data-scrim')).toBe('true')
     expect(band.className.split(' ')).toContain('bg-brand-dark')
+    expect(band.querySelector('[data-photo-set] .bg-scrim\\/80')).toBeNull()
+    expect(band.querySelector('.bg-scrim\\/80')).not.toBeNull()
+  })
+
+  it('frames a cropped photograph on its focal point, which the Studio stores in the whole image’s fractions', () => {
+    const image = {asset: {_ref: 'image-p-4000x2000-jpg'}, hotspot: {x: 0.5, y: 0.5}}
+    expect(focalPosition(image)).toBe('50.00% 50.00%')
+    expect(focalPosition({...image, crop: {top: 0, bottom: 0, left: 0.5, right: 0}})).toBe('0.00% 50.00%')
+    expect(focalPosition({...image, hotspot: {x: 0.75, y: 0.5}, crop: {top: 0, bottom: 0, left: 0.5, right: 0}})).toBe('50.00% 50.00%')
+    expect(focalPosition({asset: image.asset})).toBe('50% 50%')
   })
 
   it('a plain `<picture>`: a phone source of its own, the wide image lazy, low priority, decorative, grayscale', () => {
@@ -217,6 +252,25 @@ describe('the photograph, as served', () => {
     expect(new URL(phone).searchParams.get('fit')).toBe('crop')
     const cropped = setPhotoUrls({...SET[0], image: {...SET[0].image, crop: {top: 0, bottom: 0.1, left: 0.1, right: 0}}})
     expect(new URL(cropped.wide).searchParams.get('rect')).toBeTruthy()
+  })
+})
+
+describe('a practice card on a photograph (the pre-PR break pass)', () => {
+  it('draws no hover glow on a photograph or a lit ground: its muted line would fall under 4.5:1', () => {
+    const {container} = render(<TileGlow fx={{glow: 'group-hover:opacity-100'} as never} />)
+    expect(container.firstElementChild!.hasAttribute('data-tile-glow')).toBe(true)
+    const css = readFileSync(resolve(__dirname, '../../../app/globals.css'), 'utf8')
+    expect(css).toMatch(/:is\(\[data-scrim="true"\], \[data-glow="true"\]\) \[data-tile-glow\] \{\s*display: none;/)
+  })
+})
+
+describe('whether the close renders, one answer for the page and the preview', () => {
+  it('the homepage’s own words over the site’s, and hidden when the homepage hides it', () => {
+    expect(closeShownOf({heading: 'Talk to us'} as never, null)).toBe(true)
+    expect(closeShownOf({heading: ''} as never, {ctaOverride: {heading: 'Call today'}} as never)).toBe(true)
+    expect(closeShownOf({heading: 'Talk to us'} as never, {hideCtaForm: true} as never)).toBe(false)
+    expect(closeShownOf(null, {ctaOverride: {heading: 'Call today'}} as never)).toBe(false)
+    expect(closeShownOf({heading: ''} as never, null)).toBe(false)
   })
 })
 
@@ -261,17 +315,21 @@ describe('the page draws only the photographs approved with the theme ([R-574])'
 })
 
 describe('the preview approves the set with the theme', () => {
-  const doc = {_rev: 'r1', themePhotos: [{asset: {_ref: 'image-z-1-jpg'}}, {asset: {_ref: 'image-a-1-jpg'}}]}
+  // The stored set as `PREVIEW_STORED_DESIGN_QUERY` reads it: each photograph with its asset's size and opacity.
+  const stored = (ref: string) => ({asset: {_ref: ref}, width: 2400, height: 1600, isOpaque: true})
+  const doc = {_rev: 'r1', themePhotos: [stored('image-z-2400x1600-jpg'), stored('image-a-2400x1600-jpg')]}
+  const ids = ['image-a-2400x1600-jpg', 'image-z-2400x1600-jpg']
   const scrims = {styleSet: 'site', palette: 'site', flow: 'photoScrims.mostlyDark'}
   it('sets `flowPhotos` sorted beside the hero’s photograph; a reorder of an approved set needs nothing', () => {
-    expect(planPreview(doc, scrims, 'image-hero-1-jpg').set.flowPhotos).toEqual(['image-a-1-jpg', 'image-z-1-jpg'])
-    expect(planPreview({...doc, flowPhotos: ['image-a-1-jpg', 'image-z-1-jpg']}, scrims, 'image-hero-1-jpg').set.flowPhotos).toBeUndefined()
+    expect(planPreview(doc, scrims, 'image-hero-2400x1600-jpg').set.flowPhotos).toEqual(ids)
+    expect(planPreview({...doc, flowPhotos: ids}, scrims, 'image-hero-2400x1600-jpg').set.flowPhotos).toBeUndefined()
   })
-  it('clears it with any other theme, with no hero photograph, and with an empty set', () => {
-    const approved = {...doc, flowPhotos: ['image-a-1-jpg', 'image-z-1-jpg']}
-    expect(planPreview(approved, {...scrims, flow: 'cutBlocks.mostlyDark'}, 'image-hero-1-jpg').unset).toContain('flowPhotos')
+  it('clears it with any other theme, with no hero photograph, and with an empty set or none the theme may draw', () => {
+    const approved = {...doc, flowPhotos: ids}
+    expect(planPreview(approved, {...scrims, flow: 'cutBlocks.mostlyDark'}, 'image-hero-2400x1600-jpg').unset).toContain('flowPhotos')
     expect(planPreview(approved, scrims, null).unset).toContain('flowPhotos')
-    expect(planPreview({...approved, themePhotos: []}, scrims, 'image-hero-1-jpg').unset).toContain('flowPhotos')
-    expect(planPreview(doc, {...scrims, flow: 'cutBlocks.mostlyDark'}, 'image-hero-1-jpg').set.flowPhotos).toBeUndefined()
+    expect(planPreview({...approved, themePhotos: []}, scrims, 'image-hero-2400x1600-jpg').unset).toContain('flowPhotos')
+    expect(planPreview({...approved, themePhotos: [{...stored('image-s-1200x800-jpg'), width: 1200, height: 800}]}, scrims, 'image-hero-2400x1600-jpg').unset).toContain('flowPhotos')
+    expect(planPreview(doc, {...scrims, flow: 'cutBlocks.mostlyDark'}, 'image-hero-2400x1600-jpg').set.flowPhotos).toBeUndefined()
   })
 })
