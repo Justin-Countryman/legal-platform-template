@@ -81,6 +81,12 @@ export function photosAllOrNone(items: SiloNavItem[]): SiloNavItem[] {
   return items.map((i) => (i.image ? {...i, image: null} : i))
 }
 
+/** The section's cards draw photographs of their own (Phase 17E): the walk never lays a photograph of the
+ *  theme's set behind them, which would be photographs on a photograph (ADV-17E-C). */
+export function drawsCardPhotos(data: PracticeAreaNavBlockData): boolean {
+  return photosAllOrNone(visibleItems(data)).some((i) => hasImage(i.image))
+}
+
 /** True when this section renders nothing, so the walk skips it and it never
  *  becomes the "previous band" for the one after it (item 312). */
 export function isEmpty(data: PracticeAreaNavBlockData): boolean {

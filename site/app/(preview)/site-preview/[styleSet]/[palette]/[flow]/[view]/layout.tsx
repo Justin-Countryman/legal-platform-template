@@ -5,7 +5,7 @@ import {Switcher} from '@/components/preview/Switcher'
 import {analyticsOff} from '@/lib/preview/analytics'
 import {loadPreview} from '@/lib/preview/load'
 import {homeHeroOf} from '@/components/layout/HomeBody'
-import {heroGround, heroPhotoOf} from '@/lib/heroGround'
+import {heroGround, heroPhotoOf, setPhotoEntries} from '@/lib/heroGround'
 
 // ─── The preview address ──────────────────────────────────────────────────────
 //
@@ -47,8 +47,13 @@ export default async function PreviewLayout({children, params}: {children: React
   const host = h.get('x-forwarded-host') ?? h.get('host') ?? ''
   const proto = h.get('x-forwarded-proto') ?? (host.startsWith('localhost') || host.startsWith('127.0.0.1') ? 'http' : 'https')
   const off = analyticsOff(state.liveChrome?.scripts)
+  const heroPhoto = heroPhotoOf(homeHeroOf(state.home))
+  // The theme's set as the site has approved it (Phase 17E, `[R-574]`), and whether the close renders to take its first.
+  const photoSet = setPhotoEntries(state.liveChrome?.designTokens as Record<string, unknown> | null, heroPhoto?.assetId)
+  const page = state.home?.page as {hideCtaForm?: boolean | null} | null | undefined
+  const closeShown = !page?.hideCtaForm && !!(state.chrome?.globalCta as {heading?: string | null} | null | undefined)?.heading
   const switcher = (
-    <Switcher grant={state.grant} choices={state.choices} plan={state.plan} canvas={state.home?.page?.canvas} chrome={state.chrome} origin={`${proto}://${host}`} hero={heroGround(homeHeroOf(state.home))} heroPhoto={heroPhotoOf(homeHeroOf(state.home))} />
+    <Switcher grant={state.grant} choices={state.choices} plan={state.plan} canvas={state.home?.page?.canvas} chrome={state.chrome} origin={`${proto}://${host}`} hero={heroGround(homeHeroOf(state.home))} heroPhoto={heroPhoto} photoSet={photoSet} closeShown={closeShown} />
   )
 
   return (

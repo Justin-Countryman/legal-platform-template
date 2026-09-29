@@ -3,7 +3,7 @@ import {ghostSource} from '@/lib/brandMark'
 import {closeFrame, closeGround, walkPage} from '@/components/sections/sectionFrame'
 import {siteLookWithHeadingFace} from '@/lib/headingAdvances'
 import {firstBandRises, frameOf} from '@/components/layout/HomepageCanvas'
-import {heroGround, heroPhotoOf} from '@/lib/heroGround'
+import {heroGround, heroPhotoOf, photoSetOf} from '@/lib/heroGround'
 import {closeSurface} from '@/lib/flows'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
@@ -73,10 +73,14 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
   const photo = heroPhotoOf(hero)
   const approved = (chrome?.designTokens as {flowPhoto?: unknown} | null | undefined)?.flowPhoto
   const closeData = globalCtaData && !home?.hideCtaForm ? {...globalCtaData, ...(home?.ctaOverride ?? {})} : null
+  const heroPhoto = photo?.assetId && photo.assetId === approved ? photo : null
   const site = {
     ...look,
     ghost: ghostSource(header?.siteSettings?.firmName, look.flow?.ghost === 'once'),
-    heroPhoto: photo?.assetId && photo.assetId === approved ? photo : null,
+    heroPhoto,
+    // Phase 17E (`[R-573]`, `[R-574]`): the theme's set of photographs, beside the approved hero photograph only, each
+    // photograph only while approved.
+    photoSet: heroPhoto ? photoSetOf(chrome?.designTokens as Record<string, unknown> | null, heroPhoto.assetId) : null,
     closeShown: !!closeData?.heading,
   }
   const ground = heroGround(hero)

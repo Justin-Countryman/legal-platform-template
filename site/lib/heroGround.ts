@@ -44,3 +44,64 @@ export function heroPhotoOf(hero: HomeHeroData | null): HeroPhoto | null {
   if (w < HERO_PHOTO_MIN_WIDTH || h <= 0 || w < HERO_PHOTO_MIN_ASPECT * h) return null
   return {src: img.src, width: w, height: h, hotspot: img.hotspot ?? null, assetId: img.assetId ?? null}
 }
+
+// ─── The theme's set of photographs (Phase 17E, `[R-573]`, `[R-574]`) ─────────────
+// Photographs of one place an operator uploads once in Design Settings (`themePhotos`), which Photo
+// scrims lays behind the closing call to action and behind runs of sections, beside the hero's own
+// photograph. Each is read against the same guard as the hero's (opaque, landscape at least 1.2 to 1
+// once cropped, at least 1,600 pixels wide once cropped), drawn once however often it was added, never
+// when it is the hero's own photograph (the hero again, 17B6-A), and only while its asset id is among
+// the approved (`flowPhotos`): nothing in an image's data tells a place from a person, so a photograph
+// added or replaced after Apply shows nowhere until the operator approves it in the preview.
+export type SetPhoto = {
+  /** The image as the URL builder reads it: the asset reference, the crop and the focal point. */
+  image: {asset: {_ref: string}; crop?: {top: number; bottom: number; left: number; right: number} | null; hotspot?: {x: number; y: number; width?: number; height?: number} | null}
+  assetId: string
+  /** The size once cropped. */
+  width: number
+  height: number
+}
+export type SetPhotoStatus = 'approved' | 'notApproved' | 'small' | 'portrait' | 'transparent' | 'duplicate' | 'hero'
+export type SetPhotoEntry = {photo: SetPhoto; status: SetPhotoStatus}
+
+type RawSetPhoto = {asset?: {_ref?: unknown} | null; crop?: SetPhoto['image']['crop']; hotspot?: SetPhoto['image']['hotspot']; width?: unknown; height?: unknown; isOpaque?: unknown; assetId?: unknown}
+
+/** Every photograph of the stored set, in order, with why it draws or does not. */
+export function setPhotoEntries(tokens: Record<string, unknown> | null | undefined, heroAssetId: string | null | undefined): SetPhotoEntry[] {
+  const list = Array.isArray(tokens?.themePhotos) ? (tokens!.themePhotos as RawSetPhoto[]) : []
+  const approved = new Set(Array.isArray(tokens?.flowPhotos) ? (tokens!.flowPhotos as unknown[]).filter((x): x is string => typeof x === 'string') : [])
+  const seen = new Set<string>()
+  const out: SetPhotoEntry[] = []
+  for (const raw of list) {
+    const ref = typeof raw?.asset?._ref === 'string' ? raw.asset._ref : null
+    if (!ref) continue
+    const crop = raw.crop ?? null
+    const keepW = crop ? Math.max(0, 1 - (crop.left ?? 0) - (crop.right ?? 0)) : 1
+    const keepH = crop ? Math.max(0, 1 - (crop.top ?? 0) - (crop.bottom ?? 0)) : 1
+    const width = Math.round(Number(raw.width ?? 0) * keepW)
+    const height = Math.round(Number(raw.height ?? 0) * keepH)
+    const photo: SetPhoto = {image: {asset: {_ref: ref}, crop, hotspot: raw.hotspot ?? null}, assetId: ref, width, height}
+    const status: SetPhotoStatus =
+      seen.has(ref) ? 'duplicate'
+        : ref === heroAssetId ? 'hero'
+          : raw.isOpaque === false ? 'transparent'
+            : width < HERO_PHOTO_MIN_WIDTH ? 'small'
+              : height <= 0 || width < HERO_PHOTO_MIN_ASPECT * height ? 'portrait'
+                : approved.has(ref) ? 'approved' : 'notApproved'
+    seen.add(ref)
+    out.push({photo, status})
+  }
+  return out
+}
+
+/** The photographs the theme may draw, in order: approved, qualifying, each once, never the hero's. */
+export function photoSetOf(tokens: Record<string, unknown> | null | undefined, heroAssetId: string | null | undefined): SetPhoto[] {
+  return setPhotoEntries(tokens, heroAssetId).filter((e) => e.status === 'approved').map((e) => e.photo)
+}
+
+/** The asset ids the preview approves with a theme that draws photographs: every photograph of the
+ *  stored set, sorted and each once (a reorder needs no new approval), or none. */
+export function setAssetIds(doc: Record<string, unknown> | null | undefined): string[] {
+  const list = Array.isArray(doc?.themePhotos) ? (doc!.themePhotos as RawSetPhoto[]) : []
+  return [...new Set(list.map((p) => p?.asset?._ref).filter((r): r is string => typeof r === 'string'))].sort()
+}

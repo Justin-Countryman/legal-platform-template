@@ -3,7 +3,7 @@ import {
 } from '@/components/sections/SectionShell'
 import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
 import {closeSurface, fadeOf, flowOf, glowFillOk, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts} from '@/lib/flows'
-import type {HeroPhoto} from '@/lib/heroGround'
+import type {HeroPhoto, SetPhoto} from '@/lib/heroGround'
 import type {HeadingFace} from '@/lib/headingFace'
 import type {DrawnStrength} from '@/lib/designTokens'
 
@@ -86,6 +86,9 @@ export type FlowInputs = {
   /** The member's split draws a cutout figure, on this side (Phase 17D session 2): Gradient bloom puts its run's glow
    *  behind it. */
   cutout?: 'left' | 'right' | null
+  /** The member's cards draw photographs of their own (the practice areas' card photos, Phase 17D): never a run of the
+   *  theme's set (Phase 17E). */
+  cardPhotos?: boolean
 }
 
 /** What the ground pass assigned to a band, or nothing where the band's own surface
@@ -106,6 +109,10 @@ export type Paint = {
    *  quadrant of the photograph drawn at twice the band's size. Set only with `ground: 'image'`
    *  on a band the theme filled; the shell draws the site look's `heroPhoto` through it. */
   window?: PhotoWindow
+  /** The photograph of the theme's set this band shows (Phase 17E, `[R-573]`): its place in `site.photoSet`, and the
+   *  band's place `at` in its run of `length` bands under that one photograph. A run longer than one band is drawn once
+   *  by the canvas's wrapper (`HomepageCanvas`), and its bands paint no ground of their own. */
+  photo?: {index: number; at: number; length: number}
   /** The ground a light panel the theme floats sits on (Phase 17D, `light.paint: 'floating'`): the walk
    *  reads the band as this ground and adopts it wherever the band sits, first and last included. */
   onGround?: 'dark'
@@ -153,6 +160,9 @@ export type SiteLook = {
    *  on a live page only the photograph the theme was approved with (`[R-532]`), in the preview
    *  the live one; null wherever there is none. Set by `HomeBody`; interior pages never carry it. */
   heroPhoto?: HeroPhoto | null
+  /** The theme's set of photographs of one place (Phase 17E, `[R-573]`): approved, qualifying, each once, never the
+   *  hero's own (`photoSetOf`). Set by `HomeBody` only beside an approved hero photograph; interior pages never carry it. */
+  photoSet?: SetPhoto[] | null
   /** The closing call to action renders on this page, so a photo close is a neighbour of the
    *  last band. Set by `HomeBody`; absent reads as shown. */
   closeShown?: boolean
@@ -183,7 +193,7 @@ export function siteLookOf(d: Record<string, unknown> | null | undefined): SiteL
  *  page carries no theme. The carried pieces DO reach them (`[R-483]`), painted by the
  *  site wrapper, as the drop cap does: they are the UI system's one decision each. */
 export function interiorLook(site: SiteLook | null | undefined): SiteLook | null {
-  return site ? {...site, flow: null, ghost: null, heroPhoto: null} : null
+  return site ? {...site, flow: null, ghost: null, heroPhoto: null, photoSet: null} : null
 }
 
 /** A section's own value where it has one; absent and `inherit` follow the site. */
@@ -528,6 +538,12 @@ type Survivor = {appearance: SectionAppearance | null | undefined} & FlowInputs
 export const PHOTO_HOSTS: readonly Host[] = ['narrative', 'split', 'testimonials', 'differentiators', 'statement']
 /** At most this many windows mid-page, plus the close: a fourth window shows the hero again. */
 export const PHOTO_WINDOWS_PER_PAGE = 2
+/** A run under one photograph of the theme's set is at most this many bands (Phase 17E): the evidence's runs are 991 to
+ *  1,879 px at 1440, most often three bands (ADV-17E-A); on a phone the photograph is drawn at the run's head. */
+export const SET_RUN_MAX = 3
+/** The grids a run of the set may take in beside a text-led band: the practice areas, whose tiles let the photograph
+ *  show; never the attorneys or case results, whose opaque cards hide it (ADV-17E-B). */
+export const SET_RUN_GRIDS: readonly Host[] = ['areas']
 
 /** The photograph's windows, in the order they are given out: the quadrants farthest from the
  *  hotspot (the subject, which stays in the hero) first, and never the one nearest it; with no
@@ -543,7 +559,7 @@ export function photoWindows(hotspot: {x: number; y: number} | null | undefined)
 export function assignGrounds(
   survivors: readonly Survivor[],
   flow: FlowRules,
-  site: Pick<SiteLook, 'patternTexture' | 'saturated' | 'heroPhoto' | 'closeShown'> | null = null,
+  site: Pick<SiteLook, 'patternTexture' | 'saturated' | 'heroPhoto' | 'closeShown' | 'photoSet'> | null = null,
 ): (Paint | null)[] {
   const n = survivors.length
   const strongOf = (a: SectionAppearance | null | undefined) => {
@@ -691,7 +707,45 @@ export function assignGrounds(
   // on a phone magnifies it five to seven times. A band that would put a photograph beside an
   // inset between two strong grounds stays plain, so `[R-501]`'s adoption puts the panel on the
   // run as ruled (ADV-17B6-B). The windows: the close takes the first, the bands the next two.
-  if (flow.dark.paint === 'heroPhoto' && site?.heroPhoto) {
+  // THE SET (Phase 17E, `[R-573]`, record WS-V1-PHASE17E-DESIGN §2.3). Beside an approved hero photograph only, so the
+  // hero stays the page's first and largest photograph (a set photograph under a hero with none became the phone's
+  // largest paint, measured). The close takes the set's first photograph; runs of one to three dark bands the pass
+  // filled take the rest in page order, one photograph a run, never beside another photograph; a run is text-led
+  // bands, and the practice areas when the run has a text-led band and their cards carry no photographs of their own.
+  // Every photograph once: fewer photographs than places leave the later places plain. A set that can place nothing
+  // (the close hidden, no run) gives way to the windows below.
+  let setPlaced = 0
+  if (flow.dark.paint === 'heroPhoto' && site?.heroPhoto && site.photoSet?.length) {
+    const set = site.photoSet
+    const closePhoto = flow.dark.close === 'photo' && site.closeShown !== false
+    const strongAt = (i: number) => i >= 0 && i < n && (dark[i] || strongOf(survivors[i].appearance))
+    const photoAt = (i: number): boolean => {
+      if (i < 0) return true
+      if (i >= n) return closePhoto
+      return paints[i]?.ground === 'image' || (stored[i] && survivors[i].appearance?.surface === 'image')
+    }
+    const bracketsInset = (i: number) =>
+      (i - 1 >= 0 && inset[i - 1] && strongAt(i - 2)) || (i + 1 < n && inset[i + 1] && strongAt(i + 2))
+    const textLed = (i: number) => PHOTO_HOSTS.includes(survivors[i].host as Host)
+    const eligible = (i: number) => i >= 0 && i < n && !fixed[i] && dark[i] && !bracketsInset(i)
+      && (textLed(i) || (SET_RUN_GRIDS.includes(survivors[i].host as Host) && !survivors[i].cardPhotos))
+    let next = closePhoto ? 1 : 0
+    setPlaced = closePhoto ? 1 : 0
+    for (let i = 0; i < n && next < set.length; i++) {
+      if (!eligible(i) || photoAt(i - 1)) continue
+      const run = [i]
+      while (run.length < SET_RUN_MAX && eligible(i + run.length)) run.push(i + run.length)
+      while (run.length && photoAt(run[run.length - 1] + 1)) run.pop()
+      // A run shows its photograph behind a text band: a grid alone would spend a photograph on the gutters.
+      while (run.length && !run.some(textLed)) run.pop()
+      if (!run.length) continue
+      run.forEach((k, at) => { paints[k] = {ground: 'image', texture: false, photo: {index: next, at, length: run.length}} })
+      next++
+      setPlaced++
+      i = run[run.length - 1]
+    }
+  }
+  if (setPlaced === 0 && flow.dark.paint === 'heroPhoto' && site?.heroPhoto) {
     const closePhoto = flow.dark.close === 'photo' && site.closeShown !== false
     const strongAt = (i: number) => i >= 0 && i < n && (dark[i] || strongOf(survivors[i].appearance))
     const photoAt = (i: number): boolean => {
@@ -743,6 +797,10 @@ export function closeFrame(
   site: SiteLook,
   walked?: {run?: SeamProps['run']; fade: SeamProps['fade']},
 ): {surface: 'dark' | 'saturated' | 'muted' | 'image' | 'light'; seam?: SeamProps} {
+  // The set's first photograph where the theme has one (Phase 17E), else the hero's first window.
+  if (close === 'photo' && site.heroPhoto && site.photoSet?.length) {
+    return {surface: 'image', seam: {...NO_SEAM, site, paint: {ground: 'image', texture: false, photo: {index: 0, at: 0, length: 1}}}}
+  }
   if (close === 'photo') {
     return {surface: 'image', seam: site.heroPhoto ? {...NO_SEAM, site, paint: {ground: 'image', texture: false, window: photoWindows(site.heroPhoto.hotspot)[0]}} : undefined}
   }

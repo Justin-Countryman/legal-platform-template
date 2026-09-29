@@ -16,6 +16,7 @@ import {FAMILIES, FLOWS, flowId} from '@/lib/flows'
 import {planPreview, type StoredDesign} from '@/lib/preview/plan'
 import {verifyToken, type PreviewGrant} from '@/lib/preview/session'
 import {type SiteChrome} from '@/components/layout/SiteShell'
+import {setPhotoEntries} from '@/lib/heroGround'
 
 // The switcher (Phase 17A, monorepo WS-V1-PHASE17A-DESIGN §2.5): the operator's three
 // rows, the client's one line, and the links it signs. Phase 17B session 3 (record
@@ -217,6 +218,37 @@ describe('Switcher, the hero photograph (Phase 17B session 6, `[R-532]`)', () =>
     expect(withPhoto(applied, scrims, PHOTO, stale)).not.toContain('The hero photograph changed')
     const current = {...chromeWithTexture, designTokens: {patternTexture: 'diagonalHatch', flow: 'photoScrims.mostlyDark', flowPhoto: PHOTO.assetId}} as unknown as SiteChrome
     expect(withPhoto({...applied, flowPhoto: PHOTO.assetId}, siteIs, PHOTO, current)).not.toContain('The hero photograph changed')
+  })
+})
+
+describe('Switcher, the theme photographs (Phase 17E, `[R-574]`)', () => {
+  const HERO = {src: 'https://cdn.example.com/city.jpg', width: 2400, height: 1600, hotspot: null, assetId: 'image-hero-2400x1600-jpg'}
+  const scrims = {...choices, flow: 'photoScrims.mostlyDark'}
+  const raw = (n: string, over: Record<string, unknown> = {}) => ({asset: {_ref: `image-${n}-2400x1600-jpg`}, width: 2400, height: 1600, isOpaque: true, assetId: `image-${n}-2400x1600-jpg`, ...over})
+  const tokens = {patternTexture: 'diagonalHatch', themePhotos: [raw('a'), raw('b'), raw('a'), raw('small', {width: 1200, height: 800})], flowPhotos: ['image-a-2400x1600-jpg']}
+  const draw = (heroPhoto: typeof HERO | null, c = scrims) => {
+    const doc: StoredDesign = {...stored, ...tokens}
+    const plan = planPreview(doc, c, heroPhoto?.assetId ?? null)
+    const chrome = {...chromeWithTexture, designTokens: {...tokens, ...plan.set}} as unknown as SiteChrome
+    const entries = setPhotoEntries(tokens, heroPhoto?.assetId)
+    return render(<Switcher grant={operator} choices={c} plan={plan} canvas={[]} chrome={chrome} origin="https://example.com" hero="image" heroPhoto={heroPhoto} photoSet={entries} closeShown />).container
+  }
+
+  it('lists every photograph with a thumbnail and says why one does not show, or waits for approval', () => {
+    const c = draw(HERO)
+    const text = c.textContent ?? ''
+    expect(c.querySelectorAll('.sw-photo img')).toHaveLength(4)
+    expect(text).toContain('Theme photographs')
+    expect(text).toContain('not yet approved: it shows once this theme is applied')
+    expect(text).toContain('not shown: the same photograph is in the set twice')
+    expect(text).toContain('not shown: under 1,600 pixels wide')
+    // The close renders and takes the first photograph; the canvas is empty, so nothing else is placed.
+    expect(text).toContain('This page shows 1 of the 2 photographs it can use')
+  })
+
+  it('says the set needs a hero photograph where the homepage has none, and lists nothing under another theme', () => {
+    expect(draw(null).textContent).toContain('draws its set only with a hero photograph of a place')
+    expect(draw(HERO, {...choices, flow: 'cutBlocks.mostlyDark'}).querySelector('.sw-photos')).toBeNull()
   })
 })
 
