@@ -3,6 +3,7 @@ import {PALETTE_PRESETS, matchPreset, presetInputs, type PalettePreset} from '@/
 import {FLOWS, HIDDEN_FIELDS, RETIRED_FLOWS, drawsHeroPhoto, flowById, flowOf, type FlowRules} from '@/lib/flows'
 import {parseHexInput, type ColorInputs} from '@/lib/designTokens'
 import {isResolvedTreatment} from '@/lib/imageTreatment'
+import {setApprovalKeys} from '@/lib/heroGround'
 import {SILO_HOVER_EFFECTS} from '@/lib/siloHover'
 import {type PreviewView} from './session'
 
@@ -38,6 +39,11 @@ import {type PreviewView} from './session'
 // photograph the preview shows, its asset id written as `flowPhoto` beside `flow`; any other chosen
 // theme clears it. The live page draws that theme's photo sections only while the hero photograph
 // is still the approved one.
+//
+// Phase 17E (`[R-574]`): with it, the theme's set of photographs the preview shows, as `flowPhotos`: the key
+// of every photograph of the stored set the theme may draw (its asset id and, where cropped, the rectangle drawn;
+// `setApprovalKeys`), sorted, so a reorder needs no new approval, and never an empty list; any other chosen theme
+// clears it. The live page draws a photograph of the set only while its key is among them.
 
 /** The row value that leaves a choice as the site has it. */
 export const AS_THE_SITE_IS = 'site'
@@ -141,6 +147,12 @@ export function planPreview(
       if (doc.flowPhoto !== heroPhoto) set.flowPhoto = heroPhoto
     } else if (present(doc.flowPhoto)) {
       unset.push('flowPhoto')
+    }
+    const setIds = drawsHeroPhoto(flow) && heroPhoto ? setApprovalKeys(doc, heroPhoto) : []
+    if (setIds.length > 0) {
+      if (!same(doc.flowPhotos, setIds)) set.flowPhotos = setIds
+    } else if (present(doc.flowPhotos)) {
+      unset.push('flowPhotos')
     }
   }
 

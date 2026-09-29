@@ -2,7 +2,7 @@ import {existsSync, readFileSync} from 'node:fs'
 import {resolve} from 'node:path'
 import {type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {type VisibleGround} from '@/lib/sectionSurface'
-import {heroPhotoOf, type HeroPhoto} from '@/lib/heroGround'
+import {heroPhotoOf, photoSetOf, type HeroPhoto, type SetPhoto} from '@/lib/heroGround'
 import {type HomeHeroData} from '@/components/layout/homeHero/types'
 
 // The stub datasets under `scripts/ci/`, read the way the homepage query reads them
@@ -30,6 +30,10 @@ export const RECORD_CANVASES = [
   // Phase 17D session 2: the adversarial record with a stand-in cutout figure (a marble bust) in every split band, for
   // Gradient bloom's glow behind a figure.
   'record-adversarial-cutout.ndjson',
+  // Phase 17E (`[R-573]`): the three records with a photograph of one city behind the hero and four more of it as the
+  // theme's set, and the planning record with the set and no hero photograph, where the set draws nothing.
+  'record-adversarial-photo-set.ndjson', 'record-planning-photo-set.ndjson', 'record-multi-practice-photo-set.ndjson',
+  'record-planning-photo-set-no-hero-photo.ndjson',
 ] as const
 
 export function stubDataset(file: string): Doc[] | null {
@@ -40,9 +44,10 @@ export function stubDataset(file: string): Doc[] | null {
 
 const APPEARANCE = ['surface', 'spacing', 'inset', 'overlapPrevious'] as const
 
-/** One dataset's homepage canvas with its references resolved, the hero's ground, and the hero's
- *  photograph as the page reads it (`heroPhotoOf`), or null. */
-export function stubCanvas(file: string): {blocks: HomepageBlock[]; hero: VisibleGround; heroPhoto: HeroPhoto | null} | null {
+/** One dataset's homepage canvas with its references resolved, the hero's ground, the hero's
+ *  photograph as the page reads it (`heroPhotoOf`), or null, and the theme's set as the preview draws it
+ *  (every photograph approved, as choosing the theme approves them; Phase 17E), beside that photograph only. */
+export function stubCanvas(file: string): {blocks: HomepageBlock[]; hero: VisibleGround; heroPhoto: HeroPhoto | null; photoSet: SetPhoto[]} | null {
   const docs = stubDataset(file)
   if (!docs) return null
   const byId = new Map(docs.map((d) => [d._id, d]))
@@ -74,5 +79,12 @@ export function stubCanvas(file: string): {blocks: HomepageBlock[]; hero: Visibl
     if (m._type === 'caseResultsSectionInline') out.caseResults = ((m.caseResults as Ref[]) ?? []).map(deref).filter(Boolean)
     return out as unknown as HomepageBlock
   })
-  return {blocks, hero, heroPhoto}
+  const design = docs.find((d) => d._type === 'designSettings') as (Doc & {themePhotos?: Array<{asset?: Ref}>}) | undefined
+  const themePhotos = (design?.themePhotos ?? []).map((p) => {
+    const a = deref(p.asset)
+    const m = a?.metadata as {dimensions?: {width?: number; height?: number}; isOpaque?: boolean} | undefined
+    return {asset: p.asset, src: a?.url, width: m?.dimensions?.width, height: m?.dimensions?.height, isOpaque: m?.isOpaque, assetId: a?._id}
+  })
+  const photoSet = heroPhoto ? photoSetOf({themePhotos, flowPhotos: themePhotos.map((p) => p.assetId)}, heroPhoto.assetId) : []
+  return {blocks, hero, heroPhoto, photoSet}
 }

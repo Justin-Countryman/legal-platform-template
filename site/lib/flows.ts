@@ -367,11 +367,11 @@ export const FAMILIES: readonly FlowFamily[] = [
   // ─── Phase 17B session 6 (record WS-V1-PHASE17B6-DESIGN §2) ─────────────────
   {
     id: 'photoScrims', name: 'Photo scrims',
-    sentence: 'Dark-led: a toned piece of the hero\u2019s own photograph behind two sections and the close.',
+    sentence: 'Dark-led: photographs of one place behind groups of dark sections and the close, or pieces of the hero\u2019s own photograph.',
     // The study: delllawfirm, capflaw, abdellasise, cleghornjones and aswllp, all mostly dark, photos 57
     // to 78% of their dark bands, the close a place. `[R-526]`, `[R-530]`: the hero's own photograph
     // first, a quarter of it at a time, at most three windows a page (a fourth shows the hero again);
-    // a set of photographs, one per band, is backlog 365. Its sections work as an Image section built
+    // the theme's set of photographs takes their place once uploaded and approved (Phase 17E, `[R-573]`). Its sections work as an Image section built
     // by hand, the same scrim and colors (`[R-531]`); a photograph changed after Apply shows none until
     // it is approved (`[R-532]`). Mostly dark only: no balanced study page with a photo hero carries two
     // photo bands, and the family's sites are all mostly dark.

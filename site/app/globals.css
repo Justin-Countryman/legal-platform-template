@@ -1371,6 +1371,35 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   max-width: none;
   dynamic-range-limit: standard;
 }
+/* A photograph of the theme's set (Phase 17E, `[R-573]`; monorepo WS-V1-PHASE17E-DESIGN §2.4): held to the standard
+   range, as every photo band's image is, so nothing is brighter than the white the scrim's proof assumes. */
+@utility set-photo {
+  dynamic-range-limit: standard;
+}
+/* A run's photograph on a phone: below 768 px it is drawn at the run's head, a 4:5 box at most (the phone source's own
+   shape) and never taller than the run, fading into the run's navy over its last 45%; from 768 px it fills the run. A
+   run on a phone is 1,000 to 2,300 px tall, and a photograph cover-fitted to it showed a magnified strip of 14% of
+   itself (ADV-17E-C); the evidence's phone pages draw a head (delllawfirm). The uncovered run is navy under the same
+   scrim, so every pair on it only meets a darker ground. */
+@utility photo-run-head {
+  position: absolute;
+}
+@media (width < 48rem) {
+  .photo-run-head {
+    bottom: auto;
+    height: min(100%, 125vw);
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
+    mask-image: linear-gradient(to bottom, #000 55%, transparent);
+  }
+}
+/* No hover glow on a photograph or a lit ground (Phase 17E, the pre-PR break pass; monorepo WS-V1-PHASE17E-DESIGN §9):
+   the accent glow over a card's fill takes the muted line under 4.5:1 at its brightest corner, over the scrim's floor
+   on 8 of the 15 presets and over Gradient bloom's glow on 2 of 9 (measured). A practice grid first sits on a
+   photograph in a run of the theme's set; an Image band built by hand and a glowing band are the same case. The card
+   keeps its fill, its words, its arrow and its link's focus ring. */
+:is([data-scrim="true"], [data-glow="true"]) [data-tile-glow] {
+  display: none;
+}
 /* A card photo under text (Phase 17D, `[R-556]`): text on it sits over `--color-scrim` at 80% or more,
    the bound `validateWcag` proves over the lightest pixel (`[R-533]`), and the photo is held to the
    standard range for the same reason. `tile-text-scrim` goes on a card's text block and draws the

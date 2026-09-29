@@ -34,7 +34,7 @@ import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, chromeSchemes, clos
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {ghostSource} from '@/lib/brandMark'
 import {LOOK, themed} from './flowFixtures'
-import type {HeroPhoto} from '@/lib/heroGround'
+import type {HeroPhoto, SetPhoto} from '@/lib/heroGround'
 
 /** Quiet with the room it never takes, for the case that nothing sets `spacing` by default. */
 const QUIET_ROOM = themed({})
@@ -558,23 +558,24 @@ describe('the decision golden', () => {
   const STUB = stubCanvas('fixture.ndjson')
   const RECORDS = RECORD_CANVASES.map((f) => [f.replace(/^record-|\.ndjson$/g, ''), stubCanvas(f)] as const)
   const ciPresent = STUB !== null && RECORDS.every(([, c]) => c !== null)
-  type Canvas = [string, HomepageBlock[], VisibleGround, HeroPhoto | null]
+  type Canvas = [string, HomepageBlock[], VisibleGround, HeroPhoto | null, SetPhoto[]]
   const canvases: Canvas[] = [
-    ...(ciPresent ? [['stub', STUB!.blocks, STUB!.hero, STUB!.heroPhoto] as Canvas] : []),
-    ['migrated', migrated as unknown as HomepageBlock[], 'dark', null],
-    ['planted', planted as unknown as HomepageBlock[], 'dark', null],
-    // Phase 17B session 6: the photo canvases carry the hero's photograph, as approved.
-    ...(ciPresent ? RECORDS.map(([name, c]) => [name, c!.blocks, c!.hero, c!.heroPhoto] as Canvas) : []),
+    ...(ciPresent ? [['stub', STUB!.blocks, STUB!.hero, STUB!.heroPhoto, STUB!.photoSet] as Canvas] : []),
+    ['migrated', migrated as unknown as HomepageBlock[], 'dark', null, []],
+    ['planted', planted as unknown as HomepageBlock[], 'dark', null, []],
+    // Phase 17B session 6: the photo canvases carry the hero's photograph, as approved; since Phase 17E the set canvases
+    // their set too.
+    ...(ciPresent ? RECORDS.map(([name, c]) => [name, c!.blocks, c!.hero, c!.heroPhoto, c!.photoSet] as Canvas) : []),
   ]
   const themes: FlowRules[] = [...FLOWS, siteLookOf({sectionJoin: 'angled', dividerCarry: ['cards'], patternTexture: 'diagonalHatch', patternGround: 'dark', sectionOverlap: 'photo', brandGhost: 'none'}).flow!]
 
   it.skipIf(!ciPresent)('records every theme’s decisions on every canvas (skipped on a client tree: the stub datasets are pruned by the press)', async () => {
     const golden: Record<string, unknown> = {}
-    for (const [name, blocks, hero, heroPhoto] of canvases) {
+    for (const [name, blocks, hero, heroPhoto, photoSet] of canvases) {
       for (const flow of themes) {
         // Phase 17D session 2: a palette with room to glow (`glow`, as `saturated` passes its gate), and the walk with the
         // close's ground below the last band, as the homepage walks it (`walkPage`).
-        const site: SiteLook = {...LOOK, flow, patternTexture: 'diagonalHatch', saturated: true, glow: true, ghost: ghostSource(FIRM, flow.ghost === 'once'), heroPhoto}
+        const site: SiteLook = {...LOOK, flow, patternTexture: 'diagonalHatch', saturated: true, glow: true, ghost: ghostSource(FIRM, flow.ghost === 'once'), heroPhoto, ...(photoSet.length ? {photoSet} : {})}
         const survivors = blocks.map(frameOf).filter((r) => !r.empty)
         const page = walkPage(blocks, frameOf, site, hero, closeGround(closeSurface(flow, true, !!heroPhoto), true))
         const out = page.bands
@@ -602,11 +603,15 @@ describe('the decision golden', () => {
             ...(seam.paint?.spacing ? {spacing: seam.paint.spacing} : {}),
             // Phase 17B session 6: the window of the hero's photograph, where a band shows one.
             ...(seam.paint?.window ? {window: seam.paint.window} : {}),
+            // Phase 17E: the photograph of the theme's set, where a band shows one, and its place in the run.
+            ...(seam.paint?.photo ? {photo: {...seam.paint.photo, id: photoSet[seam.paint.photo.index]?.assetId}} : {}),
             // Phase 17D session 2: what the band draws over a dark ground, where the theme draws anything.
             ...(seam.fade ? {fade: seam.fade} : {}),
           })),
           // Phase 17D session 2: the close's place in the run, where the theme lights it.
           ...(page.close.run ? {close: page.close} : {}),
+          // Phase 17E: the close's photograph of the theme's set, where the theme draws one.
+          ...(photoSet.length && closeSurface(flow, true, !!heroPhoto) === 'photo' ? {closePhoto: photoSet[0].assetId} : {}),
         }
       }
     }

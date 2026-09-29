@@ -44,3 +44,97 @@ export function heroPhotoOf(hero: HomeHeroData | null): HeroPhoto | null {
   if (w < HERO_PHOTO_MIN_WIDTH || h <= 0 || w < HERO_PHOTO_MIN_ASPECT * h) return null
   return {src: img.src, width: w, height: h, hotspot: img.hotspot ?? null, assetId: img.assetId ?? null}
 }
+
+// ─── The theme's set of photographs (Phase 17E, `[R-573]`, `[R-574]`) ─────────────
+// Photographs of one place an operator uploads once in Design Settings (`themePhotos`), which Photo
+// scrims lays behind the closing call to action and behind runs of sections, beside the hero's own
+// photograph. Each is read against the same guard as the hero's (opaque, landscape at least 1.2 to 1
+// once cropped, at least 1,600 pixels wide once cropped), drawn once however often it was added, never
+// when it is the hero's own photograph (the hero again, 17B6-A), and only while its key is among the
+// approved (`flowPhotos`): nothing in an image's data tells a place from a person, so a photograph added
+// or replaced after Apply shows nowhere until the operator approves it in the preview.
+//
+// THE KEY IS THE PHOTOGRAPH AND THE PIXELS DRAWN (the pre-PR break pass, record §9): the asset id, and
+// where the operator cropped it, the rectangle the image CDN cuts (`rect=left,top,width,height`, as
+// `@sanity/image-url` computes it from the crop and the asset's size). So a crop widened in the Studio
+// after Apply waits for approval like a new photograph, while setting the focal point (the Studio writes
+// a zero crop beside it) or a crop moved by less than a pixel changes nothing. Every pixel a set
+// photograph can draw on any screen lies inside that rectangle.
+export type SetPhoto = {
+  /** The image as the URL builder reads it: the asset reference, the crop and the focal point. */
+  image: {asset: {_ref: string}; crop?: {top: number; bottom: number; left: number; right: number} | null; hotspot?: {x: number; y: number; width?: number; height?: number} | null}
+  assetId: string
+  /** What an approval names: the asset id, and the crop's rectangle where it crops anything. */
+  key: string
+  /** The size once cropped. */
+  width: number
+  height: number
+}
+export type SetPhotoStatus = 'approved' | 'notApproved' | 'small' | 'portrait' | 'transparent' | 'duplicate' | 'hero'
+export type SetPhotoEntry = {photo: SetPhoto; status: SetPhotoStatus}
+
+/** The asset's size, from its id (`image-<hash>-<width>x<height>-<format>`). */
+function refSize(ref: string): {width: number; height: number} | null {
+  const m = /-(\d+)x(\d+)-[a-z0-9]+$/.exec(ref)
+  return m ? {width: Number(m[1]), height: Number(m[2])} : null
+}
+
+/** The approval key of a photograph of the set: its asset id, then `#left,top,width,height` in the asset's
+ *  pixels where the crop cuts anything, the rectangle the image CDN cuts. */
+export function setPhotoKey(image: SetPhoto['image']): string {
+  const ref = image.asset._ref
+  const size = refSize(ref)
+  const c = image.crop
+  if (!size || !c) return ref
+  const left = Math.round((c.left ?? 0) * size.width)
+  const top = Math.round((c.top ?? 0) * size.height)
+  const width = Math.round(size.width - (c.right ?? 0) * size.width - left)
+  const height = Math.round(size.height - (c.bottom ?? 0) * size.height - top)
+  return left === 0 && top === 0 && width === size.width && height === size.height ? ref : `${ref}#${left},${top},${width},${height}`
+}
+
+type RawSetPhoto = {asset?: {_ref?: unknown} | null; crop?: SetPhoto['image']['crop']; hotspot?: SetPhoto['image']['hotspot']; width?: unknown; height?: unknown; isOpaque?: unknown; assetId?: unknown}
+
+/** Every photograph of the stored set, in order, with why it draws or does not. */
+export function setPhotoEntries(tokens: Record<string, unknown> | null | undefined, heroAssetId: string | null | undefined): SetPhotoEntry[] {
+  const list = Array.isArray(tokens?.themePhotos) ? (tokens!.themePhotos as RawSetPhoto[]) : []
+  const approved = new Set(Array.isArray(tokens?.flowPhotos) ? (tokens!.flowPhotos as unknown[]).filter((x): x is string => typeof x === 'string') : [])
+  const seen = new Set<string>()
+  const out: SetPhotoEntry[] = []
+  for (const raw of list) {
+    const ref = typeof raw?.asset?._ref === 'string' ? raw.asset._ref : null
+    if (!ref) continue
+    const crop = raw.crop ?? null
+    const keepW = crop ? Math.max(0, 1 - (crop.left ?? 0) - (crop.right ?? 0)) : 1
+    const keepH = crop ? Math.max(0, 1 - (crop.top ?? 0) - (crop.bottom ?? 0)) : 1
+    const width = Math.round(Number(raw.width ?? 0) * keepW)
+    const height = Math.round(Number(raw.height ?? 0) * keepH)
+    const image: SetPhoto['image'] = {asset: {_ref: ref}, crop, hotspot: raw.hotspot ?? null}
+    const key = setPhotoKey(image)
+    const photo: SetPhoto = {image, assetId: ref, key, width, height}
+    const status: SetPhotoStatus =
+      seen.has(ref) ? 'duplicate'
+        : ref === heroAssetId ? 'hero'
+          : raw.isOpaque === false ? 'transparent'
+            : width < HERO_PHOTO_MIN_WIDTH ? 'small'
+              : height <= 0 || width < HERO_PHOTO_MIN_ASPECT * height ? 'portrait'
+                : approved.has(key) ? 'approved' : 'notApproved'
+    seen.add(ref)
+    out.push({photo, status})
+  }
+  return out
+}
+
+/** The photographs the theme may draw, in order: approved, qualifying, each once, never the hero's. */
+export function photoSetOf(tokens: Record<string, unknown> | null | undefined, heroAssetId: string | null | undefined): SetPhoto[] {
+  return setPhotoEntries(tokens, heroAssetId).filter((e) => e.status === 'approved').map((e) => e.photo)
+}
+
+/** The keys the preview approves with a theme that draws photographs: every photograph of the stored set
+ *  the theme may draw (never one refused: under 1,600 pixels, portrait, transparent, a duplicate or the
+ *  hero's own, so a refusal lifted later still waits for the preview), sorted, so a reorder needs no new
+ *  approval; or none. The stored set is read with each asset's size and opacity (`PREVIEW_STORED_DESIGN_QUERY`). */
+export function setApprovalKeys(doc: Record<string, unknown> | null | undefined, heroAssetId: string | null | undefined): string[] {
+  const usable = setPhotoEntries({themePhotos: doc?.themePhotos}, heroAssetId).filter((e) => e.status === 'approved' || e.status === 'notApproved')
+  return [...new Set(usable.map((e) => e.photo.key))].sort()
+}

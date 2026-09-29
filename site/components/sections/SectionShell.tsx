@@ -8,6 +8,7 @@ import {
 } from '@/lib/sectionSurface'
 import {type SeamProps, NO_SEAM, overlapOf} from './sectionFrame'
 import {HERO_BACKDROP_SIZES} from '@/lib/heroSurface'
+import {SetPhotoLayer} from './SetPhoto'
 
 // ─── SectionShell ───────────────────────────────────────────────────────────────
 // The band wrapper every full-width section renders into. It owns the surface
@@ -143,6 +144,14 @@ export function SectionShell({
   const photoWin = seam.paint?.ground === 'image' ? seam.paint.window ?? null : null
   const heroPhoto = photoWin ? seam.site?.heroPhoto ?? null : null
   const showWindow = resolved.isImage && !!heroPhoto && !showImage
+  // Phase 17E (`[R-573]`): a photograph of the theme's set. A band alone under its photograph, and the close, draw it
+  // here; a band inside a longer run paints no ground of its own, because the canvas draws the run's one photograph
+  // behind all its bands (`HomepageCanvas`), and carries the photo band's mark so it is an Image section as built by
+  // hand (`[R-531]`).
+  const setPaint = seam.paint?.ground === 'image' ? seam.paint.photo ?? null : null
+  const setPhoto = setPaint ? seam.site?.photoSet?.[setPaint.index] ?? null : null
+  const inRun = resolved.isImage && !!setPhoto && setPaint!.length > 1 && !showImage
+  const showSet = resolved.isImage && !!setPhoto && setPaint!.length === 1 && !showImage
   const inner = typeof children === 'function' ? children(resolved) : children
 
   // An inset band is a panel: the surface, the radius and `overflow-hidden` move
@@ -210,7 +219,7 @@ export function SectionShell({
       // Text on a photo: the action color and the focus ring resolve to the on-dark
       // body text color here (globals.css, the scrim block), because neither is
       // guaranteed 4.5:1 or 3:1 over the lightest photo pixel.
-      data-scrim={showImage || showWindow ? 'true' : undefined}
+      data-scrim={showImage || showWindow || showSet || inRun ? 'true' : undefined}
       // A band Gradient bloom lights takes the photo band's colors, its glow being solved under them (`[R-557]`); an
       // inset's section glows in its gutter only, and its panel keeps its own colors, so it takes none.
       data-glow={fade === 'glow' && !isInset ? 'true' : undefined}
@@ -232,7 +241,7 @@ export function SectionShell({
         seam.raisePhoto && steps.ptVar,
         // An inset band's own box is transparent; the panel inside carries the
         // surface. A normal band carries it here.
-        !isInset && resolved.surfaceClass,
+        !isInset && !inRun && resolved.surfaceClass,
         // Phase 16F: an inset band inside a run of one strong ground paints that ground
         // on its own <section>, so the panel sits ON the run instead of on the page's
         // light ground. The walk decides it, because no band can see the one below it.
@@ -281,6 +290,7 @@ export function SectionShell({
           <div className="absolute inset-0 bg-scrim/80" aria-hidden="true" />
         </>
       )}
+      {showSet && !isInset && <SetPhotoLayer photo={setPhoto!} />}
       {showImage && !isInset && (
         <>
           <SanityImage image={bg} mode="fill" alt="" sizes="100vw" />

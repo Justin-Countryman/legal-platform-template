@@ -47,6 +47,9 @@ export function AttorneyMonogram({name, className}: {name: string; className?: s
   return (
     <div
       aria-hidden="true"
+      // The tile is light wherever it sits, so its initials read the light tokens: inside a dark band the cascade gave
+      // them the on-dark subtle tone on the light tile, 1.55 to 1.92:1 (Phase 17E, ADV-17E-C; `[R-541]`).
+      data-ring-context="light"
       className={['absolute inset-0 grid place-items-center bg-hero-tint', className ?? ''].filter(Boolean).join(' ')}
     >
       <span className="font-heading text-4xl font-semibold text-foreground-subtle">{initials(name)}</span>

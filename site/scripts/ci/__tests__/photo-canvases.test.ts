@@ -15,6 +15,11 @@ const CI = path.resolve(__dirname, '..')
 const PHOTOS = path.join(CI, 'photos')
 const SCHEMA = path.resolve(__dirname, '../../../../studio/schema.json')
 const FILES = ['record-adversarial-photo-hero.ndjson', 'record-planning-photo-hero.ndjson', 'record-multi-practice-photo-hero.ndjson']
+// Phase 17E (`[R-573]`, `[R-577]`): the three records with the night skyline behind the hero and four photographs of the same
+// city as the theme's set (`compose_from_record.py --photo-set`), and the planning record with the set and no hero photograph.
+const SET_FILES = ['record-adversarial-photo-set.ndjson', 'record-planning-photo-set.ndjson', 'record-multi-practice-photo-set.ndjson']
+const NO_HERO = 'record-planning-photo-set-no-hero-photo.ndjson'
+const SET = ['stand-in-cincinnati-riverfront.jpg', 'stand-in-cincinnati-terminal.jpg', 'stand-in-cincinnati-aerial.jpg', 'stand-in-cincinnati-courthouse.jpg']
 // SHA-256 of each stand-in as committed. Places and objects only, never a person (`[R-533]`, `[R-558]`); sources in the
 // monorepo records (WS-V1-PHASE17B6-DESIGN §9.1; the bust, WS-V1-PHASE17D2-DESIGN §9).
 const PINNED: Record<string, string> = {
@@ -23,10 +28,15 @@ const PINNED: Record<string, string> = {
   'stand-in-lake.jpg': 'baffbcb4f740e39c397e063b75e27a2f7580afdade5c5855d2f544fdfedb4ee1',
   'stand-in-courthouse.jpg': 'a54524e47cbcd84773d5e5c635558a717c25e0294618b357315e0dd1da5af543',
   'stand-in-library.jpg': 'df89263eede2f65e2f7e3a49125fdfcf1b0004c7e74759bd596206a6a547c2e7',
+  // Phase 17E (`[R-577]`): Carol M. Highsmith's photographs of the city, public domain (sources in WS-V1-PHASE17E-DESIGN §9).
+  'stand-in-cincinnati-riverfront.jpg': '1ffb785eaa1b8edba40813431290d13cb8d25e706ca755f8015898b42053229b',
+  'stand-in-cincinnati-terminal.jpg': 'dc160b672021c07f43a6272d6d47bdb02bb83fbc71a9ce9038ee110a834780fb',
+  'stand-in-cincinnati-aerial.jpg': '7abaec2e383dd4ff2d9f822fa57851f9227e81cdce8642da3260b9176081a39e',
+  'stand-in-cincinnati-courthouse.jpg': '08d04c4471b46df2640fad51b2f1e6951c562fdcb34b1d7ba5ec4e8d2cfa784c',
 }
 
 type Doc = Record<string, unknown> & {_id: string; _type: string}
-const present = fs.existsSync(PHOTOS) && FILES.every((f) => fs.existsSync(path.join(CI, f)))
+const present = fs.existsSync(PHOTOS) && [...FILES, ...SET_FILES, NO_HERO].every((f) => fs.existsSync(path.join(CI, f)))
 const read = (f: string): Doc[] => fs.readFileSync(path.join(CI, f), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))
 
 /** A PNG's pixel size, from its header. */
@@ -61,7 +71,7 @@ describe.skipIf(!present)('scripts/ci photo canvases and stand-in photographs (s
     }
   })
 
-  it.each(FILES)('%s: its documents are declared, its references resolve, and its image assets are stand-ins at their real size', (file) => {
+  it.each([...FILES, ...SET_FILES, NO_HERO])('%s: its documents are declared, its references resolve, and its image assets are stand-ins at their real size', (file) => {
     const docs = read(file)
     const byId = new Map(docs.map((d) => [d._id, d]))
     for (const doc of docs) {
@@ -96,7 +106,19 @@ describe.skipIf(!present)('scripts/ci photo canvases and stand-in photographs (s
     for (const m of splits) expect(m.media).toMatchObject({kind: 'cutout', image: {asset: {_ref: asset._id}}})
   })
 
-  it.each(FILES)('%s: the hero is a photograph a page can be made of, as the page reads it', (file) => {
+  it.each(SET_FILES)('%s: the set is the four photographs of the city, in order, none of them the hero’s, all drawn beside it', (file) => {
+    const c = stubCanvas(file)!
+    expect(c.heroPhoto?.src).toBe('/stand-ins/stand-in-city.jpg')
+    expect(c.photoSet.map((p) => p.assetId)).toEqual(SET.map((n) => `image-fx${n.replace(/\.jpg$/, '').replace(/[^a-z0-9]/g, '')}-${jpegSize(path.join(PHOTOS, n)).width}x${jpegSize(path.join(PHOTOS, n)).height}-jpg`))
+  })
+
+  it('the set with no hero photograph: nothing of it is drawn', () => {
+    const c = stubCanvas(NO_HERO)!
+    expect(c.heroPhoto).toBeNull()
+    expect(c.photoSet).toEqual([])
+  })
+
+  it.each([...FILES, ...SET_FILES])('%s: the hero is a photograph a page can be made of, as the page reads it', (file) => {
     const c = stubCanvas(file)!
     expect(c.hero).toBe('image')
     expect(c.heroPhoto?.src).toMatch(/^\/stand-ins\/stand-in-[a-z]+\.jpg$/)

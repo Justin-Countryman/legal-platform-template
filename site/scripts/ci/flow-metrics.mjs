@@ -117,7 +117,21 @@ const CANVASES = [
   ['multi-practice-area-photos', 'scripts/ci/record-multi-practice-area-photos.ndjson'],
   // Phase 17D session 2 (`[R-558]`): the adversarial record with a stand-in cutout figure in every split band.
   ['adversarial-cutout', 'scripts/ci/record-adversarial-cutout.ndjson'],
+  // Phase 17E (`[R-573]`): the three records with the night skyline behind the hero and four photographs of the same city
+  // as the theme's set, and the planning record with the set and no hero photograph, where the set draws nothing.
+  ['adversarial-photo-set', 'scripts/ci/record-adversarial-photo-set.ndjson'],
+  ['planning-photo-set', 'scripts/ci/record-planning-photo-set.ndjson'],
+  ['multi-practice-photo-set', 'scripts/ci/record-multi-practice-photo-set.ndjson'],
+  ['planning-photo-set-no-hero-photo', 'scripts/ci/record-planning-photo-set-no-hero-photo.ndjson'],
 ]
+// The set canvases are measured under the theme that draws the set and its dark-led neighbour only: every other theme
+// draws them as it draws the photo-hero canvases, whose rows the golden already holds (Phase 17E).
+const ONLY_FLOWS = {
+  'adversarial-photo-set': ['photoScrims.mostlyDark', 'cutBlocks.mostlyDark'],
+  'planning-photo-set': ['photoScrims.mostlyDark', 'cutBlocks.mostlyDark'],
+  'multi-practice-photo-set': ['photoScrims.mostlyDark', 'cutBlocks.mostlyDark'],
+  'planning-photo-set-no-hero-photo': ['photoScrims.mostlyDark'],
+}
 // The stand-in photographs (Phase 17B session 6), served from disk to the browser: the hero's own
 // optimizer address (`/_next/image?url=/stand-ins/...`) and the image CDN's address for a band's photo
 // (`cdn.sanity.io/images/.../fx<name>-<w>x<h>.jpg`). The template never lets its optimizer fetch a
@@ -334,6 +348,14 @@ function measure() {
         ghost: !!s.querySelector('[data-decor-layer]'),
         // Phase 17B session 6: the window of the hero's photograph, recorded only where a band shows one.
         ...(s.querySelector('[data-photo-window]') ? {window: s.querySelector('[data-photo-window]').getAttribute('data-photo-window')} : {}),
+        // Phase 17E (`[R-573]`): the photograph of the theme's set behind the band, on its own layer or on its run's (the
+        // run's index, and the wrapper's ground, which a broken wrapper would not paint), recorded only where one shows.
+        ...(s.querySelector('[data-photo-set]') ? {photo: s.querySelector('[data-photo-set]').getAttribute('data-photo-set')} : {}),
+        ...(s.closest('[data-photo-run]') ? {
+          photo: s.closest('[data-photo-run]').querySelector(':scope > [aria-hidden] [data-photo-set]')?.getAttribute('data-photo-set') ?? null,
+          run: s.closest('[data-photo-run]').getAttribute('data-photo-run'),
+          runBg: getComputedStyle(s.closest('[data-photo-run]')).backgroundColor,
+        } : {}),
         // Phase 17D: an inset band's panel, its own ground and ring, recorded only where a band draws one: the
         // band's own box is the gutter around it (ADV-17D-A, -B: a dark panel recorded as transparent).
         ...(s.querySelector(':scope > div.rounded-ui.overflow-hidden') ? {panel: {ring: s.querySelector(':scope > div.rounded-ui.overflow-hidden').getAttribute('data-ring-context'), bg: getComputedStyle(s.querySelector(':scope > div.rounded-ui.overflow-hidden')).backgroundColor}} : {}),
@@ -375,8 +397,15 @@ try {
       const context = await browser.newContext({...device, reducedMotion: 'reduce', colorScheme: 'light'})
       await context.addCookies([{name: 'lp-preview', value: operator, url: `${BASE}/site-preview`}])
       await servePhotos(context)
+      // Phase 17E (`[R-573]`, ADV-17E-C): what the browser takes as the page's largest paint, and whether it is a
+      // photograph of the theme's set, which it must never be.
+      await context.addInitScript(() => {
+        window.__lcp = null
+        new PerformanceObserver((l) => { for (const e of l.getEntries()) window.__lcp = {tag: e.element?.tagName ?? null, set: !!e.element?.closest?.('[data-photo-set]')} })
+          .observe({type: 'largest-contentful-paint', buffered: true})
+      })
       const page = await context.newPage()
-      for (const flow of FLOWS) {
+      for (const flow of ONLY_FLOWS[canvas] ?? FLOWS) {
         const key = `${canvas} / ${flow} / ${width}`
         watch(key)
         const url = `${BASE}/site-preview/${STYLE_SET}/${PALETTE}/${flow}/design`
@@ -407,6 +436,10 @@ try {
         }
         phase('the fonts')
         await page.evaluate(() => document.fonts.ready)
+        // Read before the sweep: a scroll ends the browser's search for the largest paint.
+        phase('the largest paint')
+        const lcp = await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => setTimeout(() => r(window.__lcp), 250))))
+        if (lcp?.set) fail(`${key}: the largest paint is a photograph of the theme's set (${lcp.tag}); the hero's photograph or heading must be`)
         // The switcher is the operator's bar, not the page: hidden for the measure and the eye.
         await page.addStyleTag({content: '.sw{display:none !important}'})
         // Reveal-on-scroll wrappers: sweep the page once so every band has entered view.

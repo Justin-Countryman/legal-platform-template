@@ -90,11 +90,13 @@ export function TileFill() {
   return <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent" />
 }
 
-/** Accent glow overlay (Glow preset). Universal; fades in only when selected. */
+/** Accent glow overlay (Glow preset). Universal; fades in only when selected. Never drawn on a photograph or a lit
+ *  ground (`data-tile-glow`, `globals.css`, Phase 17E). */
 export function TileGlow({fx}: {fx: SiloHoverClasses}) {
   return (
     <div
       aria-hidden="true"
+      data-tile-glow=""
       className={`pointer-events-none absolute inset-0 bg-gradient-to-br from-cue/30 to-cue/10 opacity-0 transition-opacity duration-ui-base ease-gentle ${fx.glow}`}
     />
   )

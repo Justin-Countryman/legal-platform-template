@@ -12,6 +12,7 @@ import {resolveResultsDisclaimer} from '@/lib/legal'
 import {type NapTokens} from '@/lib/tokens'
 import {type SectionAppearance} from '@/components/sections/SectionShell'
 import {walkFrame, walkPage, type SeamProps, type SiteLook, type FlowInputs, NO_SEAM} from '@/components/sections/sectionFrame'
+import {SetPhotoLayer} from '@/components/sections/SetPhoto'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {hostOf} from '@/lib/flows'
 import {hasImage} from '@/lib/sanity/image'
@@ -166,6 +167,7 @@ export function frameOf(block: HomepageBlock): {appearance: SectionAppearance | 
     // Phase 17D session 2: a split whose media is a cutout figure, on the side it sits, so Gradient bloom can put its
     // run's glow behind the figure. `raisesPhoto` answers true for exactly the splits whose media renders an image.
     cutout: cutoutSide(block),
+    cardPhotos: block._type === 'practiceAreaNavInline' && PracticeAreaFrame.drawsCardPhotos(block),
   }
   const frame = frameInputs(block)
   return {...frame, ...inputs}
@@ -228,25 +230,46 @@ export function HomepageCanvas({
 }) {
   if (!blocks || blocks.length === 0) return null
 
-  return (
-    <>
-      {walkPage(blocks, frameOf, site ?? null, hero ?? null, close).bands.map(({member, seam}, surviving) => {
-        const rendered = renderBlock(member, napTokens, resultsDisclaimer, seam)
-        if (!rendered) return null
-        // THE FIRST SURVIVING BAND, not the member at index 0. `i === 0` on the
-        // stored index was a live bug: an empty section at index 0 was nulled
-        // AFTER this test, so the first band a visitor actually sees was handed a
-        // ScrollReveal wrapper, against the rule the header above calls
-        // load-bearing. The walk has already dropped the empties, so
-        // `surviving === 0` is the first visible band by construction.
-        return surviving === 0 ? (
-          <div key={member._key}>{rendered}</div>
-        ) : (
-          <ScrollReveal key={member._key}>{rendered}</ScrollReveal>
-        )
-      })}
-    </>
-  )
+  // A RUN OF THE THEME'S SET (Phase 17E, `[R-573]`): one photograph behind two or three bands, drawn once by a wrapper
+  // around them, as the evidence's photographs run across a seam; the wrapper is the navy ground a slow photograph shows,
+  // the photograph and the Image section's scrim, and sits outside the bands' reveal, so the photograph holds still while
+  // a band slides. Its bands paint no ground and carry the photo band's mark (`SectionShell`). On a phone the photograph
+  // is drawn at the run's head, masked into the navy (`photo-run-head`).
+  const out: React.ReactNode[] = []
+  let run: {key: string; photo: NonNullable<SiteLook['photoSet']>[number]; index: number; kids: React.ReactNode[]} | null = null
+  // A run is drawn when its last band is; a band that renders nothing after all cannot strand the others.
+  const flush = () => {
+    if (!run) return
+    const r = run
+    out.push(
+      <div key={`run-${r.key}`} data-photo-run={r.index} className="relative isolate bg-brand-dark">
+        <div aria-hidden="true" className="absolute inset-0 -z-10">
+          <SetPhotoLayer photo={r.photo} head />
+        </div>
+        {r.kids}
+      </div>,
+    )
+    run = null
+  }
+  walkPage(blocks, frameOf, site ?? null, hero ?? null, close).bands.forEach(({member, seam}, surviving) => {
+    const rendered = renderBlock(member, napTokens, resultsDisclaimer, seam)
+    if (!rendered) return
+    // THE FIRST SURVIVING BAND, not the member at index 0. `i === 0` on the
+    // stored index was a live bug: an empty section at index 0 was nulled
+    // AFTER this test, so the first band a visitor actually sees was handed a
+    // ScrollReveal wrapper, against the rule the header above calls
+    // load-bearing. The walk has already dropped the empties, so
+    // `surviving === 0` is the first visible band by construction.
+    const node = surviving === 0 ? <div key={member._key}>{rendered}</div> : <ScrollReveal key={member._key}>{rendered}</ScrollReveal>
+    const p = seam.paint?.ground === 'image' ? seam.paint.photo : undefined
+    const photo = p && p.length > 1 ? site?.photoSet?.[p.index] ?? null : null
+    if (!photo || !p) { flush(); out.push(node); return }
+    if (!run || run.index !== p.index) { flush(); run = {key: member._key, photo, index: p.index, kids: []} }
+    run.kids.push(node)
+    if (p.at === p.length - 1) flush()
+  })
+  flush()
+  return <>{out}</>
 }
 
 /** Whether the first visible band rises into the hero, so the hero can keep its own
