@@ -318,14 +318,26 @@ export const MAX_CONFIG_REDIRECTS = 1024
 export function assertRedirectCapNotExceeded(
   served: number,
   csvPath = 'CS/redirects.csv',
+  retired = 0,
 ): void {
-  if (served <= MAX_CONFIG_REDIRECTS) return
+  // Retired URLs spend the same route budget: each is one rewrite (monorepo
+  // [R-562], `lib/retired.ts`), so the one limit counts both files.
+  if (served + retired <= MAX_CONFIG_REDIRECTS) return
+  const over = served + retired - MAX_CONFIG_REDIRECTS
+  if (!retired) {
+    throw new Error(
+      `[redirects] ${served} redirects would be emitted from ${csvPath}, above the ` +
+        `${MAX_CONFIG_REDIRECTS}-rule limit a Vercel deployment can carry. The build ` +
+        `stops here rather than shipping a set the platform cannot serve in full. ` +
+        `Remove ${over} redirect(s) in the app's Redirects screen for this client.`,
+    )
+  }
   throw new Error(
-    `[redirects] ${served} redirects would be emitted from ${csvPath}, above the ` +
-      `${MAX_CONFIG_REDIRECTS}-rule limit a Vercel deployment can carry. The build ` +
-      `stops here rather than shipping a set the platform cannot serve in full. ` +
-      `Remove ${served - MAX_CONFIG_REDIRECTS} redirect(s) in the app's Redirects ` +
-      `screen for this client.`,
+    `[redirects] ${served} redirects from ${csvPath} and ${retired} retired URLs from ` +
+      `CS/retired.csv would be emitted, above the ${MAX_CONFIG_REDIRECTS}-rule limit a ` +
+      `Vercel deployment can carry; they share it. The build stops here rather than ` +
+      `shipping a set the platform cannot serve in full. Remove ${over} of them: a ` +
+      `redirect in the app's Redirects screen, or a retired row on the sheet.`,
   )
 }
 
