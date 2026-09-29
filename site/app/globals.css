@@ -255,6 +255,19 @@
   font-size: clamp(1.125rem, 0.5rem + 2vw, var(--marketing-h4, 1.5rem));
   line-height: 1.25;
 }
+/* A ribbon's line (Phase 17E, `[R-576]`; monorepo WS-V1-PHASE17E-DESIGN §2.12): the heading face at the style
+   set's h4 step, 23 to 32 px at 1440 (measured) and 18 px on a phone, where the study's ribbons sit (18 to 57
+   px, median about 25, mostly a heading face, often capitals); it was 18 px body text. The style set's
+   heading case, tracking and weight (the weight rules under "Heading weight"), and its capitals set smaller
+   by the face's own scale, as a section heading's are. Every ribbon, composed or stored, and the marquee's.
+   A word longer than the line (an address, a domain) breaks rather than scroll the page sideways. */
+@utility ribbon-line {
+  font-size: max(1.125rem, calc(clamp(1.125rem, 0.5rem + 2vw, var(--marketing-h4, 1.5rem)) * var(--heading-caps-scale, 1)));
+  line-height: 1.25;
+  text-transform: var(--heading-case, none);
+  letter-spacing: var(--heading-tracking, normal);
+  overflow-wrap: anywhere;
+}
 
 /* ─── One type size per role (Phase 16A, [R-468]) ────────────────────────── */
 /* A card's title is one size in every card layout, and a list row's title is one
@@ -1012,7 +1025,7 @@ h1, h2, h3, h4, h5, h6 {
    and 13 inked 37% and 60% more than their real face, ADV-P16C-A). A style set may set the
    display headings regular; unlayered, so it wins over the `font-bold` utility. */
 h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
-[data-heading-weight="regular"] :is(h1, .section-heading) { font-weight: 400; }
+[data-heading-weight="regular"] :is(h1, .section-heading, .ribbon-line) { font-weight: 400; }
 /* Light (Phase 17C session 2b, `[R-534]`): 300 on the hero and on headings of 32 px and up,
    400 under (thin strokes under about 24 px fall below readability guidance at the contrast
    the platform guarantees). Written by the size utilities the headings carry, since CSS cannot
@@ -1020,7 +1033,7 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
    768, the CTA block's `lg:text-4xl` 36 px from this stylesheet's `lg` (992). The reset is
    `:where()`, whose specificity is zero, so the rules below beat it (ADV-17C2B: with `:is()`
    the hero never drew 300). */
-[data-heading-weight="light"] :where(h1, .section-heading) { font-weight: 400; }
+[data-heading-weight="light"] :where(h1, .section-heading, .ribbon-line) { font-weight: 400; }
 [data-heading-weight="light"] :is(h1.marketing-h1, h1.text-page-h1, .section-heading.text-4xl) { font-weight: 300; }
 @media (min-width: 500px) { [data-heading-weight="light"] .section-heading.marketing-h2 { font-weight: 300; } }
 @media (min-width: 768px) { [data-heading-weight="light"] :is(h1, .section-heading):is(.md\:text-4xl, .md\:text-5xl) { font-weight: 300; } }
@@ -1356,6 +1369,20 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   --hairline-ink: var(--color-accent);
 }
 @media (forced-colors: active) { .hairline-top::after { background-color: CanvasText; } }
+/* A ribbon's accent line (Phase 17E, `[R-576]`): on an edge where the ribbon shares its ground with the
+   band it touches (the hero above the first band, the close below the last), so it reads as a strip and
+   not as its neighbor's last line. A box shadow and not a pseudo-element: the divider owns `::before`
+   and the hairline `::after` on the same band. Decorative, in the accent the band resolves (the
+   accent-on-dark on a dark ground); forced colors drop it with every shadow. Never where the theme draws
+   its hairline at every band, which is already this line (`walkPage`). */
+@utility ribbon-edge-top {
+  --ribbon-edge-top: inset 0 1px 0 var(--color-accent);
+  box-shadow: var(--ribbon-edge-top), var(--ribbon-edge-bottom, 0 0 #0000);
+}
+@utility ribbon-edge-bottom {
+  --ribbon-edge-bottom: inset 0 -1px 0 var(--color-accent);
+  box-shadow: var(--ribbon-edge-top, 0 0 #0000), var(--ribbon-edge-bottom);
+}
 /* A window of the hero's photograph (Phase 17B session 6, `[R-530]`): the photograph drawn at twice
    the band's width and height, offset so the band shows one quadrant (`--window-x`, `--window-y`:
    0% or -100%, set per band). It replaces the image's own `fill` placement; the band's

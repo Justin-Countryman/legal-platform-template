@@ -262,6 +262,10 @@ export function SectionShell({
         // accent where the theme says so (session 5, `[R-524]`).
         seam.hairline && 'hairline-top',
         seam.hairline && seam.site?.flow?.divider.hairlineInk === 'accent' && 'hairline-accent',
+        // Phase 17E (`[R-576]`): a ribbon's accent line where it shares its ground with its neighbor. A panel
+        // floats on its gutter and is a strip already, so an inset band draws none.
+        seam.ribbonEdges?.top && !isInset && 'ribbon-edge-top',
+        seam.ribbonEdges?.bottom && !isInset && 'ribbon-edge-bottom',
         (textured || ghost) && !isInset && 'isolate',
         top,
         bottom,

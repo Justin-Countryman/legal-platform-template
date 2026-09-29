@@ -34,6 +34,9 @@ export const RECORD_CANVASES = [
   // theme's set, and the planning record with the set and no hero photograph, where the set draws nothing.
   'record-adversarial-photo-set.ndjson', 'record-planning-photo-set.ndjson', 'record-multi-practice-photo-set.ndjson',
   'record-planning-photo-set-no-hero-photo.ndjson',
+  // Phase 17E (`[R-575]`, `[R-576]`): the canvas the homepage composer itself writes for a synthetic firm, a ribbon after
+  // the hero and one before the close (`compose_from_record.py --composed` in the monorepo).
+  'record-composed-ribbons.ndjson',
 ] as const
 
 export function stubDataset(file: string): Doc[] | null {

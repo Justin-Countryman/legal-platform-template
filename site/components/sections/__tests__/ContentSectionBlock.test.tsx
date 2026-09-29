@@ -1,6 +1,8 @@
 import {describe, it, expect, vi} from 'vitest'
 import {forwardRef} from 'react'
 import {fireEvent, render} from '@testing-library/react'
+import {readFileSync} from 'node:fs'
+import {resolve} from 'node:path'
 
 vi.mock('next/link', () => ({
   // eslint-disable-next-line react/display-name
@@ -98,11 +100,13 @@ describe('the five layouts', () => {
     expect(container.querySelector('.mx-auto.max-w-3xl.text-center h2')?.textContent).toBe('A statement')
   })
 
-  it('ribbon: the heading as one line at body size, not a heading element', () => {
+  it('ribbon: the heading as one line in the heading face a size up, not a heading element (Phase 17E, [R-576])', () => {
     const {container} = renderSection({layout: 'ribbon', heading: 'Serving {{city}} since 1990', headingEmphasis: 'since 1990'}, {tokens: {city: 'Tulsa'}})
     expect(container.querySelector('h1,h2,h3')).toBeNull()
-    const line = container.querySelector('p.text-lg')!
+    const line = container.querySelector('p.ribbon-line')!
     expect(line.innerHTML).toBe('Serving Tulsa <em class="heading-emphasis">since 1990</em>')
+    expect(classTokens(line)).toEqual(expect.arrayContaining(['font-heading', 'font-bold', 'text-center', 'text-balance']))
+    expect(classTokens(line)).not.toContain('text-lg')
   })
 
   it('statRow: the items as number and caption tiles, with the disclaimer', () => {
@@ -268,5 +272,22 @@ describe('the marquee ribbon can be paused on the page (WCAG 2.2.2)', () => {
     const track = getByTestId('marquee-track')
     expect(classTokens(track)).toContain('motion-reduce:justify-center')
     expect(classTokens(track.children[0])).toContain('motion-reduce:text-center')
+  })
+
+  it('scrolls its line in the heading face, as a still ribbon draws it (Phase 17E, [R-576])', () => {
+    const {getByTestId} = renderSection(marquee)
+    const track = getByTestId('marquee-track')
+    for (const copy of track.children) {
+      expect(classTokens(copy)).toEqual(expect.arrayContaining(['ribbon-line', 'font-heading', 'font-bold']))
+      expect(classTokens(copy)).not.toContain('text-lg')
+    }
+    // Standing still it wraps balanced, as the still ribbon does; moving, a lap of 60 s keeps its pace near the old.
+    expect(classTokens(track.children[0])).toContain('motion-reduce:text-balance')
+    expect(classTokens(track)).toContain('animate-[marquee-top_60s_linear_infinite]')
+  })
+
+  it('breaks a word longer than the line rather than scroll the page sideways', () => {
+    const css = readFileSync(resolve(__dirname, '../../../app/globals.css'), 'utf8')
+    expect(css).toMatch(/@utility ribbon-line \{[^}]*overflow-wrap: anywhere;/)
   })
 })

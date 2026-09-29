@@ -607,6 +607,8 @@ describe('the decision golden', () => {
             ...(seam.paint?.photo ? {photo: {...seam.paint.photo, id: photoSet[seam.paint.photo.index]?.assetId}} : {}),
             // Phase 17D session 2: what the band draws over a dark ground, where the theme draws anything.
             ...(seam.fade ? {fade: seam.fade} : {}),
+            // Phase 17E (`[R-576]`): a ribbon's accent line on each edge it shares with its neighbor's ground.
+            ...(seam.ribbonEdges ? {ribbonEdges: seam.ribbonEdges} : {}),
           })),
           // Phase 17D session 2: the close's place in the run, where the theme lights it.
           ...(page.close.run ? {close: page.close} : {}),

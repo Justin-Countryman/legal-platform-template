@@ -31,7 +31,8 @@ import {headingFit} from '@/lib/headingFit'
 //   twoColumnText  tagline and heading left; body, items, pull quote, proof,
 //                  buttons and phone right.
 //   statement      tagline, heading, body, proof, buttons and phone, centred.
-//   ribbon         the heading as one line at body size; `marquee` scrolls it.
+//   ribbon         the heading as one line in the heading face a size up (`ribbon-line`,
+//                  Phase 17E, `[R-576]`); `marquee` scrolls it.
 //   statRow        tagline and heading, then the items as number and caption.
 //
 // ─── THE RESULTS DISCLAIMER IS NOT OPTIONAL ───────────────────────────────────
@@ -269,7 +270,7 @@ export function ContentSectionBlock({
             return data.marquee ? (
               <MarqueeRibbon>{content}</MarqueeRibbon>
             ) : (
-              <p className="text-center text-lg font-semibold text-foreground">{content}</p>
+              <p className="ribbon-line text-balance text-center font-heading font-bold text-foreground">{content}</p>
             )
           }
 

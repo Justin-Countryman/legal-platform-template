@@ -242,6 +242,9 @@ export type SeamProps = {
   /** This band draws the theme's hairline at its top (Phase 17B): a decorative 1px line
    *  at a change of ground or at every join, as the theme says. */
   hairline?: boolean
+  /** A ribbon's accent line on each edge where it shares its ground with the band it touches (Phase 17E,
+   *  `[R-576]`): the hero above the first band, the close below the last. */
+  ribbonEdges?: {top: boolean; bottom: boolean}
 }
 
 export const NO_SEAM: SeamProps = {site: null, seamTop: false, previousGround: null, nextOverlap: 'none', divider: null, ghost: false, raisePhoto: false, insetGround: null}
@@ -517,6 +520,26 @@ export function walkPage<M>(
     }
   }
   out.forEach((o, k) => { o.seam = {...o.seam, run: runs[k]} })
+  // ─── A ribbon's edges (Phase 17E, `[R-576]`) ─────────────────────────────────
+  // A ribbon on the ground of the band above it (the hero, for the first band) or below it (the close, for the
+  // last) reads as that band's last line: its line of display type draws an accent line on that edge, so it
+  // reads as a strip. A ribbon on a ground of its own draws none (Ribbon rhythm's filled strips), nor a panel,
+  // which floats on its gutter. A theme that draws its hairline at every band has drawn it at every join inside
+  // the page, but never at the hero's or the close's (the pre-PR break pass: Type on black left both ribbons
+  // joined to them), so there only those two edges are the ribbon's. On an interior page no theme runs.
+  if (flow) {
+    const everyBand = flow.divider.hairline === 'everyBand'
+    out.forEach((o, k) => {
+      const r = resolve(o.member)
+      if (r.host !== 'ribbon' || r.appearance?.inset || o.seam.paint?.inset) return
+      const g = groundAt.get(o.index) ?? null
+      const above = k === 0 ? hero : everyBand ? null : groundAt.get(out[k - 1].index) ?? null
+      const below = k === out.length - 1 ? close : everyBand ? null : groundAt.get(out[k + 1].index) ?? null
+      const top = !!g && !!above && same(above, g)
+      const bottom = !!g && !!below && same(below, g)
+      if (top || bottom) o.seam = {...o.seam, ribbonEdges: {top, bottom}}
+    })
+  }
 
   return {bands: out, close: {...(closeJoins ? {run: runs[grounds.length - 1]} : {}), fade}}
 }

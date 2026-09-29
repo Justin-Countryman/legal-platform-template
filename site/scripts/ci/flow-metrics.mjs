@@ -18,7 +18,7 @@
 // <main>: the hero, the canvas bands, the close), the computed ground and ink, the ring
 // context, the top (from the first band's top: the header above it is Main
 // Navigation's, not the theme's, and its measured height settles after hydration), the
-// height and paddings, the divider, hairline and gradient classes,
+// height and paddings, the divider, hairline, ribbon-edge (Phase 17E) and gradient classes,
 // the texture and ghost layers, and the tallest heading's line count; per page, the
 // inner width, the scroll width (no horizontal scroll) and the band count. Compared to
 // the committed JSON: the discrete facts exactly, the lengths within a tolerance, because
@@ -92,7 +92,8 @@ const STYLE_SET = 'graphite'
 const PALETTE = 'navy-brass'
 // The style-set matrix: the three record canvases, one theme, every style set.
 const STYLE_SET_FLOW = 'cutBlocks.balanced'
-const STYLE_SET_CANVASES = ['adversarial-mostly-dark', 'planning-mostly-light', 'multi-practice-balanced', 'long-headings']
+// Phase 17E (`[R-576]`): the composer's canvas too, so every style set's ribbon line (capitals, tracking, weight) is counted.
+const STYLE_SET_CANVASES = ['adversarial-mostly-dark', 'planning-mostly-light', 'multi-practice-balanced', 'long-headings', 'composed-ribbons']
 // Canvases measured by the style-set matrix only, never by the theme matrix.
 const STYLE_SET_ONLY = ['long-headings']
 const FONT_BUDGET = 150_000
@@ -123,6 +124,9 @@ const CANVASES = [
   ['planning-photo-set', 'scripts/ci/record-planning-photo-set.ndjson'],
   ['multi-practice-photo-set', 'scripts/ci/record-multi-practice-photo-set.ndjson'],
   ['planning-photo-set-no-hero-photo', 'scripts/ci/record-planning-photo-set-no-hero-photo.ndjson'],
+  // Phase 17E (`[R-575]`, `[R-576]`): the composer's own canvas for a synthetic firm, a ribbon after the hero and one before
+  // the close, under every theme.
+  ['composed-ribbons', 'scripts/ci/record-composed-ribbons.ndjson'],
 ]
 // The set canvases are measured under the theme that draws the set and its dark-led neighbour only: every other theme
 // draws them as it draws the photo-hero canvases, whose rows the golden already holds (Phase 17E).
@@ -274,7 +278,7 @@ function measure() {
   const origin = bands[0] ? bands[0].getBoundingClientRect().top : 0
   const px = (v) => Math.round(parseFloat(v) || 0)
   // Phase 17D session 2 (`[R-557]`): Gradient bloom's glow, its peak and its side, kept beside the gradient's own.
-  const keep = (cls) => /^(divider-|hairline-top$|hairline-accent$|band-gradient$|band-glow$|glow-from-left$|grad-[inp]-|bg-)/.test(cls)
+  const keep = (cls) => /^(divider-|hairline-top$|hairline-accent$|ribbon-edge-|band-gradient$|band-glow$|glow-from-left$|grad-[inp]-|bg-)/.test(cls)
   // Phase 17B session 4 (`[R-518]`): the site header and footer, whose schemes the theme now
   // sets. The ground at 390 is the header's own: the mobile row shows it and paints none.
   const chromeOf = (el) => (el ? {ring: el.getAttribute('data-ring-context'), bg: getComputedStyle(el).backgroundColor} : null)
@@ -311,28 +315,34 @@ function measure() {
       const cs = getComputedStyle(s)
       const r = s.getBoundingClientRect()
       const heading = s.querySelector('h1, h2')
-      let lines = 0
-      let headingWeight = null
-      let headingSize = null
-      if (heading) {
-        const h = getComputedStyle(heading.querySelector('.heading-fit') ?? heading)
-        // Distinct line tops of the heading's text nodes: neither the `::after` rule nor the fitted
-        // span's own box is in them.
-        // A line is a cluster of tops within half a line of each other: an emphasis in another face
-        // sits a pixel or two off its neighbours' top (ADV-17C3-PRA).
+      // Distinct line tops of an element's text nodes: neither a heading's `::after` rule nor its fitted
+      // span's own box is in them. A line is a cluster of tops within half a line of each other: an
+      // emphasis in another face sits a pixel or two off its neighbours' top (ADV-17C3-PRA).
+      const linesOf = (el, styled) => {
         const tops = []
-        const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT)
+        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT)
         for (let n = walker.nextNode(); n; n = walker.nextNode()) {
           const range = document.createRange()
           range.selectNodeContents(n)
           for (const r of range.getClientRects()) if (r.width > 0) tops.push(r.top)
         }
-        const lineHeight = parseFloat(h.lineHeight) || parseFloat(h.fontSize) * 1.2
+        const lineHeight = parseFloat(styled.lineHeight) || parseFloat(styled.fontSize) * 1.2
         tops.sort((a, b) => a - b)
-        lines = tops.reduce((count, top, k) => (k === 0 || top - tops[k - 1] > lineHeight / 2 ? count + 1 : count), 0)
+        return tops.reduce((count, top, k) => (k === 0 || top - tops[k - 1] > lineHeight / 2 ? count + 1 : count), 0)
+      }
+      let lines = 0
+      let headingWeight = null
+      let headingSize = null
+      if (heading) {
+        const h = getComputedStyle(heading.querySelector('.heading-fit') ?? heading)
+        lines = linesOf(heading, h)
         headingWeight = Number(h.fontWeight)
         headingSize = Math.round(parseFloat(h.fontSize) * 10) / 10
       }
+      // Phase 17E (`[R-576]`): a ribbon's line, the still one (a marquee's first copy wraps under reduced motion), held to
+      // the headings' line rule; a ribbon is a paragraph, so the heading count never saw it (the pre-PR break pass).
+      const ribbon = s.querySelector('p.ribbon-line')
+      const ribbonStyle = ribbon ? getComputedStyle(ribbon) : null
       return {
         i,
         heading: (heading?.textContent ?? '').trim().replace(/\s+/g, ' ').slice(0, 48) || null,
@@ -370,6 +380,7 @@ function measure() {
         headingLines: lines,
         headingWeight,
         headingSize,
+        ...(ribbon ? {ribbonLines: linesOf(ribbon, ribbonStyle), ribbonSize: Math.round(parseFloat(ribbonStyle.fontSize) * 10) / 10} : {}),
       }
     }),
     hero: heroVoice(main),
@@ -463,6 +474,7 @@ try {
         if (m.innerWidth !== device.viewport.width) fail(`${key}: innerWidth is ${m.innerWidth}, not ${device.viewport.width} (the layout is not at this width)`)
         if (m.scrollWidth > m.clientWidth) fail(`${key}: horizontal scroll: scrollWidth ${m.scrollWidth} over ${m.clientWidth}`)
         if (width === '390') for (const b of m.bands) if (b.headingLines > 4 && !atFloor(b, 4)) fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at 390: ${b.heading}`)
+        for (const b of m.bands) if (b.ribbonLines > (Number(width) >= 992 ? 3 : 4)) fail(`${key}: band ${b.i} ribbon wraps to ${b.ribbonLines} lines at ${width}`)
         // Card photos (`[R-556]`): all or none per list, every one under the scrim, no dark context on a link.
         for (const b of m.bands.filter((x) => x.cards)) {
           const c = b.cards
@@ -539,6 +551,7 @@ try {
         const limit = Number(width) >= 992 ? 3 : 4
         const stacked = ['768', '1024', '1279'].includes(width)
         phase('the stacked checks')
+        for (const b of m.bands) if (b.ribbonLines > limit) fail(`${key}: band ${b.i} ribbon wraps to ${b.ribbonLines} lines at ${width} (the rule is ${limit})`)
         for (const b of m.bands) {
           if (b.headingLines <= limit) continue
           if (!stacked && atFloor(b, limit)) console.log(`flow-metrics: ${key}: band ${b.i} at the readable floor (${b.headingSize} px) takes ${b.headingLines} lines, as [R-544] allows: ${b.heading}`)
@@ -616,7 +629,7 @@ if (UPDATE) {
       if (JSON.stringify(b.classes) !== JSON.stringify(gb.classes)) fail(`${key}: band ${i} classes ${b.classes.join(' ')} vs golden ${gb.classes.join(' ')}`)
       for (const f of ['top', 'height']) if (!TOLERANCE(b[f], gb[f])) fail(`${key}: band ${i} ${f} ${b[f]} vs golden ${gb[f]} (past the tolerance)`)
       if (b.headingLines !== gb.headingLines) fail(`${key}: band ${i} heading lines ${b.headingLines} vs golden ${gb.headingLines}`)
-      for (const f of ['headingWeight', 'headingSize']) if (JSON.stringify(b[f]) !== JSON.stringify(gb[f])) fail(`${key}: band ${i} ${f} ${b[f]} vs golden ${gb[f]}`)
+      for (const f of ['headingWeight', 'headingSize', 'ribbonLines', 'ribbonSize']) if (JSON.stringify(b[f]) !== JSON.stringify(gb[f])) fail(`${key}: band ${i} ${f} ${b[f]} vs golden ${gb[f]}`)
     })
     if (m.fontBytes !== undefined && m.fontBytes !== g.fontBytes) fail(`${key}: font bytes ${m.fontBytes} vs golden ${g.fontBytes}`)
     if (JSON.stringify(m.hero && [m.hero.face, m.hero.weight, m.hero.heroPx, m.hero.sectionCase]) !== JSON.stringify(g.hero && [g.hero.face, g.hero.weight, g.hero.heroPx, g.hero.sectionCase])) fail(`${key}: hero voice ${JSON.stringify(m.hero)} vs golden ${JSON.stringify(g.hero)}`)
