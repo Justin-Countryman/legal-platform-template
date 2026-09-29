@@ -873,6 +873,10 @@ export const DESIGN_TOKENS_QUERY = groq`
     // The hero photograph the Photo scrims theme was approved with (Phase 17B session 6):
     // its photo sections draw only while the live hero photograph is this one.
     flowPhoto,
+    // The photographs of one place the Photo scrims theme lays behind its sections (Phase 17E), each with
+    // its reference, crop and focal point for the image builder, and the photographs approved with it.
+    "themePhotos": themePhotos[]{asset, crop, hotspot, "src": asset->url, "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height, "isOpaque": asset->metadata.isOpaque, "assetId": asset->_id},
+    flowPhotos,
     // The style set's settings (Phase 16B): a style set in the Studio writes them with
     // the fields above. The site never reads which style set it is.
     // patternGround, sectionJoin, dividerCarry, brandGhost, sectionOverlap and
