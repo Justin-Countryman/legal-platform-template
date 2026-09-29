@@ -7,6 +7,7 @@ import {
   loadRedirects,
   resolveRedirects,
 } from './lib/redirects'
+import {loadRetired, retiredRewritesAtBuild} from './lib/retired'
 import {securityHeaders} from './lib/securityHeaders'
 
 // ─── Security headers ─────────────────────────────────────────────────────────
@@ -39,6 +40,8 @@ import {securityHeaders} from './lib/securityHeaders'
 // item 203. Next reads the default export and ignores this one.
 const CS_REDIRECTS_CSV = resolve(__dirname, '../CS/redirects.csv')
 export const CS_SITEMAP_CSV = resolve(__dirname, '../CS/CS-SITEMAP.csv')
+// Retired URLs answer 410 (monorepo [R-562]); `lib/retired.ts` says how.
+const CS_RETIRED_CSV = resolve(__dirname, '../CS/retired.csv')
 
 // NOTE: experimental.inlineCss was tested here (2026-06-23) to drop the one
 // render-blocking stylesheet. It cleared that diagnostic but REGRESSED prod LCP/score
@@ -103,8 +106,21 @@ const nextConfig: NextConfig = {
     // AFTER the report, so an over-cap build still prints which rows were
     // duplicated, flattened or looped — that is what tells the operator which
     // ones are safe to remove.
-    assertRedirectCapNotExceeded(rules.length)
+    assertRedirectCapNotExceeded(rules.length, 'CS/redirects.csv', loadRetired(CS_RETIRED_CSV).paths.length)
     return rules
+  },
+  // Each retired URL rewrites to `/api/gone`, which answers 410. `afterFiles`:
+  // after the redirects and the static routes, before the dynamic routes, the
+  // catch-all among them. `lib/retired.ts` drops and names any listed path that
+  // would hide a route or a published page, and reads the dataset only when the
+  // file lists something.
+  async rewrites() {
+    const {rules} = resolveRedirects(loadRedirects(CS_REDIRECTS_CSV, CS_SITEMAP_CSV, () => {}))
+    return {
+      beforeFiles: [],
+      afterFiles: await retiredRewritesAtBuild(CS_RETIRED_CSV, rules.map((r) => r.source)),
+      fallback: [],
+    }
   },
 }
 

@@ -54,6 +54,22 @@ for _ in $(seq 1 50); do
   sleep 0.1
 done
 
+# Retired URLs answer 410 (lib/retired.ts, monorepo [R-562]). The template ships
+# no CS/, so the build gets a stub CS/retired.csv for its length: one path that
+# must answer 410, and a route and a fixture page it must NOT hide (both are
+# dropped and named in the log). Removed again whatever the build does.
+RETIRED_DIR="../CS"
+RETIRED_CSV="$RETIRED_DIR/retired.csv"
+if [ -e "$RETIRED_CSV" ]; then echo "::error::$RETIRED_CSV already exists; refusing to overwrite it."; exit 1; fi
+MADE_CS=0
+if [ ! -d "$RETIRED_DIR" ]; then mkdir "$RETIRED_DIR"; MADE_CS=1; fi
+printf '# CI stub (build-against-stub.sh)\nold_path\n/retired-stub-page/\n/Contact/\n/blog/fixture-post/\n' > "$RETIRED_CSV"
+remove_retired_stub() {
+  rm -f "$RETIRED_CSV"
+  if [ "$MADE_CS" -eq 1 ]; then rmdir "$RETIRED_DIR" 2>/dev/null || true; fi
+}
+trap 'kill "$STUB_PID" 2>/dev/null || true; remove_retired_stub' EXIT
+
 set +e
 SANITY_API_HOST_OVERRIDE="http://127.0.0.1:$PORT" \
 NEXT_PUBLIC_SANITY_PROJECT_ID=TEMPLATE_SANITY_PROJECT_ID \
@@ -150,6 +166,10 @@ while IFS= read -r line; do
     MISSING=1
   fi
 done < "$FIXTURE"
+# The retired list's build-log lines, read before the log goes.
+for needle in '[retired] 1 answer 410 from CS/retired.csv (3 row(s) read)' '[retired] DROPPED /Contact:' '[retired] DROPPED /blog/fixture-post:'; do
+  grep -qF "$needle" build-against-stub.log || { echo "::error::The build log does not say: $needle"; exit 1; }
+done
 rm -f build-against-stub.log "$COUNT_FILE"
 [ "$MISSING" -eq 0 ] || exit 1
 
@@ -162,4 +182,14 @@ if node -e "
   if (internal.length) { console.error('internal redirect(s) present:', JSON.stringify(internal)); process.exit(1); }
   console.log('routes-manifest carries no framework slash redirect (' + (m.redirects || []).length + ' redirect rule(s))');
 "; then :; else echo "the framework's trailing-slash redirect is back in the manifest" >&2; exit 1; fi
+# The retired rewrite reached the route table Vercel consumes, and the route and
+# the fixture page it must not hide did not.
+if node -e "
+  const m = require('./.next/routes-manifest.json');
+  const after = (m.rewrites && m.rewrites.afterFiles) || [];
+  const gone = after.filter((r) => r.destination === '/api/gone').map((r) => r.source);
+  if (gone.length !== 1 || gone[0] !== '/retired-stub-page') { console.error('retired rewrites:', JSON.stringify(gone)); process.exit(1); }
+  console.log('routes-manifest carries the one retired rewrite, and not the route or the page it must not hide');
+"; then :; else echo "the retired rewrites in the route table are wrong" >&2; exit 1; fi
+remove_retired_stub
 echo "next build is green against the stub Content Lake: $QUERIES queries, every fixture template rendered."
