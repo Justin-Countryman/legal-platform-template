@@ -18,6 +18,10 @@ import {useState, type ReactNode} from 'react'
 //
 // The line is duplicated so the loop is seamless (the keyframe moves -50%);
 // every copy after the first is `aria-hidden`, so assistive tech reads it once.
+//
+// Phase 17E (`[R-576]`): a lap of 60 s, not 40. In the heading face a size up the track is up to 1.8 times as
+// wide at 1440, and at 40 s it moved 80% faster (the pre-PR break pass); at 60 s it is within a fifth of its
+// old pace there and a little slower on a phone.
 
 export function MarqueeRibbon({children}: {children: ReactNode}) {
   const [paused, setPaused] = useState(false)
@@ -36,7 +40,7 @@ export function MarqueeRibbon({children}: {children: ReactNode}) {
         <div
           data-testid="marquee-track"
           className={[
-            'flex w-max gap-16 animate-[marquee-top_40s_linear_infinite] group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused] motion-reduce:w-auto motion-reduce:animate-none motion-reduce:justify-center',
+            'flex w-max gap-16 animate-[marquee-top_60s_linear_infinite] group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused] motion-reduce:w-auto motion-reduce:animate-none motion-reduce:justify-center',
             paused ? '[animation-play-state:paused]' : null,
           ]
             .filter(Boolean)
@@ -49,7 +53,7 @@ export function MarqueeRibbon({children}: {children: ReactNode}) {
               className={
                 i === 0
                   // Centred when it stands still, as a still ribbon is (Phase 16A).
-                  ? 'ribbon-line whitespace-nowrap font-heading font-bold text-foreground motion-reduce:whitespace-normal motion-reduce:text-center'
+                  ? 'ribbon-line whitespace-nowrap font-heading font-bold text-foreground motion-reduce:whitespace-normal motion-reduce:text-center motion-reduce:text-balance'
                   : 'ribbon-line whitespace-nowrap font-heading font-bold text-foreground motion-reduce:hidden'
               }
             >

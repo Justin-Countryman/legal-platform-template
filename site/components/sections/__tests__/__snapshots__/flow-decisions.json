@@ -334,6 +334,10 @@
         "run": {
           "index": 2,
           "length": 3
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       }
     ]
@@ -593,10 +597,6 @@
         "run": {
           "index": 2,
           "length": 3
-        },
-        "ribbonEdges": {
-          "top": true,
-          "bottom": false
         }
       }
     ]
@@ -5830,6 +5830,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -6365,10 +6369,6 @@
         "run": {
           "index": 0,
           "length": 7
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       },
       {
@@ -7885,7 +7885,11 @@
           "index": 0,
           "length": 7
         },
-        "spacing": "spacious"
+        "spacing": "spacious",
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
+        }
       },
       {
         "key": "hp-narrativeBlock",
@@ -8289,10 +8293,6 @@
         "run": {
           "index": 0,
           "length": 7
-        },
-        "ribbonEdges": {
-          "top": true,
-          "bottom": true
         }
       },
       {
@@ -12076,6 +12076,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -12178,6 +12182,10 @@
         "run": {
           "index": 6,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       }
     ]
@@ -12613,10 +12621,6 @@
         "run": {
           "index": 0,
           "length": 7
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       },
       {
@@ -12719,10 +12723,6 @@
         "run": {
           "index": 6,
           "length": 7
-        },
-        "ribbonEdges": {
-          "top": true,
-          "bottom": false
         }
       }
     ]
@@ -14569,10 +14569,6 @@
         "run": {
           "index": 0,
           "length": 7
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       },
       {
@@ -16496,10 +16492,6 @@
         "run": {
           "index": 0,
           "length": 7
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       },
       {
@@ -20275,6 +20267,10 @@
         "run": {
           "index": 0,
           "length": 7
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -20810,10 +20806,6 @@
         "run": {
           "index": 0,
           "length": 7
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       },
       {
@@ -22751,10 +22743,6 @@
         "run": {
           "index": 0,
           "length": 7
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       },
       {
@@ -24689,10 +24677,6 @@
         "run": {
           "index": 0,
           "length": 7
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       },
       {
@@ -28610,7 +28594,11 @@
           "index": 0,
           "length": 7
         },
-        "spacing": "spacious"
+        "spacing": "spacious",
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
+        }
       },
       {
         "key": "hp-narrativeBlock",
@@ -29014,10 +29002,6 @@
         "run": {
           "index": 0,
           "length": 7
-        },
-        "ribbonEdges": {
-          "top": true,
-          "bottom": true
         }
       },
       {
@@ -30283,6 +30267,10 @@
         "run": {
           "index": 0,
           "length": 5
+        },
+        "ribbonEdges": {
+          "top": true,
+          "bottom": false
         }
       },
       {
@@ -30351,6 +30339,10 @@
         "run": {
           "index": 4,
           "length": 5
+        },
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
         }
       }
     ]
@@ -30682,10 +30674,6 @@
         "run": {
           "index": 0,
           "length": 5
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       },
       {
@@ -30754,10 +30742,6 @@
         "run": {
           "index": 4,
           "length": 5
-        },
-        "ribbonEdges": {
-          "top": true,
-          "bottom": false
         }
       }
     ]

@@ -47,9 +47,15 @@ describe('a ribbon lines the edge it shares with its neighbor’s ground', () =>
     expect(edges([b('ribbon'), b('narrative'), b('split'), b('ribbon')], 'ribbonRhythm.mostlyLight', 'dark', 'dark', {saturated: false})).toBe('t - - b')
   })
 
-  it('never where the theme draws its hairline at every band (Type on black, Editorial): that is the line', () => {
-    expect(edges([b('ribbon'), b('narrative'), b('ribbon')], 'typeOnBlack.allDark')).toBe('- - -')
-    expect(edges([b('ribbon'), b('narrative'), b('ribbon')], 'editorial.mostlyLight', 'light', 'light')).toBe('- - -')
+  it('where the theme draws its hairline at every band (Type on black, Editorial), only at the hero and the close', () => {
+    // The hairline is every join inside the page; the hero's and the close's joins have none (the pre-PR break pass).
+    expect(edges([b('ribbon'), b('narrative'), b('ribbon')], 'typeOnBlack.allDark')).toBe('t - b')
+    expect(edges([b('narrative'), b('ribbon'), b('split')], 'typeOnBlack.allDark')).toBe('- - -')
+    expect(edges([b('ribbon'), b('narrative'), b('ribbon')], 'editorial.mostlyLight', 'light', 'light')).toBe('t - b')
+  })
+
+  it('never on a panel, which floats on its gutter', () => {
+    expect(edges([b('narrative'), b('ribbon', {surface: 'tint', inset: true}), b('split')], 'quiet.mostlyLight')).toBe('- - -')
   })
 
   it('only a ribbon: a band of another host on its neighbor’s ground draws nothing new', () => {

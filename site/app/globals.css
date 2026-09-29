@@ -255,16 +255,18 @@
   font-size: clamp(1.125rem, 0.5rem + 2vw, var(--marketing-h4, 1.5rem));
   line-height: 1.25;
 }
-/* A ribbon's line (Phase 17E, `[R-576]`; monorepo WS-V1-PHASE17E-DESIGN §2.12): the heading face at the h4
-   step, about 24 px at 1440 and 18 to 20 at 390, where the study's ribbons sit (18 to 57 px, median about
-   25, mostly a heading face, often capitals); it was 18 px body text. The style set's heading case,
-   tracking and weight (the weight rules under "Heading weight"), and its capitals set smaller by the
-   face's own scale, as a section heading's are. Every ribbon, composed or stored, and the marquee's. */
+/* A ribbon's line (Phase 17E, `[R-576]`; monorepo WS-V1-PHASE17E-DESIGN §2.12): the heading face at the style
+   set's h4 step, 23 to 32 px at 1440 (measured) and 18 px on a phone, where the study's ribbons sit (18 to 57
+   px, median about 25, mostly a heading face, often capitals); it was 18 px body text. The style set's
+   heading case, tracking and weight (the weight rules under "Heading weight"), and its capitals set smaller
+   by the face's own scale, as a section heading's are. Every ribbon, composed or stored, and the marquee's.
+   A word longer than the line (an address, a domain) breaks rather than scroll the page sideways. */
 @utility ribbon-line {
   font-size: max(1.125rem, calc(clamp(1.125rem, 0.5rem + 2vw, var(--marketing-h4, 1.5rem)) * var(--heading-caps-scale, 1)));
   line-height: 1.25;
   text-transform: var(--heading-case, none);
   letter-spacing: var(--heading-tracking, normal);
+  overflow-wrap: anywhere;
 }
 
 /* ─── One type size per role (Phase 16A, [R-468]) ────────────────────────── */

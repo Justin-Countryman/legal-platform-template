@@ -523,14 +523,18 @@ export function walkPage<M>(
   // ─── A ribbon's edges (Phase 17E, `[R-576]`) ─────────────────────────────────
   // A ribbon on the ground of the band above it (the hero, for the first band) or below it (the close, for the
   // last) reads as that band's last line: its line of display type draws an accent line on that edge, so it
-  // reads as a strip. A ribbon on a ground of its own draws none (Ribbon rhythm's filled strips); a theme that
-  // draws its hairline at every band has drawn this line already. On an interior page no theme runs.
-  if (flow && flow.divider.hairline !== 'everyBand') {
+  // reads as a strip. A ribbon on a ground of its own draws none (Ribbon rhythm's filled strips), nor a panel,
+  // which floats on its gutter. A theme that draws its hairline at every band has drawn it at every join inside
+  // the page, but never at the hero's or the close's (the pre-PR break pass: Type on black left both ribbons
+  // joined to them), so there only those two edges are the ribbon's. On an interior page no theme runs.
+  if (flow) {
+    const everyBand = flow.divider.hairline === 'everyBand'
     out.forEach((o, k) => {
-      if (resolve(o.member).host !== 'ribbon') return
+      const r = resolve(o.member)
+      if (r.host !== 'ribbon' || r.appearance?.inset || o.seam.paint?.inset) return
       const g = groundAt.get(o.index) ?? null
-      const above = k === 0 ? hero : groundAt.get(out[k - 1].index) ?? null
-      const below = k === out.length - 1 ? close : groundAt.get(out[k + 1].index) ?? null
+      const above = k === 0 ? hero : everyBand ? null : groundAt.get(out[k - 1].index) ?? null
+      const below = k === out.length - 1 ? close : everyBand ? null : groundAt.get(out[k + 1].index) ?? null
       const top = !!g && !!above && same(above, g)
       const bottom = !!g && !!below && same(below, g)
       if (top || bottom) o.seam = {...o.seam, ribbonEdges: {top, bottom}}
