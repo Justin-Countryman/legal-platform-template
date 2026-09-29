@@ -3206,7 +3206,7 @@
     {
       "id": "photoScrims",
       "name": "Photo scrims",
-      "sentence": "Dark-led: a toned piece of the hero’s own photograph behind two sections and the close.",
+      "sentence": "Dark-led: photographs of one place behind groups of dark sections and the close, or pieces of the hero’s own photograph.",
       "steps": [
         "mostlyDark"
       ],
@@ -3610,7 +3610,7 @@
       },
       "id": "photoScrims.mostlyDark",
       "name": "Photo scrims",
-      "sentence": "Dark-led: a toned piece of the hero’s own photograph behind two sections and the close.",
+      "sentence": "Dark-led: photographs of one place behind groups of dark sections and the close, or pieces of the hero’s own photograph.",
       "family": "photoScrims",
       "step": "mostlyDark",
       "passed": true
