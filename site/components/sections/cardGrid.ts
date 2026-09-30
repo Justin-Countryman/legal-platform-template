@@ -5,8 +5,10 @@
 // throwaway: the four attorneys and four reviews each left one card alone). The columns now follow the count:
 //
 // - Up to the widest, every card sits on one row.
-// - Past it, the count picks the columns that leave nobody alone: the widest where it divides the count, else
-//   one fewer where that divides it, else whichever of the two leaves a pair or more on the last row.
+// - Past it, the count picks the columns that leave nobody alone. Upright cards: four where it divides the count,
+//   else three where that does, else whichever of the two leaves a pair or more on the last row. Sideways cards and
+//   quotes: three, and two by two for exactly four (a column of quotes five rows tall is not a fix), so ten or sixteen
+//   of them leave one alone, centered.
 // - A short last row is centered, at every width: so is a lone card no choice can avoid (13 upright cards,
 //   7 quotes), and the odd card on a tablet's two columns.
 //

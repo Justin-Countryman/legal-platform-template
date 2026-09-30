@@ -124,3 +124,14 @@ describe('the sections draw the plan', () => {
     expect(items[4]).toEqual(expect.arrayContaining(['sm:col-start-2', 'lg:col-start-auto']))
   })
 })
+
+// The pre-report break pass (Phase 18 session B): a card style the dispatcher does not know draws as Classic, so it is
+// planned as Classic; and the testimonials page draws the same cards in the same grid as the homepage's section.
+describe('every attorney style is planned as it is drawn, and the testimonials page follows the count', () => {
+  it('an unknown or retired card style is planned as the Classic card it draws', () => {
+    const c = render(<AttorneySectionBlock data={{attorneys: [1, 2, 3, 4].map(person), cardStyle: 'retired-style'} as never} />).container
+    expect(c.querySelector('ul')!.className.split(' ')).not.toContain('lg:grid-cols-8')
+    const avatar = render(<AttorneySectionBlock data={{attorneys: [1, 2, 3, 4].map(person), cardStyle: 'editorial'} as never} />).container
+    expect(avatar.querySelector('ul')!.className.split(' ')).toContain('lg:grid-cols-8')
+  })
+})

@@ -8,6 +8,9 @@ import {type AttorneySectionProps} from './sectionProps'
 import {headingFit} from '@/lib/headingFit'
 import {cardGridClasses} from './cardGrid'
 
+/** The attorney card styles drawn upright (`AttorneyCard`); 'editorial' is Avatar's old name. */
+const UPRIGHT: readonly string[] = ['portrait', 'avatar', 'editorial', 'minimal', 'spotlight']
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 // One props type for both renderings; no `_type`, the dispatchers own it. See
@@ -55,8 +58,9 @@ export function AttorneySectionBlock({
   // style set sets it, `[R-468]`'s continuity rule), otherwise Classic.
   const cardStyle = followSite(data.cardStyle as string | null | undefined, seam.site?.attorneyCardStyle) as AttorneyCardStyle | null
   const isSlider = data.layout === 'slider'
-  // The columns follow the count (cardGrid.ts): Classic lies sideways, so four of it go two by two.
-  const grid = cardGridClasses(attorneys.length, (cardStyle ?? 'classic') === 'classic' ? 3 : 4)
+  // The columns follow the count (cardGrid.ts): Classic lies sideways, so four of it go two by two. Only the styles the
+  // card draws upright plan four across; anything else, a retired or unknown value included, draws as Classic.
+  const grid = cardGridClasses(attorneys.length, UPRIGHT.includes(cardStyle as string) ? 4 : 3)
 
   return (
     <SectionShell
