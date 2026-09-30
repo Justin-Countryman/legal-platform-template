@@ -96,8 +96,9 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
   // list with the same inputs (`HomepageCanvas`, `close`), so both read one walk.
   //
   // Phase 18 session B (`[R-597]`, `[R-603]`): the close never takes the footer's color. It reads the footer's scheme as
-  // the shell renders it (the theme's, a stored one winning) and the ground of the band above it (a walk without the
-  // close: the close only joins a run or an inset's adoption, never changing what the last band itself paints).
+  // the shell renders it (the theme's, a stored one winning) and the ground of the band above it, from a walk without the
+  // close. The close then joins the walk (a run Gradient bloom lights; an inset last band between a strong ground and a
+  // strong close adopts it, `[R-501]`, as it did before this session).
   const footer = chromeSchemes(flowOf(chrome?.designTokens as Record<string, unknown> | null), header?.mainNavigation, chrome?.footer?.footerSettings, {
     onLight: header?.designSettings?.logoOnLight,
     onDark: header?.designSettings?.logoOnDark,

@@ -78,3 +78,21 @@ describe('whether the close is shown, with the homepage override', () => {
     expect(closeShownOf({layout: 'centered'}, {hideCtaForm: false, ctaOverride: {heading: '  '}})).toBe(false)
   })
 })
+
+// The pre-report break pass (Phase 18 session B): a close on the accent fill drew its buttons in the light context, whose
+// primary fill is the action color, which is the accent on every preset: the button vanished into the band. On the fill
+// the buttons take the saturated context, the pair `validateWcag` guarantees (accent-fg on accent-fill).
+describe('a close on the accent keeps its buttons visible', () => {
+  it('draws its buttons in the saturated context, never the action color the band is filled with', () => {
+    const navyBrass = presetInputs(PALETTE_PRESETS.find((p) => p.id === 'navy-brass')!)
+    const chrome = {designTokens: {...navyBrass, flow: 'alternating.balanced'}, globalCta: {heading: 'Talk to us today', layout: 'centered', buttons: [{title: 'Book a call', url: '/contact/', variant: 'primary'}, {title: 'Call us', url: 'tel:5550100', variant: 'secondary'}]}, header: {siteSettings: {firmName: 'Example Law Firm'}}}
+    const {container} = render(<HomeBody chrome={chrome as never} all={{page: {}} as never} />)
+    const sections = [...container.querySelectorAll('section')]
+    const close = sections[sections.length - 1]
+    expect(close.className.split(' ')).toContain('bg-accent-fill')
+    const buttons = [...close.querySelectorAll('a')].map((a) => a.className.split(' '))
+    expect(buttons.length).toBe(2)
+    for (const b of buttons) expect(b).not.toContain('bg-action')
+    expect(buttons[0]).toContain('bg-accent-fg')
+  })
+})

@@ -74,3 +74,28 @@ describe('every interior page closes apart from the footer', () => {
     expect(await closeClasses(route)).toContain('bg-muted')
   })
 })
+
+// The pre-report break pass: a page whose last full-width section is dark closed dark over the light footer, one block
+// with the section above it. Where the section above is dark the close takes the accent, where the palette's fill reads
+// as its own color, its buttons in the saturated context; else the dark ground, as the homepage does.
+describe('an interior close under a dark last section', () => {
+  const navyBrass = {darkGround: '#1c2b4a', lightGround: '#f5eedc', accent: '#b8893a'}
+  const withDarkSection = (route: Route) => ({...route.doc, sections: [{_type: 'contentSection', _key: 's1', layout: 'statement', heading: 'A dark statement', appearance: {surface: 'dark'}}]})
+  function serveWith(route: Route, designTokens: Record<string, unknown>) {
+    serve(route, designTokens)
+    const base = vi.mocked(client.fetch).getMockImplementation() as unknown as (query: string) => Promise<unknown>
+    vi.mocked(client.fetch).mockImplementation((async (query: string) => (query === route.query ? withDarkSection(route) : base(query))) as never)
+  }
+
+  it('takes the accent over the light footer, its buttons in the saturated context; the dark ground where the palette has no fill', async () => {
+    const route = ROUTES.find((r) => r.name === 'a CMS page (catch-all)')!
+    serveWith(route, {flow: 'quiet.mostlyLight', ...navyBrass})
+    const html = renderToStaticMarkup(await route.render())
+    const at = html.indexOf(HEADING)
+    const section = html.slice(html.lastIndexOf('<section', at), html.indexOf('</section>', at))
+    expect(section).toContain('bg-accent-fill')
+    expect(section).not.toMatch(/\bbg-action\b/)
+    serveWith(route, {flow: 'quiet.mostlyLight'})
+    expect(await closeClasses(route)).toContain('bg-brand-dark')
+  })
+})

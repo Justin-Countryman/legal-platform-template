@@ -208,7 +208,7 @@ export const STEP_HOSTS: Record<Darkness, readonly Host[]> = {
   allDark: HOSTS,
 }
 /** The header and footer per step (Phase 17B session 4, record §2.2): the lighter steps keep the
- *  white bar and dark footer every client wears today; the darker steps darken the bar, which
+ *  white bar and a dark footer; the darker steps darken the bar, which
  *  reads as one block with a dark hero. The study coded the footer (a dark one on 20 of 20
  *  mostly-dark pages, light-leaning on mostly-light ones) and never the header, so the header's
  *  values rest on the rule and the eye pass; a family may name its own. */
@@ -324,7 +324,7 @@ export const FAMILIES: readonly FlowFamily[] = [
   // ─── Phase 17B session 5 (record WS-V1-PHASE17B5-DESIGN §2) ─────────────────
   {
     id: 'typeOnBlack', name: 'Type on black',
-    sentence: 'All dark and no photographs: a thin accent line at every join.',
+    sentence: 'All dark and no photographs: a thin accent line at every join, and a close on the accent.',
     // The study: elbazelbazlaw, seven dark bands and a red line at each seam; dustincompton's
     // sand bars at every seam. The all-dark step's rhythm devices are photos, per-band ramps
     // and lines, never a second flat shade (17B §0.5); this family is the lines. Its line is

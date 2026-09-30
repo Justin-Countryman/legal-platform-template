@@ -18,7 +18,7 @@ import {CalendarIcon, MapPinIcon, type ChipIcon} from '@/components/ui/icons'
 import {TertiaryArrow} from '@/components/ui/TertiaryArrow'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {withCtaOverride} from '@/lib/ctaOverride'
-import {PageSections} from '@/components/sections/PageSections'
+import {PageSections, sectionsLastGround} from '@/components/sections/PageSections'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -271,7 +271,7 @@ export default async function EventsIndexPage() {
       {/* Global CTA */}
       {!(indexPage?.hideCtaForm) && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={withCtaOverride(globalCtaData, indexPage?.ctaOverride)} surface={await chromeClose()}
+          data={withCtaOverride(globalCtaData, indexPage?.ctaOverride)} surface={await chromeClose(sectionsLastGround(indexPage?.sections, siteLookWithHeadingFace((await getSiteChrome())?.designTokens)))}
           napTokens={tokens}
         />
       )}

@@ -95,9 +95,11 @@ export function HomepageCta({
         ) : null}
 
         {/* A close Gradient bloom lights (Phase 17D session 2) takes the dark band's button context, so a secondary
-            button's outline is the body text, which the glow is solved under; every other close is as it was
-            (backlog 367 is the accessibility phase's). */}
-        {items.length > 0 ? <ButtonGroup items={items} align="center" className="mt-6 md:mt-8" context={seam.fade === 'glow' && surface === 'dark' ? 'dark' : undefined} /> : null}
+            button's outline is the body text, which the glow is solved under. A close on the accent fill (Phase 18
+            session B, `closeOf`) takes the saturated context: the light one fills with the action color, which is the
+            accent on every preset, and the button vanished into the band (the pre-report break pass). Every other close
+            is as it was (backlog 367 is the accessibility phase's). */}
+        {items.length > 0 ? <ButtonGroup items={items} align="center" className="mt-6 md:mt-8" context={surface === 'saturated' ? 'saturated' : seam.fade === 'glow' && surface === 'dark' ? 'dark' : undefined} /> : null}
 
         {merged.formEmbed ? (
           <div className="mt-8">

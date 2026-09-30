@@ -1,7 +1,8 @@
 import {cache} from 'react'
 import {client} from './client'
 import {HOME_PAGE_QUERY, CATCH_ALL_PAGE_QUERY, SITE_CHROME_QUERY} from './queries'
-import {chromeSchemes, flowOf} from '@/lib/flows'
+import {chromeSchemes, flowOf, saturatedFillOk} from '@/lib/flows'
+import type {VisibleGround} from '@/lib/sectionSurface'
 
 // ─── One fetch per request, shared across generateMetadata, the layouts and
 // the page ────────────────────────────────────────────────────────────────────
@@ -70,13 +71,16 @@ export async function chromeHeader() {
 }
 /** The ground an interior page's closing call to action takes (Phase 18 session B, `[R-597]` as `[R-603]` amends it):
  *  never the footer's color. The footer's scheme is read as the shell renders it (`chromeSchemes`, a stored scheme
- *  winning), and the close is the dark ground over a light footer, the muted step over a dark one (ΔE2000 51 or more
- *  apart on every palette; `lib/__tests__/closeApart.test.ts` measures the homepage's). */
-export async function chromeClose(): Promise<'dark' | 'muted'> {
+ *  winning), and the close is the muted step over a dark footer (ΔE2000 51 or more apart on every palette), and over a
+ *  light one the dark ground, or the accent where the section above it is dark and the palette's fill reads as its own
+ *  color, so the close does not run on as one block with that section (the pre-report break pass). */
+export async function chromeClose(above: VisibleGround | null = null): Promise<'dark' | 'muted' | 'saturated'> {
   const chrome = await getSiteChrome()
   const footer = chromeSchemes(flowOf(chrome?.designTokens as Record<string, unknown> | null), chrome?.header?.mainNavigation, chrome?.footer?.footerSettings, {
     onLight: chrome?.header?.designSettings?.logoOnLight,
     onDark: chrome?.header?.designSettings?.logoOnDark,
   }).footer
-  return footer === 'light' ? 'dark' : 'muted'
+  if (footer === 'dark') return 'muted'
+  const strongAbove = above === 'dark' || above === 'image'
+  return strongAbove && saturatedFillOk(chrome?.designTokens as Record<string, unknown> | null) ? 'saturated' : 'dark'
 }

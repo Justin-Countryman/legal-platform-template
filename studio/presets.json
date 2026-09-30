@@ -3170,7 +3170,7 @@
     {
       "id": "typeOnBlack",
       "name": "Type on black",
-      "sentence": "All dark and no photographs: a thin accent line at every join.",
+      "sentence": "All dark and no photographs: a thin accent line at every join, and a close on the accent.",
       "steps": [
         "allDark"
       ],
@@ -3507,7 +3507,7 @@
       },
       "id": "typeOnBlack.allDark",
       "name": "Type on black",
-      "sentence": "All dark and no photographs: a thin accent line at every join.",
+      "sentence": "All dark and no photographs: a thin accent line at every join, and a close on the accent.",
       "family": "typeOnBlack",
       "step": "allDark",
       "passed": true
