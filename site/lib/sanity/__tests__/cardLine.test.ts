@@ -5,8 +5,8 @@
  * the build writes (`allTopLevel`) nothing could override it (the monorepo's Phase 18 ledger, 2026-09-30 F; Justin:
  * "1, change them", each tile one line on what the client gets). A practice area's Card Line is read first; the meta
  * description stays the fallback. The projection guards both `defined` and empty: in GROQ `null != ""` is true, so a
- * bare `cardLine != ""` answers null for every area with no card line (ADV-18B-C, measured on groq-js). GROQ cannot trim,
- * so a line of spaces passes through; the tile draws nothing for it and the Studio warns (`silo/parts.tsx`).
+ * bare `cardLine != ""` answers null for every area with no card line (ADV-18B-C, measured on groq-js). A line of spaces
+ * counts as empty too: split on spaces, it has no word (the pre-report break pass).
  */
 import {describe, expect, it} from 'vitest'
 import {evaluate, parse} from 'groq-js'
@@ -35,13 +35,13 @@ describe('a practice area’s card line reaches its card', () => {
       'Estate Planning': 'Estate planning attorneys serving the county.',
       'Family Law': 'Custody and support worked out with you, not for you.',
       Probate: 'Probate attorneys serving the county.',
-      Trusts: '   ',
+      Trusts: 'Trust attorneys serving the county.',
     })
   })
 
   it('a hand-picked item’s own line wins; an empty one falls to the card line, then the meta description', async () => {
     const pick = (ref: string, description?: string) => ({_key: ref, page: {_type: 'reference', _ref: ref}, ...(description === undefined ? {} : {description})})
-    const list = await items({_type: 'practiceAreaNavInline', items: [pick('pa-family', 'Our own words.'), pick('pa-family', ''), pick('pa-estate'), pick('geo-1')]})
+    const list = await items({_type: 'practiceAreaNavInline', items: [pick('pa-family', 'Our own words.'), pick('pa-family', ''), pick('pa-estate', '   '), pick('geo-1')]})
     expect(list.map((i) => i.description)).toEqual([
       'Our own words.',
       'Custody and support worked out with you, not for you.',
