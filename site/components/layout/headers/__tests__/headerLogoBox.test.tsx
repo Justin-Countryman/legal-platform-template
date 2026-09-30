@@ -21,6 +21,8 @@ import {type HeaderData} from '../shared'
 import {SiteShell, type SiteChrome} from '../../SiteShell'
 import {chromeSchemes, darkHeaderReady, flowById} from '@/lib/flows'
 import {ReviewPageContent} from '@/components/review/ReviewPageContent'
+import {solidBehindBox} from '@/components/ui/LogoImage'
+import type {LogoBox} from '@/lib/logoFacts'
 
 class NoResize {
   observe() {}
@@ -46,19 +48,22 @@ describe('a boxed logo is drawn into the header’s ground', () => {
       expect(boxed.length).toBeGreaterThan(0)
       for (const c of boxed) expect(c).toContain('mix-blend-multiply')
       const clear = imgClasses(header({headerLayout, defaultScheme: 'light', scrolledScheme: 'light', logoOnLight: logo('/light.png', 'clear'), logoOnDark: logo('/dark.png', 'clear')}))
+      expect(clear.length).toBeGreaterThan(0)
       for (const c of clear) expect(c.some((x) => x.startsWith('mix-blend'))).toBe(false)
     })
 
     it(`${headerLayout}: a black box on the dark header screens away; a white box is never multiplied into a dark ground`, () => {
       const black = imgClasses(header({headerLayout, defaultScheme: 'dark', scrolledScheme: 'dark', logoOnLight: logo('/light.png', 'clear'), logoOnDark: logo('/dark.png', 'black')}))
+      expect(black.length).toBeGreaterThan(0)
       for (const c of black) expect(c).toContain('mix-blend-screen')
       const white = imgClasses(header({headerLayout, defaultScheme: 'dark', scrolledScheme: 'dark', logoOnLight: logo('/light.png', 'clear'), logoOnDark: logo('/dark.png', 'white')}))
+      expect(white.length).toBeGreaterThan(0)
       for (const c of white) expect(c).not.toContain('mix-blend-multiply')
     })
   }
 })
 
-const LOGO_FILE = (src: string, box: string | null) => ({src, alt: 'Test Firm', width: 300, height: 100, facts: box ? {box, trim: null} : null})
+const LOGO_FILE = (src: string, box: LogoBox | null) => ({src, alt: 'Test Firm', width: 300, height: 100, facts: box ? {box, trim: null} : null})
 function chrome(design: Record<string, unknown>, nav: Record<string, unknown>, logos: Record<string, unknown>, footer: Record<string, unknown> = {}): SiteChrome {
   return {
     header: {siteSettings: {firmName: 'Test Firm'}, designSettings: logos, mainNavigation: {navItems: [], ...nav}},
@@ -77,6 +82,21 @@ describe('the site shell gives a boxed logo a ground it can be drawn into', () =
     expect(cls(clear.querySelector('header'))).toContain('backdrop-blur-md')
   })
 
+  it('turns the header solid only where the logo it draws will blend: the mark when compacted, never a colored box (the pre-report break pass)', () => {
+    // A clear wordmark with a white-boxed mark: glass at the top (the wordmark), solid when compacted (the mark).
+    const withMark = chrome({}, {defaultScheme: 'glass', scrolledScheme: 'glass', stickyHideSupplementary: true}, {logoOnLight: LOGO_FILE('/l.png', 'clear'), logoOnDark: LOGO_FILE('/d.png', 'clear'), logoMarkOnLight: LOGO_FILE('/m.png', 'white'), logoMarkOnDark: LOGO_FILE('/md.png', 'clear')})
+    expect(cls(render(<SiteShell chrome={withMark}><p /></SiteShell>).container.querySelector('header'))).toContain('backdrop-blur-md')
+    expect(solidBehindBox('glass', LOGO_FILE('/l.png', 'clear'))).toBe('glass')
+    expect(solidBehindBox('glass', LOGO_FILE('/m.png', 'white'))).toBe('light')
+    expect(solidBehindBox('glass-dark', LOGO_FILE('/md.png', 'black'))).toBe('dark')
+    expect(solidBehindBox('transparent-dark', LOGO_FILE('/md.png', 'white'))).toBe('transparent-dark')
+    expect(solidBehindBox('transparent-light', LOGO_FILE('/l.png', '#1c348c'))).toBe('transparent-light')
+    expect(solidBehindBox('light', LOGO_FILE('/l.png', 'white'))).toBe('light')
+    // A colored box cannot blend into either ground: a stored transparent header stays transparent over the hero.
+    const colored = chrome({}, {defaultScheme: 'transparent-light', scrolledScheme: 'light', heroMerge: true}, {logoOnLight: LOGO_FILE('/l.png', '#1c348c'), logoOnDark: LOGO_FILE('/d.png', 'clear')})
+    expect(cls(render(<SiteShell chrome={colored}><p /></SiteShell>).container.querySelector('header'))).toContain('bg-transparent')
+  })
+
   it('the light footer multiplies a white-boxed logo away', () => {
     const c = render(<SiteShell chrome={chrome({flow: 'softWash.mostlyLight'}, {}, {logoOnLight: LOGO_FILE('/l.png', 'white'), logoOnDark: LOGO_FILE('/d.png', 'clear')})}><p /></SiteShell>).container
     const footerImg = c.querySelector('footer [data-logo-box] img')
@@ -92,11 +112,11 @@ describe('the site shell gives a boxed logo a ground it can be drawn into', () =
 describe('a logo for dark grounds that carries a white or colored box keeps the theme’s dark header light', () => {
   const dark = flowById('cutBlocks.mostlyDark')!
   it('is not ready for a dark header, and the header stays light and says why', () => {
-    for (const box of ['white', '#1c348c']) {
+    for (const box of ['white', '#1c348c'] as LogoBox[]) {
       const logos = {onLight: LOGO_FILE('/l.png', 'clear'), onDark: LOGO_FILE('/d.png', box)}
       expect(darkHeaderReady(logos), box).toBe(false)
       expect(chromeSchemes(dark, null, null, logos)).toMatchObject({top: 'light', darkLogoMissing: true})
     }
-    for (const box of ['black', 'clear', null]) expect(darkHeaderReady({onLight: LOGO_FILE('/l.png', 'clear'), onDark: LOGO_FILE('/d.png', box)}), String(box)).toBe(true)
+    for (const box of ['black', 'clear', null] as (LogoBox | null)[]) expect(darkHeaderReady({onLight: LOGO_FILE('/l.png', 'clear'), onDark: LOGO_FILE('/d.png', box)}), String(box)).toBe(true)
   })
 })

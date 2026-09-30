@@ -23,6 +23,17 @@ export function logoBlend(logo: {facts?: LogoFacts | null} | null | undefined, g
   return null
 }
 
+/** A glass or transparent header scheme's solid form in its own polarity. */
+const SOLID_FORM: Record<string, 'light' | 'dark'> = {glass: 'light', 'transparent-light': 'light', 'glass-dark': 'dark', 'transparent-dark': 'dark'}
+
+/** A header scheme as the site shell hands it on: its solid form where the logo drawn in that state carries a box that
+ *  blends into the solid ground (`logoBlend`), which only a solid ground allows; else unchanged, a colored box or a box
+ *  of the other polarity included (a solid bar would not hide it). */
+export function solidBehindBox(scheme: string, drawn: {src?: string | null; facts?: LogoFacts | null} | null | undefined): string {
+  const solid = SOLID_FORM[scheme]
+  return solid && drawn?.src && logoBlend(drawn, solid) ? solid : scheme
+}
+
 export function LogoImage({
   logo,
   height,

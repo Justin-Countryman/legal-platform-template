@@ -10,6 +10,8 @@
 // chrome it fetched and nothing else, so a live page is what it was; the build's
 // check compares the prerendered pages before and after the move.
 
+import {solidBehindBox} from '@/components/ui/LogoImage'
+import type {LogoFacts} from '@/lib/logoFacts'
 import {type getSiteChrome} from '@/lib/sanity/fetchers'
 import {resolveTokenString, formatPhone} from '@/lib/tokens'
 import {buildDesignTokenCSS, buildColorCSS, buildFontCSS, resolveSidebarDesignSettings} from '@/lib/designTokens'
@@ -75,9 +77,6 @@ function buildNavItems(rawItems: unknown[]): NavItem[] {
 
 /** The chrome the shell draws from: `getSiteChrome()`'s answer, or a preview's copy of it. */
 export type SiteChrome = Awaited<ReturnType<typeof getSiteChrome>>
-
-/** A glass or transparent header scheme's solid form in its own polarity. */
-const SOLID_FORM: Record<string, 'light' | 'dark'> = {glass: 'light', 'transparent-light': 'light', 'glass-dark': 'dark', 'transparent-dark': 'dark'}
 
 export function SiteShell({chrome: given, children}: {chrome: SiteChrome; children: React.ReactNode}) {
   const chrome = given ?? {}
@@ -204,17 +203,17 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
     siteHeroSurface.isDark,
   )
   // Phase 18 session B (item 4, `[R-603]`): a logo on its own box is drawn into the header's ground (`logoBlend`), which
-  // only a solid ground allows, so where the logo the header draws carries a box, a glass or transparent header takes
-  // its solid form in its own polarity, as the phone row already does.
-  const onLightLogo = headerData?.designSettings?.logoOnLight as {src?: string | null; facts?: {box?: string | null} | null} | null | undefined
-  const onDarkLogo = headerData?.designSettings?.logoOnDark as {src?: string | null; facts?: {box?: string | null} | null} | null | undefined
-  const solidBehindBox = (scheme: string): string => {
-    const solid = SOLID_FORM[scheme]
-    if (!solid) return scheme
-    const drawn = solid === 'dark' ? onDarkLogo : onLightLogo
-    const box = drawn?.src ? drawn.facts?.box : null
-    return box && box !== 'clear' ? solid : scheme
+  // only a solid ground allows, so a glass or transparent header takes its solid form where the logo drawn in that state
+  // will blend into it: the wordmark at the top, and compacted the mark where one exists, as HeaderLogo draws them.
+  type Drawn = {src?: string | null; facts?: LogoFacts | null} | null | undefined
+  const ds = headerData?.designSettings as Record<string, Drawn> | null | undefined
+  const drawnAt = (scheme: string, compact: boolean): Drawn => {
+    const dark = scheme === 'dark' || scheme === 'glass-dark' || scheme === 'transparent-dark'
+    const mark = compact && (ds?.logoMarkOnLight || ds?.logoMarkOnDark)
+    if (mark) return dark ? (ds?.logoMarkOnDark ?? ds?.logoOnDark) : (ds?.logoMarkOnLight ?? ds?.logoOnLight)
+    return dark ? ds?.logoOnDark : ds?.logoOnLight
   }
+  const compactOnScroll = headerData?.mainNavigation?.stickyHideSupplementary ?? true
 
   // Preload regular-weight heading + body fonts so the browser fetches them in
   // parallel with parsing the inline @font-face <style> below. See
@@ -273,8 +272,8 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
           sticky: headerData?.mainNavigation?.sticky ?? true,
           stickyHideSupplementary: headerData?.mainNavigation?.stickyHideSupplementary ?? true,
           compactStyle: headerData?.mainNavigation?.compactStyle ?? 'docked',
-          defaultScheme: solidBehindBox(mergedDefaultScheme),
-          scrolledScheme: solidBehindBox(schemes.scrolled),
+          defaultScheme: solidBehindBox(mergedDefaultScheme, drawnAt(mergedDefaultScheme, false)),
+          scrolledScheme: solidBehindBox(schemes.scrolled, drawnAt(schemes.scrolled, compactOnScroll)),
           topBarDesktop: headerData?.mainNavigation?.topBarDesktop ?? false,
           topBarMobile: headerData?.mainNavigation?.topBarMobile ?? false,
           topBarPinSide: headerData?.mainNavigation?.topBarPinSide ?? 'none',
