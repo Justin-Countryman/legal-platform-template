@@ -725,6 +725,13 @@
           },
           "optional": true
         },
+        "itemsHeading": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
         "items": {
           "type": "objectAttribute",
           "value": {
@@ -6013,6 +6020,13 @@
         "value": {
           "type": "inline",
           "name": "blockProse"
+        },
+        "optional": true
+      },
+      "itemsHeading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
         },
         "optional": true
       },

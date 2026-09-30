@@ -60,7 +60,7 @@ const PAIRS: Array<[doc: string, inline: string, fields: Record<string, unknown>
     media: {kind: 'photo', image: {_type: 'image', alt: 'The office', asset: {_ref: 'image-1'}}}, imageTreatment: 'framed', surface: 'dark',
   }],
   ['contentSection', 'contentSectionInline', {
-    layout: 'twoColumnText', heading: 'Two columns',
+    layout: 'twoColumnText', heading: 'Two columns', itemsHeading: 'Our commitment to you',
     items: [{_key: 'i1', _type: 'contentSectionItem', title: 'One'}, {_key: 'i2', _type: 'contentSectionItem', title: 'Two'}],
   }],
   ['contentSection', 'contentSectionInline', {layout: 'statement', heading: 'A statement', buttons: [{_key: 'b1', title: 'A', url: '/a/'}, {_key: 'b2', title: 'B', url: '/b/'}]}],
@@ -139,6 +139,9 @@ describe('SECTION_BODY: the inline member and the referenced document project th
     expect(split.imageTreatment).toBe('framed')
     const video = canvas[first + 5] as {media: {video: {title: string; youTubeUrl: string}}}
     expect(video.media.video).toEqual(expect.objectContaining({title: 'Intro', youTubeUrl: 'https://www.youtube.com/watch?v=abc123xyz00'}))
+    // The heading over the items (Phase 18 session B), on the two-column member and on its document alike.
+    expect((canvas[first + 1] as {itemsHeading: string}).itemsHeading).toBe('Our commitment to you')
+    expect((canvas[first] as {itemsHeading: string | null}).itemsHeading).toBeNull()
     // Another section's items still resolve through its own branch, not the content section's.
     expect((canvas[0] as {items: Array<{href: string}>}).items[0].href).toBe('/family-law/')
   })
