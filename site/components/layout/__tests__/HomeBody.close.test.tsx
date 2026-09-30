@@ -96,3 +96,16 @@ describe('a close on the accent keeps its buttons visible', () => {
     expect(buttons[0]).toContain('bg-accent-fg')
   })
 })
+
+describe('the homepage close reads the footer the shell renders, a stored scheme winning', () => {
+  it('under Quiet, a stored dark footer turns the dark close to the accent; a stored light one keeps it dark', () => {
+    const navyBrass = presetInputs(PALETTE_PRESETS.find((p) => p.id === 'navy-brass')!)
+    const closeUnder = (footerScheme: string) => {
+      const chrome = {designTokens: {...navyBrass, flow: 'quiet.mostlyLight'}, globalCta: {heading: 'Talk to us today', layout: 'centered'}, header: {siteSettings: {firmName: 'Example Law Firm'}}, footer: {footerSettings: {footerScheme}}}
+      const sections = [...render(<HomeBody chrome={chrome as never} all={{page: {}} as never} />).container.querySelectorAll('section')]
+      return sections[sections.length - 1].className.split(' ')
+    }
+    expect(closeUnder('dark')).toContain('bg-accent-fill')
+    expect(closeUnder('light')).toContain('bg-brand-dark')
+  })
+})
