@@ -10,7 +10,7 @@
 // tabindex + arrow-key navigation. Dark or light via footerSettings.footerScheme.
 
 import {useId, useState} from 'react'
-import Image from 'next/image'
+import {LogoImage} from '@/components/ui/LogoImage'
 import Link from 'next/link'
 import {MdPhone, MdLocationOn, MdDirections} from 'react-icons/md'
 import {Button} from '@/components/ui/Button'
@@ -94,7 +94,7 @@ export function SwitchboardFooter({data}: Props) {
         <div className="flex flex-col gap-6 border-b border-border py-12 md:flex-row md:items-center md:justify-between">
           {logo?.src ? (
             <Link href="/" aria-label={firmName ?? 'Home'} className="inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
-              <Image src={logo.src} alt={logo.alt ?? firmName ?? ''} width={logo.width} height={logo.height} className="h-14 w-auto" />
+              <LogoImage logo={logo} height={56} alt={logo.alt ?? firmName ?? ''} place="footer" className="max-w-[18rem]" />
             </Link>
           ) : firmName ? (
             <p className="font-heading text-2xl font-bold text-foreground">{firmName}</p>

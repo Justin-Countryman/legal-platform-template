@@ -4,7 +4,7 @@
 // Form panel: ctaText as headline, then raw embed code (iframe, script-based forms, etc.).
 // Form embed is rendered client-side so script tags execute correctly.
 
-import Image from 'next/image'
+import {LogoImage} from '@/components/ui/LogoImage'
 import Link from 'next/link'
 import {MdLocationOn} from 'react-icons/md'
 import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, officeLocationLabel, footerSurface, footerLogo} from './shared'
@@ -52,13 +52,7 @@ export function BeaconFooter({data}: Props) {
           {/* Logo / firm name */}
           {logo?.src ? (
             <Link href="/" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
-              <Image
-                src={logo.src}
-                alt={logo.alt ?? ''}
-                width={logo.width}
-                height={logo.height}
-                className="h-24 w-auto object-contain"
-              />
+              <LogoImage logo={logo} height={96} alt={logo.alt ?? ''} place="footer" className="max-w-[18rem]" />
             </Link>
           ) : firmName ? (
             <Link href="/" className="font-heading text-2xl font-bold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">

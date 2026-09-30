@@ -1,6 +1,7 @@
 import {cache} from 'react'
 import {client} from './client'
 import {HOME_PAGE_QUERY, CATCH_ALL_PAGE_QUERY, SITE_CHROME_QUERY} from './queries'
+import {withLogoFacts} from '@/lib/logoFacts'
 
 // ─── One fetch per request, shared across generateMetadata, the layouts and
 // the page ────────────────────────────────────────────────────────────────────
@@ -31,7 +32,7 @@ import {HOME_PAGE_QUERY, CATCH_ALL_PAGE_QUERY, SITE_CHROME_QUERY} from './querie
 // layout-wide invalidation) is the only cache to keep in step.
 
 /** The site chrome: layouts, robots decision, NAP tokens, global CTA. One call per request. */
-export const getSiteChrome = cache(() => client.fetch(SITE_CHROME_QUERY))
+export const getSiteChrome = cache(async () => withLogoFacts(await client.fetch(SITE_CHROME_QUERY)))
 
 /** The catch-all page for one slug, shared by generateMetadata and the page. */
 export const getCatchAllPage = cache((slug: string) => client.fetch(CATCH_ALL_PAGE_QUERY, {slug}))

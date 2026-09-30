@@ -471,25 +471,29 @@ export const HEADER_QUERY = groq`{
       "src": asset->url,
       "alt": alt,
       "width": asset->metadata.dimensions.width,
-      "height": asset->metadata.dimensions.height
+      "height": asset->metadata.dimensions.height,
+      crop
     },
     "logoOnDark": logoOnDark{
       "src": asset->url,
       "alt": alt,
       "width": asset->metadata.dimensions.width,
-      "height": asset->metadata.dimensions.height
+      "height": asset->metadata.dimensions.height,
+      crop
     },
     "logoMarkOnLight": logoMarkOnLight{
       "src": asset->url,
       "alt": alt,
       "width": asset->metadata.dimensions.width,
-      "height": asset->metadata.dimensions.height
+      "height": asset->metadata.dimensions.height,
+      crop
     },
     "logoMarkOnDark": logoMarkOnDark{
       "src": asset->url,
       "alt": alt,
       "width": asset->metadata.dimensions.width,
-      "height": asset->metadata.dimensions.height
+      "height": asset->metadata.dimensions.height,
+      crop
     }
   },
   "mainNavigation": *[_type == "mainNavigation"][0]{
@@ -552,13 +556,15 @@ export const FOOTER_QUERY = groq`{
       "src": asset->url,
       "alt": alt,
       "width": asset->metadata.dimensions.width,
-      "height": asset->metadata.dimensions.height
+      "height": asset->metadata.dimensions.height,
+      crop
     },
     "logoOnLight": logoOnLight{
       "src": asset->url,
       "alt": alt,
       "width": asset->metadata.dimensions.width,
-      "height": asset->metadata.dimensions.height
+      "height": asset->metadata.dimensions.height,
+      crop
     },
     "showBackToTop": coalesce(showBackToTop, true)
   },
@@ -1825,7 +1831,8 @@ export const REVIEW_PAGE_QUERY = groq`{
       "src": asset->url,
       "alt": alt,
       "width": asset->metadata.dimensions.width,
-      "height": asset->metadata.dimensions.height
+      "height": asset->metadata.dimensions.height,
+      crop
     }
   }.logoOnLight,
   "firmInfo": *[_type == "siteSettings"][0]{

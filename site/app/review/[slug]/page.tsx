@@ -6,6 +6,7 @@ import {resolveTitle} from '@/lib/seoTitle'
 import type {Metadata} from 'next'
 import {REVIEW_PAGE_QUERY, REVIEW_SLUGS_QUERY} from '@/lib/sanity/queries'
 import {chromeNap, fetchCached} from '@/lib/sanity/fetchers'
+import {factsOf} from '@/lib/logoFacts'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {ReviewPageContent} from '@/components/review/ReviewPageContent'
@@ -109,7 +110,8 @@ export default async function ReviewPage({params}: Props) {
   return (
     <ReviewPageContent
       page={data.page}
-      logo={data.logo}
+      // Phase 18 session B: the logo's ink and box, as the header reads them (`logoFacts`).
+      logo={data.logo?.src ? {...data.logo, facts: await factsOf(data.logo)} : data.logo}
       firmInfo={data.firmInfo}
       napTokens={napTokens}
     />

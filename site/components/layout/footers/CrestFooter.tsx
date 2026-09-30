@@ -3,7 +3,7 @@
 // 3-column content below: address + social | nav links | phone + action buttons.
 // Clean, symmetrical, editorial — suits firms that want the logo to anchor the footer.
 
-import Image from 'next/image'
+import {LogoImage} from '@/components/ui/LogoImage'
 import Link from 'next/link'
 import {MdLocationOn} from 'react-icons/md'
 import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel, footerSurface, footerLogo} from './shared'
@@ -46,13 +46,7 @@ export function CrestFooter({data}: Props) {
       <div className="border-b border-border py-10 text-center">
         {logo?.src ? (
           <Link href="/" className="inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus" aria-label={firmName ?? 'Home'}>
-            <Image
-              src={logo.src}
-              alt={logo.alt ?? firmName ?? ''}
-              width={logo.width}
-              height={logo.height}
-              className="mx-auto h-16 w-auto"
-            />
+            <LogoImage logo={logo} height={64} alt={logo.alt ?? firmName ?? ''} place="footer" className="mx-auto max-w-[18rem]" />
           </Link>
         ) : firmName ? (
           <Link href="/" className="font-heading text-2xl font-bold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">

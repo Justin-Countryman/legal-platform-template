@@ -97,7 +97,7 @@ export function SpireHeader({data}: Props) {
                 data={data}
                 scheme={scheme}
                 useMark={hideSupplementary}
-                className={hideSupplementary ? 'h-9' : 'h-20'}
+                size={hideSupplementary ? 'compact' : 'rest'}
               />
             </div>
 
