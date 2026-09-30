@@ -16,6 +16,7 @@ import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {siteHost} from '@/lib/siteHost'
 import {Tagline} from '@/components/ui/Tagline'
 import {GlobalCta} from '@/components/sections/GlobalCta'
+import {withCtaOverride} from '@/lib/ctaOverride'
 import {ServiceAreaIndexClient} from '@/components/sections/ServiceAreaIndexClient'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -130,11 +131,7 @@ export default async function ServiceAreaIndexPage() {
       {/* Global CTA */}
       {!(indexPage?.hideCtaForm) && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={
-            indexPage?.ctaOverride
-              ? {...globalCtaData, ...indexPage.ctaOverride}
-              : globalCtaData
-          }
+          data={withCtaOverride(globalCtaData, indexPage?.ctaOverride)}
           napTokens={tokens}
         />
       )}

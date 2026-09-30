@@ -20,6 +20,7 @@ import {siteHost} from '@/lib/siteHost'
 import {Button} from '@/components/ui/Button'
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {GlobalCta} from '@/components/sections/GlobalCta'
+import {withCtaOverride} from '@/lib/ctaOverride'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -227,11 +228,7 @@ export default async function AttorneyIndexPage() {
       {/* Global CTA */}
       {!(indexPage?.hideCtaForm) && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={
-            indexPage?.ctaOverride
-              ? {...globalCtaData, ...indexPage.ctaOverride}
-              : globalCtaData
-          }
+          data={withCtaOverride(globalCtaData, indexPage?.ctaOverride)}
           napTokens={tokens}
         />
       )}

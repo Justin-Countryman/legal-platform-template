@@ -14,6 +14,7 @@ import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {GlobalCta} from '@/components/sections/GlobalCta'
+import {withCtaOverride} from '@/lib/ctaOverride'
 import {FormModal} from '@/components/ui/FormModal'
 import {Button} from '@/components/ui/Button'
 import {Chip} from '@/components/ui/Chip'
@@ -313,7 +314,7 @@ export default async function EventDetailPage({params}: Props) {
 
       {/* Global CTA */}
       {!event.hideCtaForm && globalCtaData && (
-        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)} data={event.ctaOverride ? {...globalCtaData, ...event.ctaOverride} : globalCtaData} napTokens={tokens} />
+        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)} data={withCtaOverride(globalCtaData, event.ctaOverride)} napTokens={tokens} />
       )}
     </>
   )

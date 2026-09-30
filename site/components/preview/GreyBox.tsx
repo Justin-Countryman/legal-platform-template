@@ -6,6 +6,7 @@ import {visibleResults} from '@/components/sections/CaseResultsSection'
 import {visibleItems} from '@/components/sections/PracticeAreaNavBlock'
 import {resolveResultsDisclaimer} from '@/lib/legal'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
+import {withCtaOverride} from '@/lib/ctaOverride'
 
 // ─── The grey box ─────────────────────────────────────────────────────────────
 //
@@ -272,10 +273,7 @@ export function GreyBox({chrome, home}: {chrome: SiteChrome; home: HomePageData}
   const heroDesign = home?.heroDesign ?? null
   const canvas = list(page?.canvas) as Member[]
   const disclaimer = resolveResultsDisclaimer(text(page?.resultsDisclaimer) || null)
-  const cta: HomepageCtaData = {
-    ...((chrome?.globalCta ?? {}) as HomepageCtaData),
-    ...((page?.ctaOverride ?? {}) as Partial<HomepageCtaData>),
-  }
+  const cta = withCtaOverride((chrome?.globalCta ?? {}) as HomepageCtaData, page?.ctaOverride as Partial<HomepageCtaData> | null)
   const firmName = text(chrome?.header?.siteSettings?.firmName)
   const navCount = list(chrome?.header?.mainNavigation?.navItems).length
   const desktop = layoutName(HEADER_LAYOUTS, chrome?.header?.mainNavigation?.headerLayout, 'apex')

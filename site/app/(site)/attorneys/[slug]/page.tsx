@@ -12,6 +12,7 @@ import {urlForImage, hasImage} from '@/lib/sanity/image'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {buildFullName} from '@/components/attorney/types'
 import {GlobalCta} from '@/components/sections/GlobalCta'
+import {withCtaOverride} from '@/lib/ctaOverride'
 import {SplitHeroLayout} from '@/components/attorney/layouts/SplitHeroLayout'
 import {ClassicSidebarLayout} from '@/components/attorney/layouts/ClassicSidebarLayout'
 import {FeatureGridLayout} from '@/components/attorney/layouts/FeatureGridLayout'
@@ -174,11 +175,7 @@ export default async function AttorneyProfilePage({params}: PageProps) {
 
       {!attorney.hideCtaForm && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={
-            attorney.ctaFormOverride
-              ? {...globalCtaData, ...attorney.ctaFormOverride}
-              : globalCtaData
-          }
+          data={withCtaOverride(globalCtaData, attorney.ctaFormOverride)}
           napTokens={napTokens}
         />
       )}

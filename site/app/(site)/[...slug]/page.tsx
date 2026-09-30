@@ -42,6 +42,7 @@ import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {FaqAccordion} from '@/components/ui/FaqAccordion'
 import {Sidebar} from '@/components/layout/Sidebar'
 import {GlobalCta} from '@/components/sections/GlobalCta'
+import {withCtaOverride} from '@/lib/ctaOverride'
 import {PageSections} from '@/components/sections/PageSections'
 import {OfficeHoursProvider} from '@/components/location/OfficeHoursContext'
 import {siteHost} from '@/lib/siteHost'
@@ -365,7 +366,7 @@ export default async function CatchAllPage({params}: Props) {
       )}
 
       {!page.hideCtaForm && globalCtaData && (
-        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)} data={page.ctaOverride ? {...globalCtaData, ...page.ctaOverride} : globalCtaData} napTokens={tokens} />
+        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)} data={withCtaOverride(globalCtaData, page.ctaOverride)} napTokens={tokens} />
       )}
     </>
   )

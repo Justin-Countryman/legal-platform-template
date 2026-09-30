@@ -22,7 +22,7 @@ vi.mock('next/image', () => ({
   default: ({src, alt, className}: {src: string; alt?: string; className?: string}) => <img src={src} alt={alt ?? ''} className={className} />,
 }))
 
-import {HomeBody} from '../HomeBody'
+import {HomeBody, closeShownOf} from '../HomeBody'
 
 const GRAPHITE_SIX = {sectionJoin: 'angled', dividerCarry: ['cards'], patternTexture: 'diagonalHatch', patternGround: 'dark', sectionOverlap: 'photo', brandGhost: 'none'}
 
@@ -49,5 +49,18 @@ describe('the closing call to action under the theme', () => {
 
   it('follows a stored theme, and the stored theme wins over the six', () => {
     expect(close({...GRAPHITE_SIX, flow: 'alternating.balanced'}).className.split(' ')).toContain('bg-brand-dark')
+  })
+})
+
+describe('whether the close is shown, with the homepage override', () => {
+  const site = {heading: 'Talk to us today', layout: 'centered'}
+
+  it('is shown when the override fills everything but the heading, as GROQ answers it', () => {
+    expect(closeShownOf(site, {hideCtaForm: false, ctaOverride: {tagline: null, heading: null, description: 'One call.', buttons: null}})).toBe(true)
+  })
+
+  it('is hidden by the page, and absent with no heading anywhere', () => {
+    expect(closeShownOf(site, {hideCtaForm: true, ctaOverride: null})).toBe(false)
+    expect(closeShownOf({layout: 'centered'}, {hideCtaForm: false, ctaOverride: {heading: '  '}})).toBe(false)
   })
 })

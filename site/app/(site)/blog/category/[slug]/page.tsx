@@ -14,6 +14,7 @@ import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {siteHost} from '@/lib/siteHost'
 import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {GlobalCta} from '@/components/sections/GlobalCta'
+import {withCtaOverride} from '@/lib/ctaOverride'
 import {Suspense} from 'react'
 import {BlogIndexClient} from '@/components/sections/BlogIndexClient'
 import {BlogIndexFallback} from '@/components/sections/BlogIndexFallback'
@@ -132,11 +133,7 @@ export default async function BlogCategoryPage({params}: Props) {
       {/* Global CTA */}
       {!(category?.hideCtaForm) && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={
-            category?.ctaOverride
-              ? {...globalCtaData, ...category.ctaOverride}
-              : globalCtaData
-          }
+          data={withCtaOverride(globalCtaData, category?.ctaOverride)}
           napTokens={tokens}
         />
       )}

@@ -7,6 +7,7 @@ import {Tagline} from '@/components/ui/Tagline'
 import {headingFit} from '@/lib/headingFit'
 import type {HeadingFace} from '@/lib/headingFace'
 import {HeadingText, headingFitStyle} from '@/components/ui/HeadingText'
+import {withCtaOverride} from '@/lib/ctaOverride'
 
 // ─── Homepage final CTA ───────────────────────────────────────────────────────
 //
@@ -65,13 +66,13 @@ export function HomepageCta({
   /** The face its heading is fitted in (Phase 17C session 3): the homepage passes it, since the
    *  close takes a seam only for a photo close. */
   headingFace?: HeadingFace | null
-  /** The page's ctaFormOverride. Shallow-merged over the singleton, matching
-   *  the interior-page precedent: an override field that is present wins, and
-   *  an absent one leaves the global value in place. */
+  /** The page's ctaFormOverride, laid over the singleton by the merge every page shares
+   *  (`lib/ctaOverride.ts`): a field the operator filled wins, and one left empty (GROQ's
+   *  null, blank text, no button that draws) leaves the global value in place. */
   override?: Partial<HomepageCtaData> | null
 }) {
   if (!data) return null
-  const merged: HomepageCtaData = override ? {...data, ...override} : data
+  const merged = withCtaOverride(data, override)
 
   // No heading means the CTA was never authored. Render nothing rather than an
   // empty band, consistent with <GlobalCta>, which bails on the same condition.

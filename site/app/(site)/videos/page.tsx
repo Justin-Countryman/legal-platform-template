@@ -17,6 +17,7 @@ import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {siteHost} from '@/lib/siteHost'
 import {GlobalCta} from '@/components/sections/GlobalCta'
+import {withCtaOverride} from '@/lib/ctaOverride'
 import {VideoLibraryClient, type VideoCardData} from '@/components/sections/VideoLibraryClient'
 import {urlForImage, hasImage} from '@/lib/sanity/image'
 
@@ -136,7 +137,7 @@ export default async function VideoLibraryPage() {
 
       {!indexPage?.hideCtaForm && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={indexPage?.ctaOverride ? {...globalCtaData, ...indexPage.ctaOverride} : globalCtaData}
+          data={withCtaOverride(globalCtaData, indexPage?.ctaOverride)}
           napTokens={tokens}
         />
       )}

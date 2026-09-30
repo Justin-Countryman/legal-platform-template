@@ -14,6 +14,7 @@ import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {siteHost} from '@/lib/siteHost'
 import {GlobalCta} from '@/components/sections/GlobalCta'
+import {withCtaOverride} from '@/lib/ctaOverride'
 import {TestimonialCard, type TestimonialData} from '@/components/ui/TestimonialCard'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -100,7 +101,7 @@ export default async function TestimonialsPage() {
       {/* Global CTA */}
       {!page?.hideCtaForm && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={page?.ctaOverride ? {...globalCtaData, ...page.ctaOverride} : globalCtaData}
+          data={withCtaOverride(globalCtaData, page?.ctaOverride)}
           napTokens={tokens}
         />
       )}

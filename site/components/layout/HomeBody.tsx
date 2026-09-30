@@ -5,6 +5,7 @@ import {siteLookWithHeadingFace} from '@/lib/headingAdvances'
 import {firstBandRises, frameOf} from '@/components/layout/HomepageCanvas'
 import {heroGround, heroPhotoOf, photoSetOf} from '@/lib/heroGround'
 import {closeSurface} from '@/lib/flows'
+import {withCtaOverride} from '@/lib/ctaOverride'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
 import {HomepageHero} from '@/components/layout/homeHero'
@@ -50,7 +51,7 @@ export function homeHeroOf(all: HomePageData | null | undefined): HomeHeroData |
 /** Whether the homepage's closing call to action renders: the site's, with the homepage's own words over it, and a
  *  heading. The preview's switcher reads the same answer (Phase 17E), so it counts the photographs the page places. */
 export function closeShownOf(globalCta: HomepageCtaData | null | undefined, home: Pick<HomeData, 'hideCtaForm' | 'ctaOverride'> | null | undefined): boolean {
-  return !!globalCta && !home?.hideCtaForm && !!{...globalCta, ...(home?.ctaOverride ?? {})}.heading
+  return !!globalCta && !home?.hideCtaForm && !!withCtaOverride(globalCta, home?.ctaOverride).heading
 }
 
 export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData}) {

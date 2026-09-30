@@ -10,6 +10,7 @@ import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {GlobalCta} from '@/components/sections/GlobalCta'
+import {withCtaOverride} from '@/lib/ctaOverride'
 import {SplitHeroLayout} from '@/components/staff/layouts/SplitHeroLayout'
 import {ClassicSidebarLayout} from '@/components/staff/layouts/ClassicSidebarLayout'
 import {FeatureGridLayout} from '@/components/staff/layouts/FeatureGridLayout'
@@ -114,11 +115,7 @@ export default async function StaffProfilePage({params}: PageProps) {
 
       {!member.hideCtaForm && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={
-            member.ctaFormOverride
-              ? {...globalCtaData, ...member.ctaFormOverride}
-              : globalCtaData
-          }
+          data={withCtaOverride(globalCtaData, member.ctaFormOverride)}
           napTokens={napTokens}
         />
       )}
