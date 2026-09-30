@@ -179,7 +179,7 @@ describe('Switcher, the operator', () => {
     // The light logo without the dark one keeps a dark theme's header light, and says why.
     const noDarkLogo = chromeNote(dark, {header: {designSettings: {logoOnLight: {src: 'x'}, logoOnDark: null}}})
     expect(noDarkLogo).toContain('a light header')
-    expect(noDarkLogo).toContain('needs the logo for dark grounds')
+    expect(noDarkLogo).toContain('needs a logo for dark grounds with no white or colored box of its own')
   })
 })
 

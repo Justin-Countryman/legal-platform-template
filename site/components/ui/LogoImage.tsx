@@ -7,9 +7,21 @@ import {logoAspect} from '@/lib/logoSize'
 // The box is the logo's trimmed rectangle (`logoFacts`): the file is drawn larger than the box and offset inside it, so
 // only the ink shows. A crop by CSS, not by the image CDN, because the CDN ignores a crop on an SVG (ADV-18B-B); the
 // file and its srcset are next/image's as before. The box takes a width and the ink's aspect ratio, never a fixed
-// height, so a responsive width cap shrinks it whole.
+// height, so a responsive width cap shrinks it whole. `blend` draws a white box into a solid light ground (`multiply`)
+// or a black one into a solid dark ground (`screen`), so the box disappears into the color behind it and the page keeps
+// its own (item 4; ADV-18B-B measured a white box on a cream header ΔE 8.60 before and 0.00 after, the ink moving 0.7 to
+// 3.0 on cream, like print on cream paper). Only a solid ground in the same stacking context blends.
 
 export type LogoFile = {src: string; alt?: string | null; width: number; height: number; facts?: LogoFacts | null}
+
+/** How a logo is drawn into a solid ground of this polarity: a white box multiplied into a light one, a black box
+ *  screened into a dark one; nothing for a clear file, a colored box, or a box of the other polarity. */
+export function logoBlend(logo: {facts?: LogoFacts | null} | null | undefined, ground: 'light' | 'dark'): 'multiply' | 'screen' | null {
+  const box = logo?.facts?.box
+  if (box === 'white' && ground === 'light') return 'multiply'
+  if (box === 'black' && ground === 'dark') return 'screen'
+  return null
+}
 
 export function LogoImage({
   logo,
@@ -17,6 +29,7 @@ export function LogoImage({
   alt,
   place,
   className = '',
+  blend = null,
   priority = false,
 }: {
   logo: LogoFile
@@ -26,6 +39,7 @@ export function LogoImage({
   /** Where it is drawn, for the tests and the measurements: `rest`, `compact`, `phone`, `footer`, `review`. */
   place: string
   className?: string
+  blend?: 'multiply' | 'screen' | null
   priority?: boolean
 }) {
   const aspect = logoAspect(logo)
@@ -46,7 +60,7 @@ export function LogoImage({
         width={logo.width}
         height={logo.height}
         priority={priority}
-        className="absolute max-w-none"
+        className={blend === 'multiply' ? 'absolute max-w-none mix-blend-multiply' : blend === 'screen' ? 'absolute max-w-none mix-blend-screen' : 'absolute max-w-none'}
         style={inside}
       />
     </span>

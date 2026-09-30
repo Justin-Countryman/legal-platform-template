@@ -4,7 +4,7 @@
 // Right panel (gray-900): nav columns, social.
 // Creates depth through contrast without color.
 
-import {LogoImage} from '@/components/ui/LogoImage'
+import {LogoImage, logoBlend} from '@/components/ui/LogoImage'
 import Link from 'next/link'
 import {MdLocationOn} from 'react-icons/md'
 import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel, footerSurface, footerLogo} from './shared'
@@ -53,7 +53,7 @@ export function PillarFooter({data}: Props) {
 
           {logo?.src ? (
             <Link href="/" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
-              <LogoImage logo={logo} height={96} alt={logo.alt ?? ''} place="footer" className="max-w-[18rem]" />
+              <LogoImage logo={logo} height={96} alt={logo.alt ?? ''} place="footer" className="max-w-[18rem]" blend={logoBlend(logo, data.footerScheme === 'light' ? 'light' : 'dark')} />
             </Link>
           ) : firmName ? (
             <p className="font-heading text-xl font-bold text-foreground">{firmName}</p>

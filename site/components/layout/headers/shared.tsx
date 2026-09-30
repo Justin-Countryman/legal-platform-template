@@ -9,7 +9,7 @@ import {motionConfig, useMotionConfig} from '@/lib/motionConfig'
 import {RxChevronDown} from 'react-icons/rx'
 import {MdPhone, MdLocationPin, MdEmail, MdClose} from 'react-icons/md'
 import Link from 'next/link'
-import {LogoImage} from '@/components/ui/LogoImage'
+import {LogoImage, logoBlend} from '@/components/ui/LogoImage'
 import {logoAspect, logoHeight, type LogoSize} from '@/lib/logoSize'
 import type {LogoFacts} from '@/lib/logoFacts'
 import {usePathname} from 'next/navigation'
@@ -394,8 +394,10 @@ export function HeaderLogo({data, scheme, useMark = false, size = 'rest', ringCl
         // shape earns here (`logoSize`), so a stacked mark over the firm's name is drawn as large as a wordmark reads;
         // the width caps keep a long wordmark from starving the navigation, as before.
         // Keyed by the file: compacted, the header may draw the mark, another file with its own shape, which must be a
-        // new box rather than the wordmark's box animating its width down to the mark's.
-        <LogoImage key={asset.src} logo={asset} height={logoHeight(logoAspect(asset), size)} alt={asset.alt ?? ''} place={size} className={LOGO_CAPS[size]} priority />
+        // new box rather than the wordmark's box animating its width down to the mark's. A logo on its own white (or
+        // black) box is drawn into the header's solid ground, so the box does not show; the site shell gives a boxed logo
+        // a solid ground wherever the header would be glass or transparent (item 4).
+        <LogoImage key={asset.src} logo={asset} height={logoHeight(logoAspect(asset), size)} alt={asset.alt ?? ''} place={size} className={LOGO_CAPS[size]} blend={scheme === 'light' || scheme === 'dark' ? logoBlend(asset, darkSurface ? 'dark' : 'light') : null} priority />
       ) : data.firmName ? (
         <span className="font-heading text-lg font-semibold">{data.firmName}</span>
       ) : null}

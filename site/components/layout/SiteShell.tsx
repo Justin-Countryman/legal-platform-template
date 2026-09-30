@@ -76,6 +76,9 @@ function buildNavItems(rawItems: unknown[]): NavItem[] {
 /** The chrome the shell draws from: `getSiteChrome()`'s answer, or a preview's copy of it. */
 export type SiteChrome = Awaited<ReturnType<typeof getSiteChrome>>
 
+/** A glass or transparent header scheme's solid form in its own polarity. */
+const SOLID_FORM: Record<string, 'light' | 'dark'> = {glass: 'light', 'transparent-light': 'light', 'glass-dark': 'dark', 'transparent-dark': 'dark'}
+
 export function SiteShell({chrome: given, children}: {chrome: SiteChrome; children: React.ReactNode}) {
   const chrome = given ?? {}
   const {header: headerData, footer: footerData, designTokens, heroSettings} = chrome
@@ -200,6 +203,18 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
     headerData?.mainNavigation?.heroMerge ?? false,
     siteHeroSurface.isDark,
   )
+  // Phase 18 session B (item 4, `[R-603]`): a logo on its own box is drawn into the header's ground (`logoBlend`), which
+  // only a solid ground allows, so where the logo the header draws carries a box, a glass or transparent header takes
+  // its solid form in its own polarity, as the phone row already does.
+  const onLightLogo = headerData?.designSettings?.logoOnLight as {src?: string | null; facts?: {box?: string | null} | null} | null | undefined
+  const onDarkLogo = headerData?.designSettings?.logoOnDark as {src?: string | null; facts?: {box?: string | null} | null} | null | undefined
+  const solidBehindBox = (scheme: string): string => {
+    const solid = SOLID_FORM[scheme]
+    if (!solid) return scheme
+    const drawn = solid === 'dark' ? onDarkLogo : onLightLogo
+    const box = drawn?.src ? drawn.facts?.box : null
+    return box && box !== 'clear' ? solid : scheme
+  }
 
   // Preload regular-weight heading + body fonts so the browser fetches them in
   // parallel with parsing the inline @font-face <style> below. See
@@ -258,8 +273,8 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
           sticky: headerData?.mainNavigation?.sticky ?? true,
           stickyHideSupplementary: headerData?.mainNavigation?.stickyHideSupplementary ?? true,
           compactStyle: headerData?.mainNavigation?.compactStyle ?? 'docked',
-          defaultScheme: mergedDefaultScheme,
-          scrolledScheme: schemes.scrolled,
+          defaultScheme: solidBehindBox(mergedDefaultScheme),
+          scrolledScheme: solidBehindBox(schemes.scrolled),
           topBarDesktop: headerData?.mainNavigation?.topBarDesktop ?? false,
           topBarMobile: headerData?.mainNavigation?.topBarMobile ?? false,
           topBarPinSide: headerData?.mainNavigation?.topBarPinSide ?? 'none',
