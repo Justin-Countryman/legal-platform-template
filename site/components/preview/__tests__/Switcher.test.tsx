@@ -171,7 +171,7 @@ describe('Switcher, the operator', () => {
     const dark = FLOWS.find((f) => f.id === 'cutBlocks.mostlyDark')!
     const light = FLOWS.find((f) => f.id === 'quiet.mostlyLight')!
     expect(chromeNote(dark, null)).toBe(`${CHROME_NOTE_HEAD}: a dark header and a dark footer.`)
-    expect(chromeNote(light, null)).toBe(`${CHROME_NOTE_HEAD}: a light header and a dark footer.`)
+    expect(chromeNote(light, null)).toBe(`${CHROME_NOTE_HEAD}: a light header and a light footer.`)
     // A stored scheme wins, per field, and the note names it.
     const stored = chromeNote(dark, {header: {mainNavigation: {scrolledScheme: 'glass'}}, footer: {footerSettings: {footerScheme: 'light'}}})
     expect(stored).toContain('a dark, glass when scrolled header and a light footer')

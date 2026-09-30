@@ -4,7 +4,7 @@ import {notFound} from 'next/navigation'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import type {Metadata} from 'next'
 import {BLOG_CATEGORY_PAGE_QUERY, BLOG_CATEGORY_SLUGS_QUERY, BLOG_POSTS_QUERY, BLOG_CATEGORIES_QUERY} from '@/lib/sanity/queries'
-import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
+import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome, chromeClose} from '@/lib/sanity/fetchers'
 import {headingFaceWithAdvances} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
@@ -133,7 +133,7 @@ export default async function BlogCategoryPage({params}: Props) {
       {/* Global CTA */}
       {!(category?.hideCtaForm) && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={withCtaOverride(globalCtaData, category?.ctaOverride)}
+          data={withCtaOverride(globalCtaData, category?.ctaOverride)} surface={await chromeClose()}
           napTokens={tokens}
         />
       )}

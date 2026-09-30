@@ -30,7 +30,8 @@ import {HomepageCta} from '@/components/layout/HomepageCta'
 import {PageSections, type PageSectionData} from '../PageSections'
 import {assignGrounds, canvasFacts, closeFrame, closeGround, walkFrame, walkPage, siteLookOf, NO_SEAM, type SiteLook} from '../sectionFrame'
 import {SectionShell, type SectionAppearance} from '../SectionShell'
-import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, chromeSchemes, closeSurface, flowById, unmetNeeds, type FlowRules, type Host} from '@/lib/flows'
+import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, chromeSchemes, closeOf, flowById, unmetNeeds, type FlowRules, type Host} from '@/lib/flows'
+import {PALETTE_PRESETS, presetInputs} from '@/lib/palettes'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {ghostSource} from '@/lib/brandMark'
 import {LOOK, themed} from './flowFixtures'
@@ -41,6 +42,8 @@ const QUIET_ROOM = themed({})
 import {RECORD_CANVASES, stubCanvas} from './stubCanvases'
 import planted from './fixtures/fixture-shaped-canvas.json'
 import migrated from '@/components/layout/__tests__/fixtures/migrated-canvas.json'
+
+const NAVY_BRASS = presetInputs(PALETTE_PRESETS.find((p) => p.id === 'navy-brass')!)
 
 type Band = {host: Host | null; appearance?: SectionAppearance | null; photo?: boolean; content?: boolean; cutout?: 'left' | 'right' | null}
 const b = (host: Host | null, appearance?: SectionAppearance | null, extra: Partial<Band> = {}): Band => ({host, appearance, ...extra})
@@ -298,7 +301,8 @@ describe('each paint, gated by its data', () => {
 
   it('a wash close is painted as the theme paints a band, through the frame the homepage renders (ADV-17D-2)', () => {
     const sw = flowById('softWash.mostlyLight')!
-    const frame = closeFrame(closeSurface(sw, true), {...LOOK, flow: sw})
+    // Its own close, as it stands beside a stored dark footer (`closeOf`; beside its light footer it closes dark).
+    const frame = closeFrame(closeOf(sw, {footer: 'dark', above: 'light', heroPhoto: false, colors: {}}), {...LOOK, flow: sw})
     expect(frame).toMatchObject({surface: 'light', seam: {paint: {ground: 'wash', texture: false}}})
     const {container} = render(<HomepageCta data={{heading: 'Talk to us'}} surface={frame.surface} seam={frame.seam} />)
     expect(container.querySelector('section')!.className.split(' ')).toContain('bg-wash')
@@ -577,7 +581,15 @@ describe('the decision golden', () => {
         // close's ground below the last band, as the homepage walks it (`walkPage`).
         const site: SiteLook = {...LOOK, flow, patternTexture: 'diagonalHatch', saturated: true, glow: true, ghost: ghostSource(FIRM, flow.ghost === 'once'), heroPhoto, ...(photoSet.length ? {photoSet} : {})}
         const survivors = blocks.map(frameOf).filter((r) => !r.empty)
-        const page = walkPage(blocks, frameOf, site, hero, closeGround(closeSurface(flow, true, !!heroPhoto), true))
+        // Phase 18 session B: the close as `HomeBody` resolves it, beside the theme's footer and the band above it, on a
+        // palette whose fill passes its gate (as `saturated` does here).
+        const close = closeOf(flow, {
+          footer: chromeSchemes(flow, null, null, {onLight: true, onDark: true}).footer,
+          above: walkPage(blocks, frameOf, site, hero, null).last ?? hero,
+          heroPhoto: !!heroPhoto,
+          colors: NAVY_BRASS,
+        })
+        const page = walkPage(blocks, frameOf, {...site, close}, hero, closeGround(close, true))
         const out = page.bands
         golden[`${name} / ${flow.id}`] = {
           unmetNeeds: unmetNeeds(flow, canvasFacts(survivors, site, hero)),
@@ -613,7 +625,9 @@ describe('the decision golden', () => {
           // Phase 17D session 2: the close's place in the run, where the theme lights it.
           ...(page.close.run ? {close: page.close} : {}),
           // Phase 17E: the close's photograph of the theme's set, where the theme draws one.
-          ...(photoSet.length && closeSurface(flow, true, !!heroPhoto) === 'photo' ? {closePhoto: photoSet[0].assetId} : {}),
+          // Phase 18 session B: the close's ground as resolved beside the footer.
+          closeGround: close,
+          ...(photoSet.length && close === 'photo' ? {closePhoto: photoSet[0].assetId} : {}),
         }
       }
     }

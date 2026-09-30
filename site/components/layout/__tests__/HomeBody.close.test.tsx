@@ -23,6 +23,7 @@ vi.mock('next/image', () => ({
 }))
 
 import {HomeBody, closeShownOf} from '../HomeBody'
+import {PALETTE_PRESETS, presetInputs} from '@/lib/palettes'
 
 const GRAPHITE_SIX = {sectionJoin: 'angled', dividerCarry: ['cards'], patternTexture: 'diagonalHatch', patternGround: 'dark', sectionOverlap: 'photo', brandGhost: 'none'}
 
@@ -48,7 +49,20 @@ describe('the closing call to action under the theme', () => {
   })
 
   it('follows a stored theme, and the stored theme wins over the six', () => {
-    expect(close({...GRAPHITE_SIX, flow: 'alternating.balanced'}).className.split(' ')).toContain('bg-brand-dark')
+    // Alternating keeps its dark footer, so its close is never dark (`[R-597]`, `[R-603]`): on the grey placeholder, with
+    // no accent to fill, the light step (`closeOf`).
+    expect(close({...GRAPHITE_SIX, flow: 'alternating.balanced'}).className.split(' ')).toContain('bg-muted')
+  })
+
+  it('never takes the footer\u2019s color: each theme\u2019s ending as its table says, on a real palette (Phase 18 session B)', () => {
+    const navyBrass = presetInputs(PALETTE_PRESETS.find((p) => p.id === 'navy-brass')!)
+    const cls = (d: Record<string, unknown>) => close({...navyBrass, ...d}).className.split(' ')
+    // Quiet ends on a light footer, so its dark close stands.
+    expect(cls({flow: 'quiet.mostlyLight'})).toContain('bg-brand-dark')
+    // Soft wash's wash would sit 6.5 from its light footer: it closes dark.
+    expect(cls({flow: 'softWash.mostlyLight'})).toContain('bg-brand-dark')
+    // Alternating keeps its dark footer; under a light band (here the empty canvas's light hero ground) it closes on the accent.
+    expect(cls({flow: 'alternating.balanced'})).toContain('bg-accent-fill')
   })
 })
 

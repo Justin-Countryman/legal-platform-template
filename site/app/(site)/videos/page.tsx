@@ -3,7 +3,7 @@ export const revalidate = 3600
 import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {VIDEO_INDEX_PAGE_QUERY} from '@/lib/sanity/queries'
-import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
+import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome, chromeClose} from '@/lib/sanity/fetchers'
 import {headingFaceWithAdvances} from '@/lib/headingAdvances'
 import {headingFit} from '@/lib/headingFit'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
@@ -137,7 +137,7 @@ export default async function VideoLibraryPage() {
 
       {!indexPage?.hideCtaForm && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={withCtaOverride(globalCtaData, indexPage?.ctaOverride)}
+          data={withCtaOverride(globalCtaData, indexPage?.ctaOverride)} surface={await chromeClose()}
           napTokens={tokens}
         />
       )}

@@ -27,7 +27,7 @@ export async function generateStaticParams() {
 import {notFound} from 'next/navigation'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import type {Metadata} from 'next'
-import {chromeGlobalCta, chromeNap, getCatchAllPage, getSiteChrome} from '@/lib/sanity/fetchers'
+import {chromeGlobalCta, chromeNap, getCatchAllPage, getSiteChrome, chromeClose} from '@/lib/sanity/fetchers'
 import {headingFaceWithAdvances, siteLookWithHeadingFace} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {aboutPageTitle, areaOfLawPageName, geoHubPageName, geoSpokePageName, locationPageName, resolveTitle, serviceAreaPageName} from '@/lib/seoTitle'
@@ -366,7 +366,7 @@ export default async function CatchAllPage({params}: Props) {
       )}
 
       {!page.hideCtaForm && globalCtaData && (
-        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)} data={withCtaOverride(globalCtaData, page.ctaOverride)} napTokens={tokens} />
+        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)} data={withCtaOverride(globalCtaData, page.ctaOverride)} surface={await chromeClose()} napTokens={tokens} />
       )}
     </>
   )

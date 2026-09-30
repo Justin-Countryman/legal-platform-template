@@ -4,7 +4,7 @@ import {closeFrame, closeGround, walkPage} from '@/components/sections/sectionFr
 import {siteLookWithHeadingFace} from '@/lib/headingAdvances'
 import {firstBandRises, frameOf} from '@/components/layout/HomepageCanvas'
 import {heroGround, heroPhotoOf, photoSetOf} from '@/lib/heroGround'
-import {closeSurface} from '@/lib/flows'
+import {chromeSchemes, closeOf, flowOf} from '@/lib/flows'
 import {withCtaOverride} from '@/lib/ctaOverride'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
@@ -94,9 +94,19 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
   // Phase 17D session 2: the close is the ground below the last band, so an inset last band between a dark run and a dark
   // close adopts the run (`[R-501]`) and a run Gradient bloom lights runs on into a dark close. The canvas walks the same
   // list with the same inputs (`HomepageCanvas`, `close`), so both read one walk.
-  const closeSurf = closeSurface(look.flow, !!look.saturated, !!site.heroPhoto)
+  //
+  // Phase 18 session B (`[R-597]`, `[R-603]`): the close never takes the footer's color. It reads the footer's scheme as
+  // the shell renders it (the theme's, a stored one winning) and the ground of the band above it (a walk without the
+  // close: the close only joins a run or an inset's adoption, never changing what the last band itself paints).
+  const footer = chromeSchemes(flowOf(chrome?.designTokens as Record<string, unknown> | null), header?.mainNavigation, chrome?.footer?.footerSettings, {
+    onLight: header?.designSettings?.logoOnLight,
+    onDark: header?.designSettings?.logoOnDark,
+  }).footer
+  const above = walkPage(home?.canvas ?? [], frameOf, site, ground, null).last ?? ground
+  const closeSurf = closeOf(look.flow, {footer, above, heroPhoto: !!site.heroPhoto, colors: chrome?.designTokens as Record<string, unknown> | null})
   const closeG = home?.hideCtaForm ? null : closeGround(closeSurf, site.closeShown)
-  const close = closeFrame(closeSurf, site, walkPage(home?.canvas ?? [], frameOf, site, ground, closeG).close)
+  const walkSite = {...site, close: closeSurf}
+  const close = closeFrame(closeSurf, walkSite, walkPage(home?.canvas ?? [], frameOf, walkSite, ground, closeG).close)
 
   return (
     <>
@@ -131,7 +141,7 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
       )}
 
       <HomepageCanvas
-        site={site}
+        site={walkSite}
         hero={ground}
         close={closeG}
         blocks={home?.canvas}

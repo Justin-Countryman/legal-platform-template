@@ -6,7 +6,7 @@ import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import Link from 'next/link'
 import {STAFF_INDEX_QUERY, STAFF_PAGES_QUERY} from '@/lib/sanity/queries'
-import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
+import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome, chromeClose} from '@/lib/sanity/fetchers'
 import {headingFaceWithAdvances} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
@@ -180,7 +180,7 @@ export default async function StaffIndexPage() {
       {/* Global CTA */}
       {!(indexPage?.hideCtaForm) && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={withCtaOverride(globalCtaData, indexPage?.ctaOverride)}
+          data={withCtaOverride(globalCtaData, indexPage?.ctaOverride)} surface={await chromeClose()}
           napTokens={tokens}
         />
       )}

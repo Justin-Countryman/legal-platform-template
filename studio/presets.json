@@ -3182,7 +3182,7 @@
     {
       "id": "editorial",
       "name": "Editorial",
-      "sentence": "Light and airy top to bottom: room around every section, a faint texture, a rule at every join.",
+      "sentence": "Light and airy down to a dark close: room around every section, a faint texture, a rule at every join.",
       "steps": [
         "mostlyLight"
       ],
@@ -3232,7 +3232,7 @@
     {
       "id": "softWash",
       "name": "Soft wash",
-      "sentence": "No dark section: the page and a warm wash of its own background in turn, and a soft close.",
+      "sentence": "No dark section but the close: the page and a warm wash of its own background in turn.",
       "steps": [
         "mostlyLight"
       ],
@@ -3274,7 +3274,11 @@
         "rhythm": "bookends",
         "paint": "plain",
         "texture": "quiet",
-        "close": "dark"
+        "close": "dark",
+        "closeElse": [
+          "saturated",
+          "muted"
+        ]
       },
       "light": {
         "paint": "plain",
@@ -3293,7 +3297,7 @@
       "needs": [],
       "chrome": {
         "header": "light",
-        "footer": "dark"
+        "footer": "light"
       },
       "id": "quiet.mostlyLight",
       "name": "Quiet",
@@ -3317,7 +3321,11 @@
         "rhythm": "pairs",
         "paint": "plain",
         "texture": "quiet",
-        "close": "dark"
+        "close": "dark",
+        "closeElse": [
+          "muted",
+          "saturated"
+        ]
       },
       "light": {
         "paint": "plain",
@@ -3360,7 +3368,11 @@
         "rhythm": "pairs",
         "paint": "pattern",
         "texture": "alternate",
-        "close": "dark"
+        "close": "dark",
+        "closeElse": [
+          "muted",
+          "saturated"
+        ]
       },
       "light": {
         "paint": "plain",
@@ -3409,7 +3421,11 @@
         "rhythm": "runs",
         "paint": "pattern",
         "texture": "alternate",
-        "close": "dark"
+        "close": "dark",
+        "closeElse": [
+          "muted",
+          "saturated"
+        ]
       },
       "light": {
         "paint": "plain",
@@ -3462,7 +3478,11 @@
         "rhythm": "runs",
         "paint": "plain",
         "texture": "quiet",
-        "close": "dark"
+        "close": "dark",
+        "closeElse": [
+          "saturated",
+          "muted"
+        ]
       },
       "light": {
         "paint": "plain",
@@ -3499,7 +3519,10 @@
         "rhythm": "bookends",
         "paint": "plain",
         "texture": "quiet",
-        "close": "muted"
+        "close": "muted",
+        "closeElse": [
+          "dark"
+        ]
       },
       "light": {
         "paint": "pattern",
@@ -3524,7 +3547,7 @@
       },
       "id": "editorial.mostlyLight",
       "name": "Editorial",
-      "sentence": "Light and airy top to bottom: room around every section, a faint texture, a rule at every join.",
+      "sentence": "Light and airy down to a dark close: room around every section, a faint texture, a rule at every join.",
       "family": "editorial",
       "step": "mostlyLight",
       "passed": true
@@ -3538,7 +3561,11 @@
         "rhythm": "alternate",
         "paint": "saturated",
         "texture": "quiet",
-        "close": "dark"
+        "close": "dark",
+        "closeElse": [
+          "saturated",
+          "muted"
+        ]
       },
       "light": {
         "paint": "plain",
@@ -3559,7 +3586,7 @@
       ],
       "chrome": {
         "header": "light",
-        "footer": "dark"
+        "footer": "light"
       },
       "id": "ribbonRhythm.mostlyLight",
       "name": "Ribbon rhythm",
@@ -3585,7 +3612,11 @@
         "rhythm": "runs",
         "paint": "heroPhoto",
         "texture": "quiet",
-        "close": "photo"
+        "close": "photo",
+        "closeElse": [
+          "dark",
+          "muted"
+        ]
       },
       "light": {
         "paint": "plain",
@@ -3606,7 +3637,7 @@
       ],
       "chrome": {
         "header": "dark",
-        "footer": "dark"
+        "footer": "light"
       },
       "id": "photoScrims.mostlyDark",
       "name": "Photo scrims",
@@ -3630,7 +3661,11 @@
         "rhythm": "alternate",
         "paint": "floating",
         "texture": "quiet",
-        "close": "dark"
+        "close": "dark",
+        "closeElse": [
+          "muted",
+          "saturated"
+        ]
       },
       "light": {
         "paint": "plain",
@@ -3675,7 +3710,11 @@
         "rhythm": "runs",
         "paint": "plain",
         "texture": "quiet",
-        "close": "dark"
+        "close": "dark",
+        "closeElse": [
+          "muted",
+          "saturated"
+        ]
       },
       "light": {
         "paint": "floating",
@@ -3710,7 +3749,10 @@
         "rhythm": "bookends",
         "paint": "plain",
         "texture": "quiet",
-        "close": "wash"
+        "close": "wash",
+        "closeElse": [
+          "dark"
+        ]
       },
       "light": {
         "paint": "washes",
@@ -3733,7 +3775,7 @@
       },
       "id": "softWash.mostlyLight",
       "name": "Soft wash",
-      "sentence": "No dark section: the page and a warm wash of its own background in turn, and a soft close.",
+      "sentence": "No dark section but the close: the page and a warm wash of its own background in turn.",
       "family": "softWash",
       "step": "mostlyLight",
       "passed": true
@@ -3755,7 +3797,11 @@
         "rhythm": "runs",
         "paint": "glow",
         "texture": "quiet",
-        "close": "dark"
+        "close": "dark",
+        "closeElse": [
+          "saturated",
+          "muted"
+        ]
       },
       "light": {
         "paint": "plain",
@@ -3800,7 +3846,11 @@
         "rhythm": "pairs",
         "paint": "plain",
         "texture": "quiet",
-        "close": "dark"
+        "close": "dark",
+        "closeElse": [
+          "muted",
+          "saturated"
+        ]
       },
       "light": {
         "paint": "plain",

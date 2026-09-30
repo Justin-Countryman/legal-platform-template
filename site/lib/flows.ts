@@ -131,6 +131,9 @@ export type FlowRules = {
     /** The closing call to action's ground; `photo` is a window of the hero's photograph where
      *  the site has an approved one, else the dark ground; `wash` is Soft wash's ground. */
     close: (typeof CLOSES)[number]
+    /** The grounds the close takes, in order, where its own would meet the footer's color or melt into
+     *  the band above it (`closeOf`, `[R-597]`, `[R-603]`). */
+    closeElse: readonly (typeof CLOSES)[number][]
   }
   light: {
     /** Light bands: one ground; the light ground and the wash in turn, counted from the foot of each
@@ -275,10 +278,12 @@ export const FAMILIES: readonly FlowFamily[] = [
     sentence: 'A dark hero, then light all the way down, and one dark band to close.',
     steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
       light: {paint: 'plain', texture: 'quiet'},
+      // Phase 18 session B (`[R-597]`, `[R-603]`): its dark close over a light footer, as the study's mostly light
+      // pages end (a light footer on 14 of 19), so the one dark band to close never meets a dark footer.
       divider: NO_DIVIDER, spacing: 'normal',
-      ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME[step],
+      ghost: 'none', overlap: 'none', needs: [], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
     }),
   },
   {
@@ -297,7 +302,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // their dark bands into runs, which is Cut blocks' rhythm.
     steps: ['balanced'], defaultStep: 'balanced', passed: ['balanced'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: 'pairs', paint: 'plain', texture: 'quiet', close: 'dark'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: 'pairs', paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
       ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME[step],
@@ -310,7 +315,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: ['balanced', 'mostlyDark'],
     rules: (step) => ({
       // Phase 17C session 3 (`[R-538]`): its textured bands alternate quiet and strong.
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'pattern', texture: 'alternate', close: 'dark'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'pattern', texture: 'alternate', close: 'dark', closeElse: ['muted', 'saturated']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: {shape: 'peak', at: 'intoDark', carry: ['cards'], hairline: 'none', hairlineInk: 'border'}, spacing: 'normal',
       ghost: 'none', overlap: 'photo', needs: ['texture'], chrome: STEP_CHROME[step],
@@ -327,7 +332,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // dark or photo hero, which the composer writes and a theme cannot reach.
     steps: ['allDark'], defaultStep: 'allDark', passed: ['allDark'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: {shape: 'straight', at: 'none', carry: [], hairline: 'everyBand', hairlineInk: 'accent'}, spacing: 'normal',
       ghost: 'none', overlap: 'none', needs: ['darkHero'], chrome: STEP_CHROME[step],
@@ -335,14 +340,14 @@ export const FAMILIES: readonly FlowFamily[] = [
   },
   {
     id: 'editorial', name: 'Editorial',
-    sentence: 'Light and airy top to bottom: room around every section, a faint texture, a rule at every join.',
+    sentence: 'Light and airy down to a dark close: room around every section, a faint texture, a rule at every join.',
     // The study: duparlaw, connieyilaw and eternalaw, light with a texture on their light
     // bands, rules between sections, coded airy, a light close and footer. Space is what
     // tells it from Quiet (`[R-525]`); the initials ghost is not drawn (no light page in the
     // study draws initials; the evidenced large mark is the logo, backlog 350).
     steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'muted'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'muted', closeElse: ['dark']},
       // Phase 17C session 3 (`[R-538]`): its light bands at the quiet strength.
       light: {paint: 'pattern', texture: 'quiet'},
       divider: {shape: 'straight', at: 'none', carry: [], hairline: 'everyBand', hairlineInk: 'border'}, spacing: 'spacious',
@@ -358,10 +363,11 @@ export const FAMILIES: readonly FlowFamily[] = [
     // which is the story's to fix (backlog 364), not this family's.
     steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
     rules: (step) => ({
-      dark: {budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', texture: 'quiet', close: 'dark'},
+      dark: {budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
-      ghost: 'none', overlap: 'none', needs: ['ribbons'], chrome: STEP_CHROME[step],
+      // Phase 18 session B: a light footer under its dark close, as Quiet's.
+      ghost: 'none', overlap: 'none', needs: ['ribbons'], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
     }),
   },
   // ─── Phase 17B session 6 (record WS-V1-PHASE17B6-DESIGN §2) ─────────────────
@@ -377,10 +383,12 @@ export const FAMILIES: readonly FlowFamily[] = [
     // photo bands, and the family's sites are all mostly dark.
     steps: ['mostlyDark'], defaultStep: 'mostlyDark', passed: ['mostlyDark'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'heroPhoto', texture: 'quiet', close: 'photo'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'heroPhoto', texture: 'quiet', close: 'photo', closeElse: ['dark', 'muted']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
-      ghost: 'none', overlap: 'none', needs: ['heroPhoto'], chrome: STEP_CHROME[step],
+      // Phase 18 session B: a light footer, so its photograph close stands apart from it; under the scrim a photograph
+      // measures 0.7 to 18.4 from the dark ground (`closeOf`). The photograph over a dark footer is shown to Justin.
+      ghost: 'none', overlap: 'none', needs: ['heroPhoto'], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
     }),
   },
   // ─── Phase 17D session 1 (record WS-V1-PHASE17D-DESIGN §2) ──────────────────
@@ -396,13 +404,13 @@ export const FAMILIES: readonly FlowFamily[] = [
     steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: ['balanced', 'mostlyDark'],
     rules: (step) => (step === 'mostlyDark'
       ? {
-          dark: {budget: STEP_BUDGET.mostlyDark, hosts: STEP_HOSTS.mostlyDark, rhythm: 'runs', paint: 'plain', texture: 'quiet', close: 'dark'},
+          dark: {budget: STEP_BUDGET.mostlyDark, hosts: STEP_HOSTS.mostlyDark, rhythm: 'runs', paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
           light: {paint: 'floating', texture: 'quiet'},
           divider: NO_DIVIDER, spacing: 'normal',
           ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.mostlyDark,
         }
       : {
-          dark: {budget: STEP_BUDGET.balanced, hosts: STEP_HOSTS.balanced, rhythm: 'alternate', paint: 'floating', texture: 'quiet', close: 'dark'},
+          dark: {budget: STEP_BUDGET.balanced, hosts: STEP_HOSTS.balanced, rhythm: 'alternate', paint: 'floating', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
           light: {paint: 'plain', texture: 'quiet'},
           divider: NO_DIVIDER, spacing: 'normal',
           ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.balanced,
@@ -410,7 +418,7 @@ export const FAMILIES: readonly FlowFamily[] = [
   },
   {
     id: 'softWash', name: 'Soft wash',
-    sentence: 'No dark section: the page and a warm wash of its own background in turn, and a soft close.',
+    sentence: 'No dark section but the close: the page and a warm wash of its own background in turn.',
     // The study: eternalaw and bdgfirm (both premium) run white bands and cream ones in turn;
     // veronicagarzalaw (premium) is cream all the way; duparlaw and connieyilaw are light with texture.
     // Their second ground is cream, never an accent pastel (ADV-17D-A), so the wash is a warm step of
@@ -418,7 +426,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // study's light pages have.
     steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
     rules: () => ({
-      dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: 'plain', texture: 'quiet', close: 'wash'},
+      dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: 'plain', texture: 'quiet', close: 'wash', closeElse: ['dark']},
       light: {paint: 'washes', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
       ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
@@ -437,7 +445,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // one device, and where the palette has no room the page is Photo scrims' fallback, which the need names.
     steps: ['mostlyDark'], defaultStep: 'mostlyDark', passed: ['mostlyDark'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'glow', texture: 'quiet', close: 'dark'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'glow', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
       ghost: 'none', overlap: 'photo', needs: ['glow'], chrome: STEP_CHROME[step],
@@ -455,7 +463,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // blocks' on every canvas.
     steps: ['balanced'], defaultStep: 'balanced', passed: ['balanced'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: {shape: 'steep', at: 'everyChange', carry: ['cards', 'photo'], hairline: 'none', hairlineInk: 'border'}, spacing: 'normal',
       ghost: 'none', overlap: 'photo', needs: [], chrome: STEP_CHROME[step],
@@ -540,7 +548,7 @@ export function bridgeOf(d: Record<string, unknown>): FlowRules {
   return {
     id: 'stored.bridge', name: 'As stored', family: 'stored', step: 'mostlyLight', passed: false,
     sentence: 'The page as the six retired fields stored it, until Apply writes a theme.',
-    dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: d.sectionGradient === 'deep' ? 'gradient' : 'plain', texture: 'quiet', close: 'muted'},
+    dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: d.sectionGradient === 'deep' ? 'gradient' : 'plain', texture: 'quiet', close: 'muted', closeElse: []},
     light: {paint: 'plain', texture: 'quiet'},
     divider: {shape, at: 'intoDark', carry: readCarry(d.dividerCarry), hairline: 'none', hairlineInk: 'border'},
     spacing: 'normal',
@@ -714,12 +722,51 @@ export function saturatedFillOk(inputs: ColorInputs | Record<string, unknown> | 
   return chroma >= 0.05 && deltaE(fill, t['--color-brand-dark']) >= 20 && deltaE(fill, t['--color-background']) >= 20
 }
 
-/** The closing call to action's ground under a theme, with the saturated gate and the photograph's
- *  gate applied: `photo` needs an approved hero photograph (`[R-532]`), else the dark ground. */
-export function closeSurface(flow: FlowRules | null | undefined, saturatedOk: boolean, heroPhoto = false): (typeof CLOSES)[number] {
-  const close = flow?.dark.close ?? 'muted'
-  if (close === 'photo') return heroPhoto ? 'photo' : 'dark'
-  return close === 'saturated' && !saturatedOk ? 'dark' : close
+// ─── The close apart from the footer (Phase 18 session B, `[R-597]`, `[R-603]`) ──────────────────────
+//
+// Justin: "the final CTA should alwasy be a different color than the footer. Needs to be a rule". The close takes the
+// first ground in its theme's order (`close`, then `closeElse`) that the site can draw (a photograph only where one is
+// approved, the fill only where the palette passes its gate), that stands at least `CLOSE_APART_DE` from the footer as
+// the site renders it (the ruling, always held), and that stands at least `CLOSE_ABOVE_DE` from the band above it (a
+// preference: the light step under a light band melts into it, ΔE 2.0 on every preset). Where no ground meets both, the
+// first that meets the footer; the light step over a dark footer and the dark ground over a light one always do.
+//
+// THE MEASURE IS WHAT IS DRAWN, on the resolved palette: the dark footer is the dark ground and the light one the tint
+// (`footers/shared.tsx`). 20 is the gate the platform already uses for a fill to read as its own color. A photograph is
+// the scrim (the dark ground capped at L 0.20) at 80% over a grey window: 0.7 to 18.4 from the dark ground across every
+// grey on every preset, so it is apart from a light footer and never from a dark one; it is apart from any band above,
+// since no flat band reads as a photograph. Every other value is one color token.
+
+export type Close = (typeof CLOSES)[number]
+export const CLOSE_APART_DE = 20
+export const CLOSE_ABOVE_DE = 6
+
+/** What the closing call to action is drawn beside: the footer's scheme as the site renders it, the visible ground of
+ *  the band above it (the hero's where the canvas is empty), whether the site has an approved hero photograph, and the
+ *  stored color roles. */
+export type CloseFacts = {
+  footer: ChromeScheme
+  above: VisibleGround | null
+  heroPhoto: boolean
+  colors: ColorInputs | Record<string, unknown> | null | undefined
+}
+
+const GROUND_TOKEN: Partial<Record<VisibleGround | Close, string>> = {
+  dark: '--color-brand-dark', light: '--color-background', tint: '--color-hero-tint', muted: '--color-muted',
+  wash: '--color-wash', saturated: '--color-accent', image: '--color-brand-dark',
+}
+
+/** The closing call to action's ground under a theme, beside the footer and the band above it. */
+export function closeOf(flow: FlowRules | null | undefined, facts: CloseFacts): Close {
+  const t = paletteOf(facts.colors).tokens
+  const satOk = saturatedFillOk(facts.colors)
+  const footerHex = facts.footer === 'dark' ? t['--color-brand-dark'] : t['--color-hero-tint']
+  const order: Close[] = [flow?.dark.close ?? 'muted', ...(flow?.dark.closeElse ?? [])]
+  const drawable = order.filter((c) => (c !== 'photo' || facts.heroPhoto) && (c !== 'saturated' || satOk))
+  const fromFooter = (c: Close) => (c === 'photo' ? facts.footer === 'light' : deltaE(t[GROUND_TOKEN[c]!], footerHex) >= CLOSE_APART_DE)
+  const aboveHex = facts.above ? t[GROUND_TOKEN[facts.above] ?? '--color-background'] : null
+  const fromAbove = (c: Close) => c === 'photo' || !aboveHex || deltaE(t[GROUND_TOKEN[c]!], aboveHex) >= CLOSE_ABOVE_DE
+  return drawable.find((c) => fromFooter(c) && fromAbove(c)) ?? drawable.find(fromFooter) ?? (facts.footer === 'dark' ? 'muted' : 'dark')
 }
 
 // ─── The header and the footer (Phase 17B session 4, `[R-518]`, record §2.3) ───
