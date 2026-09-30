@@ -1,6 +1,8 @@
 import {describe, expect, it} from 'vitest'
 import sharp from 'sharp'
-import {cropTrim, factsFromPixels, withLogoFacts} from '../logoFacts'
+import {cropTrim, factsFromPixels, logoFacts, withLogoFacts} from '../logoFacts'
+import {rmSync} from 'node:fs'
+import {join} from 'node:path'
 
 // WHAT A LOGO'S OWN FILE HOLDS AROUND ITS INK (Phase 18 session B, items 3 and 4; monorepo `[R-603]`, and the challenge
 // ADV-18B-B, whose test logos these follow). Drawn here by `sharp`, so no image is committed.
@@ -80,5 +82,19 @@ describe('a crop set in the Studio', () => {
     const chrome = await withLogoFacts({header: {designSettings: {logoOnLight: {src: '/no-such-file.png', width: 400, height: 400, crop: {top: 0.25, bottom: 0.25, left: 0, right: 0}}, logoOnDark: null}}})
     expect(chrome.header.designSettings.logoOnLight).toMatchObject({facts: {box: null, trim: {left: 0, top: 0.25, width: 1, height: 0.5}}})
     expect(chrome.header.designSettings.logoOnDark).toBeNull()
+  })
+})
+
+describe('a file that cannot be read yet', () => {
+  it('is read again on the next render, not remembered as unreadable (the pre-report break pass)', async () => {
+    const name = `/zz-logo-retry-${process.pid}.png`
+    const file = join(process.cwd(), 'public', name)
+    try {
+      expect(await logoFacts(name)).toBeNull()
+      await sharp({create: {width: 200, height: 100, channels: 4, background: '#ffffff'}}).composite([{input: Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="100"><rect x="40" y="30" width="120" height="40" fill="#1c348c"/></svg>')}]).png().toFile(file)
+      expect(await logoFacts(name)).toMatchObject({box: 'white'})
+    } finally {
+      rmSync(file, {force: true})
+    }
   })
 })

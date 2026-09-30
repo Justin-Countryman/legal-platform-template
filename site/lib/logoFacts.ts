@@ -1,6 +1,5 @@
 import {readFile} from 'node:fs/promises'
 import {join} from 'node:path'
-import sharp from 'sharp'
 
 // ─── What a logo's own file holds around it (Phase 18 session B, items 3 and 4; monorepo `[R-603]`) ─────────────
 //
@@ -18,7 +17,8 @@ import sharp from 'sharp'
 //   frame at the edge is the logo too). A soft shadow counts as ink at any alpha above 2.
 //
 // Read once per file: the URL carries the asset's content hash, so an answer never goes stale. A failure answers null,
-// and the logo draws as it always has.
+// and the logo draws as it always has; it is read again on the next render, never remembered as unreadable. `sharp`
+// (Next's own image decoder) is loaded inside that guard, so a server without it answers null too.
 
 export type LogoBox = 'clear' | 'white' | 'black' | `#${string}`
 export type LogoTrim = {left: number; top: number; width: number; height: number}
@@ -102,10 +102,14 @@ export function logoFacts(src: string | null | undefined): Promise<LogoFacts | n
   if (!facts) {
     facts = pixelsOf(src)
       .then(async (buf) => {
+        const {default: sharp} = await import('sharp')
         const {data, info} = await sharp(buf).ensureAlpha().raw().toBuffer({resolveWithObject: true})
         return factsFromPixels(data, info.width, info.height)
       })
-      .catch(() => null)
+      .catch(() => {
+        read.delete(src)
+        return null
+      })
     if (read.size >= 64) read.delete(read.keys().next().value!)
     read.set(src, facts)
   }

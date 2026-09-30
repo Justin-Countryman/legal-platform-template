@@ -96,3 +96,25 @@ describe('the header draws the logo’s trimmed ink at its shape’s height', ()
     expect(desktop.querySelector('img')!.style.top).toBe('0%')
   })
 })
+
+// The pre-report break pass (Phase 18 session B): compacted, a header draws the logo's mark where one exists, another
+// file with its own shape. The box must be a new one, not the wordmark's box animating its width from 352px down to the
+// mark's (measured in Chromium and WebKit: a 352 by 352 box for the first frames of the 400ms transition).
+describe('compacted, the mark is drawn in a box of its own', () => {
+  for (const layout of LAYOUTS) {
+    it(`${layout}: a new box at the mark’s shape, not the wordmark’s box resized`, () => {
+      const wordmark = {src: '/wordmark.png', alt: 'Test Firm', width: 440, height: 100}
+      const mark = {src: '/mark.png', alt: 'Test Firm', width: 200, height: 200}
+      const data = {...BASE, headerLayout: layout, logoOnLight: wordmark, logoOnDark: wordmark, logoMarkOnLight: mark, logoMarkOnDark: mark}
+      setScroll(0)
+      const utils = render(<Header data={data} />)
+      const atRest = utils.container.querySelector<HTMLElement>('[data-logo-box="rest"]')!
+      setScroll(400)
+      act(() => { window.dispatchEvent(new Event('scroll')) })
+      const compact = utils.container.querySelector<HTMLElement>('[data-logo-box="compact"]')!
+      expect(compact).not.toBe(atRest)
+      expect(Number.parseFloat(compact.style.aspectRatio)).toBeCloseTo(1, 3)
+      expect(compact.querySelector('img')!.getAttribute('src')).toBe('/mark.png')
+    })
+  }
+})

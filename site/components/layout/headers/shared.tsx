@@ -393,7 +393,9 @@ export function HeaderLogo({data, scheme, useMark = false, size = 'rest', ringCl
         // Phase 18 session B (`[R-603]`): the file's ink, trimmed of its own margin (`logoFacts`), at the height its
         // shape earns here (`logoSize`), so a stacked mark over the firm's name is drawn as large as a wordmark reads;
         // the width caps keep a long wordmark from starving the navigation, as before.
-        <LogoImage logo={asset} height={logoHeight(logoAspect(asset), size)} alt={asset.alt ?? ''} place={size} className={LOGO_CAPS[size]} priority />
+        // Keyed by the file: compacted, the header may draw the mark, another file with its own shape, which must be a
+        // new box rather than the wordmark's box animating its width down to the mark's.
+        <LogoImage key={asset.src} logo={asset} height={logoHeight(logoAspect(asset), size)} alt={asset.alt ?? ''} place={size} className={LOGO_CAPS[size]} priority />
       ) : data.firmName ? (
         <span className="font-heading text-lg font-semibold">{data.firmName}</span>
       ) : null}
