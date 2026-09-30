@@ -40,7 +40,7 @@ export const practiceAreaNavItem = defineType({
       title: 'Description (override)',
       type: 'text',
       rows: 2,
-      description: 'Defaults to the page meta description',
+      description: 'Defaults to the practice area\u2019s Card Line, then its meta description',
     },
     {name: 'icon', title: 'Icon', type: 'image', description: 'Optional line/glyph icon for icon-based layouts'},
     {

@@ -102,7 +102,9 @@ export function PracticeAreaNavBlock({
   napTokens?: NapTokens | null
   seam?: SeamProps
 }) {
-  const items = photosAllOrNone(visibleItems(data))
+  // Phase 18 session B: each card's line with its content tokens resolved, once, as the page's own copy is (the line is
+  // the practice area's card line or its meta description, which takes tokens).
+  const items = photosAllOrNone(visibleItems(data)).map((i) => (i.description ? {...i, description: resolveTokenString(i.description, napTokens)} : i))
   if (items.length === 0) return null
 
   const tagline = resolveTokenString(data.tagline, napTokens)
