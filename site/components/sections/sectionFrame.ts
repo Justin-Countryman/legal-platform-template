@@ -169,6 +169,9 @@ export type SiteLook = {
   /** The close's ground as `closeOf` resolved it beside the footer (Phase 18 session B, `[R-597]`), so the photo set
    *  leaves the close's window only where the close is a photograph. Set by `HomeBody`; absent reads the theme's own. */
   close?: Close | null
+  /** What the homepage hero's own band paints where it shows (Phase 18 session B, `heroPaint`): the theme's wash, or
+   *  null. The light bands under a wash hero alternate from it, so a wash never touches a wash. Set by `HomeBody`. */
+  heroPaint?: 'wash' | null
   /** The face a section heading draws in, with its widths (Phase 17C session 3): what a section's
    *  `headingFit` measures its words in. Set by the server page (`siteLookWithHeadingFace`, which
    *  holds the width table); absent, a heading takes no fit. Optional, as `flow` is. */
@@ -336,7 +339,7 @@ export function walkPage<M>(
   // ─── The ground pass (Phase 17B) ────────────────────────────────────────────
   // Before the adoption pass, because adoption reads the grounds, and the theme is what
   // decides a ground where none is stored.
-  const paints = flow ? assignGrounds(survivors, flow, site) : survivors.map(() => null)
+  const paints = flow ? assignGrounds(survivors, flow, site, {close}) : survivors.map(() => null)
   const paintAt = new Map<number, Paint | null>()
   survivors.forEach((r, i) => paintAt.set(r.index, paints[i]))
   const isInset = (r: {appearance: SectionAppearance | null | undefined}, paint: Paint | null) =>
@@ -587,7 +590,8 @@ export function photoWindows(hotspot: {x: number; y: number} | null | undefined)
 export function assignGrounds(
   survivors: readonly Survivor[],
   flow: FlowRules,
-  site: Pick<SiteLook, 'patternTexture' | 'saturated' | 'heroPhoto' | 'closeShown' | 'photoSet' | 'close'> | null = null,
+  site: Pick<SiteLook, 'patternTexture' | 'saturated' | 'heroPhoto' | 'closeShown' | 'photoSet' | 'close' | 'heroPaint'> | null = null,
+  ends: {close?: VisibleGround | null} = {},
 ): (Paint | null)[] {
   const n = survivors.length
   const strongOf = (a: SectionAppearance | null | undefined) => {
@@ -702,12 +706,21 @@ export function assignGrounds(
     if (fixed[i] || dark[i]) { k = 0; continue }
     fromFoot[i] = k++
   }
+  // Phase 18 session B (`[R-603]`): under a hero that paints the wash, the stretch that touches it counts from the top,
+  // so the band under the hero is light; where that stretch runs on into a wash close with an even count, its last band
+  // stays light too: the double light it forces sits at the foot, never under the hero. A wash never touches a wash.
+  let topEnd = 0
+  if (site?.heroPaint === 'wash') while (topEnd < n && !fixed[topEnd] && !dark[topEnd]) topEnd++
+  const washAt = (i: number) => {
+    if (i >= topEnd) return fromFoot[i] % 2 === 1
+    return i % 2 === 1 && !(i === n - 1 && ends.close === 'wash')
+  }
   survivors.forEach((r, i) => {
     if (fixed[i]) return
     if (dark[i]) return
     switch (flow.light.paint) {
       case 'washes':
-        paints[i] = {ground: fromFoot[i] % 2 === 1 ? 'wash' : 'light', texture: false}
+        paints[i] = {ground: washAt(i) ? 'wash' : 'light', texture: false}
         break
       case 'pattern':
         paints[i] = {ground: 'light', texture: texture ? 'quiet' : false}

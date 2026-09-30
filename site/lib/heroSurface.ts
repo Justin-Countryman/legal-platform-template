@@ -89,6 +89,8 @@ export type HeroPageOverrides = {
 export type ResolvedHeroSurface = {
   scheme: HeroScheme
   isDark: boolean
+  /** The ground a light homepage hero band paints (Phase 18 session B, `heroPaint`): the theme's wash, else the tint. */
+  lightGround?: 'wash' | 'tint'
   bgImage: HeroImage
   hasImage: boolean
   fit: HeroFit

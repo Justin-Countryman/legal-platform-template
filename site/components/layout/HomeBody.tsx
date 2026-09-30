@@ -3,7 +3,7 @@ import {ghostSource} from '@/lib/brandMark'
 import {closeFrame, closeGround, walkPage} from '@/components/sections/sectionFrame'
 import {siteLookWithHeadingFace} from '@/lib/headingAdvances'
 import {firstBandRises, frameOf} from '@/components/layout/HomepageCanvas'
-import {heroGround, heroPhotoOf, photoSetOf} from '@/lib/heroGround'
+import {heroGround, heroPaint, heroPhotoOf, photoSetOf} from '@/lib/heroGround'
 import {chromeSchemes, closeOf, flowOf} from '@/lib/flows'
 import {withCtaOverride} from '@/lib/ctaOverride'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
@@ -88,8 +88,10 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
     // photograph only while approved.
     photoSet: heroPhoto ? photoSetOf(chrome?.designTokens as Record<string, unknown> | null, heroPhoto.assetId) : null,
     closeShown: closeShownOf(globalCtaData, home),
+    // Phase 18 session B: the light hero paints the theme's wash (`heroPaint`), and the bands under it alternate from it.
+    heroPaint: heroPaint(hero, look.flow),
   }
-  const ground = heroGround(hero)
+  const ground = heroGround(hero, look.flow)
   const edgeBelow = firstBandRises(home?.canvas, site, ground)
   // Phase 17D session 2: the close is the ground below the last band, so an inset last band between a dark run and a dark
   // close adopts the run (`[R-501]`) and a run Gradient bloom lights runs on into a dark close. The canvas walks the same
@@ -112,7 +114,7 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
   return (
     <>
       {hero ? (
-        <HomepageHero data={hero} napTokens={tokens} edgeBelow={edgeBelow} />
+        <HomepageHero data={hero} napTokens={tokens} edgeBelow={edgeBelow} lightGround={site.heroPaint === 'wash' ? 'wash' : 'tint'} />
       ) : (
         // Fallback when the homepage hero hasn't been authored yet.
         //
