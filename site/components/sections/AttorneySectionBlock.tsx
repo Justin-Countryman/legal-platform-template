@@ -6,6 +6,7 @@ import {SectionShell} from './SectionShell'
 import {type SeamProps, NO_SEAM, followSite} from './sectionFrame'
 import {type AttorneySectionProps} from './sectionProps'
 import {headingFit} from '@/lib/headingFit'
+import {cardGridClasses} from './cardGrid'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -54,6 +55,8 @@ export function AttorneySectionBlock({
   // style set sets it, `[R-468]`'s continuity rule), otherwise Classic.
   const cardStyle = followSite(data.cardStyle as string | null | undefined, seam.site?.attorneyCardStyle) as AttorneyCardStyle | null
   const isSlider = data.layout === 'slider'
+  // The columns follow the count (cardGrid.ts): Classic lies sideways, so four of it go two by two.
+  const grid = cardGridClasses(attorneys.length, (cardStyle ?? 'classic') === 'classic' ? 3 : 4)
 
   return (
     <SectionShell
@@ -74,9 +77,9 @@ export function AttorneySectionBlock({
       {isSlider ? (
         <AttorneySlider attorneys={attorneys} cardStyle={cardStyle} />
       ) : (
-        <ul role="list" className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3" aria-label="Attorneys">
-          {attorneys.map((attorney) => (
-            <li key={attorney._id}>
+        <ul role="list" className={grid.list} aria-label="Attorneys">
+          {attorneys.map((attorney, i) => (
+            <li key={attorney._id} className={grid.items[i] || undefined}>
               <AttorneyCard attorney={attorney} cardStyle={cardStyle} />
             </li>
           ))}
