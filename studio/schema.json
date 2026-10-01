@@ -16674,6 +16674,13 @@
         },
         "optional": true
       },
+      "cardLine": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "cardImage": {
         "type": "objectAttribute",
         "value": {

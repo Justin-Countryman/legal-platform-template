@@ -146,7 +146,10 @@ const PRACTICE_AREA_SECTION_ITEM = `{
   "_key": _id,
   "label": ${NAV_LABEL_EXPR},
   "href": "/" + slug.current + "/",
-  "description": metaDescription,
+  // Phase 18 session B (R-603): the card line first, else the meta description. A line counts only where it holds a
+  // word: in GROQ null != "" is true, so a bare comparison answers null for every area with no card line, and a line of
+  // spaces split on spaces has no word.
+  "description": select(count(string::split(coalesce(cardLine, ""), " ")[@ != ""]) > 0 => cardLine, metaDescription),
   "icon": null,
   "image": cardImage ${IMAGE_FRAGMENT},
   "featured": false
@@ -252,7 +255,13 @@ export const SECTION_BODY = `
         _key,
         "label": coalesce(label, ${NAV_LABEL_VIA_PAGE_EXPR}),
         "href": "/" + page->slug.current + "/",
-        "description": coalesce(description, page->metaDescription),
+        // The item's own line, then the page's card line, then its meta description (Phase 18 session B), each guarded
+        // for null and empty: an emptied override used to print nothing.
+        "description": select(
+          count(string::split(coalesce(description, ""), " ")[@ != ""]) > 0 => description,
+          count(string::split(coalesce(page->cardLine, ""), " ")[@ != ""]) > 0 => page->cardLine,
+          page->metaDescription
+        ),
         "icon": icon ${IMAGE_FRAGMENT},
         // The item's own photo, else the practice area's Card Photo (Phase 17D, R-556); select, not
         // coalesce: an image object with no asset would win a coalesce and hide the page's photo.

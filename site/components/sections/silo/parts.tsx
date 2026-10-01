@@ -165,7 +165,7 @@ export function TileLabel({
 
 /** Short blurb (Feature / Brief / Inline). Renders nothing when unset. */
 export function TileBlurb({item, className}: {item: SiloNavItem; className?: string}) {
-  if (!item.description) return null
+  if (!item.description?.trim()) return null
   return <p className={className ?? 'text-sm leading-relaxed text-foreground-muted line-clamp-2'}>{item.description}</p>
 }
 

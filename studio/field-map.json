@@ -9979,7 +9979,7 @@
           "type": "string"
         },
         {
-          "description": "Defaults to the page meta description",
+          "description": "Defaults to the practice area’s Card Line, then its meta description",
           "jsonType": "string",
           "path": "canvas[]<practiceAreaNavInline>.items[]<practiceAreaNavItem>.description",
           "title": "Description (override)",
@@ -13298,6 +13298,13 @@
           "type": "boolean"
         },
         {
+          "description": "Optional. One sentence on what the client gets from this area, shown on its card wherever the practice areas are listed. Keep it under 80 characters so it fits two lines on a phone. Left empty, the card shows the page’s meta description.",
+          "jsonType": "string",
+          "path": "cardLine",
+          "title": "Card Line",
+          "type": "string"
+        },
+        {
           "description": "Optional. Shown on this practice area’s card in the lists of practice areas on the homepage and the About page: the top-level areas, or any area a list picks by hand. A list shows photos once every card in it has one. Use a landscape photo at least 1,600 px wide and set its focal point.",
           "jsonType": "object",
           "path": "cardImage",
@@ -13750,7 +13757,7 @@
           "type": "string"
         },
         {
-          "description": "Defaults to the page meta description",
+          "description": "Defaults to the practice area’s Card Line, then its meta description",
           "jsonType": "string",
           "path": "items[]<practiceAreaNavItem>.description",
           "title": "Description (override)",
