@@ -73,7 +73,9 @@ function CenteredCta({data, surface, seam, face}: {data: GlobalCtaData; surface:
         <CtaText tagline={tagline} heading={heading} description={description} centered fit={headingFit(heading, face ?? seam.site?.headingFace)} />
 
         {items.length > 0 && (
-          <ButtonGroup items={items} align="center" className="mt-6 md:mt-8" />
+          // On the accent fill (an interior close over a light footer under a dark section, Phase 18 session B) the
+          // buttons take the saturated context, never the action color the band is filled with.
+          <ButtonGroup items={items} align="center" className="mt-6 md:mt-8" context={surface === 'saturated' ? 'saturated' : undefined} />
         )}
 
         {formEmbed && (

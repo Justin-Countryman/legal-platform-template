@@ -50,16 +50,16 @@ describe('the site shell draws the theme’s header and footer (Phase 17B sessio
     expect(s.footer).toEqual({dark: true, ring: 'dark'})
   })
 
-  it('under Quiet, with nothing stored: the white bar and the dark footer every client wears today', () => {
+  it('under Quiet, with nothing stored: the white bar and, since Phase 18 session B, a light footer under its dark close ([R-603])', () => {
     const s = shell(chrome({flow: 'quiet.mostlyLight'}))
     expect(s.header).toEqual({dark: false, ring: null})
-    expect(s.footer.dark).toBe(true)
+    expect(s.footer).toEqual({dark: false, ring: null})
   })
 
-  it('nothing stored and no theme: the platform default, as before this session', () => {
+  it('nothing stored and no theme: the platform default, Quiet', () => {
     const s = shell(chrome({}))
     expect(s.header).toEqual({dark: false, ring: null})
-    expect(s.footer.dark).toBe(true)
+    expect(s.footer.dark).toBe(false)
   })
 
   it('a stored scheme wins over the theme, per field', () => {

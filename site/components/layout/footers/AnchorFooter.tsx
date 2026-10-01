@@ -2,7 +2,7 @@
 // Brand block left (logo, address, contact, social, action buttons) + nav columns right.
 // Solid, trustworthy — good default for single-location firms with nav-heavy footers.
 
-import Image from 'next/image'
+import {LogoImage, logoBlend} from '@/components/ui/LogoImage'
 import Link from 'next/link'
 import {MdLocationOn} from 'react-icons/md'
 import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel, footerSurface, footerLogo} from './shared'
@@ -49,13 +49,7 @@ export function AnchorFooter({data}: Props) {
           <div>
             {logo?.src ? (
               <Link href="/" className="mb-6 inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus" aria-label={firmName ?? 'Home'}>
-                <Image
-                  src={logo.src}
-                  alt={logo.alt ?? firmName ?? ''}
-                  width={logo.width}
-                  height={logo.height}
-                  className="h-16 w-auto"
-                />
+                <LogoImage logo={logo} height={64} alt={logo.alt ?? firmName ?? ''} place="footer" className="max-w-[18rem]" blend={logoBlend(logo, data.footerScheme === 'light' ? 'light' : 'dark')} />
               </Link>
             ) : firmName ? (
               <p className="mb-6 font-heading text-2xl font-bold text-foreground">{firmName}</p>

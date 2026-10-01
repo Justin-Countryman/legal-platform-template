@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import {LogoImage, logoBlend, type LogoFile} from '@/components/ui/LogoImage'
 import Link from 'next/link'
 import {SiGoogle, SiFacebook, SiYelp} from 'react-icons/si'
 import {MdLocationOn, MdPhone, MdOpenInNew, MdGavel, MdBalance} from 'react-icons/md'
@@ -14,12 +14,7 @@ type ReviewLink = {
   label: string
 }
 
-type Logo = {
-  src: string
-  alt: string
-  width: number
-  height: number
-} | null
+type Logo = LogoFile | null
 
 type FirmInfo = {
   firmName: string
@@ -77,14 +72,7 @@ export function ReviewPageContent({page, logo, firmInfo, napTokens}: Props) {
             className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 rounded-ui"
           >
             {logo ? (
-              <Image
-                src={logo.src}
-                alt={logo.alt ?? firmInfo?.firmName ?? 'Firm logo'}
-                width={logo.width}
-                height={logo.height}
-                priority
-                className="h-16 w-auto object-contain"
-              />
+              <LogoImage logo={logo} height={64} alt={logo.alt ?? firmInfo?.firmName ?? 'Firm logo'} place="review" className="mx-auto max-w-[18rem]" blend={logoBlend(logo, 'light')} priority />
             ) : firmInfo?.firmName ? (
               <span className="font-heading text-2xl font-bold text-foreground">
                 {firmInfo.firmName}

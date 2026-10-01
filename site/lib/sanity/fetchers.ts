@@ -1,6 +1,9 @@
 import {cache} from 'react'
 import {client} from './client'
 import {HOME_PAGE_QUERY, CATCH_ALL_PAGE_QUERY, SITE_CHROME_QUERY} from './queries'
+import {chromeSchemes, flowOf, saturatedFillOk} from '@/lib/flows'
+import type {VisibleGround} from '@/lib/sectionSurface'
+import {withLogoFacts} from '@/lib/logoFacts'
 
 // ─── One fetch per request, shared across generateMetadata, the layouts and
 // the page ────────────────────────────────────────────────────────────────────
@@ -31,7 +34,7 @@ import {HOME_PAGE_QUERY, CATCH_ALL_PAGE_QUERY, SITE_CHROME_QUERY} from './querie
 // layout-wide invalidation) is the only cache to keep in step.
 
 /** The site chrome: layouts, robots decision, NAP tokens, global CTA. One call per request. */
-export const getSiteChrome = cache(() => client.fetch(SITE_CHROME_QUERY))
+export const getSiteChrome = cache(async () => withLogoFacts(await client.fetch(SITE_CHROME_QUERY)))
 
 /** The catch-all page for one slug, shared by generateMetadata and the page. */
 export const getCatchAllPage = cache((slug: string) => client.fetch(CATCH_ALL_PAGE_QUERY, {slug}))
@@ -66,4 +69,19 @@ export async function chromeDesignTokens() {
 }
 export async function chromeHeader() {
   return (await getSiteChrome())?.header ?? null
+}
+/** The ground an interior page's closing call to action takes (Phase 18 session B, `[R-597]` as `[R-603]` amends it):
+ *  never the footer's color. The footer's scheme is read as the shell renders it (`chromeSchemes`, a stored scheme
+ *  winning), and the close is the muted step over a dark footer (ΔE2000 51 or more apart on every palette), and over a
+ *  light one the dark ground, or the accent where the section above it is dark and the palette's fill reads as its own
+ *  color, so the close does not run on as one block with that section (the pre-report break pass). */
+export async function chromeClose(above: VisibleGround | null = null): Promise<'dark' | 'muted' | 'saturated'> {
+  const chrome = await getSiteChrome()
+  const footer = chromeSchemes(flowOf(chrome?.designTokens as Record<string, unknown> | null), chrome?.header?.mainNavigation, chrome?.footer?.footerSettings, {
+    onLight: chrome?.header?.designSettings?.logoOnLight,
+    onDark: chrome?.header?.designSettings?.logoOnDark,
+  }).footer
+  if (footer === 'dark') return 'muted'
+  const strongAbove = above === 'dark' || above === 'image'
+  return strongAbove && saturatedFillOk(chrome?.designTokens as Record<string, unknown> | null) ? 'saturated' : 'dark'
 }

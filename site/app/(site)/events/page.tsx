@@ -4,7 +4,7 @@ import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import Link from 'next/link'
 import {EVENT_INDEX_PAGE_QUERY, EVENT_INDEX_QUERY} from '@/lib/sanity/queries'
-import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
+import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome, chromeClose} from '@/lib/sanity/fetchers'
 import {headingFaceWithAdvances, siteLookWithHeadingFace} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
@@ -17,7 +17,8 @@ import {Chip} from '@/components/ui/Chip'
 import {CalendarIcon, MapPinIcon, type ChipIcon} from '@/components/ui/icons'
 import {TertiaryArrow} from '@/components/ui/TertiaryArrow'
 import {GlobalCta} from '@/components/sections/GlobalCta'
-import {PageSections} from '@/components/sections/PageSections'
+import {withCtaOverride} from '@/lib/ctaOverride'
+import {PageSections, sectionsLastGround} from '@/components/sections/PageSections'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -270,11 +271,7 @@ export default async function EventsIndexPage() {
       {/* Global CTA */}
       {!(indexPage?.hideCtaForm) && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={
-            indexPage?.ctaOverride
-              ? {...globalCtaData, ...indexPage.ctaOverride}
-              : globalCtaData
-          }
+          data={withCtaOverride(globalCtaData, indexPage?.ctaOverride)} surface={await chromeClose(sectionsLastGround(indexPage?.sections, siteLookWithHeadingFace((await getSiteChrome())?.designTokens)))}
           napTokens={tokens}
         />
       )}

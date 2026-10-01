@@ -7,7 +7,7 @@ import type {Metadata} from 'next'
 import {SanityImage} from '@/components/ui/SanityImage'
 import Link from 'next/link'
 import {BLOG_POST_PAGE_QUERY, BLOG_POST_SLUGS_QUERY, RELATED_POSTS_QUERY} from '@/lib/sanity/queries'
-import {chromeDesignTokens, chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
+import {chromeDesignTokens, chromeGlobalCta, chromeNap, fetchCached, getSiteChrome, chromeClose} from '@/lib/sanity/fetchers'
 import {headingFaceWithAdvances} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
@@ -19,6 +19,7 @@ import {Button} from '@/components/ui/Button'
 import {ContentSidebarLayout} from '@/components/layout/ContentSidebarLayout'
 import {Sidebar} from '@/components/layout/Sidebar'
 import {GlobalCta} from '@/components/sections/GlobalCta'
+import {withCtaOverride} from '@/lib/ctaOverride'
 import {RelatedPosts, type RelatedPostsData} from '@/components/sections/RelatedPosts'
 import {siteHost} from '@/lib/siteHost'
 
@@ -364,11 +365,7 @@ export default async function BlogPostPage({params}: Props) {
       {/* ── Global CTA ───────────────────────────────────────────────────── */}
       {!post.hideCtaForm && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={
-            post.ctaOverride
-              ? {...globalCtaData, ...post.ctaOverride}
-              : globalCtaData
-          }
+          data={withCtaOverride(globalCtaData, post.ctaOverride)} surface={await chromeClose()}
           napTokens={tokens}
         />
       )}

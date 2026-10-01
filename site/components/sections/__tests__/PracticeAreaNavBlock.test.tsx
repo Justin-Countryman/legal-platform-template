@@ -199,3 +199,18 @@ describe('PracticeAreaNavBlock — card photos', () => {
     expect(container.querySelectorAll('.tile-text-scrim, [data-ring-context]')).toHaveLength(0)
   })
 })
+
+// Phase 18 session B (item 7): the card's line is resolved for content tokens, as the page's own copy is (a meta
+// description may hold one), and a line of spaces draws nothing.
+describe('PracticeAreaNavBlock: the card line', () => {
+  it('resolves a token in a card’s line, and draws no line of spaces', () => {
+    const d = data({layout: 'tile', items: [
+      {_key: 'a', label: 'Family Law', href: '/family-law/', description: 'Family law at {{firmName}}.'},
+      {_key: 'b', label: 'Probate', href: '/probate/', description: '   '},
+    ]} as never)
+    const {container} = render(<PracticeAreaNavBlock data={d} napTokens={{firmName: 'Example Law'} as never} />)
+    expect(container.textContent).toContain('Family law at Example Law.')
+    expect(container.textContent).not.toContain('{{firmName}}')
+    expect([...container.querySelectorAll('p')].some((p) => p.textContent === '   ')).toBe(false)
+  })
+})

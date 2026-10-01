@@ -47,7 +47,7 @@ vi.mock('@/components/ui/ScrollReveal', () => ({
 
 import {HomepageCanvas, frameOf, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {closeGround, walkPage, siteLookOf, type SiteLook} from '../sectionFrame'
-import {closeSurface} from '@/lib/flows'
+import {chromeSchemes, closeOf} from '@/lib/flows'
 import {ghostSource} from '@/lib/brandMark'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import planted from './fixtures/fixture-shaped-canvas.json'
@@ -116,11 +116,12 @@ const LOOKS: Array<[name: string, designTokens: Record<string, unknown>]> = [
 
 /** The ground below the last band, as `HomeBody` hands it to the walk and the canvas: the close, shown (ADV-17D2-P: the
  *  gate walked without it, and so could not see a change the close makes). */
-const closeOf = (site: SiteLook) => closeGround(closeSurface(site.flow, !!site.saturated, !!site.heroPhoto), true)
+const closeBelow = (site: SiteLook) =>
+  closeGround(closeOf(site.flow, {footer: chromeSchemes(site.flow!, null, null, null).footer, above: null, heroPhoto: !!site.heroPhoto, colors: {}}), true)
 
 /** Every decision the walk makes, without the site look (whose shape the engine changes). */
 function decisions(blocks: HomepageBlock[], site: SiteLook, hero: VisibleGround) {
-  return walkPage(blocks, frameOf, site, hero, closeOf(site)).bands.map(({member, index, seam}) => ({
+  return walkPage(blocks, frameOf, site, hero, closeBelow(site)).bands.map(({member, index, seam}) => ({
     key: member._key,
     index,
     seamTop: seam.seamTop,
@@ -146,7 +147,7 @@ describe('the compat bridge reproduces the a164ce0 walk and canvas byte for byte
       it(`${canvasName} canvas, ${lookName} stored: the HTML`, async () => {
         const site = lookOf(designTokens)
         const {container} = render(
-          <HomepageCanvas blocks={blocks} site={site} hero={hero} close={closeOf(site)} napTokens={tokens} resultsDisclaimer="Past results do not guarantee a future outcome." />,
+          <HomepageCanvas blocks={blocks} site={site} hero={hero} close={closeBelow(site)} napTokens={tokens} resultsDisclaimer="Past results do not guarantee a future outcome." />,
         )
         await expect(withoutHeadingFit(container.innerHTML)).toMatchFileSnapshot(`./__snapshots__/flow-reproduction/${canvasName}-${lookName}.html`)
       })

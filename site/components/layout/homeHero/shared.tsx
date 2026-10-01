@@ -140,7 +140,7 @@ export function HeroBand({
         // outgrow the ceiling is gone and the cap is unconditional again.
         fullViewport ? 'min-h-svh max-h-[60rem]' : '',
         center ? 'justify-center' : '',
-        hasFullBackdrop ? '' : surface.isDark ? 'bg-brand-dark' : 'bg-hero-tint',
+        hasFullBackdrop ? '' : surface.isDark ? 'bg-brand-dark' : surface.lightGround === 'wash' ? 'bg-wash' : 'bg-hero-tint',
         className ?? '',
       ]
         .filter(Boolean)

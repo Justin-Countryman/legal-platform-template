@@ -3,8 +3,9 @@ import {ghostSource} from '@/lib/brandMark'
 import {closeFrame, closeGround, walkPage} from '@/components/sections/sectionFrame'
 import {siteLookWithHeadingFace} from '@/lib/headingAdvances'
 import {firstBandRises, frameOf} from '@/components/layout/HomepageCanvas'
-import {heroGround, heroPhotoOf, photoSetOf} from '@/lib/heroGround'
-import {closeSurface} from '@/lib/flows'
+import {heroGround, heroPaint, heroPhotoOf, photoSetOf} from '@/lib/heroGround'
+import {chromeSchemes, closeOf, flowOf} from '@/lib/flows'
+import {withCtaOverride} from '@/lib/ctaOverride'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
 import {HomepageHero} from '@/components/layout/homeHero'
@@ -50,7 +51,7 @@ export function homeHeroOf(all: HomePageData | null | undefined): HomeHeroData |
 /** Whether the homepage's closing call to action renders: the site's, with the homepage's own words over it, and a
  *  heading. The preview's switcher reads the same answer (Phase 17E), so it counts the photographs the page places. */
 export function closeShownOf(globalCta: HomepageCtaData | null | undefined, home: Pick<HomeData, 'hideCtaForm' | 'ctaOverride'> | null | undefined): boolean {
-  return !!globalCta && !home?.hideCtaForm && !!{...globalCta, ...(home?.ctaOverride ?? {})}.heading
+  return !!globalCta && !home?.hideCtaForm && !!withCtaOverride(globalCta, home?.ctaOverride).heading
 }
 
 export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData}) {
@@ -87,20 +88,33 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
     // photograph only while approved.
     photoSet: heroPhoto ? photoSetOf(chrome?.designTokens as Record<string, unknown> | null, heroPhoto.assetId) : null,
     closeShown: closeShownOf(globalCtaData, home),
+    // Phase 18 session B: the light hero paints the theme's wash (`heroPaint`), and the bands under it alternate from it.
+    heroPaint: heroPaint(hero, look.flow),
   }
-  const ground = heroGround(hero)
+  const ground = heroGround(hero, look.flow)
   const edgeBelow = firstBandRises(home?.canvas, site, ground)
   // Phase 17D session 2: the close is the ground below the last band, so an inset last band between a dark run and a dark
   // close adopts the run (`[R-501]`) and a run Gradient bloom lights runs on into a dark close. The canvas walks the same
   // list with the same inputs (`HomepageCanvas`, `close`), so both read one walk.
-  const closeSurf = closeSurface(look.flow, !!look.saturated, !!site.heroPhoto)
+  //
+  // Phase 18 session B (`[R-597]`, `[R-603]`): the close never takes the footer's color. It reads the footer's scheme as
+  // the shell renders it (the theme's, a stored one winning) and the ground of the band above it, from a walk without the
+  // close. The close then joins the walk (a run Gradient bloom lights; an inset last band between a strong ground and a
+  // strong close adopts it, `[R-501]`, as it did before this session).
+  const footer = chromeSchemes(flowOf(chrome?.designTokens as Record<string, unknown> | null), header?.mainNavigation, chrome?.footer?.footerSettings, {
+    onLight: header?.designSettings?.logoOnLight,
+    onDark: header?.designSettings?.logoOnDark,
+  }).footer
+  const above = walkPage(home?.canvas ?? [], frameOf, site, ground, null).last ?? ground
+  const closeSurf = closeOf(look.flow, {footer, above, heroPhoto: !!site.heroPhoto, colors: chrome?.designTokens as Record<string, unknown> | null})
   const closeG = home?.hideCtaForm ? null : closeGround(closeSurf, site.closeShown)
-  const close = closeFrame(closeSurf, site, walkPage(home?.canvas ?? [], frameOf, site, ground, closeG).close)
+  const walkSite = {...site, close: closeSurf}
+  const close = closeFrame(closeSurf, walkSite, walkPage(home?.canvas ?? [], frameOf, walkSite, ground, closeG).close)
 
   return (
     <>
       {hero ? (
-        <HomepageHero data={hero} napTokens={tokens} edgeBelow={edgeBelow} />
+        <HomepageHero data={hero} napTokens={tokens} edgeBelow={edgeBelow} lightGround={site.heroPaint === 'wash' ? 'wash' : 'tint'} />
       ) : (
         // Fallback when the homepage hero hasn't been authored yet.
         //
@@ -130,7 +144,7 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
       )}
 
       <HomepageCanvas
-        site={site}
+        site={walkSite}
         hero={ground}
         close={closeG}
         blocks={home?.canvas}

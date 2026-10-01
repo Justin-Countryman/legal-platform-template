@@ -171,6 +171,21 @@ export const practiceArea = defineType({
       description: 'The heading inside the hero is the H1 for this page',
     },
     {
+      // Phase 18 session B (`[R-603]`): one line on the card, read before the meta description, which is written for
+      // search. The build writes it from the firm's own copy (session A's harvest); no default.
+      name: 'cardLine',
+      title: 'Card Line',
+      type: 'string',
+      description:
+        'Optional. One sentence on what the client gets from this area, shown on its card wherever the practice areas are listed. Keep it under 80 characters so it fits two lines on a phone. Left empty, the card shows the page\u2019s meta description.',
+      validation: (Rule) =>
+        Rule.custom((v?: string) => {
+          if (typeof v !== 'string' || v === '') return true
+          if (v.trim() === '') return 'A card line of spaces shows nothing on the card'
+          return v.length <= 80 ? true : `${v.length} characters: over 80 it runs past two lines on a phone and is cut off`
+        }).warning(),
+    },
+    {
       // Phase 17D (`[R-556]`): one photo per practice area, on its card wherever the practice areas are
       // listed, under every theme. No platform writer and no default: an operator adds it after the build.
       name: 'cardImage',

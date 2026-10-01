@@ -97,6 +97,23 @@ describe('GreyBox', () => {
     expect(text).toContain('Site footer · Anchor')
   })
 
+  it('keeps the site close\'s line and button where the homepage override leaves them empty (as GROQ answers it)', () => {
+    const text = draw({canvas: [], ctaOverride: {tagline: null, heading: 'Start your plan', description: null, buttons: null}}).textContent ?? ''
+    expect(text).toContain('Start your plan')
+    expect(text).toContain('Free first call.')
+    expect(text).toContain('Call now')
+  })
+
+  it('prints a content section\u2019s items with the heading over them, on the split as on two columns (Phase 18 session B)', () => {
+    const member = (layout: string) => ({_type: 'contentSectionInline', _key: layout, layout, heading: 'Can you relate?', itemsHeading: 'Our commitment to you', items: [{_key: 'a', title: 'Plain words'}]})
+    for (const layout of ['split', 'twoColumnText']) {
+      const text = draw({canvas: [member(layout)]}).textContent ?? ''
+      expect(text, layout).toContain('Our commitment to you')
+      expect(text, layout).toContain('Plain words')
+      expect(text.indexOf('Our commitment'), layout).toBeLessThan(text.indexOf('Plain words'))
+    }
+  })
+
   it('labels the header and footer with the layouts the build picked, and the offices the footer shows', () => {
     const picked = {
       ...(chrome as object),

@@ -28,7 +28,7 @@ function resolveCtas(buttons: HomeHeroData['buttons'], tokens?: NapTokens | null
   return toCtaItems((buttons ?? []).map((b) => ({...b, title: resolveStr(b.title, tokens) ?? b.title})))
 }
 
-export function HomepageHero({data, napTokens, edgeBelow}: {data: HomeHeroData; napTokens?: NapTokens | null; edgeBelow?: boolean}) {
+export function HomepageHero({data, napTokens, edgeBelow, lightGround}: {data: HomeHeroData; napTokens?: NapTokens | null; edgeBelow?: boolean; lightGround?: 'wash' | 'tint'}) {
   const config = resolveHeroConfig(data)
   const Skeleton = SKELETONS[config.skeleton]
 
@@ -53,7 +53,8 @@ export function HomepageHero({data, napTokens, edgeBelow}: {data: HomeHeroData; 
   // A mosaic backdrop sits behind the text even without a single backgroundImage,
   // so force the dark surface treatment in that case.
   const forcedDark = config.backdrop === 'mosaic' && galleryImages.length > 0
-  const effectiveSurface = forcedDark ? {...surface, scheme: 'dark' as const, isDark: true} : surface
+  // Phase 18 session B: a light band paints the theme's wash where the homepage says so (`heroPaint`), else the tint.
+  const effectiveSurface = forcedDark ? {...surface, scheme: 'dark' as const, isDark: true} : {...surface, lightGround: lightGround ?? 'tint'}
 
   // Section Background — the full-bleed pattern/texture behind the whole hero
   // (both layouts). Page-only: present ⇒ on. It adopts the band's resolved scheme

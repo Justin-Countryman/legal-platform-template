@@ -9,7 +9,9 @@ import {motionConfig, useMotionConfig} from '@/lib/motionConfig'
 import {RxChevronDown} from 'react-icons/rx'
 import {MdPhone, MdLocationPin, MdEmail, MdClose} from 'react-icons/md'
 import Link from 'next/link'
-import Image from 'next/image'
+import {LogoImage, logoBlend} from '@/components/ui/LogoImage'
+import {logoAspect, logoHeight, type LogoSize} from '@/lib/logoSize'
+import type {LogoFacts} from '@/lib/logoFacts'
 import {usePathname} from 'next/navigation'
 import {IconButton} from '@/components/ui/IconButton'
 import {ButtonGroup, type CtaItem} from '@/components/ui/ButtonGroup'
@@ -29,7 +31,7 @@ export type NavItem = {
   children?: NavChild[] | null
 }
 
-type LogoAsset = {src: string; alt: string; width: number; height: number}
+type LogoAsset = {src: string; alt: string; width: number; height: number; facts?: LogoFacts | null}
 
 export type HeaderData = {
   firmName?: string | null
@@ -358,11 +360,20 @@ type LogoProps = {
   data: HeaderData
   scheme: string
   useMark?: boolean
-  className?: string
+  /** Where the logo is drawn: at rest, compacted on scroll, in a phone row or a phone's split row (`logoSize`). */
+  size?: LogoSize
   ringClass?: string
 }
 
-export function HeaderLogo({data, scheme, useMark = false, className = 'h-10 lg:h-12', ringClass = 'focus-visible:ring-focus'}: LogoProps) {
+/** The width caps a header logo box keeps, as today's image did: 14rem on a phone, 18 from md, 22 from lg. */
+const LOGO_CAPS: Record<LogoSize, string> = {
+  rest: 'max-w-[14rem] md:max-w-[18rem] lg:max-w-[22rem]',
+  compact: 'max-w-[14rem] md:max-w-[18rem] lg:max-w-[22rem]',
+  phone: 'max-w-[14rem]',
+  phoneSplit: 'max-w-[14rem]',
+}
+
+export function HeaderLogo({data, scheme, useMark = false, size = 'rest', ringClass = 'focus-visible:ring-focus'}: LogoProps) {
   const darkSurface = isDarkSurface(scheme)
   let asset: LogoAsset | null | undefined
 
@@ -375,23 +386,18 @@ export function HeaderLogo({data, scheme, useMark = false, className = 'h-10 lg:
   return (
     <Link
       href="/"
-      aria-label={`${data.firmName ?? 'Home'} — go to homepage`}
+      aria-label={`${data.firmName ?? 'Home'} \u2014 go to homepage`}
       className={`min-w-max flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${ringClass}`}
     >
       {asset?.src ? (
-        // Cap the logo width so wide wordmark logos (high aspect ratio) don't
-        // blow out the header and starve the nav column. object-contain scales
-        // an over-wide logo down within the height box (preserving ratio, no
-        // distortion); normal/square logos never reach the cap so they're
-        // unaffected. Budget scales up with the viewport.
-        <Image
-          src={asset.src}
-          alt={asset.alt ?? ''}
-          width={asset.width}
-          height={asset.height}
-          className={`w-auto max-w-[14rem] object-contain transition-[height,max-width] duration-structural-slow ease-balanced md:max-w-[18rem] lg:max-w-[22rem] ${className}`}
-          priority
-        />
+        // Phase 18 session B (`[R-603]`): the file's ink, trimmed of its own margin (`logoFacts`), at the height its
+        // shape earns here (`logoSize`), so a stacked mark over the firm's name is drawn as large as a wordmark reads;
+        // the width caps keep a long wordmark from starving the navigation, as before.
+        // Keyed by the file: compacted, the header may draw the mark, another file with its own shape, which must be a
+        // new box rather than the wordmark's box animating its width down to the mark's. A logo on its own white (or
+        // black) box is drawn into the header's solid ground, so the box does not show; the site shell gives a boxed logo
+        // a solid ground wherever the header would be glass or transparent (item 4).
+        <LogoImage key={asset.src} logo={asset} height={logoHeight(logoAspect(asset), size)} alt={asset.alt ?? ''} place={size} className={LOGO_CAPS[size]} blend={scheme === 'light' || scheme === 'dark' ? logoBlend(asset, darkSurface ? 'dark' : 'light') : null} priority />
       ) : data.firmName ? (
         <span className="font-heading text-lg font-semibold">{data.firmName}</span>
       ) : null}
@@ -859,7 +865,7 @@ function MobileStandard({data, isOpen, onToggle, scheme, triggerRef}: MobileRowV
   return (
     <div className="flex min-h-16 items-center justify-between px-[5%]">
       <div className="min-w-0 overflow-hidden">
-        <HeaderLogo data={data} scheme={scheme} className="h-10 w-auto" />
+        <HeaderLogo data={data} scheme={scheme} size="phone" />
       </div>
       <Hamburger ref={triggerRef} isOpen={isOpen} onToggle={onToggle} />
     </div>
@@ -959,7 +965,7 @@ function CollapsibleLogoRow({data, scheme, compact}: {data: HeaderData; scheme: 
       }`}
     >
       <div className="flex justify-center px-[5%] py-3">
-        <HeaderLogo data={data} scheme={scheme} className="h-10 w-auto" />
+        <HeaderLogo data={data} scheme={scheme} size="phone" />
       </div>
     </div>
   )
@@ -972,7 +978,7 @@ function MobilePhoneSplit({data, isOpen, onToggle, scheme, hoverTextClass, trigg
   return (
     <div>
       <div className="flex min-h-12 items-center px-[5%] py-2 overflow-hidden">
-        <HeaderLogo data={data} scheme={scheme} className="h-9 w-auto" />
+        <HeaderLogo data={data} scheme={scheme} size="phoneSplit" />
       </div>
       <div className="flex items-stretch border-t border-current/10">
         {phone ? (
@@ -1011,7 +1017,7 @@ function MobileLogoSplit({data, isOpen, onToggle, scheme, hoverTextClass, trigge
       <div className="flex min-h-14 items-stretch">
         <div className="flex flex-1 min-w-0 items-center px-[5%] overflow-hidden">
           <div className="min-w-0 overflow-hidden">
-            <HeaderLogo data={data} scheme={scheme} className="h-9 w-auto" />
+            <HeaderLogo data={data} scheme={scheme} size="phoneSplit" />
           </div>
         </div>
         <button

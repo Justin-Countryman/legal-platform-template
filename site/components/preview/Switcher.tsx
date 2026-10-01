@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import {STYLE_SETS} from '@/lib/styleSets'
 import {PALETTE_PRESETS} from '@/lib/palettes'
-import {DARKNESS_LABELS, FAMILIES, chromeSchemes, drawsHeroPhoto, familyOf, flowById, flowId, needLabel, unmetNeeds, type FlowFamily, type FlowRules} from '@/lib/flows'
+import {DARKNESS_LABELS, FAMILIES, chromeSchemes, closeOf, drawsHeroPhoto, familyOf, flowById, flowId, needLabel, unmetNeeds, type FlowFamily, type FlowRules} from '@/lib/flows'
 import {photoSetOf, type HeroPhoto, type SetPhoto, type SetPhotoEntry, type SetPhotoStatus} from '@/lib/heroGround'
 import {urlForImage} from '@/lib/sanity/image'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {ghostSource} from '@/lib/brandMark'
-import {canvasFacts, siteLookOf, walkPage} from '@/components/sections/sectionFrame'
+import {canvasFacts, closeGround, siteLookOf, walkPage} from '@/components/sections/sectionFrame'
 import {frameOf, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {type SiteChrome} from '@/components/layout/SiteShell'
 import {
@@ -154,7 +154,7 @@ export function chromeNote(flow: Pick<FlowRules, 'chrome'>, chrome: StoredChrome
   ].filter(Boolean)
   let out = `${CHROME_NOTE_HEAD}: a ${header} header and a ${s.footer} footer.`
   if (kept.length > 0) out += ` Stored, so no theme reaches them: ${kept.join(', ')}; clear them in Header Settings and Footer Settings to hand them to the theme.`
-  if (s.darkLogoMissing) out += ' The theme wants a dark header, which needs the logo for dark grounds; it stays light until one is uploaded.'
+  if (s.darkLogoMissing) out += ' The theme wants a dark header, which needs a logo for dark grounds with no white or colored box of its own; it stays light until one is uploaded.'
   return out
 }
 
@@ -286,10 +286,17 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
   // again with a set longer than any page can use.
   let plainPlaces = 0
   if (drawnSet.length > 0) {
+    // The close as the page resolves it beside the footer (Phase 18 session B, `closeOf`): a photograph only where it
+    // stands apart from the footer, as `HomeBody` draws it.
+    const footer = chromeSchemes(shown, chrome?.header?.mainNavigation, chrome?.footer?.footerSettings, {
+      onLight: chrome?.header?.designSettings?.logoOnLight, onDark: chrome?.header?.designSettings?.logoOnDark,
+    }).footer
+    const above = walkPage(blocks, frameOf, {...site, flow: shown}, hero, null).last ?? hero
+    const close = closeOf(shown, {footer, above, heroPhoto: !photoChanged, colors: chrome?.designTokens as Record<string, unknown> | null})
     const photoPlaces = (set: SetPhoto[]) => {
-      const setSite = {...site, flow: shown, photoSet: set, closeShown}
-      const used = new Set<number>(closeShown && shown.dark.close === 'photo' ? [0] : [])
-      for (const b of walkPage(blocks, frameOf, setSite, hero, closeShown ? 'image' : null).bands) {
+      const setSite = {...site, flow: shown, photoSet: set, closeShown, close}
+      const used = new Set<number>(closeShown && close === 'photo' ? [0] : [])
+      for (const b of walkPage(blocks, frameOf, setSite, hero, closeGround(close, closeShown)).bands) {
         const i = b.seam.paint?.photo?.index
         if (i !== undefined && set[i]) used.add(i)
       }

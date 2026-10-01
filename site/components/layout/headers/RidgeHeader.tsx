@@ -82,7 +82,7 @@ export function RidgeHeader({data}: Props) {
               !fits ? 'absolute top-0 left-0 right-0 opacity-0 pointer-events-none' : '',
             ].join(' ')}
           >
-            <HeaderLogo data={data} scheme={scheme} useMark={hideSupplementary} className={hideSupplementary ? 'h-9' : 'h-20'} />
+            <HeaderLogo data={data} scheme={scheme} useMark={hideSupplementary} size={hideSupplementary ? 'compact' : 'rest'} />
             <nav aria-label="Main navigation" className="min-w-0 flex items-center justify-end">
               <NavLinks items={items} textClass={textClass} hoverTextClass={hoverTextClass} isMobile={!fits} />
               <CtaButtons data={data} context={isDarkSurfaceScheme(scheme) ? 'dark' : 'light'} className="ml-8" />

@@ -4,7 +4,7 @@ import {notFound} from 'next/navigation'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import type {Metadata} from 'next'
 import {BLOG_CATEGORY_PAGE_QUERY, BLOG_CATEGORY_SLUGS_QUERY, BLOG_POSTS_QUERY, BLOG_CATEGORIES_QUERY} from '@/lib/sanity/queries'
-import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
+import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome, chromeClose} from '@/lib/sanity/fetchers'
 import {headingFaceWithAdvances} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
@@ -14,6 +14,7 @@ import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {siteHost} from '@/lib/siteHost'
 import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {GlobalCta} from '@/components/sections/GlobalCta'
+import {withCtaOverride} from '@/lib/ctaOverride'
 import {Suspense} from 'react'
 import {BlogIndexClient} from '@/components/sections/BlogIndexClient'
 import {BlogIndexFallback} from '@/components/sections/BlogIndexFallback'
@@ -132,11 +133,7 @@ export default async function BlogCategoryPage({params}: Props) {
       {/* Global CTA */}
       {!(category?.hideCtaForm) && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={
-            category?.ctaOverride
-              ? {...globalCtaData, ...category.ctaOverride}
-              : globalCtaData
-          }
+          data={withCtaOverride(globalCtaData, category?.ctaOverride)} surface={await chromeClose()}
           napTokens={tokens}
         />
       )}
