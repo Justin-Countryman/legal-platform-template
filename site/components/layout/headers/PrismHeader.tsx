@@ -94,7 +94,7 @@ export function PrismHeader({data}: Props) {
               data={data}
               scheme={scheme}
               useMark={hideSupplementary}
-              className={hideSupplementary ? 'h-9' : 'h-20'}
+              size={hideSupplementary ? 'compact' : 'rest'}
             />
 
             <nav aria-label="Main navigation" className="min-w-0 flex justify-center">

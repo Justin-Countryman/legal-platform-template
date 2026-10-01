@@ -6,7 +6,7 @@
 // not here. Dark or light via footerSettings.footerScheme.
 // Falls back to the primary address when no locations array is populated.
 
-import Image from 'next/image'
+import {LogoImage, logoBlend} from '@/components/ui/LogoImage'
 import Link from 'next/link'
 import {MdLocationOn, MdPhone} from 'react-icons/md'
 import {Button} from '@/components/ui/Button'
@@ -81,7 +81,7 @@ export function DistrictsFooter({data}: Props) {
         <div className="flex flex-col gap-6 border-b border-border py-12 md:flex-row md:items-center md:justify-between">
           {logo?.src ? (
             <Link href="/" aria-label={firmName ?? 'Home'} className="inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
-              <Image src={logo.src} alt={logo.alt ?? firmName ?? ''} width={logo.width} height={logo.height} className="h-14 w-auto" />
+              <LogoImage logo={logo} height={56} alt={logo.alt ?? firmName ?? ''} place="footer" className="max-w-[18rem]" blend={logoBlend(logo, data.footerScheme === 'light' ? 'light' : 'dark')} />
             </Link>
           ) : firmName ? (
             <p className="font-heading text-2xl font-bold text-foreground">{firmName}</p>

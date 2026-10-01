@@ -1,3 +1,4 @@
+import type {LogoFile} from '@/components/ui/LogoImage'
 import {AnchorFooter} from './footers/AnchorFooter'
 import {MeridianFooter} from './footers/MeridianFooter'
 import {PillarFooter} from './footers/PillarFooter'
@@ -44,9 +45,9 @@ export type FooterData = {
   /** Dark scheme = brand background + light text; light scheme = neutral background + dark text. */
   footerScheme?: FooterScheme | null
   /** Logo for the dark surface (logoOnDark). Used when footerScheme is dark. */
-  logo?: {src: string; alt: string; width: number; height: number} | null
+  logo?: LogoFile | null
   /** Logo for the light surface (logoOnLight). Used when footerScheme is light; falls back to `logo`. */
-  logoLight?: {src: string; alt: string; width: number; height: number} | null
+  logoLight?: LogoFile | null
   address?: {
     address1?: string | null
     address2?: string | null

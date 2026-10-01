@@ -3,7 +3,7 @@
 // Action buttons sit in the bottom bar alongside legal links.
 // Inspired by Haft Law Group — elevated with column dividers + large phone treatment.
 
-import Image from 'next/image'
+import {LogoImage, logoBlend} from '@/components/ui/LogoImage'
 import Link from 'next/link'
 import {MdLocationOn} from 'react-icons/md'
 import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, officeLocationLabel, footerSurface, footerLogo} from './shared'
@@ -48,13 +48,7 @@ export function MeridianFooter({data}: Props) {
           <div className="lg:pr-12">
             {logo?.src ? (
               <Link href="/" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
-                <Image
-                  src={logo.src}
-                  alt={logo.alt ?? ''}
-                  width={logo.width}
-                  height={logo.height}
-                  className="h-24 w-auto object-contain"
-                />
+                <LogoImage logo={logo} height={96} alt={logo.alt ?? ''} place="footer" className="max-w-[18rem]" blend={logoBlend(logo, data.footerScheme === 'light' ? 'light' : 'dark')} />
               </Link>
             ) : firmName ? (
               <Link href="/" className="font-heading text-2xl font-bold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">

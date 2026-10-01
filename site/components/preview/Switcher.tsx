@@ -154,7 +154,7 @@ export function chromeNote(flow: Pick<FlowRules, 'chrome'>, chrome: StoredChrome
   ].filter(Boolean)
   let out = `${CHROME_NOTE_HEAD}: a ${header} header and a ${s.footer} footer.`
   if (kept.length > 0) out += ` Stored, so no theme reaches them: ${kept.join(', ')}; clear them in Header Settings and Footer Settings to hand them to the theme.`
-  if (s.darkLogoMissing) out += ' The theme wants a dark header, which needs the logo for dark grounds; it stays light until one is uploaded.'
+  if (s.darkLogoMissing) out += ' The theme wants a dark header, which needs a logo for dark grounds with no white or colored box of its own; it stays light until one is uploaded.'
   return out
 }
 

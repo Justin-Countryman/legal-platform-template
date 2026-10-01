@@ -793,9 +793,16 @@ export type SiteLogos = {onLight?: unknown; onDark?: unknown} | null | undefined
 const drawable = (logo: unknown): boolean =>
   !!logo && (typeof logo !== 'object' || !!(logo as {src?: unknown}).src)
 
-/** The theme's header can go dark on this site without losing its logo. */
+/** A logo for dark grounds that carries a white or colored box of its own, which no dark ground can take in (Phase 18
+ *  session B, item 4: a black box is screened away, `logoBlend`). */
+const boxedForDark = (logo: unknown): boolean => {
+  const box = (logo as {facts?: {box?: string | null} | null} | null)?.facts?.box
+  return box === 'white' || (typeof box === 'string' && box.startsWith('#'))
+}
+
+/** The theme's header can go dark on this site without losing its logo, or showing its logo's box. */
 export function darkHeaderReady(logos: SiteLogos): boolean {
-  return !(drawable(logos?.onLight) && !drawable(logos?.onDark))
+  return !(drawable(logos?.onLight) && (!drawable(logos?.onDark) || boxedForDark(logos?.onDark)))
 }
 
 /** The header's scheme at the top and when scrolled, and the footer's, as the site renders them. */
