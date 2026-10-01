@@ -23,6 +23,7 @@ import {
   validateWcag,
   textureOnDark,
   SCRIM_OPACITY,
+  SECTION_HEADING_MAX_REM,
 } from '../designTokens'
 import {PALETTE_PRESETS, matchPreset, presetInputs} from '../palettes'
 import {resolvefonts} from '../../fonts/loader'
@@ -642,25 +643,25 @@ describe('buildDesignTokenCSS marketingScale', () => {
     expect(css).toContain('--marketing-h4:1.778rem')
   })
 
-  it('md — Augmented Fourth ratio values', () => {
+  it('md — Augmented Fourth ratio values, the section heading at its ceiling', () => {
     const css = buildDesignTokenCSS({marketingScale: 'md'})
     expect(css).toContain('--marketing-h1:5.657rem')
-    expect(css).toContain('--marketing-h2:4rem')
+    expect(css).toContain('--marketing-h2:3.5rem')
     expect(css).toContain('--marketing-h3:2.828rem')
     expect(css).toContain('--marketing-h4:2rem')
   })
 
-  it('lg — Golden Ratio values, H1 capped at 8rem', () => {
+  it('lg — Golden Ratio values, H1 capped at 8rem, the section heading at its ceiling', () => {
     const css = buildDesignTokenCSS({marketingScale: 'lg'})
     expect(css).toContain('--marketing-h1:8rem')
-    expect(css).toContain('--marketing-h2:6.854rem')
-    expect(css).toContain('--marketing-h3:4.236rem')
+    expect(css).toContain('--marketing-h2:3.5rem')
+    expect(css).toContain('--marketing-h3:3rem')
     expect(css).toContain('--marketing-h4:2.618rem')
     // Sanity: capped value (8rem) is less than uncapped ratio⁵ × 16px = 11.09rem
     expect(css).not.toContain('--marketing-h1:11.09rem')
   })
 
-  it('values increase with preset across all four levels', () => {
+  it('values increase with preset across all four levels, the section heading to its ceiling', () => {
     const sm = buildDesignTokenCSS({marketingScale: 'sm'})
     const md = buildDesignTokenCSS({marketingScale: 'md'})
     const lg = buildDesignTokenCSS({marketingScale: 'lg'})
@@ -668,10 +669,14 @@ describe('buildDesignTokenCSS marketingScale', () => {
       const match = css.match(new RegExp(`--marketing-${level}:([\\d.]+)rem`))
       return parseFloat(match?.[1] ?? '0')
     }
-    for (const level of ['h1', 'h2', 'h3', 'h4']) {
+    for (const level of ['h1', 'h3', 'h4']) {
       expect(extract(md, level)).toBeGreaterThan(extract(sm, level))
       expect(extract(lg, level)).toBeGreaterThan(extract(md, level))
     }
+    // Phase 18 session D: the section heading rises from sm to md, and md and lg both stop at the ceiling.
+    expect(extract(md, 'h2')).toBeGreaterThan(extract(sm, 'h2'))
+    expect(extract(md, 'h2')).toBe(SECTION_HEADING_MAX_REM)
+    expect(extract(lg, 'h2')).toBe(SECTION_HEADING_MAX_REM)
   })
 })
 

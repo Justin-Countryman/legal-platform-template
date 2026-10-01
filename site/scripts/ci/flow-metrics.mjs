@@ -392,6 +392,11 @@ function measure() {
 // Two more lines, even at the floor, fail.
 const atFloor = (b, limit) => b.headingSize !== null && b.headingSize <= (b.headingWeight === 300 ? 32 : 20) + 0.05 && b.headingLines <= limit + 1
 
+// The section heading's ceiling (Phase 18 session D; `SECTION_HEADING_MAX_REM` in `lib/designTokens.ts`, 3.5rem): no band
+// below the hero draws its heading above 56 px at any width, under any theme or style set. The sites' range, measured.
+const SECTION_HEADING_MAX_PX = 56
+const overCeiling = (m) => m.bands.filter((b) => b.i > 0 && b.headingSize !== null && b.headingSize > SECTION_HEADING_MAX_PX + 0.05)
+
 // ─── Run ──────────────────────────────────────────────────────────────────────
 await wait(`${BASE}/`, 200, 200)
 mkdirSync(OUT, {recursive: true})
@@ -474,6 +479,7 @@ try {
         if (m.innerWidth !== device.viewport.width) fail(`${key}: innerWidth is ${m.innerWidth}, not ${device.viewport.width} (the layout is not at this width)`)
         if (m.scrollWidth > m.clientWidth) fail(`${key}: horizontal scroll: scrollWidth ${m.scrollWidth} over ${m.clientWidth}`)
         if (width === '390') for (const b of m.bands) if (b.headingLines > 4 && !atFloor(b, 4)) fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at 390: ${b.heading}`)
+        for (const b of overCeiling(m)) fail(`${key}: band ${b.i} heading set at ${b.headingSize} px, over the ${SECTION_HEADING_MAX_PX} px ceiling: ${b.heading}`)
         for (const b of m.bands) if (b.ribbonLines > (Number(width) >= 992 ? 3 : 4)) fail(`${key}: band ${b.i} ribbon wraps to ${b.ribbonLines} lines at ${width}`)
         // Card photos (`[R-556]`): all or none per list, every one under the scrim, no dark context on a link.
         for (const b of m.bands.filter((x) => x.cards)) {
@@ -552,6 +558,7 @@ try {
         const stacked = ['768', '1024', '1279'].includes(width)
         phase('the stacked checks')
         for (const b of m.bands) if (b.ribbonLines > limit) fail(`${key}: band ${b.i} ribbon wraps to ${b.ribbonLines} lines at ${width} (the rule is ${limit})`)
+        for (const b of overCeiling(m)) fail(`${key}: band ${b.i} heading set at ${b.headingSize} px, over the ${SECTION_HEADING_MAX_PX} px ceiling: ${b.heading}`)
         for (const b of m.bands) {
           if (b.headingLines <= limit) continue
           if (!stacked && atFloor(b, limit)) console.log(`flow-metrics: ${key}: band ${b.i} at the readable floor (${b.headingSize} px) takes ${b.headingLines} lines, as [R-544] allows: ${b.heading}`)
