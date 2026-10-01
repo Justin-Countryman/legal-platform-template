@@ -242,14 +242,16 @@ function ContentSkeleton({m, tokens, disclaimer}: {m: Member; tokens: NapTokens 
       ))}
     </div>
   )
-  if (layout === 'twoColumnText') return <>{copy}{itemsBox('gb-cols2')}</>
+  // The heading over the items (Phase 18 session B), where the section has both.
+  const itemsHead = items.length > 0 && text(m.itemsHeading) ? <p className="gb-heading">{resolveTokenString(text(m.itemsHeading), tokens)}</p> : null
+  if (layout === 'twoColumnText') return <>{copy}{itemsHead}{itemsBox('gb-cols2')}</>
   if (layout === 'ribbon' || layout === 'statRow') {
     return <>{copy}{itemsBox('gb-row')}{layout === 'statRow' && <p className="gb-small">{disclaimer}</p>}</>
   }
   if (layout === 'statement') return copy
   // split: the copy beside its media.
   const what = media?.kind === 'video' ? 'video' : media ? 'photo' : 'no photo set'
-  return <div className="gb-cols2">{copy}<Slot wide>{what}</Slot></div>
+  return <div className="gb-cols2"><div>{copy}{itemsHead}{items.length > 0 && itemsBox('gb-row')}</div><Slot wide>{what}</Slot></div>
 }
 
 // The header's and footer's layouts, named as Header Settings and Footer Settings name them

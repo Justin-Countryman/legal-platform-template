@@ -212,6 +212,7 @@ export const SECTION_BODY = `
   // the rest are its own. Flat, like every other key here: a nested select
   // would type-check against the flat props while every key read undefined.
   headingEmphasis,
+  itemsHeading,
   mediaSide,
   showPhone,
   marquee,

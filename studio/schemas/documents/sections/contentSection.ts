@@ -156,6 +156,17 @@ export function fields({inline}: {inline: boolean}) {
       type: 'blockProse',
       hidden: hiddenUnless('split', 'twoColumnText', 'statement'),
     }),
+    // Phase 18 session B (`[R-603]`): one section, two headed halves. Beat 2 is pain then value in one section; the
+    // promises get a heading of their own over the items, one step under the section's.
+    defineField({
+      name: 'itemsHeading',
+      title: 'Heading over the items',
+      type: 'string',
+      description:
+        'Optional. A heading of its own over the items, so one section carries two halves: the heading and body first (what the visitor is worried about), then this heading and the items (what the firm promises). Left empty, the items follow the body with no heading.',
+      hidden: hiddenUnless('split', 'twoColumnText'),
+      components: {input: TokenStringInput},
+    }),
     defineField({
       name: 'items',
       title: 'Items',

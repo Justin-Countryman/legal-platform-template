@@ -4739,6 +4739,14 @@
           "type": "number"
         },
         {
+          "description": "Optional. A heading of its own over the items, so one section carries two halves: the heading and body first (what the visitor is worried about), then this heading and the items (what the firm promises). Left empty, the items follow the body with no heading.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "path": "itemsHeading",
+          "title": "Heading over the items",
+          "type": "string"
+        },
+        {
           "description": "Short points under the body, laid out in a grid by count. On a stat row each item is a tile: the title is the number (e.g. \"$40M\") and the body its caption; tiles sit four across on desktop, two on tablets and one on phones.",
           "hidden": "<predicate>",
           "jsonType": "array",
@@ -10880,6 +10888,14 @@
           "path": "canvas[]<contentSectionInline>.body[]<block>.level",
           "title": "Indentation",
           "type": "number"
+        },
+        {
+          "description": "Optional. A heading of its own over the items, so one section carries two halves: the heading and body first (what the visitor is worried about), then this heading and the items (what the firm promises). Left empty, the items follow the body with no heading.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "path": "canvas[]<contentSectionInline>.itemsHeading",
+          "title": "Heading over the items",
+          "type": "string"
         },
         {
           "description": "Short points under the body, laid out in a grid by count. On a stat row each item is a tile: the title is the number (e.g. \"$40M\") and the body its caption; tiles sit four across on desktop, two on tablets and one on phones.",

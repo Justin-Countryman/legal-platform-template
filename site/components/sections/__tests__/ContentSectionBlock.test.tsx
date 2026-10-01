@@ -291,3 +291,46 @@ describe('the marquee ribbon can be paused on the page (WCAG 2.2.2)', () => {
     expect(css).toMatch(/@utility ribbon-line \{[^}]*overflow-wrap: anywhere;/)
   })
 })
+
+// ─── Two headed halves (Phase 18 session B, item 6; `[R-603]`) ─────────────────
+//
+// Beat 2 is pain then value in one section (monorepo BI-Homepage.md). On a throwaway the promises could not carry a
+// heading of their own: one heading, one item list, a body without headings. `itemsHeading` is the heading over the
+// items, one step under the section's (h3), and the item titles step down to h4 beneath it, their size unchanged.
+describe('ContentSectionBlock: a heading over the items', () => {
+  const PAIN_VALUE = {
+    heading: 'Can you relate?',
+    body: block('You have been putting off a plan.'),
+    itemsHeading: 'Our commitment to you',
+    items: [{_key: 'a', title: 'Plain words', body: 'No jargon.'}, {_key: 'b', title: 'A fixed price', body: 'Quoted up front.'}],
+  }
+
+  it.each(['twoColumnText', 'split'] as const)('%s: the items heading sits between the body and the items, an h3 over h4 titles', (layout) => {
+    const {container} = renderSection({layout, ...PAIN_VALUE} as ContentSectionData)
+    const h3 = container.querySelector('h3')!
+    expect(h3.textContent).toBe('Our commitment to you')
+    expect([...container.querySelectorAll('h4')].map((h) => h.textContent)).toEqual(['Plain words', 'A fixed price'])
+    const text = container.textContent ?? ''
+    expect(text.indexOf('putting off')).toBeLessThan(text.indexOf('Our commitment'))
+    expect(text.indexOf('Our commitment')).toBeLessThan(text.indexOf('Plain words'))
+    // Its own size, between the section heading and the item titles, and never the section heading's class (that draws
+    // the style set's rule and is what the flow metrics read as the band's heading).
+    expect(classTokens(h3)).toEqual(expect.arrayContaining(['font-heading', 'text-2xl', 'font-bold']))
+    expect(classTokens(h3)).not.toContain('section-heading')
+    // The titles keep their size.
+    expect(classTokens(container.querySelector('h4')!)).toEqual(expect.arrayContaining(['font-heading', 'text-xl', 'font-bold']))
+  })
+
+  it('without it the titles stay h3, and an items heading with no items draws nothing', () => {
+    const plain = renderSection({layout: 'twoColumnText', heading: 'Why us', items: [{_key: 'a', title: 'Plain words'}]}).container
+    expect(plain.querySelector('h3')?.textContent).toBe('Plain words')
+    expect(plain.querySelector('h4')).toBeNull()
+    const alone = renderSection({layout: 'twoColumnText', heading: 'Why us', body: block('Text.'), itemsHeading: 'Our commitment'} as ContentSectionData).container
+    expect(alone.textContent).not.toContain('Our commitment')
+  })
+
+  it('resolves tokens in the items heading, as in the heading', () => {
+    const {container} = renderSection({layout: 'twoColumnText', ...PAIN_VALUE, itemsHeading: 'Why {{firmName}}'} as ContentSectionData, {tokens: {firmName: 'Example Law'}})
+    expect(container.querySelector('h3')?.textContent).toBe('Why Example Law')
+  })
+})

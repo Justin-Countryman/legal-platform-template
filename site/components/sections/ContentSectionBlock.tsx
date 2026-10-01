@@ -112,6 +112,9 @@ export function rendersResultClaim(data: ContentSectionData): boolean {
   return has(data.proof?.number)
 }
 
+/** The heading over the items (Phase 18 session B): 24px, between the section heading and the 20px item titles. */
+export const ITEMS_HEADING_CLASS = 'mt-8 font-heading text-2xl font-bold text-foreground'
+
 function itemsGridClass(count: number): string {
   return count > 1 ? 'grid grid-cols-1 gap-6 sm:grid-cols-2' : 'grid grid-cols-1 gap-6'
 }
@@ -195,16 +198,26 @@ export function ContentSectionBlock({
           </div>
         ) : null
 
+        // Phase 18 session B (`[R-603]`): a heading over the items, so pain then value is one section with two headed
+        // halves. One step under the section's heading, the item titles a step under it (literal tags, so the heading
+        // cascade rule sees them), their size unchanged; never the section heading's class, which draws the style set's
+        // rule and is what the flow metrics read as the band's heading.
+        const itemsHeading = has(data.itemsHeading) ? t(data.itemsHeading) : null
         const itemList =
           items.length > 0 && layout !== 'statRow' ? (
-            <ul role="list" className={`mt-8 ${itemsGridClass(items.length)}`}>
-              {items.map((item, i) => (
-                <li key={item._key ?? i} className="border-t border-border pt-4">
-                  {has(item.title) && <h3 className="font-heading text-xl font-bold text-foreground">{t(item.title)}</h3>}
-                  {has(item.body) && <p className="mt-2 text-foreground-muted">{t(item.body)}</p>}
-                </li>
-              ))}
-            </ul>
+            <>
+              {itemsHeading && <h3 className={ITEMS_HEADING_CLASS}>{itemsHeading}</h3>}
+              <ul role="list" className={`${itemsHeading ? 'mt-6' : 'mt-8'} ${itemsGridClass(items.length)}`}>
+                {items.map((item, i) => (
+                  <li key={item._key ?? i} className="border-t border-border pt-4">
+                    {has(item.title) && (itemsHeading
+                      ? <h4 className="font-heading text-xl font-bold text-foreground">{t(item.title)}</h4>
+                      : <h3 className="font-heading text-xl font-bold text-foreground">{t(item.title)}</h3>)}
+                    {has(item.body) && <p className="mt-2 text-foreground-muted">{t(item.body)}</p>}
+                  </li>
+                ))}
+              </ul>
+            </>
           ) : null
 
         const pullQuote = has(data.pullQuote?.text) ? (
