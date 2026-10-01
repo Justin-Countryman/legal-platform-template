@@ -65,6 +65,18 @@ describe('HomepageCta — the per-page override', () => {
     expect(getAllByRole('link')).toHaveLength(2)
   })
 
+  it('keeps the global line and buttons where the override leaves them empty, as GROQ answers an unset field', () => {
+    // Phase 18 session 1's ledger: a heading-only override drew the close with no line and no button,
+    // because GROQ answers every unset field as null and a null won the spread.
+    const {container, getAllByRole} = render(
+      <HomepageCta data={cta()} override={{tagline: null, heading: 'Your plan, in one meeting', description: '', buttons: []}} />,
+    )
+    expect(container.querySelector('h2')?.textContent).toBe('Your plan, in one meeting')
+    expect(container.textContent).toContain('Free consultation')
+    expect(container.textContent).toContain('No obligation, and the call is confidential.')
+    expect(getAllByRole('link')).toHaveLength(2)
+  })
+
   it('falls back to the global CTA entirely when there is no override', () => {
     const {container} = render(<HomepageCta data={cta()} override={null} />)
     expect(container.querySelector('h2')?.textContent).toBe('Talk to someone today')

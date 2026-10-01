@@ -4,7 +4,7 @@
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -63,7 +63,8 @@
           "bottom": false
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "stub / alternating.balanced": {
     "unmetNeeds": [],
@@ -123,13 +124,10 @@
         "run": {
           "index": 0,
           "length": 1
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "stub / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -193,13 +191,10 @@
         "run": {
           "index": 0,
           "length": 1
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "stub / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -266,13 +261,10 @@
         "run": {
           "index": 0,
           "length": 1
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "stub / typeOnBlack.allDark": {
     "unmetNeeds": [
@@ -334,13 +326,10 @@
         "run": {
           "index": 2,
           "length": 3
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "stub / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -405,7 +394,8 @@
         },
         "spacing": "spacious"
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "stub / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [
@@ -414,7 +404,7 @@
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -469,7 +459,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "stub / photoScrims.mostlyDark": {
     "unmetNeeds": [
@@ -478,7 +469,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -537,7 +528,8 @@
           "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "stub / floatingPanels.balanced": {
     "unmetNeeds": [],
@@ -599,7 +591,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "stub / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -662,10 +655,11 @@
         },
         "ribbonEdges": {
           "top": true,
-          "bottom": true
+          "bottom": false
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "stub / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -727,7 +721,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "stub / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -792,26 +787,23 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 2,
-          "peak": 1,
+          "length": 1,
+          "peak": 0,
           "side": "right"
         },
-        "fade": "glow",
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
-        }
+        "fade": "glow"
       }
     ],
     "close": {
       "run": {
-        "index": 1,
-        "length": 2,
-        "peak": 1,
+        "index": 0,
+        "length": 1,
+        "peak": 0,
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "stub / wedges.balanced": {
     "unmetNeeds": [],
@@ -875,13 +867,10 @@
         "run": {
           "index": 0,
           "length": 1
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "stub / stored.bridge": {
     "unmetNeeds": [],
@@ -947,14 +936,15 @@
           "bottom": false
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "migrated / quiet.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -1009,7 +999,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "migrated / alternating.balanced": {
     "unmetNeeds": [],
@@ -1071,7 +1062,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "migrated / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -1140,7 +1132,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "migrated / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -1206,7 +1199,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "migrated / typeOnBlack.allDark": {
     "unmetNeeds": [],
@@ -1268,7 +1262,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "migrated / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -1333,7 +1328,8 @@
         },
         "spacing": "spacious"
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "migrated / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [
@@ -1342,7 +1338,7 @@
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -1397,7 +1393,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "migrated / photoScrims.mostlyDark": {
     "unmetNeeds": [
@@ -1406,7 +1403,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -1461,7 +1458,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "migrated / floatingPanels.balanced": {
     "unmetNeeds": [],
@@ -1523,7 +1521,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "migrated / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -1585,7 +1584,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "migrated / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -1647,7 +1647,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "migrated / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -1712,8 +1713,8 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 2,
-          "peak": 1,
+          "length": 1,
+          "peak": 0,
           "side": "right"
         },
         "fade": "glow"
@@ -1721,13 +1722,14 @@
     ],
     "close": {
       "run": {
-        "index": 1,
-        "length": 2,
-        "peak": 1,
+        "index": 0,
+        "length": 1,
+        "peak": 0,
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "migrated / wedges.balanced": {
     "unmetNeeds": [],
@@ -1796,7 +1798,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "migrated / stored.bridge": {
     "unmetNeeds": [],
@@ -1861,14 +1864,15 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "planted / quiet.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -2097,7 +2101,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planted / alternating.balanced": {
     "unmetNeeds": [],
@@ -2333,7 +2338,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planted / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -2580,7 +2586,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planted / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -2827,7 +2834,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planted / typeOnBlack.allDark": {
     "unmetNeeds": [],
@@ -3059,7 +3067,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planted / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -3294,7 +3303,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planted / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [
@@ -3303,7 +3313,7 @@
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -3532,7 +3542,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planted / photoScrims.mostlyDark": {
     "unmetNeeds": [
@@ -3541,7 +3552,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -3770,7 +3781,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planted / floatingPanels.balanced": {
     "unmetNeeds": [],
@@ -4006,7 +4018,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planted / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -4242,7 +4255,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planted / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -4478,7 +4492,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planted / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -4762,7 +4777,8 @@
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "planted / wedges.balanced": {
     "unmetNeeds": [],
@@ -5017,7 +5033,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planted / stored.bridge": {
     "unmetNeeds": [],
@@ -5260,14 +5277,15 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "adversarial-mostly-dark / quiet.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -5394,7 +5412,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-mostly-dark / alternating.balanced": {
     "unmetNeeds": [],
@@ -5528,7 +5547,8 @@
           "length": 2
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-mostly-dark / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -5666,7 +5686,8 @@
           "length": 2
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-mostly-dark / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -5804,7 +5825,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "adversarial-mostly-dark / typeOnBlack.allDark": {
     "unmetNeeds": [],
@@ -5938,7 +5960,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-mostly-dark / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -6075,7 +6098,8 @@
         },
         "spacing": "spacious"
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-mostly-dark / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [
@@ -6084,7 +6108,7 @@
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -6207,7 +6231,8 @@
           "length": 6
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-mostly-dark / photoScrims.mostlyDark": {
     "unmetNeeds": [
@@ -6216,7 +6241,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -6343,7 +6368,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-mostly-dark / floatingPanels.balanced": {
     "unmetNeeds": [],
@@ -6473,7 +6499,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-mostly-dark / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -6607,7 +6634,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "adversarial-mostly-dark / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -6737,7 +6765,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-mostly-dark / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -6846,8 +6875,8 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -6866,8 +6895,8 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -6886,8 +6915,8 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -6895,13 +6924,14 @@
     ],
     "close": {
       "run": {
-        "index": 3,
-        "length": 4,
-        "peak": 2,
+        "index": 0,
+        "length": 1,
+        "peak": 0,
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "adversarial-mostly-dark / wedges.balanced": {
     "unmetNeeds": [],
@@ -7047,7 +7077,8 @@
           "length": 2
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-mostly-dark / stored.bridge": {
     "unmetNeeds": [],
@@ -7184,14 +7215,15 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "planning-mostly-light / quiet.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -7318,7 +7350,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-mostly-light / alternating.balanced": {
     "unmetNeeds": [],
@@ -7448,7 +7481,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-mostly-light / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -7585,7 +7619,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-mostly-light / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -7726,7 +7761,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-mostly-light / typeOnBlack.allDark": {
     "unmetNeeds": [
@@ -7858,7 +7894,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-mostly-light / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -7999,7 +8036,8 @@
         },
         "spacing": "spacious"
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-mostly-light / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [
@@ -8008,7 +8046,7 @@
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -8131,7 +8169,8 @@
           "length": 6
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-mostly-light / photoScrims.mostlyDark": {
     "unmetNeeds": [
@@ -8140,7 +8179,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -8267,7 +8306,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-mostly-light / floatingPanels.balanced": {
     "unmetNeeds": [],
@@ -8397,7 +8437,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-mostly-light / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -8531,7 +8572,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "planning-mostly-light / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -8665,7 +8707,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-mostly-light / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -8829,7 +8872,8 @@
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "planning-mostly-light / wedges.balanced": {
     "unmetNeeds": [],
@@ -8974,7 +9018,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-mostly-light / stored.bridge": {
     "unmetNeeds": [],
@@ -9108,14 +9153,15 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "multi-practice-balanced / quiet.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -9272,7 +9318,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "multi-practice-balanced / alternating.balanced": {
     "unmetNeeds": [],
@@ -9436,7 +9483,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "multi-practice-balanced / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -9608,7 +9656,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "multi-practice-balanced / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -9779,7 +9828,8 @@
           "length": 4
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "multi-practice-balanced / typeOnBlack.allDark": {
     "unmetNeeds": [
@@ -9945,7 +9995,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "multi-practice-balanced / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -10118,7 +10169,8 @@
         },
         "spacing": "spacious"
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "multi-practice-balanced / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [
@@ -10127,7 +10179,7 @@
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -10284,7 +10336,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "multi-practice-balanced / photoScrims.mostlyDark": {
     "unmetNeeds": [
@@ -10293,7 +10346,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -10450,7 +10503,8 @@
           "length": 4
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "multi-practice-balanced / floatingPanels.balanced": {
     "unmetNeeds": [],
@@ -10614,7 +10668,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "multi-practice-balanced / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -10778,7 +10833,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "multi-practice-balanced / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -10942,7 +10998,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "multi-practice-balanced / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -11067,7 +11124,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 5,
+          "length": 4,
           "peak": 2,
           "side": "right"
         },
@@ -11087,7 +11144,7 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 5,
+          "length": 4,
           "peak": 2,
           "side": "right"
         },
@@ -11107,7 +11164,7 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 5,
+          "length": 4,
           "peak": 2,
           "side": "right"
         },
@@ -11127,7 +11184,7 @@
         "raisePhoto": false,
         "run": {
           "index": 3,
-          "length": 5,
+          "length": 4,
           "peak": 2,
           "side": "right"
         },
@@ -11136,13 +11193,14 @@
     ],
     "close": {
       "run": {
-        "index": 4,
-        "length": 5,
-        "peak": 2,
+        "index": 0,
+        "length": 1,
+        "peak": 0,
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "multi-practice-balanced / wedges.balanced": {
     "unmetNeeds": [],
@@ -11322,7 +11380,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "multi-practice-balanced / stored.bridge": {
     "unmetNeeds": [],
@@ -11486,14 +11545,15 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "ribbons-mostly-light / quiet.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -11624,7 +11684,8 @@
           "bottom": false
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "ribbons-mostly-light / alternating.balanced": {
     "unmetNeeds": [],
@@ -11756,13 +11817,10 @@
         "run": {
           "index": 0,
           "length": 1
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "ribbons-mostly-light / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -11902,13 +11960,10 @@
         "run": {
           "index": 0,
           "length": 1
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "ribbons-mostly-light / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -12047,10 +12102,11 @@
         },
         "ribbonEdges": {
           "top": true,
-          "bottom": true
+          "bottom": false
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "ribbons-mostly-light / typeOnBlack.allDark": {
     "unmetNeeds": [],
@@ -12182,13 +12238,10 @@
         "run": {
           "index": 6,
           "length": 7
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "ribbons-mostly-light / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -12325,14 +12378,15 @@
         },
         "spacing": "spacious"
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "ribbons-mostly-light / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -12455,7 +12509,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "ribbons-mostly-light / photoScrims.mostlyDark": {
     "unmetNeeds": [
@@ -12464,7 +12519,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -12595,7 +12650,8 @@
           "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "ribbons-mostly-light / floatingPanels.balanced": {
     "unmetNeeds": [],
@@ -12725,7 +12781,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "ribbons-mostly-light / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -12860,10 +12917,11 @@
         },
         "ribbonEdges": {
           "top": true,
-          "bottom": true
+          "bottom": false
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "ribbons-mostly-light / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -12993,7 +13051,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "ribbons-mostly-light / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -13102,8 +13161,8 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -13122,8 +13181,8 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -13142,26 +13201,27 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow",
         "ribbonEdges": {
           "top": true,
-          "bottom": true
+          "bottom": false
         }
       }
     ],
     "close": {
       "run": {
-        "index": 3,
-        "length": 4,
-        "peak": 2,
+        "index": 0,
+        "length": 1,
+        "peak": 0,
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "ribbons-mostly-light / wedges.balanced": {
     "unmetNeeds": [],
@@ -13309,13 +13369,10 @@
         "run": {
           "index": 0,
           "length": 1
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "ribbons-mostly-light / stored.bridge": {
     "unmetNeeds": [],
@@ -13456,14 +13513,15 @@
           "bottom": false
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "adversarial-photo-hero / quiet.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -13590,7 +13648,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-photo-hero / alternating.balanced": {
     "unmetNeeds": [],
@@ -13724,7 +13783,8 @@
           "length": 2
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-photo-hero / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -13865,7 +13925,8 @@
           "length": 2
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-photo-hero / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -14006,7 +14067,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "adversarial-photo-hero / typeOnBlack.allDark": {
     "unmetNeeds": [],
@@ -14136,7 +14198,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-photo-hero / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -14273,7 +14336,8 @@
         },
         "spacing": "spacious"
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-photo-hero / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [
@@ -14282,7 +14346,7 @@
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -14405,14 +14469,15 @@
           "length": 6
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-photo-hero / photoScrims.mostlyDark": {
     "unmetNeeds": [],
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -14543,7 +14608,8 @@
           "length": 2
         }
       }
-    ]
+    ],
+    "closeGround": "photo"
   },
   "adversarial-photo-hero / floatingPanels.balanced": {
     "unmetNeeds": [],
@@ -14673,7 +14739,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-photo-hero / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -14807,7 +14874,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "adversarial-photo-hero / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -14937,7 +15005,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-photo-hero / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -15046,8 +15115,8 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -15066,8 +15135,8 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -15086,8 +15155,8 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -15095,13 +15164,14 @@
     ],
     "close": {
       "run": {
-        "index": 3,
-        "length": 4,
-        "peak": 2,
+        "index": 0,
+        "length": 1,
+        "peak": 0,
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "adversarial-photo-hero / wedges.balanced": {
     "unmetNeeds": [],
@@ -15250,7 +15320,8 @@
           "length": 2
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-photo-hero / stored.bridge": {
     "unmetNeeds": [],
@@ -15387,14 +15458,15 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "planning-photo-hero / quiet.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -15521,7 +15593,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-photo-hero / alternating.balanced": {
     "unmetNeeds": [],
@@ -15651,7 +15724,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-hero / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -15788,7 +15862,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-hero / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -15929,7 +16004,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-hero / typeOnBlack.allDark": {
     "unmetNeeds": [],
@@ -16059,7 +16135,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-hero / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -16196,7 +16273,8 @@
         },
         "spacing": "spacious"
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-photo-hero / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [
@@ -16205,7 +16283,7 @@
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -16328,14 +16406,15 @@
           "length": 6
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-photo-hero / photoScrims.mostlyDark": {
     "unmetNeeds": [],
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -16466,7 +16545,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "photo"
   },
   "planning-photo-hero / floatingPanels.balanced": {
     "unmetNeeds": [],
@@ -16596,7 +16676,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-hero / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -16730,7 +16811,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "planning-photo-hero / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -16860,7 +16942,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-photo-hero / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -17024,7 +17107,8 @@
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "planning-photo-hero / wedges.balanced": {
     "unmetNeeds": [],
@@ -17169,7 +17253,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-hero / stored.bridge": {
     "unmetNeeds": [],
@@ -17306,14 +17391,15 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "multi-practice-photo-hero / quiet.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -17470,7 +17556,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "multi-practice-photo-hero / alternating.balanced": {
     "unmetNeeds": [],
@@ -17634,7 +17721,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "multi-practice-photo-hero / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -17809,7 +17897,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "multi-practice-photo-hero / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -17980,7 +18069,8 @@
           "length": 4
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "multi-practice-photo-hero / typeOnBlack.allDark": {
     "unmetNeeds": [],
@@ -18144,7 +18234,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "multi-practice-photo-hero / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -18317,7 +18408,8 @@
         },
         "spacing": "spacious"
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "multi-practice-photo-hero / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [
@@ -18326,7 +18418,7 @@
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -18483,14 +18575,15 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "multi-practice-photo-hero / photoScrims.mostlyDark": {
     "unmetNeeds": [],
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -18655,7 +18748,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "photo"
   },
   "multi-practice-photo-hero / floatingPanels.balanced": {
     "unmetNeeds": [],
@@ -18819,7 +18913,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "multi-practice-photo-hero / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -18983,7 +19078,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "multi-practice-photo-hero / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -19147,7 +19243,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "multi-practice-photo-hero / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -19272,7 +19369,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 5,
+          "length": 4,
           "peak": 2,
           "side": "right"
         },
@@ -19292,7 +19389,7 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 5,
+          "length": 4,
           "peak": 2,
           "side": "right"
         },
@@ -19312,7 +19409,7 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 5,
+          "length": 4,
           "peak": 2,
           "side": "right"
         },
@@ -19332,7 +19429,7 @@
         "raisePhoto": false,
         "run": {
           "index": 3,
-          "length": 5,
+          "length": 4,
           "peak": 2,
           "side": "right"
         },
@@ -19341,13 +19438,14 @@
     ],
     "close": {
       "run": {
-        "index": 4,
-        "length": 5,
-        "peak": 2,
+        "index": 0,
+        "length": 1,
+        "peak": 0,
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "multi-practice-photo-hero / wedges.balanced": {
     "unmetNeeds": [],
@@ -19530,7 +19628,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "multi-practice-photo-hero / stored.bridge": {
     "unmetNeeds": [],
@@ -19697,14 +19796,15 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "adversarial-cutout / quiet.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -19831,7 +19931,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-cutout / alternating.balanced": {
     "unmetNeeds": [],
@@ -19965,7 +20066,8 @@
           "length": 2
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-cutout / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -20103,7 +20205,8 @@
           "length": 2
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-cutout / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -20241,7 +20344,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "adversarial-cutout / typeOnBlack.allDark": {
     "unmetNeeds": [],
@@ -20375,7 +20479,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-cutout / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -20512,7 +20617,8 @@
         },
         "spacing": "spacious"
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-cutout / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [
@@ -20521,7 +20627,7 @@
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -20644,7 +20750,8 @@
           "length": 6
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-cutout / photoScrims.mostlyDark": {
     "unmetNeeds": [
@@ -20653,7 +20760,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -20780,7 +20887,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-cutout / floatingPanels.balanced": {
     "unmetNeeds": [],
@@ -20910,7 +21018,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-cutout / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -21044,7 +21153,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "adversarial-cutout / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -21174,7 +21284,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-cutout / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -21283,7 +21394,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 4,
+          "length": 3,
           "peak": 2,
           "side": "right"
         },
@@ -21303,7 +21414,7 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 4,
+          "length": 3,
           "peak": 2,
           "side": "right"
         },
@@ -21323,7 +21434,7 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 4,
+          "length": 3,
           "peak": 2,
           "side": "right"
         },
@@ -21332,13 +21443,14 @@
     ],
     "close": {
       "run": {
-        "index": 3,
-        "length": 4,
-        "peak": 2,
+        "index": 0,
+        "length": 1,
+        "peak": 0,
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "adversarial-cutout / wedges.balanced": {
     "unmetNeeds": [],
@@ -21484,7 +21596,8 @@
           "length": 2
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-cutout / stored.bridge": {
     "unmetNeeds": [],
@@ -21621,14 +21734,15 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "adversarial-photo-set / quiet.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -21755,7 +21869,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-photo-set / alternating.balanced": {
     "unmetNeeds": [],
@@ -21889,7 +22004,8 @@
           "length": 2
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-photo-set / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -22030,7 +22146,8 @@
           "length": 2
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-photo-set / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -22171,7 +22288,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "adversarial-photo-set / typeOnBlack.allDark": {
     "unmetNeeds": [],
@@ -22301,7 +22419,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-photo-set / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -22438,7 +22557,8 @@
         },
         "spacing": "spacious"
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-photo-set / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [
@@ -22447,7 +22567,7 @@
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -22570,14 +22690,15 @@
           "length": 6
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-photo-set / photoScrims.mostlyDark": {
     "unmetNeeds": [],
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -22717,6 +22838,7 @@
         }
       }
     ],
+    "closeGround": "photo",
     "closePhoto": "image-fxstandincincinnatiriverfront-2400x1920-jpg"
   },
   "adversarial-photo-set / floatingPanels.balanced": {
@@ -22847,7 +22969,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-photo-set / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -22981,7 +23104,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "adversarial-photo-set / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -23111,7 +23235,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "adversarial-photo-set / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -23220,8 +23345,8 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -23240,8 +23365,8 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -23260,8 +23385,8 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -23269,13 +23394,14 @@
     ],
     "close": {
       "run": {
-        "index": 3,
-        "length": 4,
-        "peak": 2,
+        "index": 0,
+        "length": 1,
+        "peak": 0,
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "adversarial-photo-set / wedges.balanced": {
     "unmetNeeds": [],
@@ -23424,7 +23550,8 @@
           "length": 2
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "adversarial-photo-set / stored.bridge": {
     "unmetNeeds": [],
@@ -23561,14 +23688,15 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "planning-photo-set / quiet.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -23695,7 +23823,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-photo-set / alternating.balanced": {
     "unmetNeeds": [],
@@ -23825,7 +23954,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-set / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -23962,7 +24092,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-set / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -24103,7 +24234,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-set / typeOnBlack.allDark": {
     "unmetNeeds": [],
@@ -24233,7 +24365,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-set / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -24370,7 +24503,8 @@
         },
         "spacing": "spacious"
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-photo-set / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [
@@ -24379,7 +24513,7 @@
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -24502,14 +24636,15 @@
           "length": 6
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-photo-set / photoScrims.mostlyDark": {
     "unmetNeeds": [],
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -24651,6 +24786,7 @@
         }
       }
     ],
+    "closeGround": "photo",
     "closePhoto": "image-fxstandincincinnatiriverfront-2400x1920-jpg"
   },
   "planning-photo-set / floatingPanels.balanced": {
@@ -24781,7 +24917,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-set / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -24915,7 +25052,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "planning-photo-set / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -25045,7 +25183,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-photo-set / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -25209,7 +25348,8 @@
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "planning-photo-set / wedges.balanced": {
     "unmetNeeds": [],
@@ -25354,7 +25494,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-set / stored.bridge": {
     "unmetNeeds": [],
@@ -25491,14 +25632,15 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "multi-practice-photo-set / quiet.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -25655,7 +25797,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "multi-practice-photo-set / alternating.balanced": {
     "unmetNeeds": [],
@@ -25819,7 +25962,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "multi-practice-photo-set / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -25994,7 +26138,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "multi-practice-photo-set / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -26165,7 +26310,8 @@
           "length": 4
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "multi-practice-photo-set / typeOnBlack.allDark": {
     "unmetNeeds": [],
@@ -26329,7 +26475,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "multi-practice-photo-set / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -26502,7 +26649,8 @@
         },
         "spacing": "spacious"
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "multi-practice-photo-set / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [
@@ -26511,7 +26659,7 @@
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -26668,14 +26816,15 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "multi-practice-photo-set / photoScrims.mostlyDark": {
     "unmetNeeds": [],
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -26851,6 +27000,7 @@
         }
       }
     ],
+    "closeGround": "photo",
     "closePhoto": "image-fxstandincincinnatiriverfront-2400x1920-jpg"
   },
   "multi-practice-photo-set / floatingPanels.balanced": {
@@ -27015,7 +27165,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "multi-practice-photo-set / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -27179,7 +27330,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "multi-practice-photo-set / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -27343,7 +27495,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "multi-practice-photo-set / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -27468,7 +27621,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 5,
+          "length": 4,
           "peak": 2,
           "side": "right"
         },
@@ -27488,7 +27641,7 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 5,
+          "length": 4,
           "peak": 2,
           "side": "right"
         },
@@ -27508,7 +27661,7 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 5,
+          "length": 4,
           "peak": 2,
           "side": "right"
         },
@@ -27528,7 +27681,7 @@
         "raisePhoto": false,
         "run": {
           "index": 3,
-          "length": 5,
+          "length": 4,
           "peak": 2,
           "side": "right"
         },
@@ -27537,13 +27690,14 @@
     ],
     "close": {
       "run": {
-        "index": 4,
-        "length": 5,
-        "peak": 2,
+        "index": 0,
+        "length": 1,
+        "peak": 0,
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "multi-practice-photo-set / wedges.balanced": {
     "unmetNeeds": [],
@@ -27726,7 +27880,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "multi-practice-photo-set / stored.bridge": {
     "unmetNeeds": [],
@@ -27893,14 +28048,15 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "planning-photo-set-no-hero-photo / quiet.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -28027,7 +28183,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-photo-set-no-hero-photo / alternating.balanced": {
     "unmetNeeds": [],
@@ -28157,7 +28314,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-set-no-hero-photo / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -28294,7 +28452,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-set-no-hero-photo / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -28435,7 +28594,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-set-no-hero-photo / typeOnBlack.allDark": {
     "unmetNeeds": [
@@ -28567,7 +28727,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-set-no-hero-photo / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -28708,7 +28869,8 @@
         },
         "spacing": "spacious"
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-photo-set-no-hero-photo / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [
@@ -28717,7 +28879,7 @@
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -28840,7 +29002,8 @@
           "length": 6
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-photo-set-no-hero-photo / photoScrims.mostlyDark": {
     "unmetNeeds": [
@@ -28849,7 +29012,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -28976,7 +29139,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-photo-set-no-hero-photo / floatingPanels.balanced": {
     "unmetNeeds": [],
@@ -29106,7 +29270,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-set-no-hero-photo / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -29240,7 +29405,8 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "planning-photo-set-no-hero-photo / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -29374,7 +29540,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "planning-photo-set-no-hero-photo / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -29538,7 +29705,8 @@
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "planning-photo-set-no-hero-photo / wedges.balanced": {
     "unmetNeeds": [],
@@ -29683,7 +29851,8 @@
           "length": 3
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "planning-photo-set-no-hero-photo / stored.bridge": {
     "unmetNeeds": [],
@@ -29817,14 +29986,15 @@
           "length": 7
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "composed-ribbons / quiet.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -29921,7 +30091,8 @@
           "bottom": false
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "composed-ribbons / alternating.balanced": {
     "unmetNeeds": [],
@@ -30019,13 +30190,10 @@
         "run": {
           "index": 0,
           "length": 1
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "composed-ribbons / cutBlocks.balanced": {
     "unmetNeeds": [],
@@ -30127,13 +30295,10 @@
         "run": {
           "index": 0,
           "length": 1
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "composed-ribbons / cutBlocks.mostlyDark": {
     "unmetNeeds": [],
@@ -30238,10 +30403,11 @@
         },
         "ribbonEdges": {
           "top": true,
-          "bottom": true
+          "bottom": false
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "composed-ribbons / typeOnBlack.allDark": {
     "unmetNeeds": [],
@@ -30339,13 +30505,10 @@
         "run": {
           "index": 4,
           "length": 5
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "composed-ribbons / editorial.mostlyLight": {
     "unmetNeeds": [],
@@ -30446,14 +30609,15 @@
         },
         "spacing": "spacious"
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "composed-ribbons / ribbonRhythm.mostlyLight": {
     "unmetNeeds": [],
     "chrome": {
       "top": "light",
       "scrolled": "light",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -30542,7 +30706,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "composed-ribbons / photoScrims.mostlyDark": {
     "unmetNeeds": [
@@ -30551,7 +30716,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -30648,7 +30813,8 @@
           "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "composed-ribbons / floatingPanels.balanced": {
     "unmetNeeds": [],
@@ -30744,7 +30910,8 @@
           "length": 5
         }
       }
-    ]
+    ],
+    "closeGround": "saturated"
   },
   "composed-ribbons / floatingPanels.mostlyDark": {
     "unmetNeeds": [],
@@ -30845,10 +31012,11 @@
         },
         "ribbonEdges": {
           "top": true,
-          "bottom": true
+          "bottom": false
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "composed-ribbons / softWash.mostlyLight": {
     "unmetNeeds": [],
@@ -30944,7 +31112,8 @@
           "length": 1
         }
       }
-    ]
+    ],
+    "closeGround": "dark"
   },
   "composed-ribbons / gradientBloom.mostlyDark": {
     "unmetNeeds": [],
@@ -31033,7 +31202,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 3,
+          "length": 2,
           "peak": 1,
           "side": "right"
         },
@@ -31053,26 +31222,27 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 3,
+          "length": 2,
           "peak": 1,
           "side": "right"
         },
         "fade": "glow",
         "ribbonEdges": {
           "top": true,
-          "bottom": true
+          "bottom": false
         }
       }
     ],
     "close": {
       "run": {
-        "index": 2,
-        "length": 3,
-        "peak": 1,
+        "index": 0,
+        "length": 1,
+        "peak": 0,
         "side": "right"
       },
       "fade": "glow"
-    }
+    },
+    "closeGround": "saturated"
   },
   "composed-ribbons / wedges.balanced": {
     "unmetNeeds": [],
@@ -31178,13 +31348,10 @@
         "run": {
           "index": 0,
           "length": 1
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   },
   "composed-ribbons / stored.bridge": {
     "unmetNeeds": [],
@@ -31291,6 +31458,7 @@
           "bottom": false
         }
       }
-    ]
+    ],
+    "closeGround": "muted"
   }
 }

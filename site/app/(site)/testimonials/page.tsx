@@ -3,7 +3,7 @@ export const revalidate = 3600
 import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {TESTIMONIALS_PAGE_QUERY} from '@/lib/sanity/queries'
-import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
+import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome, chromeClose} from '@/lib/sanity/fetchers'
 import {headingFaceWithAdvances} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
@@ -14,6 +14,7 @@ import {Breadcrumbs} from '@/components/ui/Breadcrumbs'
 import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {siteHost} from '@/lib/siteHost'
 import {GlobalCta} from '@/components/sections/GlobalCta'
+import {withCtaOverride} from '@/lib/ctaOverride'
 import {TestimonialCard, type TestimonialData} from '@/components/ui/TestimonialCard'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -100,7 +101,7 @@ export default async function TestimonialsPage() {
       {/* Global CTA */}
       {!page?.hideCtaForm && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={page?.ctaOverride ? {...globalCtaData, ...page.ctaOverride} : globalCtaData}
+          data={withCtaOverride(globalCtaData, page?.ctaOverride)} surface={await chromeClose()}
           napTokens={tokens}
         />
       )}

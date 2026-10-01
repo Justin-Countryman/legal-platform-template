@@ -3,7 +3,7 @@ import {readFileSync} from 'node:fs'
 import {resolve} from 'node:path'
 import {
   CLOSES, DARKNESS, DARK_BUDGETS, DARK_PAINTS, DARK_RHYTHMS, DEFAULT_FLOW, DIVIDER_ATS, FAMILIES, FLOWS, GHOSTS, HAIRLINES, HAIRLINE_INKS, HIDDEN_FIELDS,
-  HOSTS, LIGHT_PAINTS, NEEDS, SPACINGS, STEP_HOSTS, bridgeOf, closeSurface, darkBudget, flowById, flowOf, hostOf, impliedNeeds, needLabel, saturatedFillOk,
+  HOSTS, LIGHT_PAINTS, NEEDS, SPACINGS, STEP_HOSTS, bridgeOf, closeOf, darkBudget, flowById, flowOf, hostOf, impliedNeeds, needLabel, saturatedFillOk,
   storesHiddenFields, unmetNeeds, CHROME_SCHEMES, STEP_CHROME, chromeSchemes, darkHeaderReady, drawsHeroPhoto, familyOf, TEXTURE_STRENGTHS, fadeOf,} from '../flows'
 import {DIVIDERS, CARRY_PIECES} from '../dividers'
 import {OVERLAPS} from '../overlaps'
@@ -107,7 +107,11 @@ describe('the families and the roster', () => {
     expect(sw.light.paint).toBe('washes')
     expect(sw).toMatchObject({ghost: 'none', overlap: 'none', spacing: 'normal', needs: [], chrome: {header: 'light', footer: 'light'}})
     expect(sw.divider).toMatchObject({shape: 'straight', at: 'none', hairline: 'none'})
-    expect(closeSurface(sw, true)).toBe('wash')
+    // Its own close is the wash; beside its light footer the close takes the dark ground (`[R-597]`), and beside a
+    // stored dark footer the wash stands (`closeApart.test.ts` holds every theme).
+    const navy = presetInputs(PALETTE_PRESETS.find((p) => p.id === 'navy-brass')!)
+    expect(closeOf(sw, {footer: 'light', above: 'light', heroPhoto: false, colors: navy})).toBe('dark')
+    expect(closeOf(sw, {footer: 'dark', above: 'light', heroPhoto: false, colors: navy})).toBe('wash')
     // Only Soft wash washes, and only its close is the wash.
     expect(FLOWS.filter((f) => f.light.paint === 'washes' || f.dark.close === 'wash').map((f) => f.id)).toEqual(['softWash.mostlyLight'])
   })
@@ -135,7 +139,7 @@ describe('the families and the roster', () => {
     expect(ps.dark).toMatchObject({budget: 'threeQuarters', rhythm: 'runs', paint: 'heroPhoto', close: 'photo'})
     expect(ps.dark.hosts).toEqual(STEP_HOSTS.mostlyDark)
     expect(ps.divider).toMatchObject({shape: 'straight', at: 'none', hairline: 'none'})
-    expect(ps).toMatchObject({ghost: 'none', overlap: 'none', spacing: 'normal', needs: ['heroPhoto'], chrome: {header: 'dark', footer: 'dark'}})
+    expect(ps).toMatchObject({ghost: 'none', overlap: 'none', spacing: 'normal', needs: ['heroPhoto'], chrome: {header: 'dark', footer: 'light'}})
     expect(familyOf(ps)!.steps).toEqual(['mostlyDark'])
     expect(drawsHeroPhoto(ps)).toBe(true)
     // It is the only theme that draws the hero's photograph, and no other theme's close is a photo.
@@ -148,10 +152,11 @@ describe('the families and the roster', () => {
     const facts = {hosts: [], photos: 0, texture: false, initials: false}
     expect(unmetNeeds(ps, facts)).toEqual(['heroPhoto'])
     expect(unmetNeeds(ps, {...facts, heroPhoto: true})).toEqual([])
-    expect(closeSurface(ps, true, false)).toBe('dark')
-    expect(closeSurface(ps, true, true)).toBe('photo')
+    const navy = presetInputs(PALETTE_PRESETS.find((p) => p.id === 'navy-brass')!)
+    expect(closeOf(ps, {footer: ps.chrome.footer, above: 'dark', heroPhoto: false, colors: navy})).toBe('dark')
+    expect(closeOf(ps, {footer: ps.chrome.footer, above: 'dark', heroPhoto: true, colors: navy})).toBe('photo')
     // No other theme's close asks for the photograph.
-    for (const f of FLOWS.filter((x) => x.dark.close !== 'photo')) expect(closeSurface(f, true, true)).not.toBe('photo')
+    for (const f of FLOWS.filter((x) => x.dark.close !== 'photo')) expect(closeOf(f, {footer: f.chrome.footer, above: null, heroPhoto: true, colors: navy})).not.toBe('photo')
   })
 
   it('session 5’s families are the record’s §2.2 to §2.4, written out', () => {
@@ -322,7 +327,7 @@ describe('the compat bridge, for one pin', () => {
     expect(b.spacing).toBe('normal')
     expect(b.ghost).toBe('once')
     expect(b.overlap).toBe('photo')
-    expect(b.dark).toEqual({budget: 'none', hosts: [], rhythm: 'bookends', paint: 'gradient', texture: 'quiet', close: 'muted'})
+    expect(b.dark).toEqual({budget: 'none', hosts: [], rhythm: 'bookends', paint: 'gradient', texture: 'quiet', close: 'muted', closeElse: []})
     expect(b.light.paint).toBe('plain')
     // Unknown values read as nothing, as the site read them.
     const none = bridgeOf({sectionJoin: 'squiggle', sectionOverlap: 'yes', brandGhost: 'true', sectionGradient: 'shallow'})
@@ -374,13 +379,15 @@ describe('needs and gates', () => {
     expect(saturatedFillOk({darkGround: '#1c2b4a', lightGround: '#ffffff', accent: '#777777'})).toBe(false)
   })
 
-  it('the close falls back to dark where the fill is refused', () => {
+  it('the close never draws the fill a palette refuses, and falls to a ground apart from the footer', () => {
     const q = flowById('quiet.mostlyLight')!
-    expect(closeSurface(q, false)).toBe('dark')
-    expect(closeSurface({...q, dark: {...q.dark, close: 'saturated'}}, false)).toBe('dark')
-    expect(closeSurface({...q, dark: {...q.dark, close: 'saturated'}}, true)).toBe('saturated')
-    expect(closeSurface({...q, dark: {...q.dark, close: 'muted'}}, true)).toBe('muted')
-    expect(closeSurface(null, true)).toBe('muted')
+    const navy = presetInputs(PALETTE_PRESETS.find((p) => p.id === 'navy-brass')!)
+    const facts = (colors: Record<string, unknown>) => ({footer: 'light' as const, above: null, heroPhoto: false, colors})
+    expect(closeOf(q, facts({}))).toBe('dark')
+    expect(closeOf({...q, dark: {...q.dark, close: 'saturated', closeElse: []}}, facts({}))).toBe('dark')
+    expect(closeOf({...q, dark: {...q.dark, close: 'saturated', closeElse: []}}, facts(navy))).toBe('saturated')
+    expect(closeOf({...q, dark: {...q.dark, close: 'muted', closeElse: []}}, {...facts(navy), footer: 'dark'})).toBe('muted')
+    expect(closeOf(null, {...facts(navy), footer: 'dark'})).toBe('muted')
   })
 })
 
@@ -418,14 +425,17 @@ describe('the header and the footer (Phase 17B session 4, [R-518])', () => {
       allDark: {header: 'dark', footer: 'dark'},
     })
     // Every family takes its step's chrome but those that name their own: Editorial's and Soft wash's
-    // light footer, from their evidence sites (session 5 record §2.4; Phase 17D record §2.3).
-    for (const f of FLOWS) expect(f.chrome, f.id).toEqual(['editorial', 'softWash'].includes(f.family) ? {header: 'light', footer: 'light'} : STEP_CHROME[f.step])
+    // light footer, from their evidence sites (session 5 record §2.4; Phase 17D record §2.3); and since Phase 18
+    // session B (`[R-597]`, `[R-603]`) the light footer under the dark close of Quiet and Ribbon rhythm and under Photo
+    // scrims' photograph close, so the close never takes the footer's color.
+    const lightFooter = ['editorial', 'softWash', 'quiet', 'ribbonRhythm', 'photoScrims']
+    for (const f of FLOWS) expect(f.chrome, f.id).toEqual(lightFooter.includes(f.family) ? {header: STEP_CHROME[f.step].header, footer: 'light'} : STEP_CHROME[f.step])
   })
 
-  it('the bridge and the platform default give what every client renders today: a light header, a dark footer', () => {
+  it('the bridge renders a light header and a dark footer as before; the platform default ends on a light footer under its dark close ([R-603])', () => {
     expect(bridgeOf({sectionJoin: 'angled'}).chrome).toEqual({header: 'light', footer: 'dark'})
-    expect(flowOf(null).chrome).toEqual({header: 'light', footer: 'dark'})
-    expect(flowById(DEFAULT_FLOW)!.chrome).toEqual({header: 'light', footer: 'dark'})
+    expect(flowOf(null).chrome).toEqual({header: 'light', footer: 'light'})
+    expect(flowById(DEFAULT_FLOW)!.chrome).toEqual({header: 'light', footer: 'light'})
   })
 
   it('a stored scheme wins, per field; the theme fills what is absent', () => {
@@ -437,7 +447,7 @@ describe('the header and the footer (Phase 17B session 4, [R-518])', () => {
     const quiet = byId('quiet.mostlyLight')
     expect(chromeSchemes(quiet, {defaultScheme: 'transparent-dark'}, null, logos)).toMatchObject({top: 'transparent-dark', scrolled: 'light'})
     // An unknown stored footer value is not a scheme: the theme's.
-    expect(chromeSchemes(quiet, null, {footerScheme: 'blue'}, logos).footer).toBe('dark')
+    expect(chromeSchemes(quiet, null, {footerScheme: 'blue'}, logos).footer).toBe('light')
   })
 
   it('the theme never yields a transparent value, merged header or not', () => {

@@ -2,6 +2,7 @@ import {resolveHeroConfig} from '@/components/layout/homeHero/config'
 import type {HomeHeroData} from '@/components/layout/homeHero/types'
 import type {VisibleGround} from './sectionSurface'
 import type {HeroImage} from './heroSurface'
+import type {FlowRules} from './flows'
 
 // ─── The hero's bottom ground (Phase 16C) ─────────────────────────────────────
 // What the first section meets at the hero's bottom, answered on the server from the
@@ -10,13 +11,28 @@ import type {HeroImage} from './heroSurface'
 // image reaches the bottom) is `image`; otherwise the hero's scheme: the tint step on a
 // light hero, the dark ground on a dark one. The first section rises into the hero in
 // its own ground, so the hero's own color never has to be known exactly (ADV-P16C-A).
-export function heroGround(hero: HomeHeroData | null): VisibleGround {
+export function heroGround(hero: HomeHeroData | null, flow: Pick<FlowRules, 'light'> | null = null): VisibleGround {
   if (!hero) return 'light'
   const c = resolveHeroConfig(hero)
   if (c.skeleton === 'overlay' && (c.backdrop === 'image' || c.backdrop === 'mosaic')) return 'image'
   if (hero.sectionBackgroundImage?.src) return 'image'
   if (c.skeleton === 'split' && c.splitImageStyle === 'full' && c.splitMedia === 'image') return 'image'
-  return hero.schemeOverride === 'light' ? 'tint' : 'dark'
+  if (hero.schemeOverride !== 'light') return 'dark'
+  return heroPaint(hero, flow) === 'wash' ? 'wash' : 'tint'
+}
+
+// ─── The light hero's paint (Phase 18 session B, `[R-603]`) ────────────────────
+// Justin, of Soft wash on a throwaway: "I would expect the hero to be the warm color bg and not the grey". A light hero
+// painted the tint, the ground at L -0.015 (ΔE2000 1.0 from the page on every preset), which on a white page reads as a
+// grey step. Under a theme that paints washes it paints the wash: wherever the band's own ground shows, which is every
+// light hero but one with a photograph, a mosaic or a section background behind it (the text half of a full-bleed split
+// included, whose band paints behind that half). `heroGround` stays what the first band meets.
+export function heroPaint(hero: HomeHeroData | null, flow: Pick<FlowRules, 'light'> | null | undefined): 'wash' | null {
+  if (!hero || flow?.light.paint !== 'washes' || hero.schemeOverride !== 'light') return null
+  const c = resolveHeroConfig(hero)
+  if (c.skeleton === 'overlay' && (c.backdrop === 'image' || c.backdrop === 'mosaic')) return null
+  if (hero.sectionBackgroundImage?.src) return null
+  return 'wash'
 }
 
 // ─── The hero's photograph as a page ground (Phase 17B session 6, `[R-530]`) ───

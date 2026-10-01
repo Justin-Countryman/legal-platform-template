@@ -97,6 +97,13 @@ describe('GreyBox', () => {
     expect(text).toContain('Site footer · Anchor')
   })
 
+  it('keeps the site close\'s line and button where the homepage override leaves them empty (as GROQ answers it)', () => {
+    const text = draw({canvas: [], ctaOverride: {tagline: null, heading: 'Start your plan', description: null, buttons: null}}).textContent ?? ''
+    expect(text).toContain('Start your plan')
+    expect(text).toContain('Free first call.')
+    expect(text).toContain('Call now')
+  })
+
   it('labels the header and footer with the layouts the build picked, and the offices the footer shows', () => {
     const picked = {
       ...(chrome as object),

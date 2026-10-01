@@ -6,7 +6,7 @@ import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import Link from 'next/link'
 import {ATTORNEY_INDEX_QUERY, ATTORNEY_PAGES_QUERY} from '@/lib/sanity/queries'
-import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
+import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome, chromeClose} from '@/lib/sanity/fetchers'
 import {headingFaceWithAdvances} from '@/lib/headingAdvances'
 import {headingFit} from '@/lib/headingFit'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
@@ -20,6 +20,7 @@ import {siteHost} from '@/lib/siteHost'
 import {Button} from '@/components/ui/Button'
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {GlobalCta} from '@/components/sections/GlobalCta'
+import {withCtaOverride} from '@/lib/ctaOverride'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -227,11 +228,7 @@ export default async function AttorneyIndexPage() {
       {/* Global CTA */}
       {!(indexPage?.hideCtaForm) && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={
-            indexPage?.ctaOverride
-              ? {...globalCtaData, ...indexPage.ctaOverride}
-              : globalCtaData
-          }
+          data={withCtaOverride(globalCtaData, indexPage?.ctaOverride)} surface={await chromeClose()}
           napTokens={tokens}
         />
       )}

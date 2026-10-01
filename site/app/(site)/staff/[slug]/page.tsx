@@ -4,12 +4,13 @@ import type {Metadata} from 'next'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {notFound} from 'next/navigation'
 import {STAFF_PAGE_QUERY, STAFF_SLUGS_QUERY} from '@/lib/sanity/queries'
-import {chromeDesignTokens, chromeGlobalCta, chromeNap, fetchCached, getSiteChrome} from '@/lib/sanity/fetchers'
+import {chromeDesignTokens, chromeGlobalCta, chromeNap, fetchCached, getSiteChrome, chromeClose} from '@/lib/sanity/fetchers'
 import {headingFaceWithAdvances} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
 import {resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {GlobalCta} from '@/components/sections/GlobalCta'
+import {withCtaOverride} from '@/lib/ctaOverride'
 import {SplitHeroLayout} from '@/components/staff/layouts/SplitHeroLayout'
 import {ClassicSidebarLayout} from '@/components/staff/layouts/ClassicSidebarLayout'
 import {FeatureGridLayout} from '@/components/staff/layouts/FeatureGridLayout'
@@ -114,11 +115,7 @@ export default async function StaffProfilePage({params}: PageProps) {
 
       {!member.hideCtaForm && globalCtaData && (
         <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)}
-          data={
-            member.ctaFormOverride
-              ? {...globalCtaData, ...member.ctaFormOverride}
-              : globalCtaData
-          }
+          data={withCtaOverride(globalCtaData, member.ctaFormOverride)} surface={await chromeClose()}
           napTokens={napTokens}
         />
       )}

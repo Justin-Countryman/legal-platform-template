@@ -27,7 +27,7 @@ export async function generateStaticParams() {
 import {notFound} from 'next/navigation'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import type {Metadata} from 'next'
-import {chromeGlobalCta, chromeNap, getCatchAllPage, getSiteChrome} from '@/lib/sanity/fetchers'
+import {chromeGlobalCta, chromeNap, getCatchAllPage, getSiteChrome, chromeClose} from '@/lib/sanity/fetchers'
 import {headingFaceWithAdvances, siteLookWithHeadingFace} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {aboutPageTitle, areaOfLawPageName, geoHubPageName, geoSpokePageName, locationPageName, resolveTitle, serviceAreaPageName} from '@/lib/seoTitle'
@@ -42,7 +42,8 @@ import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {FaqAccordion} from '@/components/ui/FaqAccordion'
 import {Sidebar} from '@/components/layout/Sidebar'
 import {GlobalCta} from '@/components/sections/GlobalCta'
-import {PageSections} from '@/components/sections/PageSections'
+import {withCtaOverride} from '@/lib/ctaOverride'
+import {PageSections, sectionsLastGround} from '@/components/sections/PageSections'
 import {OfficeHoursProvider} from '@/components/location/OfficeHoursContext'
 import {siteHost} from '@/lib/siteHost'
 
@@ -365,7 +366,7 @@ export default async function CatchAllPage({params}: Props) {
       )}
 
       {!page.hideCtaForm && globalCtaData && (
-        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)} data={page.ctaOverride ? {...globalCtaData, ...page.ctaOverride} : globalCtaData} napTokens={tokens} />
+        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)} data={withCtaOverride(globalCtaData, page.ctaOverride)} surface={await chromeClose(sectionsLastGround(page.sections, siteLookWithHeadingFace((await getSiteChrome())?.designTokens)))} napTokens={tokens} />
       )}
     </>
   )

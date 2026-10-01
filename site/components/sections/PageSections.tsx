@@ -11,7 +11,8 @@ import {AttorneySectionBlock, type AttorneySectionBlockData} from './AttorneySec
 import {ReviewsSectionBlock, type ReviewsSectionBlockData} from './ReviewsSectionBlock'
 import {VideoSectionBlock, type VideoSectionBlockData} from './VideoSectionBlock'
 import {PracticeAreaNavBlock, type PracticeAreaNavBlockData} from './PracticeAreaNavBlock'
-import {walkFrame, interiorLook, type SiteLook} from './sectionFrame'
+import {walkFrame, walkPage, interiorLook, type SiteLook} from './sectionFrame'
+import {type VisibleGround} from '@/lib/sectionSurface'
 import {type SectionAppearance} from './SectionShell'
 import * as AttorneyFrame from './AttorneySectionBlock'
 import * as BadgesFrame from './BadgesSectionBlock'
@@ -89,6 +90,12 @@ function withoutTexture(section: PageSectionData): PageSectionData {
   return appearance?.surface === 'pattern'
     ? ({...section, appearance: {...appearance, surface: 'light'}} as PageSectionData)
     : section
+}
+
+/** The ground the page's last full-width section shows, for the close below it (Phase 18 session B, `chromeClose`). */
+export function sectionsLastGround(sections: PageSectionData[] | null | undefined, site?: SiteLook | null): VisibleGround | null {
+  if (!sections?.length) return null
+  return walkPage(sections.map(withoutTexture), frameOf, interiorLook(site), null, null).last
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
