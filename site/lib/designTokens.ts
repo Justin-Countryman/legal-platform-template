@@ -206,12 +206,12 @@ export const mutedOf = (ground: string) => lightStep(ground, MUTED_STEP)
 //
 // The second light ground: the light hero, a band stored `tint`, the light footer, a light interior header. At L −0.015
 // it stood ΔE2000 1.0 from the page on every preset, which nobody sees, so a page that used it still read as one light
-// ground. On the study's rated law sites a page with two light grounds sets the second a median ΔE2000 2.8 from the first
-// (quartiles 1.9 and 3.9; the study counts two grounds apart at 1.5; monorepo WS-DESIGN-ENGINE-GAPS-DESIGN.md §16.3 row 6,
+// ground. On the study's rated law sites a page with two light grounds at L* 85 or lighter sets the second a median ΔE2000 2.7 from the
+// first (quartiles 1.9 and 4.4, monorepo study `light-grounds.txt`; the study counts two grounds apart at 1.5; monorepo WS-DESIGN-ENGINE-GAPS-DESIGN.md §16.3 row 6,
 // §19). So the tint is the ground's own hue at the muted rule's chroma, at the smallest lightness step that stands TINT_DE
 // from the ground, and never past the muted step: the muted step is the darkest light ground the light text tiers are
-// solved against, and a tint below it darkens the lightest tier on every palette (at the sites' median, 2.8, it pressed
-// the lightest tier against the next on 128 of the swept light grounds). CC's value under `[R-503]`.
+// solved against, and a tint below it darkens the lightest tier on every palette (a step of ΔE 3, about the sites' median,
+// pressed the lightest tier against the next on 128 of `colorGuarantee.test.ts`'s swept light grounds, measured once). CC's value under `[R-503]`.
 export const TINT_DE = 1.8
 export function heroTintOf(ground: string): string {
   const de = differenceCiede2000()

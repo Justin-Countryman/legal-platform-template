@@ -7,8 +7,8 @@ import {PALETTE_PRESETS, presetInputs} from '../palettes'
 //
 // The tint is the second light ground: the light hero, a band stored `tint`, the light footer, a light interior page's
 // header. Drawn at L −0.015 it stood ΔE2000 1.0 from the page on every preset, which nobody sees, so a page that used it
-// still read as one light ground. On the study's rated law sites a page that carries two light grounds sets the second a
-// median of ΔE2000 2.8 from the first (quartiles 1.9 and 3.9; the study counted two grounds apart at 1.5). So the tint
+// still read as one light ground. On the study's rated law sites a page that carries two light grounds at L* 85 or lighter
+// sets the second a median ΔE2000 2.7 from the first (quartiles 1.9 and 4.4, `light-grounds.txt`; the study counts two apart at 1.5). So the tint
 // stands TINT_DE from its ground on every palette, at the ground's own hue, and never past the muted step, so no text
 // tier moves on any palette: CC's value under `[R-503]`.
 
