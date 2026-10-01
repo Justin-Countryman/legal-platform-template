@@ -5,7 +5,7 @@ import {beforeAll, describe, expect, it} from 'vitest'
 import {render} from '@testing-library/react'
 
 import {findUnknown, readPlainCssClasses} from '../../../scripts/check-unknown-utility-classes.mjs'
-import {COUNT_GRID_CLASSES, columnsFor, countGridClasses, countGridPlan, AREA_CARD_TIERS, AREA_ROW_TIERS, CASE_RESULT_TIERS, itemTiers, type GridTier} from '../countGrid'
+import {COUNT_GRID_CLASSES, columnsFor, countGridClasses, countGridPlan, AREA_CARD_TIERS, AREA_ROW_TIERS, AREA_SIDEWAYS_TIERS, CASE_RESULT_TIERS, NARROW_FEW, NARROW_ONE_ROW, itemTiers, type GridTier} from '../countGrid'
 import {SiloTileLayout as SiloTile, SiloInline, SiloSpotlight, SiloFeature, SiloSplit, type SiloLayoutProps} from '../silo/SiloLayouts'
 import {ContentSectionBlock} from '../ContentSectionBlock'
 import {CaseResultsSection} from '../CaseResultsSection'
@@ -107,10 +107,12 @@ describe('the classes: what the plan draws', () => {
 
   it('every class the plan can write resolves through Tailwind, and is written out whole for its scanner', () => {
     expect(findUnknown([...COUNT_GRID_CLASSES], designSystem, plainCss)).toEqual([])
-    for (const tiers of [AREA_CARD_TIERS, AREA_ROW_TIERS, CASE_RESULT_TIERS, itemTiers(3), itemTiers(5)]) {
+    for (const tiers of [AREA_CARD_TIERS, AREA_SIDEWAYS_TIERS, AREA_ROW_TIERS, CASE_RESULT_TIERS, itemTiers(3), itemTiers(5)]) {
       for (let n = 1; n <= 24; n++) {
-        const {list, items} = countGridClasses(n, tiers)
-        for (const c of [...list.split(' '), ...items.flatMap((i) => i.split(' '))].filter(Boolean)) expect(COUNT_GRID_CLASSES, c).toContain(c)
+        for (const narrow of [{}, NARROW_FEW, NARROW_ONE_ROW]) {
+          const {list, items} = countGridClasses(n, tiers, narrow)
+          for (const c of [...list.split(' '), ...items.flatMap((i) => i.split(' '))].filter(Boolean)) expect(COUNT_GRID_CLASSES, c).toContain(c)
+        }
       }
     }
   })
@@ -120,12 +122,28 @@ const area = (i: number) => ({_key: `a${i}`, title: `Area ${i}`, href: `/area-${
 const props = (n: number): SiloLayoutProps => ({items: Array.from({length: n}, (_, i) => area(i + 1)), ariaLabel: 'Practice areas', hoverEffects: [], showArrow: true, iconPosition: 'none'}) as unknown as SiloLayoutProps
 
 describe('the sections draw the plan', () => {
-  it('every area layout draws its count: four areas four across where the band is wide, two by two narrower', () => {
-    for (const Layout of [SiloTile, SiloSpotlight, SiloFeature, SiloSplit]) {
+  it('every upright area layout draws its count: four areas four across where the band is wide, two by two narrower', () => {
+    for (const Layout of [SiloTile, SiloSpotlight, SiloFeature]) {
       const ul = render(<Layout {...props(4)} />).container.querySelector('ul')!
       expect(ul.className.split(' ')).toEqual(expect.arrayContaining(['@4xl:grid-cols-4', '@6xl:grid-cols-8']))
       expect(ul.className.split(' ')).not.toContain('@4xl:grid-cols-3')
     }
+  })
+
+  it('one or two areas or results keep the width they had, never one card across the band', () => {
+    for (const Layout of [SiloTile, SiloSpotlight, SiloFeature, SiloSplit]) {
+      expect(render(<Layout {...props(1)} />).container.querySelector('ul')!.className.split(' ')).toContain('max-w-sm')
+      expect(render(<Layout {...props(2)} />).container.querySelector('ul')!.className.split(' ')).toContain('max-w-3xl')
+    }
+    expect(render(<SiloInline {...props(1)} />).container.querySelector('ul')!.className.split(' ')).toContain('max-w-xl')
+    const one = [{_id: 'r1', amount: '$100,000', caseType: 'Injury'}]
+    expect(render(<CaseResultsSection disclaimer="Results vary." data={{heading: 'Results', caseResults: one} as never} />).container.querySelector('ul')!.className.split(' ')).toContain('max-w-sm')
+  })
+
+  it('split area cards lie sideways, so they go at most three across, as session B’s sideways cards', () => {
+    const ul = render(<SiloSplit {...props(4)} />).container.querySelector('ul')!
+    expect(ul.className.split(' ')).not.toContain('@6xl:grid-cols-8')
+    expect(ul.className.split(' ')).toContain('@6xl:grid-cols-4')
   })
 
   it('five area rows centre the fifth', () => {

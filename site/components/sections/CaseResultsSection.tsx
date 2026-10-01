@@ -5,7 +5,7 @@ import {SectionShell} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type CaseResultsSectionProps} from './sectionProps'
 import {headingFit} from '@/lib/headingFit'
-import {CASE_RESULT_TIERS, countGridClasses} from './countGrid'
+import {CASE_RESULT_TIERS, NARROW_FEW, countGridClasses} from './countGrid'
 
 // ─── Case Results section ─────────────────────────────────────────────────────
 //
@@ -75,7 +75,7 @@ export function CaseResultsSection({
   seam?: SeamProps
 }) {
   const results = visibleResults(data)
-  const grid = countGridClasses(results.length, CASE_RESULT_TIERS)
+  const grid = countGridClasses(results.length, CASE_RESULT_TIERS, NARROW_FEW)
 
   // No results means no results are being published, so there is nothing to
   // disclaim and the section renders nothing at all. This is the ONLY branch in

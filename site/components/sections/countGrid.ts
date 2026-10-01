@@ -22,6 +22,12 @@ export type TierPlan = {prefix: GridTier['prefix']; columns: number; lastRow: nu
 
 /** The practice areas' cards: two across from a 36rem nav, three from 56rem, four from 72rem (a full band at 1280). */
 export const AREA_CARD_TIERS: readonly GridTier[] = [{prefix: '@xl', widest: 2}, {prefix: '@4xl', widest: 3}, {prefix: '@6xl', widest: 4}]
+/** Split area cards lie sideways (a photo panel beside the text), so at most three across, as session B's sideways cards. */
+export const AREA_SIDEWAYS_TIERS: readonly GridTier[] = [{prefix: '@xl', widest: 2}, {prefix: '@4xl', widest: 3}, {prefix: '@6xl', widest: 3}]
+/** One or two items keep the width they had in a fixed grid (the pre-report break pass): one area card a third of the band,
+ *  two of them two thirds, one row half; one case result a third. Never one card across the whole band. */
+export const NARROW_FEW: Readonly<Partial<Record<number, string>>> = {1: 'mx-auto w-full max-w-sm', 2: 'mx-auto w-full max-w-3xl'}
+export const NARROW_ONE_ROW: Readonly<Partial<Record<number, string>>> = {1: 'mx-auto w-full max-w-xl'}
 /** The practice areas' bordered rows (`inline`): two across from a 36rem nav. */
 export const AREA_ROW_TIERS: readonly GridTier[] = [{prefix: '@xl', widest: 2}]
 /** Case results: a result card lies sideways (its figure, then its type and caption), so two across from `sm` and
@@ -51,7 +57,7 @@ export function countGridPlan(count: number, tiers: readonly GridTier[]): TierPl
 
 /** Every class the plan can write, written out whole. */
 export const COUNT_GRID_CLASSES: readonly string[] = [
-  'grid', 'grid-cols-1',
+  'grid', 'grid-cols-1', 'mx-auto', 'w-full', 'max-w-sm', 'max-w-xl', 'max-w-3xl',
   'sm:grid-cols-2', 'sm:grid-cols-4', 'sm:grid-cols-6', 'sm:grid-cols-8', 'sm:col-span-2',
   'sm:col-start-2', 'sm:col-start-3', 'sm:col-start-4', 'sm:col-start-auto',
   'lg:grid-cols-2', 'lg:grid-cols-4', 'lg:grid-cols-6', 'lg:grid-cols-8', 'lg:col-span-2',
@@ -69,10 +75,10 @@ const cls = (prefix: string, rest: string) => {
   return c
 }
 
-/** The list's grid classes (without its gap), and one class string per item. */
-export function countGridClasses(count: number, tiers: readonly GridTier[]): {list: string; items: string[]} {
+/** The list's grid classes (without its gap), and one class string per item; `narrow` caps the list's width at a count. */
+export function countGridClasses(count: number, tiers: readonly GridTier[], narrow: Readonly<Partial<Record<number, string>>> = {}): {list: string; items: string[]} {
   const plan = countGridPlan(count, tiers)
-  const list = ['grid', 'grid-cols-1', ...plan.map((t) => cls(t.prefix, `grid-cols-${t.columns * 2}`))]
+  const list = ['grid', 'grid-cols-1', ...plan.map((t) => cls(t.prefix, `grid-cols-${t.columns * 2}`)), ...(narrow[count] ? [narrow[count]!] : [])]
   const items: string[][] = Array.from({length: count}, () => plan.map((t) => cls(t.prefix, 'col-span-2')))
   const last: string[] = Array.from({length: count}, () => 'auto')
   for (const t of plan) {
