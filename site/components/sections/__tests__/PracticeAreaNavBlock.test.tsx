@@ -67,7 +67,8 @@ describe('PracticeAreaNavBlock — section layouts', () => {
     // SiloNav wraps the list in an @container; the grid uses container-query columns
     const nav = container.querySelector('nav.\\@container')
     expect(nav).not.toBeNull()
-    expect(nav?.querySelector('ul')?.className).toContain('@4xl:grid-cols-3')
+    // Phase 18 session D: the container-query columns follow the count (`countGrid.ts`), so the class names the count.
+    expect(nav?.querySelector('ul')?.className).toMatch(/(^| )@4xl:grid-cols-\d( |$)/)
   })
 
   it('renders nothing when there are no linkable items', () => {

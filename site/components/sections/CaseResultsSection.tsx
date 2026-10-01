@@ -5,6 +5,7 @@ import {SectionShell} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type CaseResultsSectionProps} from './sectionProps'
 import {headingFit} from '@/lib/headingFit'
+import {CASE_RESULT_TIERS, countGridClasses} from './countGrid'
 
 // ─── Case Results section ─────────────────────────────────────────────────────
 //
@@ -74,6 +75,7 @@ export function CaseResultsSection({
   seam?: SeamProps
 }) {
   const results = visibleResults(data)
+  const grid = countGridClasses(results.length, CASE_RESULT_TIERS)
 
   // No results means no results are being published, so there is nothing to
   // disclaim and the section renders nothing at all. This is the ONLY branch in
@@ -94,12 +96,14 @@ export function CaseResultsSection({
         <SectionHeader heading={heading} fit={headingFit(heading, seam.site?.headingFace)} description={intro} className="mx-auto mb-12 max-w-2xl" />
       )}
 
-      <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-label="Case results">
+      {/* Phase 18 session D: the columns follow the count (`countGrid.ts`; a result card lies sideways, so three across
+          and two by two at four, as session B's sideways cards). They were three across whatever the count. */}
+      <ul role="list" className={`${grid.list} gap-6`} aria-label="Case results">
         {results.map((r, i) => (
           // A light card keeps light-surface text wherever the band is: an operator
           // can set this section dark or image, and without the light context the
           // card's text inherited the dark band's (measured 1.06:1, Phase 14).
-          <li key={r._id ?? i} data-card="" data-ring-context="light" className="rounded-ui bg-muted p-6 shadow-card-rest md:p-8">
+          <li key={r._id ?? i} data-card="" data-ring-context="light" className={`rounded-ui bg-muted p-6 shadow-card-rest md:p-8 ${grid.items[i]}`}>
             {r.amount ? (
               // The result itself is the loudest thing in the card. h3, so it
               // sits under the section's single h2.
