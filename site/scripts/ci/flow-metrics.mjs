@@ -76,6 +76,7 @@ import {spawn} from 'node:child_process'
 import {existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync} from 'node:fs'
 import {resolve} from 'node:path'
 import {chromium} from '@playwright/test'
+import {converter, differenceCiede2000, parse} from 'culori'
 
 const arg = (name) => { const i = process.argv.indexOf(name); return i > 0 ? process.argv[i + 1] : null }
 const UPDATE = process.argv.includes('--update')
@@ -396,6 +397,17 @@ const atFloor = (b, limit) => b.headingSize !== null && b.headingSize <= (b.head
 // below the hero draws its heading above 56 px at any width, under any theme or style set. The sites' range, measured.
 const SECTION_HEADING_MAX_PX = 56
 const overCeiling = (m) => m.bands.filter((b) => b.i > 0 && b.headingSize !== null && b.headingSize > SECTION_HEADING_MAX_PX + 0.05)
+// Two light grounds side by side read apart (Phase 18 session D; `TINT_DE` in `lib/designTokens.ts`): where neighbouring bands
+// sit on two different light grounds, they stand at least 1.5 apart (ΔE2000, the study's measure of two light grounds), so
+// a page never carries a second light ground nobody can see. The tint stood 1.0 from the page on every preset.
+const LIGHT_APART = 1.5
+const toLab = converter('lab65')
+const deltaE = differenceCiede2000()
+const lightBg = (bg) => { const c = parse(bg); return !!c && (c.alpha ?? 1) === 1 && toLab(c).l >= 85 }
+const unseenLightSteps = (m) => m.bands.slice(1).flatMap((b, k) => {
+  const a = m.bands[k]
+  return lightBg(a.bg) && lightBg(b.bg) && a.bg !== b.bg && deltaE(a.bg, b.bg) < LIGHT_APART ? [{a, b, d: deltaE(a.bg, b.bg)}] : []
+})
 
 // ─── Run ──────────────────────────────────────────────────────────────────────
 await wait(`${BASE}/`, 200, 200)
@@ -480,6 +492,7 @@ try {
         if (m.scrollWidth > m.clientWidth) fail(`${key}: horizontal scroll: scrollWidth ${m.scrollWidth} over ${m.clientWidth}`)
         if (width === '390') for (const b of m.bands) if (b.headingLines > 4 && !atFloor(b, 4)) fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at 390: ${b.heading}`)
         for (const b of overCeiling(m)) fail(`${key}: band ${b.i} heading set at ${b.headingSize} px, over the ${SECTION_HEADING_MAX_PX} px ceiling: ${b.heading}`)
+        for (const {a, b, d} of unseenLightSteps(m)) fail(`${key}: bands ${a.i} and ${b.i} sit on two light grounds ${d.toFixed(2)} apart (${a.bg}, ${b.bg}), under the ${LIGHT_APART} a visitor can see`)
         for (const b of m.bands) if (b.ribbonLines > (Number(width) >= 992 ? 3 : 4)) fail(`${key}: band ${b.i} ribbon wraps to ${b.ribbonLines} lines at ${width}`)
         // Card photos (`[R-556]`): all or none per list, every one under the scrim, no dark context on a link.
         for (const b of m.bands.filter((x) => x.cards)) {

@@ -64,12 +64,14 @@ describe('the derivation, row by row', () => {
     expect(t['--color-action']).toBe('#666666')
   })
 
-  it('muted is the light ground at L −0.03 and hero-tint at L −0.015, on the ground’s own hue', () => {
+  it('muted is the light ground at L −0.03 and hero-tint TINT_DE from it, never past muted, on the ground’s own hue', () => {
     expect(t['--color-muted']).toBe('#f5f5f5')
-    expect(t['--color-hero-tint']).toBe('#fafafa')
+    expect(t['--color-hero-tint']).toBe('#f6f6f6')
     const cream = '#f5eedc'
     expect(oklch(mutedOf(cream)).l).toBeCloseTo(oklch(cream).l - 0.03, 2)
-    expect(oklch(heroTintOf(cream)).l).toBeCloseTo(oklch(cream).l - 0.015, 2)
+    // Phase 18 session D: the tint stands TINT_DE from the ground (it was L −0.015, ΔE 1.0), between the ground and muted.
+    expect(oklch(heroTintOf(cream)).l).toBeLessThan(oklch(cream).l - 0.015)
+    expect(oklch(heroTintOf(cream)).l).toBeGreaterThanOrEqual(oklch(mutedOf(cream)).l)
     // A cream ground's steps stay cream, not the grey today's recipe produced.
     expect(Math.abs(deltaH(mutedOf(cream), cream))).toBeLessThan(0.005)
     expect(oklch(heroTintOf(cream)).c).toBeGreaterThan(0.01)

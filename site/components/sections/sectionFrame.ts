@@ -312,7 +312,7 @@ export function walkPage<M>(
   // or saturated. `everyChange` fires at every change of ground. Never into a photo
   // band, or out of one: no site in the study cuts a shape into one (0 of 53 entries;
   // ADV-P16C-B). Tint and light count as one ground, because a tint wedge on white is
-  // 1.04:1 and the band would gain its space for nothing.
+  // 1.04:1 (1.08:1 since the tint reads apart, Phase 18 session D) and the band would gain its space for nothing.
   const shaped = !!flow && flow.divider.shape !== 'straight' && flow.divider.at !== 'none'
   const alternates = flow?.divider.shape === 'angledAlternating'
   const everyChange = flow?.divider.at === 'everyChange'
