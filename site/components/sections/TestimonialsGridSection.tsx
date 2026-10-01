@@ -5,6 +5,7 @@ import {SectionShell} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type TestimonialsGridProps} from './sectionProps'
 import {headingFit} from '@/lib/headingFit'
+import {cardGridClasses} from './cardGrid'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -51,6 +52,8 @@ export function TestimonialsGridSection({
   const tagline = resolveTokenString(data.tagline, napTokens)
   const heading = resolveTokenString(data.heading, napTokens)
   const description = resolveTokenString(data.description, napTokens)
+  // The columns follow the count (cardGrid.ts): a quote needs its measure, so four go two by two.
+  const grid = cardGridClasses(testimonials.length, 3)
 
   return (
     <SectionShell
@@ -70,11 +73,11 @@ export function TestimonialsGridSection({
 
       <ul
         role="list"
-        className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
+        className={grid.list}
         aria-label="Client testimonials"
       >
-        {testimonials.map((t) => (
-          <li key={t._id}>
+        {testimonials.map((t, i) => (
+          <li key={t._id} className={grid.items[i] || undefined}>
             <TestimonialCard t={t} />
           </li>
         ))}

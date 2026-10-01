@@ -15,6 +15,7 @@ import {INDEX_PAGE_PRESETS, resolvePageLabel} from '@/lib/pageLabel'
 import {siteHost} from '@/lib/siteHost'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {withCtaOverride} from '@/lib/ctaOverride'
+import {cardGridClasses} from '@/components/sections/cardGrid'
 import {TestimonialCard, type TestimonialData} from '@/components/ui/TestimonialCard'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -80,13 +81,14 @@ export default async function TestimonialsPage() {
 
           {/* Testimonials grid */}
           {testimonials.length > 0 ? (
+            // The columns follow the count, as the homepage's section does (cardGrid.ts, Phase 18 session B).
             <ul
               role="list"
-              className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
+              className={cardGridClasses(testimonials.length, 3).list}
               aria-label="Client testimonials"
             >
-              {testimonials.map((t) => (
-                <li key={t._id}>
+              {testimonials.map((t, i) => (
+                <li key={t._id} className={cardGridClasses(testimonials.length, 3).items[i] || undefined}>
                   <TestimonialCard t={t} />
                 </li>
               ))}
