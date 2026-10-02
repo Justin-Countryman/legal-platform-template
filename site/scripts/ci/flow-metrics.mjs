@@ -424,7 +424,10 @@ const unseenLightSteps = (m) => m.bands.slice(1).flatMap((b, k) => {
 //     from document start, where a sampler misses a 10 ms animation;
 //   - an animation that never ends sits in a band with no `button[aria-pressed]` (WCAG 2.2.2, monorepo `[R-617]`);
 //   - the sweep shifts layout more than it does on the reduced page, or the largest paint is another element;
-//   - under reduced motion, anything inside <main> starts an animation or a moving transition.
+//   - under reduced motion, anything inside <main> starts an animation or a moving transition;
+//   - the hero's photograph does not drift a fifth of a 300 px scroll at 1440, or drifts at all at 390 or under
+//     reduced motion (the parallax Justin ruled, monorepo WS-MOTION-LAYER-DESIGN.md §7: the positive control measures movement, never that an
+//     animation exists, because an animation on a box that never scrolls reports itself running and moves nothing).
 // Its findings are failures, never golden rows: motion is timing, and the golden holds layout.
 const MOTION_PAGES = [
   ['stub', 'scripts/ci/fixture.ndjson', ['quiet.mostlyLight', 'cutBlocks.mostlyDark', 'typeOnBlack.allDark']],
@@ -433,6 +436,9 @@ const MOTION_PAGES = [
 // A property that lays the page out again when it changes.
 const LAYOUT_PROP = /^(width|height|(min|max)-(width|height)|top|right|bottom|left|inset.*|margin.*|padding.*|grid-template-.*|font-size|line-height|letter-spacing|border(-[a-z]+)?-width|flex.*|gap|row-gap|column-gap)$/
 const MOVING_PROPS = new Set(['transform', 'translate', 'scale', 'rotate'])
+// The canvas whose hero carries a photograph, and how far it drifts over a 300 px scroll from the top.
+const DRIFT_CANVAS = 'multi-practice-photo-set'
+const DRIFT_SCROLL = 300
 const SHORT_SCREEN = ['390x240', {viewport: {width: 390, height: 240}, isMobile: true, hasTouch: true}]
 // Installed before any page script: every animation and transition that starts inside <main>, the layout
 // shifts, and the largest paint's element.
@@ -482,6 +488,25 @@ async function bandGaps(wait) {
   }
   return out
 }
+// How far the hero's photograph moves inside its box over the first DRIFT_SCROLL px of scroll.
+async function heroDrift(by) {
+  const two = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
+  // The hero is the first band in <main>; its photograph is the full-bleed image it fills its box with.
+  const img = document.querySelector('main section')?.querySelector('img[data-nimg="fill"]')
+  const box = img?.parentElement
+  if (!img || !box) return null
+  const at = async (y) => {
+    window.scrollTo(0, y)
+    await two()
+    await new Promise((r) => setTimeout(r, 100))
+    await two()
+    return img.getBoundingClientRect().top - box.getBoundingClientRect().top
+  }
+  const from = await at(0)
+  const to = await at(by)
+  window.scrollTo(0, 0)
+  return Math.round(to - from)
+}
 async function sweep() {
   const h = document.documentElement.scrollHeight
   for (let y = 0; y <= h; y += 150) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)) }
@@ -516,6 +541,13 @@ async function motionPass() {
           phase('the sweep')
           const offset = await page.evaluate(sweep)
           const settled = reduced ? [] : await page.evaluate(bandGaps, false)
+          if (canvas === DRIFT_CANVAS && flow === flows[0]) {
+            phase('the hero photograph')
+            const drift = await page.evaluate(heroDrift, DRIFT_SCROLL)
+            const want = !reduced && Number(width) >= 768 ? DRIFT_SCROLL / 5 : 0
+            if (drift === null) fail(`${key}: no hero photograph to measure`)
+            else if (Math.abs(drift - want) > 3) fail(`${key}: the hero photograph moves ${drift} px over a ${DRIFT_SCROLL} px scroll; it should move ${want}`)
+          }
           const m = await page.evaluate(() => window.__motion)
           seen[flow] = seen[flow] ?? {}
           seen[flow][reducedMotion] = m
