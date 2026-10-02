@@ -59,12 +59,12 @@ describe('the families and the roster', () => {
     }
   })
 
-  it('ships the three families of session 2, the three of session 5, Photo scrims of session 6 and Phase 17D’s', () => {
+  it('ships the three families of session 2, the three of session 5, Photo scrims of session 6, Phase 17D’s, and Soft wash’s second step (Phase 18 session E)', () => {
     expect(FAMILIES.map((f) => f.id)).toEqual(['quiet', 'alternating', 'cutBlocks', 'typeOnBlack', 'editorial', 'ribbonRhythm', 'photoScrims',
       'floatingPanels', 'softWash', 'gradientBloom', 'wedges'])
     expect(FLOWS.map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
       'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark',
-      'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight', 'gradientBloom.mostlyDark', 'wedges.balanced'])
+      'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight', 'softWash.balanced', 'gradientBloom.mostlyDark', 'wedges.balanced'])
   })
 
   it('Gradient bloom is the Phase 17D session 2 record\u2019s \u00a72.4, written out: mostly dark, the glow, the need of room ([R-557])', () => {
@@ -112,8 +112,10 @@ describe('the families and the roster', () => {
     const navy = presetInputs(PALETTE_PRESETS.find((p) => p.id === 'navy-brass')!)
     expect(closeOf(sw, {footer: 'light', above: 'light', heroPhoto: false, colors: navy})).toBe('dark')
     expect(closeOf(sw, {footer: 'dark', above: 'light', heroPhoto: false, colors: navy})).toBe('wash')
-    // Only Soft wash washes, and only its close is the wash.
-    expect(FLOWS.filter((f) => f.light.paint === 'washes' || f.dark.close === 'wash').map((f) => f.id)).toEqual(['softWash.mostlyLight'])
+    // Only Soft wash washes, and only its first step's close is the wash; the second step closes dark, then the wash
+    // (Phase 18 session E; its rules are `softWashBalanced.test.tsx`'s).
+    expect(FLOWS.filter((f) => f.light.paint === 'washes').map((f) => f.id)).toEqual(['softWash.mostlyLight', 'softWash.balanced'])
+    expect(FLOWS.filter((f) => f.dark.close === 'wash').map((f) => f.id)).toEqual(['softWash.mostlyLight'])
   })
 
   it('Floating panels is the Phase 17D record’s §2.2, written out: dark panels on the light page, light panels on the dark one', () => {

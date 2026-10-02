@@ -5193,6 +5193,7 @@
               "floatingPanels.balanced",
               "floatingPanels.mostlyDark",
               "softWash.mostlyLight",
+              "softWash.balanced",
               "gradientBloom.mostlyDark",
               "wedges.balanced"
             ]

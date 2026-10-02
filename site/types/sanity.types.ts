@@ -2823,6 +2823,7 @@ export type DesignSettings = {
     | "floatingPanels.balanced"
     | "floatingPanels.mostlyDark"
     | "softWash.mostlyLight"
+    | "softWash.balanced"
     | "gradientBloom.mostlyDark"
     | "wedges.balanced";
   flowPhoto?: string;
@@ -4204,6 +4205,7 @@ export type DESIGN_TOKENS_QUERY_RESULT = {
     | "photoScrims.mostlyDark"
     | "quiet.mostlyLight"
     | "ribbonRhythm.mostlyLight"
+    | "softWash.balanced"
     | "softWash.mostlyLight"
     | "typeOnBlack.allDark"
     | "wedges.balanced"
@@ -19691,6 +19693,7 @@ export type SITE_CHROME_QUERY_RESULT = {
       | "photoScrims.mostlyDark"
       | "quiet.mostlyLight"
       | "ribbonRhythm.mostlyLight"
+      | "softWash.balanced"
       | "softWash.mostlyLight"
       | "typeOnBlack.allDark"
       | "wedges.balanced"
@@ -20913,6 +20916,7 @@ export type PREVIEW_STORED_DESIGN_QUERY_RESULT = {
     | "photoScrims.mostlyDark"
     | "quiet.mostlyLight"
     | "ribbonRhythm.mostlyLight"
+    | "softWash.balanced"
     | "softWash.mostlyLight"
     | "typeOnBlack.allDark"
     | "wedges.balanced";

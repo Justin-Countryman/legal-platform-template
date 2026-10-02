@@ -339,7 +339,7 @@ export function walkPage<M>(
   // ─── The ground pass (Phase 17B) ────────────────────────────────────────────
   // Before the adoption pass, because adoption reads the grounds, and the theme is what
   // decides a ground where none is stored.
-  const paints = flow ? assignGrounds(survivors, flow, site, {close}) : survivors.map(() => null)
+  const paints = flow ? assignGrounds(survivors, flow, site, {close, hero}) : survivors.map(() => null)
   const paintAt = new Map<number, Paint | null>()
   survivors.forEach((r, i) => paintAt.set(r.index, paints[i]))
   const isInset = (r: {appearance: SectionAppearance | null | undefined}, paint: Paint | null) =>
@@ -591,7 +591,7 @@ export function assignGrounds(
   survivors: readonly Survivor[],
   flow: FlowRules,
   site: Pick<SiteLook, 'patternTexture' | 'saturated' | 'heroPhoto' | 'closeShown' | 'photoSet' | 'close' | 'heroPaint'> | null = null,
-  ends: {close?: VisibleGround | null} = {},
+  ends: {close?: VisibleGround | null; hero?: VisibleGround | null} = {},
 ): (Paint | null)[] {
   const n = survivors.length
   const strongOf = (a: SectionAppearance | null | undefined) => {
@@ -673,6 +673,37 @@ export function assignGrounds(
         }
       }
       break
+    case 'spread': {
+      // Soft wash's second step (Phase 18 session E, monorepo `[R-598]`, WS-V1-PHASE18E-DESIGN §9.3): the dark ground
+      // spread down a light page so it recurs, never gathered at one end. The positioning line under a light hero goes
+      // dark outside the budget; under a dark or photo hero the first band sits out, since a dark band there only
+      // lengthens the hero. The budget's bands then split the bands below into equal stretches, and in each the host
+      // nearest the stretch's middle goes dark, its rank breaking a tie; a stretch already holding a strong band takes
+      // none. Never two dark together: the dark close counts as the band after the last, and an inset beside a band
+      // counts as dark where the band beyond it is, because it would adopt that ground (`[R-501]`, `[R-570]`).
+      const h = ends.hero ?? null
+      const heroLight = h === 'light' || h === 'tint' || h === 'wash' || h === 'muted'
+      const c = ends.close ?? null
+      const closeStrong = c === 'dark' || c === 'saturated' || c === 'image'
+      const strongAt = (j: number) => (j === n ? closeStrong : j >= 0 && j < n && dark[j])
+      const besideDark = (i: number) => ([-1, 1] as const).some((d) => strongAt(i + d) || (i + d >= 0 && i + d < n && inset[i + d] && strongAt(i + 2 * d)))
+      const fillable = (i: number) => !fixed[i] && !dark[i] && rank(i) >= 0 && !besideDark(i)
+      let start = 0
+      if (n > 0 && !heroLight) start = 1
+      else if (n > 0 && survivors[0].host === 'ribbon' && fillable(0)) { take(0); start = 1 }
+      const m = n - start
+      const k = darkBudget(flow.dark.budget, m)
+      for (let j = 0; j < k; j++) {
+        const from = start + Math.floor((j * m) / k)
+        const to = start + Math.floor(((j + 1) * m) / k)
+        if (dark.slice(from, to).some(Boolean)) continue
+        const mid = (from + to - 1) / 2
+        const pick = Array.from({length: to - from}, (_, t) => from + t).filter(fillable)
+          .sort((x, y) => Math.abs(x - mid) - Math.abs(y - mid) || rank(x) - rank(y) || x - y)[0]
+        if (pick !== undefined) take(pick)
+      }
+      break
+    }
   }
 
   const texture = !!site?.patternTexture
@@ -869,7 +900,7 @@ export function canvasFacts(
   hero: VisibleGround | null = null,
   flow: FlowRules | null | undefined = site?.flow,
 ): CanvasFacts {
-  const paints = flow ? assignGrounds(survivors, flow, site ?? null) : []
+  const paints = flow ? assignGrounds(survivors, flow, site ?? null, {hero}) : []
   return {
     hosts: [...new Set(survivors.map((r) => r.host).filter((h): h is Host => !!h))],
     photos: survivors.filter((r) => r.photo).length,

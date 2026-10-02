@@ -61,8 +61,8 @@ export const HOSTS = [
 ] as const
 export type Host = (typeof HOSTS)[number]
 
-export const DARK_BUDGETS = ['none', 'third', 'threeQuarters', 'all'] as const
-export const DARK_RHYTHMS = ['alternate', 'pairs', 'runs', 'bookends'] as const
+export const DARK_BUDGETS = ['none', 'quarter', 'third', 'threeQuarters', 'all'] as const
+export const DARK_RHYTHMS = ['alternate', 'pairs', 'runs', 'bookends', 'spread'] as const
 export const DARK_PAINTS = ['plain', 'pattern', 'gradient', 'gradientPerBand', 'photo', 'saturated', 'heroPhoto', 'floating', 'glow'] as const
 export const CLOSES = ['dark', 'saturated', 'muted', 'photo', 'wash'] as const
 export const LIGHT_PAINTS = ['plain', 'washes', 'pattern', 'panel', 'floating'] as const
@@ -108,13 +108,15 @@ export type FlowRules = {
    *  passed step; the switcher lists every step, because the eye pass runs through it. */
   passed: boolean
   dark: {
-    /** The mid-page dark budget: none; a third of the survivors; three quarters; all. */
+    /** The mid-page dark budget: none; a few (`quarter`, one band in four, Phase 18 session E); a third of the
+     *  survivors; three quarters; all. */
     budget: (typeof DARK_BUDGETS)[number]
     /** The bands that may go dark, in this theme's order of preference. Absent hosts stay light. */
     hosts: readonly Host[]
     /** How the dark bands sit: never two in a row; runs of at most two; gathered into runs;
-     *  none mid-page. The hero is never a neighbour, so a band directly under a dark hero
-     *  may join it under every rhythm (25 of 45 dark heroes are followed by a dark band). */
+     *  none mid-page; or spread down the page, one in each equal stretch (`spread`, Phase 18 session E). The hero is
+     *  never a neighbour, so a band directly under a dark hero may join it under the first four rhythms (25 of 45 dark
+     *  heroes are followed by a dark band); `spread` leaves that band light, since the dark it recurs is the page's. */
     rhythm: (typeof DARK_RHYTHMS)[number]
     /** What a dark band paints: the dark ground; the dark ground with the style set's texture;
      *  the ramp (one per run, sliced); the ramp restarted on every band; a photo where the band
@@ -225,6 +227,9 @@ export const STEP_CHROME: Record<Darkness, FlowRules['chrome']> = {
 export function darkBudget(budget: FlowRules['dark']['budget'], n: number): number {
   switch (budget) {
     case 'none': return 0
+    // A few (Phase 18 session E, `[R-598]`): one band at five or six, two at seven to ten, three at eleven to fourteen,
+    // so a light page with the dark close lands near a third dark, where `third` puts four of nine dark on eight bands.
+    case 'quarter': return Math.floor((n + 1) / 4)
     case 'third': return Math.ceil(n / 3)
     // Never below the balanced budget: on a one-band page `n - ceil(n/4)` is 0 while a
     // third is 1, and a darker step must not darken less (ADV-17B-2 F10).
@@ -418,19 +423,35 @@ export const FAMILIES: readonly FlowFamily[] = [
   },
   {
     id: 'softWash', name: 'Soft wash',
-    sentence: 'No dark section but the close: the page and a warm wash of its own background in turn.',
+    sentence: 'The page and a warm wash of its own background in turn; at balanced, the dark color returns on a few sections down the page.',
     // The study: eternalaw and bdgfirm (both premium) run white bands and cream ones in turn;
     // veronicagarzalaw (premium) is cream all the way; duparlaw and connieyilaw are light with texture.
     // Their second ground is cream, never an accent pastel (ADV-17D-A), so the wash is a warm step of
-    // the page's own background (`washOf`, `[R-551]`), and no band goes dark. A light footer, as the
+    // the page's own background (`washOf`, `[R-551]`). At mostly light no band goes dark. A light footer, as the
     // study's light pages have.
-    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
-    rules: () => ({
-      dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: 'plain', texture: 'quiet', close: 'wash', closeElse: ['dark']},
-      light: {paint: 'washes', texture: 'quiet'},
-      divider: NO_DIVIDER, spacing: 'normal',
-      ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
-    }),
+    //
+    // THE SECOND STEP (Phase 18 session E, monorepo `[R-598]`, WS-V1-PHASE18E-DESIGN §9.3). Justin, of a warm firm's
+    // page: "design is all about continuity so we can't just use it in one spot". The white and cream bands keep their
+    // turn, and the palette's dark ground goes on a few by rule: the positioning line under a light hero, then a
+    // quarter of the bands below it, one in each equal stretch, the host nearest the stretch's middle, never two dark
+    // together, the dark close counted after the last band. It stands on his ruling, as the close apart from the footer
+    // does: on his rated pages the dark color seldom recurs on a light page (the record's §8.1 item 5); their light-
+    // leaning pages give the range, about a third of the bands strong with the close. The attorneys come last among
+    // the hosts, since a tall card grid on a phone makes a dark band heavy.
+    steps: ['mostlyLight', 'balanced'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
+    rules: (step) => (step === 'balanced'
+      ? {
+          dark: {budget: 'quarter', hosts: ['ribbon', 'differentiators', 'narrative', 'testimonials', 'statement', 'caseResults', 'attorneys'], rhythm: 'spread', paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['wash']},
+          light: {paint: 'washes', texture: 'quiet'},
+          divider: NO_DIVIDER, spacing: 'normal',
+          ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
+        }
+      : {
+          dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: 'plain', texture: 'quiet', close: 'wash', closeElse: ['dark']},
+          light: {paint: 'washes', texture: 'quiet'},
+          divider: NO_DIVIDER, spacing: 'normal',
+          ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
+        }),
   },
   // ─── Phase 17D session 2 (record WS-V1-PHASE17D2-DESIGN §2) ─────────────────
   {
