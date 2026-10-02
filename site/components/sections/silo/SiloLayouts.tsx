@@ -4,6 +4,7 @@ import type {SiloNavItem, SiloIconPosition} from './types'
 import {
   SiloNav, TileLink, TileImage, TileFill, TileGlow, TileBorder, TileIcon, TileLabel, TileBlurb, TileArrow,
 } from './parts'
+import {AREA_CARD_TIERS, AREA_ROW_TIERS, AREA_SIDEWAYS_TIERS, NARROW_FEW, NARROW_ONE_ROW, countGridClasses, type GridTier} from '../countGrid'
 
 // The five silo-nav button layouts. Each composes the shared item model
 // (image · icon · label · blurb) differently and inherits the hover system +
@@ -39,20 +40,30 @@ function pickIconPos(setting: SiloIconPosition, allowed: IconPos[], fallback: Ic
 // Container-query grids: columns scale off the nav's own width (see SiloNav's
 // @container), so the grid is 3-up full-bleed and 2-up inside an Aside column with
 // no viewport coupling. @xl ≈ 36rem, @4xl ≈ 56rem (container widths).
-const CARD_GRID = 'grid grid-cols-1 gap-6 @xl:grid-cols-2 @4xl:grid-cols-3 @4xl:gap-7'
-const ROW_GRID = 'grid grid-cols-1 gap-4 @xl:grid-cols-2'
+// Phase 18 session D: the columns follow the count (`countGrid.ts`): every area on one row up to four in a full band,
+// three from a 56rem nav and two from 36rem, past that the count that leaves nobody alone, a short last row centred.
+// They were three across and two across whatever the count, so four, five, seven or eight areas left a short row.
+const cardGrid = (count: number, tiers: readonly GridTier[] = AREA_CARD_TIERS) => {
+  const g = countGridClasses(count, tiers, NARROW_FEW)
+  return {list: `${g.list} gap-6 @4xl:gap-7`, items: g.items}
+}
+const rowGrid = (count: number) => {
+  const g = countGridClasses(count, AREA_ROW_TIERS, NARROW_ONE_ROW)
+  return {list: `${g.list} gap-4`, items: g.items}
+}
 const CARD = 'flex h-full flex-col rounded-ui border border-border'
 
 // ── 1. Spotlight — photo cover · large label + arrow over the scrim ──────────────
 export function SiloSpotlight({items, ariaLabel, hoverEffects, showArrow, iconPosition}: SiloLayoutProps) {
   const fx = siloHover(hoverEffects)
   const showIcon = iconPosition !== 'none'
+  const grid = cardGrid(items.length)
   return (
-    <SiloNav ariaLabel={ariaLabel} className={CARD_GRID}>
-      {items.map((item) => {
+    <SiloNav ariaLabel={ariaLabel} className={grid.list}>
+      {items.map((item, i) => {
         const onImage = hasImage(item.image)
         return (
-          <li key={item._key}>
+          <li key={item._key} className={grid.items[i]}>
             <TileLink href={item.href ?? '#'} className={`${CARD} min-h-[14rem] ${fx.container}`}>
               {onImage ? <TileImage item={item} fx={fx} /> : <TileFill />}
               <TileGlow fx={fx} />
@@ -81,12 +92,13 @@ export function SiloSpotlight({items, ariaLabel, hoverEffects, showArrow, iconPo
 export function SiloFeature({items, ariaLabel, hoverEffects, showArrow, iconPosition}: SiloLayoutProps) {
   const fx = siloHover(hoverEffects)
   const showIcon = iconPosition !== 'none'
+  const grid = cardGrid(items.length)
   return (
-    <SiloNav ariaLabel={ariaLabel} className={CARD_GRID}>
-      {items.map((item) => {
+    <SiloNav ariaLabel={ariaLabel} className={grid.list}>
+      {items.map((item, i) => {
         const onImage = hasImage(item.image)
         return (
-          <li key={item._key}>
+          <li key={item._key} className={grid.items[i]}>
             <TileLink href={item.href ?? '#'} className={`${CARD} min-h-[20rem] overflow-hidden ${fx.container}`}>
               <div className="relative h-44 w-full shrink-0 overflow-hidden">
                 {onImage ? <TileImage item={item} fx={fx} scrim={false} /> : <TileFill />}
@@ -127,12 +139,13 @@ export function SiloTileLayout({items, ariaLabel, hoverEffects, iconPosition}: S
   const fx = siloHover(hoverEffects)
   const pos = pickIconPos(iconPosition, ['top', 'left', 'right'], 'top')
   const stacked = pos === 'top' || pos === 'none'
+  const grid = cardGrid(items.length)
   return (
-    <SiloNav ariaLabel={ariaLabel} className={CARD_GRID}>
-      {items.map((item) => {
+    <SiloNav ariaLabel={ariaLabel} className={grid.list}>
+      {items.map((item, i) => {
         const onImage = hasImage(item.image)
         return (
-          <li key={item._key}>
+          <li key={item._key} className={grid.items[i]}>
             <TileLink
               href={item.href ?? '#'}
               className={`${CARD} min-h-[12rem] items-center ${onImage ? 'justify-end' : 'justify-center'} p-8 ${stacked ? 'text-center' : ''} ${fx.container}`}
@@ -164,10 +177,11 @@ export function SiloTileLayout({items, ariaLabel, hoverEffects, iconPosition}: S
 export function SiloInline({items, ariaLabel, hoverEffects, showArrow, iconPosition}: SiloLayoutProps) {
   const fx = siloHover(hoverEffects)
   const pos = pickIconPos(iconPosition, ['left', 'right'], 'left')
+  const grid = rowGrid(items.length)
   return (
-    <SiloNav ariaLabel={ariaLabel} className={ROW_GRID}>
-      {items.map((item) => (
-        <li key={item._key}>
+    <SiloNav ariaLabel={ariaLabel} className={grid.list}>
+      {items.map((item, i) => (
+        <li key={item._key} className={grid.items[i]}>
           <TileLink href={item.href ?? '#'} card={false} className={`flex items-center rounded-ui border border-border p-5 ${fx.container}`}>
             <TileFill />
             <TileGlow fx={fx} />
@@ -192,12 +206,13 @@ export function SiloInline({items, ariaLabel, hoverEffects, showArrow, iconPosit
 export function SiloSplit({items, ariaLabel, hoverEffects, showArrow, iconPosition}: SiloLayoutProps) {
   const fx = siloHover(hoverEffects)
   const showIcon = iconPosition !== 'none'
+  const grid = cardGrid(items.length, AREA_SIDEWAYS_TIERS)
   return (
-    <SiloNav ariaLabel={ariaLabel} className={CARD_GRID}>
-      {items.map((item) => {
+    <SiloNav ariaLabel={ariaLabel} className={grid.list}>
+      {items.map((item, i) => {
         const onImage = hasImage(item.image)
         return (
-          <li key={item._key}>
+          <li key={item._key} className={grid.items[i]}>
             <TileLink
               href={item.href ?? '#'}
               className={`flex flex-col overflow-hidden rounded-ui border border-border sm:min-h-[11rem] sm:flex-row ${fx.container}`}

@@ -198,15 +198,38 @@ const lightStep = (ground: string, dl: number) => {
   const o = parseOklch(ground)
   return mapped(o.l - dl, Math.min(o.c, 0.03), o.h)
 }
+/** The muted step's lightness below the ground: the darkest light ground the light text tiers are solved against. */
+const MUTED_STEP = 0.03
 /** The card and alternation step: the ground at L −0.03, its own hue, chroma ≤0.03. */
-export const mutedOf = (ground: string) => lightStep(ground, 0.03)
-/** The tint band step: L −0.015 on the same rule. */
-export const heroTintOf = (ground: string) => lightStep(ground, 0.015)
+export const mutedOf = (ground: string) => lightStep(ground, MUTED_STEP)
+// ─── The tint (Phase 18 session D) ────────────────────────────────────────────
+//
+// The second light ground: the light hero, a band stored `tint`, the light footer, a light interior header. At L −0.015
+// it stood ΔE2000 1.0 from the page on every preset, which nobody sees, so a page that used it still read as one light
+// ground. On the study's rated law sites a page with two light grounds at L* 85 or lighter sets the second a median ΔE2000 2.7 from the
+// first (quartiles 1.9 and 4.4, monorepo study `light-grounds.txt`; the study counts two grounds apart at 1.5; monorepo WS-DESIGN-ENGINE-GAPS-DESIGN.md §16.3 row 6,
+// §19). So the tint is the ground's own hue at the muted rule's chroma, at the smallest lightness step that stands TINT_DE
+// from the ground, and never past the muted step: the muted step is the darkest light ground the light text tiers are
+// solved against, and a tint below it darkens the lightest tier on every palette (a step of ΔE 3, about the sites' median,
+// pressed the lightest tier against the next on 128 of `colorGuarantee.test.ts`'s swept light grounds, measured once). CC's value under `[R-503]`.
+export const TINT_DE = 1.8
+export function heroTintOf(ground: string): string {
+  const de = differenceCiede2000()
+  if (de(ground, lightStep(ground, MUTED_STEP)) <= TINT_DE) return lightStep(ground, MUTED_STEP)
+  let lo = 0
+  let hi = MUTED_STEP
+  for (let i = 0; i < 30; i++) {
+    const mid = (lo + hi) / 2
+    if (de(ground, lightStep(ground, mid)) < TINT_DE) lo = mid
+    else hi = mid
+  }
+  return lightStep(ground, hi)
+}
 
 // ─── The wash (Phase 17D, `[R-551]`) ──────────────────────────────────────────
 //
-// Soft wash's second light ground: a pale, warm step of the page's own background. The tint above is
-// ΔE2000 1.0 from the ground on every preset, which nobody sees; the evidence's second ground is cream
+// Soft wash's second light ground: a pale, warm step of the page's own background. The tint above was
+// ΔE2000 1.0 from the ground on every preset when this was written, which nobody sees (1.8 since Phase 18 session D); the evidence's second ground is cream
 // (eternalaw, bdgfirm, veronicagarzalaw), never a pastel of the accent, which measured faint or loud
 // (ΔE 2.3 to 29 over 11,172 palettes, ADV-17D-C). So: the ground's own hue where it has one, else cream
 // (hue 85); the chroma that stands WASH_DE from the ground; at the lowest lightness whose luminance,
@@ -1193,6 +1216,12 @@ const STRUCTURAL_SLOW  = STRUCTURAL_DURATIONS.slow
 
 export type MarketingScaleTokens = {h1: string; h2: string; h3: string; h4: string}
 
+/** The section heading's ceiling, in rem (Phase 18 session D): a content section's heading and the close's never pass 56 px
+ *  at any width. On the study's 53 rated law sites a page's section headings sit at a median of 43 px at 1440 and no page's
+ *  median passes 56 (monorepo WS-DESIGN-ENGINE-GAPS-DESIGN.md §16.3 row 4); md drew 64 and lg 70. CC's value (`[R-503]`):
+ *  one section set large is a statement layout's, not every content section's. `sectionHeadingCeiling.test.ts`. */
+export const SECTION_HEADING_MAX_REM = 3.5
+
 // Exported so the Studio can render a catalog of all options sourced from the
 // canonical map (per BI-FOUNDATIONS.md → "Design Studio = visual contract" →
 // Catalog mode vs active mode). buildDesignTokenCSS reads the same map from
@@ -1200,10 +1229,11 @@ export type MarketingScaleTokens = {h1: string; h2: string; h3: string; h4: stri
 export const MARKETING_SCALE_MAP: Record<string, MarketingScaleTokens> = {
   // Perfect Fourth (1.333) — restrained but clearly marketing
   sm: {h1: '4.214rem', h2: '3.161rem', h3: '2.371rem', h4: '1.778rem'},
-  // Augmented Fourth (1.414) — classic bold marketing
-  md: {h1: '5.657rem', h2: '4rem',     h3: '2.828rem', h4: '2rem'},
-  // Golden Ratio (1.618) — dramatic, hero-driven (H1 capped at 8rem; raw value 11.09rem felt broken at large viewports)
-  lg: {h1: '8rem',     h2: '6.854rem', h3: '4.236rem', h4: '2.618rem'},
+  // Augmented Fourth (1.414) — classic bold marketing; the section heading at the ceiling (`SECTION_HEADING_MAX_REM`, was 4rem)
+  md: {h1: '5.657rem', h2: '3.5rem',   h3: '2.828rem', h4: '2rem'},
+  // Golden Ratio (1.618) — dramatic, hero-driven (H1 capped at 8rem; raw value 11.09rem felt broken at large viewports). The
+  // section heading at the ceiling (was 6.854rem), and h3 under it (was 4.236rem, which only the Design Studio's sample draws).
+  lg: {h1: '8rem',     h2: '3.5rem',   h3: '3rem',     h4: '2.618rem'},
 }
 
 // ─── The heading signature (Phase 16B) ────────────────────────────────────────

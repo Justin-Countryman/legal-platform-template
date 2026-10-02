@@ -30020,8 +30020,8 @@
         }
       },
       {
-        "key": "hp-differentiatorBlock",
-        "host": "differentiators",
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -30037,8 +30037,8 @@
         }
       },
       {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -30125,8 +30125,8 @@
         }
       },
       {
-        "key": "hp-differentiatorBlock",
-        "host": "differentiators",
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -30142,8 +30142,8 @@
         }
       },
       {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -30226,8 +30226,8 @@
         }
       },
       {
-        "key": "hp-differentiatorBlock",
-        "host": "differentiators",
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -30243,8 +30243,8 @@
         }
       },
       {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -30323,11 +30323,28 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1
+          "length": 2
         },
         "ribbonEdges": {
           "top": true,
-          "bottom": false
+          "bottom": true
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": "strong",
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
         }
       },
       {
@@ -30348,8 +30365,8 @@
         }
       },
       {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -30365,10 +30382,10 @@
         }
       },
       {
-        "key": "hp-narrativeBlock",
-        "host": "narrative",
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
         "ground": "dark",
-        "texture": "strong",
+        "texture": "quiet",
         "inset": false,
         "adopted": null,
         "seam": false,
@@ -30382,28 +30399,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 2
-        }
-      },
-      {
-        "key": "hp-codaRibbonBlock",
-        "host": "ribbon",
-        "ground": "dark",
-        "texture": "quiet",
-        "inset": false,
-        "adopted": null,
-        "seam": true,
-        "divider": null,
-        "hairline": false,
-        "ghost": false,
-        "raisePhoto": false,
-        "run": {
-          "index": 1,
-          "length": 2
-        },
-        "ribbonEdges": {
-          "top": true,
-          "bottom": false
+          "length": 1
         }
       }
     ],
@@ -30440,8 +30436,8 @@
         }
       },
       {
-        "key": "hp-differentiatorBlock",
-        "host": "differentiators",
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "dark",
         "texture": false,
         "inset": false,
@@ -30457,8 +30453,8 @@
         }
       },
       {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
         "ground": "dark",
         "texture": false,
         "inset": false,
@@ -30538,8 +30534,8 @@
         "spacing": "spacious"
       },
       {
-        "key": "hp-differentiatorBlock",
-        "host": "differentiators",
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "light",
         "texture": "quiet",
         "inset": false,
@@ -30556,8 +30552,8 @@
         "spacing": "spacious"
       },
       {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
         "ground": "light",
         "texture": "quiet",
         "inset": false,
@@ -30639,8 +30635,8 @@
         }
       },
       {
-        "key": "hp-differentiatorBlock",
-        "host": "differentiators",
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -30656,8 +30652,8 @@
         }
       },
       {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -30734,11 +30730,28 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1
+          "length": 2
         },
         "ribbonEdges": {
           "top": true,
-          "bottom": false
+          "bottom": true
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2
         }
       },
       {
@@ -30759,8 +30772,8 @@
         }
       },
       {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -30776,8 +30789,8 @@
         }
       },
       {
-        "key": "hp-narrativeBlock",
-        "host": "narrative",
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
         "ground": "dark",
         "texture": false,
         "inset": false,
@@ -30789,27 +30802,10 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 2
-        }
-      },
-      {
-        "key": "hp-codaRibbonBlock",
-        "host": "ribbon",
-        "ground": "dark",
-        "texture": false,
-        "inset": false,
-        "adopted": null,
-        "seam": true,
-        "divider": null,
-        "hairline": false,
-        "ghost": false,
-        "raisePhoto": false,
-        "run": {
-          "index": 1,
-          "length": 2
+          "length": 1
         },
         "ribbonEdges": {
-          "top": true,
+          "top": false,
           "bottom": true
         }
       }
@@ -30843,8 +30839,8 @@
         }
       },
       {
-        "key": "hp-differentiatorBlock",
-        "host": "differentiators",
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -30860,8 +30856,8 @@
         }
       },
       {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -30944,12 +30940,12 @@
         }
       },
       {
-        "key": "hp-differentiatorBlock",
-        "host": "differentiators",
-        "ground": "light",
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
         "texture": false,
-        "inset": true,
-        "adopted": "dark",
+        "inset": false,
+        "adopted": null,
         "seam": true,
         "divider": null,
         "hairline": false,
@@ -30961,8 +30957,8 @@
         }
       },
       {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
         "ground": "light",
         "texture": false,
         "inset": true,
@@ -30980,10 +30976,10 @@
       {
         "key": "hp-narrativeBlock",
         "host": "narrative",
-        "ground": "dark",
+        "ground": "light",
         "texture": false,
-        "inset": false,
-        "adopted": null,
+        "inset": true,
+        "adopted": "dark",
         "seam": true,
         "divider": null,
         "hairline": false,
@@ -31045,8 +31041,8 @@
         }
       },
       {
-        "key": "hp-differentiatorBlock",
-        "host": "differentiators",
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "wash",
         "texture": false,
         "inset": false,
@@ -31062,8 +31058,8 @@
         }
       },
       {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -31138,15 +31134,35 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
+          "length": 2,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow",
         "ribbonEdges": {
           "top": true,
-          "bottom": false
+          "bottom": true
         }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
+        "ground": "dark",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": true,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 1,
+          "length": 2,
+          "peak": 1,
+          "side": "right"
+        },
+        "fade": "glow"
       },
       {
         "key": "hp-differentiatorBlock",
@@ -31169,8 +31185,8 @@
         "fade": "glow"
       },
       {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -31189,8 +31205,8 @@
         "fade": "glow"
       },
       {
-        "key": "hp-narrativeBlock",
-        "host": "narrative",
+        "key": "hp-codaRibbonBlock",
+        "host": "ribbon",
         "ground": "dark",
         "texture": false,
         "inset": false,
@@ -31202,35 +31218,11 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 2,
-          "peak": 1,
+          "length": 1,
+          "peak": 0,
           "side": "right"
         },
         "fade": "glow"
-      },
-      {
-        "key": "hp-codaRibbonBlock",
-        "host": "ribbon",
-        "ground": "dark",
-        "texture": false,
-        "inset": false,
-        "adopted": null,
-        "seam": true,
-        "divider": null,
-        "hairline": false,
-        "ghost": false,
-        "raisePhoto": false,
-        "run": {
-          "index": 1,
-          "length": 2,
-          "peak": 1,
-          "side": "right"
-        },
-        "fade": "glow",
-        "ribbonEdges": {
-          "top": true,
-          "bottom": false
-        }
       }
     ],
     "close": {
@@ -31275,8 +31267,8 @@
         }
       },
       {
-        "key": "hp-differentiatorBlock",
-        "host": "differentiators",
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -31296,8 +31288,8 @@
         }
       },
       {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -31387,8 +31379,8 @@
         }
       },
       {
-        "key": "hp-differentiatorBlock",
-        "host": "differentiators",
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -31404,8 +31396,8 @@
         }
       },
       {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
+        "key": "hp-differentiatorBlock",
+        "host": "differentiators",
         "ground": "light",
         "texture": false,
         "inset": false,

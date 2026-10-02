@@ -61,7 +61,9 @@ export function FeaturedTestimonialSection({
 
         {/* Section heading */}
         {tagline && <Tagline as="p">{tagline}</Tagline>}
-        <h2 className="section-heading mb-6 font-heading text-xl font-bold text-foreground md:text-2xl" style={headingFitStyle(fit)}>
+        {/* Phase 18 session D (monorepo `[R-615]`): the section tier every `SectionHeader` draws (it was 24 px, smaller than
+            every other section's heading), the quote kept under it and at a reading measure. */}
+        <h2 className="section-heading mb-6 font-heading text-3xl font-bold text-foreground md:text-4xl" style={headingFitStyle(fit)}>
           <HeadingText fit={fit}>{heading}</HeadingText>
         </h2>
 
@@ -71,7 +73,7 @@ export function FeaturedTestimonialSection({
         )}
 
         {/* Quote */}
-        <blockquote className="border-l-4 border-decor pl-8 text-left">
+        <blockquote className="max-w-3xl border-l-4 border-decor pl-8 text-left">
           <p className="text-xl font-medium leading-relaxed text-foreground md:text-2xl lg:text-3xl">
             {t.quote}
           </p>

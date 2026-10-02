@@ -15,6 +15,7 @@ import {SectionShell, type SectionAppearance} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
 import type {ContentSectionProps} from './sectionProps'
 import {headingFit} from '@/lib/headingFit'
+import {countGridClasses, itemTiers} from './countGrid'
 
 // ─── Content section ──────────────────────────────────────────────────────────
 //
@@ -115,8 +116,12 @@ export function rendersResultClaim(data: ContentSectionData): boolean {
 /** The heading over the items (Phase 18 session B): 24px, between the section heading and the 20px item titles. */
 export const ITEMS_HEADING_CLASS = 'mt-8 font-heading text-2xl font-bold text-foreground'
 
-function itemsGridClass(count: number): string {
-  return count > 1 ? 'grid grid-cols-1 gap-6 sm:grid-cols-2' : 'grid grid-cols-1 gap-6'
+// Phase 18 session D: the items follow their count (`countGrid.ts`): three one per row (three across a column is a
+// cramped line), else two across from `sm` with a short last row centred. They were two across whatever the count, so
+// the firm-data path's three differentiators always left one alone.
+function itemsGrid(count: number): {list: string; items: string[]} {
+  const g = countGridClasses(count, itemTiers(count))
+  return {list: `${g.list} gap-6`, items: g.items}
 }
 
 function statGridClass(count: number): string {
@@ -207,9 +212,9 @@ export function ContentSectionBlock({
           items.length > 0 && layout !== 'statRow' ? (
             <>
               {itemsHeading && <h3 className={ITEMS_HEADING_CLASS}>{itemsHeading}</h3>}
-              <ul role="list" className={`${itemsHeading ? 'mt-6' : 'mt-8'} ${itemsGridClass(items.length)}`}>
+              <ul role="list" className={`${itemsHeading ? 'mt-6' : 'mt-8'} ${itemsGrid(items.length).list}`}>
                 {items.map((item, i) => (
-                  <li key={item._key ?? i} className="border-t border-border pt-4">
+                  <li key={item._key ?? i} className={`border-t border-border pt-4 ${itemsGrid(items.length).items[i]}`}>
                     {has(item.title) && (itemsHeading
                       ? <h4 className="font-heading text-xl font-bold text-foreground">{t(item.title)}</h4>
                       : <h3 className="font-heading text-xl font-bold text-foreground">{t(item.title)}</h3>)}

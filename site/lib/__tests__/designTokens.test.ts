@@ -23,6 +23,7 @@ import {
   validateWcag,
   textureOnDark,
   SCRIM_OPACITY,
+  SECTION_HEADING_MAX_REM,
 } from '../designTokens'
 import {PALETTE_PRESETS, matchPreset, presetInputs} from '../palettes'
 import {resolvefonts} from '../../fonts/loader'
@@ -63,12 +64,14 @@ describe('the derivation, row by row', () => {
     expect(t['--color-action']).toBe('#666666')
   })
 
-  it('muted is the light ground at L −0.03 and hero-tint at L −0.015, on the ground’s own hue', () => {
+  it('muted is the light ground at L −0.03 and hero-tint TINT_DE from it, never past muted, on the ground’s own hue', () => {
     expect(t['--color-muted']).toBe('#f5f5f5')
-    expect(t['--color-hero-tint']).toBe('#fafafa')
+    expect(t['--color-hero-tint']).toBe('#f6f6f6')
     const cream = '#f5eedc'
     expect(oklch(mutedOf(cream)).l).toBeCloseTo(oklch(cream).l - 0.03, 2)
-    expect(oklch(heroTintOf(cream)).l).toBeCloseTo(oklch(cream).l - 0.015, 2)
+    // Phase 18 session D: the tint stands TINT_DE from the ground (it was L −0.015, ΔE 1.0), between the ground and muted.
+    expect(oklch(heroTintOf(cream)).l).toBeLessThan(oklch(cream).l - 0.015)
+    expect(oklch(heroTintOf(cream)).l).toBeGreaterThanOrEqual(oklch(mutedOf(cream)).l)
     // A cream ground's steps stay cream, not the grey today's recipe produced.
     expect(Math.abs(deltaH(mutedOf(cream), cream))).toBeLessThan(0.005)
     expect(oklch(heroTintOf(cream)).c).toBeGreaterThan(0.01)
@@ -642,25 +645,25 @@ describe('buildDesignTokenCSS marketingScale', () => {
     expect(css).toContain('--marketing-h4:1.778rem')
   })
 
-  it('md — Augmented Fourth ratio values', () => {
+  it('md — Augmented Fourth ratio values, the section heading at its ceiling', () => {
     const css = buildDesignTokenCSS({marketingScale: 'md'})
     expect(css).toContain('--marketing-h1:5.657rem')
-    expect(css).toContain('--marketing-h2:4rem')
+    expect(css).toContain('--marketing-h2:3.5rem')
     expect(css).toContain('--marketing-h3:2.828rem')
     expect(css).toContain('--marketing-h4:2rem')
   })
 
-  it('lg — Golden Ratio values, H1 capped at 8rem', () => {
+  it('lg — Golden Ratio values, H1 capped at 8rem, the section heading at its ceiling', () => {
     const css = buildDesignTokenCSS({marketingScale: 'lg'})
     expect(css).toContain('--marketing-h1:8rem')
-    expect(css).toContain('--marketing-h2:6.854rem')
-    expect(css).toContain('--marketing-h3:4.236rem')
+    expect(css).toContain('--marketing-h2:3.5rem')
+    expect(css).toContain('--marketing-h3:3rem')
     expect(css).toContain('--marketing-h4:2.618rem')
     // Sanity: capped value (8rem) is less than uncapped ratio⁵ × 16px = 11.09rem
     expect(css).not.toContain('--marketing-h1:11.09rem')
   })
 
-  it('values increase with preset across all four levels', () => {
+  it('values increase with preset across all four levels, the section heading to its ceiling', () => {
     const sm = buildDesignTokenCSS({marketingScale: 'sm'})
     const md = buildDesignTokenCSS({marketingScale: 'md'})
     const lg = buildDesignTokenCSS({marketingScale: 'lg'})
@@ -668,10 +671,14 @@ describe('buildDesignTokenCSS marketingScale', () => {
       const match = css.match(new RegExp(`--marketing-${level}:([\\d.]+)rem`))
       return parseFloat(match?.[1] ?? '0')
     }
-    for (const level of ['h1', 'h2', 'h3', 'h4']) {
+    for (const level of ['h1', 'h3', 'h4']) {
       expect(extract(md, level)).toBeGreaterThan(extract(sm, level))
       expect(extract(lg, level)).toBeGreaterThan(extract(md, level))
     }
+    // Phase 18 session D: the section heading rises from sm to md, and md and lg both stop at the ceiling.
+    expect(extract(md, 'h2')).toBeGreaterThan(extract(sm, 'h2'))
+    expect(extract(md, 'h2')).toBe(SECTION_HEADING_MAX_REM)
+    expect(extract(lg, 'h2')).toBe(SECTION_HEADING_MAX_REM)
   })
 })
 

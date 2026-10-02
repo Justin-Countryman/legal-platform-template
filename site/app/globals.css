@@ -518,7 +518,7 @@
   --color-action-text:         #666666;   /* outlined-button + tertiary text (cascade-aware: light = AA-safe action-on-light) */
   --color-action-text-on-dark: #838383;   /* action text on dark: the action stepped lighter until 4.5:1 */
   --color-muted:               #f5f5f5;   /* the card and alternation step: the light ground at L −0.03 (anchored — does NOT cascade) */
-  --color-hero-tint:           #fafafa;   /* the tint step: the light ground at L −0.015, its own hue; the light hero and tint bands */
+  --color-hero-tint:           #f6f6f6;   /* the tint step: ΔE2000 1.8 from the light ground, never past muted, its own hue; the light hero and tint bands (Phase 18 session D) */
   --color-wash:                #fdf6e8;   /* Soft wash's ground: a warm step of the light ground, never darker than muted (Phase 17D, [R-551]) */
   --color-brand-dark:          #141414;   /* the accepted dark ground: dark sections, footer */
   --color-accent:              #666666;   /* the accent as a fill, rule or icon (cascade-aware) */
