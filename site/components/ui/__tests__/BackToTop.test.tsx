@@ -171,3 +171,37 @@ describe('BackToTop — cascade-aware contract', () => {
     expect(html).not.toMatch(/#[0-9a-fA-F]{3,8}/)
   })
 })
+
+// ─── Reduced motion: the page jumps, never glides (monorepo WS-MOTION-LAYER-DESIGN.md §1.2) ────
+//
+// A page-length smooth scroll is the kind of motion WCAG 2.3.3's technique C39 asks to stop; the
+// two carousels already read the preference at call time (AttorneySlider, SiloCarousel), and this
+// button did not.
+
+describe('BackToTop — reduced motion', () => {
+  const prefer = (reduce: boolean) => {
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+      matches: reduce && query.includes('prefers-reduced-motion: reduce'),
+      media: query, onchange: null,
+      addListener: vi.fn(), removeListener: vi.fn(), addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn(),
+    })) as unknown as typeof window.matchMedia
+  }
+
+  it('jumps to the top when the visitor asks for less motion', () => {
+    prefer(true)
+    const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+    const {getByLabelText} = render(<BackToTop />)
+    fireEvent.click(getByLabelText('Back to top'))
+    expect(scrollTo).toHaveBeenCalledWith({top: 0, behavior: 'auto'})
+    scrollTo.mockRestore()
+  })
+
+  it('glides to the top otherwise', () => {
+    prefer(false)
+    const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+    const {getByLabelText} = render(<BackToTop />)
+    fireEvent.click(getByLabelText('Back to top'))
+    expect(scrollTo).toHaveBeenCalledWith({top: 0, behavior: 'smooth'})
+    scrollTo.mockRestore()
+  })
+})
