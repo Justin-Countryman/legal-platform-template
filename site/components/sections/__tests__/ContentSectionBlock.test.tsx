@@ -334,3 +334,13 @@ describe('ContentSectionBlock: a heading over the items', () => {
     expect(container.querySelector('h3')?.textContent).toBe('Why Example Law')
   })
 })
+
+
+// ─── Nothing clickable moves (monorepo [R-618], Phase 18 session E) ───────────
+describe('the moving line holds nothing a visitor can click or focus', () => {
+  it('draws only its line in the track, whatever else the band stores', () => {
+    const {getByTestId} = renderSection({layout: 'ribbon', heading: 'Serving the county since 1990', marquee: true,
+      buttons: [{_key: 'b', title: 'Call', url: 'tel:+15555550100', variant: 'primary'}]} as unknown as ContentSectionData)
+    expect(getByTestId('marquee-track').querySelectorAll('a, button, input, select, textarea, [tabindex]')).toHaveLength(0)
+  })
+})
