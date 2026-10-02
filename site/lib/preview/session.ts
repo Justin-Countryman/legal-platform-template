@@ -61,10 +61,17 @@ export type PreviewGrant = {
    *  Operator grants only; `v` stays 1, so an older pin, whose `asGrant` builds its grant from the
    *  keys it knows, drops it and shows the whole roster. */
   suggest?: PreviewSuggest
+  /** The theme's three for the meeting (Phase 18 session E, monorepo `[R-619]`): the build's pick first, then two the
+   *  firm's reading names. Operator grants only; a key of its own, so an older pin's `asGrant` drops it, keeping `suggest`. */
+  suggestTheme?: SuggestRow
+  /** The palette built from the firm's own colors (Phase 18 session E, monorepo `[R-620]`), the `brand` palette of the
+   *  address: an operator's grant carries it to offer it; a client's, only when it was sent that palette. */
+  brandPalette?: BrandPalette
 }
 
 export type SuggestRow = {ids: string[]; why: string}
 export type PreviewSuggest = {styleSet?: SuggestRow; palette?: SuggestRow}
+export type BrandPalette = {darkGround: string; accent: string; lightGround?: string; why: string}
 
 /** The bounds the Python signer holds too (`BE/_shared/preview_tokens.py`). */
 const SUGGEST_ID = /^[a-z0-9-]{1,32}$/
@@ -77,6 +84,31 @@ function suggestRow(v: unknown): SuggestRow | null {
   if (r.ids.length < 1 || r.ids.length > SUGGEST_IDS_MAX || !r.ids.every((i) => typeof i === 'string' && SUGGEST_ID.test(i))) return null
   if (typeof r.why !== 'string' || !r.why || r.why.length > SUGGEST_WHY_MAX) return null
   return {ids: r.ids as string[], why: r.why}
+}
+
+/** The bounds the Python signer holds too (`BE/_shared/preview_tokens.py`, Phase 18 session E). */
+const THEME_ID = /^[a-z][A-Za-z]{0,23}\.[a-z][A-Za-z]{0,11}$/
+const BRAND_HEX = /^#[0-9a-f]{6}$/
+
+/** A grant's theme row, read leniently: a malformed one is dropped and the grant kept. */
+export function asSuggestTheme(v: unknown): SuggestRow | undefined {
+  const r = v as {ids?: unknown; why?: unknown} | null
+  if (!r || typeof r !== 'object' || Object.keys(r).some((k) => k !== 'ids' && k !== 'why') || !Array.isArray(r.ids)) return undefined
+  if (r.ids.length < 1 || r.ids.length > SUGGEST_IDS_MAX || !r.ids.every((i) => typeof i === 'string' && THEME_ID.test(i))) return undefined
+  if (typeof r.why !== 'string' || !r.why || r.why.length > SUGGEST_WHY_MAX) return undefined
+  return {ids: r.ids as string[], why: r.why}
+}
+
+/** A grant's palette built from the firm's colors, read leniently: a malformed one is dropped. */
+export function asBrandPalette(v: unknown): BrandPalette | undefined {
+  const r = v as Record<string, unknown> | null
+  if (!r || typeof r !== 'object' || Object.keys(r).some((k) => !['darkGround', 'accent', 'lightGround', 'why'].includes(k))) return undefined
+  const hex = (x: unknown) => typeof x === 'string' && BRAND_HEX.test(x)
+  if (!hex(r.darkGround) || !hex(r.accent) || (r.lightGround !== undefined && r.lightGround !== null && !hex(r.lightGround))) return undefined
+  if (typeof r.why !== 'string' || !r.why || r.why.length > SUGGEST_WHY_MAX) return undefined
+  const out: BrandPalette = {darkGround: r.darkGround as string, accent: r.accent as string, why: r.why}
+  if (hex(r.lightGround)) out.lightGround = r.lightGround as string
+  return out
 }
 
 /** A grant's `suggest`, read leniently: a malformed one is dropped and the grant kept. */
@@ -164,6 +196,17 @@ export function asGrant(payload: unknown): PreviewGrant | null {
   if (p.role === 'operator') {
     const suggest = asSuggest(p.suggest)
     if (suggest) grant.suggest = suggest
+    // Phase 18 session E: the theme's three and the palette built from the firm's own colors, read as `suggest` is.
+    const suggestTheme = asSuggestTheme(p.suggestTheme)
+    if (suggestTheme) grant.suggestTheme = suggestTheme
+    const brandPalette = asBrandPalette(p.brandPalette)
+    if (brandPalette) grant.brandPalette = brandPalette
+  }
+  // A client sent the palette built from the firm's colors carries its roles, or the link draws nothing it was sent.
+  if (p.role === 'client' && grant.palette === 'brand') {
+    const brandPalette = asBrandPalette(p.brandPalette)
+    if (!brandPalette) return null
+    grant.brandPalette = brandPalette
   }
   // A client's view is bound to the choices it was sent, so it must carry them. The
   // theme is optional: a link minted before the fourth segment carries none.

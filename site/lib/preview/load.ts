@@ -57,6 +57,8 @@ export const loadPreview = cache(async (styleSet: string, palette: string, flow:
     client.fetch(PREVIEW_STORED_DESIGN_QUERY) as Promise<StoredDesign | null>,
   ])
   // The hero's photograph a Photo scrims choice is approved with (Phase 17B session 6, `[R-532]`).
-  const plan = planPreview(stored, choices, heroPhotoOf(homeHeroOf(home))?.assetId ?? null)
+  // The palette built from the firm's own colors, where the grant carries it (Phase 18 session E).
+  if (choices.palette === 'brand' && !grant.brandPalette) return {kind: 'none'}
+  const plan = planPreview(stored, choices, heroPhotoOf(homeHeroOf(home))?.assetId ?? null, grant.brandPalette ?? null)
   return {kind: 'live', grant, choices, plan, chrome: withPreview(liveChrome, plan), liveChrome, home}
 })
