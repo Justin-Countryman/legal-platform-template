@@ -334,8 +334,13 @@
 [data-button-animation="sweep"] [data-button-animatable="true"][data-variant="secondary"]::before {
   background: var(--color-action);
 }
-[data-button-animation="sweep"] [data-button-animatable="true"]:hover::before {
-  transform: scaleX(1);
+/* Each effect only where the device can hover: a tap on a phone sets :hover and leaves it set,
+   which left a sweep or a fill drawn (monorepo WS-MOTION-LAYER-DESIGN.md §1.2); Tailwind's own
+   hover: variant is already held so. */
+@media (hover: hover) {
+  [data-button-animation="sweep"] [data-button-animatable="true"]:hover::before {
+    transform: scaleX(1);
+  }
 }
 
 /* Mode: fill-center — background fills from center via clip-path circle. */
@@ -359,8 +364,10 @@
 [data-button-animation="fill-center"] [data-button-animatable="true"][data-variant="secondary"]::before {
   background: var(--color-action);
 }
-[data-button-animation="fill-center"] [data-button-animatable="true"]:hover::before {
-  clip-path: circle(75% at 50% 50%);
+@media (hover: hover) {
+  [data-button-animation="fill-center"] [data-button-animatable="true"]:hover::before {
+    clip-path: circle(75% at 50% 50%);
+  }
 }
 
 /* Mode: inset — pressed-in shadow on hover gives the button physical weight.
@@ -375,8 +382,10 @@
               color var(--motion-ui-fast) ease-out,
               border-color var(--motion-ui-fast) ease-out;
 }
-[data-button-animation="inset"] [data-button-animatable="true"]:hover {
-  box-shadow: inset 0 2px 8px rgb(var(--shadow-rgb) / 0.2);
+@media (hover: hover) {
+  [data-button-animation="inset"] [data-button-animatable="true"]:hover {
+    box-shadow: inset 0 2px 8px rgb(var(--shadow-rgb) / 0.2);
+  }
 }
 
 /* Mode: lift — translateY + shadow grows on hover. */
@@ -387,9 +396,11 @@
               border-color var(--motion-ui-fast),
               color var(--motion-ui-fast);
 }
-[data-button-animation="lift"] [data-button-animatable="true"]:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-elevation-md);
+@media (hover: hover) {
+  [data-button-animation="lift"] [data-button-animatable="true"]:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-elevation-md);
+  }
 }
 
 /* Reduced-motion carve-outs for all four non-standard modes. */
@@ -401,15 +412,19 @@
   [data-button-animation="inset"] [data-button-animatable="true"] {
     transition: none;
   }
-  [data-button-animation="inset"] [data-button-animatable="true"]:hover {
-    box-shadow: none;
+  @media (hover: hover) {
+    [data-button-animation="inset"] [data-button-animatable="true"]:hover {
+      box-shadow: none;
+    }
   }
   [data-button-animation="lift"] [data-button-animatable="true"] {
     transition: none;
   }
-  [data-button-animation="lift"] [data-button-animatable="true"]:hover {
-    transform: none;
-    box-shadow: none;
+  @media (hover: hover) {
+    [data-button-animation="lift"] [data-button-animatable="true"]:hover {
+      transform: none;
+      box-shadow: none;
+    }
   }
 }
 

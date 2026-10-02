@@ -14,7 +14,9 @@ export function BackToTop() {
 
   return (
     <button
-      onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}
+      // Jumps for a visitor who asks for less motion, read at the click as the carousels do
+      // (a page-length glide is the motion WCAG 2.3.3's C39 stops; monorepo WS-MOTION-LAYER-DESIGN.md §1.2).
+      onClick={() => window.scrollTo({top: 0, behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'})}
       aria-label="Back to top"
       inert={!visible}
       className={[
