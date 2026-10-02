@@ -6,6 +6,7 @@ import {SectionShell, type SectionAppearance} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type BadgesSectionProps} from './sectionProps'
 import {headingFit, type HeadingFit} from '@/lib/headingFit'
+import {PausableMarquee} from './PausableMarquee'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -169,23 +170,23 @@ function ScrollingBadges({data, tagline, heading, description, buttons, fit}: {d
           <SectionHeader tagline={tagline} heading={heading} fit={fit} description={description} className={description ? 'mb-10' : undefined} />
         </div>
       )}
-      <div className="w-full overflow-hidden" aria-label="Awards and recognition badges">
-        <div className="flex w-max animate-[marquee-top_30s_linear_infinite] gap-16 hover:[animation-play-state:paused]">
-          {[...badges, ...badges, ...badges, ...badges].map((badge, i) =>
-            badge.src ? (
-              <Image
-                key={i}
-                src={badge.src}
-                alt={badge.alt ?? ''}
-                width={badge.width ?? 300}
-                height={badge.height ?? 300}
-                className="h-20 w-auto object-contain"
-                aria-hidden={i >= badges.length}
-              />
-            ) : null,
-          )}
-        </div>
-      </div>
+      {/* Moves by itself, so it carries a Pause control and stands still under reduced
+          motion (WCAG 2.2.2; monorepo [R-617]): `PausableMarquee`. */}
+      <PausableMarquee label="Awards and recognition badges">
+        {[...badges, ...badges, ...badges, ...badges].map((badge, i) =>
+          badge.src ? (
+            <Image
+              key={i}
+              src={badge.src}
+              alt={badge.alt ?? ''}
+              width={badge.width ?? 300}
+              height={badge.height ?? 300}
+              className={i >= badges.length ? 'h-20 w-auto object-contain motion-reduce:hidden' : 'h-20 w-auto object-contain'}
+              aria-hidden={i >= badges.length ? true : undefined}
+            />
+          ) : null,
+        )}
+      </PausableMarquee>
       {buttons && buttons.length > 0 && (
         <div className="container px-[5%]">
           <ButtonGroup items={toCtaItems(buttons)} align="center" respectVariantField={false} className="mt-8" />
