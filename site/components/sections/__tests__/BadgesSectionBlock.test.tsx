@@ -79,3 +79,14 @@ describe('BadgesSectionBlock, scrolling, WCAG 2.2.2', () => {
     })
   })
 })
+
+// ─── Nothing clickable moves (monorepo [R-618], Phase 18 session E) ───────────
+// "nothing in the moving band is a link": a badge may store the address of its award's listing and a band its buttons,
+// and neither may ride the moving track, where a visitor cannot catch it.
+describe('the moving row holds nothing a visitor can click or focus', () => {
+  it('draws the badges, with their listing addresses and the band’s buttons, outside reach of the track', () => {
+    const linked = badges.map((b) => ({...b, url: 'https://awards.example/listing'}))
+    const {getByTestId} = render(<BadgesSectionBlock data={{layout: 'scrolling', heading: 'Awards', badges: linked, buttons} as never} />)
+    expect(getByTestId('marquee-track').querySelectorAll('a, button, input, select, textarea, [tabindex]')).toHaveLength(0)
+  })
+})

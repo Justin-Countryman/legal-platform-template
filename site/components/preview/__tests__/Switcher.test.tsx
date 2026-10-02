@@ -351,3 +351,57 @@ describe('the meeting’s preselection', () => {
     expect(c.textContent).not.toContain('Suggested first')
   })
 })
+
+// Phase 18 session E (monorepo `[R-619]`, `[R-620]`): the palette built from the firm's own colors first in the palette
+// row, and the theme's three first in the theme row, each with its reason; the rest one click away.
+describe('the firm’s own look in the meeting', () => {
+  const brandPalette = {darkGround: '#0c5c63', accent: '#e86a24', lightGround: '#f7f2e8', why: 'Built from the firm’s own teal and orange.'}
+  const suggestTheme = {ids: ['softWash.mostlyLight', 'editorial.mostlyLight', 'quiet.mostlyLight'], why: 'Warm and calm: Soft wash first.'}
+  const rowOf = (el: Element, head: string) => [...el.querySelectorAll('.sw-row')].find((r) => r.querySelector('.sw-head')?.textContent === head)!
+  const firstLinks = (row: Element) => [...row.children].filter((c) => c.tagName === 'A').map((a) => a.textContent)
+
+  it('shows Your colors first in the palette row, with its reason, linking the brand address', () => {
+    const c = draw({...operator, brandPalette})
+    const row = rowOf(c, 'Palette')
+    expect(firstLinks(row)[1]).toBe('Your colors')
+    expect(hrefs(row)).toContain('/site-preview/graphite/brand/site/design')
+    expect(c.textContent).toContain('Your colors: Built from the firm’s own teal and orange.')
+    expect(firstLinks(rowOf(draw(operator), 'Palette'))).not.toContain('Your colors')
+  })
+
+  it('names Your colors as the palette shown, and a client link sent it carries its roles', () => {
+    const c4 = {...choices, palette: 'brand'}
+    const c = render(<Switcher grant={{...operator, brandPalette}} choices={c4} plan={planPreview(stored, c4, null, brandPalette)} canvas={[]} chrome={null} origin="https://example.com" />).container
+    expect(c.textContent).toContain('Your colors')
+    const share = [...c.querySelectorAll('input, a')].map((el) => el.getAttribute('value') ?? el.getAttribute('href') ?? '').find((v) => v.includes('/site-preview/enter?t='))!
+    const payload = verifyToken(share.split('?t=')[1], SECRET) as {palette?: string; brandPalette?: unknown}
+    expect(payload.palette).toBe('brand')
+    expect(payload.brandPalette).toEqual(brandPalette)
+  })
+
+  it('shows the theme’s three first, each its exact step, with the reason, and the families behind All', () => {
+    const c = draw({...operator, suggestTheme})
+    const row = rowOf(c, ROW_THEME_HEAD)
+    const first = firstLinks(row)
+    expect(first[0]).toContain('As the site is')
+    expect(first.slice(1, 4)).toEqual(['Soft wash, mostly light', 'Editorial', 'Quiet'])
+    expect(hrefs(row)).toContain('/site-preview/graphite/navy-brass/softWash.mostlyLight/design')
+    expect(row.querySelector('details.sw-all summary')!.textContent).toBe(`All (${FAMILIES.length} more)`)
+    expect(c.textContent).toContain('Suggested first: Warm and calm: Soft wash first.')
+    // Without a suggestion, the families as before.
+    expect(rowOf(draw(operator), ROW_THEME_HEAD).querySelector('details.sw-all')).toBeNull()
+  })
+})
+
+// Phase 18 session E's break pass (ADV-18E-D): an inherited hero follows the theme (`themedHero`), so a theme's needs are
+// read against the hero as THAT theme draws it, not the previewed one: previewing Soft wash, Type on black still has the
+// dark hero it needs, since choosing it draws the hero dark.
+describe('a theme’s needs read the hero as that theme draws it', () => {
+  it('previewing Soft wash, Type on black is not told it lacks a dark hero', () => {
+    const c4 = {...choices, flow: 'softWash.mostlyLight'}
+    const heroUnder = (f: {family: string}) => (f.family === 'softWash' ? 'wash' : 'dark') as 'wash' | 'dark'
+    const c = render(<Switcher grant={operator} choices={c4} plan={planPreview(stored, c4)} canvas={[]} chrome={null} origin="https://example.com" hero="wash" heroUnder={heroUnder} />).container
+    const black = [...c.querySelectorAll('a.sw-family')].find((a) => a.textContent?.startsWith('Type on black'))!
+    expect(black.textContent).not.toContain('a dark or photo hero')
+  })
+})

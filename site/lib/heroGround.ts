@@ -4,6 +4,16 @@ import type {VisibleGround} from './sectionSurface'
 import type {HeroImage} from './heroSurface'
 import type {FlowRules} from './flows'
 
+// ─── The hero under the theme (Phase 18 session E, monorepo `[R-619]`) ──────────
+// The build leaves the homepage hero's ground to inherit and writes the theme (WS-V1-PHASE18E-DESIGN §9.2), so the hero
+// follows the theme the meeting picks: where the hero stores neither dark nor light, the theme's `hero` decides, and only
+// Soft wash says light (its warm wash, `heroPaint`). Every other theme leaves the hero as it was, the site's internal
+// default, so no live page moves. A photograph forces dark downstream, as always (`resolveHeroSurface`).
+export function themedHero<H extends HomeHeroData | null>(hero: H, flow: Pick<FlowRules, 'hero'> | null | undefined): H {
+  if (!hero || flow?.hero !== 'light' || hero.schemeOverride === 'dark' || hero.schemeOverride === 'light') return hero
+  return {...hero, schemeOverride: 'light'}
+}
+
 // ─── The hero's bottom ground (Phase 16C) ─────────────────────────────────────
 // What the first section meets at the hero's bottom, answered on the server from the
 // stored hero alone. Any photo there (an image backdrop, even one with no photo yet,

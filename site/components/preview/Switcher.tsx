@@ -12,7 +12,7 @@ import {type SiteChrome} from '@/components/layout/SiteShell'
 import {
   APPLY_LINK_SECONDS, CLIENT_LINK_SECONDS, nowSeconds, signToken, type PreviewGrant,
 } from '@/lib/preview/session'
-import {AS_THE_SITE_IS, ownGrounds, ownLooks, previewPath, type PreviewChoices, type PreviewPlan} from '@/lib/preview/plan'
+import {AS_THE_SITE_IS, BRAND_PALETTE, BRAND_PALETTE_NAME, ownGrounds, ownLooks, previewPath, type PreviewChoices, type PreviewPlan} from '@/lib/preview/plan'
 
 // ─── The switcher ─────────────────────────────────────────────────────────────
 //
@@ -58,6 +58,9 @@ type Props = {
   /** The homepage hero's ground as the walk meets it, for a theme that wants a dark hero
    *  (Phase 17B session 5). */
   hero?: VisibleGround | null
+  /** The hero's ground as each theme would draw it (Phase 18 session E: an inherited hero follows the theme,
+   *  `themedHero`), so a theme's needs are read against its own hero; absent, every theme reads `hero`. */
+  heroUnder?: (flow: FlowRules) => VisibleGround | null
   /** The live hero photograph a Photo scrims choice would be approved with (Phase 17B session 6). */
   heroPhoto?: HeroPhoto | null
   /** Every photograph of the theme's stored set, with its status against what the site has approved (Phase 17E). */
@@ -219,7 +222,7 @@ function Choice({href, active, className, children}: {href: string; active: bool
   )
 }
 
-export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = null, heroPhoto = null, photoSet = null, closeShown = true}: Props) {
+export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = null, heroUnder, heroPhoto = null, photoSet = null, closeShown = true}: Props) {
   const now = nowSeconds()
   const at = (c: Partial<PreviewChoices>) => previewPath({...choices, ...c})
 
@@ -232,7 +235,9 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
     )
   }
 
-  const share = signToken({v: 1, role: 'client', exp: now + CLIENT_LINK_SECONDS, ...choices})
+  // A client sent the palette built from the firm's colors carries its roles (Phase 18 session E), or its link draws nothing.
+  const brandRoles = choices.palette === BRAND_PALETTE && grant.brandPalette ? {brandPalette: grant.brandPalette} : {}
+  const share = signToken({v: 1, role: 'client', exp: now + CLIENT_LINK_SECONDS, ...choices, ...brandRoles})
   const shareUrl = share ? `${origin}/site-preview/enter?t=${share}` : null
   const changes = Object.keys(plan.set).length + plan.unset.length
   // A retired style set (Phase 17C session 2b, `[R-534]`) is rendered by a typed address so a live
@@ -272,10 +277,22 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
   // Facts per theme: the ribbons a theme fills are read from that theme's own pass.
   // A need of the palette, not of the page (Phase 17D session 2): Gradient bloom's room to glow is said on its own, so the
   // page is not blamed for the palette (ADV-17D2-C).
-  const unmetOf = (f: FlowRules | null) => (f ? unmetNeeds(f, canvasFacts(survivors, site, hero, f)) : [])
+  const unmetOf = (f: FlowRules | null) => (f ? unmetNeeds(f, canvasFacts(survivors, site, heroUnder ? heroUnder(f) : hero, f)) : [])
   const lacks = (f: FlowRules | null) => unmetOf(f).filter((n) => n !== 'glow').map(needLabel)
   const noGlow = (f: FlowRules | null) => unmetOf(f).includes('glow')
   const unmet = lacks(shown)
+  // The theme's three the Site Builder App suggests (`suggestTheme`), the ones this roster ships and the eye has passed.
+  const suggestedFlows = (grant.suggestTheme?.ids ?? []).map((id) => flowById(id)).filter((f): f is FlowRules => !!f && f.passed)
+  const familyChoices = FAMILIES.map((f) => {
+    const first = flowById(flowId(f.id, f.defaultStep))
+    const missing = lacks(first)
+    return (
+      <Choice key={f.id} href={at({flow: flowId(f.id, f.defaultStep)})} active={choices.flow !== AS_THE_SITE_IS && family?.id === f.id} className="sw-family">
+        <strong>{familyLabel(f)}</strong>
+        <span className="sw-sentence">{f.sentence}{missing.length > 0 && ` Needs ${missing.join(', ')} this page lacks.`}{noGlow(first) && ` ${NO_GLOW}`}</span>
+      </Choice>
+    )
+  })
   const headerNote = chromeNote(shown, chrome)
   // The set as this preview draws it (Phase 17E): choosing the theme approves every photograph of the set in the preview,
   // so the photographs the page places are read from the preview's own walk, with the preview's own look; beside the
@@ -329,6 +346,13 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
         <div className="sw-row">
           <span className="sw-head">Palette</span>
           <Choice href={at({palette: AS_THE_SITE_IS})} active={choices.palette === AS_THE_SITE_IS}>As the site is: {wearsPalette}</Choice>
+          {grant.brandPalette && (
+            <Choice href={at({palette: BRAND_PALETTE})} active={choices.palette === BRAND_PALETTE}>
+              <span className="sw-swatch" style={{background: grant.brandPalette.darkGround}} />
+              <span className="sw-swatch" style={{background: grant.brandPalette.accent}} />
+              {BRAND_PALETTE_NAME}
+            </Choice>
+          )}
           <Preselected all={PALETTE_PRESETS} ids={grant.suggest?.palette?.ids} offered={() => true} active={choices.palette}>
             {(p) => (
               <Choice key={p.id} href={at({palette: p.id})} active={choices.palette === p.id}>
@@ -339,21 +363,23 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
             )}
           </Preselected>
         </div>
+        {grant.brandPalette && <p className="sw-note sw-why">{BRAND_PALETTE_NAME}: {grant.brandPalette.why}</p>}
         {suggestedWhy(PALETTE_PRESETS, grant.suggest?.palette, () => true)}
         <div className="sw-row">
           <span className="sw-head">{ROW_THEME_HEAD}</span>
           <Choice href={at({flow: AS_THE_SITE_IS})} active={choices.flow === AS_THE_SITE_IS}>As the site is: {plan.wears.flow.name}</Choice>
-          {FAMILIES.map((f) => {
-            const first = flowById(flowId(f.id, f.defaultStep))
-            const missing = lacks(first)
-            return (
-              <Choice key={f.id} href={at({flow: flowId(f.id, f.defaultStep)})} active={choices.flow !== AS_THE_SITE_IS && family?.id === f.id} className="sw-family">
-                <strong>{familyLabel(f)}</strong>
-                <span className="sw-sentence">{f.sentence}{missing.length > 0 && ` Needs ${missing.join(', ')} this page lacks.`}{noGlow(first) && ` ${NO_GLOW}`}</span>
-              </Choice>
-            )
-          })}
+          {/* The theme's three for the meeting (Phase 18 session E), each its exact step, then the families behind All. */}
+          {suggestedFlows.map((f) => (
+            <Choice key={f.id} href={at({flow: f.id})} active={choices.flow === f.id}>{f.name}</Choice>
+          ))}
+          {suggestedFlows.length > 0 ? (
+            <details className="sw-all" open={(choices.flow !== AS_THE_SITE_IS && !suggestedFlows.some((f) => f.id === choices.flow)) || undefined}>
+              <summary className="sw-choice">All ({FAMILIES.length} more)</summary>
+              {familyChoices}
+            </details>
+          ) : familyChoices}
         </div>
+        {suggestedFlows.length > 0 && grant.suggestTheme && <p className="sw-note sw-why">Suggested first: {grant.suggestTheme.why}</p>}
         {family && family.steps.length > 1 && (
           <div className="sw-row">
             <span className="sw-head">Step: {family.name}</span>

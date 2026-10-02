@@ -131,3 +131,39 @@ describe('suggest', () => {
     expect(asGrant({...client, suggest})!.suggest).toBeUndefined()
   })
 })
+
+// Phase 18 session E (monorepo `[R-619]`, `[R-620]`): the theme's three for the meeting and the palette built from the
+// firm's own colors, each a key of its own beside `suggest`, so an older pin's `asGrant` drops them and keeps `suggest`.
+describe('the firm’s own look in the grant', () => {
+  const suggestTheme = {ids: ['softWash.balanced', 'softWash.mostlyLight', 'editorial.mostlyLight'], why: 'Warm and calm.'}
+  const brandPalette = {darkGround: '#0c5c63', accent: '#e86a24', lightGround: '#f7f2e8', why: 'The firm’s own teal and orange.'}
+
+  it('ride an operator grant, which stays version 1', () => {
+    const grant = asGrant({...operator, suggestTheme, brandPalette})!
+    expect(grant.v).toBe(1)
+    expect(grant.suggestTheme).toEqual(suggestTheme)
+    expect(grant.brandPalette).toEqual(brandPalette)
+    expect(asGrant({...operator, brandPalette: {...brandPalette, lightGround: undefined}})!.brandPalette).toEqual({darkGround: '#0c5c63', accent: '#e86a24', why: brandPalette.why})
+  })
+
+  it('are dropped, never refused, when malformed, and the grant is kept', () => {
+    for (const bad of [{ids: ['quiet'], why: 'x'}, {ids: ['Quiet.mostlyLight'], why: 'x'}, {ids: [], why: 'x'}, {ids: ['quiet.mostlyLight'], why: ''}, 'x']) {
+      const grant = asGrant({...operator, suggestTheme: bad})
+      expect(grant, JSON.stringify(bad)).not.toBeNull()
+      expect(grant!.suggestTheme).toBeUndefined()
+    }
+    for (const bad of [{darkGround: '#0c5c63', why: 'x'}, {darkGround: 'teal', accent: '#e86a24', why: 'x'}, {...brandPalette, why: ''},
+      {...brandPalette, action: '#000000'}, {...brandPalette, accent: '#E86A24'}]) {
+      const grant = asGrant({...operator, brandPalette: bad})
+      expect(grant, JSON.stringify(bad)).not.toBeNull()
+      expect(grant!.brandPalette).toBeUndefined()
+    }
+  })
+
+  it('a client link carries the built palette only when it was sent that palette, and is refused naming it without one', () => {
+    expect(asGrant({...client, suggestTheme, brandPalette})!.suggestTheme).toBeUndefined()
+    expect(asGrant({...client, brandPalette})!.brandPalette).toBeUndefined()
+    expect(asGrant({...client, palette: 'brand', brandPalette})!.brandPalette).toEqual(brandPalette)
+    expect(asGrant({...client, palette: 'brand'})).toBeNull()
+  })
+})
