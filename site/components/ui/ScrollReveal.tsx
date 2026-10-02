@@ -40,6 +40,15 @@ import {useReducedMotion} from 'framer-motion'
 // to `m.div`.
 //
 // See BI-Library.md → Scroll-reveal, for the usage rule and when NOT to apply it.
+//
+// THE CONTENT RISES, NEVER THE GROUND (monorepo WS-MOTION-LAYER-DESIGN.md §5). This
+// wrapper carries the phase (`data-reveal`) and the approved values as custom
+// properties; `globals.css` moves the band's content (`[data-band-content]`, the
+// content container `SectionShell` draws), inside `prefers-reduced-motion:
+// no-preference`. Moving the whole band slid its ground 24px off its neighbour, and
+// the page's body showed through the gap: a cream stripe between two navy bands on
+// the dark themes while the lower one waited (measured, both widths). A band with
+// no marked content does not move at all, which is the safe direction.
 
 // Motion values. 24px and 600ms match the hero's `entrance` variant so the two
 // entrance systems feel like one. The easing is the repo's `--ease-gentle`
@@ -51,6 +60,13 @@ export const REVEAL_DISTANCE_PX = 24
 export const REVEAL_DURATION_MS = 600
 export const REVEAL_EASING = 'cubic-bezier(0.33, 1, 0.68, 1)'
 export const REVEAL_THRESHOLD = 0.15
+/** The second trigger: the band's top 15% of the screen up from the bottom. */
+export const REVEAL_SCREEN_MARGIN = `0px 0px -${REVEAL_THRESHOLD * 100}% 0px`
+const REVEAL_VALUES = {
+  '--reveal-distance': `${REVEAL_DISTANCE_PX}px`,
+  '--reveal-duration': `${REVEAL_DURATION_MS}ms`,
+  '--reveal-easing': REVEAL_EASING,
+} as React.CSSProperties
 
 // `unset` renders no styles at all — the server-rendered state, and the state
 // every failure path falls back to.
@@ -117,44 +133,43 @@ export function ScrollReveal({
 
     // Attach BEFORE applying any state. If the constructor or observe() throws,
     // the element is still untouched and renders exactly as the server sent it.
-    let observer: IntersectionObserver
+    //
+    // Two triggers, whichever fires first: 15% of the band in view (the approved
+    // moment, unchanged for every band shorter than the screen), or its top 15% of
+    // the screen up. A threshold is a share of the band's own area, so a band
+    // taller than the screen divided by 0.15 (about 5,600px on a 390 by 844 phone,
+    // a long attorney list) never reached it and stayed offset for good.
+    const observers: IntersectionObserver[] = []
+    const disconnect = () => observers.forEach((o) => o.disconnect())
+    const reveal = (entries: IntersectionObserverEntry[]) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return
+      setPhase('revealed')
+      // Reveal once. An element that has revealed stays revealed — it is
+      // never re-hidden on scroll away, and never re-animated on return.
+      disconnect()
+    }
     try {
-      observer = new IntersectionObserver(
-        (entries) => {
-          if (!entries.some((entry) => entry.isIntersecting)) return
-          setPhase('revealed')
-          // Reveal once. An element that has revealed stays revealed — it is
-          // never re-hidden on scroll away, and never re-animated on return.
-          observer.disconnect()
-        },
-        {threshold: REVEAL_THRESHOLD},
-      )
-      observer.observe(el)
+      observers.push(new IntersectionObserver(reveal, {threshold: REVEAL_THRESHOLD}))
+      observers.push(new IntersectionObserver(reveal, {rootMargin: REVEAL_SCREEN_MARGIN, threshold: 0}))
+      observers.forEach((o) => o.observe(el))
     } catch {
+      disconnect()
       return
     }
 
     armed.current = true
     setPhase('offset')
 
-    return () => observer.disconnect()
+    return disconnect
   }, [reduce])
 
-  // `reduce` short-circuits the style entirely rather than shortening a
+  // `reduce` drops the phase and the values entirely rather than shortening a
   // duration, which is also what makes a mid-session toggle correct: the
-  // transform is dropped instantly, with no transition to run.
-  const style =
-    reduce || phase === 'unset'
-      ? undefined
-      : phase === 'offset'
-        ? {transform: `translateY(${REVEAL_DISTANCE_PX}px)`}
-        : {
-            transform: 'none',
-            transition: `transform ${REVEAL_DURATION_MS}ms ${REVEAL_EASING}`,
-          }
+  // offset is gone instantly, with no transition to run.
+  const live = !reduce && phase !== 'unset'
 
   return (
-    <div ref={ref} className={className} style={style}>
+    <div ref={ref} className={className} data-reveal={live ? phase : undefined} style={live ? REVEAL_VALUES : undefined}>
       {children}
     </div>
   )

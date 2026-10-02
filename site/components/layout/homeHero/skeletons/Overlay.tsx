@@ -38,8 +38,10 @@ function Backdrop({config, surface, content}: {config: HeroConfig; surface: Reso
           ))}
         </ul>
       ) : (
+        // `hero-drift`: the photograph drifts as the hero leaves (globals.css, the parallax); only a
+        // single full-bleed photograph, never the mosaic, whose tiles do not clip.
         surface.bgImage && (
-          <Image src={surface.bgImage.src} alt={surface.bgImage.alt ?? ''} fill priority className="object-cover" style={{objectPosition: heroObjectPosition(surface.bgImage)}} sizes={HERO_BACKDROP_SIZES} />
+          <Image src={surface.bgImage.src} alt={surface.bgImage.alt ?? ''} fill priority className="object-cover hero-drift" style={{objectPosition: heroObjectPosition(surface.bgImage)}} sizes={HERO_BACKDROP_SIZES} />
         )
       )}
       <HeroScrim style={config.scrimStyle} color={config.scrimColor} direction={config.scrimDirection} opacity={surface.scrimOpacity} align={config.contentAlign} tone="dark" />

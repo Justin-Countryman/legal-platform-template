@@ -450,6 +450,41 @@
   background: var(--color-foreground);
 }
 
+/* ─── The scroll reveal (components/ui/ScrollReveal.tsx) ─────────────────── */
+/* The band's CONTENT rises, never its ground: the wrapper carries the phase and the
+   approved values (24px, 600ms, --ease-gentle; Justin, 2026-07-20, BI-Library.md),
+   SectionShell marks the content. Only for a visitor who has not asked for reduced
+   motion; the transition only once the band is revealed, so arming never animates. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal="offset"] [data-band-content] {
+    transform: translateY(var(--reveal-distance));
+  }
+  [data-reveal="revealed"] [data-band-content] {
+    transition: transform var(--reveal-duration) var(--reveal-easing);
+  }
+}
+
+/* ─── The parallax: a hero photograph drifts as the hero leaves ────────── */
+/* Justin, 2026-10-02 (monorepo WS-MOTION-LAYER-DESIGN.md §7): every hero photograph, from
+   768 px, still for a visitor who asks for less motion. The photograph behind an Overlay hero
+   moves down a fifth of the distance scrolled, over the first screen of scroll, inside the box
+   that clips it; the scrim and the text stay. No enlarged image: the strip it uncovers at its
+   top sits above the screen or under the sticky header (measured at 1440, 1024 and 768).
+   Tied to the page's own scroller (`scroll(root)`): a timeline on the image's own box, which
+   clips and never scrolls, would never move. Only where scroll timelines exist (Firefox draws
+   it still), and only inside the media query, because the reduced-motion reset below cannot
+   stop a scroll-driven animation (its duration is "treated as auto", CSS Animations 2). */
+@keyframes hero-drift { to { transform: translateY(20vh); } }
+@media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
+  @supports (animation-timeline: scroll()) {
+    .hero-drift {
+      animation: hero-drift linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+  }
+}
+
 /* ─── Prefers Reduced Motion ─────────────────────────────────────────────── */
 /* 10ms (not 0ms) avoids jump-cut artifacts in max-height collapse animations. */
 @media (prefers-reduced-motion: reduce) {

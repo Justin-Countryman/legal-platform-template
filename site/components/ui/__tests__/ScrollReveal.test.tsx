@@ -17,6 +17,7 @@ import {
   REVEAL_DURATION_MS,
   REVEAL_EASING,
   REVEAL_THRESHOLD,
+  REVEAL_SCREEN_MARGIN,
 } from '../ScrollReveal'
 
 // ─── IntersectionObserver harness ─────────────────────────────────────────────
@@ -139,7 +140,7 @@ describe('ScrollReveal — transform only, no opacity in any state', () => {
   it('never sets opacity on the element in the offset state', () => {
     stubRect(BELOW_FOLD)
     const {wrapper} = renderProbe()
-    expect(wrapper.style.transform).toBe(`translateY(${REVEAL_DISTANCE_PX}px)`)
+    expect(wrapper.dataset.reveal).toBe('offset')
     expect(wrapper.style.opacity).toBe('')
   })
 
@@ -150,12 +151,14 @@ describe('ScrollReveal — transform only, no opacity in any state', () => {
     expect(wrapper.style.opacity).toBe('')
   })
 
-  it('never transitions opacity — the transition names transform only', () => {
+  it('never transitions opacity — the wrapper names no transition of its own', () => {
+    // The transition is globals.css's, on the band's content, and names transform
+    // only; the wrapper carries values, never a transition or an opacity.
     stubRect(BELOW_FOLD)
     const {wrapper} = renderProbe()
     act(() => observers[0].fire(true))
-    expect(wrapper.style.transition).toContain('transform')
-    expect(wrapper.style.transition).not.toContain('opacity')
+    expect(wrapper.style.transition).toBe('')
+    expect(wrapper.getAttribute('style')).not.toMatch(/opacity/i)
   })
 
   it('offset content is painted, not hidden — no display, visibility or clip', () => {
@@ -190,6 +193,7 @@ describe('ScrollReveal — the server-rendered state carries no styles', () => {
     expect(html).toContain('probe')
     expect(html).not.toContain('style=')
     expect(html).not.toContain('transform')
+    expect(html).not.toContain('data-reveal')
   })
 })
 
@@ -200,6 +204,7 @@ describe('ScrollReveal — at-or-above-the-fold content is left alone', () => {
     stubRect(IN_VIEWPORT)
     const {wrapper} = renderProbe()
     expect(wrapper.getAttribute('style')).toBeNull()
+    expect(wrapper.dataset.reveal).toBeUndefined()
   })
 
   it('attaches no observer for an element already in the viewport', () => {
@@ -232,57 +237,84 @@ describe('ScrollReveal — below-fold content offsets then reveals', () => {
   it('offsets by the approved distance once armed', () => {
     stubRect(BELOW_FOLD)
     const {wrapper} = renderProbe()
-    expect(wrapper.style.transform).toBe(`translateY(${REVEAL_DISTANCE_PX}px)`)
+    expect(wrapper.dataset.reveal).toBe('offset')
+    expect(wrapper.style.getPropertyValue('--reveal-distance')).toBe(`${REVEAL_DISTANCE_PX}px`)
   })
 
   it('applies no transition while offset, so arming does not animate downward', () => {
+    // globals.css transitions the content only under `data-reveal="revealed"`.
     stubRect(BELOW_FOLD)
     const {wrapper} = renderProbe()
+    expect(wrapper.dataset.reveal).toBe('offset')
     expect(wrapper.style.transition).toBe('')
   })
 
-  it('observes the wrapper element at the approved threshold', () => {
+  it('observes the wrapper element at the approved threshold, and at 15% of the screen', () => {
     stubRect(BELOW_FOLD)
     const {wrapper} = renderProbe()
-    expect(observers.length).toBe(1)
+    expect(observers.length).toBe(2)
     expect(observers[0].observed).toEqual([wrapper])
     expect(observers[0].options?.threshold).toBe(REVEAL_THRESHOLD)
+    expect(observers[1].observed).toEqual([wrapper])
+    expect(observers[1].options?.rootMargin).toBe('0px 0px -15% 0px')
+    expect(observers[1].options?.threshold).toBe(0)
+    expect(REVEAL_SCREEN_MARGIN).toBe('0px 0px -15% 0px')
   })
 
-  it('attaches the observer BEFORE applying the offset', () => {
+  it('attaches the observers BEFORE applying the offset', () => {
     // Ordering is the ruling-1 guarantee: if construction or observe() throws,
     // no state has been applied and the element renders as the server sent it.
     stubRect(BELOW_FOLD)
     renderProbe()
-    expect(opLog).toEqual(['observe'])
+    expect(opLog).toEqual(['observe', 'observe'])
   })
 
   it('reveals to its resting position with the approved motion on intersection', () => {
     stubRect(BELOW_FOLD)
     const {wrapper} = renderProbe()
     act(() => observers[0].fire(true))
-    expect(wrapper.style.transform).toBe('none')
-    expect(wrapper.style.transition).toBe(
-      `transform ${REVEAL_DURATION_MS}ms ${REVEAL_EASING}`,
-    )
+    expect(wrapper.dataset.reveal).toBe('revealed')
+    expect(wrapper.style.getPropertyValue('--reveal-duration')).toBe(`${REVEAL_DURATION_MS}ms`)
+    expect(wrapper.style.getPropertyValue('--reveal-easing')).toBe(REVEAL_EASING)
   })
 
   it('ignores a non-intersecting callback', () => {
     stubRect(BELOW_FOLD)
     const {wrapper} = renderProbe()
     act(() => observers[0].fire(false))
-    expect(wrapper.style.transform).toBe(`translateY(${REVEAL_DISTANCE_PX}px)`)
+    expect(wrapper.dataset.reveal).toBe('offset')
+  })
+
+  it('reveals a band taller than the screen by its second trigger', () => {
+    // A threshold is a share of the band's own area: a band taller than the screen
+    // divided by 0.15 never reaches it, and stayed offset for good (measured).
+    stubRect(BELOW_FOLD, BELOW_FOLD + 8000)
+    const {wrapper} = renderProbe()
+    act(() => observers[1].fire(true))
+    expect(wrapper.dataset.reveal).toBe('revealed')
+    expect(observers.every((o) => o.disconnected >= 1)).toBe(true)
+  })
+
+  it('never moves the wrapper itself, so the band ground stays put in every phase', () => {
+    // globals.css moves `[data-band-content]` inside the band; the wrapper (and the
+    // band's ground with it) stays where the page lays it out.
+    stubRect(BELOW_FOLD)
+    const {wrapper} = renderProbe()
+    expect(wrapper.style.transform).toBe('')
+    act(() => observers[0].fire(true))
+    expect(wrapper.style.transform).toBe('')
   })
 })
 
 // ─── Reveal once ──────────────────────────────────────────────────────────────
 
 describe('ScrollReveal — reveals once and stays revealed', () => {
-  it('disconnects the observer on reveal', () => {
+  it('disconnects both observers on reveal', () => {
     stubRect(BELOW_FOLD)
     renderProbe()
     act(() => observers[0].fire(true))
     expect(observers[0].disconnected).toBeGreaterThanOrEqual(1)
+    expect(observers[1].disconnected).toBeGreaterThanOrEqual(1)
   })
 
   it('does not re-hide when the element leaves the viewport again', () => {
@@ -290,16 +322,16 @@ describe('ScrollReveal — reveals once and stays revealed', () => {
     const {wrapper} = renderProbe()
     act(() => observers[0].fire(true))
     act(() => observers[0].fire(false))
-    expect(wrapper.style.transform).toBe('none')
+    expect(wrapper.dataset.reveal).toBe('revealed')
   })
 
   it('does not re-animate on a second intersection', () => {
     stubRect(BELOW_FOLD)
     const {wrapper} = renderProbe()
     act(() => observers[0].fire(true))
-    act(() => observers[0].fire(true))
-    expect(wrapper.style.transform).toBe('none')
-    expect(observers.length).toBe(1)
+    act(() => observers[1].fire(true))
+    expect(wrapper.dataset.reveal).toBe('revealed')
+    expect(observers.length).toBe(2)
   })
 })
 
@@ -311,6 +343,7 @@ describe('ScrollReveal — reduced motion', () => {
     stubRect(BELOW_FOLD)
     const {wrapper} = renderProbe()
     expect(wrapper.getAttribute('style')).toBeNull()
+    expect(wrapper.dataset.reveal).toBeUndefined()
   })
 
   it('attaches no observer when reduced motion is preferred', () => {
@@ -335,7 +368,7 @@ describe('ScrollReveal — reduced motion', () => {
     mockReduce = null
     stubRect(BELOW_FOLD)
     const {wrapper} = renderProbe()
-    expect(wrapper.style.transform).toBe(`translateY(${REVEAL_DISTANCE_PX}px)`)
+    expect(wrapper.dataset.reveal).toBe('offset')
   })
 })
 
@@ -347,6 +380,7 @@ describe('ScrollReveal — every failure path falls back to visible, in place', 
     stubRect(BELOW_FOLD)
     const {wrapper} = renderProbe()
     expect(wrapper.getAttribute('style')).toBeNull()
+    expect(wrapper.dataset.reveal).toBeUndefined()
     expect(wrapper.textContent).toBe('probe')
   })
 
@@ -355,6 +389,7 @@ describe('ScrollReveal — every failure path falls back to visible, in place', 
     stubRect(BELOW_FOLD)
     const {wrapper} = renderProbe()
     expect(wrapper.getAttribute('style')).toBeNull()
+    expect(wrapper.dataset.reveal).toBeUndefined()
     expect(wrapper.textContent).toBe('probe')
   })
 

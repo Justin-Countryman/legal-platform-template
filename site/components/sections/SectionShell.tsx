@@ -321,13 +321,13 @@ export function SectionShell({
             </>
           )}
           {texture}
-          <div className={[contained ? 'container relative' : 'relative', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
+          <div data-band-content className={[contained ? 'container relative' : 'relative', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
         </div>
       ) : (
         <>
           {texture}
           {ghost}
-          <div className={[contained ? 'container relative' : 'relative', seam.divider?.mode === 'cut' && 'mt-divider', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
+          <div data-band-content className={[contained ? 'container relative' : 'relative', seam.divider?.mode === 'cut' && 'mt-divider', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
         </>
       )}
     </Tag>
