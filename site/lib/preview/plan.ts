@@ -48,6 +48,11 @@ import {type PreviewView} from './session'
 /** The row value that leaves a choice as the site has it. */
 export const AS_THE_SITE_IS = 'site'
 export const COLOR_ROLES = ['darkGround', 'lightGround', 'accent', 'action'] as const
+/** The palette built from the firm's own colors (Phase 18 session E, monorepo `[R-620]`): its id in the address, its
+ *  roles from the grant (`brandPalette`), written by Apply as a preset's are. The engine keeps every text pair readable
+ *  whatever the roles (`resolvePalette`). */
+export const BRAND_PALETTE = 'brand'
+export const BRAND_PALETTE_NAME = 'Your colors'
 
 export type PreviewChoices = {styleSet: string; palette: string; flow: string; view: PreviewView}
 
@@ -60,7 +65,7 @@ const ADDRESSABLE: readonly StyleSet[] = [...STYLE_SETS, ...RETIRED_STYLE_SETS]
 /** The choices from the preview address, or null when any part is not one. */
 export function parseChoices(styleSet: string, palette: string, flow: string, view: string): PreviewChoices | null {
   const s = styleSet === AS_THE_SITE_IS || ADDRESSABLE.some((t) => t.id === styleSet)
-  const p = palette === AS_THE_SITE_IS || PALETTE_PRESETS.some((x) => x.id === palette)
+  const p = palette === AS_THE_SITE_IS || palette === BRAND_PALETTE || PALETTE_PRESETS.some((x) => x.id === palette)
   const f = flow === AS_THE_SITE_IS || FLOWS.some((x) => x.id === flow)
   const v = view === 'design' || view === 'grey'
   return s && p && f && v ? {styleSet, palette, flow, view: view as PreviewView} : null
@@ -113,6 +118,7 @@ export function planPreview(
   stored: StoredDesign | null | undefined,
   choices: Pick<PreviewChoices, 'styleSet' | 'palette' | 'flow'>,
   heroPhoto: string | null = null,
+  brand: {darkGround: string; accent: string; lightGround?: string} | null = null,
 ): PreviewPlan {
   const doc: StoredDesign = stored ?? {}
   const wears = {styleSet: matchStyleSet(doc), palette: matchPreset(doc), flow: flowOf(doc)}
@@ -126,7 +132,9 @@ export function planPreview(
     for (const field of patch.unset) if (present(doc[field])) unset.push(field)
   }
 
-  const palette = PALETTE_PRESETS.find((p) => p.id === choices.palette) ?? null
+  const palette = choices.palette === BRAND_PALETTE
+    ? (brand ? {id: BRAND_PALETTE, name: BRAND_PALETTE_NAME, darkGround: brand.darkGround, lightGround: brand.lightGround, accent: brand.accent, evidence: []} : null)
+    : PALETTE_PRESETS.find((p) => p.id === choices.palette) ?? null
   if (palette) {
     const inputs = presetInputs(palette)
     for (const role of COLOR_ROLES) {

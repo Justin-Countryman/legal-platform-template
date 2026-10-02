@@ -18115,6 +18115,10 @@
             },
             {
               "type": "string",
+              "value": "softWash.balanced"
+            },
+            {
+              "type": "string",
               "value": "gradientBloom.mostlyDark"
             },
             {

@@ -61,8 +61,8 @@ export const HOSTS = [
 ] as const
 export type Host = (typeof HOSTS)[number]
 
-export const DARK_BUDGETS = ['none', 'third', 'threeQuarters', 'all'] as const
-export const DARK_RHYTHMS = ['alternate', 'pairs', 'runs', 'bookends'] as const
+export const DARK_BUDGETS = ['none', 'quarter', 'third', 'threeQuarters', 'all'] as const
+export const DARK_RHYTHMS = ['alternate', 'pairs', 'runs', 'bookends', 'spread'] as const
 export const DARK_PAINTS = ['plain', 'pattern', 'gradient', 'gradientPerBand', 'photo', 'saturated', 'heroPhoto', 'floating', 'glow'] as const
 export const CLOSES = ['dark', 'saturated', 'muted', 'photo', 'wash'] as const
 export const LIGHT_PAINTS = ['plain', 'washes', 'pattern', 'panel', 'floating'] as const
@@ -87,6 +87,11 @@ export const GHOSTS = ['none', 'once'] as const
  *  polarity follows the internal hero, not the homepage's (measured unreadable at 1.02:1 when they
  *  differ, ADV-17B4-A); glass pairs with the floating compact style. Both stay the operator's. */
 export const CHROME_SCHEMES = ['light', 'dark'] as const
+/** The homepage hero's ground where the hero stores none of its own (Inherit; Phase 18 session E, monorepo `[R-619]`):
+ *  the site's internal default as before (`site`), or light (`light`), which a theme that paints washes draws as its
+ *  wash. Only Soft wash says light, so a warm firm opens on its warm hero and the hero follows the theme the meeting
+ *  picks; a stored dark or light wins, and a photograph forces dark (`themedHero`, `lib/heroGround.ts`). */
+export const HERO_GROUNDS = ['site', 'light'] as const
 export type ChromeScheme = (typeof CHROME_SCHEMES)[number]
 /** `ribbons`: the theme fills two ribbons on this page (read from the pass, so two adjacent or a
  *  stored one do not count); `darkHero`: the hero is dark or a photo (Phase 17B session 5);
@@ -108,13 +113,15 @@ export type FlowRules = {
    *  passed step; the switcher lists every step, because the eye pass runs through it. */
   passed: boolean
   dark: {
-    /** The mid-page dark budget: none; a third of the survivors; three quarters; all. */
+    /** The mid-page dark budget: none; a few (`quarter`, one band in four, Phase 18 session E); a third of the
+     *  survivors; three quarters; all. */
     budget: (typeof DARK_BUDGETS)[number]
     /** The bands that may go dark, in this theme's order of preference. Absent hosts stay light. */
     hosts: readonly Host[]
     /** How the dark bands sit: never two in a row; runs of at most two; gathered into runs;
-     *  none mid-page. The hero is never a neighbour, so a band directly under a dark hero
-     *  may join it under every rhythm (25 of 45 dark heroes are followed by a dark band). */
+     *  none mid-page; or spread down the page, one in each equal stretch (`spread`, Phase 18 session E). The hero is
+     *  never a neighbour, so a band directly under a dark hero may join it under the first four rhythms (25 of 45 dark
+     *  heroes are followed by a dark band); `spread` leaves that band light, since the dark it recurs is the page's. */
     rhythm: (typeof DARK_RHYTHMS)[number]
     /** What a dark band paints: the dark ground; the dark ground with the style set's texture;
      *  the ramp (one per run, sliced); the ramp restarted on every band; a photo where the band
@@ -158,6 +165,8 @@ export type FlowRules = {
   }
   /** The room around each band the theme fills: the normal preset or the spacious one. */
   spacing: (typeof SPACINGS)[number]
+  /** The homepage hero's ground where it stores none (`HERO_GROUNDS`). */
+  hero: (typeof HERO_GROUNDS)[number]
   /** Placement as before: once, the first dark band, else the first eligible (`[R-492]`). */
   ghost: (typeof GHOSTS)[number]
   /** Placement as before: once, nearest the middle, at a change of visible ground (`[R-499]`). */
@@ -225,6 +234,9 @@ export const STEP_CHROME: Record<Darkness, FlowRules['chrome']> = {
 export function darkBudget(budget: FlowRules['dark']['budget'], n: number): number {
   switch (budget) {
     case 'none': return 0
+    // A few (Phase 18 session E, `[R-598]`): one band at five or six, two at seven to ten, three at eleven to fourteen,
+    // so a light page with the dark close lands near a third dark, where `third` puts four of nine dark on eight bands.
+    case 'quarter': return Math.floor((n + 1) / 4)
     case 'third': return Math.ceil(n / 3)
     // Never below the balanced budget: on a one-band page `n - ceil(n/4)` is 0 while a
     // third is 1, and a darker step must not darken less (ADV-17B-2 F10).
@@ -283,7 +295,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       // Phase 18 session B (`[R-597]`, `[R-603]`): its dark close over a light footer, as the study's mostly light
       // pages end (a light footer on 14 of 19), so the one dark band to close never meets a dark footer.
       divider: NO_DIVIDER, spacing: 'normal',
-      ghost: 'none', overlap: 'none', needs: [], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
+      hero: 'site', ghost: 'none', overlap: 'none', needs: [], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
     }),
   },
   {
@@ -305,7 +317,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: 'pairs', paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
-      ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME[step],
+      hero: 'site', ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME[step],
     }),
   },
   {
@@ -318,7 +330,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'pattern', texture: 'alternate', close: 'dark', closeElse: ['muted', 'saturated']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: {shape: 'peak', at: 'intoDark', carry: ['cards'], hairline: 'none', hairlineInk: 'border'}, spacing: 'normal',
-      ghost: 'none', overlap: 'photo', needs: ['texture'], chrome: STEP_CHROME[step],
+      hero: 'site', ghost: 'none', overlap: 'photo', needs: ['texture'], chrome: STEP_CHROME[step],
     }),
   },
   // ─── Phase 17B session 5 (record WS-V1-PHASE17B5-DESIGN §2) ─────────────────
@@ -335,7 +347,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: {shape: 'straight', at: 'none', carry: [], hairline: 'everyBand', hairlineInk: 'accent'}, spacing: 'normal',
-      ghost: 'none', overlap: 'none', needs: ['darkHero'], chrome: STEP_CHROME[step],
+      hero: 'site', ghost: 'none', overlap: 'none', needs: ['darkHero'], chrome: STEP_CHROME[step],
     }),
   },
   {
@@ -351,7 +363,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       // Phase 17C session 3 (`[R-538]`): its light bands at the quiet strength.
       light: {paint: 'pattern', texture: 'quiet'},
       divider: {shape: 'straight', at: 'none', carry: [], hairline: 'everyBand', hairlineInk: 'border'}, spacing: 'spacious',
-      ghost: 'none', overlap: 'none', needs: ['texture'], chrome: {header: 'light', footer: 'light'},
+      hero: 'site', ghost: 'none', overlap: 'none', needs: ['texture'], chrome: {header: 'light', footer: 'light'},
     }),
   },
   {
@@ -367,7 +379,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
       // Phase 18 session B: a light footer under its dark close, as Quiet's.
-      ghost: 'none', overlap: 'none', needs: ['ribbons'], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
+      hero: 'site', ghost: 'none', overlap: 'none', needs: ['ribbons'], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
     }),
   },
   // ─── Phase 17B session 6 (record WS-V1-PHASE17B6-DESIGN §2) ─────────────────
@@ -388,7 +400,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       divider: NO_DIVIDER, spacing: 'normal',
       // Phase 18 session B: a light footer, so its photograph close stands apart from it; under the scrim a photograph
       // measures 0.7 to 18.4 from the dark ground (`closeOf`). The photograph over a dark footer is shown to Justin.
-      ghost: 'none', overlap: 'none', needs: ['heroPhoto'], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
+      hero: 'site', ghost: 'none', overlap: 'none', needs: ['heroPhoto'], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
     }),
   },
   // ─── Phase 17D session 1 (record WS-V1-PHASE17D-DESIGN §2) ──────────────────
@@ -407,30 +419,49 @@ export const FAMILIES: readonly FlowFamily[] = [
           dark: {budget: STEP_BUDGET.mostlyDark, hosts: STEP_HOSTS.mostlyDark, rhythm: 'runs', paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
           light: {paint: 'floating', texture: 'quiet'},
           divider: NO_DIVIDER, spacing: 'normal',
-          ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.mostlyDark,
+          hero: 'site', ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.mostlyDark,
         }
       : {
           dark: {budget: STEP_BUDGET.balanced, hosts: STEP_HOSTS.balanced, rhythm: 'alternate', paint: 'floating', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
           light: {paint: 'plain', texture: 'quiet'},
           divider: NO_DIVIDER, spacing: 'normal',
-          ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.balanced,
+          hero: 'site', ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.balanced,
         }),
   },
   {
     id: 'softWash', name: 'Soft wash',
-    sentence: 'No dark section but the close: the page and a warm wash of its own background in turn.',
+    sentence: 'The page and a warm wash of its own background in turn; at balanced, the dark color returns on a few sections down the page.',
     // The study: eternalaw and bdgfirm (both premium) run white bands and cream ones in turn;
     // veronicagarzalaw (premium) is cream all the way; duparlaw and connieyilaw are light with texture.
     // Their second ground is cream, never an accent pastel (ADV-17D-A), so the wash is a warm step of
-    // the page's own background (`washOf`, `[R-551]`), and no band goes dark. A light footer, as the
+    // the page's own background (`washOf`, `[R-551]`). At mostly light no band goes dark. A light footer, as the
     // study's light pages have.
-    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
-    rules: () => ({
-      dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: 'plain', texture: 'quiet', close: 'wash', closeElse: ['dark']},
-      light: {paint: 'washes', texture: 'quiet'},
-      divider: NO_DIVIDER, spacing: 'normal',
-      ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
-    }),
+    //
+    // THE SECOND STEP (Phase 18 session E, monorepo `[R-598]`, WS-V1-PHASE18E-DESIGN §9.3). Justin, of a warm firm's
+    // page: "design is all about continuity so we can't just use it in one spot". The white and cream bands keep their
+    // turn, and the palette's dark ground goes on a few by rule: the positioning line under a light hero, then a
+    // quarter of the bands below it, one in each equal stretch, the host nearest the stretch's middle, never two dark
+    // together, the dark close counted after the last band. It stands on his ruling, as the close apart from the footer
+    // does: on his rated pages the dark color seldom recurs on a light page (the record's §8.1 item 5); their light-
+    // leaning pages give the range, about a third of the bands strong with the close. The attorneys come last among
+    // the hosts, since a tall card grid on a phone makes a dark band heavy.
+    // THE EYE PASS OF THE SECOND STEP (Phase 18 session E, monorepo `[R-623]`): shown live in the in-app browser on the
+    // composer's canvas with a warm hero, under Dune and Forest & Brass, beside the first step; Justin, 2026-10-02:
+    // "1, ship as shown".
+    steps: ['mostlyLight', 'balanced'], defaultStep: 'mostlyLight', passed: ['mostlyLight', 'balanced'],
+    rules: (step) => (step === 'balanced'
+      ? {
+          dark: {budget: 'quarter', hosts: ['ribbon', 'differentiators', 'narrative', 'testimonials', 'statement', 'caseResults', 'attorneys'], rhythm: 'spread', paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['wash']},
+          light: {paint: 'washes', texture: 'quiet'},
+          divider: NO_DIVIDER, spacing: 'normal',
+          hero: 'light', ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
+        }
+      : {
+          dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: 'plain', texture: 'quiet', close: 'wash', closeElse: ['dark']},
+          light: {paint: 'washes', texture: 'quiet'},
+          divider: NO_DIVIDER, spacing: 'normal',
+          hero: 'light', ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
+        }),
   },
   // ─── Phase 17D session 2 (record WS-V1-PHASE17D2-DESIGN §2) ─────────────────
   {
@@ -448,7 +479,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'glow', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
-      ghost: 'none', overlap: 'photo', needs: ['glow'], chrome: STEP_CHROME[step],
+      hero: 'site', ghost: 'none', overlap: 'photo', needs: ['glow'], chrome: STEP_CHROME[step],
     }),
   },
   {
@@ -466,7 +497,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: {shape: 'steep', at: 'everyChange', carry: ['cards', 'photo'], hairline: 'none', hairlineInk: 'border'}, spacing: 'normal',
-      ghost: 'none', overlap: 'photo', needs: [], chrome: STEP_CHROME[step],
+      hero: 'site', ghost: 'none', overlap: 'photo', needs: [], chrome: STEP_CHROME[step],
     }),
   },
 ]
@@ -552,6 +583,7 @@ export function bridgeOf(d: Record<string, unknown>): FlowRules {
     light: {paint: 'plain', texture: 'quiet'},
     divider: {shape, at: 'intoDark', carry: readCarry(d.dividerCarry), hairline: 'none', hairlineInk: 'border'},
     spacing: 'normal',
+    hero: 'site',
     ghost: d.brandGhost === 'on' ? 'once' : 'none',
     overlap: readOverlap(d.sectionOverlap),
     needs: [],

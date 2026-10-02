@@ -4,8 +4,7 @@
 // file is tiny and purely structural — all surface/scheme/merge/typography/CTA
 // plumbing lives here and is reused from the existing internal-hero system.
 
-import {useSyncExternalStore, type CSSProperties, type ReactElement, type ReactNode} from 'react'
-import {m, useReducedMotion, type Variants} from 'framer-motion'
+import {type CSSProperties, type ReactNode} from 'react'
 import {
   resolveHeroSurface,
   type HeroScheme,
@@ -21,28 +20,6 @@ import type {Motion} from './types'
 
 // Re-exported for the skeletons that build their own flush layout (e.g. Split full-bleed).
 export {HERO_HEADER_CLEARANCE}
-
-// ─── Hydration gate ──────────────────────────────────────────────────────────
-// `false` on the server and through the hydration render, `true` afterwards.
-//
-// This is the useSyncExternalStore form of the mount flag rather than
-// `useState(false)` + `useEffect(() => setMounted(true), [])`. The two produce
-// the same two-phase result, but the effect form calls setState synchronously
-// inside an effect, which React's `react-hooks/set-state-in-effect` rule flags
-// as a cascading render. Here the server snapshot IS `false` and the client
-// snapshot IS `true`, so the value is read rather than assigned — no second
-// render is scheduled by us, and nothing has to be suppressed.
-//
-// `subscribe` returns a no-op unsubscribe: hydration happens once and never
-// changes again, so there is no external store to listen to.
-const subscribeToNothing = () => () => {}
-function useIsHydrated(): boolean {
-  return useSyncExternalStore(
-    subscribeToNothing,
-    () => true,  // client
-    () => false, // server + hydration render
-  )
-}
 
 // ─── Image role + scheme resolution ───────────────────────────────────────────
 // A variant interprets the background image differently:
@@ -216,28 +193,17 @@ export function HeroCtas({
 }
 
 // ─── Content (on-load) animation ──────────────────────────────────────────────
-// Premium, content-focused entrances. Two safety rules so the hero (and its LCP
-// H1) is NEVER shipped hidden:
-//   • Movement variants (entrance/slide/stagger/staggerRight) are TRANSFORM-ONLY
-//     (no opacity) — content is always painted, just offset; safe for SSR / no-JS
-//     / LCP, so they render immediately.
-//   • `fade` animates opacity (would hide content), so it's gated behind a mount
-//     flag: SSR / no-JS / reduced-motion render fully visible; the fade only runs
-//     after hydration.
-// Reduced-motion → no animation at all.
-const EASE: [number, number, number, number] = [0.25, 0, 0, 1]
-const WHOLE = {
-  fade: {hidden: {opacity: 0}, show: {opacity: 1, transition: {duration: 1.2, ease: EASE}}},
-  entrance: {hidden: {y: 24}, show: {y: 0, transition: {duration: 0.6, ease: EASE}}},
-  slide: {hidden: {x: -48}, show: {x: 0, transition: {duration: 0.7, ease: EASE}}},
-} satisfies Record<string, Variants>
-const STAGGER_CONTAINER: Variants = {hidden: {}, show: {transition: {staggerChildren: 0.12, delayChildren: 0.08}}}
-const STAGGER_ITEM: Variants = {hidden: {y: 20}, show: {y: 0, transition: {duration: 0.5, ease: EASE}}}
-const STAGGER_ITEM_RIGHT: Variants = {hidden: {x: 48}, show: {x: 0, transition: {duration: 0.5, ease: EASE}}}
+// CSS keyframes from the first paint (`globals.css`, `.hero-lines`), not Framer Motion, whose
+// feature bundle loads after the page: the lines sat 20 px low until it arrived (4.4 s on a slow
+// phone) and `fade` blanked the heading at hydration (monorepo WS-MOTION-LAYER-DESIGN.md §1.2).
+// The values are the ones Framer ran. Movement is transform only, so content is always painted;
+// the heading never fades (it is the largest paint; `fade` moves the lines around it); `slide`
+// starts 24 px out under 768 px, where 48 cut the heading at the gutter; reduced motion draws none.
 
 // A vertically-stacked text block (eyebrow → h1 → lede → CTAs) used by most
-// variants. `align` centers the text and the CTA group. `motion` adds an on-load
-// content animation.
+// variants. `align` centers the text and the CTA group. `motion` names the
+// on-load content animation; each line is a child of the block, so the
+// stylesheet can time them in turn.
 export function HeroTextBlock({
   eyebrow,
   heading,
@@ -259,45 +225,17 @@ export function HeroTextBlock({
   headingClassName?: string
   className?: string
 }) {
-  const reduce = useReducedMotion() ?? false
-  // `fade` animates opacity → would hide content pre-hydration; only enable it
-  // after mount (SSR / no-JS / first paint stay fully visible). Transform-only
-  // variants are always safe to render (content is painted, just offset).
-  const mounted = useIsHydrated()
-
   const centered = align === 'center'
   // mx-auto centers the max-width column when centered; explicit per-element
   // alignment guards against inherited-text-align surprises.
-  const outerClass = [centered ? 'mx-auto text-center' : 'text-left', className ?? ''].filter(Boolean).join(' ')
+  const outerClass = ['hero-lines', centered ? 'mx-auto text-center' : 'text-left', className ?? ''].filter(Boolean).join(' ')
 
-  const pieces = [
-    eyebrow ? <HeroEyebrow key="e" className={centered ? 'justify-center' : undefined}>{eyebrow}</HeroEyebrow> : null,
-    <HeroHeading key="h" className={['mb-5 md:mb-6', centered ? 'text-center' : 'text-left', headingClassName ?? ''].filter(Boolean).join(' ')}>{heading}</HeroHeading>,
-    description ? <HeroLede key="l" className={centered ? 'text-center' : 'text-left'}>{description}</HeroLede> : null,
-    ctas.length ? <HeroCtas key="c" items={ctas} isDark={isDark} align={align} /> : null,
-  ].filter(Boolean) as ReactElement[]
-
-  const enabled = !reduce && motion !== 'none' && (motion !== 'fade' || mounted)
-  const active = enabled ? motion : null
-  if (!active) return <div className={outerClass}>{pieces}</div>
-
-  if (active === 'stagger' || active === 'staggerRight') {
-    const item = active === 'staggerRight' ? STAGGER_ITEM_RIGHT : STAGGER_ITEM
-    return (
-      <m.div className={outerClass} initial="hidden" animate="show" variants={STAGGER_CONTAINER}>
-        {pieces.map((node) => (
-          <m.div key={node.key} variants={item}>
-            {node}
-          </m.div>
-        ))}
-      </m.div>
-    )
-  }
-  const variants = WHOLE[active as keyof typeof WHOLE]
-  if (!variants) return <div className={outerClass}>{pieces}</div>
   return (
-    <m.div className={outerClass} initial="hidden" animate="show" variants={variants}>
-      {pieces}
-    </m.div>
+    <div className={outerClass} data-hero-motion={motion === 'none' ? undefined : motion}>
+      {eyebrow ? <HeroEyebrow className={centered ? 'justify-center' : undefined}>{eyebrow}</HeroEyebrow> : null}
+      <HeroHeading className={['mb-5 md:mb-6', centered ? 'text-center' : 'text-left', headingClassName ?? ''].filter(Boolean).join(' ')}>{heading}</HeroHeading>
+      {description ? <HeroLede className={centered ? 'text-center' : 'text-left'}>{description}</HeroLede> : null}
+      {ctas.length ? <HeroCtas items={ctas} isDark={isDark} align={align} /> : null}
+    </div>
   )
 }

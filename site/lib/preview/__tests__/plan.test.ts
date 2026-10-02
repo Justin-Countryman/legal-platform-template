@@ -256,3 +256,26 @@ describe('a retired style set', () => {
     expect(plan.unset).toEqual([])
   })
 })
+
+// Phase 18 session E (monorepo `[R-620]`): the palette built from the firm's own colors, `brand` in the address, its
+// roles from the grant; Apply writes them as a preset's.
+describe('the palette built from the firm’s own colors', () => {
+  const brand = {darkGround: '#0c5c63', accent: '#e86a24', lightGround: '#f7f2e8', why: 'The firm’s own colors.'}
+
+  it('is an address the preview reads', () => {
+    expect(parseChoices('graphite', 'brand', 'site', 'design')).toEqual({styleSet: 'graphite', palette: 'brand', flow: 'site', view: 'design'})
+  })
+
+  it('writes its roles as a preset would, and names itself', () => {
+    const plan = planPreview({_id: 'designSettings', _rev: 'r1', darkGround: '#111111', accent: '#c5a253', action: '#123456'}, {styleSet: 'site', palette: 'brand', flow: 'site'}, null, brand)
+    expect(plan.set).toMatchObject({darkGround: '#0c5c63', accent: '#e86a24', lightGround: '#f7f2e8'})
+    expect(plan.unset).toContain('action')
+    expect(plan.palette).toMatchObject({id: 'brand', name: 'Your colors'})
+  })
+
+  it('changes nothing without its roles', () => {
+    const plan = planPreview({_id: 'designSettings', _rev: 'r1'}, {styleSet: 'site', palette: 'brand', flow: 'site'}, null, null)
+    expect(plan.palette).toBeNull()
+    expect(plan.set).toEqual({})
+  })
+})

@@ -334,8 +334,13 @@
 [data-button-animation="sweep"] [data-button-animatable="true"][data-variant="secondary"]::before {
   background: var(--color-action);
 }
-[data-button-animation="sweep"] [data-button-animatable="true"]:hover::before {
-  transform: scaleX(1);
+/* Each effect only where the device can hover: a tap on a phone sets :hover and leaves it set,
+   which left a sweep or a fill drawn (monorepo WS-MOTION-LAYER-DESIGN.md §1.2); Tailwind's own
+   hover: variant is already held so. */
+@media (hover: hover) {
+  [data-button-animation="sweep"] [data-button-animatable="true"]:hover::before {
+    transform: scaleX(1);
+  }
 }
 
 /* Mode: fill-center — background fills from center via clip-path circle. */
@@ -359,8 +364,10 @@
 [data-button-animation="fill-center"] [data-button-animatable="true"][data-variant="secondary"]::before {
   background: var(--color-action);
 }
-[data-button-animation="fill-center"] [data-button-animatable="true"]:hover::before {
-  clip-path: circle(75% at 50% 50%);
+@media (hover: hover) {
+  [data-button-animation="fill-center"] [data-button-animatable="true"]:hover::before {
+    clip-path: circle(75% at 50% 50%);
+  }
 }
 
 /* Mode: inset — pressed-in shadow on hover gives the button physical weight.
@@ -375,8 +382,10 @@
               color var(--motion-ui-fast) ease-out,
               border-color var(--motion-ui-fast) ease-out;
 }
-[data-button-animation="inset"] [data-button-animatable="true"]:hover {
-  box-shadow: inset 0 2px 8px rgb(var(--shadow-rgb) / 0.2);
+@media (hover: hover) {
+  [data-button-animation="inset"] [data-button-animatable="true"]:hover {
+    box-shadow: inset 0 2px 8px rgb(var(--shadow-rgb) / 0.2);
+  }
 }
 
 /* Mode: lift — translateY + shadow grows on hover. */
@@ -387,9 +396,11 @@
               border-color var(--motion-ui-fast),
               color var(--motion-ui-fast);
 }
-[data-button-animation="lift"] [data-button-animatable="true"]:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-elevation-md);
+@media (hover: hover) {
+  [data-button-animation="lift"] [data-button-animatable="true"]:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-elevation-md);
+  }
 }
 
 /* Reduced-motion carve-outs for all four non-standard modes. */
@@ -401,15 +412,19 @@
   [data-button-animation="inset"] [data-button-animatable="true"] {
     transition: none;
   }
-  [data-button-animation="inset"] [data-button-animatable="true"]:hover {
-    box-shadow: none;
+  @media (hover: hover) {
+    [data-button-animation="inset"] [data-button-animatable="true"]:hover {
+      box-shadow: none;
+    }
   }
   [data-button-animation="lift"] [data-button-animatable="true"] {
     transition: none;
   }
-  [data-button-animation="lift"] [data-button-animatable="true"]:hover {
-    transform: none;
-    box-shadow: none;
+  @media (hover: hover) {
+    [data-button-animation="lift"] [data-button-animatable="true"]:hover {
+      transform: none;
+      box-shadow: none;
+    }
   }
 }
 
@@ -448,6 +463,64 @@
 [data-hero-image="true"] [data-button-animation="sweep"] [data-button-animatable="true"][data-variant="secondary"]::before,
 [data-hero-image="true"] [data-button-animation="fill-center"] [data-button-animatable="true"][data-variant="secondary"]::before {
   background: var(--color-foreground);
+}
+
+/* ─── The scroll reveal (components/ui/ScrollReveal.tsx) ─────────────────── */
+/* The band's CONTENT rises, never its ground: the wrapper carries the phase and the
+   approved values (24px, 600ms, --ease-gentle; Justin, 2026-07-20, BI-Library.md),
+   SectionShell marks the content. Only for a visitor who has not asked for reduced
+   motion; the transition only once the band is revealed, so arming never animates. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal="offset"] [data-band-content] {
+    transform: translateY(var(--reveal-distance));
+  }
+  [data-reveal="revealed"] [data-band-content] {
+    transition: transform var(--reveal-duration) var(--reveal-easing);
+  }
+}
+
+/* ─── The parallax: a hero photograph drifts as the hero leaves ────────── */
+/* Justin, 2026-10-02 (monorepo WS-MOTION-LAYER-DESIGN.md §7): every hero photograph, from
+   768 px, still for a visitor who asks for less motion. The photograph behind an Overlay hero
+   moves down a fifth of the distance scrolled, over the first screen of scroll, inside the box
+   that clips it; the scrim and the text stay. No enlarged image: the strip it uncovers at its
+   top sits above the screen or under the sticky header (measured at 1440, 1024 and 768).
+   Tied to the page's own scroller (`scroll(root)`): a timeline on the image's own box, which
+   clips and never scrolls, would never move. Only where scroll timelines exist (Firefox draws
+   it still), and only inside the media query, because the reduced-motion reset below cannot
+   stop a scroll-driven animation (its duration is "treated as auto", CSS Animations 2). */
+@keyframes hero-drift { to { transform: translateY(20vh); } }
+@media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
+  @supports (animation-timeline: scroll()) {
+    .hero-drift {
+      animation: hero-drift linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+  }
+}
+
+/* ─── The hero's content animation (Hero Settings → Content animation) ─── */
+/* From the first paint, with no script (components/layout/homeHero/shared.tsx); the values
+   Framer Motion ran before (monorepo WS-MOTION-LAYER-DESIGN.md §1.2). Transform only, so the
+   lines are always painted; `fade` moves the lines around the heading, never the heading (the
+   largest paint); `backwards` holds each line at its start through its delay, and nothing
+   after. Only for a visitor who has not asked for reduced motion. */
+@keyframes hero-rise { from { transform: translateY(var(--hero-from)); } }
+@keyframes hero-slide { from { transform: translateX(var(--hero-from)); } }
+@keyframes hero-fade { from { opacity: 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-lines[data-hero-motion="entrance"] { --hero-from: 24px; animation: hero-rise 600ms var(--ease-smooth) backwards; }
+  .hero-lines[data-hero-motion="slide"] { --hero-from: -24px; animation: hero-slide 700ms var(--ease-smooth) backwards; }
+  .hero-lines[data-hero-motion="fade"] > :not(h1) { animation: hero-fade 1200ms var(--ease-smooth) backwards; }
+  .hero-lines[data-hero-motion="stagger"] > * { --hero-from: 20px; animation: hero-rise 500ms var(--ease-smooth) var(--hero-line, 80ms) backwards; }
+  .hero-lines[data-hero-motion="staggerRight"] > * { --hero-from: 48px; animation: hero-slide 500ms var(--ease-smooth) var(--hero-line, 80ms) backwards; }
+  .hero-lines > :nth-child(2) { --hero-line: 200ms; }
+  .hero-lines > :nth-child(3) { --hero-line: 320ms; }
+  .hero-lines > :nth-child(4) { --hero-line: 440ms; }
+  @media (min-width: 768px) {
+    .hero-lines[data-hero-motion="slide"] { --hero-from: -48px; }
+  }
 }
 
 /* ─── Prefers Reduced Motion ─────────────────────────────────────────────── */

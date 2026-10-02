@@ -3232,13 +3232,15 @@
     {
       "id": "softWash",
       "name": "Soft wash",
-      "sentence": "No dark section but the close: the page and a warm wash of its own background in turn.",
+      "sentence": "The page and a warm wash of its own background in turn; at balanced, the dark color returns on a few sections down the page.",
       "steps": [
-        "mostlyLight"
+        "mostlyLight",
+        "balanced"
       ],
       "defaultStep": "mostlyLight",
       "passed": [
-        "mostlyLight"
+        "mostlyLight",
+        "balanced"
       ]
     },
     {
@@ -3292,6 +3294,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [],
@@ -3339,6 +3342,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [],
@@ -3388,6 +3392,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "photo",
       "needs": [
@@ -3441,6 +3446,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "photo",
       "needs": [
@@ -3496,6 +3502,7 @@
         "hairlineInk": "accent"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [
@@ -3536,6 +3543,7 @@
         "hairlineInk": "border"
       },
       "spacing": "spacious",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [
@@ -3579,6 +3587,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [
@@ -3630,6 +3639,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [
@@ -3679,6 +3689,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [],
@@ -3728,6 +3739,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [],
@@ -3766,6 +3778,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "light",
       "ghost": "none",
       "overlap": "none",
       "needs": [],
@@ -3774,10 +3787,57 @@
         "footer": "light"
       },
       "id": "softWash.mostlyLight",
-      "name": "Soft wash",
-      "sentence": "No dark section but the close: the page and a warm wash of its own background in turn.",
+      "name": "Soft wash, mostly light",
+      "sentence": "The page and a warm wash of its own background in turn; at balanced, the dark color returns on a few sections down the page.",
       "family": "softWash",
       "step": "mostlyLight",
+      "passed": true
+    },
+    {
+      "dark": {
+        "budget": "quarter",
+        "hosts": [
+          "ribbon",
+          "differentiators",
+          "narrative",
+          "testimonials",
+          "statement",
+          "caseResults",
+          "attorneys"
+        ],
+        "rhythm": "spread",
+        "paint": "plain",
+        "texture": "quiet",
+        "close": "dark",
+        "closeElse": [
+          "wash"
+        ]
+      },
+      "light": {
+        "paint": "washes",
+        "texture": "quiet"
+      },
+      "divider": {
+        "shape": "straight",
+        "at": "none",
+        "carry": [],
+        "hairline": "none",
+        "hairlineInk": "border"
+      },
+      "spacing": "normal",
+      "hero": "light",
+      "ghost": "none",
+      "overlap": "none",
+      "needs": [],
+      "chrome": {
+        "header": "light",
+        "footer": "light"
+      },
+      "id": "softWash.balanced",
+      "name": "Soft wash, balanced",
+      "sentence": "The page and a warm wash of its own background in turn; at balanced, the dark color returns on a few sections down the page.",
+      "family": "softWash",
+      "step": "balanced",
       "passed": true
     },
     {
@@ -3815,6 +3875,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "photo",
       "needs": [
@@ -3867,6 +3928,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "photo",
       "needs": [],
