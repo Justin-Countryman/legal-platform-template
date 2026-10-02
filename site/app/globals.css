@@ -485,6 +485,29 @@
   }
 }
 
+/* ─── The hero's content animation (Hero Settings → Content animation) ─── */
+/* From the first paint, with no script (components/layout/homeHero/shared.tsx); the values
+   Framer Motion ran before (monorepo WS-MOTION-LAYER-DESIGN.md §1.2). Transform only, so the
+   lines are always painted; `fade` moves the lines around the heading, never the heading (the
+   largest paint); `backwards` holds each line at its start through its delay, and nothing
+   after. Only for a visitor who has not asked for reduced motion. */
+@keyframes hero-rise { from { transform: translateY(var(--hero-from)); } }
+@keyframes hero-slide { from { transform: translateX(var(--hero-from)); } }
+@keyframes hero-fade { from { opacity: 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-lines[data-hero-motion="entrance"] { --hero-from: 24px; animation: hero-rise 600ms var(--ease-smooth) backwards; }
+  .hero-lines[data-hero-motion="slide"] { --hero-from: -24px; animation: hero-slide 700ms var(--ease-smooth) backwards; }
+  .hero-lines[data-hero-motion="fade"] > :not(h1) { animation: hero-fade 1200ms var(--ease-smooth) backwards; }
+  .hero-lines[data-hero-motion="stagger"] > * { --hero-from: 20px; animation: hero-rise 500ms var(--ease-smooth) var(--hero-line, 80ms) backwards; }
+  .hero-lines[data-hero-motion="staggerRight"] > * { --hero-from: 48px; animation: hero-slide 500ms var(--ease-smooth) var(--hero-line, 80ms) backwards; }
+  .hero-lines > :nth-child(2) { --hero-line: 200ms; }
+  .hero-lines > :nth-child(3) { --hero-line: 320ms; }
+  .hero-lines > :nth-child(4) { --hero-line: 440ms; }
+  @media (min-width: 768px) {
+    .hero-lines[data-hero-motion="slide"] { --hero-from: -48px; }
+  }
+}
+
 /* ─── Prefers Reduced Motion ─────────────────────────────────────────────── */
 /* 10ms (not 0ms) avoids jump-cut artifacts in max-height collapse animations. */
 @media (prefers-reduced-motion: reduce) {
