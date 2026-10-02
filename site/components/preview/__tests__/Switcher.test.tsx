@@ -392,3 +392,16 @@ describe('the firm’s own look in the meeting', () => {
     expect(rowOf(draw(operator), ROW_THEME_HEAD).querySelector('details.sw-all')).toBeNull()
   })
 })
+
+// Phase 18 session E's break pass (ADV-18E-D): an inherited hero follows the theme (`themedHero`), so a theme's needs are
+// read against the hero as THAT theme draws it, not the previewed one: previewing Soft wash, Type on black still has the
+// dark hero it needs, since choosing it draws the hero dark.
+describe('a theme’s needs read the hero as that theme draws it', () => {
+  it('previewing Soft wash, Type on black is not told it lacks a dark hero', () => {
+    const c4 = {...choices, flow: 'softWash.mostlyLight'}
+    const heroUnder = (f: {family: string}) => (f.family === 'softWash' ? 'wash' : 'dark') as 'wash' | 'dark'
+    const c = render(<Switcher grant={operator} choices={c4} plan={planPreview(stored, c4)} canvas={[]} chrome={null} origin="https://example.com" hero="wash" heroUnder={heroUnder} />).container
+    const black = [...c.querySelectorAll('a.sw-family')].find((a) => a.textContent?.startsWith('Type on black'))!
+    expect(black.textContent).not.toContain('a dark or photo hero')
+  })
+})

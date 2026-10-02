@@ -58,6 +58,9 @@ type Props = {
   /** The homepage hero's ground as the walk meets it, for a theme that wants a dark hero
    *  (Phase 17B session 5). */
   hero?: VisibleGround | null
+  /** The hero's ground as each theme would draw it (Phase 18 session E: an inherited hero follows the theme,
+   *  `themedHero`), so a theme's needs are read against its own hero; absent, every theme reads `hero`. */
+  heroUnder?: (flow: FlowRules) => VisibleGround | null
   /** The live hero photograph a Photo scrims choice would be approved with (Phase 17B session 6). */
   heroPhoto?: HeroPhoto | null
   /** Every photograph of the theme's stored set, with its status against what the site has approved (Phase 17E). */
@@ -219,7 +222,7 @@ function Choice({href, active, className, children}: {href: string; active: bool
   )
 }
 
-export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = null, heroPhoto = null, photoSet = null, closeShown = true}: Props) {
+export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = null, heroUnder, heroPhoto = null, photoSet = null, closeShown = true}: Props) {
   const now = nowSeconds()
   const at = (c: Partial<PreviewChoices>) => previewPath({...choices, ...c})
 
@@ -274,7 +277,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
   // Facts per theme: the ribbons a theme fills are read from that theme's own pass.
   // A need of the palette, not of the page (Phase 17D session 2): Gradient bloom's room to glow is said on its own, so the
   // page is not blamed for the palette (ADV-17D2-C).
-  const unmetOf = (f: FlowRules | null) => (f ? unmetNeeds(f, canvasFacts(survivors, site, hero, f)) : [])
+  const unmetOf = (f: FlowRules | null) => (f ? unmetNeeds(f, canvasFacts(survivors, site, heroUnder ? heroUnder(f) : hero, f)) : [])
   const lacks = (f: FlowRules | null) => unmetOf(f).filter((n) => n !== 'glow').map(needLabel)
   const noGlow = (f: FlowRules | null) => unmetOf(f).includes('glow')
   const unmet = lacks(shown)

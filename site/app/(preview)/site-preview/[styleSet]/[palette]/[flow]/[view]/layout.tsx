@@ -57,7 +57,7 @@ export default async function PreviewLayout({children, params}: {children: React
   // hero follows the theme, `themedHero`; and a light hero under Soft wash is its wash).
   const previewFlow = flowOf(state.chrome?.designTokens as Record<string, unknown> | null)
   const switcher = (
-    <Switcher grant={state.grant} choices={state.choices} plan={state.plan} canvas={state.home?.page?.canvas} chrome={state.chrome} origin={`${proto}://${host}`} hero={heroGround(homeHeroOf(state.home, previewFlow), previewFlow)} heroPhoto={heroPhoto} photoSet={photoSet} closeShown={closeShown} />
+    <Switcher grant={state.grant} choices={state.choices} plan={state.plan} canvas={state.home?.page?.canvas} chrome={state.chrome} origin={`${proto}://${host}`} hero={heroGround(homeHeroOf(state.home, previewFlow), previewFlow)} heroUnder={(f) => heroGround(homeHeroOf(state.home, f), f)} heroPhoto={heroPhoto} photoSet={photoSet} closeShown={closeShown} />
   )
 
   return (
