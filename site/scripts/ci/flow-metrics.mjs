@@ -80,6 +80,8 @@ import {converter, differenceCiede2000, parse} from 'culori'
 
 const arg = (name) => { const i = process.argv.indexOf(name); return i > 0 ? process.argv[i + 1] : null }
 const UPDATE = process.argv.includes('--update')
+// The motion pass alone, for local work on it; CI runs everything (the theme matrix, the style-set matrix, the pass).
+const MOTION_ONLY = process.argv.includes('--motion-only')
 const OUT = resolve(arg('--out') ?? 'flow-captures')
 const GOLDEN = resolve('scripts/ci/__snapshots__/flow-metrics.json')
 const STUB_PORT = Number(process.env.STUB_PORT ?? 4013)
@@ -409,6 +411,158 @@ const unseenLightSteps = (m) => m.bands.slice(1).flatMap((b, k) => {
   return lightBg(a.bg) && lightBg(b.bg) && a.bg !== b.bg && deltaE(a.bg, b.bg) < LIGHT_APART ? [{a, b, d: deltaE(a.bg, b.bg)}] : []
 })
 
+// ─── The motion pass (Phase 18 session F; monorepo WS-MOTION-LAYER-DESIGN.md §5) ───────────────────────
+//
+// Every page above is measured with reduced motion on, so nothing saw what moves for everyone else: a band's
+// ground slid 24 px off its neighbour and showed the page's body between two dark bands while it waited, and a
+// band taller than the screen divided by 0.15 never arrived. This pass loads a few pages in a context that does
+// NOT ask for reduced motion and in one that does, and fails a page where:
+//   - a band waiting to rise leaves a gap above its ground that the settled page does not have;
+//   - anything is still offset after a sweep, at 1440, at 390, and on a 390 by 240 screen where bands are tall;
+//   - anything inside <main> animates a property that lays the page out again (a size, a position, a margin or a
+//     padding: only transform and opacity move, colors may change), read from `animationstart` and `transitionrun`
+//     from document start, where a sampler misses a 10 ms animation;
+//   - an animation that never ends sits in a band with no `button[aria-pressed]` (WCAG 2.2.2, monorepo `[R-617]`);
+//   - the sweep shifts layout more than it does on the reduced page, or the largest paint is another element;
+//   - under reduced motion, anything inside <main> starts an animation or a moving transition.
+// Its findings are failures, never golden rows: motion is timing, and the golden holds layout.
+const MOTION_PAGES = [
+  ['stub', 'scripts/ci/fixture.ndjson', ['quiet.mostlyLight', 'cutBlocks.mostlyDark', 'typeOnBlack.allDark']],
+  ['multi-practice-photo-set', 'scripts/ci/record-multi-practice-photo-set.ndjson', ['photoScrims.mostlyDark', 'cutBlocks.mostlyDark']],
+]
+// A property that lays the page out again when it changes.
+const LAYOUT_PROP = /^(width|height|(min|max)-(width|height)|top|right|bottom|left|inset.*|margin.*|padding.*|grid-template-.*|font-size|line-height|letter-spacing|border(-[a-z]+)?-width|flex.*|gap|row-gap|column-gap)$/
+const MOVING_PROPS = new Set(['transform', 'translate', 'scale', 'rotate'])
+const SHORT_SCREEN = ['390x240', {viewport: {width: 390, height: 240}, isMobile: true, hasTouch: true}]
+// Installed before any page script: every animation and transition that starts inside <main>, the layout
+// shifts, and the largest paint's element.
+function motionRecorder() {
+  const m = (window.__motion = {events: [], shifts: 0, lcp: null})
+  // The operator's preview bar is not the page: hidden before it paints, so it is never the largest paint.
+  const bar = document.createElement('style')
+  bar.textContent = '.sw{display:none !important}'
+  document.documentElement.appendChild(bar)
+  const record = (e, kind) => {
+    const el = e.target
+    if (!(el instanceof Element) || !el.closest('main')) return
+    let props = [e.propertyName]
+    let infinite = false
+    if (kind === 'animation') {
+      const a = el.getAnimations().find((x) => x.animationName === e.animationName)
+      const frames = a?.effect?.getKeyframes() ?? []
+      props = [...new Set(frames.flatMap((f) => Object.keys(f)).filter((k) => !['offset', 'easing', 'composite', 'computedOffset'].includes(k)))]
+      infinite = a?.effect?.getTiming().iterations === Infinity
+    }
+    const cls = typeof el.className === 'string' && el.className ? `.${el.className.trim().split(/\s+/)[0]}` : ''
+    m.events.push({kind, name: e.animationName || e.propertyName, props, infinite,
+      paused: !!el.closest('section')?.querySelector('button[aria-pressed]'), at: el.tagName.toLowerCase() + cls})
+  }
+  document.addEventListener('animationstart', (e) => record(e, 'animation'), true)
+  document.addEventListener('transitionrun', (e) => record(e, 'transition'), true)
+  new PerformanceObserver((l) => { for (const e of l.getEntries()) if (!e.hadRecentInput) m.shifts += e.value }).observe({type: 'layout-shift', buffered: true})
+  new PerformanceObserver((l) => {
+    for (const e of l.getEntries()) {
+      const el = e.element
+      m.lcp = el ? `${el.tagName}:${el.getAttribute('src')?.split('?')[0].slice(-40) ?? (el.textContent ?? '').trim().slice(0, 40)}` : null
+    }
+  }).observe({type: 'largest-contentful-paint', buffered: true})
+}
+// The gap above each band's ground just as it comes into view (40 px of it showing, under either trigger), once
+// the band above has finished its own rise; then the same once every band has settled.
+async function bandGaps(wait) {
+  const two = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
+  const main = document.querySelector('main')
+  const bands = [...(main?.querySelectorAll('section') ?? [])].filter((x) => !x.parentElement?.closest('section'))
+  const out = []
+  for (let i = 1; i < bands.length; i++) {
+    window.scrollTo(0, bands[i].getBoundingClientRect().top + window.scrollY - window.innerHeight + 40)
+    await two()
+    if (wait) { await new Promise((r) => setTimeout(r, 700)); await two() }
+    out.push({i, gap: Math.round(bands[i].getBoundingClientRect().top - bands[i - 1].getBoundingClientRect().bottom)})
+  }
+  return out
+}
+async function sweep() {
+  const h = document.documentElement.scrollHeight
+  for (let y = 0; y <= h; y += 150) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)) }
+  await new Promise((r) => setTimeout(r, 900))
+  return [...document.querySelectorAll('main div[style*="translateY"], [data-reveal="offset"]')].length
+}
+async function motionPass() {
+  for (const [canvas, file, flows] of MOTION_PAGES) {
+    await startStub(file)
+    for (const [width, device] of WIDTHS) {
+      const seen = {}
+      for (const reducedMotion of ['reduce', 'no-preference']) {
+        watch(`motion / ${canvas} / ${width} / ${reducedMotion}`, 'opening a browser context')
+        const context = await browser.newContext({...device, reducedMotion, colorScheme: 'light'})
+        await context.addCookies([{name: 'lp-preview', value: operator, url: `${BASE}/site-preview`}])
+        await servePhotos(context)
+        await context.addInitScript(motionRecorder)
+        const page = await context.newPage()
+        for (const flow of flows) {
+          const key = `motion / ${canvas} / ${flow} / ${width} / ${reducedMotion}`
+          watch(key)
+          const url = `${BASE}/site-preview/${STYLE_SET}/${PALETTE}/${flow}/design`
+          const res = await page.goto(url, {waitUntil: 'load', timeout: 60_000})
+          if (!res || res.status() !== 200 || page.url() !== url) { fail(`${key}: ${url} answered ${res?.status()} at ${page.url()}`); continue }
+          phase('the fonts and the largest paint')
+          await page.evaluate(() => document.fonts.ready)
+          await page.addStyleTag({content: '.sw{display:none !important}'})
+          await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => setTimeout(r, 250))))
+          const reduced = reducedMotion === 'reduce'
+          phase('the bands as they arrive')
+          const arriving = reduced ? [] : await page.evaluate(bandGaps, true)
+          phase('the sweep')
+          const offset = await page.evaluate(sweep)
+          const settled = reduced ? [] : await page.evaluate(bandGaps, false)
+          const m = await page.evaluate(() => window.__motion)
+          seen[flow] = seen[flow] ?? {}
+          seen[flow][reducedMotion] = m
+          if (offset) fail(`${key}: ${offset} band(s) still offset after the sweep`)
+          for (const a of arriving) {
+            const s = settled.find((x) => x.i === a.i)
+            if (s && a.gap - s.gap >= 2) fail(`${key}: band ${a.i} leaves a ${a.gap - s.gap} px gap above its ground while it waits (the page shows through)`)
+          }
+          for (const e of m.events) {
+            const bad = e.props.filter((p) => LAYOUT_PROP.test(p))
+            if (bad.length) fail(`${key}: ${e.at} animates ${bad.join(', ')} (${e.kind} ${e.name}), which lays the page out again; only transform and opacity move`)
+            if (e.infinite && !e.paused) fail(`${key}: ${e.at} moves for ever (${e.name}) with no pause control in its band (WCAG 2.2.2)`)
+            if (reduced && (e.kind === 'animation' || e.props.some((p) => MOVING_PROPS.has(p)))) fail(`${key}: ${e.at} moves under reduced motion (${e.kind} ${e.name})`)
+          }
+        }
+        await context.close()
+        unwatch()
+      }
+      for (const flow of flows) {
+        const r = seen[flow]?.reduce
+        const n = seen[flow]?.['no-preference']
+        if (!r || !n) continue
+        const key = `motion / ${canvas} / ${flow} / ${width}`
+        if (n.shifts - r.shifts > 0.001) fail(`${key}: the sweep shifts layout ${n.shifts.toFixed(4)} with motion, ${r.shifts.toFixed(4)} without`)
+        if (n.lcp !== r.lcp) fail(`${key}: the largest paint is ${n.lcp} with motion and ${r.lcp} without`)
+      }
+    }
+    if (canvas !== 'multi-practice-photo-set') continue
+    // A short screen, where two bands are taller than the screen divided by 0.15.
+    const [width, device] = SHORT_SCREEN
+    const key = `motion / ${canvas} / quiet.mostlyLight / ${width}`
+    watch(key, 'opening a browser context')
+    const context = await browser.newContext({...device, reducedMotion: 'no-preference', colorScheme: 'light'})
+    await context.addCookies([{name: 'lp-preview', value: operator, url: `${BASE}/site-preview`}])
+    await servePhotos(context)
+    const page = await context.newPage()
+    await page.goto(`${BASE}/site-preview/${STYLE_SET}/${PALETTE}/quiet.mostlyLight/design`, {waitUntil: 'load', timeout: 60_000})
+    await page.addStyleTag({content: '.sw{display:none !important}'})
+    const tall = await page.evaluate(() => [...document.querySelectorAll('main section')].filter((x) => x.getBoundingClientRect().height > window.innerHeight / 0.15).length)
+    const offset = await page.evaluate(sweep)
+    if (!tall) fail(`${key}: no band is taller than the screen divided by 0.15, so this page tests nothing`)
+    if (offset) fail(`${key}: ${offset} band(s) still offset after the sweep (${tall} taller than the screen divided by 0.15)`)
+    await context.close()
+    unwatch()
+  }
+}
+
 // ─── Run ──────────────────────────────────────────────────────────────────────
 await wait(`${BASE}/`, 200, 200)
 mkdirSync(OUT, {recursive: true})
@@ -417,7 +571,7 @@ const results = {}
 const failures = []
 const fail = (m) => failures.push(m)
 try {
-  for (const [canvas, file] of CANVASES) {
+  for (const [canvas, file] of MOTION_ONLY ? [] : CANVASES) {
     if (!existsSync(file)) { console.log(`flow-metrics: ${file} absent, skipped`); continue }
     await startStub(file)
     for (const [width, device] of STYLE_SET_ONLY.includes(canvas) ? [] : WIDTHS) {
@@ -612,6 +766,7 @@ try {
       }
     }
   }
+  await motionPass()
 } finally {
   await browser.close()
   stop()
@@ -623,7 +778,9 @@ const heroVoices = () => Object.fromEntries(OFFERED.map((id) => {
   const m = results[`${HERO_VOICE_CANVAS} / ${STYLE_SET_FLOW} / 1440 / ${id}`]
   return [id, m?.hero ?? null]
 }).filter(([, v]) => v))
-if (UPDATE) {
+if (MOTION_ONLY) {
+  console.log('flow-metrics: the motion pass alone; nothing compared to the golden')
+} else if (UPDATE) {
   mkdirSync(resolve('scripts/ci/__snapshots__'), {recursive: true})
   writeFileSync(GOLDEN, JSON.stringify(results, null, 2) + '\n')
   writeFileSync(HERO_VOICE, JSON.stringify({method: 'the hero of the multi-practice canvas at 1440 under Cut blocks balanced, Navy & Brass; the face and weight the h1 computes; "Counsel you can call" drawn at 100 px on a canvas: width per em and the mean darkness of its box', styleSets: heroVoices()}, null, 2) + '\n')
@@ -667,4 +824,4 @@ if (failures.length) {
   for (const f of failures) console.log(`::error::${f}`)
   process.exit(1)
 }
-console.log('flow-metrics: every theme on every canvas at 1440 and 390 is what the golden says.')
+console.log(MOTION_ONLY ? 'flow-metrics: the motion pass is clean.' : 'flow-metrics: every theme on every canvas at 1440 and 390 is what the golden says, and the motion pass is clean.')
