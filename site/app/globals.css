@@ -450,6 +450,20 @@
   background: var(--color-foreground);
 }
 
+/* ─── The scroll reveal (components/ui/ScrollReveal.tsx) ─────────────────── */
+/* The band's CONTENT rises, never its ground: the wrapper carries the phase and the
+   approved values (24px, 600ms, --ease-gentle; Justin, 2026-07-20, BI-Library.md),
+   SectionShell marks the content. Only for a visitor who has not asked for reduced
+   motion; the transition only once the band is revealed, so arming never animates. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal="offset"] [data-band-content] {
+    transform: translateY(var(--reveal-distance));
+  }
+  [data-reveal="revealed"] [data-band-content] {
+    transition: transform var(--reveal-duration) var(--reveal-easing);
+  }
+}
+
 /* ─── Prefers Reduced Motion ─────────────────────────────────────────────── */
 /* 10ms (not 0ms) avoids jump-cut artifacts in max-height collapse animations. */
 @media (prefers-reduced-motion: reduce) {
