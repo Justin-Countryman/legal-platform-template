@@ -3239,7 +3239,8 @@
       ],
       "defaultStep": "mostlyLight",
       "passed": [
-        "mostlyLight"
+        "mostlyLight",
+        "balanced"
       ]
     },
     {
@@ -3837,7 +3838,7 @@
       "sentence": "The page and a warm wash of its own background in turn; at balanced, the dark color returns on a few sections down the page.",
       "family": "softWash",
       "step": "balanced",
-      "passed": false
+      "passed": true
     },
     {
       "dark": {

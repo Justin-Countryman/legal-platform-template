@@ -49,9 +49,9 @@ function seen<M>(members: readonly M[], resolve: Parameters<typeof walkPage<M>>[
 }
 
 describe('the step', () => {
-  it('ships beside the first, unpassed until his eye, in new words of the closed vocabulary', () => {
+  it('ships beside the first, passed by his eye (2026-10-02: "1, ship as shown"), in new words of the closed vocabulary', () => {
     expect(STEP).not.toBeNull()
-    expect(STEP!.passed).toBe(false)
+    expect(STEP!.passed).toBe(true)
     expect(DARK_BUDGETS).toContain('quarter')
     expect(DARK_RHYTHMS).toContain('spread')
     expect(STEP!.dark).toMatchObject({budget: 'quarter', rhythm: 'spread', paint: 'plain', close: 'dark', closeElse: ['wash']})

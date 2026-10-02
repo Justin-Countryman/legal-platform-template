@@ -445,7 +445,10 @@ export const FAMILIES: readonly FlowFamily[] = [
     // does: on his rated pages the dark color seldom recurs on a light page (the record's §8.1 item 5); their light-
     // leaning pages give the range, about a third of the bands strong with the close. The attorneys come last among
     // the hosts, since a tall card grid on a phone makes a dark band heavy.
-    steps: ['mostlyLight', 'balanced'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
+    // THE EYE PASS OF THE SECOND STEP (Phase 18 session E, monorepo `[R-623]`): shown live in the in-app browser on the
+    // composer's canvas with a warm hero, under Dune and Forest & Brass, beside the first step; Justin, 2026-10-02:
+    // "1, ship as shown".
+    steps: ['mostlyLight', 'balanced'], defaultStep: 'mostlyLight', passed: ['mostlyLight', 'balanced'],
     rules: (step) => (step === 'balanced'
       ? {
           dark: {budget: 'quarter', hosts: ['ribbon', 'differentiators', 'narrative', 'testimonials', 'statement', 'caseResults', 'attorneys'], rhythm: 'spread', paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['wash']},

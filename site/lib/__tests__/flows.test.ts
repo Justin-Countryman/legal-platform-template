@@ -42,7 +42,7 @@ describe('the families and the roster', () => {
   it('the passed steps are the eye pass verdicts: session 3 passed four; session 5 passed three and retired Alternating at mostly dark ([R-523]); session 6 passed Photo scrims; Phase 17D passed four; its session 2 passed Gradient bloom', () => {
     expect(FLOWS.filter((f) => f.passed).map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
       'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark',
-      'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight', 'gradientBloom.mostlyDark', 'wedges.balanced'])
+      'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight', 'softWash.balanced', 'gradientBloom.mostlyDark', 'wedges.balanced'])
     // Dark-led pages are runs, not alternation: the step left the roster, it is not merely unpassed.
     expect(flowById('alternating.mostlyDark')).toBeNull()
     expect(FAMILIES.find((f) => f.id === 'alternating')!.steps).toEqual(['balanced'])
