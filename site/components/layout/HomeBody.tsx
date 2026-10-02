@@ -3,8 +3,8 @@ import {ghostSource} from '@/lib/brandMark'
 import {closeFrame, closeGround, walkPage} from '@/components/sections/sectionFrame'
 import {siteLookWithHeadingFace} from '@/lib/headingAdvances'
 import {firstBandRises, frameOf} from '@/components/layout/HomepageCanvas'
-import {heroGround, heroPaint, heroPhotoOf, photoSetOf} from '@/lib/heroGround'
-import {chromeSchemes, closeOf, flowOf} from '@/lib/flows'
+import {heroGround, heroPaint, heroPhotoOf, photoSetOf, themedHero} from '@/lib/heroGround'
+import {chromeSchemes, closeOf, flowOf, type FlowRules} from '@/lib/flows'
 import {withCtaOverride} from '@/lib/ctaOverride'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
@@ -41,11 +41,12 @@ export type HomePageData = Awaited<ReturnType<typeof getHomePage>>
 
 /** The homepage hero as `HomeBody` renders it: content with a heading over an authored
  *  design, else none. The preview's switcher reads its ground the same way (Phase 17B session 5). */
-export function homeHeroOf(all: HomePageData | null | undefined): HomeHeroData | null {
+export function homeHeroOf(all: HomePageData | null | undefined, flow: Pick<FlowRules, 'hero'> | null = null): HomeHeroData | null {
   const home = (all?.page ?? null) as HomeData | null
   const design = (all?.heroDesign ?? null) as HomeHeroDesign | null
   const content = home?.hero
-  return content?.heading && design ? {...design, ...content} : null
+  // Phase 18 session E: under the theme, an inherited hero takes the theme's ground (`themedHero`).
+  return themedHero(content?.heading && design ? {...design, ...content} : null, flow)
 }
 
 /** Whether the homepage's closing call to action renders: the site's, with the homepage's own words over it, and a
@@ -63,7 +64,9 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
   // Render the hero only when content has a heading AND the design is
   // authored/migrated. An empty/unmigrated heroSettings.homepageHero falls through
   // to the minimal band below — the hard-cut safety net, never a crash.
-  const hero = homeHeroOf(all)
+  // The theme first (Phase 18 session E): the hero takes its ground where it stores none (`themedHero`).
+  const look = siteLookWithHeadingFace(chrome?.designTokens)
+  const hero = homeHeroOf(all, look.flow)
   // Phase 16C: the first band rises into the hero when the theme's divider is shaped and
   // the grounds differ, so the hero makes room for it and the walk knows what it meets.
   // Phase 16D: the ghost's initials ride the site look, as the photo frame and the
@@ -71,8 +74,7 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
   // gains a prop. Derived from the firm's name, never stored (`[R-492]`).
   // Phase 17B: the theme (`look.flow`, from the stored `flow`, the compat bridge or the
   // platform default) says whether the ghost draws and what ground the close takes.
-  // Phase 17C session 3: with the heading face's widths, which only a server page may read.
-  const look = siteLookWithHeadingFace(chrome?.designTokens)
+  // Phase 17C session 3: with the heading face's widths, which only a server page may read (`look`, above).
   // Phase 17B session 6 (`[R-530]`, `[R-532]`): the hero's photograph the theme may lay in windows
   // down the page, only while it is the photograph the theme was approved with (`flowPhoto`, which
   // the preview sets to the live one when the operator chooses the theme); and whether the close

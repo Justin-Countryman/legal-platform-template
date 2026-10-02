@@ -3293,6 +3293,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [],
@@ -3340,6 +3341,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [],
@@ -3389,6 +3391,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "photo",
       "needs": [
@@ -3442,6 +3445,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "photo",
       "needs": [
@@ -3497,6 +3501,7 @@
         "hairlineInk": "accent"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [
@@ -3537,6 +3542,7 @@
         "hairlineInk": "border"
       },
       "spacing": "spacious",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [
@@ -3580,6 +3586,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [
@@ -3631,6 +3638,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [
@@ -3680,6 +3688,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [],
@@ -3729,6 +3738,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "none",
       "needs": [],
@@ -3767,6 +3777,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "light",
       "ghost": "none",
       "overlap": "none",
       "needs": [],
@@ -3813,6 +3824,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "light",
       "ghost": "none",
       "overlap": "none",
       "needs": [],
@@ -3862,6 +3874,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "photo",
       "needs": [
@@ -3914,6 +3927,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
+      "hero": "site",
       "ghost": "none",
       "overlap": "photo",
       "needs": [],

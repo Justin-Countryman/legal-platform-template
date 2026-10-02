@@ -6,6 +6,7 @@ import {analyticsOff} from '@/lib/preview/analytics'
 import {loadPreview} from '@/lib/preview/load'
 import {closeShownOf, homeHeroOf} from '@/components/layout/HomeBody'
 import {heroGround, heroPhotoOf, setPhotoEntries} from '@/lib/heroGround'
+import {flowOf} from '@/lib/flows'
 
 // ─── The preview address ──────────────────────────────────────────────────────
 //
@@ -52,8 +53,11 @@ export default async function PreviewLayout({children, params}: {children: React
   const photoSet = setPhotoEntries(state.liveChrome?.designTokens as Record<string, unknown> | null, heroPhoto?.assetId)
   // The homepage's own words over the site's, as the page merges them (`closeShownOf`, the pre-PR break pass).
   const closeShown = closeShownOf(state.chrome?.globalCta as Parameters<typeof closeShownOf>[0], state.home?.page as Parameters<typeof closeShownOf>[1])
+  // The previewed theme, so the hero's ground the switcher names is the one the page draws (Phase 18 session E: an inherited
+  // hero follows the theme, `themedHero`; and a light hero under Soft wash is its wash).
+  const previewFlow = flowOf(state.chrome?.designTokens as Record<string, unknown> | null)
   const switcher = (
-    <Switcher grant={state.grant} choices={state.choices} plan={state.plan} canvas={state.home?.page?.canvas} chrome={state.chrome} origin={`${proto}://${host}`} hero={heroGround(homeHeroOf(state.home))} heroPhoto={heroPhoto} photoSet={photoSet} closeShown={closeShown} />
+    <Switcher grant={state.grant} choices={state.choices} plan={state.plan} canvas={state.home?.page?.canvas} chrome={state.chrome} origin={`${proto}://${host}`} hero={heroGround(homeHeroOf(state.home, previewFlow), previewFlow)} heroPhoto={heroPhoto} photoSet={photoSet} closeShown={closeShown} />
   )
 
   return (

@@ -87,6 +87,11 @@ export const GHOSTS = ['none', 'once'] as const
  *  polarity follows the internal hero, not the homepage's (measured unreadable at 1.02:1 when they
  *  differ, ADV-17B4-A); glass pairs with the floating compact style. Both stay the operator's. */
 export const CHROME_SCHEMES = ['light', 'dark'] as const
+/** The homepage hero's ground where the hero stores none of its own (Inherit; Phase 18 session E, monorepo `[R-619]`):
+ *  the site's internal default as before (`site`), or light (`light`), which a theme that paints washes draws as its
+ *  wash. Only Soft wash says light, so a warm firm opens on its warm hero and the hero follows the theme the meeting
+ *  picks; a stored dark or light wins, and a photograph forces dark (`themedHero`, `lib/heroGround.ts`). */
+export const HERO_GROUNDS = ['site', 'light'] as const
 export type ChromeScheme = (typeof CHROME_SCHEMES)[number]
 /** `ribbons`: the theme fills two ribbons on this page (read from the pass, so two adjacent or a
  *  stored one do not count); `darkHero`: the hero is dark or a photo (Phase 17B session 5);
@@ -160,6 +165,8 @@ export type FlowRules = {
   }
   /** The room around each band the theme fills: the normal preset or the spacious one. */
   spacing: (typeof SPACINGS)[number]
+  /** The homepage hero's ground where it stores none (`HERO_GROUNDS`). */
+  hero: (typeof HERO_GROUNDS)[number]
   /** Placement as before: once, the first dark band, else the first eligible (`[R-492]`). */
   ghost: (typeof GHOSTS)[number]
   /** Placement as before: once, nearest the middle, at a change of visible ground (`[R-499]`). */
@@ -288,7 +295,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       // Phase 18 session B (`[R-597]`, `[R-603]`): its dark close over a light footer, as the study's mostly light
       // pages end (a light footer on 14 of 19), so the one dark band to close never meets a dark footer.
       divider: NO_DIVIDER, spacing: 'normal',
-      ghost: 'none', overlap: 'none', needs: [], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
+      hero: 'site', ghost: 'none', overlap: 'none', needs: [], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
     }),
   },
   {
@@ -310,7 +317,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: 'pairs', paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
-      ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME[step],
+      hero: 'site', ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME[step],
     }),
   },
   {
@@ -323,7 +330,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'pattern', texture: 'alternate', close: 'dark', closeElse: ['muted', 'saturated']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: {shape: 'peak', at: 'intoDark', carry: ['cards'], hairline: 'none', hairlineInk: 'border'}, spacing: 'normal',
-      ghost: 'none', overlap: 'photo', needs: ['texture'], chrome: STEP_CHROME[step],
+      hero: 'site', ghost: 'none', overlap: 'photo', needs: ['texture'], chrome: STEP_CHROME[step],
     }),
   },
   // ─── Phase 17B session 5 (record WS-V1-PHASE17B5-DESIGN §2) ─────────────────
@@ -340,7 +347,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: {shape: 'straight', at: 'none', carry: [], hairline: 'everyBand', hairlineInk: 'accent'}, spacing: 'normal',
-      ghost: 'none', overlap: 'none', needs: ['darkHero'], chrome: STEP_CHROME[step],
+      hero: 'site', ghost: 'none', overlap: 'none', needs: ['darkHero'], chrome: STEP_CHROME[step],
     }),
   },
   {
@@ -356,7 +363,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       // Phase 17C session 3 (`[R-538]`): its light bands at the quiet strength.
       light: {paint: 'pattern', texture: 'quiet'},
       divider: {shape: 'straight', at: 'none', carry: [], hairline: 'everyBand', hairlineInk: 'border'}, spacing: 'spacious',
-      ghost: 'none', overlap: 'none', needs: ['texture'], chrome: {header: 'light', footer: 'light'},
+      hero: 'site', ghost: 'none', overlap: 'none', needs: ['texture'], chrome: {header: 'light', footer: 'light'},
     }),
   },
   {
@@ -372,7 +379,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
       // Phase 18 session B: a light footer under its dark close, as Quiet's.
-      ghost: 'none', overlap: 'none', needs: ['ribbons'], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
+      hero: 'site', ghost: 'none', overlap: 'none', needs: ['ribbons'], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
     }),
   },
   // ─── Phase 17B session 6 (record WS-V1-PHASE17B6-DESIGN §2) ─────────────────
@@ -393,7 +400,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       divider: NO_DIVIDER, spacing: 'normal',
       // Phase 18 session B: a light footer, so its photograph close stands apart from it; under the scrim a photograph
       // measures 0.7 to 18.4 from the dark ground (`closeOf`). The photograph over a dark footer is shown to Justin.
-      ghost: 'none', overlap: 'none', needs: ['heroPhoto'], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
+      hero: 'site', ghost: 'none', overlap: 'none', needs: ['heroPhoto'], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
     }),
   },
   // ─── Phase 17D session 1 (record WS-V1-PHASE17D-DESIGN §2) ──────────────────
@@ -412,13 +419,13 @@ export const FAMILIES: readonly FlowFamily[] = [
           dark: {budget: STEP_BUDGET.mostlyDark, hosts: STEP_HOSTS.mostlyDark, rhythm: 'runs', paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
           light: {paint: 'floating', texture: 'quiet'},
           divider: NO_DIVIDER, spacing: 'normal',
-          ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.mostlyDark,
+          hero: 'site', ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.mostlyDark,
         }
       : {
           dark: {budget: STEP_BUDGET.balanced, hosts: STEP_HOSTS.balanced, rhythm: 'alternate', paint: 'floating', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
           light: {paint: 'plain', texture: 'quiet'},
           divider: NO_DIVIDER, spacing: 'normal',
-          ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.balanced,
+          hero: 'site', ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.balanced,
         }),
   },
   {
@@ -444,13 +451,13 @@ export const FAMILIES: readonly FlowFamily[] = [
           dark: {budget: 'quarter', hosts: ['ribbon', 'differentiators', 'narrative', 'testimonials', 'statement', 'caseResults', 'attorneys'], rhythm: 'spread', paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['wash']},
           light: {paint: 'washes', texture: 'quiet'},
           divider: NO_DIVIDER, spacing: 'normal',
-          ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
+          hero: 'light', ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
         }
       : {
           dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: 'plain', texture: 'quiet', close: 'wash', closeElse: ['dark']},
           light: {paint: 'washes', texture: 'quiet'},
           divider: NO_DIVIDER, spacing: 'normal',
-          ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
+          hero: 'light', ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
         }),
   },
   // ─── Phase 17D session 2 (record WS-V1-PHASE17D2-DESIGN §2) ─────────────────
@@ -469,7 +476,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'glow', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
-      ghost: 'none', overlap: 'photo', needs: ['glow'], chrome: STEP_CHROME[step],
+      hero: 'site', ghost: 'none', overlap: 'photo', needs: ['glow'], chrome: STEP_CHROME[step],
     }),
   },
   {
@@ -487,7 +494,7 @@ export const FAMILIES: readonly FlowFamily[] = [
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: {shape: 'steep', at: 'everyChange', carry: ['cards', 'photo'], hairline: 'none', hairlineInk: 'border'}, spacing: 'normal',
-      ghost: 'none', overlap: 'photo', needs: [], chrome: STEP_CHROME[step],
+      hero: 'site', ghost: 'none', overlap: 'photo', needs: [], chrome: STEP_CHROME[step],
     }),
   },
 ]
@@ -573,6 +580,7 @@ export function bridgeOf(d: Record<string, unknown>): FlowRules {
     light: {paint: 'plain', texture: 'quiet'},
     divider: {shape, at: 'intoDark', carry: readCarry(d.dividerCarry), hairline: 'none', hairlineInk: 'border'},
     spacing: 'normal',
+    hero: 'site',
     ghost: d.brandGhost === 'on' ? 'once' : 'none',
     overlap: readOverlap(d.sectionOverlap),
     needs: [],
