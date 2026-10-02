@@ -464,6 +464,27 @@
   }
 }
 
+/* ─── The parallax: a hero photograph drifts as the hero leaves ────────── */
+/* Justin, 2026-10-02 (monorepo WS-MOTION-LAYER-DESIGN.md §7): every hero photograph, from
+   768 px, still for a visitor who asks for less motion. The photograph behind an Overlay hero
+   moves down a fifth of the distance scrolled, over the first screen of scroll, inside the box
+   that clips it; the scrim and the text stay. No enlarged image: the strip it uncovers at its
+   top sits above the screen or under the sticky header (measured at 1440, 1024 and 768).
+   Tied to the page's own scroller (`scroll(root)`): a timeline on the image's own box, which
+   clips and never scrolls, would never move. Only where scroll timelines exist (Firefox draws
+   it still), and only inside the media query, because the reduced-motion reset below cannot
+   stop a scroll-driven animation (its duration is "treated as auto", CSS Animations 2). */
+@keyframes hero-drift { to { transform: translateY(20vh); } }
+@media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
+  @supports (animation-timeline: scroll()) {
+    .hero-drift {
+      animation: hero-drift linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+  }
+}
+
 /* ─── Prefers Reduced Motion ─────────────────────────────────────────────── */
 /* 10ms (not 0ms) avoids jump-cut artifacts in max-height collapse animations. */
 @media (prefers-reduced-motion: reduce) {
