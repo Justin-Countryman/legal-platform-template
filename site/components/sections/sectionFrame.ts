@@ -532,7 +532,9 @@ export function walkPage<M>(
   // reads as a strip. A ribbon on a ground of its own draws none (Ribbon rhythm's filled strips), nor a panel,
   // which floats on its gutter. A theme that draws its hairline at every band has drawn it at every join inside
   // the page, but never at the hero's or the close's (the pre-PR break pass: Type on black left both ribbons
-  // joined to them), so there only those two edges are the ribbon's. On an interior page no theme runs.
+  // joined to them), so there only those two edges are the ribbon's. Since the roster eye of 2026-10-03
+  // (`[R-631]`) only Editorial draws at every band: Type on black's line draws at a change alone, so its ribbons
+  // in the dark run line both edges, the ribbon's own lines, not the seam's. On an interior page no theme runs.
   if (flow) {
     const everyBand = flow.divider.hairline === 'everyBand'
     out.forEach((o, k) => {

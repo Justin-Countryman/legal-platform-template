@@ -54,11 +54,15 @@ describe('a ribbon lines the edge it shares with its neighbor’s ground', () =>
     expect(edges([b('ribbon'), b('narrative'), b('split'), b('ribbon')], 'ribbonRhythm.mostlyLight', 'dark', 'dark', {saturated: false})).toBe('t - - b')
   })
 
-  it('where the theme draws its hairline at every band (Type on black, Editorial), only at the hero and the close', () => {
+  it('where the theme draws its hairline at every band (Editorial), only at the hero and the close', () => {
     // The hairline is every join inside the page; the hero's and the close's joins have none (the pre-PR break pass).
-    expect(edges([b('ribbon'), b('narrative'), b('ribbon')], 'typeOnBlack.allDark')).toBe('t - b')
-    expect(edges([b('narrative'), b('ribbon'), b('split')], 'typeOnBlack.allDark')).toBe('- - -')
     expect(edges([b('ribbon'), b('narrative'), b('ribbon')], 'editorial.mostlyLight', 'light', 'light')).toBe('t - b')
+  })
+
+  it('under Type on black, whose line draws only at a change since the roster eye of 2026-10-03 ([R-631]), a ribbon in the dark run lines both edges', () => {
+    // The seam's hairline is gone from the run ("get rid of the lines"); the ribbon's own lines are the ribbon's and stay.
+    expect(edges([b('ribbon'), b('narrative'), b('ribbon')], 'typeOnBlack.allDark')).toBe('tb - tb')
+    expect(edges([b('narrative'), b('ribbon'), b('split')], 'typeOnBlack.allDark')).toBe('- tb -')
   })
 
   it('never on a panel, which floats on its gutter', () => {

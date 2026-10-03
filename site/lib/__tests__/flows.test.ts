@@ -43,7 +43,7 @@ describe('the families and the roster', () => {
     // The roster eye of 2026-10-03 (monorepo WS-V1-ROSTER-EYE-2026-10-03/verdicts.txt): six steps pass, eight change. A step
     // he asked to change is not passed until he sees it again (`[R-517]`), so each leaves this list with its fix.
     expect(FLOWS.filter((f) => f.passed).map((f) => f.id)).toEqual(['alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
-      'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark',
+      'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark',
       'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight', 'softWash.balanced', 'gradientBloom.mostlyDark', 'wedges.balanced'])
     // Dark-led pages are runs, not alternation: the step left the roster, it is not merely unpassed.
     expect(flowById('alternating.mostlyDark')).toBeNull()
@@ -182,7 +182,11 @@ describe('the families and the roster', () => {
     const tob = flowById('typeOnBlack.allDark')!
     expect(tob.dark).toMatchObject({budget: 'all', rhythm: 'runs', paint: 'plain', close: 'dark'})
     expect(tob.dark.hosts).toEqual(HOSTS)
-    expect(tob.divider).toMatchObject({shape: 'straight', at: 'none', hairline: 'everyBand', hairlineInk: 'accent'})
+    // The roster eye of 2026-10-03 (`[R-631]`): "mostly dark theme is so you do not see all the bands but we have gold
+    // lines which breaks everything up anyways"; "get rid of the lines". Its line draws only where the ground changes,
+    // which on an all-dark page is nowhere; a stored light band inside the run still gets its two.
+    expect(tob.divider).toMatchObject({shape: 'straight', at: 'none', hairline: 'atChange', hairlineInk: 'accent'})
+    expect(tob.passed).toBe(false)
     expect(tob.needs).toEqual(['darkHero'])
     const ed = flowById('editorial.mostlyLight')!
     expect(ed.dark).toMatchObject({budget: 'none', rhythm: 'bookends', close: 'muted'})
@@ -190,6 +194,8 @@ describe('the families and the roster', () => {
     expect(ed.spacing).toBe('spacious')
     expect(ed.ghost).toBe('none')
     expect(ed.divider).toMatchObject({hairline: 'everyBand', hairlineInk: 'border'})
+    // Only Editorial still draws a line at every join.
+    expect(FLOWS.filter((f) => f.divider.hairline === 'everyBand').map((f) => f.id)).toEqual(['editorial.mostlyLight'])
     expect(ed.chrome).toEqual({header: 'light', footer: 'light'})
     const rr = flowById('ribbonRhythm.mostlyLight')!
     expect(rr.dark).toMatchObject({budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', close: 'dark'})

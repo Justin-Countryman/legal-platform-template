@@ -345,17 +345,26 @@ export const FAMILIES: readonly FlowFamily[] = [
   // ─── Phase 17B session 5 (record WS-V1-PHASE17B5-DESIGN §2) ─────────────────
   {
     id: 'typeOnBlack', name: 'Type on black',
-    sentence: 'All dark and no photographs: a thin accent line at every join, and a close on the accent.',
+    sentence: 'All dark and no photographs: one unbroken dark ground, and a close on the accent.',
     // The study: elbazelbazlaw, seven dark bands and a red line at each seam; dustincompton's
     // sand bars at every seam. The all-dark step's rhythm devices are photos, per-band ramps
-    // and lines, never a second flat shade (17B §0.5); this family is the lines. Its line is
+    // and lines, never a second flat shade (17B §0.5); this family was the lines. Its line is
     // the accent (`[R-524]`): the border token cannot be seen on a dark ground. It wants a
     // dark or photo hero, which the composer writes and a theme cannot reach.
-    steps: ['allDark'], defaultStep: 'allDark', passed: ['allDark'],
+    //
+    // THE ROSTER EYE OF 2026-10-03 (monorepo WS-V1-ROSTER-EYE-2026-10-03/verdicts.txt; `[R-631]`): judged live on
+    // Stone Arch beside lewinlawfirm.com, "change": "mostly dark theme is so you do not see all the bands but we have
+    // gold lines which breaks everything up anyways"; "get rid of the lines". So its hairline draws at a change of
+    // ground only (`atChange`), which on an all-dark page is nowhere: a stored light band inside the run still gets its
+    // two, and the close meets the run on its own ground. The ribbons' accent lines are the ribbon's, not the seam's
+    // (`[R-576]`, the content section's ribbon layout), and stay. His verdict also asked for faint photographs across
+    // the run, which is the background layer's (`[R-631]`), not this family's. Not passed until he sees it again
+    // (`[R-517]`).
+    steps: ['allDark'], defaultStep: 'allDark', passed: [],
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
       light: {paint: 'plain', texture: 'quiet'},
-      divider: {shape: 'straight', at: 'none', carry: [], hairline: 'everyBand', hairlineInk: 'accent'}, spacing: 'normal',
+      divider: {shape: 'straight', at: 'none', carry: [], hairline: 'atChange', hairlineInk: 'accent'}, spacing: 'normal',
       hero: 'site', ghost: 'none', overlap: 'none', needs: ['darkHero'], chrome: STEP_CHROME[step],
     }),
   },

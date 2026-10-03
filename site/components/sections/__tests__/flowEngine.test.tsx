@@ -426,6 +426,26 @@ describe('the all-dark page', () => {
     expect(out.map((o) => !!o.seam.hairline)).toEqual([false, ...Array(12).fill(true)])
   })
 
+  it('Type on black draws no line inside its dark run (the roster eye of 2026-10-03, [R-631]); a stored light band inside it gets its two', () => {
+    // Justin: "mostly dark theme is so you do not see all the bands but we have gold lines which breaks everything up
+    // anyways"; "get rid of the lines". The family's hairline is `atChange`: on an all-dark page under a dark hero no
+    // band carries it, and a stored light band is marked at both of its changes. The ribbons' own accent lines
+    // (`[R-576]`) are the ribbon's, not the seam's, and stay: a ribbon between two dark bands lines both edges.
+    const tob = flowById('typeOnBlack.allDark')!
+    const dark = walkPage([b('ribbon'), b('narrative'), b('split'), b('attorneys'), b('ribbon')], resolveBand, {...LOOK, flow: tob}, 'dark', 'dark')
+    expect(dark.bands.map((o) => o.seam.paint?.ground)).toEqual(Array(5).fill('dark'))
+    expect(dark.bands.map((o) => !!o.seam.hairline)).toEqual(Array(5).fill(false))
+    expect(dark.bands.map((o) => o.seam.ribbonEdges ?? null)).toEqual([{top: true, bottom: true}, null, null, null, {top: true, bottom: true}])
+    const stored = walkPage([b('ribbon'), b('narrative', {surface: 'light'}), b('split')], resolveBand, {...LOOK, flow: tob}, 'dark', 'dark')
+    expect(stored.bands.map((o) => !!o.seam.hairline)).toEqual([false, true, true])
+    // Rendered: no hairline class on the dark page; the accent ink where a line draws.
+    const blocks = ['a', 'b', 'c'].map((k) => ({_type: 'contentSectionInline', _key: k, layout: 'statement', heading: k})) as unknown as HomepageBlock[]
+    const classes = [...render(<HomepageCanvas blocks={blocks} site={{...LOOK, flow: tob}} hero="dark" close="dark" />).container.querySelectorAll('section')].map((s) => s.className.split(' '))
+    expect(classes.flat()).not.toContain('hairline-top')
+    const lit = [...render(<HomepageCanvas blocks={[blocks[0], {...blocks[1], appearance: {surface: 'light'}} as HomepageBlock, blocks[2]]} site={{...LOOK, flow: tob}} hero="dark" close="dark" />).container.querySelectorAll('section')].map((s) => s.className.split(' '))
+    expect(lit.map((c) => c.includes('hairline-top') && c.includes('hairline-accent'))).toEqual([false, true, true])
+  })
+
   it('the hairline at a change of ground marks the joins where the ground changes and no other', () => {
     const flow = themed({divider: {hairline: 'atChange'}})
     const out = walkFrame([b('split', {surface: 'light'}), b('split', {surface: 'dark'}), b('split', {surface: 'dark'}), b('split', {surface: 'tint'}), b('split', {surface: 'light'})], resolveBand, {...LOOK, flow}, 'dark')

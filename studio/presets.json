@@ -3168,14 +3168,12 @@
     {
       "id": "typeOnBlack",
       "name": "Type on black",
-      "sentence": "All dark and no photographs: a thin accent line at every join, and a close on the accent.",
+      "sentence": "All dark and no photographs: one unbroken dark ground, and a close on the accent.",
       "steps": [
         "allDark"
       ],
       "defaultStep": "allDark",
-      "passed": [
-        "allDark"
-      ]
+      "passed": []
     },
     {
       "id": "editorial",
@@ -3498,7 +3496,7 @@
         "shape": "straight",
         "at": "none",
         "carry": [],
-        "hairline": "everyBand",
+        "hairline": "atChange",
         "hairlineInk": "accent"
       },
       "spacing": "normal",
@@ -3514,10 +3512,10 @@
       },
       "id": "typeOnBlack.allDark",
       "name": "Type on black",
-      "sentence": "All dark and no photographs: a thin accent line at every join, and a close on the accent.",
+      "sentence": "All dark and no photographs: one unbroken dark ground, and a close on the accent.",
       "family": "typeOnBlack",
       "step": "allDark",
-      "passed": true
+      "passed": false
     },
     {
       "dark": {
