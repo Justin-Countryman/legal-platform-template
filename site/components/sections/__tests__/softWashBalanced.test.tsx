@@ -31,7 +31,8 @@ import {DARK_BUDGETS, DARK_RHYTHMS, FLOWS, closeOf, darkBudget, flowById, type F
 import {PALETTE_PRESETS, presetInputs} from '@/lib/palettes'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {LOOK} from './flowFixtures'
-import {RECORD_CANVASES, stubCanvas} from './stubCanvases'
+import {existsSync} from 'node:fs'
+import {CI_DIR, RECORD_CANVASES, stubCanvas} from './stubCanvases'
 
 const STEP = flowById('softWash.balanced')
 const STRONG = new Set<VisibleGround | string>(['dark', 'saturated', 'image'])
@@ -115,7 +116,9 @@ describe('where the dark ground goes', () => {
 describe('on every stub canvas, at both hero grounds', () => {
   const CANVASES = (['fixture.ndjson', ...RECORD_CANVASES] as const).map((f) => [f, stubCanvas(f)] as const).filter(([, c]) => c)
 
-  it('reads the canvases (the template checkout carries them)', () => {
+  // A client tree has no stub canvases (the press prunes `scripts/ci/`), so the count is the
+  // template's own check only, skipped by name there, as flowEngine.test.tsx's is (PR #41).
+  it.skipIf(!existsSync(CI_DIR))('reads the canvases (skipped on a client tree: the stub datasets are pruned by the press)', () => {
     expect(CANVASES.length).toBeGreaterThanOrEqual(10)
   })
 
