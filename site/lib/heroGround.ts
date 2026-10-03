@@ -7,11 +7,29 @@ import type {FlowRules} from './flows'
 // ─── The hero under the theme (Phase 18 session E, monorepo `[R-619]`) ──────────
 // The build leaves the homepage hero's ground to inherit and writes the theme (WS-V1-PHASE18E-DESIGN §9.2), so the hero
 // follows the theme the meeting picks: where the hero stores neither dark nor light, the theme's `hero` decides, and only
-// Soft wash says light (its warm wash, `heroPaint`). Every other theme leaves the hero as it was, the site's internal
-// default, so no live page moves. A photograph forces dark downstream, as always (`resolveHeroSurface`).
+// Soft wash says light (its warm wash, `heroPaint`), and only Gradient bloom says dark (the roster eye of 2026-10-03,
+// `[R-631]`: its glow starts in the hero). Every other theme leaves the hero as it was, the site's internal default, so
+// no live page moves. A photograph forces dark downstream, as always (`resolveHeroSurface`).
 export function themedHero<H extends HomeHeroData | null>(hero: H, flow: Pick<FlowRules, 'hero'> | null | undefined): H {
-  if (!hero || flow?.hero !== 'light' || hero.schemeOverride === 'dark' || hero.schemeOverride === 'light') return hero
-  return {...hero, schemeOverride: 'light'}
+  if (!hero || hero.schemeOverride === 'dark' || hero.schemeOverride === 'light') return hero
+  if (flow?.hero === 'light') return {...hero, schemeOverride: 'light'}
+  if (flow?.hero === 'dark') return {...hero, schemeOverride: 'dark'}
+  return hero
+}
+
+// ─── The hero in a lit run (the roster eye of 2026-10-03, `[R-631]`) ───────────
+// Justin, of Gradient bloom: "there is no gradient in the hero to create that continuity after a few sections the
+// gradient stuff just stops". The walk gives a dark hero its place in the first run the theme lights (`walkPage().hero`,
+// `components/sections/sectionFrame.ts`), and the hero band draws it as a section draws its own.
+export type HeroGlow = {index: number; length: number; peak?: number; side?: 'left' | 'right'}
+
+/** The side the homepage hero's cutout figure stands on, for the glow to peak behind it as it peaks behind a
+ *  section's: the overlay's foreground figure, grounded bottom-right beside left-aligned text (`HeroForeground`).
+ *  Centred text draws no figure, nor does a split. */
+export function heroCutout(hero: HomeHeroData | null): 'left' | 'right' | null {
+  if (!hero) return null
+  const c = resolveHeroConfig(hero)
+  return c.skeleton === 'overlay' && c.foreground && c.contentAlign !== 'center' && !!hero.foregroundImage?.src ? 'right' : null
 }
 
 // ─── The hero's bottom ground (Phase 16C) ─────────────────────────────────────

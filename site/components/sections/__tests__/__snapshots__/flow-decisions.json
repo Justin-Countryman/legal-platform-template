@@ -792,7 +792,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -830,9 +830,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 1
         },
         "fade": "glow"
       },
@@ -850,23 +848,27 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 2,
+          "peak": 1,
+          "side": "left"
         },
-        "fade": "glow"
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
+        }
       }
     ],
     "close": {
       "run": {
-        "index": 0,
-        "length": 1,
-        "peak": 0,
-        "side": "right"
+        "index": 1,
+        "length": 2,
+        "peak": 1,
+        "side": "left"
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "closeGround": "dark"
   },
   "stub / wedges.balanced": {
     "unmetNeeds": [],
@@ -1781,7 +1783,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -1798,9 +1800,9 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 0,
-          "length": 1,
-          "peak": 0,
+          "index": 1,
+          "length": 2,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -1819,9 +1821,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 1
         },
         "fade": "glow"
       },
@@ -1839,23 +1839,32 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 2,
+          "peak": 1,
+          "side": "left"
         },
         "fade": "glow"
       }
     ],
-    "close": {
+    "hero": {
       "run": {
         "index": 0,
-        "length": 1,
-        "peak": 0,
+        "length": 2,
+        "peak": 1,
         "side": "right"
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "close": {
+      "run": {
+        "index": 1,
+        "length": 2,
+        "peak": 1,
+        "side": "left"
+      },
+      "fade": "glow"
+    },
+    "closeGround": "dark"
   },
   "migrated / wedges.balanced": {
     "unmetNeeds": [],
@@ -4867,7 +4876,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -4885,9 +4894,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 1
         },
         "fade": "glow"
       },
@@ -4907,7 +4914,7 @@
           "index": 0,
           "length": 1,
           "peak": 0,
-          "side": "right"
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -4925,9 +4932,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 1
         },
         "fade": "glow"
       },
@@ -4945,8 +4950,8 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 5,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -4965,8 +4970,8 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 5,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -4985,8 +4990,8 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 5,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -5004,10 +5009,10 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 5,
-          "peak": 2,
-          "side": "right"
+          "index": 0,
+          "length": 2,
+          "peak": 1,
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -5024,10 +5029,10 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 4,
-          "length": 5,
-          "peak": 2,
-          "side": "right"
+          "index": 1,
+          "length": 2,
+          "peak": 1,
+          "side": "left"
         },
         "fade": "glow",
         "ribbonEdges": {
@@ -5049,9 +5054,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 1
         },
         "fade": "glow"
       },
@@ -5069,9 +5072,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 1
         },
         "fade": "glow"
       },
@@ -5089,9 +5090,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 2,
-          "peak": 1,
-          "side": "right"
+          "length": 2
         },
         "fade": "glow"
       },
@@ -5109,9 +5108,7 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 2,
-          "peak": 1,
-          "side": "right"
+          "length": 2
         },
         "fade": "glow"
       },
@@ -5129,13 +5126,20 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 1
         },
         "fade": "glow"
       }
     ],
+    "hero": {
+      "run": {
+        "index": 0,
+        "length": 1,
+        "peak": 0,
+        "side": "right"
+      },
+      "fade": "glow"
+    },
     "close": {
       "run": {
         "index": 0,
@@ -5145,7 +5149,7 @@
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "closeGround": "dark"
   },
   "planted / wedges.balanced": {
     "unmetNeeds": [],
@@ -7267,7 +7271,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -7284,8 +7288,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 0,
-          "length": 2,
+          "index": 1,
+          "length": 3,
           "peak": 1,
           "side": "right"
         },
@@ -7308,8 +7312,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 1,
-          "length": 2,
+          "index": 2,
+          "length": 3,
           "peak": 1,
           "side": "right"
         },
@@ -7329,9 +7333,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 2,
-          "peak": 1,
-          "side": "right"
+          "length": 2
         },
         "fade": "glow"
       },
@@ -7349,9 +7351,7 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 2,
-          "peak": 1,
-          "side": "right"
+          "length": 2
         },
         "fade": "glow"
       },
@@ -7371,7 +7371,7 @@
           "index": 0,
           "length": 3,
           "peak": 1,
-          "side": "right"
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -7391,7 +7391,7 @@
           "index": 1,
           "length": 3,
           "peak": 1,
-          "side": "right"
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -7411,11 +7411,20 @@
           "index": 2,
           "length": 3,
           "peak": 1,
-          "side": "right"
+          "side": "left"
         },
         "fade": "glow"
       }
     ],
+    "hero": {
+      "run": {
+        "index": 0,
+        "length": 3,
+        "peak": 1,
+        "side": "right"
+      },
+      "fade": "glow"
+    },
     "close": {
       "run": {
         "index": 0,
@@ -7425,7 +7434,7 @@
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "closeGround": "dark"
   },
   "adversarial-mostly-dark / wedges.balanced": {
     "unmetNeeds": [],
@@ -9340,7 +9349,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -9358,8 +9367,8 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow",
@@ -9382,8 +9391,8 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -9402,8 +9411,8 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -9421,10 +9430,10 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 4,
-          "peak": 2,
-          "side": "right"
+          "index": 0,
+          "length": 1,
+          "peak": 0,
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -9442,9 +9451,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 1
         },
         "fade": "glow"
       },
@@ -9482,9 +9489,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 1
         },
         "fade": "glow"
       }
@@ -9494,11 +9499,11 @@
         "index": 0,
         "length": 1,
         "peak": 0,
-        "side": "right"
+        "side": "left"
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "closeGround": "dark"
   },
   "planning-mostly-light / wedges.balanced": {
     "unmetNeeds": [],
@@ -11796,7 +11801,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -11854,9 +11859,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 3,
-          "peak": 1,
-          "side": "right"
+          "length": 3
         },
         "fade": "glow"
       },
@@ -11874,9 +11877,7 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 3,
-          "peak": 1,
-          "side": "right"
+          "length": 3
         },
         "fade": "glow"
       },
@@ -11894,9 +11895,7 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 3,
-          "peak": 1,
-          "side": "right"
+          "length": 3
         },
         "fade": "glow"
       },
@@ -11914,9 +11913,9 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 4,
-          "peak": 2,
-          "side": "right"
+          "length": 3,
+          "peak": 1,
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -11934,9 +11933,9 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 4,
-          "peak": 2,
-          "side": "right"
+          "length": 3,
+          "peak": 1,
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -11954,9 +11953,9 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 4,
-          "peak": 2,
-          "side": "right"
+          "length": 3,
+          "peak": 1,
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -11973,9 +11972,9 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 4,
-          "peak": 2,
+          "index": 0,
+          "length": 2,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -11983,14 +11982,14 @@
     ],
     "close": {
       "run": {
-        "index": 0,
-        "length": 1,
-        "peak": 0,
+        "index": 1,
+        "length": 2,
+        "peak": 1,
         "side": "right"
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "closeGround": "dark"
   },
   "multi-practice-balanced / wedges.balanced": {
     "unmetNeeds": [],
@@ -13976,7 +13975,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -13993,8 +13992,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 0,
-          "length": 2,
+          "index": 1,
+          "length": 3,
           "peak": 1,
           "side": "right"
         },
@@ -14017,8 +14016,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 1,
-          "length": 2,
+          "index": 2,
+          "length": 3,
           "peak": 1,
           "side": "right"
         },
@@ -14038,9 +14037,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 2,
-          "peak": 1,
-          "side": "right"
+          "length": 2
         },
         "fade": "glow"
       },
@@ -14058,9 +14055,7 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 2,
-          "peak": 1,
-          "side": "right"
+          "length": 2
         },
         "fade": "glow"
       },
@@ -14080,7 +14075,7 @@
           "index": 0,
           "length": 3,
           "peak": 1,
-          "side": "right"
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -14100,7 +14095,7 @@
           "index": 1,
           "length": 3,
           "peak": 1,
-          "side": "right"
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -14120,15 +14115,24 @@
           "index": 2,
           "length": 3,
           "peak": 1,
-          "side": "right"
+          "side": "left"
         },
         "fade": "glow",
         "ribbonEdges": {
           "top": true,
-          "bottom": false
+          "bottom": true
         }
       }
     ],
+    "hero": {
+      "run": {
+        "index": 0,
+        "length": 3,
+        "peak": 1,
+        "side": "right"
+      },
+      "fade": "glow"
+    },
     "close": {
       "run": {
         "index": 0,
@@ -14138,7 +14142,7 @@
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "closeGround": "dark"
   },
   "ribbons-mostly-light / wedges.balanced": {
     "unmetNeeds": [],
@@ -16061,7 +16065,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -16123,9 +16127,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 2,
-          "peak": 1,
-          "side": "right"
+          "length": 2
         },
         "fade": "glow"
       },
@@ -16143,9 +16145,7 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 2,
-          "peak": 1,
-          "side": "right"
+          "length": 2
         },
         "fade": "glow"
       },
@@ -16165,7 +16165,7 @@
           "index": 0,
           "length": 3,
           "peak": 1,
-          "side": "right"
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -16185,7 +16185,7 @@
           "index": 1,
           "length": 3,
           "peak": 1,
-          "side": "right"
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -16205,7 +16205,7 @@
           "index": 2,
           "length": 3,
           "peak": 1,
-          "side": "right"
+          "side": "left"
         },
         "fade": "glow"
       }
@@ -16219,7 +16219,7 @@
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "closeGround": "dark"
   },
   "adversarial-photo-hero / wedges.balanced": {
     "unmetNeeds": [],
@@ -18129,7 +18129,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -18147,8 +18147,8 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow",
@@ -18171,8 +18171,8 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -18191,8 +18191,8 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -18210,10 +18210,10 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 4,
-          "peak": 2,
-          "side": "right"
+          "index": 0,
+          "length": 1,
+          "peak": 0,
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -18231,9 +18231,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 1
         },
         "fade": "glow"
       },
@@ -18271,9 +18269,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 1
         },
         "fade": "glow"
       }
@@ -18283,11 +18279,11 @@
         "index": 0,
         "length": 1,
         "peak": 0,
-        "side": "right"
+        "side": "left"
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "closeGround": "dark"
   },
   "planning-photo-hero / wedges.balanced": {
     "unmetNeeds": [],
@@ -20595,7 +20591,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -20653,9 +20649,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 3,
-          "peak": 1,
-          "side": "right"
+          "length": 3
         },
         "fade": "glow"
       },
@@ -20673,9 +20667,7 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 3,
-          "peak": 1,
-          "side": "right"
+          "length": 3
         },
         "fade": "glow"
       },
@@ -20693,9 +20685,7 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 3,
-          "peak": 1,
-          "side": "right"
+          "length": 3
         },
         "fade": "glow"
       },
@@ -20713,9 +20703,9 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 4,
-          "peak": 2,
-          "side": "right"
+          "length": 3,
+          "peak": 1,
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -20733,9 +20723,9 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 4,
-          "peak": 2,
-          "side": "right"
+          "length": 3,
+          "peak": 1,
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -20753,9 +20743,9 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 4,
-          "peak": 2,
-          "side": "right"
+          "length": 3,
+          "peak": 1,
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -20772,9 +20762,9 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 4,
-          "peak": 2,
+          "index": 0,
+          "length": 2,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -20782,14 +20772,14 @@
     ],
     "close": {
       "run": {
-        "index": 0,
-        "length": 1,
-        "peak": 0,
+        "index": 1,
+        "length": 2,
+        "peak": 1,
         "side": "right"
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "closeGround": "dark"
   },
   "multi-practice-photo-hero / wedges.balanced": {
     "unmetNeeds": [],
@@ -22763,7 +22753,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -22780,8 +22770,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 0,
-          "length": 2,
+          "index": 1,
+          "length": 3,
           "peak": 1,
           "side": "right"
         },
@@ -22804,8 +22794,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 1,
-          "length": 2,
+          "index": 2,
+          "length": 3,
           "peak": 1,
           "side": "right"
         },
@@ -22825,9 +22815,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 2,
-          "peak": 1,
-          "side": "right"
+          "length": 2
         },
         "fade": "glow"
       },
@@ -22845,9 +22833,7 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 2,
-          "peak": 1,
-          "side": "right"
+          "length": 2
         },
         "fade": "glow"
       },
@@ -22912,6 +22898,15 @@
         "fade": "glow"
       }
     ],
+    "hero": {
+      "run": {
+        "index": 0,
+        "length": 3,
+        "peak": 1,
+        "side": "right"
+      },
+      "fade": "glow"
+    },
     "close": {
       "run": {
         "index": 0,
@@ -22921,7 +22916,7 @@
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "closeGround": "dark"
   },
   "adversarial-cutout / wedges.balanced": {
     "unmetNeeds": [],
@@ -24845,7 +24840,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -24907,9 +24902,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 2,
-          "peak": 1,
-          "side": "right"
+          "length": 2
         },
         "fade": "glow"
       },
@@ -24927,9 +24920,7 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 2,
-          "peak": 1,
-          "side": "right"
+          "length": 2
         },
         "fade": "glow"
       },
@@ -24949,7 +24940,7 @@
           "index": 0,
           "length": 3,
           "peak": 1,
-          "side": "right"
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -24969,7 +24960,7 @@
           "index": 1,
           "length": 3,
           "peak": 1,
-          "side": "right"
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -24989,7 +24980,7 @@
           "index": 2,
           "length": 3,
           "peak": 1,
-          "side": "right"
+          "side": "left"
         },
         "fade": "glow"
       }
@@ -25003,7 +24994,7 @@
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "closeGround": "dark"
   },
   "adversarial-photo-set / wedges.balanced": {
     "unmetNeeds": [],
@@ -26924,7 +26915,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -26942,8 +26933,8 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow",
@@ -26966,8 +26957,8 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -26986,8 +26977,8 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -27005,10 +26996,10 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 4,
-          "peak": 2,
-          "side": "right"
+          "index": 0,
+          "length": 1,
+          "peak": 0,
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -27026,9 +27017,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 1
         },
         "fade": "glow"
       },
@@ -27066,9 +27055,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 1
         },
         "fade": "glow"
       }
@@ -27078,11 +27065,11 @@
         "index": 0,
         "length": 1,
         "peak": 0,
-        "side": "right"
+        "side": "left"
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "closeGround": "dark"
   },
   "planning-photo-set / wedges.balanced": {
     "unmetNeeds": [],
@@ -29401,7 +29388,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -29459,9 +29446,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 3,
-          "peak": 1,
-          "side": "right"
+          "length": 3
         },
         "fade": "glow"
       },
@@ -29479,9 +29464,7 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 3,
-          "peak": 1,
-          "side": "right"
+          "length": 3
         },
         "fade": "glow"
       },
@@ -29499,9 +29482,7 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 3,
-          "peak": 1,
-          "side": "right"
+          "length": 3
         },
         "fade": "glow"
       },
@@ -29519,9 +29500,9 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 4,
-          "peak": 2,
-          "side": "right"
+          "length": 3,
+          "peak": 1,
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -29539,9 +29520,9 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 4,
-          "peak": 2,
-          "side": "right"
+          "length": 3,
+          "peak": 1,
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -29559,9 +29540,9 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 4,
-          "peak": 2,
-          "side": "right"
+          "length": 3,
+          "peak": 1,
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -29578,9 +29559,9 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 4,
-          "peak": 2,
+          "index": 0,
+          "length": 2,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -29588,14 +29569,14 @@
     ],
     "close": {
       "run": {
-        "index": 0,
-        "length": 1,
-        "peak": 0,
+        "index": 1,
+        "length": 2,
+        "peak": 1,
         "side": "right"
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "closeGround": "dark"
   },
   "multi-practice-photo-set / wedges.balanced": {
     "unmetNeeds": [],
@@ -31577,7 +31558,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -31595,8 +31576,8 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow",
@@ -31619,8 +31600,8 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -31639,8 +31620,8 @@
         "raisePhoto": false,
         "run": {
           "index": 2,
-          "length": 4,
-          "peak": 2,
+          "length": 3,
+          "peak": 1,
           "side": "right"
         },
         "fade": "glow"
@@ -31658,10 +31639,10 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 4,
-          "peak": 2,
-          "side": "right"
+          "index": 0,
+          "length": 1,
+          "peak": 0,
+          "side": "left"
         },
         "fade": "glow"
       },
@@ -31679,9 +31660,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 1
         },
         "fade": "glow"
       },
@@ -31719,9 +31698,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 1
         },
         "fade": "glow"
       }
@@ -31731,11 +31708,11 @@
         "index": 0,
         "length": 1,
         "peak": 0,
-        "side": "right"
+        "side": "left"
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "closeGround": "dark"
   },
   "planning-photo-set-no-hero-photo / wedges.balanced": {
     "unmetNeeds": [],
@@ -33238,7 +33215,7 @@
     "chrome": {
       "top": "dark",
       "scrolled": "dark",
-      "footer": "dark",
+      "footer": "light",
       "darkLogoMissing": false
     },
     "bands": [
@@ -33255,8 +33232,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 0,
-          "length": 2,
+          "index": 1,
+          "length": 3,
           "peak": 1,
           "side": "right"
         },
@@ -33279,8 +33256,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 1,
-          "length": 2,
+          "index": 2,
+          "length": 3,
           "peak": 1,
           "side": "right"
         },
@@ -33300,9 +33277,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 2,
-          "peak": 1,
-          "side": "right"
+          "length": 2
         },
         "fade": "glow"
       },
@@ -33320,9 +33295,7 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 2,
-          "peak": 1,
-          "side": "right"
+          "length": 2
         },
         "fade": "glow"
       },
@@ -33340,23 +33313,36 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 1,
-          "peak": 0,
-          "side": "right"
+          "length": 2,
+          "peak": 1,
+          "side": "left"
         },
-        "fade": "glow"
+        "fade": "glow",
+        "ribbonEdges": {
+          "top": false,
+          "bottom": true
+        }
       }
     ],
-    "close": {
+    "hero": {
       "run": {
         "index": 0,
-        "length": 1,
-        "peak": 0,
+        "length": 3,
+        "peak": 1,
         "side": "right"
       },
       "fade": "glow"
     },
-    "closeGround": "saturated"
+    "close": {
+      "run": {
+        "index": 1,
+        "length": 2,
+        "peak": 1,
+        "side": "left"
+      },
+      "fade": "glow"
+    },
+    "closeGround": "dark"
   },
   "composed-ribbons / wedges.balanced": {
     "unmetNeeds": [],

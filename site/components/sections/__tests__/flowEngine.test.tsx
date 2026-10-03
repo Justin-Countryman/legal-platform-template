@@ -31,6 +31,7 @@ import {PageSections, type PageSectionData} from '../PageSections'
 import {assignGrounds, canvasFacts, closeFrame, closeGround, walkFrame, walkPage, siteLookOf, NO_SEAM, type SiteLook} from '../sectionFrame'
 import {SectionShell, type SectionAppearance} from '../SectionShell'
 import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, chromeSchemes, closeOf, flowById, unmetNeeds, type FlowRules, type Host} from '@/lib/flows'
+import {GLOW_RUN_CAP} from '../sectionFrame'
 import {PALETTE_PRESETS, presetInputs} from '@/lib/palettes'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {ghostSource} from '@/lib/brandMark'
@@ -550,24 +551,68 @@ describe('Gradient bloom (Phase 17D session 2, [R-557])', () => {
     expect(inset.getAttribute('data-glow')).toBeNull()
   })
 
-  it('peaks on the band carrying a cutout figure, lit from the figure\u2019s side; else on the run\u2019s middle band, lit from the right', () => {
-    const run = (bands: Band[]) => walkPage(bands, resolveBand, {...LOOK, flow: themed({dark: {budget: 'all', hosts: ['split'], rhythm: 'runs', paint: 'glow'}}), glow: true}, 'dark').bands.map((o) => o.seam.run)
-    expect(run([b('split'), b('split'), b('split'), b('split')]).map((r) => [r?.peak, r?.side])).toEqual(Array(4).fill([2, 'right']))
-    expect(run([b('split'), b('split'), b('split', null, {cutout: 'left'}), b('split')]).map((r) => [r?.peak, r?.side])).toEqual(Array(4).fill([2, 'left']))
+  // THE ROSTER EYE OF 2026-10-03 (`[R-631]`): "I like this one but there is no gradient in the hero to create that
+  // continuity after a few sections the gradient stuff just stops". The glow starts in the hero and recurs down every
+  // dark run to the close: a dark hero joins the first run as its first band, and a run is lit in stretches of at most
+  // GLOW_RUN_CAP bands, each with its own peak (the band carrying a cutout figure, lit from its side, else the stretch's
+  // middle band), the light coming from the right, then the left, in turn down the page.
+  const glowy = themed({dark: {budget: 'all', hosts: ['split'], rhythm: 'runs', paint: 'glow'}})
+  const run = (bands: Band[], hero: VisibleGround = 'tint', site: Partial<SiteLook> = {}) =>
+    walkPage(bands, resolveBand, {...LOOK, flow: glowy, glow: true, ...site}, hero).bands.map((o) => o.seam.run)
+
+  it('peaks on the band carrying a cutout figure, lit from the figure\u2019s side; else on the stretch\u2019s middle band, lit from the right', () => {
+    // Under a light hero, the bands alone.
+    expect(run([b('split'), b('split'), b('split')]).map((r) => [r?.index, r?.length, r?.peak, r?.side])).toEqual([[0, 3, 1, 'right'], [1, 3, 1, 'right'], [2, 3, 1, 'right']])
+    expect(run([b('split'), b('split', null, {cutout: 'left'}), b('split')]).map((r) => [r?.peak, r?.side])).toEqual(Array(3).fill([1, 'left']))
     expect(run([b('split', null, {cutout: 'right'}), b('split')]).map((r) => [r?.peak, r?.side])).toEqual(Array(2).fill([0, 'right']))
     // No other theme's run carries a peak or a side.
     const other = walkPage([b('split'), b('split')], resolveBand, {...LOOK, flow: themed({dark: {budget: 'all', hosts: ['split'], rhythm: 'runs', paint: 'pattern'}}), glow: true}, 'dark').bands
     expect(other.map((o) => o.seam.run)).toEqual([{index: 0, length: 2}, {index: 1, length: 2}])
   })
 
+  it('a long run is lit in stretches of three, so the glow recurs down the page from alternate sides instead of stopping', () => {
+    expect(GLOW_RUN_CAP).toBe(3)
+    const seven = run(Array.from({length: 7}, () => b('split')))
+    expect(seven.map((r) => [r?.index, r?.length, r?.peak, r?.side])).toEqual([
+      [0, 3, 1, 'right'], [1, 3, 1, 'right'], [2, 3, 1, 'right'],
+      [0, 3, 1, 'left'], [1, 3, 1, 'left'], [2, 3, 1, 'left'],
+      [0, 1, 0, 'right'],
+    ])
+    // A figure sets its stretch's side; the turn goes on from there.
+    const figured = run([b('split'), b('split'), b('split'), b('split', null, {cutout: 'left'}), b('split'), b('split'), b('split')])
+    expect(figured.map((r) => r?.side)).toEqual(['right', 'right', 'right', 'left', 'left', 'left', 'right'])
+    // Every other ground is numbered as it was: a light run of seven is one run of seven.
+    const light = walkPage(Array.from({length: 7}, () => b('narrative')), resolveBand, {...LOOK, flow: glowy, glow: true}, 'dark').bands
+    expect(light.map((o) => o.seam.run?.length)).toEqual(Array(7).fill(7))
+  })
+
+  it('a dark hero joins the first run as its first band and carries the glow; a light or photo hero does not', () => {
+    const page = walkPage([b('split'), b('split')], resolveBand, {...LOOK, flow: glowy, glow: true}, 'dark')
+    expect(page.hero).toEqual({run: {index: 0, length: 3, peak: 1, side: 'right'}, fade: 'glow'})
+    expect(page.bands.map((o) => o.seam.run)).toEqual([{index: 1, length: 3, peak: 1, side: 'right'}, {index: 2, length: 3, peak: 1, side: 'right'}])
+    // The hero's own figure is the peak, lit from its side.
+    const figured = walkPage([b('split'), b('split')], resolveBand, {...LOOK, flow: glowy, glow: true, heroCutout: 'right'}, 'dark')
+    expect(figured.hero.run).toEqual({index: 0, length: 3, peak: 0, side: 'right'})
+    // Under a light band the hero is a stretch of its own, lit in its middle.
+    expect(walkPage([b('narrative')], resolveBand, {...LOOK, flow: glowy, glow: true}, 'dark').hero).toEqual({run: {index: 0, length: 1, peak: 0, side: 'right'}, fade: 'glow'})
+    for (const hero of ['tint', 'light', 'image', 'wash', null] as const) {
+      expect(walkPage([b('split')], resolveBand, {...LOOK, flow: glowy, glow: true}, hero).hero, String(hero)).toEqual({fade: 'glow'})
+    }
+    // No glow, no hero run: the palette without room, and every other theme.
+    expect(walkPage([b('split')], resolveBand, {...LOOK, flow: glowy, glow: false}, 'dark').hero).toEqual({fade: null})
+    expect(walkPage([b('split')], resolveBand, {...LOOK, flow: flowById('cutBlocks.mostlyDark')!, glow: true}, 'dark').hero).toEqual({fade: null})
+  })
+
   it('draws the peak and the side on the band', () => {
     const blocks = [statement('a', {surface: 'dark'}), {_type: 'contentSectionInline', _key: 'f', layout: 'split', heading: 'With a figure', appearance: {surface: 'dark'}, mediaSide: 'left', media: {kind: 'cutout', image: {asset: {_ref: 'image-fxfigure-900x1200-png'}, alt: 'The attorney'}}} as unknown as HomepageBlock]
+    // Under the dark hero the run is hero, a, f (the roster eye of 2026-10-03): the figure's band is its third, the peak.
     const els = sections(blocks, {})
-    expect(els.map((el) => cls(el).filter((c) => c.startsWith('grad-p-') || c === 'glow-from-left'))).toEqual([['grad-p-1', 'glow-from-left'], ['grad-p-1', 'glow-from-left']])
+    expect(els.map((el) => cls(el).filter((c) => c.startsWith('grad-') || c === 'glow-from-left'))).toEqual([['grad-i-1', 'grad-n-3', 'grad-p-2', 'glow-from-left'], ['grad-i-2', 'grad-n-3', 'grad-p-2', 'glow-from-left']])
   })
 
   it('runs on into a dark close, which glows as the run\u2019s last band and puts its buttons in the dark context', () => {
-    const page = walkPage([b('split'), b('split')], resolveBand, {...LOOK, flow: themed({dark: {budget: 'all', hosts: ['split'], rhythm: 'runs', paint: 'glow'}}), glow: true}, 'dark', 'dark')
+    // A light hero, two dark bands and the close: one stretch of three, the close its last band.
+    const page = walkPage([b('split'), b('split')], resolveBand, {...LOOK, flow: glowy, glow: true}, 'tint', 'dark')
     expect(page.bands.map((o) => o.seam.run)).toEqual([{index: 0, length: 3, peak: 1, side: 'right'}, {index: 1, length: 3, peak: 1, side: 'right'}])
     expect(page.close).toEqual({run: {index: 2, length: 3, peak: 1, side: 'right'}, fade: 'glow'})
     const frame = closeFrame('dark', {...LOOK, flow: gb, glow: true}, page.close)
@@ -576,9 +621,33 @@ describe('Gradient bloom (Phase 17D session 2, [R-557])', () => {
     expect(cls(close)).toEqual(expect.arrayContaining(['bg-brand-dark', 'band-glow', 'grad-i-2', 'grad-n-3', 'grad-p-1']))
     expect(close.getAttribute('data-glow')).toBe('true')
     expect(close.querySelector('a')!.className.split(' ')).toEqual(expect.arrayContaining(['border-current', 'text-foreground']))
+    // From a dark hero the glow runs hero, band, band, then the close as a stretch of its own, lit from the other side.
+    const whole = walkPage([b('split'), b('split')], resolveBand, {...LOOK, flow: glowy, glow: true}, 'dark', 'dark')
+    expect(whole.hero.run).toEqual({index: 0, length: 3, peak: 1, side: 'right'})
+    expect(whole.close).toEqual({run: {index: 0, length: 1, peak: 0, side: 'left'}, fade: 'glow'})
     // After a light band the close is a run of its own, glowing in its middle; under any other theme it joins nothing.
-    expect(walkPage([b('split', {surface: 'light'})], resolveBand, {...LOOK, flow: gb, glow: true}, 'dark', 'dark').close.run).toEqual({index: 0, length: 1, peak: 0, side: 'right'})
+    expect(walkPage([b('split', {surface: 'light'})], resolveBand, {...LOOK, flow: gb, glow: true}, 'tint', 'dark').close.run).toEqual({index: 0, length: 1, peak: 0, side: 'right'})
     expect(walkPage([b('split'), b('split')], resolveBand, {...LOOK, flow: flowById('cutBlocks.mostlyDark')!}, 'dark', 'dark').close).toEqual({fade: null})
+  })
+
+  it('on a record canvas the glow runs from the hero through every dark band to the close (the roster eye of 2026-10-03)', () => {
+    // The adversarial record with a cutout figure in its splits, under a dark hero: the CI stub has no authored hero.
+    const record = stubCanvas('record-adversarial-cutout.ndjson')
+    if (!record) return
+    expect(record.hero).toBe('dark')
+    const site: SiteLook = {...LOOK, flow: gb, glow: true, saturated: true}
+    const page = walkPage(record.blocks, frameOf, site, record.hero, 'dark')
+    expect(page.hero.run).toBeDefined()
+    expect(page.hero.fade).toBe('glow')
+    const dark = page.bands.filter((o) => o.seam.paint?.ground === 'dark')
+    expect(dark.length).toBeGreaterThan(3)
+    for (const o of dark) {
+      expect(o.seam.fade, o.member._key).toBe('glow')
+      expect(o.seam.run?.peak, o.member._key).toBeDefined()
+      expect(o.seam.run!.length).toBeLessThanOrEqual(GLOW_RUN_CAP)
+    }
+    expect(page.close.run).toBeDefined()
+    expect(page.close.fade).toBe('glow')
   })
 
   it('under every theme, a last inset between a dark band and a dark close sits on the dark ground ([R-501], found here)', () => {
@@ -675,7 +744,9 @@ describe('the decision golden', () => {
             // Phase 17E (`[R-576]`): a ribbon's accent line on each edge it shares with its neighbor's ground.
             ...(seam.ribbonEdges ? {ribbonEdges: seam.ribbonEdges} : {}),
           })),
-          // Phase 17D session 2: the close's place in the run, where the theme lights it.
+          // Phase 17D session 2: the close's place in the run, where the theme lights it; since the roster eye of
+          // 2026-10-03 the hero's too (`[R-631]`).
+          ...(page.hero.run ? {hero: page.hero} : {}),
           ...(page.close.run ? {close: page.close} : {}),
           // Phase 17E: the close's photograph of the theme's set, where the theme draws one.
           // Phase 18 session B: the close's ground as resolved beside the footer.

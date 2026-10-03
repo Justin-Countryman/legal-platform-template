@@ -13,6 +13,7 @@ import {resolveVariantSurface} from './shared'
 import {resolveHeroConfig, imageRoleFor} from './config'
 import {type HomeHeroData, type ResolvedHomeContent, type Skeleton, type SkeletonProps} from './types'
 import {DEFAULT_SCRIM_OPACITY, type ResolvedHeroSurface} from '@/lib/heroSurface'
+import type {HeroGlow} from '@/lib/heroGround'
 
 const SKELETONS: Record<Skeleton, ComponentType<SkeletonProps>> = {
   overlay: dynamic(() => import('./skeletons/Overlay').then((m) => m.Overlay)),
@@ -28,7 +29,7 @@ function resolveCtas(buttons: HomeHeroData['buttons'], tokens?: NapTokens | null
   return toCtaItems((buttons ?? []).map((b) => ({...b, title: resolveStr(b.title, tokens) ?? b.title})))
 }
 
-export function HomepageHero({data, napTokens, edgeBelow, lightGround}: {data: HomeHeroData; napTokens?: NapTokens | null; edgeBelow?: boolean; lightGround?: 'wash' | 'tint'}) {
+export function HomepageHero({data, napTokens, edgeBelow, lightGround, glow}: {data: HomeHeroData; napTokens?: NapTokens | null; edgeBelow?: boolean; lightGround?: 'wash' | 'tint'; glow?: HeroGlow | null}) {
   const config = resolveHeroConfig(data)
   const Skeleton = SKELETONS[config.skeleton]
 
@@ -91,5 +92,6 @@ export function HomepageHero({data, napTokens, edgeBelow, lightGround}: {data: H
     videoUrl: data.videoUrl,
   }
 
-  return <Skeleton config={config} content={content} surface={effectiveSurface} sectionBackground={sectionBackground} edgeBelow={edgeBelow} />
+  // The roster eye of 2026-10-03 (`[R-631]`): the hero's place in Gradient bloom's first lit run, from the walk (`HomeBody`).
+  return <Skeleton config={config} content={content} surface={effectiveSurface} sectionBackground={sectionBackground} edgeBelow={edgeBelow} glow={glow} />
 }

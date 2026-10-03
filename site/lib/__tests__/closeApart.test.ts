@@ -109,9 +109,18 @@ describe('each family ends as its table says (CC’s values, shown to Justin bef
     }
   })
 
-  it('Type on black and Gradient bloom close on the accent', () => {
+  it('Type on black closes on the accent', () => {
     expect(end('typeOnBlack.allDark', 'dark')).toEqual({footer: 'dark', close: 'saturated'})
-    expect(end('gradientBloom.mostlyDark', 'dark')).toEqual({footer: 'dark', close: 'saturated'})
+  })
+
+  it('Gradient bloom closes dark over its light footer, lit as the run\u2019s last band (the roster eye of 2026-10-03, [R-631])', () => {
+    // Its glow carries through to the close, so a dark close under a dark last band stands: it does not melt into the
+    // run, its glow peaks in its own middle. Under a stored dark footer the ruling holds and the close takes the accent;
+    // on a palette with no room to glow the close is held off the run above as any other theme's.
+    expect(end('gradientBloom.mostlyDark', 'dark')).toEqual({footer: 'light', close: 'dark'})
+    expect(end('gradientBloom.mostlyDark', 'dark', {stored: 'dark'})).toEqual({footer: 'dark', close: 'saturated'})
+    // Burgundy & Gold is one of the six presets whose dark ground has no room to glow (`glowFillOk`).
+    expect(end('gradientBloom.mostlyDark', 'dark', {colors: presetInputs(PALETTE_PRESETS.find((p) => p.id === 'burgundy-gold')!)}).close).not.toBe('dark')
   })
 
   it('Editorial and Soft wash close dark over their light footer', () => {

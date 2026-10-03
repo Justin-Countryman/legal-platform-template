@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'vitest'
 import {heroGround, heroPaint, themedHero} from '../heroGround'
 import {FLOWS, HERO_GROUNDS, bridgeOf, flowById} from '../flows'
+import {heroCutout} from '../heroGround'
 import type {HomeHeroData} from '@/components/layout/homeHero/types'
 
 // ─── The homepage hero follows the theme where it stores no ground of its own (Phase 18 session E) ─────────────
@@ -15,6 +16,7 @@ const hero = (over: Partial<HomeHeroData> = {}): HomeHeroData =>
   ({heading: 'Counsel you can call', skeleton: 'overlay', backdrop: 'none', ...over}) as HomeHeroData
 const SOFT = flowById('softWash.mostlyLight')!
 const QUIET = flowById('quiet.mostlyLight')!
+const BLOOM = flowById('gradientBloom.mostlyDark')!
 
 describe('the hero under the theme', () => {
   it('every theme names its hero in the closed vocabulary; only Soft wash, at both steps, says light', () => {
@@ -32,13 +34,37 @@ describe('the hero under the theme', () => {
     }
   })
 
-  it('under every other theme an inherited hero is unchanged, so no live page moves', () => {
+  it('under every theme that says `site` an inherited hero is unchanged, so no live page moves', () => {
     const h = hero({schemeOverride: 'inherit'})
-    for (const f of FLOWS.filter((x) => x.hero !== 'light')) {
+    for (const f of FLOWS.filter((x) => x.hero === 'site')) {
       expect(themedHero(h, f), f.id).toBe(h)
       expect(heroGround(themedHero(h, f), f), f.id).toBe('dark')
     }
     expect(themedHero(h, null)).toBe(h)
+    expect(HERO_GROUNDS).toEqual(['site', 'light', 'dark'])
+  })
+
+  it('an inherited hero takes Gradient bloom\u2019s dark (the roster eye of 2026-10-03, [R-631]), so the glow can start in it; a stored light wins', () => {
+    // Justin: "there is no gradient in the hero to create that continuity after a few sections the gradient stuff just
+    // stops". Only Gradient bloom says dark.
+    expect(FLOWS.filter((f) => f.hero === 'dark').map((f) => f.id)).toEqual(['gradientBloom.mostlyDark'])
+    for (const scheme of [undefined, null, 'inherit'] as const) {
+      const h = themedHero(hero({schemeOverride: scheme as HomeHeroData['schemeOverride']}), BLOOM)
+      expect(h?.schemeOverride, String(scheme)).toBe('dark')
+      expect(heroGround(h, BLOOM)).toBe('dark')
+      expect(heroPaint(h, BLOOM)).toBeNull()
+    }
+    expect(heroGround(themedHero(hero({schemeOverride: 'light'}), BLOOM), BLOOM)).toBe('tint')
+  })
+
+  it('the hero\u2019s cutout figure, for the glow to peak behind: an overlay with a foreground figure beside left-aligned text, on the right', () => {
+    const figure = {src: 'https://cdn.example.com/f.png', width: 900, height: 1200, isOpaque: false}
+    expect(heroCutout(hero({foreground: true, foregroundImage: figure}))).toBe('right')
+    // Centred text draws no figure; no image, no figure; a split draws none; nothing, none.
+    expect(heroCutout(hero({foreground: true, foregroundImage: figure, contentAlign: 'center'}))).toBeNull()
+    expect(heroCutout(hero({foreground: true}))).toBeNull()
+    expect(heroCutout(hero({foreground: true, foregroundImage: figure, skeleton: 'split'}))).toBeNull()
+    expect(heroCutout(null)).toBeNull()
   })
 
   it('a stored dark or light hero wins, and a photograph still forces dark', () => {

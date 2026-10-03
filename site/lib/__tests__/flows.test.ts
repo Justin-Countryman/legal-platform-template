@@ -44,7 +44,7 @@ describe('the families and the roster', () => {
     // he asked to change is not passed until he sees it again (`[R-517]`), so each leaves this list with its fix.
     expect(FLOWS.filter((f) => f.passed).map((f) => f.id)).toEqual(['alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
       'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark',
-      'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight', 'softWash.balanced', 'gradientBloom.mostlyDark', 'wedges.balanced'])
+      'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight', 'softWash.balanced', 'wedges.balanced'])
     // Dark-led pages are runs, not alternation: the step left the roster, it is not merely unpassed.
     expect(flowById('alternating.mostlyDark')).toBeNull()
     expect(FAMILIES.find((f) => f.id === 'alternating')!.steps).toEqual(['balanced'])
@@ -76,7 +76,16 @@ describe('the families and the roster', () => {
     expect(gb.dark.hosts).toEqual(flowById('cutBlocks.mostlyDark')!.dark.hosts)
     expect(gb.light).toEqual({paint: 'plain', texture: 'quiet'})
     expect(gb.divider).toEqual({shape: 'straight', at: 'none', carry: [], hairline: 'none', hairlineInk: 'border'})
-    expect(gb).toMatchObject({ghost: 'none', overlap: 'photo', spacing: 'normal', needs: ['glow'], chrome: {header: 'dark', footer: 'dark'}})
+    // The roster eye of 2026-10-03 (`[R-631]`): "there is no gradient in the hero to create that continuity after a few
+    // sections the gradient stuff just stops". The glow starts in the hero, so the theme says the hero is dark where it
+    // stores no ground (`themedHero`), the one theme that does; and it ends in the close, so the footer is light and
+    // the close can be dark beside it (`[R-597]`), as Photo scrims ends; not passed until he sees it again ([R-517]).
+    expect(gb).toMatchObject({ghost: 'none', overlap: 'photo', spacing: 'normal', needs: ['glow'], chrome: {header: 'dark', footer: 'light'}})
+    const navy = presetInputs(PALETTE_PRESETS.find((p) => p.id === 'navy-brass')!)
+    expect(closeOf(gb, {footer: gb.chrome.footer, above: 'dark', heroPhoto: false, colors: navy})).toBe('dark')
+    expect(gb.hero).toBe('dark')
+    expect(gb.passed).toBe(false)
+    expect(FLOWS.filter((f) => f.hero === 'dark').map((f) => f.id)).toEqual(['gradientBloom.mostlyDark'])
     // Only Gradient bloom glows, and the glow is a need of the palette the switcher says on its own.
     expect(FLOWS.filter((f) => f.dark.paint === 'glow').map((f) => f.id)).toEqual(['gradientBloom.mostlyDark'])
     expect(needLabel('glow')).toBe('a palette whose dark sections have room to glow')
@@ -453,7 +462,9 @@ describe('the header and the footer (Phase 17B session 4, [R-518])', () => {
     // light footer, from their evidence sites (session 5 record §2.4; Phase 17D record §2.3); and since Phase 18
     // session B (`[R-597]`, `[R-603]`) the light footer under the dark close of Quiet and Ribbon rhythm and under Photo
     // scrims' photograph close, so the close never takes the footer's color.
-    const lightFooter = ['editorial', 'softWash', 'quiet', 'ribbonRhythm', 'photoScrims']
+    // Since the roster eye of 2026-10-03 Gradient bloom too, so its dark close is lit beside the footer rather than
+    // moved onto the accent.
+    const lightFooter = ['editorial', 'softWash', 'quiet', 'ribbonRhythm', 'photoScrims', 'gradientBloom']
     for (const f of FLOWS) expect(f.chrome, f.id).toEqual(lightFooter.includes(f.family) ? {header: STEP_CHROME[f.step].header, footer: 'light'} : STEP_CHROME[f.step])
   })
 

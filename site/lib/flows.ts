@@ -89,9 +89,11 @@ export const GHOSTS = ['none', 'once'] as const
 export const CHROME_SCHEMES = ['light', 'dark'] as const
 /** The homepage hero's ground where the hero stores none of its own (Inherit; Phase 18 session E, monorepo `[R-619]`):
  *  the site's internal default as before (`site`), or light (`light`), which a theme that paints washes draws as its
- *  wash. Only Soft wash says light, so a warm firm opens on its warm hero and the hero follows the theme the meeting
- *  picks; a stored dark or light wins, and a photograph forces dark (`themedHero`, `lib/heroGround.ts`). */
-export const HERO_GROUNDS = ['site', 'light'] as const
+ *  wash, or dark (`dark`; the roster eye of 2026-10-03, `[R-631]`), for a theme whose device starts in the hero. Only
+ *  Soft wash says light, so a warm firm opens on its warm hero and the hero follows the theme the meeting picks; only
+ *  Gradient bloom says dark, so its glow starts in the hero; a stored dark or light wins, and a photograph forces dark
+ *  (`themedHero`, `lib/heroGround.ts`). */
+export const HERO_GROUNDS = ['site', 'light', 'dark'] as const
 export type ChromeScheme = (typeof CHROME_SCHEMES)[number]
 /** `ribbons`: the theme fills two ribbons on this page (read from the pass, so two adjacent or a
  *  stored one do not count); `darkHero`: the hero is dark or a photo (Phase 17B session 5);
@@ -484,7 +486,7 @@ export const FAMILIES: readonly FlowFamily[] = [
   // ─── Phase 17D session 2 (record WS-V1-PHASE17D2-DESIGN §2) ─────────────────
   {
     id: 'gradientBloom', name: 'Gradient bloom',
-    sentence: 'Dark runs lit by a soft glow, behind the attorney where a section has a cutout.',
+    sentence: 'A soft glow from the hero down through every dark run to the close, behind the attorney where a section has a cutout.',
     // The study: calesariclaw and lewinlawfirm (premium), bowlesverna and bardinelawfirm, all mostly dark, glow lighter
     // than their ground, and so do the nine other dark-ground gradients checked live; none fades deeper (`[R-557]`,
     // amending `[R-502]`). The glow is the accent's color on a near-neutral ground and the ground's own, lighter, on a
@@ -492,12 +494,25 @@ export const FAMILIES: readonly FlowFamily[] = [
     // the figure, as calesariclaw, bardine and lewin draw it) else the run's middle band; a glowing band takes the photo
     // band's colors. Mostly dark only, on Cut blocks' hosts and runs, with no divider, texture or ghost: the glow is the
     // one device, and where the palette has no room the page is Photo scrims' fallback, which the need names.
-    steps: ['mostlyDark'], defaultStep: 'mostlyDark', passed: ['mostlyDark'],
+    //
+    // THE ROSTER EYE OF 2026-10-03 (monorepo WS-V1-ROSTER-EYE-2026-10-03/verdicts.txt; `[R-631]`): judged live on Stone
+    // Arch, "change": "I like this one but there is no gradient in the hero to create that continuity after a few
+    // sections the gradient stuff just stops". One glow per run peaked once, so a long run went flat after its middle,
+    // and the hero stood outside it. Now the hero is dark where it stores no ground (`hero: 'dark'`, `themedHero`), so
+    // the glow starts in it: a dark hero joins the first run as its first band, and every dark run, the close
+    // included, is lit in stretches of at most `GLOW_RUN_CAP` bands, each with its own peak (the band carrying a
+    // cutout figure, the hero's included, lit from its side, else the stretch's middle band), the light coming from the
+    // right, then the left, in turn down the page (`sectionFrame.ts`, the run pass; `HeroBand` draws the hero's). The
+    // glow's color and room are as they were (`glowOf`, `glowOk`). Not passed until he sees it again (`[R-517]`).
+    // A LIGHT FOOTER, so the close is dark and lit: since the close never takes the footer's color (`[R-597]`,
+    // `[R-603]`) a dark footer put its close on the accent, where no glow draws, and the run stopped a band short of
+    // the end he looked at. Photo scrims ends the same way, its photograph close over a light footer.
+    steps: ['mostlyDark'], defaultStep: 'mostlyDark', passed: [],
     rules: (step) => ({
       dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'glow', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
       light: {paint: 'plain', texture: 'quiet'},
       divider: NO_DIVIDER, spacing: 'normal',
-      hero: 'site', ghost: 'none', overlap: 'photo', needs: ['glow'], chrome: STEP_CHROME[step],
+      hero: 'dark', ghost: 'none', overlap: 'photo', needs: ['glow'], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
     }),
   },
   {
@@ -815,7 +830,11 @@ export function closeOf(flow: FlowRules | null | undefined, facts: CloseFacts): 
   const drawable = order.filter((c) => (c !== 'photo' || facts.heroPhoto) && (c !== 'saturated' || satOk))
   const fromFooter = (c: Close) => (c === 'photo' ? facts.footer === 'light' : deltaE(t[GROUND_TOKEN[c]!], footerHex) >= CLOSE_APART_DE)
   const aboveHex = facts.above ? t[GROUND_TOKEN[facts.above] ?? '--color-background'] : null
-  const fromAbove = (c: Close) => c === 'photo' || !aboveHex || deltaE(t[GROUND_TOKEN[c]!], aboveHex) >= CLOSE_ABOVE_DE
+  // A dark close the theme lights does not melt into the dark run above it: its glow peaks in its own middle, as the
+  // run's last band (the roster eye of 2026-10-03, `[R-631]`: the glow carries through to the close). Gradient bloom
+  // alone, and only where the palette has room to glow; the ruling against the footer's color holds as always.
+  const lit = flow?.dark.paint === 'glow' && paletteOf(facts.colors).glowOk
+  const fromAbove = (c: Close) => c === 'photo' || (c === 'dark' && lit) || !aboveHex || deltaE(t[GROUND_TOKEN[c]!], aboveHex) >= CLOSE_ABOVE_DE
   return drawable.find((c) => fromFooter(c) && fromAbove(c)) ?? drawable.find(fromFooter) ?? (facts.footer === 'dark' ? 'muted' : 'dark')
 }
 

@@ -17,6 +17,7 @@ import {HERO_HEADER_CLEARANCE} from '@/lib/heroLayout'
 import {ButtonGroup, type CtaItem} from '@/components/ui/ButtonGroup'
 import {Tagline} from '@/components/ui/Tagline'
 import type {Motion} from './types'
+import type {HeroGlow} from '@/lib/heroGround'
 
 // Re-exported for the skeletons that build their own flush layout (e.g. Split full-bleed).
 export {HERO_HEADER_CLEARANCE}
@@ -73,11 +74,16 @@ export function HeroBand({
   style,
   children,
   edgeBelow = false,
+  glow = null,
 }: {
   /** A divider rises into this band's bottom (Phase 16C): a padded band grows by its
    *  depth, so the hero's own content never sits under it. A flush band has a child
    *  reaching the bottom edge, which is what the shape is meant to cut. */
   edgeBelow?: boolean
+  /** The hero's place in the first run Gradient bloom lights (the roster eye of 2026-10-03, `[R-631]`; `walkPage().hero`).
+   *  Drawn only where the band paints the dark ground: a light hero, or one behind a photograph, a mosaic or a section
+   *  background, draws none, as a section does not over its photograph. */
+  glow?: HeroGlow | null
   surface: ResolvedHeroSurface
   fullViewport: boolean
   /** Render the shared full-bleed background image + scrim (HeroBackdrop) behind the content. */
@@ -96,6 +102,10 @@ export function HeroBand({
 }) {
   const showBackdrop = backdrop && surface.hasImage
   const hasFullBackdrop = showBackdrop || !!backdropNode
+  // The glow, as `SectionShell` draws a lit band's: its place and length in the run (`grad-i-*`, `grad-n-*`), its peak
+  // (`grad-p-*`) and the side the light comes from; the band takes the photo band's colors (`data-glow`), under which
+  // the glow is solved (`[R-557]`).
+  const lit = glow && surface.isDark && !hasFullBackdrop ? glow : null
   return (
     <section
       // Non-flush bands reserve the (possibly merged) header height at the top.
@@ -104,8 +114,11 @@ export function HeroBand({
       style={{...(flush ? {} : {paddingTop: HERO_HEADER_CLEARANCE}), ...style}}
       data-ring-context={surface.isDark ? 'dark' : undefined}
       data-hero-image={showBackdrop || imageBacked ? 'true' : undefined}
+      data-glow={lit ? 'true' : undefined}
       className={[
         'relative isolate overflow-hidden',
+        lit ? `band-glow grad-i-${Math.min(lit.index, 7)} grad-n-${Math.min(lit.length, 8)} grad-p-${Math.min(lit.peak ?? 0, 7)}` : '',
+        lit?.side === 'left' ? 'glow-from-left' : '',
         flush ? '' : 'px-[5%] pb-12 md:pb-16 lg:pb-20',
         '[--hero-pt:2rem] md:[--hero-pt:3rem] lg:[--hero-pt:4rem]',
         'flex flex-col',

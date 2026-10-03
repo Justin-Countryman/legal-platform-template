@@ -3242,14 +3242,12 @@
     {
       "id": "gradientBloom",
       "name": "Gradient bloom",
-      "sentence": "Dark runs lit by a soft glow, behind the attorney where a section has a cutout.",
+      "sentence": "A soft glow from the hero down through every dark run to the close, behind the attorney where a section has a cutout.",
       "steps": [
         "mostlyDark"
       ],
       "defaultStep": "mostlyDark",
-      "passed": [
-        "mostlyDark"
-      ]
+      "passed": []
     },
     {
       "id": "wedges",
@@ -3873,7 +3871,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
-      "hero": "site",
+      "hero": "dark",
       "ghost": "none",
       "overlap": "photo",
       "needs": [
@@ -3881,14 +3879,14 @@
       ],
       "chrome": {
         "header": "dark",
-        "footer": "dark"
+        "footer": "light"
       },
       "id": "gradientBloom.mostlyDark",
       "name": "Gradient bloom",
-      "sentence": "Dark runs lit by a soft glow, behind the attorney where a section has a cutout.",
+      "sentence": "A soft glow from the hero down through every dark run to the close, behind the attorney where a section has a cutout.",
       "family": "gradientBloom",
       "step": "mostlyDark",
-      "passed": true
+      "passed": false
     },
     {
       "dark": {
