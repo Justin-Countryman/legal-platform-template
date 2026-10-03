@@ -71,7 +71,7 @@ export function InternalPageHeader({title}: Props) {
           className="w-full max-w-2xl"
           data-hero-heading-reserve={surface.hasForeground ? '' : undefined}
         >
-          <h1 className="marketing-h1 font-bold text-foreground">
+          <h1 className="marketing-h1 font-bold text-heading">
             {title}
           </h1>
         </div>

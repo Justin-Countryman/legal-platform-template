@@ -102,7 +102,7 @@ function CenteredCta({data, fit}: {data: CtaSectionBlockData; fit?: HeadingFit |
   return (
     <>
       {tagline && <Tagline as="p">{tagline}</Tagline>}
-      <h2 className="section-heading mb-4 text-2xl font-bold text-foreground md:text-3xl lg:text-4xl" style={headingFitStyle(fit)}><HeadingText fit={fit}>{heading}</HeadingText></h2>
+      <h2 className="section-heading mb-4 text-2xl font-bold text-heading md:text-3xl lg:text-4xl" style={headingFitStyle(fit)}><HeadingText fit={fit}>{heading}</HeadingText></h2>
       {description && <p className="text-foreground-muted">{description}</p>}
       {buttons && <ButtonGroup items={toCtaItems(buttons)} align="center" className="mt-6 md:mt-8" />}
     </>

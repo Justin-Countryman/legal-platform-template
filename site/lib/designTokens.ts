@@ -403,6 +403,16 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
     : stepLightness(parseOklch(accent), -1, (h) => passesOn(h, lightGrounds, 4.5)) ?? brandDark
   const accentFg = textOn(accent)
 
+  // The heading's ink on a light ground (the roster eye of 2026-10-03, `[R-631]`): Justin, "the headings follow the
+  // dark ground, and the dark ground follows the logo". The dark ground itself where it reaches 4.5:1 on every light
+  // ground, which an accepted dark ground always does (white reaches 7:1 on it, so it is darker than any light ground's
+  // text needs; `validateWcag` holds the pair and the guarantee sweeps it); else the ground stepped darker at its own
+  // hue, the rule `accent-text` follows above, so no palette an operator types reaches a heading under AA. On a dark
+  // band the cascade swaps it to the on-dark text, on the accent fill to the fill's text (`globals.css`).
+  const heading = passesOn(brandDark, lightGrounds, 4.5)
+    ? brandDark
+    : stepLightness(parseOklch(brandDark), -1, (h) => passesOn(h, lightGrounds, 4.5)) ?? '#000000'
+
   // Action forms.
   const actionFg    = textOn(action)
   const actionHover = actionHoverOf(action, actionFg)
@@ -525,6 +535,9 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
     '--color-accent-on-dark':           accentOnDark,
     '--color-accent-text':              accentText,
     '--color-accent-text-on-light':     accentText,
+    // The heading's ink, cascade-aware, and its static on-light twin for a light island.
+    '--color-heading':                  heading,
+    '--color-heading-on-light':         heading,
     // Action.
     '--color-action':                   action,
     '--color-action-fg':                actionFg,
@@ -902,6 +915,11 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
     ['section-texture', blendOver(t['--color-background'], textureOnLight(t['--color-brand-dark']).ink, textureOnLight(t['--color-brand-dark']).opacity)],
   ]
   for (const [name, ground] of lightGrounds) {
+    // The dark ground as ink (the roster eye of 2026-10-03, `[R-631]`): headings on a light ground take it, so it is
+    // held as text on every light ground, where it was held only under white and the on-dark tiers (the layout record's
+    // §8.3 found the gap).
+    check(`brand-dark on ${name}`,        t['--color-brand-dark'],        ground, 4.5)
+    check(`heading on ${name}`,           t['--color-heading'],           ground, 4.5)
     check(`foreground on ${name}`,        t['--color-foreground'],        ground, 4.5)
     check(`foreground-muted on ${name}`,  t['--color-foreground-muted'],  ground, 4.5)
     check(`foreground-subtle on ${name}`, t['--color-foreground-subtle'], ground, 4.5)

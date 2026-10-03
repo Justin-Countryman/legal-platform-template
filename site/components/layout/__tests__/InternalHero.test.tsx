@@ -111,7 +111,7 @@ describe('InternalHero — render shape', () => {
     const {container} = render(<InternalHero data={BASE_DATA} />)
     const h1 = container.querySelector('h1') as HTMLElement
     expect(h1.textContent).toBe('Family Law Services')
-    expect(h1.className).toContain('text-foreground')
+    expect(h1.className).toContain('text-heading')
   })
 
   it('applies the inline padding-top style mirroring InternalPageHeader spacing', () => {
@@ -577,11 +577,11 @@ describe('InternalHero — resolveTokenString integration', () => {
 // ─── Cascade-aware contract ───────────────────────────────────────────────────
 
 describe('InternalHero — cascade-aware contract', () => {
-  it('h1 + description use cascade-aware text-foreground', () => {
+  it('h1 uses cascade-aware text-heading and the description text-foreground (the roster eye of 2026-10-03, [R-631])', () => {
     const {container} = render(<InternalHero data={BASE_DATA} />)
     const h1 = container.querySelector('h1') as HTMLElement
     const p = container.querySelector('p') as HTMLElement
-    expect(h1.className).toContain('text-foreground')
+    expect(h1.className).toContain('text-heading')
     expect(p.className).toContain('text-foreground')
   })
 

@@ -63,7 +63,7 @@ export function FeaturedTestimonialSection({
         {tagline && <Tagline as="p">{tagline}</Tagline>}
         {/* Phase 18 session D (monorepo `[R-615]`): the section tier every `SectionHeader` draws (it was 24 px, smaller than
             every other section's heading), the quote kept under it and at a reading measure. */}
-        <h2 className="section-heading mb-6 font-heading text-3xl font-bold text-foreground md:text-4xl" style={headingFitStyle(fit)}>
+        <h2 className="section-heading mb-6 font-heading text-3xl font-bold text-heading md:text-4xl" style={headingFitStyle(fit)}>
           <HeadingText fit={fit}>{heading}</HeadingText>
         </h2>
 

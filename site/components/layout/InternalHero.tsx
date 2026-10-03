@@ -140,7 +140,7 @@ export function InternalHero({data, napTokens}: {data: InternalHeroData; napToke
           data-hero-heading-reserve={surface.hasForeground ? '' : undefined}
         >
 
-          <h1 className={`text-page-h1 font-bold text-foreground${onlyHeading ? '' : ' mb-5 md:mb-6'}`}>
+          <h1 className={`text-page-h1 font-bold text-heading${onlyHeading ? '' : ' mb-5 md:mb-6'}`}>
             {heading}
           </h1>
 

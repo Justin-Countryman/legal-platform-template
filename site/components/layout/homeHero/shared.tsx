@@ -169,7 +169,8 @@ export function HeroHeading({
   className?: string
 }) {
   return (
-    <h1 className={['marketing-h1 font-heading font-bold text-foreground', className ?? ''].filter(Boolean).join(' ')}>
+    // `text-heading` (the roster eye of 2026-10-03, `[R-631]`): the dark ground on a light hero, the on-dark text on a dark one.
+    <h1 className={['marketing-h1 font-heading font-bold text-heading', className ?? ''].filter(Boolean).join(' ')}>
       {children}
     </h1>
   )

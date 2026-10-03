@@ -20,6 +20,7 @@ tester.run('platform/heading-cascade-discipline', rule, {
   valid: [
     // Each acceptable token, primary case
     {code: `<h1 className="text-foreground">x</h1>`},
+    {code: `<h2 className="text-3xl font-bold text-heading section-heading">x</h2>`},
     {code: `<h1 className="text-foreground-muted">x</h1>`},
     {code: `<h1 className="text-foreground-subtle">x</h1>`},
     {code: `<h1 className="text-accent">x</h1>`},

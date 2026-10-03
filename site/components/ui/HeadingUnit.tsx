@@ -31,10 +31,11 @@ export type HeadingUnitScale = 'marketing' | 'interior'
 export const HEADING_UNIT_TIER_CLASS: Record<HeadingUnitScale, string> = {
   // The homepage tier: the marketing scale, so designSettings.marketingScale
   // moves it, as it moves the old homepage blocks.
-  marketing: 'marketing-h2 section-heading font-heading font-bold text-foreground',
+  // `text-heading`: the heading's own ink, the dark ground on a light ground (the roster eye of 2026-10-03, `[R-631]`).
+  marketing: 'marketing-h2 section-heading font-heading font-bold text-heading',
   // The interior tier: SectionHeader's standard (md) type size, without its
   // trailing margin; the consumer owns the gap below the unit.
-  interior: 'section-heading text-3xl font-bold text-foreground md:text-4xl',
+  interior: 'section-heading text-3xl font-bold text-heading md:text-4xl',
 }
 
 export type HeadingUnitProps = {
