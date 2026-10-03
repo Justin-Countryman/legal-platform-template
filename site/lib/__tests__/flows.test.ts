@@ -39,8 +39,10 @@ describe('the families and the roster', () => {
     }
   })
 
-  it('the passed steps are the eye pass verdicts: session 3 passed four; session 5 passed three and retired Alternating at mostly dark ([R-523]); session 6 passed Photo scrims; Phase 17D passed four; its session 2 passed Gradient bloom', () => {
-    expect(FLOWS.filter((f) => f.passed).map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
+  it('the passed steps are the eye pass verdicts: session 3 passed four; session 5 passed three and retired Alternating at mostly dark ([R-523]); session 6 passed Photo scrims; Phase 17D passed four; its session 2 passed Gradient bloom; the roster eye of 2026-10-03 changed Quiet ([R-631])', () => {
+    // The roster eye of 2026-10-03 (monorepo WS-V1-ROSTER-EYE-2026-10-03/verdicts.txt): six steps pass, eight change. A step
+    // he asked to change is not passed until he sees it again (`[R-517]`), so each leaves this list with its fix.
+    expect(FLOWS.filter((f) => f.passed).map((f) => f.id)).toEqual(['alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
       'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark',
       'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight', 'softWash.balanced', 'gradientBloom.mostlyDark', 'wedges.balanced'])
     // Dark-led pages are runs, not alternation: the step left the roster, it is not merely unpassed.
@@ -80,6 +82,21 @@ describe('the families and the roster', () => {
     expect(needLabel('glow')).toBe('a palette whose dark sections have room to glow')
     expect(unmetNeeds(gb, {hosts: [], photos: 0, texture: false, initials: false, glow: false})).toEqual(['glow'])
     expect(unmetNeeds(gb, {hosts: [], photos: 0, texture: false, initials: false, glow: true})).toEqual([])
+  })
+
+  it('Quiet paints its ribbons on the accent (the roster eye of 2026-10-03, [R-631]): the ribbon host alone, the saturated paint, light everywhere else, the dark close', () => {
+    // Justin, of Quiet beside bdgfirm.com: "that band is fine but maybe it can have more design to it to make it pop";
+    // bdgfirm paints the band solid gold where Quiet drew gold lines above and below it. The device exists since Phase 15
+    // (Ribbon rhythm's `saturated` paint); Quiet names it on its ribbons and nothing else: no other host, so the page
+    // stays light all the way down to the dark close, and `alternate`, so two ribbons together take one fill.
+    const q = flowById('quiet.mostlyLight')!
+    expect(q.dark).toMatchObject({budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', close: 'dark'})
+    expect(q.light).toEqual({paint: 'plain', texture: 'quiet'})
+    expect(q).toMatchObject({divider: {shape: 'straight', at: 'none', hairline: 'none'}, needs: [], chrome: {header: 'light', footer: 'light'}})
+    // Its fill needs no second ribbon: a page with none is still Quiet, where Ribbon rhythm asks for two.
+    expect(unmetNeeds(q, {hosts: [], photos: 0, texture: false, initials: false})).toEqual([])
+    // Not passed until he sees it again ([R-517]).
+    expect(q.passed).toBe(false)
   })
 
   it('what a dark band draws over its ground: the bridge\u2019s ramp, the glow where the palette has room, or nothing', () => {

@@ -22,7 +22,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 3
+          "length": 2
         }
       },
       {
@@ -39,28 +39,24 @@
         "raisePhoto": false,
         "run": {
           "index": 1,
-          "length": 3
+          "length": 2
         }
       },
       {
         "key": "fx-content-ribbon",
         "host": "ribbon",
-        "ground": "light",
+        "ground": "saturated",
         "texture": false,
         "inset": false,
         "adopted": null,
-        "seam": true,
+        "seam": false,
         "divider": null,
         "hairline": false,
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 2,
-          "length": 3
-        },
-        "ribbonEdges": {
-          "top": true,
-          "bottom": false
+          "index": 0,
+          "length": 1
         }
       }
     ],
@@ -5655,6 +5651,23 @@
       {
         "key": "rc2-ribbon",
         "host": "ribbon",
+        "ground": "saturated",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -5666,28 +5679,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 7
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
-        }
-      },
-      {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
-        "ground": "light",
-        "texture": false,
-        "inset": false,
-        "adopted": null,
-        "seam": true,
-        "divider": null,
-        "hairline": false,
-        "ghost": false,
-        "raisePhoto": false,
-        "run": {
-          "index": 1,
-          "length": 7
+          "length": 6
         }
       },
       {
@@ -5703,8 +5695,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 2,
-          "length": 7
+          "index": 1,
+          "length": 6
         }
       },
       {
@@ -5720,8 +5712,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 7
+          "index": 2,
+          "length": 6
         }
       },
       {
@@ -5737,8 +5729,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 4,
-          "length": 7
+          "index": 3,
+          "length": 6
         }
       },
       {
@@ -5754,8 +5746,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 5,
-          "length": 7
+          "index": 4,
+          "length": 6
         }
       },
       {
@@ -5771,8 +5763,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 6,
-          "length": 7
+          "index": 5,
+          "length": 6
         }
       }
     ],
@@ -7724,6 +7716,23 @@
       {
         "key": "rc2-ribbon",
         "host": "ribbon",
+        "ground": "saturated",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -7735,28 +7744,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 7
-        },
-        "ribbonEdges": {
-          "top": true,
-          "bottom": true
-        }
-      },
-      {
-        "key": "hp-narrativeBlock",
-        "host": "narrative",
-        "ground": "light",
-        "texture": false,
-        "inset": false,
-        "adopted": null,
-        "seam": true,
-        "divider": null,
-        "hairline": false,
-        "ghost": false,
-        "raisePhoto": false,
-        "run": {
-          "index": 1,
-          "length": 7
+          "length": 6
         }
       },
       {
@@ -7772,8 +7760,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 2,
-          "length": 7
+          "index": 1,
+          "length": 6
         }
       },
       {
@@ -7789,8 +7777,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 7
+          "index": 2,
+          "length": 6
         }
       },
       {
@@ -7806,8 +7794,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 4,
-          "length": 7
+          "index": 3,
+          "length": 6
         }
       },
       {
@@ -7823,8 +7811,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 5,
-          "length": 7
+          "index": 4,
+          "length": 6
         }
       },
       {
@@ -7840,8 +7828,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 6,
-          "length": 7
+          "index": 5,
+          "length": 6
         }
       }
     ],
@@ -12350,6 +12338,23 @@
       {
         "key": "rc2-ribbon",
         "host": "ribbon",
+        "ground": "saturated",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -12361,28 +12366,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 7
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
-        }
-      },
-      {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
-        "ground": "light",
-        "texture": false,
-        "inset": false,
-        "adopted": null,
-        "seam": true,
-        "divider": null,
-        "hairline": false,
-        "ghost": false,
-        "raisePhoto": false,
-        "run": {
-          "index": 1,
-          "length": 7
+          "length": 5
         }
       },
       {
@@ -12398,8 +12382,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 2,
-          "length": 7
+          "index": 1,
+          "length": 5
         }
       },
       {
@@ -12415,8 +12399,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 7
+          "index": 2,
+          "length": 5
         }
       },
       {
@@ -12432,8 +12416,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 4,
-          "length": 7
+          "index": 3,
+          "length": 5
         }
       },
       {
@@ -12449,29 +12433,25 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 5,
-          "length": 7
+          "index": 4,
+          "length": 5
         }
       },
       {
         "key": "rc11-ribbon",
         "host": "ribbon",
-        "ground": "light",
+        "ground": "saturated",
         "texture": false,
         "inset": false,
         "adopted": null,
-        "seam": true,
+        "seam": false,
         "divider": null,
         "hairline": false,
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 6,
-          "length": 7
-        },
-        "ribbonEdges": {
-          "top": true,
-          "bottom": false
+          "index": 0,
+          "length": 1
         }
       }
     ],
@@ -14449,6 +14429,23 @@
       {
         "key": "rc2-ribbon",
         "host": "ribbon",
+        "ground": "saturated",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -14460,28 +14457,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 7
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
-        }
-      },
-      {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
-        "ground": "light",
-        "texture": false,
-        "inset": false,
-        "adopted": null,
-        "seam": true,
-        "divider": null,
-        "hairline": false,
-        "ghost": false,
-        "raisePhoto": false,
-        "run": {
-          "index": 1,
-          "length": 7
+          "length": 6
         }
       },
       {
@@ -14497,8 +14473,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 2,
-          "length": 7
+          "index": 1,
+          "length": 6
         }
       },
       {
@@ -14514,8 +14490,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 7
+          "index": 2,
+          "length": 6
         }
       },
       {
@@ -14531,8 +14507,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 4,
-          "length": 7
+          "index": 3,
+          "length": 6
         }
       },
       {
@@ -14548,8 +14524,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 5,
-          "length": 7
+          "index": 4,
+          "length": 6
         }
       },
       {
@@ -14565,8 +14541,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 6,
-          "length": 7
+          "index": 5,
+          "length": 6
         }
       }
     ],
@@ -16525,6 +16501,23 @@
       {
         "key": "rc2-ribbon",
         "host": "ribbon",
+        "ground": "saturated",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -16536,28 +16529,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 7
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
-        }
-      },
-      {
-        "key": "hp-narrativeBlock",
-        "host": "narrative",
-        "ground": "light",
-        "texture": false,
-        "inset": false,
-        "adopted": null,
-        "seam": true,
-        "divider": null,
-        "hairline": false,
-        "ghost": false,
-        "raisePhoto": false,
-        "run": {
-          "index": 1,
-          "length": 7
+          "length": 6
         }
       },
       {
@@ -16573,8 +16545,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 2,
-          "length": 7
+          "index": 1,
+          "length": 6
         }
       },
       {
@@ -16590,8 +16562,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 7
+          "index": 2,
+          "length": 6
         }
       },
       {
@@ -16607,8 +16579,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 4,
-          "length": 7
+          "index": 3,
+          "length": 6
         }
       },
       {
@@ -16624,8 +16596,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 5,
-          "length": 7
+          "index": 4,
+          "length": 6
         }
       },
       {
@@ -16641,8 +16613,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 6,
-          "length": 7
+          "index": 5,
+          "length": 6
         }
       }
     ],
@@ -21159,6 +21131,23 @@
       {
         "key": "rc2-ribbon",
         "host": "ribbon",
+        "ground": "saturated",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -21170,28 +21159,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 7
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
-        }
-      },
-      {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
-        "ground": "light",
-        "texture": false,
-        "inset": false,
-        "adopted": null,
-        "seam": true,
-        "divider": null,
-        "hairline": false,
-        "ghost": false,
-        "raisePhoto": false,
-        "run": {
-          "index": 1,
-          "length": 7
+          "length": 6
         }
       },
       {
@@ -21207,8 +21175,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 2,
-          "length": 7
+          "index": 1,
+          "length": 6
         }
       },
       {
@@ -21224,8 +21192,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 7
+          "index": 2,
+          "length": 6
         }
       },
       {
@@ -21241,8 +21209,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 4,
-          "length": 7
+          "index": 3,
+          "length": 6
         }
       },
       {
@@ -21258,8 +21226,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 5,
-          "length": 7
+          "index": 4,
+          "length": 6
         }
       },
       {
@@ -21275,8 +21243,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 6,
-          "length": 7
+          "index": 5,
+          "length": 6
         }
       }
     ],
@@ -23228,6 +23196,23 @@
       {
         "key": "rc2-ribbon",
         "host": "ribbon",
+        "ground": "saturated",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -23239,28 +23224,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 7
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
-        }
-      },
-      {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
-        "ground": "light",
-        "texture": false,
-        "inset": false,
-        "adopted": null,
-        "seam": true,
-        "divider": null,
-        "hairline": false,
-        "ghost": false,
-        "raisePhoto": false,
-        "run": {
-          "index": 1,
-          "length": 7
+          "length": 6
         }
       },
       {
@@ -23276,8 +23240,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 2,
-          "length": 7
+          "index": 1,
+          "length": 6
         }
       },
       {
@@ -23293,8 +23257,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 7
+          "index": 2,
+          "length": 6
         }
       },
       {
@@ -23310,8 +23274,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 4,
-          "length": 7
+          "index": 3,
+          "length": 6
         }
       },
       {
@@ -23327,8 +23291,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 5,
-          "length": 7
+          "index": 4,
+          "length": 6
         }
       },
       {
@@ -23344,8 +23308,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 6,
-          "length": 7
+          "index": 5,
+          "length": 6
         }
       }
     ],
@@ -25313,6 +25277,23 @@
       {
         "key": "rc2-ribbon",
         "host": "ribbon",
+        "ground": "saturated",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -25324,28 +25305,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 7
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
-        }
-      },
-      {
-        "key": "hp-narrativeBlock",
-        "host": "narrative",
-        "ground": "light",
-        "texture": false,
-        "inset": false,
-        "adopted": null,
-        "seam": true,
-        "divider": null,
-        "hairline": false,
-        "ghost": false,
-        "raisePhoto": false,
-        "run": {
-          "index": 1,
-          "length": 7
+          "length": 6
         }
       },
       {
@@ -25361,8 +25321,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 2,
-          "length": 7
+          "index": 1,
+          "length": 6
         }
       },
       {
@@ -25378,8 +25338,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 7
+          "index": 2,
+          "length": 6
         }
       },
       {
@@ -25395,8 +25355,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 4,
-          "length": 7
+          "index": 3,
+          "length": 6
         }
       },
       {
@@ -25412,8 +25372,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 5,
-          "length": 7
+          "index": 4,
+          "length": 6
         }
       },
       {
@@ -25429,8 +25389,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 6,
-          "length": 7
+          "index": 5,
+          "length": 6
         }
       }
     ],
@@ -29969,6 +29929,23 @@
       {
         "key": "rc2-ribbon",
         "host": "ribbon",
+        "ground": "saturated",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-narrativeBlock",
+        "host": "narrative",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -29980,28 +29957,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 7
-        },
-        "ribbonEdges": {
-          "top": true,
-          "bottom": true
-        }
-      },
-      {
-        "key": "hp-narrativeBlock",
-        "host": "narrative",
-        "ground": "light",
-        "texture": false,
-        "inset": false,
-        "adopted": null,
-        "seam": true,
-        "divider": null,
-        "hairline": false,
-        "ghost": false,
-        "raisePhoto": false,
-        "run": {
-          "index": 1,
-          "length": 7
+          "length": 6
         }
       },
       {
@@ -30017,8 +29973,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 2,
-          "length": 7
+          "index": 1,
+          "length": 6
         }
       },
       {
@@ -30034,8 +29990,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 7
+          "index": 2,
+          "length": 6
         }
       },
       {
@@ -30051,8 +30007,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 4,
-          "length": 7
+          "index": 3,
+          "length": 6
         }
       },
       {
@@ -30068,8 +30024,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 5,
-          "length": 7
+          "index": 4,
+          "length": 6
         }
       },
       {
@@ -30085,8 +30041,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 6,
-          "length": 7
+          "index": 5,
+          "length": 6
         }
       }
     ],
@@ -32038,6 +31994,23 @@
       {
         "key": "hp-openingRibbonBlock",
         "host": "ribbon",
+        "ground": "saturated",
+        "texture": false,
+        "inset": false,
+        "adopted": null,
+        "seam": false,
+        "divider": null,
+        "hairline": false,
+        "ghost": false,
+        "raisePhoto": false,
+        "run": {
+          "index": 0,
+          "length": 1
+        }
+      },
+      {
+        "key": "hp-siloNavBlock",
+        "host": "areas",
         "ground": "light",
         "texture": false,
         "inset": false,
@@ -32049,28 +32022,7 @@
         "raisePhoto": false,
         "run": {
           "index": 0,
-          "length": 5
-        },
-        "ribbonEdges": {
-          "top": false,
-          "bottom": true
-        }
-      },
-      {
-        "key": "hp-siloNavBlock",
-        "host": "areas",
-        "ground": "light",
-        "texture": false,
-        "inset": false,
-        "adopted": null,
-        "seam": true,
-        "divider": null,
-        "hairline": false,
-        "ghost": false,
-        "raisePhoto": false,
-        "run": {
-          "index": 1,
-          "length": 5
+          "length": 3
         }
       },
       {
@@ -32086,8 +32038,8 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 2,
-          "length": 5
+          "index": 1,
+          "length": 3
         }
       },
       {
@@ -32103,29 +32055,25 @@
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 3,
-          "length": 5
+          "index": 2,
+          "length": 3
         }
       },
       {
         "key": "hp-codaRibbonBlock",
         "host": "ribbon",
-        "ground": "light",
+        "ground": "saturated",
         "texture": false,
         "inset": false,
         "adopted": null,
-        "seam": true,
+        "seam": false,
         "divider": null,
         "hairline": false,
         "ghost": false,
         "raisePhoto": false,
         "run": {
-          "index": 4,
-          "length": 5
-        },
-        "ribbonEdges": {
-          "top": true,
-          "bottom": false
+          "index": 0,
+          "length": 1
         }
       }
     ],

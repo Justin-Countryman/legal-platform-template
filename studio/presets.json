@@ -3132,14 +3132,12 @@
     {
       "id": "quiet",
       "name": "Quiet",
-      "sentence": "A dark hero, then light all the way down, and one dark band to close.",
+      "sentence": "A dark hero, the ribbon on the accent, then light all the way down, and one dark band to close.",
       "steps": [
         "mostlyLight"
       ],
       "defaultStep": "mostlyLight",
-      "passed": [
-        "mostlyLight"
-      ]
+      "passed": []
     },
     {
       "id": "alternating",
@@ -3271,10 +3269,12 @@
   "flows": [
     {
       "dark": {
-        "budget": "none",
-        "hosts": [],
-        "rhythm": "bookends",
-        "paint": "plain",
+        "budget": "all",
+        "hosts": [
+          "ribbon"
+        ],
+        "rhythm": "alternate",
+        "paint": "saturated",
         "texture": "quiet",
         "close": "dark",
         "closeElse": [
@@ -3304,10 +3304,10 @@
       },
       "id": "quiet.mostlyLight",
       "name": "Quiet",
-      "sentence": "A dark hero, then light all the way down, and one dark band to close.",
+      "sentence": "A dark hero, the ribbon on the accent, then light all the way down, and one dark band to close.",
       "family": "quiet",
       "step": "mostlyLight",
-      "passed": true
+      "passed": false
     },
     {
       "dark": {

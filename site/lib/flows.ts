@@ -287,10 +287,19 @@ const NO_DIVIDER: FlowRules['divider'] = {shape: 'straight', at: 'none', carry: 
 export const FAMILIES: readonly FlowFamily[] = [
   {
     id: 'quiet', name: 'Quiet',
-    sentence: 'A dark hero, then light all the way down, and one dark band to close.',
-    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
+    sentence: 'A dark hero, the ribbon on the accent, then light all the way down, and one dark band to close.',
+    // THE ROSTER EYE OF 2026-10-03 (monorepo WS-V1-ROSTER-EYE-2026-10-03/verdicts.txt; `[R-631]`): judged live on
+    // Stone Arch beside bdgfirm.com, "change": "that band is fine but maybe it can have more design to it to make it
+    // pop". bdgfirm paints its ribbon solid gold; Quiet drew gold lines above and below a light ribbon (`[R-576]`). So
+    // its ribbons take the accent fill, the device Ribbon rhythm has had since Phase 15: the ribbon host alone, every
+    // ribbon the budget allows, `alternate` so two together take one fill, the fill where the palette passes its gate
+    // and the dark ground where it does not (as Ribbon rhythm falls). Every other band stays light and the close dark,
+    // which is the sentence. No need: a page without a ribbon is still Quiet, where Ribbon rhythm asks for two. Not
+    // passed until he sees it again (`[R-517]`); his verdict named the headings, the hero's backdrop and a texture on
+    // one or two light bands too, which are the palette's and the background layer's (`[R-631]`), not this family's.
+    steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: [],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
+      dark: {budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
       light: {paint: 'plain', texture: 'quiet'},
       // Phase 18 session B (`[R-597]`, `[R-603]`): its dark close over a light footer, as the study's mostly light
       // pages end (a light footer on 14 of 19), so the one dark band to close never meets a dark footer.

@@ -148,6 +148,39 @@ describe('the budget and the rhythm', () => {
   })
 })
 
+describe('Quiet\u2019s ribbons on the accent (the roster eye of 2026-10-03, [R-631])', () => {
+  const quiet = flowById('quiet.mostlyLight')!
+  const page = [b('ribbon', null, {content: true}), b('split'), b('narrative'), b('ribbon', null, {content: true}), b('split')]
+
+  it('under Quiet a ribbon takes the saturated ground and the band after it is light; every other band is light', () => {
+    expect(grounds(page, quiet, {saturated: true})).toEqual(['saturated', 'light', 'light', 'saturated', 'light'])
+    // No other host goes dark under Quiet, however the canvas is shaped.
+    const six = ['differentiators', 'caseResults', 'areas', 'narrative', 'attorneys', 'badges'] as Host[]
+    expect(grounds(six.map((h) => b(h)), quiet, {saturated: true})).toEqual(Array(6).fill('light'))
+  })
+
+  it('where the palette refuses the fill the ribbon is a band of the dark ground, as under Ribbon rhythm; a stored ribbon stands', () => {
+    expect(grounds(page, quiet, {saturated: false})).toEqual(['dark', 'light', 'light', 'dark', 'light'])
+    expect(grounds([b('ribbon', {surface: 'light'}), b('split')], quiet, {saturated: true})).toEqual(['light', 'light'])
+  })
+
+  it('two ribbons together take one fill, and the opening ribbon under the dark hero takes it', () => {
+    expect(grounds([b('ribbon', null, {content: true}), b('ribbon', null, {content: true}), b('split')], quiet, {saturated: true})).toEqual(['saturated', 'light', 'light'])
+  })
+
+  it('the band renders the fill: the accent ground with its own text color, and the close stays the dark ground', () => {
+    const blocks = [
+      {_type: 'contentSectionInline', _key: 'r', layout: 'ribbon', heading: 'Call us today'},
+      {_type: 'contentSectionInline', _key: 's', layout: 'statement', heading: 'A statement'},
+    ] as unknown as HomepageBlock[]
+    const sections = [...render(<HomepageCanvas blocks={blocks} site={{...LOOK, flow: quiet, saturated: true}} hero="dark" close="dark" />).container.querySelectorAll('section')]
+    expect(sections[0].className.split(' ')).toContain('bg-accent-fill')
+    expect(sections[0].getAttribute('data-ring-context')).toBe('saturated')
+    expect(sections[1].className.split(' ')).toContain('bg-background')
+    expect(closeOf(quiet, {footer: 'light', above: 'light', heroPhoto: false, colors: NAVY_BRASS})).toBe('dark')
+  })
+})
+
 describe('the words of session 5: the room, the accent line, the needs read from the pass', () => {
   it('spacious goes on the bands the theme fills; a stored surface keeps its own room', () => {
     const flow = themed({dark: {budget: 'third', hosts: ['ribbon'], rhythm: 'pairs'}, spacing: 'spacious'})
