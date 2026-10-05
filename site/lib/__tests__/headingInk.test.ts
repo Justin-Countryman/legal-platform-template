@@ -2,8 +2,8 @@
 //
 // ─── Headings follow the dark ground (the roster eye of 2026-10-03, `[R-631]`) ───────────────────────────────────────
 //
-// Justin, of Quiet beside bdgfirm.com: "notice how some of the text is in blue to align with the color palette in the
-// bdgfirm.com vs ours is black and gold"; and, asked what follows what: "the headings follow the dark ground, and the
+// Justin, of Quiet beside bdgfirm: "notice how some of the text is in blue to align with the color palette in the
+// bdgfirm vs ours is black and gold"; and, asked what follows what: "the headings follow the dark ground, and the
 // dark ground follows the logo". So on a light ground (the page, the hero's tint, the muted step, the wash, a textured
 // band) a heading's ink is the palette's dark ground, `--color-heading`; on a dark ground it is the on-dark text as
 // before, and on the accent fill the fill's one text color. A token rule, the palette's: no theme or style set moves it.

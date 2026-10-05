@@ -94,7 +94,7 @@ describe('the families and the roster', () => {
   })
 
   it('Quiet paints its ribbons on the accent (the roster eye of 2026-10-03, [R-631]): the ribbon host alone, the saturated paint, light everywhere else, the dark close', () => {
-    // Justin, of Quiet beside bdgfirm.com: "that band is fine but maybe it can have more design to it to make it pop";
+    // Justin, of Quiet beside bdgfirm: "that band is fine but maybe it can have more design to it to make it pop";
     // bdgfirm paints the band solid gold where Quiet drew gold lines above and below it. The device exists since Phase 15
     // (Ribbon rhythm's `saturated` paint); Quiet names it on its ribbons and nothing else: no other host, so the page
     // stays light all the way down to the dark close, and `alternate`, so two ribbons together take one fill.

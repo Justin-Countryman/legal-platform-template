@@ -291,7 +291,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     id: 'quiet', name: 'Quiet',
     sentence: 'A dark hero, the ribbon on the accent, then light all the way down, and one dark band to close.',
     // THE ROSTER EYE OF 2026-10-03 (monorepo WS-V1-ROSTER-EYE-2026-10-03/verdicts.txt; `[R-631]`): judged live on
-    // Stone Arch beside bdgfirm.com, "change": "that band is fine but maybe it can have more design to it to make it
+    // Stone Arch beside bdgfirm, "change": "that band is fine but maybe it can have more design to it to make it
     // pop". bdgfirm paints its ribbon solid gold; Quiet drew gold lines above and below a light ribbon (`[R-576]`). So
     // its ribbons take the accent fill, the device Ribbon rhythm has had since Phase 15: the ribbon host alone, every
     // ribbon the budget allows, `alternate` so two together take one fill, the fill where the palette passes its gate
@@ -355,7 +355,7 @@ export const FAMILIES: readonly FlowFamily[] = [
     // dark or photo hero, which the composer writes and a theme cannot reach.
     //
     // THE ROSTER EYE OF 2026-10-03 (monorepo WS-V1-ROSTER-EYE-2026-10-03/verdicts.txt; `[R-631]`): judged live on
-    // Stone Arch beside lewinlawfirm.com, "change": "mostly dark theme is so you do not see all the bands but we have
+    // Stone Arch beside lewinlawfirm, "change": "mostly dark theme is so you do not see all the bands but we have
     // gold lines which breaks everything up anyways"; "get rid of the lines". So its hairline draws at a change of
     // ground only (`atChange`), which on an all-dark page is nowhere: a stored light band inside the run still gets its
     // two, and the close meets the run on its own ground. The ribbons' accent lines are the ribbon's, not the seam's
