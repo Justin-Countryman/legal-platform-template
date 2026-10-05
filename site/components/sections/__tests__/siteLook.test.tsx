@@ -49,7 +49,8 @@ describe('the site look from Design Settings', () => {
     expect(bridged.divider).toEqual({shape: 'angled', at: 'intoDark', carry: ['cards'], hairline: 'none', hairlineInk: 'border'})
     expect(bridged.overlap).toBe('photo')
     expect(bridged.ghost).toBe('once')
-    expect(bridged.dark).toMatchObject({budget: 'none', hosts: [], rhythm: 'bookends', paint: 'gradient', close: 'muted'})
+    expect(bridged.dark).toMatchObject({budget: 'none', hosts: [], rhythm: 'bookends', close: 'muted'})
+    expect(bridged.on.dark).toBe('gradient')
     // The palette's saturated gate: the grey placeholder fails it, a shipped preset passes.
     expect(siteLookOf({}).saturated).toBe(false)
     expect(siteLookOf({darkGround: '#1c2b4a', lightGround: '#f5eedc', accent: '#b8893a'}).saturated).toBe(true)

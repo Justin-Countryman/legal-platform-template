@@ -30,12 +30,16 @@ import {HomepageCta} from '@/components/layout/HomepageCta'
 import {PageSections, type PageSectionData} from '../PageSections'
 import {assignGrounds, canvasFacts, closeFrame, closeGround, walkFrame, walkPage, siteLookOf, NO_SEAM, type SiteLook} from '../sectionFrame'
 import {SectionShell, type SectionAppearance} from '../SectionShell'
-import {DARK_PAINTS, FLOWS, HOSTS, LIGHT_PAINTS, STEP_HOSTS, chromeSchemes, closeOf, flowById, unmetNeeds, type FlowRules, type Host} from '@/lib/flows'
+import {FLOWS, HOSTS, STEP_HOSTS, chromeSchemes, closeOf, flowById, unmetNeeds, type FlowRules, type Host} from '@/lib/flows'
 import {GLOW_RUN_CAP} from '../sectionFrame'
 import {PALETTE_PRESETS, presetInputs} from '@/lib/palettes'
 import {type VisibleGround} from '@/lib/sectionSurface'
 import {ghostSource} from '@/lib/brandMark'
-import {LOOK, themed} from './flowFixtures'
+import {LOOK, themed, type DarkPaint, type LightPaint} from './flowFixtures'
+
+/** Every word a paint was, before the split (`flowFixtures.ts`): the sweep below still reaches every ground. */
+const DARK_PAINTS: readonly DarkPaint[] = ['plain', 'pattern', 'gradient', 'gradientPerBand', 'photo', 'saturated', 'heroPhoto', 'floating', 'glow']
+const LIGHT_PAINTS: readonly LightPaint[] = ['plain', 'washes', 'pattern', 'panel', 'floating']
 import type {HeroPhoto, SetPhoto} from '@/lib/heroGround'
 
 /** Quiet with the room it never takes, for the case that nothing sets `spacing` by default. */
@@ -288,7 +292,7 @@ describe('precedence: the operator’s band stands', () => {
 })
 
 describe('each paint, gated by its data', () => {
-  const dark = (paint: FlowRules['dark']['paint']) => themed({dark: {budget: 'all', hosts: ['split', 'ribbon'], rhythm: 'runs', paint}})
+  const dark = (paint: DarkPaint) => themed({dark: {budget: 'all', hosts: ['split', 'ribbon'], rhythm: 'runs', paint}})
 
   it('photo paints a band’s own background photo, else the dark ground', () => {
     const out = walkFrame([b('split', null, {photo: true}), b('split')], resolveBand, {...LOOK, flow: dark('photo')}, 'dark')

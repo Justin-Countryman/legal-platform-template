@@ -56,7 +56,7 @@ export function heroGround(hero: HomeHeroData | null, flow: Pick<FlowRules, 'lig
 // light hero but one with a photograph, a mosaic or a section background behind it (the text half of a full-bleed split
 // included, whose band paints behind that half). `heroGround` stays what the first band meets.
 export function heroPaint(hero: HomeHeroData | null, flow: Pick<FlowRules, 'light'> | null | undefined): 'wash' | null {
-  if (!hero || flow?.light.paint !== 'washes' || hero.schemeOverride !== 'light') return null
+  if (!hero || flow?.light.ground !== 'washes' || hero.schemeOverride !== 'light') return null
   const c = resolveHeroConfig(hero)
   if (c.skeleton === 'overlay' && (c.backdrop === 'image' || c.backdrop === 'mosaic')) return null
   if (hero.sectionBackgroundImage?.src) return null
