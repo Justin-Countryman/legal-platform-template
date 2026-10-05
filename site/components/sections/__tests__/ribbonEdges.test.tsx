@@ -12,7 +12,7 @@ import {render} from '@testing-library/react'
 import {walkPage, NO_SEAM, type SiteLook} from '../sectionFrame'
 import {SectionShell, type SectionAppearance} from '../SectionShell'
 import {flowById, type Host} from '@/lib/flows'
-import {LOOK} from './flowFixtures'
+import {LOOK, PLAIN} from './flowFixtures'
 import {type VisibleGround} from '@/lib/sectionSurface'
 
 type Band = {host: Host | null; appearance?: SectionAppearance | null}
@@ -21,14 +21,21 @@ const b = (host: Host | null, appearance?: SectionAppearance): Band => ({host, a
 const resolveBand = (m: Band) => ({appearance: m.appearance, empty: false, stored: !!m.appearance?.surface, host: m.host, content: m.host === 'ribbon' || m.host === 'narrative' || m.host === 'split' || m.host === 'statement'})
 /** Each band as `t`, `b` or `tb` for the edges it lines, `-` for none. */
 const edges = (bands: Band[], flow: string | null, hero: VisibleGround | null = 'dark', close: VisibleGround | null = 'dark', site: Partial<SiteLook> = {}) =>
-  walkPage(bands, resolveBand, {...LOOK, flow: flow ? flowById(flow)! : null, ...site}, hero, close)
+  walkPage(bands, resolveBand, {...LOOK, flow: flow === 'plain' ? PLAIN : flow ? flowById(flow)! : null, ...site}, hero, close)
     .bands.map(({seam}) => (seam.ribbonEdges ? `${seam.ribbonEdges.top ? 't' : ''}${seam.ribbonEdges.bottom ? 'b' : ''}` : '-'))
     .join(' ')
 
 describe('a ribbon lines the edge it shares with its neighbor’s ground', () => {
-  it('under Quiet, below the opening ribbon and above the coda, the light page’s two joins', () => {
-    // A dark hero and a dark close around a light page: each ribbon shares one edge, with the band inside the page.
-    expect(edges([b('ribbon'), b('narrative'), b('split'), b('ribbon')], 'quiet.mostlyLight')).toBe('b - - t')
+  it('on a light page, below the opening ribbon and above the coda, the page’s two joins', () => {
+    // A dark hero and a dark close around a light page: each ribbon shares one edge, with the band inside the page. The
+    // plain base is Quiet as it was until 2026-10-03; Quiet's own ribbons are on the accent since (below).
+    expect(edges([b('ribbon'), b('narrative'), b('split'), b('ribbon')], 'plain')).toBe('b - - t')
+  })
+
+  it('under Quiet since the roster eye of 2026-10-03 ([R-631]) the ribbons are on the accent, a ground of their own, and line nothing', () => {
+    expect(edges([b('ribbon'), b('narrative'), b('split'), b('ribbon')], 'quiet.mostlyLight', 'dark', 'dark', {saturated: true})).toBe('- - - -')
+    // Where the palette refuses the fill they are dark, as the hero and the close, and share those edges.
+    expect(edges([b('ribbon'), b('narrative'), b('split'), b('ribbon')], 'quiet.mostlyLight', 'dark', 'dark', {saturated: false})).toBe('t - - b')
   })
 
   it('a stored ribbon, as on a homepage an operator built, on the hero’s own ground lines its top', () => {
@@ -47,11 +54,15 @@ describe('a ribbon lines the edge it shares with its neighbor’s ground', () =>
     expect(edges([b('ribbon'), b('narrative'), b('split'), b('ribbon')], 'ribbonRhythm.mostlyLight', 'dark', 'dark', {saturated: false})).toBe('t - - b')
   })
 
-  it('where the theme draws its hairline at every band (Type on black, Editorial), only at the hero and the close', () => {
+  it('where the theme draws its hairline at every band (Editorial), only at the hero and the close', () => {
     // The hairline is every join inside the page; the hero's and the close's joins have none (the pre-PR break pass).
-    expect(edges([b('ribbon'), b('narrative'), b('ribbon')], 'typeOnBlack.allDark')).toBe('t - b')
-    expect(edges([b('narrative'), b('ribbon'), b('split')], 'typeOnBlack.allDark')).toBe('- - -')
     expect(edges([b('ribbon'), b('narrative'), b('ribbon')], 'editorial.mostlyLight', 'light', 'light')).toBe('t - b')
+  })
+
+  it('under Type on black, whose line draws only at a change since the roster eye of 2026-10-03 ([R-631]), a ribbon in the dark run lines both edges', () => {
+    // The seam's hairline is gone from the run ("get rid of the lines"); the ribbon's own lines are the ribbon's and stay.
+    expect(edges([b('ribbon'), b('narrative'), b('ribbon')], 'typeOnBlack.allDark')).toBe('tb - tb')
+    expect(edges([b('narrative'), b('ribbon'), b('split')], 'typeOnBlack.allDark')).toBe('- tb -')
   })
 
   it('never on a panel, which floats on its gutter', () => {

@@ -12,7 +12,7 @@
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
-    "scrollHeight": 1463,
+    "scrollHeight": 1495,
     "bands": [
       {
         "i": 0,
@@ -75,19 +75,18 @@
       {
         "i": 3,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-top"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
         "top": 1110,
-        "height": 136,
-        "pt": 32,
+        "height": 168,
+        "pt": 64,
         "pb": 64,
         "headingLines": 0,
         "headingWeight": null,
@@ -508,9 +507,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -531,8 +528,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "ribbon-edge-top"
         ],
         "texture": false,
         "ghost": false,
@@ -1355,8 +1351,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 1440,
     "clientWidth": 1440,
@@ -1437,6 +1433,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
           "grad-n-1",
           "grad-p-0"
@@ -1594,7 +1591,7 @@
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
-    "scrollHeight": 1314,
+    "scrollHeight": 1338,
     "bands": [
       {
         "i": 0,
@@ -1657,19 +1654,18 @@
       {
         "i": 3,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-top"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
         "top": 938,
-        "height": 95,
-        "pt": 24,
+        "height": 119,
+        "pt": 48,
         "pb": 48,
         "headingLines": 0,
         "headingWeight": null,
@@ -2090,9 +2086,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -2113,8 +2107,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "ribbon-edge-top"
         ],
         "texture": false,
         "ghost": false,
@@ -2937,8 +2930,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 390,
     "clientWidth": 390,
@@ -3019,6 +3012,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
           "grad-n-1",
           "grad-p-0"
@@ -3176,7 +3170,7 @@
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
-    "scrollHeight": 4248,
+    "scrollHeight": 4304,
     "bands": [
       {
         "i": 0,
@@ -3201,13 +3195,12 @@
       {
         "i": 1,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-bottom"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
@@ -3234,8 +3227,8 @@
         "texture": false,
         "ghost": false,
         "top": 851,
-        "height": 571,
-        "pt": 56,
+        "height": 627,
+        "pt": 112,
         "pb": 112,
         "headingLines": 1,
         "headingWeight": 700,
@@ -3253,7 +3246,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1421,
+        "top": 1477,
         "height": 426,
         "pt": 56,
         "pb": 112,
@@ -3273,7 +3266,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1847,
+        "top": 1903,
         "height": 493,
         "pt": 56,
         "pb": 112,
@@ -3293,7 +3286,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2341,
+        "top": 2397,
         "height": 371,
         "pt": 56,
         "pb": 112,
@@ -3313,7 +3306,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2711,
+        "top": 2767,
         "height": 332,
         "pt": 56,
         "pb": 112,
@@ -3333,7 +3326,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3043,
+        "top": 3099,
         "height": 493,
         "pt": 56,
         "pb": 112,
@@ -3353,7 +3346,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3537,
+        "top": 3593,
         "height": 419,
         "pt": 112,
         "pb": 112,
@@ -4068,6 +4061,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "ribbon-edge-bottom",
           "ribbon-edge-top"
         ],
         "texture": false,
@@ -4090,9 +4084,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -4112,9 +4104,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -4134,9 +4124,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -4156,9 +4144,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -4178,9 +4164,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -4200,9 +4184,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -5772,8 +5754,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 1440,
     "clientWidth": 1440,
@@ -5785,10 +5767,15 @@
         "heading": "Counsel you can call",
         "ring": "dark",
         "scrim": null,
+        "glow": "true",
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -5811,8 +5798,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-0",
-          "grad-n-2",
+          "grad-i-1",
+          "grad-n-3",
           "grad-p-1",
           "ribbon-edge-bottom",
           "ribbon-edge-top"
@@ -5840,8 +5827,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-1",
-          "grad-n-2",
+          "grad-i-2",
+          "grad-n-3",
           "grad-p-1"
         ],
         "texture": false,
@@ -5905,6 +5892,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
           "grad-n-3",
           "grad-p-1"
@@ -5930,6 +5918,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-1",
           "grad-n-3",
           "grad-p-1"
@@ -5955,6 +5944,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-2",
           "grad-n-3",
           "grad-p-1"
@@ -5972,12 +5962,17 @@
       {
         "i": 8,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -6236,7 +6231,7 @@
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
-    "scrollHeight": 4188,
+    "scrollHeight": 4220,
     "bands": [
       {
         "i": 0,
@@ -6261,13 +6256,12 @@
       {
         "i": 1,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-bottom"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
@@ -6294,8 +6288,8 @@
         "texture": false,
         "ghost": false,
         "top": 563,
-        "height": 795,
-        "pt": 32,
+        "height": 827,
+        "pt": 64,
         "pb": 64,
         "headingLines": 1,
         "headingWeight": 700,
@@ -6313,7 +6307,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1358,
+        "top": 1390,
         "height": 680,
         "pt": 32,
         "pb": 64,
@@ -6333,7 +6327,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2038,
+        "top": 2070,
         "height": 407,
         "pt": 32,
         "pb": 64,
@@ -6353,7 +6347,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2445,
+        "top": 2477,
         "height": 311,
         "pt": 32,
         "pb": 64,
@@ -6373,7 +6367,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2756,
+        "top": 2788,
         "height": 384,
         "pt": 32,
         "pb": 64,
@@ -6393,7 +6387,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3140,
+        "top": 3172,
         "height": 407,
         "pt": 32,
         "pb": 64,
@@ -6413,7 +6407,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3547,
+        "top": 3579,
         "height": 304,
         "pt": 64,
         "pb": 64,
@@ -7128,6 +7122,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "ribbon-edge-bottom",
           "ribbon-edge-top"
         ],
         "texture": false,
@@ -7150,9 +7145,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -7172,9 +7165,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -7194,9 +7185,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -7216,9 +7205,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -7238,9 +7225,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -7260,9 +7245,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -8832,8 +8815,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 390,
     "clientWidth": 390,
@@ -8845,10 +8828,15 @@
         "heading": "Counsel you can call",
         "ring": "dark",
         "scrim": null,
+        "glow": "true",
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -8871,8 +8859,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-0",
-          "grad-n-2",
+          "grad-i-1",
+          "grad-n-3",
           "grad-p-1",
           "ribbon-edge-bottom",
           "ribbon-edge-top"
@@ -8900,8 +8888,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-1",
-          "grad-n-2",
+          "grad-i-2",
+          "grad-n-3",
           "grad-p-1"
         ],
         "texture": false,
@@ -8965,6 +8953,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
           "grad-n-3",
           "grad-p-1"
@@ -8990,6 +8979,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-1",
           "grad-n-3",
           "grad-p-1"
@@ -9015,6 +9005,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-2",
           "grad-n-3",
           "grad-p-1"
@@ -9032,12 +9023,17 @@
       {
         "i": 8,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -14886,7 +14882,7 @@
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
-    "scrollHeight": 4550,
+    "scrollHeight": 4606,
     "bands": [
       {
         "i": 0,
@@ -14911,14 +14907,12 @@
       {
         "i": 1,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-bottom",
-          "ribbon-edge-top"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
@@ -14945,8 +14939,8 @@
         "texture": false,
         "ghost": false,
         "top": 851,
-        "height": 332,
-        "pt": 56,
+        "height": 388,
+        "pt": 112,
         "pb": 112,
         "headingLines": 1,
         "headingWeight": 700,
@@ -14964,7 +14958,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1183,
+        "top": 1239,
         "height": 682,
         "pt": 56,
         "pb": 112,
@@ -14984,7 +14978,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1865,
+        "top": 1921,
         "height": 884,
         "pt": 56,
         "pb": 112,
@@ -15004,7 +14998,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2749,
+        "top": 2805,
         "height": 426,
         "pt": 56,
         "pb": 112,
@@ -15024,7 +15018,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3175,
+        "top": 3231,
         "height": 332,
         "pt": 56,
         "pb": 112,
@@ -15044,7 +15038,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3507,
+        "top": 3563,
         "height": 332,
         "pt": 56,
         "pb": 112,
@@ -15064,7 +15058,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3839,
+        "top": 3895,
         "height": 419,
         "pt": 112,
         "pb": 112,
@@ -15775,7 +15769,8 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark"
+          "bg-brand-dark",
+          "ribbon-edge-bottom"
         ],
         "texture": false,
         "ghost": false,
@@ -15797,9 +15792,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -15819,9 +15812,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -15841,9 +15832,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -15863,9 +15852,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -15885,9 +15872,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -15907,9 +15892,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -17478,8 +17461,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 1440,
     "clientWidth": 1440,
@@ -17518,8 +17501,8 @@
           "band-glow",
           "bg-brand-dark",
           "grad-i-0",
-          "grad-n-4",
-          "grad-p-2",
+          "grad-n-3",
+          "grad-p-1",
           "ribbon-edge-bottom"
         ],
         "texture": false,
@@ -17546,8 +17529,8 @@
           "band-glow",
           "bg-brand-dark",
           "grad-i-1",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -17571,8 +17554,8 @@
           "band-glow",
           "bg-brand-dark",
           "grad-i-2",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -17595,9 +17578,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-3",
-          "grad-n-4",
-          "grad-p-2"
+          "glow-from-left",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -17677,12 +17661,18 @@
       {
         "i": 8,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "glow-from-left",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -17940,7 +17930,7 @@
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
-    "scrollHeight": 6380,
+    "scrollHeight": 6412,
     "bands": [
       {
         "i": 0,
@@ -17965,14 +17955,12 @@
       {
         "i": 1,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-bottom",
-          "ribbon-edge-top"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
@@ -17999,8 +17987,8 @@
         "texture": false,
         "ghost": false,
         "top": 563,
-        "height": 384,
-        "pt": 32,
+        "height": 416,
+        "pt": 64,
         "pb": 64,
         "headingLines": 1,
         "headingWeight": 700,
@@ -18018,7 +18006,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 947,
+        "top": 979,
         "height": 1466,
         "pt": 32,
         "pb": 64,
@@ -18038,7 +18026,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2413,
+        "top": 2445,
         "height": 1877,
         "pt": 32,
         "pb": 64,
@@ -18058,7 +18046,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4289,
+        "top": 4321,
         "height": 680,
         "pt": 32,
         "pb": 64,
@@ -18078,7 +18066,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4970,
+        "top": 5002,
         "height": 384,
         "pt": 32,
         "pb": 64,
@@ -18098,7 +18086,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 5354,
+        "top": 5386,
         "height": 384,
         "pt": 32,
         "pb": 64,
@@ -18118,7 +18106,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 5738,
+        "top": 5770,
         "height": 304,
         "pt": 64,
         "pb": 64,
@@ -18829,7 +18817,8 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark"
+          "bg-brand-dark",
+          "ribbon-edge-bottom"
         ],
         "texture": false,
         "ghost": false,
@@ -18851,9 +18840,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -18873,9 +18860,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -18895,9 +18880,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -18917,9 +18900,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -18939,9 +18920,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -18961,9 +18940,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -20532,8 +20509,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 390,
     "clientWidth": 390,
@@ -20572,8 +20549,8 @@
           "band-glow",
           "bg-brand-dark",
           "grad-i-0",
-          "grad-n-4",
-          "grad-p-2",
+          "grad-n-3",
+          "grad-p-1",
           "ribbon-edge-bottom"
         ],
         "texture": false,
@@ -20600,8 +20577,8 @@
           "band-glow",
           "bg-brand-dark",
           "grad-i-1",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -20625,8 +20602,8 @@
           "band-glow",
           "bg-brand-dark",
           "grad-i-2",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -20649,9 +20626,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-3",
-          "grad-n-4",
-          "grad-p-2"
+          "glow-from-left",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -20731,12 +20709,18 @@
       {
         "i": 8,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "glow-from-left",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -27616,9 +27600,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -27638,9 +27620,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -27660,9 +27640,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -27682,9 +27660,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -27704,9 +27680,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -27726,9 +27700,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -27748,9 +27720,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -27770,9 +27740,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -29610,8 +29578,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 1440,
     "clientWidth": 1440,
@@ -29759,9 +29727,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -29784,9 +29753,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-1",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -29809,9 +29779,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-2",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -29834,9 +29805,9 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-3",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-i-0",
+          "grad-n-2",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -29851,12 +29822,17 @@
       {
         "i": 10,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-1",
+          "grad-n-2",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -31210,9 +31186,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -31232,9 +31206,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -31254,9 +31226,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -31276,9 +31246,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -31298,9 +31266,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -31320,9 +31286,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -31342,9 +31306,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -31364,9 +31326,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -33204,8 +33164,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 390,
     "clientWidth": 390,
@@ -33353,9 +33313,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -33378,9 +33339,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-1",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -33403,9 +33365,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-2",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -33428,9 +33391,9 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-3",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-i-0",
+          "grad-n-2",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -33445,12 +33408,17 @@
       {
         "i": 10,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-1",
+          "grad-n-2",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -40298,7 +40266,7 @@
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
-    "scrollHeight": 4674,
+    "scrollHeight": 4762,
     "bands": [
       {
         "i": 0,
@@ -40323,13 +40291,12 @@
       {
         "i": 1,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-bottom"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
@@ -40356,8 +40323,8 @@
         "texture": false,
         "ghost": false,
         "top": 851,
-        "height": 682,
-        "pt": 56,
+        "height": 738,
+        "pt": 112,
         "pb": 112,
         "headingLines": 1,
         "headingWeight": 700,
@@ -40375,7 +40342,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1533,
+        "top": 1589,
         "height": 426,
         "pt": 56,
         "pb": 112,
@@ -40395,7 +40362,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1959,
+        "top": 2015,
         "height": 493,
         "pt": 56,
         "pb": 112,
@@ -40415,7 +40382,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2452,
+        "top": 2508,
         "height": 884,
         "pt": 56,
         "pb": 112,
@@ -40435,7 +40402,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3336,
+        "top": 3392,
         "height": 491,
         "pt": 56,
         "pb": 112,
@@ -40446,19 +40413,18 @@
       {
         "i": 7,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-top"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
-        "top": 3827,
-        "height": 136,
-        "pt": 32,
+        "top": 3883,
+        "height": 168,
+        "pt": 64,
         "pb": 64,
         "headingLines": 0,
         "headingWeight": null,
@@ -40478,7 +40444,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3963,
+        "top": 4051,
         "height": 419,
         "pt": 112,
         "pb": 112,
@@ -41199,6 +41165,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "ribbon-edge-bottom",
           "ribbon-edge-top"
         ],
         "texture": false,
@@ -41221,9 +41188,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -41243,9 +41208,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -41265,9 +41228,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -41287,9 +41248,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -41309,9 +41268,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -41332,8 +41289,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "ribbon-edge-top"
         ],
         "texture": false,
         "ghost": false,
@@ -42922,8 +42878,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 1440,
     "clientWidth": 1440,
@@ -42935,10 +42891,15 @@
         "heading": "Counsel you can call",
         "ring": "dark",
         "scrim": null,
+        "glow": "true",
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -42961,8 +42922,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-0",
-          "grad-n-2",
+          "grad-i-1",
+          "grad-n-3",
           "grad-p-1",
           "ribbon-edge-bottom",
           "ribbon-edge-top"
@@ -42990,8 +42951,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-1",
-          "grad-n-2",
+          "grad-i-2",
+          "grad-n-3",
           "grad-p-1"
         ],
         "texture": false,
@@ -43055,6 +43016,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
           "grad-n-3",
           "grad-p-1"
@@ -43080,6 +43042,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-1",
           "grad-n-3",
           "grad-p-1"
@@ -43105,9 +43068,11 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-2",
           "grad-n-3",
           "grad-p-1",
+          "ribbon-edge-bottom",
           "ribbon-edge-top"
         ],
         "texture": false,
@@ -43125,12 +43090,17 @@
       {
         "i": 8,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -43391,7 +43361,7 @@
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
-    "scrollHeight": 6099,
+    "scrollHeight": 6155,
     "bands": [
       {
         "i": 0,
@@ -43416,13 +43386,12 @@
       {
         "i": 1,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-bottom"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
@@ -43449,8 +43418,8 @@
         "texture": false,
         "ghost": false,
         "top": 563,
-        "height": 1466,
-        "pt": 32,
+        "height": 1498,
+        "pt": 64,
         "pb": 64,
         "headingLines": 1,
         "headingWeight": 700,
@@ -43468,7 +43437,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2029,
+        "top": 2061,
         "height": 680,
         "pt": 32,
         "pb": 64,
@@ -43488,7 +43457,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2709,
+        "top": 2741,
         "height": 407,
         "pt": 32,
         "pb": 64,
@@ -43508,7 +43477,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3116,
+        "top": 3148,
         "height": 1877,
         "pt": 32,
         "pb": 64,
@@ -43528,7 +43497,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4992,
+        "top": 5024,
         "height": 349,
         "pt": 32,
         "pb": 64,
@@ -43539,19 +43508,18 @@
       {
         "i": 7,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-top"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
-        "top": 5341,
-        "height": 117,
-        "pt": 24,
+        "top": 5373,
+        "height": 141,
+        "pt": 48,
         "pb": 48,
         "headingLines": 0,
         "headingWeight": null,
@@ -43571,7 +43539,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 5458,
+        "top": 5514,
         "height": 304,
         "pt": 64,
         "pb": 64,
@@ -44292,6 +44260,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "ribbon-edge-bottom",
           "ribbon-edge-top"
         ],
         "texture": false,
@@ -44314,9 +44283,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -44336,9 +44303,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -44358,9 +44323,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -44380,9 +44343,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -44402,9 +44363,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -44425,8 +44384,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "ribbon-edge-top"
         ],
         "texture": false,
         "ghost": false,
@@ -46015,8 +45973,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 390,
     "clientWidth": 390,
@@ -46028,10 +45986,15 @@
         "heading": "Counsel you can call",
         "ring": "dark",
         "scrim": null,
+        "glow": "true",
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -46054,8 +46017,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-0",
-          "grad-n-2",
+          "grad-i-1",
+          "grad-n-3",
           "grad-p-1",
           "ribbon-edge-bottom",
           "ribbon-edge-top"
@@ -46083,8 +46046,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-1",
-          "grad-n-2",
+          "grad-i-2",
+          "grad-n-3",
           "grad-p-1"
         ],
         "texture": false,
@@ -46148,6 +46111,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
           "grad-n-3",
           "grad-p-1"
@@ -46173,6 +46137,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-1",
           "grad-n-3",
           "grad-p-1"
@@ -46198,9 +46163,11 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-2",
           "grad-n-3",
           "grad-p-1",
+          "ribbon-edge-bottom",
           "ribbon-edge-top"
         ],
         "texture": false,
@@ -46218,12 +46185,17 @@
       {
         "i": 8,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -46484,7 +46456,7 @@
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
-    "scrollHeight": 4420,
+    "scrollHeight": 4476,
     "bands": [
       {
         "i": 0,
@@ -46507,13 +46479,12 @@
       {
         "i": 1,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-bottom"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
@@ -46540,8 +46511,8 @@
         "texture": false,
         "ghost": false,
         "top": 851,
-        "height": 571,
-        "pt": 56,
+        "height": 627,
+        "pt": 112,
         "pb": 112,
         "headingLines": 1,
         "headingWeight": 700,
@@ -46559,7 +46530,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1421,
+        "top": 1477,
         "height": 426,
         "pt": 56,
         "pb": 112,
@@ -46579,7 +46550,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1847,
+        "top": 1903,
         "height": 579,
         "pt": 56,
         "pb": 112,
@@ -46599,7 +46570,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2426,
+        "top": 2482,
         "height": 371,
         "pt": 56,
         "pb": 112,
@@ -46619,7 +46590,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2797,
+        "top": 2853,
         "height": 332,
         "pt": 56,
         "pb": 112,
@@ -46639,7 +46610,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3129,
+        "top": 3185,
         "height": 579,
         "pt": 56,
         "pb": 112,
@@ -46659,7 +46630,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3708,
+        "top": 3764,
         "height": 419,
         "pt": 112,
         "pb": 112,
@@ -47364,7 +47335,8 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark"
+          "bg-brand-dark",
+          "ribbon-edge-bottom"
         ],
         "texture": false,
         "ghost": false,
@@ -47386,9 +47358,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -47408,9 +47378,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -47430,9 +47398,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -47452,9 +47418,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -47474,9 +47438,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -47496,9 +47458,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -49054,8 +49014,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 1440,
     "clientWidth": 1440,
@@ -49184,6 +49144,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
           "grad-n-3",
           "grad-p-1"
@@ -49209,6 +49170,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-1",
           "grad-n-3",
           "grad-p-1"
@@ -49234,6 +49196,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-2",
           "grad-n-3",
           "grad-p-1"
@@ -49251,12 +49214,17 @@
       {
         "i": 8,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -49513,7 +49481,7 @@
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
-    "scrollHeight": 4736,
+    "scrollHeight": 4768,
     "bands": [
       {
         "i": 0,
@@ -49536,13 +49504,12 @@
       {
         "i": 1,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-bottom"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
@@ -49569,8 +49536,8 @@
         "texture": false,
         "ghost": false,
         "top": 563,
-        "height": 795,
-        "pt": 32,
+        "height": 827,
+        "pt": 64,
         "pb": 64,
         "headingLines": 1,
         "headingWeight": 700,
@@ -49588,7 +49555,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1358,
+        "top": 1390,
         "height": 680,
         "pt": 32,
         "pb": 64,
@@ -49608,7 +49575,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2038,
+        "top": 2070,
         "height": 681,
         "pt": 32,
         "pb": 64,
@@ -49628,7 +49595,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2719,
+        "top": 2751,
         "height": 311,
         "pt": 32,
         "pb": 64,
@@ -49648,7 +49615,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3030,
+        "top": 3062,
         "height": 384,
         "pt": 32,
         "pb": 64,
@@ -49668,7 +49635,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3414,
+        "top": 3446,
         "height": 681,
         "pt": 32,
         "pb": 64,
@@ -49688,7 +49655,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4095,
+        "top": 4127,
         "height": 304,
         "pt": 64,
         "pb": 64,
@@ -50393,7 +50360,8 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark"
+          "bg-brand-dark",
+          "ribbon-edge-bottom"
         ],
         "texture": false,
         "ghost": false,
@@ -50415,9 +50383,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -50437,9 +50403,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -50459,9 +50423,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -50481,9 +50443,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -50503,9 +50463,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -50525,9 +50483,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -52083,8 +52039,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 390,
     "clientWidth": 390,
@@ -52213,6 +52169,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
           "grad-n-3",
           "grad-p-1"
@@ -52238,6 +52195,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-1",
           "grad-n-3",
           "grad-p-1"
@@ -52263,6 +52221,7 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-2",
           "grad-n-3",
           "grad-p-1"
@@ -52280,12 +52239,17 @@
       {
         "i": 8,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -52542,7 +52506,7 @@
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
-    "scrollHeight": 4550,
+    "scrollHeight": 4606,
     "bands": [
       {
         "i": 0,
@@ -52565,13 +52529,12 @@
       {
         "i": 1,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-bottom"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
@@ -52598,8 +52561,8 @@
         "texture": false,
         "ghost": false,
         "top": 851,
-        "height": 332,
-        "pt": 56,
+        "height": 388,
+        "pt": 112,
         "pb": 112,
         "headingLines": 1,
         "headingWeight": 700,
@@ -52617,7 +52580,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1183,
+        "top": 1239,
         "height": 682,
         "pt": 56,
         "pb": 112,
@@ -52637,7 +52600,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1865,
+        "top": 1921,
         "height": 884,
         "pt": 56,
         "pb": 112,
@@ -52657,7 +52620,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2749,
+        "top": 2805,
         "height": 426,
         "pt": 56,
         "pb": 112,
@@ -52677,7 +52640,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3175,
+        "top": 3231,
         "height": 332,
         "pt": 56,
         "pb": 112,
@@ -52697,7 +52660,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3507,
+        "top": 3563,
         "height": 332,
         "pt": 56,
         "pb": 112,
@@ -52717,7 +52680,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3839,
+        "top": 3895,
         "height": 419,
         "pt": 112,
         "pb": 112,
@@ -53420,7 +53383,8 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark"
+          "bg-brand-dark",
+          "ribbon-edge-bottom"
         ],
         "texture": false,
         "ghost": false,
@@ -53442,9 +53406,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -53464,9 +53426,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -53486,9 +53446,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -53508,9 +53466,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -53530,9 +53486,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -53552,9 +53506,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -55110,8 +55062,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 1440,
     "clientWidth": 1440,
@@ -55148,8 +55100,8 @@
           "band-glow",
           "bg-brand-dark",
           "grad-i-0",
-          "grad-n-4",
-          "grad-p-2",
+          "grad-n-3",
+          "grad-p-1",
           "ribbon-edge-bottom"
         ],
         "texture": false,
@@ -55176,8 +55128,8 @@
           "band-glow",
           "bg-brand-dark",
           "grad-i-1",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -55201,8 +55153,8 @@
           "band-glow",
           "bg-brand-dark",
           "grad-i-2",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -55225,9 +55177,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-3",
-          "grad-n-4",
-          "grad-p-2"
+          "glow-from-left",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -55307,12 +55260,18 @@
       {
         "i": 8,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "glow-from-left",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -55568,7 +55527,7 @@
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
-    "scrollHeight": 6380,
+    "scrollHeight": 6412,
     "bands": [
       {
         "i": 0,
@@ -55591,13 +55550,12 @@
       {
         "i": 1,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-bottom"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
@@ -55624,8 +55582,8 @@
         "texture": false,
         "ghost": false,
         "top": 563,
-        "height": 384,
-        "pt": 32,
+        "height": 416,
+        "pt": 64,
         "pb": 64,
         "headingLines": 1,
         "headingWeight": 700,
@@ -55643,7 +55601,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 947,
+        "top": 979,
         "height": 1466,
         "pt": 32,
         "pb": 64,
@@ -55663,7 +55621,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2413,
+        "top": 2445,
         "height": 1877,
         "pt": 32,
         "pb": 64,
@@ -55683,7 +55641,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4289,
+        "top": 4321,
         "height": 680,
         "pt": 32,
         "pb": 64,
@@ -55703,7 +55661,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4970,
+        "top": 5002,
         "height": 384,
         "pt": 32,
         "pb": 64,
@@ -55723,7 +55681,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 5354,
+        "top": 5386,
         "height": 384,
         "pt": 32,
         "pb": 64,
@@ -55743,7 +55701,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 5738,
+        "top": 5770,
         "height": 304,
         "pt": 64,
         "pb": 64,
@@ -56446,7 +56404,8 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark"
+          "bg-brand-dark",
+          "ribbon-edge-bottom"
         ],
         "texture": false,
         "ghost": false,
@@ -56468,9 +56427,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -56490,9 +56447,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -56512,9 +56467,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -56534,9 +56487,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -56556,9 +56507,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -56578,9 +56527,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -58136,8 +58083,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 390,
     "clientWidth": 390,
@@ -58174,8 +58121,8 @@
           "band-glow",
           "bg-brand-dark",
           "grad-i-0",
-          "grad-n-4",
-          "grad-p-2",
+          "grad-n-3",
+          "grad-p-1",
           "ribbon-edge-bottom"
         ],
         "texture": false,
@@ -58202,8 +58149,8 @@
           "band-glow",
           "bg-brand-dark",
           "grad-i-1",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -58227,8 +58174,8 @@
           "band-glow",
           "bg-brand-dark",
           "grad-i-2",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -58251,9 +58198,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-3",
-          "grad-n-4",
-          "grad-p-2"
+          "glow-from-left",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -58333,12 +58281,18 @@
       {
         "i": 8,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "glow-from-left",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -59643,9 +59597,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -59665,9 +59617,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -59687,9 +59637,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -59709,9 +59657,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -59731,9 +59677,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -59753,9 +59697,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -59775,9 +59717,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -59797,9 +59737,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -61626,8 +61564,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 1440,
     "clientWidth": 1440,
@@ -61773,9 +61711,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -61798,9 +61737,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-1",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -61823,9 +61763,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-2",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -61848,9 +61789,9 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-3",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-i-0",
+          "grad-n-2",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -61865,12 +61806,17 @@
       {
         "i": 10,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-1",
+          "grad-n-2",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -63214,9 +63160,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -63236,9 +63180,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -63258,9 +63200,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -63280,9 +63220,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -63302,9 +63240,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -63324,9 +63260,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -63346,9 +63280,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -63368,9 +63300,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -65197,8 +65127,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 390,
     "clientWidth": 390,
@@ -65344,9 +65274,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -65369,9 +65300,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-1",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -65394,9 +65326,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-2",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -65419,9 +65352,9 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-3",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-i-0",
+          "grad-n-2",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -65436,12 +65369,17 @@
       {
         "i": 10,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-1",
+          "grad-n-2",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -75828,7 +75766,7 @@
     "innerWidth": 1279,
     "clientWidth": 1279,
     "scrollWidth": 1279,
-    "scrollHeight": 5279,
+    "scrollHeight": 5280,
     "bands": [
       {
         "i": 0,
@@ -76697,7 +76635,7 @@
     "innerWidth": 1279,
     "clientWidth": 1279,
     "scrollWidth": 1279,
-    "scrollHeight": 4953,
+    "scrollHeight": 4952,
     "bands": [
       {
         "i": 0,
@@ -78136,9 +78074,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -78166,9 +78102,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -78188,9 +78122,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -78210,9 +78142,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -78232,9 +78162,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -78254,9 +78182,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -78276,9 +78202,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -78298,9 +78222,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -80194,8 +80116,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 1440,
     "clientWidth": 1440,
@@ -80351,9 +80273,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -80376,9 +80299,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-1",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -80401,9 +80325,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-2",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -80426,9 +80351,9 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-3",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-i-0",
+          "grad-n-2",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -80443,12 +80368,17 @@
       {
         "i": 10,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-1",
+          "grad-n-2",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -81842,9 +81772,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -81872,9 +81800,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -81894,9 +81820,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -81916,9 +81840,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -81938,9 +81860,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -81960,9 +81880,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -81982,9 +81900,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -82004,9 +81920,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -83900,8 +83814,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 390,
     "clientWidth": 390,
@@ -84057,9 +83971,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -84082,9 +83997,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-1",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -84107,9 +84023,10 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-2",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -84132,9 +84049,9 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-3",
-          "grad-n-4",
-          "grad-p-2"
+          "grad-i-0",
+          "grad-n-2",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -84149,12 +84066,17 @@
       {
         "i": 10,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-1",
+          "grad-n-2",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -84458,7 +84380,7 @@
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
-    "scrollHeight": 5520,
+    "scrollHeight": 5576,
     "bands": [
       {
         "i": 0,
@@ -84483,13 +84405,12 @@
       {
         "i": 1,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-bottom"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
@@ -84516,8 +84437,8 @@
         "texture": false,
         "ghost": false,
         "top": 851,
-        "height": 571,
-        "pt": 56,
+        "height": 627,
+        "pt": 112,
         "pb": 112,
         "headingLines": 1,
         "headingWeight": 700,
@@ -84535,7 +84456,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1421,
+        "top": 1477,
         "height": 426,
         "pt": 56,
         "pb": 112,
@@ -84555,7 +84476,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1847,
+        "top": 1903,
         "height": 1129,
         "pt": 56,
         "pb": 112,
@@ -84575,7 +84496,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2976,
+        "top": 3032,
         "height": 371,
         "pt": 56,
         "pb": 112,
@@ -84595,7 +84516,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3347,
+        "top": 3403,
         "height": 332,
         "pt": 56,
         "pb": 112,
@@ -84615,7 +84536,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3679,
+        "top": 3735,
         "height": 1129,
         "pt": 56,
         "pb": 112,
@@ -84635,7 +84556,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4808,
+        "top": 4864,
         "height": 419,
         "pt": 112,
         "pb": 112,
@@ -85350,6 +85271,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "ribbon-edge-bottom",
           "ribbon-edge-top"
         ],
         "texture": false,
@@ -85372,9 +85294,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -85394,9 +85314,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -85416,9 +85334,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -85438,9 +85354,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -85460,9 +85374,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -85482,9 +85394,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -87054,8 +86964,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 1440,
     "clientWidth": 1440,
@@ -87067,10 +86977,15 @@
         "heading": "Counsel you can call",
         "ring": "dark",
         "scrim": null,
+        "glow": "true",
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -87093,8 +87008,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-0",
-          "grad-n-2",
+          "grad-i-1",
+          "grad-n-3",
           "grad-p-1",
           "ribbon-edge-bottom",
           "ribbon-edge-top"
@@ -87122,8 +87037,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-1",
-          "grad-n-2",
+          "grad-i-2",
+          "grad-n-3",
           "grad-p-1"
         ],
         "texture": false,
@@ -87254,12 +87169,17 @@
       {
         "i": 8,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -87518,7 +87438,7 @@
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
-    "scrollHeight": 5029,
+    "scrollHeight": 5061,
     "bands": [
       {
         "i": 0,
@@ -87543,13 +87463,12 @@
       {
         "i": 1,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-bottom"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
@@ -87576,8 +87495,8 @@
         "texture": false,
         "ghost": false,
         "top": 563,
-        "height": 795,
-        "pt": 32,
+        "height": 827,
+        "pt": 64,
         "pb": 64,
         "headingLines": 1,
         "headingWeight": 700,
@@ -87595,7 +87514,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1358,
+        "top": 1390,
         "height": 680,
         "pt": 32,
         "pb": 64,
@@ -87615,7 +87534,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2038,
+        "top": 2070,
         "height": 827,
         "pt": 32,
         "pb": 64,
@@ -87635,7 +87554,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2865,
+        "top": 2897,
         "height": 311,
         "pt": 32,
         "pb": 64,
@@ -87655,7 +87574,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3176,
+        "top": 3208,
         "height": 384,
         "pt": 32,
         "pb": 64,
@@ -87675,7 +87594,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3560,
+        "top": 3592,
         "height": 827,
         "pt": 32,
         "pb": 64,
@@ -87695,7 +87614,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4387,
+        "top": 4419,
         "height": 304,
         "pt": 64,
         "pb": 64,
@@ -88410,6 +88329,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "ribbon-edge-bottom",
           "ribbon-edge-top"
         ],
         "texture": false,
@@ -88432,9 +88352,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -88454,9 +88372,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -88476,9 +88392,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -88498,9 +88412,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -88520,9 +88432,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -88542,9 +88452,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -90114,8 +90022,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 390,
     "clientWidth": 390,
@@ -90127,10 +90035,15 @@
         "heading": "Counsel you can call",
         "ring": "dark",
         "scrim": null,
+        "glow": "true",
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -90153,8 +90066,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-0",
-          "grad-n-2",
+          "grad-i-1",
+          "grad-n-3",
           "grad-p-1",
           "ribbon-edge-bottom",
           "ribbon-edge-top"
@@ -90182,8 +90095,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-1",
-          "grad-n-2",
+          "grad-i-2",
+          "grad-n-3",
           "grad-p-1"
         ],
         "texture": false,
@@ -90314,12 +90227,17 @@
       {
         "i": 8,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-1",
+          "grad-p-0"
         ],
         "texture": false,
         "ghost": false,
@@ -93730,7 +93648,7 @@
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
-    "scrollHeight": 4159,
+    "scrollHeight": 4247,
     "bands": [
       {
         "i": 0,
@@ -93755,13 +93673,12 @@
       {
         "i": 1,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-bottom"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
@@ -93788,8 +93705,8 @@
         "texture": false,
         "ghost": false,
         "top": 851,
-        "height": 682,
-        "pt": 56,
+        "height": 738,
+        "pt": 112,
         "pb": 112,
         "headingLines": 1,
         "headingWeight": 700,
@@ -93807,7 +93724,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1533,
+        "top": 1589,
         "height": 479,
         "pt": 56,
         "pb": 112,
@@ -93827,7 +93744,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2012,
+        "top": 2068,
         "height": 416,
         "pt": 56,
         "pb": 112,
@@ -93847,7 +93764,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2427,
+        "top": 2483,
         "height": 884,
         "pt": 56,
         "pb": 112,
@@ -93858,19 +93775,18 @@
       {
         "i": 6,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-top"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
-        "top": 3311,
-        "height": 136,
-        "pt": 32,
+        "top": 3367,
+        "height": 168,
+        "pt": 64,
         "pb": 64,
         "headingLines": 0,
         "headingWeight": null,
@@ -93890,7 +93806,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 3447,
+        "top": 3535,
         "height": 419,
         "pt": 112,
         "pb": 112,
@@ -94550,6 +94466,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "ribbon-edge-bottom",
           "ribbon-edge-top"
         ],
         "texture": false,
@@ -94572,9 +94489,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -94594,9 +94509,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -94616,9 +94529,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -94638,9 +94549,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -94661,8 +94570,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "ribbon-edge-top"
         ],
         "texture": false,
         "ghost": false,
@@ -96108,8 +96016,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 1440,
     "clientWidth": 1440,
@@ -96121,10 +96029,15 @@
         "heading": "Counsel you can call",
         "ring": "dark",
         "scrim": null,
+        "glow": "true",
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -96147,8 +96060,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-0",
-          "grad-n-2",
+          "grad-i-1",
+          "grad-n-3",
           "grad-p-1",
           "ribbon-edge-bottom",
           "ribbon-edge-top"
@@ -96176,8 +96089,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-1",
-          "grad-n-2",
+          "grad-i-2",
+          "grad-n-3",
           "grad-p-1"
         ],
         "texture": false,
@@ -96241,8 +96154,9 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
-          "grad-n-2",
+          "grad-n-3",
           "grad-p-1"
         ],
         "texture": false,
@@ -96266,9 +96180,11 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-1",
-          "grad-n-2",
+          "grad-n-3",
           "grad-p-1",
+          "ribbon-edge-bottom",
           "ribbon-edge-top"
         ],
         "texture": false,
@@ -96286,12 +96202,18 @@
       {
         "i": 7,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "glow-from-left",
+          "grad-i-2",
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -96530,7 +96452,7 @@
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
-    "scrollHeight": 4763,
+    "scrollHeight": 4819,
     "bands": [
       {
         "i": 0,
@@ -96555,13 +96477,12 @@
       {
         "i": 1,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-bottom"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
@@ -96588,8 +96509,8 @@
         "texture": false,
         "ghost": false,
         "top": 563,
-        "height": 626,
-        "pt": 32,
+        "height": 658,
+        "pt": 64,
         "pb": 64,
         "headingLines": 1,
         "headingWeight": 700,
@@ -96607,7 +96528,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1189,
+        "top": 1221,
         "height": 555,
         "pt": 32,
         "pb": 64,
@@ -96627,7 +96548,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 1744,
+        "top": 1776,
         "height": 384,
         "pt": 32,
         "pb": 64,
@@ -96647,7 +96568,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 2128,
+        "top": 2160,
         "height": 1877,
         "pt": 32,
         "pb": 64,
@@ -96658,19 +96579,18 @@
       {
         "i": 6,
         "heading": null,
-        "ring": null,
+        "ring": "saturated",
         "scrim": null,
-        "bg": "rgb(245, 238, 220)",
+        "bg": "rgb(184, 137, 58)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-background",
-          "ribbon-edge-top"
+          "bg-accent-fill"
         ],
         "texture": false,
         "ghost": false,
-        "top": 4005,
-        "height": 117,
-        "pt": 24,
+        "top": 4037,
+        "height": 141,
+        "pt": 48,
         "pb": 48,
         "headingLines": 0,
         "headingWeight": null,
@@ -96690,7 +96610,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4122,
+        "top": 4178,
         "height": 304,
         "pt": 64,
         "pb": 64,
@@ -97350,6 +97270,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
+          "ribbon-edge-bottom",
           "ribbon-edge-top"
         ],
         "texture": false,
@@ -97372,9 +97293,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -97394,9 +97313,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -97416,9 +97333,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -97438,9 +97353,7 @@
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "bg-brand-dark"
         ],
         "texture": false,
         "ghost": false,
@@ -97461,8 +97374,7 @@
         "ink": "rgb(21, 22, 25)",
         "classes": [
           "bg-brand-dark",
-          "hairline-accent",
-          "hairline-top"
+          "ribbon-edge-top"
         ],
         "texture": false,
         "ghost": false,
@@ -98908,8 +98820,8 @@
     },
     "headerRow": "rgb(28, 43, 74)",
     "footer": {
-      "ring": "dark",
-      "bg": "rgb(28, 43, 74)"
+      "ring": null,
+      "bg": "rgb(236, 230, 212)"
     },
     "innerWidth": 390,
     "clientWidth": 390,
@@ -98921,10 +98833,15 @@
         "heading": "Counsel you can call",
         "ring": "dark",
         "scrim": null,
+        "glow": "true",
         "bg": "rgb(28, 43, 74)",
         "ink": "rgb(21, 22, 25)",
         "classes": [
-          "bg-brand-dark"
+          "band-glow",
+          "bg-brand-dark",
+          "grad-i-0",
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,
@@ -98947,8 +98864,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-0",
-          "grad-n-2",
+          "grad-i-1",
+          "grad-n-3",
           "grad-p-1",
           "ribbon-edge-bottom",
           "ribbon-edge-top"
@@ -98976,8 +98893,8 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
-          "grad-i-1",
-          "grad-n-2",
+          "grad-i-2",
+          "grad-n-3",
           "grad-p-1"
         ],
         "texture": false,
@@ -99041,8 +98958,9 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-0",
-          "grad-n-2",
+          "grad-n-3",
           "grad-p-1"
         ],
         "texture": false,
@@ -99066,9 +98984,11 @@
         "classes": [
           "band-glow",
           "bg-brand-dark",
+          "glow-from-left",
           "grad-i-1",
-          "grad-n-2",
+          "grad-n-3",
           "grad-p-1",
+          "ribbon-edge-bottom",
           "ribbon-edge-top"
         ],
         "texture": false,
@@ -99086,12 +99006,18 @@
       {
         "i": 7,
         "heading": "Talk to an attorney today",
-        "ring": "saturated",
+        "ring": "dark",
         "scrim": null,
-        "bg": "rgb(184, 137, 58)",
-        "ink": "rgb(25, 21, 16)",
+        "glow": "true",
+        "bg": "rgb(28, 43, 74)",
+        "ink": "rgb(236, 238, 243)",
         "classes": [
-          "bg-accent-fill"
+          "band-glow",
+          "bg-brand-dark",
+          "glow-from-left",
+          "grad-i-2",
+          "grad-n-3",
+          "grad-p-1"
         ],
         "texture": false,
         "ghost": false,

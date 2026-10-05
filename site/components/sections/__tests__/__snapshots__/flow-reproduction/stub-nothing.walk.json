@@ -11,13 +11,13 @@
     "insetGround": null,
     "run": {
       "index": 0,
-      "length": 2
+      "length": 1
     }
   },
   {
     "key": "fx-content-ribbon",
     "index": 2,
-    "seamTop": true,
+    "seamTop": false,
     "previousGround": "light",
     "nextOverlap": "none",
     "divider": null,
@@ -25,8 +25,8 @@
     "raisePhoto": false,
     "insetGround": null,
     "run": {
-      "index": 1,
-      "length": 2
+      "index": 0,
+      "length": 1
     }
   }
 ]

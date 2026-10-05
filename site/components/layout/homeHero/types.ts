@@ -115,4 +115,7 @@ export type SkeletonProps = {
   /** Phase 16C: the first section rises into this hero's bottom, so a padded hero keeps
    *  its own content clear of it by the divider's depth (`[R-481]`). */
   edgeBelow?: boolean
+  /** The hero's place in the first run Gradient bloom lights, where it is dark and the theme glows (the roster eye of
+   *  2026-10-03, `[R-631]`; `walkPage().hero`): `HeroBand` draws the glow as a section draws its own. */
+  glow?: import('@/lib/heroGround').HeroGlow | null
 }

@@ -79,6 +79,7 @@ const UNREAD: Record<string, Reason> = Object.fromEntries([
     '--color-border-on-dark', '--color-border-on-light',
     '--color-foreground-muted-on-dark', '--color-foreground-muted-on-light',
     '--color-foreground-subtle-on-dark', '--color-foreground-subtle-on-light',
+    '--color-heading-on-light',
     '--color-hover-wash-on-dark', '--color-star-outline-on-dark', '--color-star-outline-on-light',
   ].map((name) => [name, 'cascade' as Reason]),
   // Tailwind v4 does not generate a ring utility from a color name, so globals.css

@@ -75,7 +75,7 @@ describe('CtaSectionBlock — TextOnlyCta header', () => {
     const h2 = container.querySelector('h2') as HTMLElement
     expect(h2.textContent).toBe('Talk with an attorney')
     // `section-heading` carries the style set's heading signature (Phase 16B).
-    expect(h2.className).toBe('text-3xl font-bold text-foreground md:text-4xl lg:text-5xl section-heading')
+    expect(h2.className).toBe('text-3xl font-bold text-heading md:text-4xl lg:text-5xl section-heading')
     expect(h2.className).not.toContain('mb-')
   })
 

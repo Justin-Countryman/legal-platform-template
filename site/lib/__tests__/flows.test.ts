@@ -39,10 +39,12 @@ describe('the families and the roster', () => {
     }
   })
 
-  it('the passed steps are the eye pass verdicts: session 3 passed four; session 5 passed three and retired Alternating at mostly dark ([R-523]); session 6 passed Photo scrims; Phase 17D passed four; its session 2 passed Gradient bloom', () => {
-    expect(FLOWS.filter((f) => f.passed).map((f) => f.id)).toEqual(['quiet.mostlyLight', 'alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
-      'typeOnBlack.allDark', 'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark',
-      'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight', 'softWash.balanced', 'gradientBloom.mostlyDark', 'wedges.balanced'])
+  it('the passed steps are the eye pass verdicts: session 3 passed four; session 5 passed three and retired Alternating at mostly dark ([R-523]); session 6 passed Photo scrims; Phase 17D passed four; its session 2 passed Gradient bloom; the roster eye of 2026-10-03 changed Quiet ([R-631])', () => {
+    // The roster eye of 2026-10-03 (monorepo WS-V1-ROSTER-EYE-2026-10-03/verdicts.txt): six steps pass, eight change. A step
+    // he asked to change is not passed until he sees it again (`[R-517]`), so each leaves this list with its fix.
+    expect(FLOWS.filter((f) => f.passed).map((f) => f.id)).toEqual(['alternating.balanced', 'cutBlocks.balanced', 'cutBlocks.mostlyDark',
+      'editorial.mostlyLight', 'ribbonRhythm.mostlyLight', 'photoScrims.mostlyDark',
+      'floatingPanels.balanced', 'floatingPanels.mostlyDark', 'softWash.mostlyLight', 'softWash.balanced', 'wedges.balanced'])
     // Dark-led pages are runs, not alternation: the step left the roster, it is not merely unpassed.
     expect(flowById('alternating.mostlyDark')).toBeNull()
     expect(FAMILIES.find((f) => f.id === 'alternating')!.steps).toEqual(['balanced'])
@@ -74,12 +76,36 @@ describe('the families and the roster', () => {
     expect(gb.dark.hosts).toEqual(flowById('cutBlocks.mostlyDark')!.dark.hosts)
     expect(gb.light).toEqual({paint: 'plain', texture: 'quiet'})
     expect(gb.divider).toEqual({shape: 'straight', at: 'none', carry: [], hairline: 'none', hairlineInk: 'border'})
-    expect(gb).toMatchObject({ghost: 'none', overlap: 'photo', spacing: 'normal', needs: ['glow'], chrome: {header: 'dark', footer: 'dark'}})
+    // The roster eye of 2026-10-03 (`[R-631]`): "there is no gradient in the hero to create that continuity after a few
+    // sections the gradient stuff just stops". The glow starts in the hero, so the theme says the hero is dark where it
+    // stores no ground (`themedHero`), the one theme that does; and it ends in the close, so the footer is light and
+    // the close can be dark beside it (`[R-597]`), as Photo scrims ends; not passed until he sees it again ([R-517]).
+    expect(gb).toMatchObject({ghost: 'none', overlap: 'photo', spacing: 'normal', needs: ['glow'], chrome: {header: 'dark', footer: 'light'}})
+    const navy = presetInputs(PALETTE_PRESETS.find((p) => p.id === 'navy-brass')!)
+    expect(closeOf(gb, {footer: gb.chrome.footer, above: 'dark', heroPhoto: false, colors: navy})).toBe('dark')
+    expect(gb.hero).toBe('dark')
+    expect(gb.passed).toBe(false)
+    expect(FLOWS.filter((f) => f.hero === 'dark').map((f) => f.id)).toEqual(['gradientBloom.mostlyDark'])
     // Only Gradient bloom glows, and the glow is a need of the palette the switcher says on its own.
     expect(FLOWS.filter((f) => f.dark.paint === 'glow').map((f) => f.id)).toEqual(['gradientBloom.mostlyDark'])
     expect(needLabel('glow')).toBe('a palette whose dark sections have room to glow')
     expect(unmetNeeds(gb, {hosts: [], photos: 0, texture: false, initials: false, glow: false})).toEqual(['glow'])
     expect(unmetNeeds(gb, {hosts: [], photos: 0, texture: false, initials: false, glow: true})).toEqual([])
+  })
+
+  it('Quiet paints its ribbons on the accent (the roster eye of 2026-10-03, [R-631]): the ribbon host alone, the saturated paint, light everywhere else, the dark close', () => {
+    // Justin, of Quiet beside bdgfirm: "that band is fine but maybe it can have more design to it to make it pop";
+    // bdgfirm paints the band solid gold where Quiet drew gold lines above and below it. The device exists since Phase 15
+    // (Ribbon rhythm's `saturated` paint); Quiet names it on its ribbons and nothing else: no other host, so the page
+    // stays light all the way down to the dark close, and `alternate`, so two ribbons together take one fill.
+    const q = flowById('quiet.mostlyLight')!
+    expect(q.dark).toMatchObject({budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', close: 'dark'})
+    expect(q.light).toEqual({paint: 'plain', texture: 'quiet'})
+    expect(q).toMatchObject({divider: {shape: 'straight', at: 'none', hairline: 'none'}, needs: [], chrome: {header: 'light', footer: 'light'}})
+    // Its fill needs no second ribbon: a page with none is still Quiet, where Ribbon rhythm asks for two.
+    expect(unmetNeeds(q, {hosts: [], photos: 0, texture: false, initials: false})).toEqual([])
+    // Not passed until he sees it again ([R-517]).
+    expect(q.passed).toBe(false)
   })
 
   it('what a dark band draws over its ground: the bridge\u2019s ramp, the glow where the palette has room, or nothing', () => {
@@ -165,7 +191,11 @@ describe('the families and the roster', () => {
     const tob = flowById('typeOnBlack.allDark')!
     expect(tob.dark).toMatchObject({budget: 'all', rhythm: 'runs', paint: 'plain', close: 'dark'})
     expect(tob.dark.hosts).toEqual(HOSTS)
-    expect(tob.divider).toMatchObject({shape: 'straight', at: 'none', hairline: 'everyBand', hairlineInk: 'accent'})
+    // The roster eye of 2026-10-03 (`[R-631]`): "mostly dark theme is so you do not see all the bands but we have gold
+    // lines which breaks everything up anyways"; "get rid of the lines". Its line draws only where the ground changes,
+    // which on an all-dark page is nowhere; a stored light band inside the run still gets its two.
+    expect(tob.divider).toMatchObject({shape: 'straight', at: 'none', hairline: 'atChange', hairlineInk: 'accent'})
+    expect(tob.passed).toBe(false)
     expect(tob.needs).toEqual(['darkHero'])
     const ed = flowById('editorial.mostlyLight')!
     expect(ed.dark).toMatchObject({budget: 'none', rhythm: 'bookends', close: 'muted'})
@@ -173,6 +203,8 @@ describe('the families and the roster', () => {
     expect(ed.spacing).toBe('spacious')
     expect(ed.ghost).toBe('none')
     expect(ed.divider).toMatchObject({hairline: 'everyBand', hairlineInk: 'border'})
+    // Only Editorial still draws a line at every join.
+    expect(FLOWS.filter((f) => f.divider.hairline === 'everyBand').map((f) => f.id)).toEqual(['editorial.mostlyLight'])
     expect(ed.chrome).toEqual({header: 'light', footer: 'light'})
     const rr = flowById('ribbonRhythm.mostlyLight')!
     expect(rr.dark).toMatchObject({budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', close: 'dark'})
@@ -430,7 +462,9 @@ describe('the header and the footer (Phase 17B session 4, [R-518])', () => {
     // light footer, from their evidence sites (session 5 record §2.4; Phase 17D record §2.3); and since Phase 18
     // session B (`[R-597]`, `[R-603]`) the light footer under the dark close of Quiet and Ribbon rhythm and under Photo
     // scrims' photograph close, so the close never takes the footer's color.
-    const lightFooter = ['editorial', 'softWash', 'quiet', 'ribbonRhythm', 'photoScrims']
+    // Since the roster eye of 2026-10-03 Gradient bloom too, so its dark close is lit beside the footer rather than
+    // moved onto the accent.
+    const lightFooter = ['editorial', 'softWash', 'quiet', 'ribbonRhythm', 'photoScrims', 'gradientBloom']
     for (const f of FLOWS) expect(f.chrome, f.id).toEqual(lightFooter.includes(f.family) ? {header: STEP_CHROME[f.step].header, footer: 'light'} : STEP_CHROME[f.step])
   })
 

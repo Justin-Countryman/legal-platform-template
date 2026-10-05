@@ -23,7 +23,7 @@ import {NO_SEAM, followSite, interiorLook, siteLookOf, walkFrame, type SiteLook}
 import {sectionSurface, visibleGround} from '@/lib/sectionSurface'
 import {resolveHovers} from '@/lib/siloHover'
 import {DEFAULT_FLOW, type FlowRules} from '@/lib/flows'
-import {LOOK, themed} from './flowFixtures'
+import {LOOK, QUIET, themed} from './flowFixtures'
 
 // The site's look (Phase 16B, [R-468], [R-479]): the settings a style set writes reach
 // every section through the walk's per-band object, and a section with a value of
@@ -37,7 +37,8 @@ describe('the site look from Design Settings', () => {
     expect(siteLookOf({imageFrame: 'slab', cardHover: 'lift', attorneyCardStyle: 'minimal', patternTexture: 'scallop'})).toMatchObject(
       {imageFrame: 'slab', cardHover: 'lift', attorneyCardStyle: 'minimal', patternTexture: 'scallop', ghost: null},
     )
-    expect(siteLookOf(null)).toMatchObject({...LOOK, saturated: false})
+    // The default theme is the roster's Quiet, not the fixtures' plain base.
+    expect(siteLookOf(null)).toMatchObject({...LOOK, flow: QUIET, saturated: false})
     // Nothing stored renders the platform default.
     expect(siteLookOf({}).flow?.id).toBe(DEFAULT_FLOW)
     // A stored theme.

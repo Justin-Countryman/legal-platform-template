@@ -156,14 +156,14 @@ describe('InternalPageHeader — useHeroScheme integration', () => {
 // ─── Cascade-aware contract ───────────────────────────────────────────────────
 
 describe('InternalPageHeader — cascade-aware contract', () => {
-  it('h1 uses cascade-aware text-foreground (resolves correctly under either scheme)', () => {
+  it('h1 uses cascade-aware text-heading (resolves correctly under either scheme; the roster eye of 2026-10-03, [R-631])', () => {
     const {container} = render(
       <HeroSchemeProvider scheme="dark">
         <InternalPageHeader title="X" />
       </HeroSchemeProvider>,
     )
     const h1 = container.querySelector('h1') as HTMLElement
-    expect(h1.className).toContain('text-foreground')
+    expect(h1.className).toContain('text-heading')
   })
 
   it('does not emit anchored aliases or hex literals', () => {

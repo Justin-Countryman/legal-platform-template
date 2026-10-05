@@ -3,7 +3,7 @@ import {ghostSource} from '@/lib/brandMark'
 import {closeFrame, closeGround, walkPage} from '@/components/sections/sectionFrame'
 import {siteLookWithHeadingFace} from '@/lib/headingAdvances'
 import {firstBandRises, frameOf} from '@/components/layout/HomepageCanvas'
-import {heroGround, heroPaint, heroPhotoOf, photoSetOf, themedHero} from '@/lib/heroGround'
+import {heroCutout, heroGround, heroPaint, heroPhotoOf, photoSetOf, themedHero} from '@/lib/heroGround'
 import {chromeSchemes, closeOf, flowOf, type FlowRules} from '@/lib/flows'
 import {withCtaOverride} from '@/lib/ctaOverride'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
@@ -92,6 +92,8 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
     closeShown: closeShownOf(globalCtaData, home),
     // Phase 18 session B: the light hero paints the theme's wash (`heroPaint`), and the bands under it alternate from it.
     heroPaint: heroPaint(hero, look.flow),
+    // The roster eye of 2026-10-03 (`[R-631]`): the hero's cutout figure, so Gradient bloom's glow peaks behind it.
+    heroCutout: heroCutout(hero),
   }
   const ground = heroGround(hero, look.flow)
   const edgeBelow = firstBandRises(home?.canvas, site, ground)
@@ -111,12 +113,16 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
   const closeSurf = closeOf(look.flow, {footer, above, heroPhoto: !!site.heroPhoto, colors: chrome?.designTokens as Record<string, unknown> | null})
   const closeG = home?.hideCtaForm ? null : closeGround(closeSurf, site.closeShown)
   const walkSite = {...site, close: closeSurf}
-  const close = closeFrame(closeSurf, walkSite, walkPage(home?.canvas ?? [], frameOf, walkSite, ground, closeG).close)
+  const walked = walkPage(home?.canvas ?? [], frameOf, walkSite, ground, closeG)
+  const close = closeFrame(closeSurf, walkSite, walked.close)
+  // The roster eye of 2026-10-03 (`[R-631]`): under Gradient bloom a dark hero is the first band of the first lit run, and
+  // draws the glow as a section does (`HeroBand`).
+  const heroGlow = walked.hero.run ?? null
 
   return (
     <>
       {hero ? (
-        <HomepageHero data={hero} napTokens={tokens} edgeBelow={edgeBelow} lightGround={site.heroPaint === 'wash' ? 'wash' : 'tint'} />
+        <HomepageHero data={hero} napTokens={tokens} edgeBelow={edgeBelow} lightGround={site.heroPaint === 'wash' ? 'wash' : 'tint'} glow={heroGlow} />
       ) : (
         // Fallback when the homepage hero hasn't been authored yet.
         //

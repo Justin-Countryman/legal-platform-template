@@ -172,6 +172,9 @@ export type SiteLook = {
   /** What the homepage hero's own band paints where it shows (Phase 18 session B, `heroPaint`): the theme's wash, or
    *  null. The light bands under a wash hero alternate from it, so a wash never touches a wash. Set by `HomeBody`. */
   heroPaint?: 'wash' | null
+  /** The side the homepage hero's cutout figure stands on (`heroCutout`; the roster eye of 2026-10-03, `[R-631]`), so
+   *  Gradient bloom's glow peaks behind it as it peaks behind a section's figure. Set by `HomeBody`; null without one. */
+  heroCutout?: 'left' | 'right' | null
   /** The face a section heading draws in, with its widths (Phase 17C session 3): what a section's
    *  `headingFit` measures its words in. Set by the server page (`siteLookWithHeadingFace`, which
    *  holds the width table); absent, a heading takes no fit. Optional, as `flow` is. */
@@ -303,7 +306,7 @@ export function walkPage<M>(
   site: SiteLook | null = null,
   hero: VisibleGround | null = null,
   close: VisibleGround | null = null,
-): {bands: Array<{member: M; index: number; seam: SeamProps}>; close: {run?: SeamProps['run']; fade: SeamProps['fade']}; last: VisibleGround | null} {
+): {bands: Array<{member: M; index: number; seam: SeamProps}>; hero: {run?: SeamProps['run']; fade: SeamProps['fade']}; close: {run?: SeamProps['run']; fade: SeamProps['fade']}; last: VisibleGround | null} {
   // The theme (Phase 17B). Null on an interior page, where no page-level device fires.
   const flow = site?.flow ?? null
   const fade = fadeOf(flow, site?.glow)
@@ -494,29 +497,43 @@ export function walkPage<M>(
   // Gradient bloom lights runs on into a dark close; and a run names where the glow peaks, the band carrying a cutout
   // figure, lit from the figure's side, else the run's middle band, lit from the right. Under every other theme the runs
   // are numbered as they were.
+  //
+  // THE ROSTER EYE OF 2026-10-03 (`[R-631]`), of Gradient bloom: "there is no gradient in the hero to create that
+  // continuity after a few sections the gradient stuff just stops". One peak per run left a long run flat past its
+  // middle, and the hero stood outside it. So where the theme glows: a dark hero is one more ground at the head (a photo
+  // hero is the scrim's, a light one is not lit) and joins the first run as its first band, its own cutout figure the
+  // peak where it has one (`site.heroCutout`); and a dark run is lit in stretches of at most `GLOW_RUN_CAP` bands, each
+  // with its own peak, the light coming from the right, then the left, in turn down the page, so the glow recurs from
+  // the hero to the close instead of stopping. The hero's run comes back beside the close's (`hero`), for `HeroBand`.
+  // Light runs under the theme, and every run under every other theme, are numbered as they were.
   const RUN_CAP = 8
   const perBand = flow?.dark.paint === 'gradientPerBand'
   const glows = fade === 'glow'
-  const grounds: (VisibleGround | null)[] = out.map((o) => groundAt.get(o.index) ?? null)
-  const figures: ('left' | 'right' | null)[] = out.map((o) => resolve(o.member).cutout ?? null)
+  const heroJoins = glows && hero === 'dark'
+  const grounds: (VisibleGround | null)[] = [...(heroJoins ? [hero] : []), ...out.map((o) => groundAt.get(o.index) ?? null)]
+  const figures: ('left' | 'right' | null)[] = [...(heroJoins ? [site?.heroCutout ?? null] : []), ...out.map((o) => resolve(o.member).cutout ?? null)]
   // The close joins the run only where the theme glows: no other theme draws anything a run's numbering moves.
   const closeJoins = glows && !!close
   if (closeJoins) { grounds.push(close); figures.push(null) }
   const runs: NonNullable<SeamProps['run']>[] = new Array(grounds.length)
   {
     let start = 0
+    let stretch = 0
     for (let i = 1; i <= grounds.length; i++) {
       const same2 = i < grounds.length && grounds[i] === grounds[start]
       if (!same2) {
         if (perBand) {
           for (let k = start; k < i; k++) runs[k] = {index: 0, length: 1}
         } else {
-          for (let chunk = start; chunk < i; chunk += RUN_CAP) {
-            const length = Math.min(RUN_CAP, i - chunk)
+          const lights = glows && grounds[start] === 'dark'
+          const cap = lights ? GLOW_RUN_CAP : RUN_CAP
+          for (let chunk = start; chunk < i; chunk += cap) {
+            const length = Math.min(cap, i - chunk)
             let lit: {peak: number; side: 'left' | 'right'} | null = null
-            if (glows) {
-              lit = {peak: Math.floor(length / 2), side: 'right'}
+            if (lights) {
+              lit = {peak: Math.floor(length / 2), side: stretch % 2 === 0 ? 'right' : 'left'}
               for (let k = chunk; k < chunk + length; k++) if (figures[k]) { lit = {peak: k - chunk, side: figures[k]!}; break }
+              stretch++
             }
             for (let k = chunk; k < chunk + length; k++) runs[k] = {index: k - chunk, length, ...(lit ?? {})}
           }
@@ -525,14 +542,17 @@ export function walkPage<M>(
       }
     }
   }
-  out.forEach((o, k) => { o.seam = {...o.seam, run: runs[k]} })
+  const head = heroJoins ? 1 : 0
+  out.forEach((o, k) => { o.seam = {...o.seam, run: runs[k + head]} })
   // ─── A ribbon's edges (Phase 17E, `[R-576]`) ─────────────────────────────────
   // A ribbon on the ground of the band above it (the hero, for the first band) or below it (the close, for the
   // last) reads as that band's last line: its line of display type draws an accent line on that edge, so it
   // reads as a strip. A ribbon on a ground of its own draws none (Ribbon rhythm's filled strips), nor a panel,
   // which floats on its gutter. A theme that draws its hairline at every band has drawn it at every join inside
   // the page, but never at the hero's or the close's (the pre-PR break pass: Type on black left both ribbons
-  // joined to them), so there only those two edges are the ribbon's. On an interior page no theme runs.
+  // joined to them), so there only those two edges are the ribbon's. Since the roster eye of 2026-10-03
+  // (`[R-631]`) only Editorial draws at every band: Type on black's line draws at a change alone, so its ribbons
+  // in the dark run line both edges, the ribbon's own lines, not the seam's. On an interior page no theme runs.
   if (flow) {
     const everyBand = flow.divider.hairline === 'everyBand'
     out.forEach((o, k) => {
@@ -549,7 +569,7 @@ export function walkPage<M>(
 
   // The ground the close meets (Phase 18 session B): the last band's as the visitor sees it, for `closeOf`.
   const last = out.length ? (groundAt.get(out[out.length - 1].index) ?? visibleGround(resolve(out[out.length - 1].member).appearance)) : null
-  return {bands: out, close: {...(closeJoins ? {run: runs[grounds.length - 1]} : {}), fade}, last}
+  return {bands: out, hero: {...(heroJoins ? {run: runs[0]} : {}), fade}, close: {...(closeJoins ? {run: runs[grounds.length - 1]} : {}), fade}, last}
 }
 
 // ─── The ground pass (Phase 17B, record §2.3) ─────────────────────────────────
@@ -565,6 +585,10 @@ export function walkPage<M>(
 
 type Survivor = {appearance: SectionAppearance | null | undefined} & FlowInputs
 
+/** A dark run Gradient bloom lights is lit in stretches of at most this many bands, each with its own peak (the roster
+ *  eye of 2026-10-03, `[R-631]`): the glow in and out over three bands, as the study's pages draw several glows down a
+ *  page, so a long run never goes flat past one middle. */
+export const GLOW_RUN_CAP = 3
 /** The bands the hero's photograph may sit behind: text-led ones (record §2.3). */
 export const PHOTO_HOSTS: readonly Host[] = ['narrative', 'split', 'testimonials', 'differentiators', 'statement']
 /** At most this many windows mid-page, plus the close: a fourth window shows the hero again. */

@@ -135,14 +135,14 @@ describe('SectionHeader — noTrailingGap prop', () => {
   it('drops mb-5 from the lg tier and keeps the full type scale', () => {
     const {container} = render(<SectionHeader heading="x" scale="lg" noTrailingGap />)
     const h2 = container.querySelector('h2') as HTMLElement
-    expect(h2.className).toBe('text-3xl font-bold text-foreground md:text-4xl lg:text-5xl section-heading')
+    expect(h2.className).toBe('text-3xl font-bold text-heading md:text-4xl lg:text-5xl section-heading')
     expect(h2.className).not.toContain('mb-')
   })
 
   it('drops mb-4 from the md tier', () => {
     const {container} = render(<SectionHeader heading="x" noTrailingGap />)
     const h2 = container.querySelector('h2') as HTMLElement
-    expect(h2.className).toBe('text-3xl font-bold text-foreground md:text-4xl section-heading')
+    expect(h2.className).toBe('text-3xl font-bold text-heading md:text-4xl section-heading')
   })
 
   it('drops the responsive md:mb-6 as well as mb-5 from the xl tier', () => {
@@ -150,7 +150,7 @@ describe('SectionHeader — noTrailingGap prop', () => {
     // `mb-X` strip would leave md:mb-6 behind and the gap would survive at md+.
     const {container} = render(<SectionHeader heading="x" scale="xl" noTrailingGap />)
     const h2 = container.querySelector('h2') as HTMLElement
-    expect(h2.className).toBe('text-4xl font-bold text-foreground md:text-5xl section-heading')
+    expect(h2.className).toBe('text-4xl font-bold text-heading md:text-5xl section-heading')
     expect(h2.className).not.toContain('mb-5')
     expect(h2.className).not.toContain('md:mb-6')
   })
@@ -248,18 +248,20 @@ describe('SectionHeader — className composition', () => {
 
 // ─── Cascade-aware + design-system contract ───────────────────────────────────
 //
-// SectionHeader emits cascade-aware tokens (text-foreground, text-foreground-muted)
+// SectionHeader emits cascade-aware tokens (text-heading, text-foreground-muted)
 // so the same component renders correctly on light and dark surfaces. Raw color
 // tokens (anchored on-light / on-dark, hex literals) must NOT appear — that
-// would bypass the cascade rule.
+// would bypass the cascade rule. The heading's token is its own since the roster
+// eye of 2026-10-03 (`[R-631]`): the dark ground on a light ground, swapped by the
+// cascade blocks as the foreground tiers are (`lib/__tests__/headingInk.test.ts`).
 
 describe('SectionHeader — cascade-aware + design-system contract', () => {
-  it('h2 uses text-foreground (cascade-aware) — never an anchored or hex color', () => {
+  it('h2 uses text-heading (cascade-aware) — never an anchored or hex color', () => {
     const {container} = render(<SectionHeader heading="x" />)
     const h2 = container.querySelector('h2') as HTMLElement
-    expect(h2.className).toContain('text-foreground')
-    expect(h2.className).not.toMatch(/\btext-foreground-on-light\b/)
-    expect(h2.className).not.toMatch(/\btext-foreground-on-dark\b/)
+    expect(h2.className).toContain('text-heading')
+    expect(h2.className).not.toMatch(/\btext-foreground\b/)
+    expect(h2.className).not.toMatch(/\btext-heading-on-light\b/)
     expect(h2.className).not.toMatch(/#[0-9a-fA-F]{3,8}/)
   })
 

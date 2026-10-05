@@ -101,7 +101,8 @@ describe('the derivation, row by row', () => {
       if (ground.c >= 0.01) expect(Math.abs(deltaH(wash, t['--color-background']))).toBeLessThan(0.01)
       else expect(Math.abs(hue - 85)).toBeLessThan(6)
       const pairs = validateWcag(p).filter((r) => r.pair.endsWith(' on wash'))
-      expect(pairs.length).toBe(9)
+      // Eleven since the roster eye of 2026-10-03 (`[R-631]`): the dark ground and the heading as ink, beside the nine.
+      expect(pairs.length).toBe(11)
       for (const r of pairs) expect(r.passes, r.pair).toBe(true)
     }
   })

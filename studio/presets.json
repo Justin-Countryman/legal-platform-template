@@ -3132,14 +3132,12 @@
     {
       "id": "quiet",
       "name": "Quiet",
-      "sentence": "A dark hero, then light all the way down, and one dark band to close.",
+      "sentence": "A dark hero, the ribbon on the accent, then light all the way down, and one dark band to close.",
       "steps": [
         "mostlyLight"
       ],
       "defaultStep": "mostlyLight",
-      "passed": [
-        "mostlyLight"
-      ]
+      "passed": []
     },
     {
       "id": "alternating",
@@ -3170,14 +3168,12 @@
     {
       "id": "typeOnBlack",
       "name": "Type on black",
-      "sentence": "All dark and no photographs: a thin accent line at every join, and a close on the accent.",
+      "sentence": "All dark and no photographs: one unbroken dark ground, and a close on the accent.",
       "steps": [
         "allDark"
       ],
       "defaultStep": "allDark",
-      "passed": [
-        "allDark"
-      ]
+      "passed": []
     },
     {
       "id": "editorial",
@@ -3246,14 +3242,12 @@
     {
       "id": "gradientBloom",
       "name": "Gradient bloom",
-      "sentence": "Dark runs lit by a soft glow, behind the attorney where a section has a cutout.",
+      "sentence": "A soft glow from the hero down through every dark run to the close, behind the attorney where a section has a cutout.",
       "steps": [
         "mostlyDark"
       ],
       "defaultStep": "mostlyDark",
-      "passed": [
-        "mostlyDark"
-      ]
+      "passed": []
     },
     {
       "id": "wedges",
@@ -3271,10 +3265,12 @@
   "flows": [
     {
       "dark": {
-        "budget": "none",
-        "hosts": [],
-        "rhythm": "bookends",
-        "paint": "plain",
+        "budget": "all",
+        "hosts": [
+          "ribbon"
+        ],
+        "rhythm": "alternate",
+        "paint": "saturated",
         "texture": "quiet",
         "close": "dark",
         "closeElse": [
@@ -3304,10 +3300,10 @@
       },
       "id": "quiet.mostlyLight",
       "name": "Quiet",
-      "sentence": "A dark hero, then light all the way down, and one dark band to close.",
+      "sentence": "A dark hero, the ribbon on the accent, then light all the way down, and one dark band to close.",
       "family": "quiet",
       "step": "mostlyLight",
-      "passed": true
+      "passed": false
     },
     {
       "dark": {
@@ -3498,7 +3494,7 @@
         "shape": "straight",
         "at": "none",
         "carry": [],
-        "hairline": "everyBand",
+        "hairline": "atChange",
         "hairlineInk": "accent"
       },
       "spacing": "normal",
@@ -3514,10 +3510,10 @@
       },
       "id": "typeOnBlack.allDark",
       "name": "Type on black",
-      "sentence": "All dark and no photographs: a thin accent line at every join, and a close on the accent.",
+      "sentence": "All dark and no photographs: one unbroken dark ground, and a close on the accent.",
       "family": "typeOnBlack",
       "step": "allDark",
-      "passed": true
+      "passed": false
     },
     {
       "dark": {
@@ -3875,7 +3871,7 @@
         "hairlineInk": "border"
       },
       "spacing": "normal",
-      "hero": "site",
+      "hero": "dark",
       "ghost": "none",
       "overlap": "photo",
       "needs": [
@@ -3883,14 +3879,14 @@
       ],
       "chrome": {
         "header": "dark",
-        "footer": "dark"
+        "footer": "light"
       },
       "id": "gradientBloom.mostlyDark",
       "name": "Gradient bloom",
-      "sentence": "Dark runs lit by a soft glow, behind the attorney where a section has a cutout.",
+      "sentence": "A soft glow from the hero down through every dark run to the close, behind the attorney where a section has a cutout.",
       "family": "gradientBloom",
       "step": "mostlyDark",
-      "passed": true
+      "passed": false
     },
     {
       "dark": {

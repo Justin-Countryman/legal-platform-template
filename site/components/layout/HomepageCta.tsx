@@ -88,7 +88,7 @@ export function HomepageCta({
         {merged.tagline ? <Tagline as="p">{merged.tagline}</Tagline> : null}
 
         {/* marketing-h2, not SectionHeader. See the header. */}
-        <h2 className="marketing-h2 section-heading font-heading font-bold text-foreground" style={headingFitStyle(fit)}><HeadingText fit={fit}>{merged.heading}</HeadingText></h2>
+        <h2 className="marketing-h2 section-heading font-heading font-bold text-heading" style={headingFitStyle(fit)}><HeadingText fit={fit}>{merged.heading}</HeadingText></h2>
 
         {merged.description ? (
           <p className="mt-4 text-foreground-muted md:text-md">{merged.description}</p>

@@ -594,6 +594,8 @@
   --color-hero-tint:           #f6f6f6;   /* the tint step: ΔE2000 1.8 from the light ground, never past muted, its own hue; the light hero and tint bands (Phase 18 session D) */
   --color-wash:                #fdf6e8;   /* Soft wash's ground: a warm step of the light ground, never darker than muted (Phase 17D, [R-551]) */
   --color-brand-dark:          #141414;   /* the accepted dark ground: dark sections, footer */
+  --color-heading:             #141414;   /* a heading's ink: the dark ground on a light ground (the roster eye of 2026-10-03, [R-631]: "the headings follow the dark ground, and the dark ground follows the logo"); cascade-aware, the on-dark text on a dark band, the fill's text on the accent */
+  --color-heading-on-light:    #141414;   /* its static on-light twin, for a light island inside a dark band */
   --color-accent:              #666666;   /* the accent as a fill, rule or icon (cascade-aware) */
   --color-accent-on-dark:      #d7d7d7;   /* accent brightened for dark bg                  */
   --color-star-fill:           #f5b301;   /* StarRating fill — one fixed rating gold on every site, not the palette ([R-474]; STAR_GOLD; anchored, never cascades) */
@@ -796,6 +798,9 @@ h1, h2, h3, h4, h5, h6 {
   --color-foreground:        var(--color-foreground-on-dark);
   --color-foreground-muted:  var(--color-foreground-muted-on-dark);
   --color-foreground-subtle: var(--color-foreground-subtle-on-dark);
+  /* A heading in the dark ground would vanish on a dark band; it takes the on-dark text, as it did before the
+     heading had an ink of its own ([R-631]). */
+  --color-heading:           var(--color-foreground-on-dark);
   --color-hover-wash:        var(--color-hover-wash-on-dark);
   --color-star-outline:      var(--color-star-outline-on-dark);
   /* A slab in the dark ground would vanish on a dark band; it takes the accent. */
@@ -820,6 +825,7 @@ h1, h2, h3, h4, h5, h6 {
   --color-foreground:        var(--color-foreground-on-light);
   --color-foreground-muted:  var(--color-foreground-muted-on-light);
   --color-foreground-subtle: var(--color-foreground-subtle-on-light);
+  --color-heading:           var(--color-heading-on-light);
   --color-hover-wash:        rgb(var(--shadow-rgb) / 0.06);
   --color-star-outline:      var(--color-star-outline-on-light);
   --color-slab:              var(--color-brand-dark);
@@ -847,6 +853,7 @@ h1, h2, h3, h4, h5, h6 {
   --color-foreground:        var(--color-accent-fg);
   --color-foreground-muted:  var(--color-accent-fg);
   --color-foreground-subtle: var(--color-accent-fg);
+  --color-heading:           var(--color-accent-fg);
   --color-hover-wash:        transparent;
   --color-star-outline:      var(--color-accent-fg);
   --color-slab:              var(--color-accent-fg);

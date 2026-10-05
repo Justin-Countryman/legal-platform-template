@@ -57,6 +57,7 @@
 //
 // Acceptable cascade-aware token allowlist (Justin direction):
 //
+//   - text-heading            — a section or page heading: the dark ground on a light ground ([R-631])
 //   - text-foreground         — primary content
 //   - text-foreground-muted   — secondary content (footer column titles, etc.)
 //   - text-foreground-subtle  — tertiary content
@@ -86,6 +87,9 @@ const {getClassNameAttribute, getJSXElementName} = require('../lib/ast-utils')
 const HEADING_NAMES = new Set(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
 
 const ACCEPTABLE_TOKENS = [
+  // The heading's own ink (the roster eye of 2026-10-03, `[R-631]`): the dark ground on a light ground, swapped by
+  // the cascade blocks like the foreground tiers.
+  'text-heading',
   'text-foreground',
   'text-foreground-muted',
   'text-foreground-subtle',
@@ -111,9 +115,9 @@ module.exports = {
     schema: [],
     messages: {
       noClassName:
-        '<{{tag}}> has no className attribute. Bare headings rely on inherited computed-color from <body>, which bypasses the dark-context cascade rule and silently renders dark text on dark surfaces. Add an explicit cascade-aware token (typically `text-foreground`; use `text-foreground-muted` for secondary headings like footer column titles, or `tagline`/`sr-only` where appropriate). See BI-FOUNDATIONS.md → "Heading-cascade discipline" and skill-color-system → "Cascade reassignment vs. computed-color inheritance".',
+        '<{{tag}}> has no className attribute. Bare headings rely on inherited computed-color from <body>, which bypasses the dark-context cascade rule and silently renders dark text on dark surfaces. Add an explicit cascade-aware token (typically `text-heading` for a section or page heading, `text-foreground` for a title that reads as text; use `text-foreground-muted` for secondary headings like footer column titles, or `tagline`/`sr-only` where appropriate). See BI-FOUNDATIONS.md → "Heading-cascade discipline" and skill-color-system → "Cascade reassignment vs. computed-color inheritance".',
       missingCascadeToken:
-        '<{{tag}}> className lacks a cascade-aware text token. Add one of: text-foreground (primary), text-foreground-muted (secondary), text-foreground-subtle (tertiary), text-accent (decorative), text-action-text, text-current, text-inherit, text-brand-dark, tagline (utility class), or sr-only (screen-reader-only exception). Inherited body color does NOT cascade-swap on dark surfaces — explicit reference is required. See BI-FOUNDATIONS.md → "Heading-cascade discipline" and skill-color-system → "Cascade reassignment vs. computed-color inheritance".',
+        '<{{tag}}> className lacks a cascade-aware text token. Add one of: text-heading (a section or page heading), text-foreground (primary), text-foreground-muted (secondary), text-foreground-subtle (tertiary), text-accent (decorative), text-action-text, text-current, text-inherit, text-brand-dark, tagline (utility class), or sr-only (screen-reader-only exception). Inherited body color does NOT cascade-swap on dark surfaces — explicit reference is required. See BI-FOUNDATIONS.md → "Heading-cascade discipline" and skill-color-system → "Cascade reassignment vs. computed-color inheritance".',
     },
   },
   create(context) {

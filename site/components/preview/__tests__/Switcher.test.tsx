@@ -60,7 +60,7 @@ describe('Switcher, the operator', () => {
     }
     // Nothing stored: the site wears the platform default.
     expect(c.textContent).toContain('As the site is: Quiet')
-    expect(c.textContent).toContain('Theme: Quiet. A dark hero, then light all the way down')
+    expect(c.textContent).toContain('Theme: Quiet. A dark hero, the ribbon on the accent, then light all the way down')
   })
 
   it('a two-step family shows its steps on a second line with the chosen one active, and a step the eye has not passed says so', () => {
@@ -356,7 +356,8 @@ describe('the meeting’s preselection', () => {
 // row, and the theme's three first in the theme row, each with its reason; the rest one click away.
 describe('the firm’s own look in the meeting', () => {
   const brandPalette = {darkGround: '#0c5c63', accent: '#e86a24', lightGround: '#f7f2e8', why: 'Built from the firm’s own teal and orange.'}
-  const suggestTheme = {ids: ['softWash.mostlyLight', 'editorial.mostlyLight', 'quiet.mostlyLight'], why: 'Warm and calm: Soft wash first.'}
+  // Three passed steps: an unpassed one is dropped from the three (`[R-517]`), as Quiet is since the roster eye of 2026-10-03.
+  const suggestTheme = {ids: ['softWash.mostlyLight', 'editorial.mostlyLight', 'alternating.balanced'], why: 'Warm and calm: Soft wash first.'}
   const rowOf = (el: Element, head: string) => [...el.querySelectorAll('.sw-row')].find((r) => r.querySelector('.sw-head')?.textContent === head)!
   const firstLinks = (row: Element) => [...row.children].filter((c) => c.tagName === 'A').map((a) => a.textContent)
 
@@ -384,7 +385,8 @@ describe('the firm’s own look in the meeting', () => {
     const row = rowOf(c, ROW_THEME_HEAD)
     const first = firstLinks(row)
     expect(first[0]).toContain('As the site is')
-    expect(first.slice(1, 4)).toEqual(['Soft wash, mostly light', 'Editorial', 'Quiet'])
+    expect(first.slice(1, 4)).toEqual(['Soft wash, mostly light', 'Editorial', 'Alternating'])
+    expect(firstLinks(rowOf(draw({...operator, suggestTheme: {...suggestTheme, ids: [...suggestTheme.ids, 'quiet.mostlyLight']}}), ROW_THEME_HEAD)).slice(1, 5)).toEqual(['Soft wash, mostly light', 'Editorial', 'Alternating'])
     expect(hrefs(row)).toContain('/site-preview/graphite/navy-brass/softWash.mostlyLight/design')
     expect(row.querySelector('details.sw-all summary')!.textContent).toBe(`All (${FAMILIES.length} more)`)
     expect(c.textContent).toContain('Suggested first: Warm and calm: Soft wash first.')
