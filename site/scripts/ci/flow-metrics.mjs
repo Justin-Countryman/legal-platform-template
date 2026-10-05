@@ -131,12 +131,22 @@ const CANVASES = [
   // the close, under every theme.
   ['composed-ribbons', 'scripts/ci/record-composed-ribbons.ndjson'],
 ]
+// THE BACKGROUND MATRIX (the Background theme; monorepo WS-V1-BACKGROUND-THEME-DESIGN §6). Every background of the roster
+// under a theme that gives it something to draw on, written `<theme>+<background>` and measured as a theme is, on the one
+// canvas that holds everything a background can need (a photograph behind the hero, the set, Graphite's texture, Navy &
+// Brass's room to glow): his six verdict pairs, and the options no verdict names. A theme alone is measured with no
+// background in its address, so every row above this matrix is the theme's own background, as it was before the layer.
+const BACKGROUND_PAGES = [
+  'quiet.mostlyLight+pattern.touch', 'editorial.mostlyLight+pattern.light', 'cutBlocks.balanced+pattern.dark', 'alternating.balanced+pattern.all',
+  'typeOnBlack.allDark+fade', 'softWash.balanced+fade', 'cutBlocks.mostlyDark+span', 'cutBlocks.mostlyDark+windows',
+  'alternating.balanced+gradient', 'alternating.balanced+glow', 'cutBlocks.balanced+plain',
+]
 // The set canvases are measured under the theme that draws the set and its dark-led neighbour only: every other theme
 // draws them as it draws the photo-hero canvases, whose rows the golden already holds (Phase 17E).
 const ONLY_FLOWS = {
   'adversarial-photo-set': ['photoScrims.mostlyDark', 'cutBlocks.mostlyDark'],
   'planning-photo-set': ['photoScrims.mostlyDark', 'cutBlocks.mostlyDark'],
-  'multi-practice-photo-set': ['photoScrims.mostlyDark', 'cutBlocks.mostlyDark'],
+  'multi-practice-photo-set': ['photoScrims.mostlyDark', 'cutBlocks.mostlyDark', ...BACKGROUND_PAGES],
   'planning-photo-set-no-hero-photo': ['photoScrims.mostlyDark'],
 }
 // The stand-in photographs (Phase 17B session 6), served from disk to the browser: the hero's own
@@ -364,6 +374,10 @@ function measure() {
         // Phase 17E (`[R-573]`): the photograph of the theme's set behind the band, on its own layer or on its run's (the
         // run's index, and the wrapper's ground, which a broken wrapper would not paint), recorded only where one shows.
         ...(s.querySelector('[data-photo-set]') ? {photo: s.querySelector('[data-photo-set]').getAttribute('data-photo-set')} : {}),
+        // The Background theme's faint photographs, recorded only where a band shows one: a light band's ghost (the band
+        // takes the ghost's tiers, `data-fade`), its opacity as computed, and a dark band's or run's soft edges.
+        ...(s.getAttribute('data-fade') ? {fade: s.getAttribute('data-fade'), ghostOpacity: s.querySelector('[data-photo-ghost]') ? getComputedStyle(s.querySelector('[data-photo-ghost]')).opacity : null} : {}),
+        ...(s.querySelector('[data-photo-fade]') || s.closest('[data-photo-run]')?.querySelector(':scope > [aria-hidden] [data-photo-fade]') ? {soft: true} : {}),
         ...(s.closest('[data-photo-run]') ? {
           photo: s.closest('[data-photo-run]').querySelector(':scope > [aria-hidden] [data-photo-set]')?.getAttribute('data-photo-set') ?? null,
           run: s.closest('[data-photo-run]').getAttribute('data-photo-run'),
@@ -615,14 +629,16 @@ try {
       // photograph of the theme's set, which it must never be.
       await context.addInitScript(() => {
         window.__lcp = null
-        new PerformanceObserver((l) => { for (const e of l.getEntries()) window.__lcp = {tag: e.element?.tagName ?? null, set: !!e.element?.closest?.('[data-photo-set]')} })
+        new PerformanceObserver((l) => { for (const e of l.getEntries()) window.__lcp = {tag: e.element?.tagName ?? null, set: !!e.element?.closest?.('[data-photo-set], [data-photo-ghost]')} })
           .observe({type: 'largest-contentful-paint', buffered: true})
       })
       const page = await context.newPage()
       for (const flow of ONLY_FLOWS[canvas] ?? FLOWS) {
         const key = `${canvas} / ${flow} / ${width}`
         watch(key)
-        const url = `${BASE}/site-preview/${STYLE_SET}/${PALETTE}/${flow}/design`
+        // A row of the background matrix names its background after the theme.
+        const [flowId, background] = flow.split('+')
+        const url = `${BASE}/site-preview/${STYLE_SET}/${PALETTE}/${flowId}${background ? `/${background}` : ''}/design`
         // `load`, then the fonts: `networkidle` never settled on some pages (a kept-alive
         // connection is enough to hold it), and what the measure needs is the layout.
         let res = null
@@ -633,10 +649,12 @@ try {
         // `goto` reports the final status after a redirect (ADV-17B-3 F4): the page measured
         // must be the address asked for, and must say it wears the theme asked for.
         if (page.url() !== url) { fail(`${key}: landed on ${page.url()}, not ${url}`); continue }
-        const flowName = presets.flows.find((f) => f.id === flow)?.name
+        const flowName = presets.flows.find((f) => f.id === flowId)?.name
+        const backgroundName = background ? presets.backgrounds.find((b) => b.id === background)?.name : null
         phase('reading the switcher')
         const bar = await page.evaluate(() => document.querySelector('.sw summary')?.textContent ?? '')
         if (!flowName || !bar.includes(flowName)) { fail(`${key}: the page's bar reads "${bar}", not the theme "${flowName}"`); continue }
+        if (background && (!backgroundName || !bar.includes(backgroundName))) { fail(`${key}: the page's bar reads "${bar}", not the background "${backgroundName}"`); continue }
         // The hero reaches the switcher (Phase 17B session 5, ADV-17B5-2 F2b): a theme that wants a
         // dark hero names the need exactly where this canvas's hero is not dark.
         if (flow === 'typeOnBlack.allDark') {
@@ -832,7 +850,7 @@ if (MOTION_ONLY) {
     if (m.bands.length !== g.bands.length) { fail(`${key}: ${m.bands.length} bands vs golden ${g.bands.length}`); continue }
     m.bands.forEach((b, i) => {
       const gb = g.bands[i]
-      for (const f of ['heading', 'ring', 'scrim', 'glow', 'bg', 'ink', 'texture', 'ghost', 'window', 'panel', 'cards', 'pt', 'pb']) {
+      for (const f of ['heading', 'ring', 'scrim', 'glow', 'bg', 'ink', 'texture', 'ghost', 'window', 'panel', 'cards', 'pt', 'pb', 'fade', 'ghostOpacity', 'soft', 'photo', 'run']) {
         if (JSON.stringify(b[f]) !== JSON.stringify(gb[f])) fail(`${key}: band ${i} (${b.heading}) ${f} ${JSON.stringify(b[f])} vs golden ${JSON.stringify(gb[f])}`)
       }
       if (JSON.stringify(b.classes) !== JSON.stringify(gb.classes)) fail(`${key}: band ${i} classes ${b.classes.join(' ')} vs golden ${gb.classes.join(' ')}`)

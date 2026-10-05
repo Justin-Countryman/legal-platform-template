@@ -16,11 +16,11 @@ export const metadata: Metadata = {
   robots: {index: false, follow: false},
 }
 
-type Params = Promise<{styleSet: string; palette: string; flow: string; view: string}>
+type Params = Promise<{choices: string[]}>
 
 export default async function PreviewPage({params}: {params: Params}) {
-  const {styleSet, palette, flow, view} = await params
-  const state = await loadPreview(styleSet, palette, flow, view)
+  const {choices} = await params
+  const state = await loadPreview(choices.join('/'))
   if (state.kind === 'none') notFound()
   if (state.kind === 'redirect') redirect(state.path)
   if (state.kind === 'ended') return null

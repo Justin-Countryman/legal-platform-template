@@ -287,6 +287,8 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
   'set-photo', 'photo-run-head',
   // Phase 17E (`[R-576]`): a ribbon's accent line on an edge it shares with its neighbor's ground.
   'ribbon-edge-top', 'ribbon-edge-bottom',
+  // The Background theme's faint photographs: a dark run's soft edges, and a light band's ghost and its side.
+  'photo-fade-run', 'photo-ghost', 'photo-ghost-from-left',
   // WRITTEN OUT, not generated. Tailwind's own scanner looks for candidate STRINGS in
   // source; a class built from a template literal in the shell is invisible to it and
   // the utility is never emitted (measured: 0 occurrences in the served stylesheet).

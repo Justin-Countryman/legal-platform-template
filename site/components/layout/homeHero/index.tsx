@@ -29,7 +29,7 @@ function resolveCtas(buttons: HomeHeroData['buttons'], tokens?: NapTokens | null
   return toCtaItems((buttons ?? []).map((b) => ({...b, title: resolveStr(b.title, tokens) ?? b.title})))
 }
 
-export function HomepageHero({data, napTokens, edgeBelow, lightGround, glow}: {data: HomeHeroData; napTokens?: NapTokens | null; edgeBelow?: boolean; lightGround?: 'wash' | 'tint'; glow?: HeroGlow | null}) {
+export function HomepageHero({data, napTokens, edgeBelow, lightGround, glow, texture}: {data: HomeHeroData; napTokens?: NapTokens | null; edgeBelow?: boolean; lightGround?: 'wash' | 'tint'; glow?: HeroGlow | null; texture?: 'quiet' | 'strong' | null}) {
   const config = resolveHeroConfig(data)
   const Skeleton = SKELETONS[config.skeleton]
 
@@ -93,5 +93,5 @@ export function HomepageHero({data, napTokens, edgeBelow, lightGround, glow}: {d
   }
 
   // The roster eye of 2026-10-03 (`[R-631]`): the hero's place in Gradient bloom's first lit run, from the walk (`HomeBody`).
-  return <Skeleton config={config} content={content} surface={effectiveSurface} sectionBackground={sectionBackground} edgeBelow={edgeBelow} glow={glow} />
+  return <Skeleton config={config} content={content} surface={effectiveSurface} sectionBackground={sectionBackground} edgeBelow={edgeBelow} glow={glow} texture={texture} />
 }

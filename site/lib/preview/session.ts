@@ -54,6 +54,8 @@ export type PreviewGrant = {
    *  address segment existed, and read as `site` then, so a 14-day client link outlives
    *  the route (record §2.10, amendment 16). */
   flow?: string
+  /** The background's id (the Background theme's row). Absent on a link minted before the row, and read as `site`. */
+  background?: string
   view?: PreviewView
   apply?: ApplyTarget
   /** The meeting's preselection (Phase 17C session 3, `[R-537]`): the style sets and palettes the
@@ -181,6 +183,10 @@ export function asGrant(payload: unknown): PreviewGrant | null {
   if (p.flow !== undefined) {
     if (!isText(p.flow)) return null
     grant.flow = p.flow
+  }
+  if (p.background !== undefined) {
+    if (!isText(p.background)) return null
+    grant.background = p.background
   }
   if (p.view !== undefined) {
     if (!isView(p.view)) return null

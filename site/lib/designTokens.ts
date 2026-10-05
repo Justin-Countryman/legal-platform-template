@@ -588,6 +588,9 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
   // Gradient bloom's glow (Phase 17D session 2, `[R-557]`): the plain ground where the palette has no room.
   const glow = glowOf(brandDark, accent, tokens)
   tokens['--color-glow'] = glow.ok ? glow.glow : brandDark
+  // A photograph ghosted into a light band (the Background theme, monorepo WS-V1-BACKGROUND-THEME-DESIGN §7 item 8):
+  // its opacity, and the tiers the band's text takes over it.
+  Object.assign(tokens, fadeOnLight(tokens).tokens)
   tokens['--color-texture-ink-on-dark'] = texture.ink
   tokens['--section-texture-opacity-on-dark'] = String(texture.opacity)
   // Phase 17C session 3: the render margin applies on a dark band only where its ink is lighter than
@@ -828,6 +831,60 @@ export function glowOf(ground: string, accent: string, t: Record<string, string>
   return {glow: ground, ok: false}
 }
 
+// ─── A photograph ghosted into a light band (the Background theme, `[R-632]`) ───────────────────────────
+//
+// Monorepo WS-V1-BACKGROUND-THEME-DESIGN §3 item 5 as amended by §7 item 8. A greyscale photograph drawn over a light
+// band at an opacity. Nothing in a photograph's data says how dark its darkest pixel is, so the bound is black: the
+// band's FLOOR is its ground with black over it at the opacity, as drawn (each channel floored and a level darker, the
+// lesson `lightTextureCap` records), and WCAG F83 measures every pair against that floor.
+//
+// Under the tiers every light band shares there is room for 4% of black on the page ground, 1% on the wash and none
+// on muted (measured on every preset: the tiers are solved to the texture's own blend), which shows no photograph. So
+// a ghosted band takes its own tiers, as a photo band does on the dark side (`data-scrim`): the opacity is
+// `FADE_LIGHT_OPACITY`, lowered only where the three strong inks (the dark ground, the heading, the body text) would
+// not hold on the floor, and each weaker tier is itself where it holds there, else stepped darker at its own hue, else
+// the heading's ink. Muted and subtle text read one neutral on the band. Drawn on the page ground and the wash only,
+// never the tint, muted or a panel (`sectionFrame.ts`). `validateWcag` holds all eleven light pairs on both floors.
+export const FADE_LIGHT_OPACITY = 0.14
+
+/** A light ground with black over it at `opacity`, as a browser may draw it: floored, and a level darker. */
+export function fadeFloor(ground: string, opacity: number): string {
+  const c = toRgb(ground) as unknown as {r: number; g: number; b: number}
+  const step = Math.ceil(opacity * 255)
+  const drawn = [c.r, c.g, c.b].map((v) => Math.max(0, Math.floor(Math.round(v * 255) * (1 - step / 255)) - 1))
+  return '#' + drawn.map((v) => v.toString(16).padStart(2, '0')).join('')
+}
+
+export const FADE_TIERS = [
+  ['foreground-muted', 4.5], ['foreground-subtle', 4.5], ['accent-text', 4.5], ['action-text', 4.5], ['action-text-hover', 4.5],
+  ['ring-focus', 3], ['star-outline', 3], ['border-control', 3],
+] as const
+
+/** The ghost's opacity on this palette, the floors it leaves under the page ground and the wash, and the tokens a
+ *  ghosted band reads (`[data-fade="light"]`, `globals.css`). */
+export function fadeOnLight(t: Record<string, string>): {opacity: number; floors: string[]; tokens: Record<string, string>} {
+  const grounds = [t['--color-background'], t['--color-wash']]
+  const strong = [t['--color-brand-dark'], t['--color-heading'], t['--color-foreground']]
+  const floorsAt = (a: number) => grounds.map((g) => fadeFloor(g, a))
+  let opacity = FADE_LIGHT_OPACITY
+  while (opacity > 0 && !strong.every((fg) => passesOn(fg, floorsAt(opacity), 4.5))) opacity = Math.round((opacity - 0.01) * 100) / 100
+  opacity = Math.max(0, opacity)
+  const floors = floorsAt(opacity)
+  const heading = passesOn(t['--color-heading'], floors, 4.5) ? t['--color-heading'] : '#000000'
+  const out: Record<string, string> = {'--fade-opacity-on-light': String(opacity)}
+  for (const [name, min] of FADE_TIERS) {
+    const today = t[`--color-${name}`]
+    out[`--color-${name}-on-fade`] = passesOn(today, floors, min)
+      ? today
+      : stepLightness(parseOklch(today), -1, (h) => passesOn(h, floors, min)) ?? heading
+  }
+  // One neutral for the band's quieter text: where the subtle tier had to step, it lands on the muted one.
+  out['--color-foreground-subtle-on-fade'] = passesOn(t['--color-foreground-subtle'], floors, 4.5) ? t['--color-foreground-subtle'] : out['--color-foreground-muted-on-fade']
+  // A selected control's cue (WCAG 1.4.11): drawn where the action fill does not reach 3:1 on the floor.
+  out['--color-action-state-cue-on-fade'] = passesOn(t['--color-action'], floors, 3) ? t['--color-action-state-cue'] : out['--color-action-text-on-fade']
+  return {opacity, floors, tokens: out}
+}
+
 /** The texture on a light band (Phase 17C session 3, `[R-538]`): the dark ground as its ink, at the
  *  opacity every light text tier holds 4.5:1 over for any palette (Phase 16A). Beside
  *  `textureOnDark`, so both grounds' textures come from one place; `validateWcag` sweeps this blend,
@@ -929,6 +986,21 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
     check(`ring-focus on ${name}`,        t['--color-ring-focus'],        ground, 3)
     check(`star-outline on ${name}`,      t['--color-star-outline'],      ground, 3)
     check(`border-control on ${name}`,    t['--color-border-control'],    ground, 3)
+  }
+  // A photograph ghosted into a light band (the Background theme): the band's floor under the page ground and under
+  // the wash, black at the ghost's opacity as drawn, against the tiers a ghosted band reads (`fadeOnLight`).
+  {
+    const fade = fadeOnLight(t)
+    const names = ['the ghost floor over the page', 'the ghost floor over a wash band']
+    fade.floors.forEach((floor, i) => {
+      check(`brand-dark on ${names[i]}`, t['--color-brand-dark'], floor, 4.5)
+      check(`heading on ${names[i]}`, t['--color-heading'], floor, 4.5)
+      check(`foreground on ${names[i]}`, t['--color-foreground'], floor, 4.5)
+      for (const [name, min] of FADE_TIERS) check(`${name}-on-fade on ${names[i]}`, t[`--color-${name}-on-fade`], floor, min)
+      const cue = t['--color-action-state-cue-on-fade']
+      const shown = Math.max(contrast(t['--color-action'], floor), cue === 'transparent' ? 0 : contrast(cue, floor))
+      results.push({pair: `the active state (action fill or cue) on ${names[i]}`, ratio: Math.round(shown * 100) / 100, min: 3, passes: shown >= 3, blocking: true})
+    })
   }
   const dark = t['--color-brand-dark']
   // A dark Pattern band's texture blend: every on-dark text tier must hold there too

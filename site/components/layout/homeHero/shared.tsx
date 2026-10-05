@@ -75,7 +75,13 @@ export function HeroBand({
   children,
   edgeBelow = false,
   glow = null,
+  texture = null,
 }: {
+  /** The style set's texture behind the hero (the Background theme's pattern, `on.hero`), drawn only where the band
+   *  paints its own ground: never over a photograph, a mosaic or a section background, nor on the wash. A light hero
+   *  that takes it paints the page ground, where the texture's blend is a pair already held (`validateWcag`); on the
+   *  tint the same blend would sit under every light tier's floor. */
+  texture?: 'quiet' | 'strong' | null
   /** A divider rises into this band's bottom (Phase 16C): a padded band grows by its
    *  depth, so the hero's own content never sits under it. A flush band has a child
    *  reaching the bottom edge, which is what the shape is meant to cut. */
@@ -106,6 +112,8 @@ export function HeroBand({
   // (`grad-p-*`) and the side the light comes from; the band takes the photo band's colors (`data-glow`), under which
   // the glow is solved (`[R-557]`).
   const lit = glow && surface.isDark && !hasFullBackdrop ? glow : null
+  const ramp = lit?.kind === 'gradient'
+  const textured = !!texture && !hasFullBackdrop && (surface.isDark || surface.lightGround !== 'wash')
   return (
     <section
       // Non-flush bands reserve the (possibly merged) header height at the top.
@@ -114,11 +122,12 @@ export function HeroBand({
       style={{...(flush ? {} : {paddingTop: HERO_HEADER_CLEARANCE}), ...style}}
       data-ring-context={surface.isDark ? 'dark' : undefined}
       data-hero-image={showBackdrop || imageBacked ? 'true' : undefined}
-      data-glow={lit ? 'true' : undefined}
+      data-glow={lit && !ramp ? 'true' : undefined}
       className={[
         'relative isolate overflow-hidden',
-        lit ? `band-glow grad-i-${Math.min(lit.index, 7)} grad-n-${Math.min(lit.length, 8)} grad-p-${Math.min(lit.peak ?? 0, 7)}` : '',
-        lit?.side === 'left' ? 'glow-from-left' : '',
+        lit && !ramp ? `band-glow grad-i-${Math.min(lit.index, 7)} grad-n-${Math.min(lit.length, 8)} grad-p-${Math.min(lit.peak ?? 0, 7)}` : '',
+        lit && ramp ? `band-gradient grad-i-${Math.min(lit.index, 7)} grad-n-${Math.min(lit.length, 8)}` : '',
+        lit && !ramp && lit.side === 'left' ? 'glow-from-left' : '',
         flush ? '' : 'px-[5%] pb-12 md:pb-16 lg:pb-20',
         '[--hero-pt:2rem] md:[--hero-pt:3rem] lg:[--hero-pt:4rem]',
         'flex flex-col',
@@ -130,12 +139,19 @@ export function HeroBand({
         // outgrow the ceiling is gone and the cap is unconditional again.
         fullViewport ? 'min-h-svh max-h-[60rem]' : '',
         center ? 'justify-center' : '',
-        hasFullBackdrop ? '' : surface.isDark ? 'bg-brand-dark' : surface.lightGround === 'wash' ? 'bg-wash' : 'bg-hero-tint',
+        hasFullBackdrop ? '' : surface.isDark ? 'bg-brand-dark' : surface.lightGround === 'wash' ? 'bg-wash' : textured ? 'bg-background' : 'bg-hero-tint',
         className ?? '',
       ]
         .filter(Boolean)
         .join(' ')}
     >
+      {textured && (
+        <div
+          aria-hidden="true"
+          data-section-texture={texture}
+          className={`${texture === 'strong' ? 'section-texture-strong' : 'section-texture'} pointer-events-none absolute inset-0 -z-10 ${surface.isDark ? 'section-texture-on-dark' : 'section-texture-on-light'}`}
+        />
+      )}
       {children}
       {edgeBelow && !flush && <div aria-hidden="true" className="h-divider shrink-0" />}
       {backdropNode ? backdropNode : showBackdrop && <HeroBackdrop surface={surface} />}

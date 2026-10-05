@@ -8,7 +8,7 @@ import {
 } from '@/lib/sectionSurface'
 import {type SeamProps, NO_SEAM, overlapOf} from './sectionFrame'
 import {HERO_BACKDROP_SIZES} from '@/lib/heroSurface'
-import {SetPhotoLayer} from './SetPhoto'
+import {GhostPhotoLayer, SetPhotoLayer} from './SetPhoto'
 
 // ─── SectionShell ───────────────────────────────────────────────────────────────
 // The band wrapper every full-width section renders into. It owns the surface
@@ -168,6 +168,15 @@ export function SectionShell({
   const ADOPTED: Record<string, string> = {dark: 'bg-brand-dark', saturated: 'bg-accent-fill'}
   const adoptedClass = isInset && seam.insetGround ? ADOPTED[seam.insetGround] ?? '' : ''
   const paintsDark = isInset ? adoptedClass === 'bg-brand-dark' : resolved.surfaceClass === 'bg-brand-dark'
+  // A photograph of the set faded into the band's own ground (the Background theme's faint photographs,
+  // `seam.paint.photoFade`): on a dark band the set's layer with soft edges, the band an Image section in its colors
+  // (`data-scrim`), one band alone drawing it here and a longer run drawn once by the canvas, its bands painting no
+  // ground; on the page ground or the wash a ghost under the band's own tiers (`data-fade`). Never a panel.
+  const fadePaint = !isInset && !resolved.isImage ? seam.paint?.photoFade ?? null : null
+  const fadePhoto = fadePaint ? seam.site?.photoSet?.[fadePaint.index] ?? null : null
+  const softDark = !!fadePhoto && resolved.surfaceClass === 'bg-brand-dark'
+  const softRun = softDark && fadePaint!.length > 1
+  const ghosted = !!fadePhoto && (resolved.surfaceClass === 'bg-background' || resolved.surfaceClass === 'bg-wash')
   // What the band draws over its dark ground (Phase 17D session 2, `seam.fade`): only where it paints the dark ground.
   const fade = paintsDark && !resolved.isImage ? seam.fade ?? null : null
 
@@ -219,7 +228,8 @@ export function SectionShell({
       // Text on a photo: the action color and the focus ring resolve to the on-dark
       // body text color here (globals.css, the scrim block), because neither is
       // guaranteed 4.5:1 or 3:1 over the lightest photo pixel.
-      data-scrim={showImage || showWindow || showSet || inRun ? 'true' : undefined}
+      data-scrim={showImage || showWindow || showSet || inRun || softDark ? 'true' : undefined}
+      data-fade={ghosted ? 'light' : undefined}
       // A band Gradient bloom lights takes the photo band's colors, its glow being solved under them (`[R-557]`); an
       // inset's section glows in its gutter only, and its panel keeps its own colors, so it takes none.
       data-glow={fade === 'glow' && !isInset ? 'true' : undefined}
@@ -241,7 +251,7 @@ export function SectionShell({
         seam.raisePhoto && steps.ptVar,
         // An inset band's own box is transparent; the panel inside carries the
         // surface. A normal band carries it here.
-        !isInset && !inRun && resolved.surfaceClass,
+        !isInset && !inRun && !softRun && resolved.surfaceClass,
         // Phase 16F: an inset band inside a run of one strong ground paints that ground
         // on its own <section>, so the panel sits ON the run instead of on the page's
         // light ground. The walk decides it, because no band can see the one below it.
@@ -266,7 +276,7 @@ export function SectionShell({
         // floats on its gutter and is a strip already, so an inset band draws none.
         seam.ribbonEdges?.top && !isInset && 'ribbon-edge-top',
         seam.ribbonEdges?.bottom && !isInset && 'ribbon-edge-bottom',
-        (textured || ghost) && !isInset && 'isolate',
+        (textured || ghost || ghosted) && !isInset && 'isolate',
         top,
         bottom,
         className,
@@ -295,6 +305,8 @@ export function SectionShell({
         </>
       )}
       {showSet && !isInset && <SetPhotoLayer photo={setPhoto!} />}
+      {softDark && !softRun && <SetPhotoLayer photo={fadePhoto!} soft />}
+      {ghosted && <GhostPhotoLayer photo={fadePhoto!} side={fadePaint!.side} />}
       {showImage && !isInset && (
         <>
           <SanityImage image={bg} mode="fill" alt="" sizes="100vw" />

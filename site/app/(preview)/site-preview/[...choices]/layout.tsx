@@ -15,8 +15,11 @@ import {flowOf} from '@/lib/flows'
 // nothing written: `/site-preview/<style set>/<palette>/<theme>/<view>`, where `site`
 // in a slot means "as the site is" and the view is `design` or `grey`. It is the live
 // site's own shell (`SiteShell`) and homepage (`HomeBody`) over a chrome carrying the
-// choice. The theme slot is Phase 17B session 3's (record §2.10); the three-segment
-// address it replaced redirects here for one pin (`../page.tsx`).
+// choice. The theme slot is Phase 17B session 3's (record §2.10) and the background's the Background theme's
+// (monorepo WS-V1-BACKGROUND-THEME-DESIGN §7 item 2): `/site-preview/<style set>/<palette>/<theme>/<background>/<view>`.
+// ONE CATCH-ALL SEGMENT, read by `parseAddress` (`lib/preview/plan.ts`): the last word is the view and the rows fill
+// from the left, so an address minted before a row existed still opens its page, with no redirect page to keep, and
+// the next layer appends a word.
 //
 // A layout receives its segments' params, so the choices reach the CSS the shell
 // builds, which a query string never could. Rendered per request, behind a signed
@@ -29,11 +32,11 @@ import {flowOf} from '@/lib/flows'
 
 export const dynamic = 'force-dynamic'
 
-type Params = Promise<{styleSet: string; palette: string; flow: string; view: string}>
+type Params = Promise<{choices: string[]}>
 
 export default async function PreviewLayout({children, params}: {children: React.ReactNode; params: Params}) {
-  const {styleSet, palette, flow, view} = await params
-  const state = await loadPreview(styleSet, palette, flow, view)
+  const {choices} = await params
+  const state = await loadPreview(choices.join('/'))
   if (state.kind === 'none') notFound()
   if (state.kind === 'redirect') redirect(state.path)
   if (state.kind === 'ended') {

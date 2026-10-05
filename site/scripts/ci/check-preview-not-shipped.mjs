@@ -22,9 +22,11 @@
 //           robots line included, ignores the cookie; a client's link is bound to its choices and shows no roster; an
 //           ended session shows nothing of the site; the grey box draws no image;
 //           (Phase 17B session 3) the theme in the fourth segment changes the page,
-//           the three-segment address of the old pin redirects to the four-segment
-//           one and reaches nobody without a session, and a client link minted at
-//           the old pin (no theme in the grant) still enters.
+//           the three-segment address of the old pin opens the same page (the address is
+//           one catch-all segment since the Background theme, so an address minted before a
+//           row existed needs no redirect) and reaches nobody without a session, a client
+//           link minted at the old pin (no theme in the grant) still enters, and the
+//           background in the fifth segment changes the page.
 //
 // Sentinels are VALUES a visitor could only receive from preview code, never attribute
 // names alone (a conditional prop can put an attribute's name in every page's flight
@@ -41,6 +43,7 @@ const SENTINELS = [
   'site-preview',
   'lp-preview',
   'Theme, the flow of the page',
+  'Background, what sits on the sections',
   'Header and footer on this page',
   'Client preview link',
   'Preview, nothing is live',
@@ -151,8 +154,7 @@ if (base) {
   // measured the earlier shape (3-tuples, a trailing `true`) answering 500 "could not be
   // parsed" before any route code ran, so the case passed without exercising the path it
   // names; a 500 is now a failure of this proof.
-  const seg = (name, value) => [name, value, 'd', null]
-  const tree = encodeURIComponent(JSON.stringify(['', {children: ['(preview)', {children: ['site-preview', {children: [seg('styleSet', 'graphite'), {children: [seg('palette', 'navy-brass'), {children: [seg('flow', 'site'), {children: [seg('view', 'design'), {children: ['__PAGE__', {}]}]}]}]}]}]}]}, null, null, 1]))
+  const tree = encodeURIComponent(JSON.stringify(['', {children: ['(preview)', {children: ['site-preview', {children: [['choices', 'graphite/navy-brass/site/design', 'c', null], {children: ['__PAGE__', {}]}]}]}]}, null, null, 1]))
   for (const [label, headers, suffix] of [
     ['as HTML', {}, ''],
     ['as a router request', {RSC: '1'}, ''],
@@ -221,10 +223,17 @@ if (base) {
   const unknownTheme = await get('/site-preview/site/site/no-such-theme/design', cookie(operator))
   check(unknownTheme.res.status === 404, `an unknown theme answered ${unknownTheme.res.status}`)
 
-  // The three-segment address of the old pin: sent to the four-segment one inside a
-  // session, and a 404 without one.
+  // The three-segment address of the old pin: the same page inside a session (the rows it does not
+  // reach read as the site is), and a 404 without one.
   const three = await get('/site-preview/graphite/navy-brass/design', cookie(operator))
-  check([307, 308].includes(three.res.status) && three.res.headers.get('location')?.endsWith('/site-preview/graphite/navy-brass/site/design'), `the three-segment address answered ${three.res.status} to ${three.res.headers.get('location')}`)
+  check(three.res.status === 200 && three.body.includes('Theme, the flow of the page'), `the three-segment address answered ${three.res.status}`)
+  // The background in the fifth segment: the row is there, a chosen background changes the page, an unknown one is a 404.
+  const plainBg = await get('/site-preview/graphite/site/cutBlocks.balanced/plain/design', cookie(operator))
+  const ownBg = await get('/site-preview/graphite/site/cutBlocks.balanced/own/design', cookie(operator))
+  check(plainBg.res.status === 200 && plainBg.body.includes('Background, what sits on the sections'), `the background address answered ${plainBg.res.status}`)
+  check(ownBg.res.status === 200 && ownBg.body.includes('data-section-texture') && !plainBg.body.includes('data-section-texture'), 'Plain under Cut blocks still drew the texture, or the theme\'s own did not')
+  const unknownBg = await get('/site-preview/site/site/site/nope/design', cookie(operator))
+  check(unknownBg.res.status === 404, `an unknown background answered ${unknownBg.res.status}`)
   const threeNoCookie = await get('/site-preview/graphite/navy-brass/design')
   check(threeNoCookie.res.status === 404 && !threeNoCookie.res.headers.get('location'), `the three-segment address without a session answered ${threeNoCookie.res.status}`)
 

@@ -1,6 +1,7 @@
 import {RETIRED_STYLE_SETS, STYLE_SETS, matchStyleSet, styleSetPatch, updatePatch, type StyleSet, type StyleSetDoc, type StyleSetMatch} from '@/lib/styleSets'
 import {PALETTE_PRESETS, matchPreset, presetInputs, type PalettePreset} from '@/lib/palettes'
 import {FLOWS, HIDDEN_FIELDS, RETIRED_FLOWS, drawsHeroPhoto, flowById, flowOf, type FlowRules} from '@/lib/flows'
+import {BACKGROUNDS, backgroundById, effectiveFlow, type Background} from '@/lib/backgrounds'
 import {parseHexInput, type ColorInputs} from '@/lib/designTokens'
 import {isResolvedTreatment} from '@/lib/imageTreatment'
 import {setApprovalKeys} from '@/lib/heroGround'
@@ -45,8 +46,17 @@ import {type PreviewView} from './session'
 // `setApprovalKeys`), sorted, so a reorder needs no new approval, and never an empty list; any other chosen theme
 // clears it. The live page draws a photograph of the set only while its key is among them.
 
+// The Background theme (monorepo WS-V1-BACKGROUND-THEME-DESIGN §4, §7): the fourth row. A background IS stored by name,
+// as a theme is (`designSettings.background`), so its block is one key: a chosen background that differs from the stored
+// one sets it, and "the theme's own" clears it, since an absent value is what renders the theme's own. The theme and
+// the background meet in one place, `effectiveFlow`, and the photograph approvals follow THE PAIR the page will render
+// (the chosen or stored theme under the chosen or stored background): a background of photographs chosen alone approves
+// them, and a theme changed under a kept background of photographs keeps them.
+
 /** The row value that leaves a choice as the site has it. */
 export const AS_THE_SITE_IS = 'site'
+/** The background row's value for the theme's own background: Apply clears the stored one. */
+export const OWN_BACKGROUND = 'own'
 export const COLOR_ROLES = ['darkGround', 'lightGround', 'accent', 'action'] as const
 /** The palette built from the firm's own colors (Phase 18 session E, monorepo `[R-620]`): its id in the address, its
  *  roles from the grant (`brandPalette`), written by Apply as a preset's are. The engine keeps every text pair readable
@@ -54,7 +64,8 @@ export const COLOR_ROLES = ['darkGround', 'lightGround', 'accent', 'action'] as 
 export const BRAND_PALETTE = 'brand'
 export const BRAND_PALETTE_NAME = 'Your colors'
 
-export type PreviewChoices = {styleSet: string; palette: string; flow: string; view: PreviewView}
+/** `background` is absent on choices built before the row existed, and reads as the site is. */
+export type PreviewChoices = {styleSet: string; palette: string; flow: string; background?: string; view: PreviewView}
 
 /** Every style set the address may name: the eight offered and the five retired. A retired one
  *  is never offered (the switcher, the Studio and the meeting's suggestions list the eight), but
@@ -63,12 +74,32 @@ export type PreviewChoices = {styleSet: string; palette: string; flow: string; v
 const ADDRESSABLE: readonly StyleSet[] = [...STYLE_SETS, ...RETIRED_STYLE_SETS]
 
 /** The choices from the preview address, or null when any part is not one. */
-export function parseChoices(styleSet: string, palette: string, flow: string, view: string): PreviewChoices | null {
+export function parseChoices(styleSet: string, palette: string, flow: string, view: string, background: string = AS_THE_SITE_IS): PreviewChoices | null {
   const s = styleSet === AS_THE_SITE_IS || ADDRESSABLE.some((t) => t.id === styleSet)
   const p = palette === AS_THE_SITE_IS || palette === BRAND_PALETTE || PALETTE_PRESETS.some((x) => x.id === palette)
   const f = flow === AS_THE_SITE_IS || FLOWS.some((x) => x.id === flow)
+  const b = background === AS_THE_SITE_IS || background === OWN_BACKGROUND || BACKGROUNDS.some((x) => x.id === background)
   const v = view === 'design' || view === 'grey'
-  return s && p && f && v ? {styleSet, palette, flow, view: view as PreviewView} : null
+  return s && p && f && b && v ? {styleSet, palette, flow, background, view: view as PreviewView} : null
+}
+
+/** The rows of the address, in order, between `/site-preview/` and the view. A layer added later appends its word. */
+export const ADDRESS_ROWS = ['styleSet', 'palette', 'flow', 'background'] as const
+
+/** The choices from the address's segments: the last is the view, the rows fill from the left, and a row the address
+ *  does not reach reads as the site is. So an address minted before a row existed (three segments before the theme,
+ *  four before the background) still opens the same page, with no redirect, and a 14-day client link outlives the row. */
+export function parseAddress(segments: readonly string[] | null | undefined): PreviewChoices | null {
+  const parts = segments ?? []
+  if (parts.length < 3 || parts.length > ADDRESS_ROWS.length + 1) return null
+  const rows = parts.slice(0, -1)
+  const at = (i: number) => rows[i] ?? AS_THE_SITE_IS
+  return parseChoices(at(0), at(1), at(2), parts[parts.length - 1], at(3))
+}
+
+/** A grant's background: absent (a link minted before the row) reads as the site is. */
+export function grantBackground(background: string | null | undefined): string {
+  return background == null ? AS_THE_SITE_IS : background
 }
 
 /** A client grant's theme, read against today's roster: an absent one (a link minted before the
@@ -88,7 +119,10 @@ export function grantStyleSet(styleSet: string | null | undefined): string {
 }
 
 export function previewPath(c: PreviewChoices): string {
-  return `/site-preview/${c.styleSet}/${c.palette}/${c.flow}/${c.view}`
+  // The background's slot only where a background is chosen, so every address minted before the row is still the
+  // address of its page.
+  const background = c.background && c.background !== AS_THE_SITE_IS ? `/${c.background}` : ''
+  return `/site-preview/${c.styleSet}/${c.palette}/${c.flow}${background}/${c.view}`
 }
 
 /** Design Settings as stored, with the revision the plan was computed on. */
@@ -103,12 +137,18 @@ export type PreviewPlan = {
   styleSet: StyleSet | null
   palette: PalettePreset | null
   flow: FlowRules | null
+  /** The chosen background; `'own'` is the theme's own (the stored one cleared); null is as the site is. */
+  background: Background | typeof OWN_BACKGROUND | null
+  /** The rules the previewed page renders: the chosen or stored theme under the chosen or stored background. */
+  shown: FlowRules
+  /** The background id in force on the previewed page: the chosen one, none for the theme's own, else the stored one. */
+  inForce: string | null
   /** The stored revision the plan was computed on; Apply writes against it. */
   rev: string | null
   /** What the stored settings wear now, named as the Studio names them. The theme is
    *  what the site renders: the stored id, the bridge over the retired fields, or the
    *  platform default (`flowOf`). */
-  wears: {styleSet: StyleSetMatch | null; palette: PalettePreset | null; flow: FlowRules}
+  wears: {styleSet: StyleSetMatch | null; palette: PalettePreset | null; flow: FlowRules; background: Background | null}
 }
 
 const present = (v: unknown) => v !== undefined && v !== null
@@ -116,12 +156,12 @@ const same = (a: unknown, b: unknown) => JSON.stringify(a ?? null) === JSON.stri
 
 export function planPreview(
   stored: StoredDesign | null | undefined,
-  choices: Pick<PreviewChoices, 'styleSet' | 'palette' | 'flow'>,
+  choices: Pick<PreviewChoices, 'styleSet' | 'palette' | 'flow'> & {background?: string},
   heroPhoto: string | null = null,
   brand: {darkGround: string; accent: string; lightGround?: string} | null = null,
 ): PreviewPlan {
   const doc: StoredDesign = stored ?? {}
-  const wears = {styleSet: matchStyleSet(doc), palette: matchPreset(doc), flow: flowOf(doc)}
+  const wears = {styleSet: matchStyleSet(doc), palette: matchPreset(doc), flow: flowOf(doc), background: backgroundById(doc.background)}
   const set: PreviewPlan['set'] = {}
   const unset: string[] = []
 
@@ -151,12 +191,24 @@ export function planPreview(
   if (flow) {
     if (doc.flow !== flow.id) set.flow = flow.id
     for (const field of HIDDEN_FIELDS) if (present(doc[field]) && !unset.includes(field)) unset.push(field)
-    if (drawsHeroPhoto(flow) && heroPhoto) {
+  }
+
+  // The background: a roster id set, or the stored one cleared for the theme's own.
+  const chosen = backgroundById(choices.background)
+  const own = choices.background === OWN_BACKGROUND
+  if (chosen && doc.background !== chosen.id) set.background = chosen.id
+  if (own && present(doc.background)) unset.push('background')
+  const background: PreviewPlan['background'] = chosen ?? (own ? OWN_BACKGROUND : null)
+  // The pair the page will render, which is what the photographs are approved with.
+  const inForce = chosen ? chosen.id : own ? null : backgroundById(doc.background)?.id ?? null
+  const shown = effectiveFlow(flow ?? wears.flow, inForce)
+  if (flow || background) {
+    if (drawsHeroPhoto(shown) && heroPhoto) {
       if (doc.flowPhoto !== heroPhoto) set.flowPhoto = heroPhoto
     } else if (present(doc.flowPhoto)) {
       unset.push('flowPhoto')
     }
-    const setIds = drawsHeroPhoto(flow) && heroPhoto ? setApprovalKeys(doc, heroPhoto) : []
+    const setIds = drawsHeroPhoto(shown) && heroPhoto ? setApprovalKeys(doc, heroPhoto) : []
     if (setIds.length > 0) {
       if (!same(doc.flowPhotos, setIds)) set.flowPhotos = setIds
     } else if (present(doc.flowPhotos)) {
@@ -164,7 +216,7 @@ export function planPreview(
     }
   }
 
-  return {set, unset, styleSet: styleSet, palette, flow, rev: typeof doc._rev === 'string' ? doc._rev : null, wears}
+  return {set, unset, styleSet: styleSet, palette, flow, background, shown, inForce, rev: typeof doc._rev === 'string' ? doc._rev : null, wears}
 }
 
 /** The chrome with the plan applied to the settings the layout and the page read. The

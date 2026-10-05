@@ -5232,6 +5232,28 @@
           "type": "array"
         },
         {
+          "description": "What sits on the section colors the theme lays down: nothing, the style set’s pattern, a gradient or glow down the dark sections, or your photographs, faint or behind groups of sections. It never changes which sections are dark or light; that is the Theme. Photographs show only once they are approved by choosing the background in the design preview and applying it. Leave blank for the theme’s own background.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "plain",
+              "pattern.touch",
+              "pattern.light",
+              "pattern.dark",
+              "pattern.all",
+              "gradient",
+              "glow",
+              "fade",
+              "span",
+              "windows"
+            ]
+          },
+          "path": "background",
+          "title": "Background",
+          "type": "string"
+        },
+        {
           "description": "How the highlighted words in a heading stand out. Color: upright, in the accent. Italic: in the heading font’s italic, in the accent. Leave blank for Color.",
           "jsonType": "string",
           "options": {

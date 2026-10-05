@@ -9,6 +9,7 @@ import {
 } from '../styleSets'
 import {PREVIEW_TOKEN_VECTOR, signToken} from '../preview/session'
 import {DARKNESS, DEFAULT_FLOW, FAMILIES, FLOWS, HIDDEN_FIELDS, HOSTS} from '../flows'
+import {BACKGROUNDS, SUGGESTED_WITH} from '../backgrounds'
 
 // studio/presets.json (Phase 16B amendment 4, widened in 16C): the style sets with their
 // picks, the corner families, the palettes and the font pairings as data, for the readers
@@ -141,6 +142,10 @@ function presets() {
     flows: FLOWS,
     defaultFlow: DEFAULT_FLOW,
     hiddenFields: HIDDEN_FIELDS,
+    // The Background theme (`lib/backgrounds.ts`): the roster a stored `background` names, which Apply's allow-list
+    // reads; absent renders the theme's own, so there is no default id. And the pair that answers each verdict.
+    backgrounds: BACKGROUNDS,
+    suggestedWith: SUGGESTED_WITH,
   }
 }
 

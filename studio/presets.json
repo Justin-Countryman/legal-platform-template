@@ -4105,5 +4105,185 @@
     "brandGhost",
     "sectionOverlap",
     "sectionGradient"
-  ]
+  ],
+  "backgrounds": [
+    {
+      "id": "plain",
+      "family": "plain",
+      "name": "Plain",
+      "sentence": "Nothing on any section: the colors alone.",
+      "passed": false,
+      "on": {
+        "dark": "plain",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
+      }
+    },
+    {
+      "id": "pattern.touch",
+      "family": "pattern",
+      "name": "Pattern: a touch",
+      "sentence": "The style set’s pattern behind the hero and on one light section in three.",
+      "passed": false,
+      "on": {
+        "dark": "plain",
+        "light": "pattern",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "few",
+        "hero": true,
+        "ends": false,
+        "close": "none"
+      }
+    },
+    {
+      "id": "pattern.light",
+      "family": "pattern",
+      "name": "Pattern: light sections",
+      "sentence": "The pattern behind the hero and on every light section.",
+      "passed": false,
+      "on": {
+        "dark": "plain",
+        "light": "pattern",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": true,
+        "ends": false,
+        "close": "none"
+      }
+    },
+    {
+      "id": "pattern.dark",
+      "family": "pattern",
+      "name": "Pattern: dark sections",
+      "sentence": "The pattern on the dark sections, quiet and strong in turn, the hero and the closing section.",
+      "passed": false,
+      "on": {
+        "dark": "pattern",
+        "light": "plain",
+        "darkTexture": "alternate",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": true,
+        "ends": false,
+        "close": "pattern"
+      }
+    },
+    {
+      "id": "pattern.all",
+      "family": "pattern",
+      "name": "Pattern: everywhere, strong",
+      "sentence": "The pattern at full strength on every section, hero to close.",
+      "passed": false,
+      "on": {
+        "dark": "pattern",
+        "light": "pattern",
+        "darkTexture": "strong",
+        "lightTexture": "strong",
+        "lightEvery": "all",
+        "hero": true,
+        "ends": false,
+        "close": "pattern"
+      }
+    },
+    {
+      "id": "gradient",
+      "family": "gradient",
+      "name": "Gradient",
+      "sentence": "Each group of dark sections deepens from top to bottom, the hero and the closing section with it.",
+      "passed": false,
+      "on": {
+        "dark": "gradient",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": true,
+        "close": "none"
+      }
+    },
+    {
+      "id": "glow",
+      "family": "glow",
+      "name": "Glow",
+      "sentence": "A soft glow down every group of dark sections, from the hero to the closing section.",
+      "passed": false,
+      "on": {
+        "dark": "glow",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
+      }
+    },
+    {
+      "id": "fade",
+      "family": "fade",
+      "name": "Faint photographs",
+      "sentence": "Your photographs, faint: behind every group of dark sections with soft edges, and ghosted into every second light section.",
+      "passed": false,
+      "on": {
+        "dark": "fade",
+        "light": "fade",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "photo"
+      }
+    },
+    {
+      "id": "span",
+      "family": "span",
+      "name": "Photographs",
+      "sentence": "A photograph behind each group of two or three dark sections and behind the closing section.",
+      "passed": false,
+      "on": {
+        "dark": "span",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "photo"
+      }
+    },
+    {
+      "id": "windows",
+      "family": "windows",
+      "name": "Hero photograph",
+      "sentence": "Pieces of the hero’s own photograph behind two dark sections and the closing section.",
+      "passed": false,
+      "on": {
+        "dark": "windows",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "photo"
+      }
+    }
+  ],
+  "suggestedWith": {
+    "quiet": "pattern.touch",
+    "typeOnBlack": "fade",
+    "editorial": "pattern.light",
+    "photoScrims": "span",
+    "softWash": "fade",
+    "gradientBloom": "glow"
+  }
 }

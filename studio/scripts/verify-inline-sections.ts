@@ -310,6 +310,7 @@ for (const field of ['patternGround', 'headingEmphasisStyle', 'headingRule', 'he
 // Phase 17B: the theme's stored id. A seed would make "nobody chose" mean two things,
 // frozen on a fresh build and floating on a propagated one (ADV-17B-C F8).
 NO_SEED.push(['designSettings', 'flow', 'the theme id (Phase 17B)'])
+NO_SEED.push(['designSettings', 'background', 'the background id: absent renders the theme\'s own'])
 // Phase 17B session 4 (`[R-518]`): the header's and the footer's schemes are the theme's where
 // none is stored; a seed would be stored on every build and override the theme for ever.
 NO_SEED.push(

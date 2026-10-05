@@ -36,12 +36,12 @@ export function setPhotoUrls(photo: SetPhoto): {phone: string; wide: string} {
 /** The photograph and the scrim over it. `head` draws it at the head of a run on a phone, masked into the
  *  dark ground below (`photo-run-head`): a run on a phone is 1,000 to 2,300 px tall, and a photograph
  *  cover-fitted to it shows a magnified strip of 14% of itself (delllawfirm draws a head, ADV-17E-A). */
-export function SetPhotoLayer({photo, head = false}: {photo: SetPhoto; head?: boolean}) {
+export function SetPhotoLayer({photo, head = false, soft = false}: {photo: SetPhoto; head?: boolean; soft?: boolean}) {
   const {phone, wide} = setPhotoUrls(photo)
   const scrim = <div className="absolute inset-0 bg-scrim/80" aria-hidden="true" />
   return (
     <>
-      <div aria-hidden="true" data-photo-set={photo.assetId} className={head ? 'photo-run-head absolute inset-0 overflow-hidden' : 'absolute inset-0 overflow-hidden'}>
+      <div aria-hidden="true" data-photo-set={photo.assetId} data-photo-fade={soft ? 'dark' : undefined} className={[head && 'photo-run-head', soft && 'photo-fade-run', 'absolute inset-0 overflow-hidden'].filter(Boolean).join(' ')}>
         <picture>
           <source media="(max-width: 767px)" srcSet={phone} />
           <img
@@ -58,10 +58,34 @@ export function SetPhotoLayer({photo, head = false}: {photo: SetPhoto; head?: bo
             the run's own dark ground, the shade of the dark bands around it. Every point of the fade is a mix of the
             scrim over the photograph and the dark ground, each proven under the band's text, and no lighter than the
             lighter of the two. From 768 px the head is the whole run, as before. */}
-        {head && scrim}
+        {(head || soft) && scrim}
       </div>
-      {!head && scrim}
+      {!head && !soft && scrim}
     </>
+  )
+}
+
+/** A photograph of the set ghosted into a light band (the Background theme's faint photographs; monorepo
+ *  WS-V1-BACKGROUND-THEME-DESIGN §7 item 8): the same sources as the layer above, greyscale, at the opacity the palette
+ *  solved (`--fade-opacity-on-light`, `fadeOnLight`), under the band's content and fading out across the band from the
+ *  side named. No scrim: the band's own tiers are solved against black at that opacity (`[data-fade="light"]`). */
+export function GhostPhotoLayer({photo, side = 'right'}: {photo: SetPhoto; side?: 'left' | 'right'}) {
+  const {phone, wide} = setPhotoUrls(photo)
+  return (
+    <div aria-hidden="true" data-photo-ghost={photo.assetId} className={['photo-ghost', side === 'left' && 'photo-ghost-from-left', 'pointer-events-none absolute inset-0 -z-10 overflow-hidden'].filter(Boolean).join(' ')}>
+      <picture>
+        <source media="(max-width: 767px)" srcSet={phone} />
+        <img
+          src={wide}
+          alt=""
+          loading="lazy"
+          fetchPriority="low"
+          decoding="async"
+          className="set-photo absolute inset-0 h-full w-full object-cover grayscale"
+          style={{objectPosition: focalPosition(photo.image)}}
+        />
+      </picture>
+    </div>
   )
 }
 

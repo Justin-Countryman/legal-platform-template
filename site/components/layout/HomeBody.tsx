@@ -117,12 +117,17 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
   const close = closeFrame(closeSurf, walkSite, walked.close)
   // The roster eye of 2026-10-03 (`[R-631]`): under Gradient bloom a dark hero is the first band of the first lit run, and
   // draws the glow as a section does (`HeroBand`).
-  const heroGlow = walked.hero.run ?? null
+  const heroGlow = walked.hero.run ? {...walked.hero.run, kind: walked.hero.fade} : null
+  // The Background theme's pattern behind the hero (`on.hero`), where the style set has a texture: strong only where
+  // the background's word for the hero's ground is; the hero is the first of any `alternate`, which starts quiet.
+  const on = look.flow?.on
+  const heroDark = ground === 'dark'
+  const heroTexture = on?.hero && look.patternTexture ? ((heroDark ? on.darkTexture : on.lightTexture) === 'strong' ? 'strong' as const : 'quiet' as const) : null
 
   return (
     <>
       {hero ? (
-        <HomepageHero data={hero} napTokens={tokens} edgeBelow={edgeBelow} lightGround={site.heroPaint === 'wash' ? 'wash' : 'tint'} glow={heroGlow} />
+        <HomepageHero data={hero} napTokens={tokens} edgeBelow={edgeBelow} lightGround={site.heroPaint === 'wash' ? 'wash' : 'tint'} glow={heroGlow} texture={heroTexture} />
       ) : (
         // Fallback when the homepage hero hasn't been authored yet.
         //

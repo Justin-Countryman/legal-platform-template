@@ -893,6 +893,8 @@ export const DESIGN_TOKENS_QUERY = groq`
     // its reference, crop and focal point for the image builder, and the photographs approved with it.
     "themePhotos": themePhotos[]{asset, crop, hotspot, "src": asset->url, "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height, "isOpaque": asset->metadata.isOpaque, "assetId": asset->_id},
     flowPhotos,
+    // What sits on the grounds, beside the theme: one stored id; absent renders the theme's own.
+    background,
     // The style set's settings (Phase 16B): a style set in the Studio writes them with
     // the fields above. The site never reads which style set it is.
     // patternGround, sectionJoin, dividerCarry, brandGhost, sectionOverlap and

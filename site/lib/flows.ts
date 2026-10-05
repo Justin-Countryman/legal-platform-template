@@ -124,7 +124,7 @@ export type ChromeScheme = (typeof CHROME_SCHEMES)[number]
  *  `heroPhoto`: the hero's backdrop is a photograph a page can be made of, approved with this theme
  *  (Phase 17B session 6, `heroPhotoOf`, `[R-532]`); `glow`: the palette's dark ground has room to glow
  *  (Phase 17D session 2, `glowOk`, `[R-557]`), a need of the palette rather than of the page. */
-export const NEEDS = ['photos', 'texture', 'initials', 'ribbons', 'darkHero', 'heroPhoto', 'glow', ...HOSTS] as const
+export const NEEDS = ['photos', 'texture', 'initials', 'ribbons', 'darkHero', 'heroPhoto', 'photoSet', 'glow', ...HOSTS] as const
 export type Need = (typeof NEEDS)[number]
 
 export type FlowRules = {
@@ -752,6 +752,8 @@ export type CanvasFacts = {
   heroPhoto?: boolean
   /** The palette's dark ground has room to glow (`glowOk`, Phase 17D session 2). */
   glow?: boolean
+  /** The site has an approved photograph in the theme's set (`photoSetOf`), which the faint photographs are drawn from. */
+  photoSet?: boolean
 }
 
 /** The needs a theme's own rules imply, for the test that holds `needs` to them. */
@@ -761,6 +763,7 @@ export function impliedNeeds(rules: Pick<FlowRules, 'on' | 'ghost'>): Need[] {
   if (on.dark === 'pattern' || on.light === 'pattern' || on.hero || on.close === 'pattern') out.push('texture')
   if (on.dark === 'photo') out.push('photos')
   if (drawsHeroPhoto(rules)) out.push('heroPhoto')
+  if (on.dark === 'fade' || on.light === 'fade') out.push('photoSet')
   if (rules.ghost === 'once') out.push('initials')
   if (on.dark === 'glow') out.push('glow')
   return out
@@ -775,6 +778,7 @@ export function needLabel(need: Need): string {
     case 'ribbons': return 'two ribbon sections the theme can fill'
     case 'darkHero': return 'a dark or photo hero'
     case 'heroPhoto': return 'a landscape hero photograph of a place, approved with this theme'
+    case 'photoSet': return 'theme photographs uploaded in Design Settings'
     case 'glow': return 'a palette whose dark sections have room to glow'
     default: return `a ${need} section`
   }
@@ -790,6 +794,7 @@ export function unmetNeeds(flow: FlowRules, facts: CanvasFacts): Need[] {
     if (need === 'ribbons') return (facts.ribbonsFilled ?? 0) < 2
     if (need === 'darkHero') return !(facts.hero === 'dark' || facts.hero === 'image')
     if (need === 'heroPhoto') return !facts.heroPhoto
+    if (need === 'photoSet') return !facts.photoSet
     if (need === 'glow') return !facts.glow
     return !facts.hosts.includes(need)
   })
@@ -901,7 +906,7 @@ export function closeOf(flow: FlowRules | null | undefined, facts: CloseFacts): 
   // A dark close the theme lights does not melt into the dark run above it: its glow peaks in its own middle, as the
   // run's last band (the roster eye of 2026-10-03, `[R-631]`: the glow carries through to the close). Gradient bloom
   // alone, and only where the palette has room to glow; the ruling against the footer's color holds as always.
-  const lit = flow?.on.dark === 'glow' && paletteOf(facts.colors).glowOk
+  const lit = (flow?.on.dark === 'glow' && paletteOf(facts.colors).glowOk) || (flow?.on.dark === 'gradient' && flow.on.ends)
   const fromAbove = (c: Close) => c === 'photo' || (c === 'dark' && lit) || !aboveHex || deltaE(t[GROUND_TOKEN[c]!], aboveHex) >= CLOSE_ABOVE_DE
   return drawable.find((c) => fromFooter(c) && fromAbove(c)) ?? drawable.find(fromFooter) ?? (facts.footer === 'dark' ? 'muted' : 'dark')
 }
