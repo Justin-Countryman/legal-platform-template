@@ -7,6 +7,7 @@ import {StyleSetPicker} from '../../components/StyleSetPicker'
 import {HeadingLinePicker} from '../../components/HeadingLinePicker'
 import {DividerPicker} from '../../components/DividerPicker'
 import {FLOWS, DEFAULT_FLOW} from '../../../site/lib/flows'
+import {BACKGROUNDS} from '../../../site/lib/backgrounds'
 import {readFontKind, variableUploadWarning, type FontFileKind} from '../../../site/fonts/fileKind'
 
 // Phase 17C (`[R-541]`; monorepo WS-V1-PHASE17C2A-DESIGN §7.6 amendment 4): an upload's
@@ -215,6 +216,23 @@ export const designSettings = defineType({
       fieldset: 'theme',
       hidden: () => true,
       readOnly: true,
+    }),
+
+    // ─── The background: what sits on the grounds (the fourth design layer, [R-632]) ──
+    // ONE STORED ID, read by the site at render beside the theme (`site/lib/backgrounds.ts`). NO `initialValue` (item
+    // 308): absent renders the theme's own background, what the theme shipped with, so a site that stores none renders
+    // as it did before this field existed. Apply writes what the preview showed; no build writes it ([R-537]).
+    defineField({
+      name: 'background',
+      title: 'Background',
+      type: 'string',
+      fieldset: 'theme',
+      description:
+        'What sits on the section colors the theme lays down: nothing, the style set\u2019s pattern, a gradient or glow down the dark sections, or your photographs, faint or behind groups of sections. It never changes which sections are dark or light; that is the Theme. Photographs show only once they are approved by choosing the background in the design preview and applying it. Leave blank for the theme\u2019s own background.',
+      options: {
+        list: BACKGROUNDS.map((b) => ({title: `${b.name} \u2014 ${b.sentence}`, value: b.id})),
+        layout: 'radio',
+      },
     }),
 
     // ─── Headings (Phase 16B) ─────────────────────────────────────────────────

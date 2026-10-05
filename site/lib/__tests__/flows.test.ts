@@ -2,8 +2,8 @@ import {describe, expect, it} from 'vitest'
 import {readFileSync} from 'node:fs'
 import {resolve} from 'node:path'
 import {
-  CLOSES, DARKNESS, DARK_BUDGETS, DARK_PAINTS, DARK_RHYTHMS, DEFAULT_FLOW, DIVIDER_ATS, FAMILIES, FLOWS, GHOSTS, HAIRLINES, HAIRLINE_INKS, HIDDEN_FIELDS,
-  HOSTS, LIGHT_PAINTS, NEEDS, SPACINGS, STEP_HOSTS, bridgeOf, closeOf, darkBudget, flowById, flowOf, hostOf, impliedNeeds, needLabel, saturatedFillOk,
+  CLOSES, DARKNESS, DARK_BUDGETS, DARK_GROUNDS, DARK_ONS, DARK_RHYTHMS, DARK_SITS, FLOW_CLOSES, LIGHT_GROUNDS, LIGHT_ONS, LIGHT_SITS, DEFAULT_FLOW, DIVIDER_ATS, FAMILIES, FLOWS, GHOSTS, HAIRLINES, HAIRLINE_INKS, HIDDEN_FIELDS,
+  HOSTS, NEEDS, SPACINGS, STEP_HOSTS, bridgeOf, closeOf, darkBudget, flowById, flowOf, hostOf, impliedNeeds, needLabel, saturatedFillOk,
   storesHiddenFields, unmetNeeds, CHROME_SCHEMES, STEP_CHROME, chromeSchemes, darkHeaderReady, drawsHeroPhoto, familyOf, TEXTURE_STRENGTHS, fadeOf,} from '../flows'
 import {DIVIDERS, CARRY_PIECES} from '../dividers'
 import {OVERLAPS} from '../overlaps'
@@ -72,9 +72,10 @@ describe('the families and the roster', () => {
   it('Gradient bloom is the Phase 17D session 2 record\u2019s \u00a72.4, written out: mostly dark, the glow, the need of room ([R-557])', () => {
     const gb = flowById('gradientBloom.mostlyDark')!
     expect(familyOf(gb)!.steps).toEqual(['mostlyDark'])
-    expect(gb.dark).toMatchObject({budget: 'threeQuarters', rhythm: 'runs', paint: 'glow', texture: 'quiet', close: 'dark'})
+    expect(gb.dark).toMatchObject({budget: 'threeQuarters', rhythm: 'runs', ground: 'plain', sit: 'band', close: 'dark'})
+    expect(gb.on).toMatchObject({dark: 'glow', darkTexture: 'quiet', close: 'none'})
     expect(gb.dark.hosts).toEqual(flowById('cutBlocks.mostlyDark')!.dark.hosts)
-    expect(gb.light).toEqual({paint: 'plain', texture: 'quiet'})
+    expect(gb.light).toEqual({ground: 'plain', sit: 'band'})
     expect(gb.divider).toEqual({shape: 'straight', at: 'none', carry: [], hairline: 'none', hairlineInk: 'border'})
     // The roster eye of 2026-10-03 (`[R-631]`): "there is no gradient in the hero to create that continuity after a few
     // sections the gradient stuff just stops". The glow starts in the hero, so the theme says the hero is dark where it
@@ -87,7 +88,7 @@ describe('the families and the roster', () => {
     expect(gb.passed).toBe(false)
     expect(FLOWS.filter((f) => f.hero === 'dark').map((f) => f.id)).toEqual(['gradientBloom.mostlyDark'])
     // Only Gradient bloom glows, and the glow is a need of the palette the switcher says on its own.
-    expect(FLOWS.filter((f) => f.dark.paint === 'glow').map((f) => f.id)).toEqual(['gradientBloom.mostlyDark'])
+    expect(FLOWS.filter((f) => f.on.dark === 'glow').map((f) => f.id)).toEqual(['gradientBloom.mostlyDark'])
     expect(needLabel('glow')).toBe('a palette whose dark sections have room to glow')
     expect(unmetNeeds(gb, {hosts: [], photos: 0, texture: false, initials: false, glow: false})).toEqual(['glow'])
     expect(unmetNeeds(gb, {hosts: [], photos: 0, texture: false, initials: false, glow: true})).toEqual([])
@@ -99,8 +100,9 @@ describe('the families and the roster', () => {
     // (Ribbon rhythm's `saturated` paint); Quiet names it on its ribbons and nothing else: no other host, so the page
     // stays light all the way down to the dark close, and `alternate`, so two ribbons together take one fill.
     const q = flowById('quiet.mostlyLight')!
-    expect(q.dark).toMatchObject({budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', close: 'dark'})
-    expect(q.light).toEqual({paint: 'plain', texture: 'quiet'})
+    expect(q.dark).toMatchObject({budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', ground: 'saturated', sit: 'band', close: 'dark'})
+    expect(q.light).toEqual({ground: 'plain', sit: 'band'})
+    expect(q.on).toMatchObject({dark: 'plain', light: 'plain'})
     expect(q).toMatchObject({divider: {shape: 'straight', at: 'none', hairline: 'none'}, needs: [], chrome: {header: 'light', footer: 'light'}})
     // Its fill needs no second ribbon: a page with none is still Quiet, where Ribbon rhythm asks for two.
     expect(unmetNeeds(q, {hosts: [], photos: 0, texture: false, initials: false})).toEqual([])
@@ -120,7 +122,7 @@ describe('the families and the roster', () => {
   it('Wedges is the Phase 17D record\u2019s \u00a72.1, written out: balanced only, the steep angle at every change ([R-552])', () => {
     const w = flowById('wedges.balanced')!
     expect(familyOf(w)!.steps).toEqual(['balanced'])
-    expect(w.dark).toMatchObject({budget: 'third', rhythm: 'pairs', paint: 'plain', close: 'dark'})
+    expect(w.dark).toMatchObject({budget: 'third', rhythm: 'pairs', ground: 'plain', sit: 'band', close: 'dark'})
     expect(w.divider).toEqual({shape: 'steep', at: 'everyChange', carry: ['cards', 'photo'], hairline: 'none', hairlineInk: 'border'})
     expect(w).toMatchObject({ghost: 'none', overlap: 'photo', spacing: 'normal', needs: [], chrome: {header: 'light', footer: 'dark'}})
     // Only Wedges wears the steep angle, and only Wedges places a divider at every change.
@@ -129,8 +131,8 @@ describe('the families and the roster', () => {
 
   it('Soft wash is the Phase 17D record\u2019s \u00a72.3, written out: no dark section, the wash in turn, a wash close ([R-551])', () => {
     const sw = flowById('softWash.mostlyLight')!
-    expect(sw.dark).toMatchObject({budget: 'none', hosts: [], rhythm: 'bookends', paint: 'plain', close: 'wash'})
-    expect(sw.light.paint).toBe('washes')
+    expect(sw.dark).toMatchObject({budget: 'none', hosts: [], rhythm: 'bookends', ground: 'plain', close: 'wash'})
+    expect(sw.light.ground).toBe('washes')
     expect(sw).toMatchObject({ghost: 'none', overlap: 'none', spacing: 'normal', needs: [], chrome: {header: 'light', footer: 'light'}})
     expect(sw.divider).toMatchObject({shape: 'straight', at: 'none', hairline: 'none'})
     // Its own close is the wash; beside its light footer the close takes the dark ground (`[R-597]`), and beside a
@@ -140,31 +142,32 @@ describe('the families and the roster', () => {
     expect(closeOf(sw, {footer: 'dark', above: 'light', heroPhoto: false, colors: navy})).toBe('wash')
     // Only Soft wash washes, and only its first step's close is the wash; the second step closes dark, then the wash
     // (Phase 18 session E; its rules are `softWashBalanced.test.tsx`'s).
-    expect(FLOWS.filter((f) => f.light.paint === 'washes').map((f) => f.id)).toEqual(['softWash.mostlyLight', 'softWash.balanced'])
+    expect(FLOWS.filter((f) => f.light.ground === 'washes').map((f) => f.id)).toEqual(['softWash.mostlyLight', 'softWash.balanced'])
     expect(FLOWS.filter((f) => f.dark.close === 'wash').map((f) => f.id)).toEqual(['softWash.mostlyLight'])
   })
 
   it('Floating panels is the Phase 17D record’s §2.2, written out: dark panels on the light page, light panels on the dark one', () => {
     const light = flowById('floatingPanels.balanced')!
-    expect(light.dark).toMatchObject({budget: 'third', rhythm: 'alternate', paint: 'floating', close: 'dark'})
+    expect(light.dark).toMatchObject({budget: 'third', rhythm: 'alternate', sit: 'floating', close: 'dark'})
     expect(light.dark.hosts).toEqual(STEP_HOSTS.balanced)
-    expect(light.light.paint).toBe('plain')
+    expect(light.light.sit).toBe('band')
     expect(light.chrome).toEqual({header: 'light', footer: 'dark'})
     const dark = flowById('floatingPanels.mostlyDark')!
-    expect(dark.dark).toMatchObject({budget: 'threeQuarters', rhythm: 'runs', paint: 'plain', close: 'dark'})
-    expect(dark.light.paint).toBe('floating')
+    expect(dark.dark).toMatchObject({budget: 'threeQuarters', rhythm: 'runs', sit: 'band', close: 'dark'})
+    expect(dark.light.sit).toBe('floating')
     expect(dark.chrome).toEqual({header: 'dark', footer: 'dark'})
     for (const f of [light, dark]) {
       expect(f).toMatchObject({ghost: 'none', overlap: 'none', spacing: 'normal', needs: []})
       expect(f.divider).toMatchObject({shape: 'straight', at: 'none', hairline: 'none'})
     }
     // Only this family floats a panel.
-    expect(FLOWS.filter((f) => f.dark.paint === 'floating' || f.light.paint === 'floating').map((f) => f.id)).toEqual(['floatingPanels.balanced', 'floatingPanels.mostlyDark'])
+    expect(FLOWS.filter((f) => f.dark.sit === 'floating' || f.light.sit === 'floating').map((f) => f.id)).toEqual(['floatingPanels.balanced', 'floatingPanels.mostlyDark'])
   })
 
   it('Photo scrims is the session 6 record’s §2.9, written out: mostly dark only, the hero’s photograph, the photo close', () => {
     const ps = flowById('photoScrims.mostlyDark')!
-    expect(ps.dark).toMatchObject({budget: 'threeQuarters', rhythm: 'runs', paint: 'heroPhoto', close: 'photo'})
+    expect(ps.dark).toMatchObject({budget: 'threeQuarters', rhythm: 'runs', ground: 'plain', close: 'dark', closeElse: ['muted']})
+    expect(ps.on).toMatchObject({dark: 'span', close: 'photo'})
     expect(ps.dark.hosts).toEqual(STEP_HOSTS.mostlyDark)
     expect(ps.divider).toMatchObject({shape: 'straight', at: 'none', hairline: 'none'})
     expect(ps).toMatchObject({ghost: 'none', overlap: 'none', spacing: 'normal', needs: ['heroPhoto'], chrome: {header: 'dark', footer: 'light'}})
@@ -184,12 +187,13 @@ describe('the families and the roster', () => {
     expect(closeOf(ps, {footer: ps.chrome.footer, above: 'dark', heroPhoto: false, colors: navy})).toBe('dark')
     expect(closeOf(ps, {footer: ps.chrome.footer, above: 'dark', heroPhoto: true, colors: navy})).toBe('photo')
     // No other theme's close asks for the photograph.
-    for (const f of FLOWS.filter((x) => x.dark.close !== 'photo')) expect(closeOf(f, {footer: f.chrome.footer, above: null, heroPhoto: true, colors: navy})).not.toBe('photo')
+    for (const f of FLOWS.filter((x) => x.on.close !== 'photo')) expect(closeOf(f, {footer: f.chrome.footer, above: null, heroPhoto: true, colors: navy})).not.toBe('photo')
   })
 
   it('session 5’s families are the record’s §2.2 to §2.4, written out', () => {
     const tob = flowById('typeOnBlack.allDark')!
-    expect(tob.dark).toMatchObject({budget: 'all', rhythm: 'runs', paint: 'plain', close: 'dark'})
+    expect(tob.dark).toMatchObject({budget: 'all', rhythm: 'runs', ground: 'plain', close: 'dark'})
+    expect(tob.on.dark).toBe('plain')
     expect(tob.dark.hosts).toEqual(HOSTS)
     // The roster eye of 2026-10-03 (`[R-631]`): "mostly dark theme is so you do not see all the bands but we have gold
     // lines which breaks everything up anyways"; "get rid of the lines". Its line draws only where the ground changes,
@@ -199,7 +203,7 @@ describe('the families and the roster', () => {
     expect(tob.needs).toEqual(['darkHero'])
     const ed = flowById('editorial.mostlyLight')!
     expect(ed.dark).toMatchObject({budget: 'none', rhythm: 'bookends', close: 'muted'})
-    expect(ed.light.paint).toBe('pattern')
+    expect(ed.on.light).toBe('pattern')
     expect(ed.spacing).toBe('spacious')
     expect(ed.ghost).toBe('none')
     expect(ed.divider).toMatchObject({hairline: 'everyBand', hairlineInk: 'border'})
@@ -207,7 +211,7 @@ describe('the families and the roster', () => {
     expect(FLOWS.filter((f) => f.divider.hairline === 'everyBand').map((f) => f.id)).toEqual(['editorial.mostlyLight'])
     expect(ed.chrome).toEqual({header: 'light', footer: 'light'})
     const rr = flowById('ribbonRhythm.mostlyLight')!
-    expect(rr.dark).toMatchObject({budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', close: 'dark'})
+    expect(rr.dark).toMatchObject({budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', ground: 'saturated', close: 'dark'})
     expect(rr.needs).toEqual(['ribbons'])
     // Only Editorial takes the room; only Type on black inks its line in the accent.
     expect(FLOWS.filter((f) => f.spacing === 'spacious').map((f) => f.id)).toEqual(['editorial.mostlyLight'])
@@ -217,11 +221,16 @@ describe('the families and the roster', () => {
   it.each(FLOWS.map((f) => [f.id, f] as const))('%s names every vocabulary field with a legal value', (_, flow) => {
     expect(DARK_BUDGETS).toContain(flow.dark.budget)
     expect(DARK_RHYTHMS).toContain(flow.dark.rhythm)
-    expect(DARK_PAINTS).toContain(flow.dark.paint)
+    expect(DARK_GROUNDS).toContain(flow.dark.ground)
+    expect(DARK_SITS).toContain(flow.dark.sit)
+    expect(DARK_ONS).toContain(flow.on.dark)
+    expect(FLOW_CLOSES).toContain(flow.dark.close)
     expect(CLOSES).toContain(flow.dark.close)
     for (const h of flow.dark.hosts) expect(HOSTS).toContain(h)
     expect(new Set(flow.dark.hosts).size).toBe(flow.dark.hosts.length)
-    expect(LIGHT_PAINTS).toContain(flow.light.paint)
+    expect(LIGHT_GROUNDS).toContain(flow.light.ground)
+    expect(LIGHT_SITS).toContain(flow.light.sit)
+    expect(LIGHT_ONS).toContain(flow.on.light)
     expect(DIVIDERS).toContain(flow.divider.shape)
     expect(DIVIDER_ATS).toContain(flow.divider.at)
     for (const c of flow.divider.carry) expect(CARRY_PIECES).toContain(c)
@@ -278,19 +287,19 @@ describe('the families and the roster', () => {
 describe('the texture strength (Phase 17C session 3, [R-538])', () => {
   it('every roster theme names a word from the vocabulary on both paints', () => {
     for (const f of FLOWS) {
-      expect(TEXTURE_STRENGTHS, f.id).toContain(f.dark.texture)
-      expect(TEXTURE_STRENGTHS, f.id).toContain(f.light.texture)
+      expect(TEXTURE_STRENGTHS, f.id).toContain(f.on.darkTexture)
+      expect(TEXTURE_STRENGTHS, f.id).toContain(f.on.lightTexture)
     }
   })
   it('a paint that is not pattern names quiet, so no family carries a word that does nothing', () => {
     for (const f of FLOWS) {
-      if (f.dark.paint !== 'pattern') expect(f.dark.texture, f.id).toBe('quiet')
-      if (f.light.paint !== 'pattern') expect(f.light.texture, f.id).toBe('quiet')
+      if (f.on.dark !== 'pattern') expect(f.on.darkTexture, f.id).toBe('quiet')
+      if (f.on.light !== 'pattern') expect(f.on.lightTexture, f.id).toBe('quiet')
     }
   })
   it('Cut blocks alternates its dark bands; Editorial draws its light bands quiet', () => {
-    for (const f of FLOWS.filter((x) => x.family === 'cutBlocks')) expect(f.dark.texture).toBe('alternate')
-    for (const f of FLOWS.filter((x) => x.family === 'editorial')) expect(f.light.texture).toBe('quiet')
+    for (const f of FLOWS.filter((x) => x.family === 'cutBlocks')) expect(f.on.darkTexture).toBe('alternate')
+    for (const f of FLOWS.filter((x) => x.family === 'editorial')) expect(f.on.lightTexture).toBe('quiet')
   })
 })
 
@@ -361,14 +370,15 @@ describe('the compat bridge, for one pin', () => {
     expect(b.spacing).toBe('normal')
     expect(b.ghost).toBe('once')
     expect(b.overlap).toBe('photo')
-    expect(b.dark).toEqual({budget: 'none', hosts: [], rhythm: 'bookends', paint: 'gradient', texture: 'quiet', close: 'muted', closeElse: []})
-    expect(b.light.paint).toBe('plain')
+    expect(b.dark).toEqual({budget: 'none', hosts: [], rhythm: 'bookends', ground: 'plain', sit: 'band', close: 'muted', closeElse: []})
+    expect(b.on).toMatchObject({dark: 'gradient', darkTexture: 'quiet', ends: false})
+    expect(b.on.light).toBe('plain')
     // Unknown values read as nothing, as the site read them.
     const none = bridgeOf({sectionJoin: 'squiggle', sectionOverlap: 'yes', brandGhost: 'true', sectionGradient: 'shallow'})
     expect(none.divider.shape).toBe('straight')
     expect(none.overlap).toBe('none')
     expect(none.ghost).toBe('none')
-    expect(none.dark.paint).toBe('plain')
+    expect(none.on.dark).toBe('plain')
   })
 
   it('maps a dark texture ground to the plain dark paint, because today it textured no stored dark band', () => {
@@ -376,7 +386,7 @@ describe('the compat bridge, for one pin', () => {
     // nothing else; a theme's `pattern` paint textures every dark band, which would change
     // a stored client's page under the bridge. A stored Pattern band is light under every
     // theme since amendment 5.
-    expect(bridgeOf({patternGround: 'dark', patternTexture: 'scallop'}).dark.paint).toBe('plain')
+    expect(bridgeOf({patternGround: 'dark', patternTexture: 'scallop'}).on.dark).toBe('plain')
   })
 })
 

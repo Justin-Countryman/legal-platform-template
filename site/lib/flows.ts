@@ -63,9 +63,33 @@ export type Host = (typeof HOSTS)[number]
 
 export const DARK_BUDGETS = ['none', 'quarter', 'third', 'threeQuarters', 'all'] as const
 export const DARK_RHYTHMS = ['alternate', 'pairs', 'runs', 'bookends', 'spread'] as const
-export const DARK_PAINTS = ['plain', 'pattern', 'gradient', 'gradientPerBand', 'photo', 'saturated', 'heroPhoto', 'floating', 'glow'] as const
+// THE THREE FIELDS A PAINT WAS (the Background theme, monorepo WS-V1-BACKGROUND-THEME-DESIGN §1, `[R-632]`). Until
+// 2026-10-05 one word per ground, `paint`, held three layers' decisions. It is three fields now, one per layer:
+// which GROUND a band takes is this layer's, the Flow theme's (`ground`); what sits ON the ground is the Background
+// theme's (`on`, below); how the band SITS on the page, as a band or as a panel, is the Layout theme's (`sit`), which
+// this layer carries unchanged until that layer is built. No rule moved with the split: every roster theme renders
+// byte for byte what it rendered before, which the reproduction goldens and the metrics golden hold unregenerated.
+export const DARK_GROUNDS = ['plain', 'saturated'] as const
+export const DARK_SITS = ['band', 'floating'] as const
+export const LIGHT_GROUNDS = ['plain', 'washes'] as const
+export const LIGHT_SITS = ['band', 'panel', 'floating'] as const
+/** What sits on a dark band (the Background theme's): nothing; the style set's texture; the ramp (one per run, sliced);
+ *  the ramp restarted on every band; a photo where the band has one of its own; the theme's set of photographs behind
+ *  runs, else windows of the hero's photograph (`span`, Photo scrims' mechanism, Phase 17B session 6 and 17E); windows
+ *  of the hero's photograph alone (`windows`); Gradient bloom's glow (`glow`, Phase 17D session 2); a photograph of the
+ *  set faded into the dark ground behind every run (`fade`). */
+export const DARK_ONS = ['plain', 'pattern', 'gradient', 'gradientPerBand', 'photo', 'span', 'windows', 'glow', 'fade'] as const
+/** What sits on a light band: nothing; the texture; a photograph of the set ghosted into the band (`fade`). */
+export const LIGHT_ONS = ['plain', 'pattern', 'fade'] as const
+/** How many of the light bands a light `on` draws on: every one, or a few (one in three, two at most). */
+export const LIGHT_EVERY = ['all', 'few'] as const
+/** What the background puts on the closing call to action: nothing, a photograph (where one is approved and the
+ *  footer is light, `closeOf`), or the texture (on a dark close). */
+export const ON_CLOSES = ['none', 'photo', 'pattern'] as const
+/** The grounds a theme may name for its close. */
+export const FLOW_CLOSES = ['dark', 'saturated', 'muted', 'wash'] as const
+/** The grounds a close resolves to (`closeOf`): a theme's, or the background's photograph. */
 export const CLOSES = ['dark', 'saturated', 'muted', 'photo', 'wash'] as const
-export const LIGHT_PAINTS = ['plain', 'washes', 'pattern', 'panel', 'floating'] as const
 /** The texture's strength where a paint is `pattern` (Phase 17C session 3, `[R-538]`): the style set's
  *  one tile as it shipped, the same motif at twice the ink, or the two in turn down the page (the bands
  *  the paint textures, in order: quiet, strong, quiet). Every other paint names `quiet`. */
@@ -100,7 +124,7 @@ export type ChromeScheme = (typeof CHROME_SCHEMES)[number]
  *  `heroPhoto`: the hero's backdrop is a photograph a page can be made of, approved with this theme
  *  (Phase 17B session 6, `heroPhotoOf`, `[R-532]`); `glow`: the palette's dark ground has room to glow
  *  (Phase 17D session 2, `glowOk`, `[R-557]`), a need of the palette rather than of the page. */
-export const NEEDS = ['photos', 'texture', 'initials', 'ribbons', 'darkHero', 'heroPhoto', 'glow', ...HOSTS] as const
+export const NEEDS = ['photos', 'texture', 'initials', 'ribbons', 'darkHero', 'heroPhoto', 'photoSet', 'glow', ...HOSTS] as const
 export type Need = (typeof NEEDS)[number]
 
 export type FlowRules = {
@@ -125,34 +149,34 @@ export type FlowRules = {
      *  never a neighbour, so a band directly under a dark hero may join it under the first four rhythms (25 of 45 dark
      *  heroes are followed by a dark band); `spread` leaves that band light, since the dark it recurs is the page's. */
     rhythm: (typeof DARK_RHYTHMS)[number]
-    /** What a dark band paints: the dark ground; the dark ground with the style set's texture;
-     *  the ramp (one per run, sliced); the ramp restarted on every band; a photo where the band
-     *  has one, else the dark ground; the accent fill where the palette and the band allow it,
-     *  else the dark ground; a window of the hero's own photograph on a text-led band, never
-     *  beside another photograph and at most twice a page, else the dark ground (`heroPhoto`,
-     *  Phase 17B session 6, `[R-530]`); the dark ground as a panel on the page's light ground, a
-     *  gutter around it (`floating`, Phase 17D); the dark ground lit by one glow per run of dark bands,
-     *  the dark close part of the run, where the palette has room, else the dark ground (`glow`, Phase 17D
-     *  session 2, `[R-557]`). */
-    paint: (typeof DARK_PAINTS)[number]
-    /** The texture's strength on the bands the `pattern` paint textures (`TEXTURE_STRENGTHS`). */
-    texture: TextureStrength
-    /** The closing call to action's ground; `photo` is a window of the hero's photograph where
-     *  the site has an approved one, else the dark ground; `wash` is Soft wash's ground. */
-    close: (typeof CLOSES)[number]
+    /** The ground a dark band takes: the dark ground; or the accent fill where the palette and the band allow
+     *  it, else the dark ground (`saturated`). */
+    ground: (typeof DARK_GROUNDS)[number]
+    /** How a dark band sits (the Layout theme's, carried here until that layer is built): a full band; or the dark
+     *  ground as a panel on the page's light ground, a gutter around it (`floating`, Phase 17D). */
+    sit: (typeof DARK_SITS)[number]
+    /** The closing call to action's ground; `wash` is Soft wash's ground. A photograph behind the close is the
+     *  background's (`on.close`). */
+    close: (typeof FLOW_CLOSES)[number]
     /** The grounds the close takes, in order, where its own would meet the footer's color or melt into
      *  the band above it (`closeOf`, `[R-597]`, `[R-603]`). */
-    closeElse: readonly (typeof CLOSES)[number][]
+    closeElse: readonly (typeof FLOW_CLOSES)[number][]
   }
   light: {
-    /** Light bands: one ground; the light ground and the wash in turn, counted from the foot of each
-     *  light stretch (`washes`, Phase 17D, `[R-551]`); textured; inside a dark run, an inset
-     *  panel that adopts the run (`[R-501]`) where the band stores no `inset`; or, wherever it sits,
-     *  a panel on the dark ground, which the walk reads as dark (`floating`, Phase 17D). */
-    paint: (typeof LIGHT_PAINTS)[number]
-    /** The texture's strength on the light bands a `pattern` paint textures. */
-    texture: TextureStrength
+    /** The ground a light band takes: one ground; or the light ground and the wash in turn, counted from the foot of
+     *  each light stretch (`washes`, Phase 17D, `[R-551]`). */
+    ground: (typeof LIGHT_GROUNDS)[number]
+    /** How a light band sits (the Layout theme's): a full band; inside a dark run, an inset panel that adopts the
+     *  run (`panel`); or, wherever it sits, a panel on the dark ground (`floating`). */
+    sit: (typeof LIGHT_SITS)[number]
   }
+  /** What sits on the grounds: the Background theme's (`lib/backgrounds.ts`). On a roster theme this is THE THEME'S
+   *  OWN background, what it shipped with, and what an absent `designSettings.background` renders; a stored background
+   *  replaces it whole (`effectiveFlow`). */
+  on: BackgroundRules
+  /** The needs that are the flow's own (a dark hero, two ribbons, a host), apart from what its background implies
+   *  (`impliedNeeds`): `needs` is the two together, recomputed when a background replaces the theme's own. */
+  ownNeeds: readonly Need[]
   divider: {
     /** `lib/dividers.ts`; `straight` draws none. */
     shape: Divider
@@ -182,6 +206,27 @@ export type FlowRules = {
   chrome: {header: ChromeScheme; footer: ChromeScheme}
 }
 
+/** What sits on the grounds under a theme: the Background theme's rules (monorepo WS-V1-BACKGROUND-THEME-DESIGN §2). */
+export type BackgroundRules = {
+  dark: (typeof DARK_ONS)[number]
+  light: (typeof LIGHT_ONS)[number]
+  /** The texture's strength on the bands a `pattern` textures (`TEXTURE_STRENGTHS`); every other word names `quiet`. */
+  darkTexture: TextureStrength
+  lightTexture: TextureStrength
+  /** How many light bands the light word draws on. */
+  lightEvery: (typeof LIGHT_EVERY)[number]
+  /** The texture in the homepage hero, where the hero paints its own ground. */
+  hero: boolean
+  /** A dark hero and a dark close join the ramp's first and last runs. The glow's always do. */
+  ends: boolean
+  close: (typeof ON_CLOSES)[number]
+}
+
+/** A background's rules, every word it does not name at its plain value. */
+export function own(on: Partial<BackgroundRules>): BackgroundRules {
+  return {dark: 'plain', light: 'plain', darkTexture: 'quiet', lightTexture: 'quiet', lightEvery: 'all', hero: false, ends: false, close: 'none', ...on}
+}
+
 export type FlowFamily = {
   id: string
   name: string
@@ -193,7 +238,7 @@ export type FlowFamily = {
    *  in the phase record with its captures, never when a step is added. */
   passed: readonly Darkness[]
   /** One rule family, parameterised by the step. */
-  rules: (step: Darkness) => Omit<FlowRules, 'id' | 'name' | 'sentence' | 'family' | 'step' | 'passed'>
+  rules: (step: Darkness) => Omit<FlowRules, 'id' | 'name' | 'sentence' | 'family' | 'step' | 'passed' | 'needs' | 'ownNeeds'> & {needs: readonly Need[]}
 }
 
 // ─── The darkness dial's rule, from the evidence (record §2.5) ────────────────
@@ -301,8 +346,9 @@ export const FAMILIES: readonly FlowFamily[] = [
     // one or two light bands too, which are the palette's and the background layer's (`[R-631]`), not this family's.
     steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: [],
     rules: (step) => ({
-      dark: {budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
-      light: {paint: 'plain', texture: 'quiet'},
+      dark: {budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', ground: 'saturated', sit: 'band', close: 'dark', closeElse: ['saturated', 'muted']},
+      light: {ground: 'plain', sit: 'band'},
+      on: own({dark: 'plain', light: 'plain', darkTexture: 'quiet', lightTexture: 'quiet'}),
       // Phase 18 session B (`[R-597]`, `[R-603]`): its dark close over a light footer, as the study's mostly light
       // pages end (a light footer on 14 of 19), so the one dark band to close never meets a dark footer.
       divider: NO_DIVIDER, spacing: 'normal',
@@ -325,8 +371,9 @@ export const FAMILIES: readonly FlowFamily[] = [
     // their dark bands into runs, which is Cut blocks' rhythm.
     steps: ['balanced'], defaultStep: 'balanced', passed: ['balanced'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: 'pairs', paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
-      light: {paint: 'plain', texture: 'quiet'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: 'pairs', ground: 'plain', sit: 'band', close: 'dark', closeElse: ['muted', 'saturated']},
+      light: {ground: 'plain', sit: 'band'},
+      on: own({dark: 'plain', light: 'plain', darkTexture: 'quiet', lightTexture: 'quiet'}),
       divider: NO_DIVIDER, spacing: 'normal',
       hero: 'site', ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME[step],
     }),
@@ -338,10 +385,11 @@ export const FAMILIES: readonly FlowFamily[] = [
     steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: ['balanced', 'mostlyDark'],
     rules: (step) => ({
       // Phase 17C session 3 (`[R-538]`): its textured bands alternate quiet and strong.
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'pattern', texture: 'alternate', close: 'dark', closeElse: ['muted', 'saturated']},
-      light: {paint: 'plain', texture: 'quiet'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], ground: 'plain', sit: 'band', close: 'dark', closeElse: ['muted', 'saturated']},
+      light: {ground: 'plain', sit: 'band'},
+      on: own({dark: 'pattern', light: 'plain', darkTexture: 'alternate', lightTexture: 'quiet'}),
       divider: {shape: 'peak', at: 'intoDark', carry: ['cards'], hairline: 'none', hairlineInk: 'border'}, spacing: 'normal',
-      hero: 'site', ghost: 'none', overlap: 'photo', needs: ['texture'], chrome: STEP_CHROME[step],
+      hero: 'site', ghost: 'none', overlap: 'photo', needs: [], chrome: STEP_CHROME[step],
     }),
   },
   // ─── Phase 17B session 5 (record WS-V1-PHASE17B5-DESIGN §2) ─────────────────
@@ -364,8 +412,9 @@ export const FAMILIES: readonly FlowFamily[] = [
     // (`[R-517]`).
     steps: ['allDark'], defaultStep: 'allDark', passed: [],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
-      light: {paint: 'plain', texture: 'quiet'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], ground: 'plain', sit: 'band', close: 'dark', closeElse: ['saturated', 'muted']},
+      light: {ground: 'plain', sit: 'band'},
+      on: own({dark: 'plain', light: 'plain', darkTexture: 'quiet', lightTexture: 'quiet'}),
       divider: {shape: 'straight', at: 'none', carry: [], hairline: 'atChange', hairlineInk: 'accent'}, spacing: 'normal',
       hero: 'site', ghost: 'none', overlap: 'none', needs: ['darkHero'], chrome: STEP_CHROME[step],
     }),
@@ -379,11 +428,12 @@ export const FAMILIES: readonly FlowFamily[] = [
     // study draws initials; the evidenced large mark is the logo, backlog 350).
     steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'muted', closeElse: ['dark']},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], ground: 'plain', sit: 'band', close: 'muted', closeElse: ['dark']},
       // Phase 17C session 3 (`[R-538]`): its light bands at the quiet strength.
-      light: {paint: 'pattern', texture: 'quiet'},
+      light: {ground: 'plain', sit: 'band'},
+      on: own({dark: 'plain', light: 'pattern', darkTexture: 'quiet', lightTexture: 'quiet'}),
       divider: {shape: 'straight', at: 'none', carry: [], hairline: 'everyBand', hairlineInk: 'border'}, spacing: 'spacious',
-      hero: 'site', ghost: 'none', overlap: 'none', needs: ['texture'], chrome: {header: 'light', footer: 'light'},
+      hero: 'site', ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
     }),
   },
   {
@@ -395,8 +445,9 @@ export const FAMILIES: readonly FlowFamily[] = [
     // which is the story's to fix (backlog 364), not this family's.
     steps: ['mostlyLight'], defaultStep: 'mostlyLight', passed: ['mostlyLight'],
     rules: (step) => ({
-      dark: {budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', paint: 'saturated', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
-      light: {paint: 'plain', texture: 'quiet'},
+      dark: {budget: 'all', hosts: ['ribbon'], rhythm: 'alternate', ground: 'saturated', sit: 'band', close: 'dark', closeElse: ['saturated', 'muted']},
+      light: {ground: 'plain', sit: 'band'},
+      on: own({dark: 'plain', light: 'plain', darkTexture: 'quiet', lightTexture: 'quiet'}),
       divider: NO_DIVIDER, spacing: 'normal',
       // Phase 18 session B: a light footer under its dark close, as Quiet's.
       hero: 'site', ghost: 'none', overlap: 'none', needs: ['ribbons'], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
@@ -415,12 +466,13 @@ export const FAMILIES: readonly FlowFamily[] = [
     // photo bands, and the family's sites are all mostly dark.
     steps: ['mostlyDark'], defaultStep: 'mostlyDark', passed: ['mostlyDark'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'heroPhoto', texture: 'quiet', close: 'photo', closeElse: ['dark', 'muted']},
-      light: {paint: 'plain', texture: 'quiet'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], ground: 'plain', sit: 'band', close: 'dark', closeElse: ['muted']},
+      light: {ground: 'plain', sit: 'band'},
+      on: own({dark: 'span', light: 'plain', darkTexture: 'quiet', lightTexture: 'quiet', close: 'photo'}),
       divider: NO_DIVIDER, spacing: 'normal',
       // Phase 18 session B: a light footer, so its photograph close stands apart from it; under the scrim a photograph
       // measures 0.7 to 18.4 from the dark ground (`closeOf`). The photograph over a dark footer is shown to Justin.
-      hero: 'site', ghost: 'none', overlap: 'none', needs: ['heroPhoto'], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
+      hero: 'site', ghost: 'none', overlap: 'none', needs: [], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
     }),
   },
   // ─── Phase 17D session 1 (record WS-V1-PHASE17D-DESIGN §2) ──────────────────
@@ -436,14 +488,16 @@ export const FAMILIES: readonly FlowFamily[] = [
     steps: ['balanced', 'mostlyDark'], defaultStep: 'balanced', passed: ['balanced', 'mostlyDark'],
     rules: (step) => (step === 'mostlyDark'
       ? {
-          dark: {budget: STEP_BUDGET.mostlyDark, hosts: STEP_HOSTS.mostlyDark, rhythm: 'runs', paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
-          light: {paint: 'floating', texture: 'quiet'},
+          dark: {budget: STEP_BUDGET.mostlyDark, hosts: STEP_HOSTS.mostlyDark, rhythm: 'runs', ground: 'plain', sit: 'band', close: 'dark', closeElse: ['muted', 'saturated']},
+          light: {ground: 'plain', sit: 'floating'},
+          on: own({dark: 'plain', light: 'plain', darkTexture: 'quiet', lightTexture: 'quiet'}),
           divider: NO_DIVIDER, spacing: 'normal',
           hero: 'site', ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.mostlyDark,
         }
       : {
-          dark: {budget: STEP_BUDGET.balanced, hosts: STEP_HOSTS.balanced, rhythm: 'alternate', paint: 'floating', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
-          light: {paint: 'plain', texture: 'quiet'},
+          dark: {budget: STEP_BUDGET.balanced, hosts: STEP_HOSTS.balanced, rhythm: 'alternate', ground: 'plain', sit: 'floating', close: 'dark', closeElse: ['muted', 'saturated']},
+          light: {ground: 'plain', sit: 'band'},
+          on: own({dark: 'plain', light: 'plain', darkTexture: 'quiet', lightTexture: 'quiet'}),
           divider: NO_DIVIDER, spacing: 'normal',
           hero: 'site', ghost: 'none', overlap: 'none', needs: [], chrome: STEP_CHROME.balanced,
         }),
@@ -471,14 +525,16 @@ export const FAMILIES: readonly FlowFamily[] = [
     steps: ['mostlyLight', 'balanced'], defaultStep: 'mostlyLight', passed: ['mostlyLight', 'balanced'],
     rules: (step) => (step === 'balanced'
       ? {
-          dark: {budget: 'quarter', hosts: ['ribbon', 'differentiators', 'narrative', 'testimonials', 'statement', 'caseResults', 'attorneys'], rhythm: 'spread', paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['wash']},
-          light: {paint: 'washes', texture: 'quiet'},
+          dark: {budget: 'quarter', hosts: ['ribbon', 'differentiators', 'narrative', 'testimonials', 'statement', 'caseResults', 'attorneys'], rhythm: 'spread', ground: 'plain', sit: 'band', close: 'dark', closeElse: ['wash']},
+          light: {ground: 'washes', sit: 'band'},
+          on: own({dark: 'plain', light: 'plain', darkTexture: 'quiet', lightTexture: 'quiet'}),
           divider: NO_DIVIDER, spacing: 'normal',
           hero: 'light', ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
         }
       : {
-          dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: 'plain', texture: 'quiet', close: 'wash', closeElse: ['dark']},
-          light: {paint: 'washes', texture: 'quiet'},
+          dark: {budget: 'none', hosts: [], rhythm: 'bookends', ground: 'plain', sit: 'band', close: 'wash', closeElse: ['dark']},
+          light: {ground: 'washes', sit: 'band'},
+          on: own({dark: 'plain', light: 'plain', darkTexture: 'quiet', lightTexture: 'quiet'}),
           divider: NO_DIVIDER, spacing: 'normal',
           hero: 'light', ghost: 'none', overlap: 'none', needs: [], chrome: {header: 'light', footer: 'light'},
         }),
@@ -509,10 +565,11 @@ export const FAMILIES: readonly FlowFamily[] = [
     // the end he looked at. Photo scrims ends the same way, its photograph close over a light footer.
     steps: ['mostlyDark'], defaultStep: 'mostlyDark', passed: [],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'glow', texture: 'quiet', close: 'dark', closeElse: ['saturated', 'muted']},
-      light: {paint: 'plain', texture: 'quiet'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], ground: 'plain', sit: 'band', close: 'dark', closeElse: ['saturated', 'muted']},
+      light: {ground: 'plain', sit: 'band'},
+      on: own({dark: 'glow', light: 'plain', darkTexture: 'quiet', lightTexture: 'quiet'}),
       divider: NO_DIVIDER, spacing: 'normal',
-      hero: 'dark', ghost: 'none', overlap: 'photo', needs: ['glow'], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
+      hero: 'dark', ghost: 'none', overlap: 'photo', needs: [], chrome: {header: STEP_CHROME[step].header, footer: 'light'},
     }),
   },
   {
@@ -527,8 +584,9 @@ export const FAMILIES: readonly FlowFamily[] = [
     // blocks' on every canvas.
     steps: ['balanced'], defaultStep: 'balanced', passed: ['balanced'],
     rules: (step) => ({
-      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], paint: 'plain', texture: 'quiet', close: 'dark', closeElse: ['muted', 'saturated']},
-      light: {paint: 'plain', texture: 'quiet'},
+      dark: {budget: STEP_BUDGET[step], hosts: STEP_HOSTS[step], rhythm: STEP_RHYTHM[step], ground: 'plain', sit: 'band', close: 'dark', closeElse: ['muted', 'saturated']},
+      light: {ground: 'plain', sit: 'band'},
+      on: own({dark: 'plain', light: 'plain', darkTexture: 'quiet', lightTexture: 'quiet'}),
       divider: {shape: 'steep', at: 'everyChange', carry: ['cards', 'photo'], hairline: 'none', hairlineInk: 'border'}, spacing: 'normal',
       hero: 'site', ghost: 'none', overlap: 'photo', needs: [], chrome: STEP_CHROME[step],
     }),
@@ -541,15 +599,20 @@ export function flowId(family: string, step: Darkness): string {
 
 /** The roster: one theme per family per shipped step. `presets.json` carries it into Python. */
 export const FLOWS: readonly FlowRules[] = FAMILIES.flatMap((f) =>
-  f.steps.map((step) => ({
-    ...f.rules(step),
+  f.steps.map((step) => {
+    const {needs: ownNeeds, ...rules} = f.rules(step)
+    return {
+    ...rules,
+    ownNeeds,
+    needs: [...ownNeeds, ...impliedNeeds({...rules, on: rules.on})],
     id: flowId(f.id, step),
     name: f.steps.length > 1 ? `${f.name}, ${DARKNESS_LABELS[step].toLowerCase()}` : f.name,
     sentence: f.sentence,
     family: f.id,
     step,
     passed: f.passed.includes(step),
-  })),
+    }
+  }),
 )
 
 /** The family a roster theme belongs to. */
@@ -612,8 +675,10 @@ export function bridgeOf(d: Record<string, unknown>): FlowRules {
   return {
     id: 'stored.bridge', name: 'As stored', family: 'stored', step: 'mostlyLight', passed: false,
     sentence: 'The page as the six retired fields stored it, until Apply writes a theme.',
-    dark: {budget: 'none', hosts: [], rhythm: 'bookends', paint: d.sectionGradient === 'deep' ? 'gradient' : 'plain', texture: 'quiet', close: 'muted', closeElse: []},
-    light: {paint: 'plain', texture: 'quiet'},
+    dark: {budget: 'none', hosts: [], rhythm: 'bookends', ground: 'plain', sit: 'band', close: 'muted', closeElse: []},
+    light: {ground: 'plain', sit: 'band'},
+    on: own({dark: d.sectionGradient === 'deep' ? 'gradient' : 'plain'}),
+    ownNeeds: [],
     divider: {shape, at: 'intoDark', carry: readCarry(d.dividerCarry), hairline: 'none', hairlineInk: 'border'},
     spacing: 'normal',
     hero: 'site',
@@ -687,16 +752,20 @@ export type CanvasFacts = {
   heroPhoto?: boolean
   /** The palette's dark ground has room to glow (`glowOk`, Phase 17D session 2). */
   glow?: boolean
+  /** The site has an approved photograph in the theme's set (`photoSetOf`), which the faint photographs are drawn from. */
+  photoSet?: boolean
 }
 
 /** The needs a theme's own rules imply, for the test that holds `needs` to them. */
-export function impliedNeeds(rules: Pick<FlowRules, 'dark' | 'light' | 'ghost'>): Need[] {
+export function impliedNeeds(rules: Pick<FlowRules, 'on' | 'ghost'>): Need[] {
   const out: Need[] = []
-  if (rules.dark.paint === 'pattern' || rules.light.paint === 'pattern') out.push('texture')
-  if (rules.dark.paint === 'photo') out.push('photos')
-  if (rules.dark.paint === 'heroPhoto' || rules.dark.close === 'photo') out.push('heroPhoto')
+  const {on} = rules
+  if (on.dark === 'pattern' || on.light === 'pattern' || on.hero || on.close === 'pattern') out.push('texture')
+  if (on.dark === 'photo') out.push('photos')
+  if (drawsHeroPhoto(rules)) out.push('heroPhoto')
+  if (on.dark === 'fade' || on.light === 'fade') out.push('photoSet')
   if (rules.ghost === 'once') out.push('initials')
-  if (rules.dark.paint === 'glow') out.push('glow')
+  if (on.dark === 'glow') out.push('glow')
   return out
 }
 
@@ -709,6 +778,7 @@ export function needLabel(need: Need): string {
     case 'ribbons': return 'two ribbon sections the theme can fill'
     case 'darkHero': return 'a dark or photo hero'
     case 'heroPhoto': return 'a landscape hero photograph of a place, approved with this theme'
+    case 'photoSet': return 'theme photographs uploaded in Design Settings'
     case 'glow': return 'a palette whose dark sections have room to glow'
     default: return `a ${need} section`
   }
@@ -724,6 +794,7 @@ export function unmetNeeds(flow: FlowRules, facts: CanvasFacts): Need[] {
     if (need === 'ribbons') return (facts.ribbonsFilled ?? 0) < 2
     if (need === 'darkHero') return !(facts.hero === 'dark' || facts.hero === 'image')
     if (need === 'heroPhoto') return !facts.heroPhoto
+    if (need === 'photoSet') return !facts.photoSet
     if (need === 'glow') return !facts.glow
     return !facts.hosts.includes(need)
   })
@@ -733,13 +804,14 @@ export function unmetNeeds(flow: FlowRules, facts: CanvasFacts): Need[] {
 
 /** The theme draws the hero's photograph (Phase 17B session 6): its sections or its close, so Apply
  *  records which photograph it was approved with (`[R-532]`). */
-export function drawsHeroPhoto(flow: Pick<FlowRules, 'dark'> | null | undefined): boolean {
-  return flow?.dark.paint === 'heroPhoto' || flow?.dark.close === 'photo'
+export function drawsHeroPhoto(flow: Pick<FlowRules, 'on'> | null | undefined): boolean {
+  const on = flow?.on
+  return !!on && (on.dark === 'span' || on.dark === 'windows' || on.dark === 'fade' || on.light === 'fade' || on.close === 'photo')
 }
 
 /** A dark band's ground fades under this theme: the bridge's ramp (`gradient`, `gradientPerBand`). */
 export function fadesUnder(flow: FlowRules | null | undefined): boolean {
-  return flow?.dark.paint === 'gradient' || flow?.dark.paint === 'gradientPerBand'
+  return flow?.on.dark === 'gradient' || flow?.on.dark === 'gradientPerBand'
 }
 
 /** What a dark band this theme paints draws over its ground (Phase 17D session 2): the bridge's ramp, Gradient bloom's
@@ -747,7 +819,7 @@ export function fadesUnder(flow: FlowRules | null | undefined): boolean {
  *  the dark ground; the walk carries it on every band's seam (`seam.fade`). */
 export function fadeOf(flow: FlowRules | null | undefined, glow: boolean | undefined): 'gradient' | 'glow' | null {
   if (fadesUnder(flow)) return 'gradient'
-  return flow?.dark.paint === 'glow' && glow ? 'glow' : null
+  return flow?.on.dark === 'glow' && glow ? 'glow' : null
 }
 
 const toOklch = converter('oklch')
@@ -826,14 +898,15 @@ export function closeOf(flow: FlowRules | null | undefined, facts: CloseFacts): 
   const t = paletteOf(facts.colors).tokens
   const satOk = saturatedFillOk(facts.colors)
   const footerHex = facts.footer === 'dark' ? t['--color-brand-dark'] : t['--color-hero-tint']
-  const order: Close[] = [flow?.dark.close ?? 'muted', ...(flow?.dark.closeElse ?? [])]
+  // The background's photograph first, where it asks for one (Photo scrims' own does), then the theme's grounds.
+  const order: Close[] = [...(flow?.on.close === 'photo' ? ['photo' as const] : []), flow?.dark.close ?? 'muted', ...(flow?.dark.closeElse ?? [])]
   const drawable = order.filter((c) => (c !== 'photo' || facts.heroPhoto) && (c !== 'saturated' || satOk))
   const fromFooter = (c: Close) => (c === 'photo' ? facts.footer === 'light' : deltaE(t[GROUND_TOKEN[c]!], footerHex) >= CLOSE_APART_DE)
   const aboveHex = facts.above ? t[GROUND_TOKEN[facts.above] ?? '--color-background'] : null
   // A dark close the theme lights does not melt into the dark run above it: its glow peaks in its own middle, as the
   // run's last band (the roster eye of 2026-10-03, `[R-631]`: the glow carries through to the close). Gradient bloom
   // alone, and only where the palette has room to glow; the ruling against the footer's color holds as always.
-  const lit = flow?.dark.paint === 'glow' && paletteOf(facts.colors).glowOk
+  const lit = (flow?.on.dark === 'glow' && paletteOf(facts.colors).glowOk) || (flow?.on.dark === 'gradient' && flow.on.ends)
   const fromAbove = (c: Close) => c === 'photo' || (c === 'dark' && lit) || !aboveHex || deltaE(t[GROUND_TOKEN[c]!], aboveHex) >= CLOSE_ABOVE_DE
   return drawable.find((c) => fromFooter(c) && fromAbove(c)) ?? drawable.find(fromFooter) ?? (facts.footer === 'dark' ? 'muted' : 'dark')
 }

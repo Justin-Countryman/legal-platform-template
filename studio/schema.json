@@ -18207,6 +18207,55 @@
         },
         "optional": true
       },
+      "background": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "plain"
+            },
+            {
+              "type": "string",
+              "value": "pattern.touch"
+            },
+            {
+              "type": "string",
+              "value": "pattern.light"
+            },
+            {
+              "type": "string",
+              "value": "pattern.dark"
+            },
+            {
+              "type": "string",
+              "value": "pattern.all"
+            },
+            {
+              "type": "string",
+              "value": "gradient"
+            },
+            {
+              "type": "string",
+              "value": "glow"
+            },
+            {
+              "type": "string",
+              "value": "fade"
+            },
+            {
+              "type": "string",
+              "value": "span"
+            },
+            {
+              "type": "string",
+              "value": "windows"
+            }
+          ]
+        },
+        "optional": true
+      },
       "headingEmphasisStyle": {
         "type": "objectAttribute",
         "value": {

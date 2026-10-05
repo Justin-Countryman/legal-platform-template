@@ -13,7 +13,7 @@ import {Switcher, ROW_THEME_HEAD, CHROME_NOTE_HEAD, chromeNote, familyLabel} fro
 import {RETIRED_STYLE_SETS, STYLE_SETS} from '@/lib/styleSets'
 import {PALETTE_PRESETS} from '@/lib/palettes'
 import {FAMILIES, FLOWS, flowId} from '@/lib/flows'
-import {planPreview, type StoredDesign} from '@/lib/preview/plan'
+import {planPreview, type PreviewChoices, type StoredDesign} from '@/lib/preview/plan'
 import {verifyToken, type PreviewGrant} from '@/lib/preview/session'
 import {type SiteChrome} from '@/components/layout/SiteShell'
 import {setPhotoEntries} from '@/lib/heroGround'
@@ -27,7 +27,7 @@ const SECRET = 'switcher-test-secret'
 const stored: StoredDesign = {_id: 'designSettings', _rev: 'rev-9'}
 const operator: PreviewGrant = {v: 1, role: 'operator', exp: 1_900_000_000, apply: {origin: 'http://127.0.0.1:8787', slug: 'example-firm'}}
 const client: PreviewGrant = {v: 1, role: 'client', exp: 1_900_000_000, styleSet: 'graphite', palette: 'navy-brass', flow: 'alternating.balanced', view: 'design'}
-const choices = {styleSet: 'graphite', palette: 'navy-brass', flow: 'site', view: 'design' as const}
+const choices: PreviewChoices = {styleSet: 'graphite', palette: 'navy-brass', flow: 'site', view: 'design'}
 /** A chrome whose style set names a texture, so Cut blocks' one need is met. */
 const chromeWithTexture = {designTokens: {patternTexture: 'diagonalHatch'}, header: {siteSettings: {firmName: 'Example Law Firm'}, mainNavigation: {defaultScheme: 'light', heroMerge: false}}} as unknown as SiteChrome
 
@@ -405,5 +405,74 @@ describe('a theme’s needs read the hero as that theme draws it', () => {
     const c = render(<Switcher grant={operator} choices={c4} plan={planPreview(stored, c4)} canvas={[]} chrome={null} origin="https://example.com" hero="wash" heroUnder={heroUnder} />).container
     const black = [...c.querySelectorAll('a.sw-family')].find((a) => a.textContent?.startsWith('Type on black'))!
     expect(black.textContent).not.toContain('a dark or photo hero')
+  })
+})
+
+// ─── The background row (the Background theme, monorepo WS-V1-BACKGROUND-THEME-DESIGN §2, §7) ─────────────────
+describe('Switcher, the background row', () => {
+  const band = (key: string, layout: string) => ({_type: 'contentSectionInline', _key: key, layout, heading: 'A heading', body: [{_type: 'block', children: [{_type: 'span', text: 'Words.'}]}]})
+  const canvas = [band('a', 'statement'), band('b', 'twoColumnText'), band('c', 'statement'), band('d', 'twoColumnText')]
+  const at = (flow: string, background?: string) => ({...choices, flow, ...(background ? {background} : {})})
+
+  it('heads with its sentinel and offers as the site is, the theme’s own named for what it draws, and every family, each a link', async () => {
+    const {ROW_BACKGROUND_HEAD} = await import('../Switcher')
+    const {BACKGROUND_FAMILIES} = await import('@/lib/backgrounds')
+    const c = draw(operator, stored, at('cutBlocks.balanced'), canvas, chromeWithTexture, 'dark')
+    expect(c.textContent).toContain(ROW_BACKGROUND_HEAD)
+    expect(c.textContent).toContain('Under Cut blocks, balanced: the pattern on dark sections.')
+    const links = hrefs(c)
+    expect(links).toContain('/site-preview/graphite/navy-brass/cutBlocks.balanced/own/design')
+    for (const f of BACKGROUND_FAMILIES) expect(links.some((h) => h.startsWith(`/site-preview/graphite/navy-brass/cutBlocks.balanced/${f.id}`)), f.id).toBe(true)
+    // With no background chosen, every other row's links are the addresses they always were.
+    expect(links).toContain('/site-preview/graphite/navy-brass/quiet.mostlyLight/design')
+  })
+
+  it('a chosen background rides every other row’s links, shows its steps, and is named with what it replaces', () => {
+    const c = draw(operator, stored, at('cutBlocks.balanced', 'pattern.touch'), canvas, chromeWithTexture, 'dark')
+    const links = hrefs(c)
+    expect(links).toContain('/site-preview/graphite/navy-brass/quiet.mostlyLight/pattern.touch/design')
+    for (const step of ['touch', 'light', 'dark', 'all']) expect(links).toContain(`/site-preview/graphite/navy-brass/cutBlocks.balanced/pattern.${step}/design`)
+    expect(c.textContent).toContain('It replaces the theme’s own (the pattern on dark sections).')
+    expect(c.querySelector('summary')!.textContent).toContain('Pattern: a touch on the sections')
+  })
+
+  it('an option with nothing to draw on here is dimmed with its reason and stays a link, never hidden', () => {
+    // No texture, no photograph, the placeholder palette's glow aside: Pattern needs a style set with one.
+    const c = draw(operator, stored, at('quiet.mostlyLight'), canvas, null, 'dark')
+    const dim = [...c.querySelectorAll('a.sw-dim')]
+    const reasons = dim.map((a) => a.textContent ?? '')
+    expect(reasons.some((r) => r.startsWith('Pattern') && r.includes('Needs a style set with a texture'))).toBe(true)
+    expect(reasons.some((r) => r.startsWith('Photographs') && r.includes('Needs a landscape hero photograph'))).toBe(true)
+    // Quiet darkens only its ribbons, and this page has none: a dark-section device has no section.
+    expect(reasons.some((r) => r.startsWith('Gradient') && r.includes('leaves it no section to draw on'))).toBe(true)
+    for (const a of dim) expect(a.getAttribute('href')).toMatch(/^\/site-preview\//)
+    expect(c.textContent).toContain('a dimmed one has nothing to draw on here')
+  })
+
+  it('marks the background that answers the theme’s verdict, and says where one draws only in part', () => {
+    const quiet = draw(operator, stored, at('quiet.mostlyLight'), canvas, chromeWithTexture, 'dark')
+    expect(quiet.textContent).toContain('Pattern (suggested with Quiet)')
+    // Cut blocks keeps a dark footer, so a lit close cannot stand beside it.
+    const cut = draw(operator, stored, at('cutBlocks.mostlyDark'), canvas, chromeWithTexture, 'dark')
+    const glow = [...cut.querySelectorAll('a')].find((a) => (a.textContent ?? '').startsWith('Glow'))!
+    expect(glow.textContent).toContain('Partly here')
+    expect(glow.textContent).toContain('dark footer keeps the closing section plain')
+  })
+
+  it('the Apply link carries the one field and names the background; the theme’s own clears it', () => {
+    const applyOf = (c: Element) => verifyToken(new URL([...c.querySelectorAll('a')].find((a) => (a.textContent ?? '').startsWith('Apply'))!.getAttribute('href')!.replace('/#/design', '/design')).searchParams.get('t'), SECRET) as {set: Record<string, unknown>; unset: string[]; background: {id: string; name: string} | null}
+    const set = applyOf(draw(operator, stored, {...choices, styleSet: 'site', palette: 'site', background: 'glow'}, canvas, chromeWithTexture, 'dark'))
+    expect(set.set).toEqual({background: 'glow'})
+    expect(set.background).toEqual({id: 'glow', name: 'Glow on the sections'})
+    const cleared = applyOf(draw(operator, {...stored, background: 'glow'}, {...choices, styleSet: 'site', palette: 'site', background: 'own'}, canvas, chromeWithTexture, 'dark'))
+    expect(cleared.unset).toEqual(['background'])
+    expect(cleared.set).toEqual({})
+  })
+
+  it('a client sees one line that names the background, and never the row', async () => {
+    const {ROW_BACKGROUND_HEAD} = await import('../Switcher')
+    const c = draw({...client, background: 'fade'}, stored, {...choices, flow: 'alternating.balanced', background: 'fade'})
+    expect(c.textContent).toContain('Faint photographs on the sections')
+    expect(c.textContent).not.toContain(ROW_BACKGROUND_HEAD)
   })
 })

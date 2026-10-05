@@ -893,6 +893,25 @@ h1, h2, h3, h4, h5, h6 {
   --color-border-control:    var(--color-border-control-on-scrim);
   --color-action-state-cue:  var(--color-action-state-cue-on-scrim);
 }
+/* A photograph ghosted into a light band (the Background theme's faint photographs, `data-fade`; monorepo
+   WS-V1-BACKGROUND-THEME-DESIGN §7 item 8). The band's floor is its ground with black over it at the ghost's opacity,
+   and under the tiers every light band shares that leaves room for 4% of black, which shows no photograph. So the band
+   takes its own tiers, as a photo band does on the dark side: each is the site's own where that holds on the floor,
+   else stepped darker at its own hue (`fadeOnLight`, `lib/designTokens.ts`; `validateWcag` holds every pair on the
+   floor). The hover wash is off: a 6% ink over a tier solved to its ratio would take it under. A dark card or panel
+   inside the band sets its own values, as it does anywhere. */
+[data-fade="light"] {
+  --color-foreground-muted:   var(--color-foreground-muted-on-fade);
+  --color-foreground-subtle:  var(--color-foreground-subtle-on-fade);
+  --color-accent-text:        var(--color-accent-text-on-fade);
+  --color-action-text:        var(--color-action-text-on-fade);
+  --color-action-text-hover:  var(--color-action-text-hover-on-fade);
+  --color-ring-focus:         var(--color-ring-focus-on-fade);
+  --color-star-outline:       var(--color-star-outline-on-fade);
+  --color-border-control:     var(--color-border-control-on-fade);
+  --color-action-state-cue:   var(--color-action-state-cue-on-fade);
+  --color-hover-wash:         transparent;
+}
 /* No image on a photo band renders brighter than the white the scrim's proof assumes (an HDR
    photograph otherwise can, where the browser supports extended range). */
 [data-scrim="true"] img {
@@ -1499,6 +1518,37 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
     mask-image: linear-gradient(to bottom, #000 55%, transparent);
   }
 }
+/* A faint photograph behind a dark run (the Background theme, `photoFade`; monorepo WS-V1-BACKGROUND-THEME-DESIGN §7
+   item 9): the set's photograph and its scrim fade into the run's dark ground at the head and the foot, so the
+   photograph arrives and leaves without an edge. Every point is a mix of the scrim over the photograph and the dark
+   ground, each held under the band's text (the run head's proof, above). On a phone it is the run's head, fading in
+   as well as out. Nothing here moves. */
+@utility photo-fade-run {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 24%, #000 76%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 24%, #000 76%, transparent);
+}
+@media (width < 48rem) {
+  .photo-fade-run.photo-run-head {
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 55%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 55%, transparent);
+  }
+}
+/* A photograph ghosted into a light band: at the opacity the palette solved, fading out across the band from the side
+   it enters (the right, or the left). A mask only removes: no point is darker than the floor the tiers are held on. */
+@utility photo-ghost {
+  opacity: var(--fade-opacity-on-light, 0);
+  -webkit-mask-image: linear-gradient(to left, #000 20%, transparent 88%);
+  mask-image: linear-gradient(to left, #000 20%, transparent 88%);
+}
+@utility photo-ghost-from-left {
+  -webkit-mask-image: linear-gradient(to right, #000 20%, transparent 88%);
+  mask-image: linear-gradient(to right, #000 20%, transparent 88%);
+}
+/* A ghost is decoration: gone where the reader asked for their own colors, more contrast, or paper. The band keeps its
+   stronger tiers, which only raises contrast on the bare ground. */
+@media (forced-colors: active) { [data-photo-ghost] { display: none; } }
+@media print { [data-photo-ghost] { display: none; } }
+@media (prefers-contrast: more) { [data-photo-ghost] { display: none; } }
 /* No hover glow on a photograph or a lit ground (Phase 17E, the pre-PR break pass; monorepo WS-V1-PHASE17E-DESIGN §9):
    the accent glow over a card's fill takes the muted line under 4.5:1 at its brightest corner, over the scrim's floor
    on 8 of the 15 presets and over Gradient bloom's glow on 2 of 9 (measured). A practice grid first sits on a

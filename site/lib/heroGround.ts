@@ -21,7 +21,7 @@ export function themedHero<H extends HomeHeroData | null>(hero: H, flow: Pick<Fl
 // Justin, of Gradient bloom: "there is no gradient in the hero to create that continuity after a few sections the
 // gradient stuff just stops". The walk gives a dark hero its place in the first run the theme lights (`walkPage().hero`,
 // `components/sections/sectionFrame.ts`), and the hero band draws it as a section draws its own.
-export type HeroGlow = {index: number; length: number; peak?: number; side?: 'left' | 'right'}
+export type HeroGlow = {index: number; length: number; peak?: number; side?: 'left' | 'right'; /** The ramp instead of the glow (the Background theme's Gradient). */ kind?: 'gradient' | 'glow' | null}
 
 /** The side the homepage hero's cutout figure stands on, for the glow to peak behind it as it peaks behind a
  *  section's: the overlay's foreground figure, grounded bottom-right beside left-aligned text (`HeroForeground`).
@@ -56,7 +56,7 @@ export function heroGround(hero: HomeHeroData | null, flow: Pick<FlowRules, 'lig
 // light hero but one with a photograph, a mosaic or a section background behind it (the text half of a full-bleed split
 // included, whose band paints behind that half). `heroGround` stays what the first band meets.
 export function heroPaint(hero: HomeHeroData | null, flow: Pick<FlowRules, 'light'> | null | undefined): 'wash' | null {
-  if (!hero || flow?.light.paint !== 'washes' || hero.schemeOverride !== 'light') return null
+  if (!hero || flow?.light.ground !== 'washes' || hero.schemeOverride !== 'light') return null
   const c = resolveHeroConfig(hero)
   if (c.skeleton === 'overlay' && (c.backdrop === 'image' || c.backdrop === 'mosaic')) return null
   if (hero.sectionBackgroundImage?.src) return null

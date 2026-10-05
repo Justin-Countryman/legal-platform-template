@@ -6,7 +6,7 @@ import {type SiteChrome} from '@/components/layout/SiteShell'
 import {homeHeroOf, type HomePageData} from '@/components/layout/HomeBody'
 import {heroPhotoOf} from '@/lib/heroGround'
 import {getPreviewSession, type PreviewGrant} from './session'
-import {grantFlow, parseChoices, planPreview, previewPath, withPreview, type PreviewChoices, type PreviewPlan, type StoredDesign} from './plan'
+import {grantBackground, grantFlow, parseAddress, parseChoices, planPreview, previewPath, withPreview, type PreviewChoices, type PreviewPlan, type StoredDesign} from './plan'
 
 // ─── One read of the preview, shared by its layout, its page and the switcher ──
 //
@@ -33,18 +33,19 @@ export type PreviewState =
       home: HomePageData
     }
 
-export const loadPreview = cache(async (styleSet: string, palette: string, flow: string, view: string): Promise<PreviewState> => {
+/** `address` is the address's segments joined by `/` (a string, so `cache()` keys one read per request). */
+export const loadPreview = cache(async (address: string): Promise<PreviewState> => {
   const session = await getPreviewSession()
   if (session.state === 'none') return {kind: 'none'}
   if (session.state === 'ended') return {kind: 'ended'}
   const {grant} = session
 
-  const asked = parseChoices(styleSet, palette, flow, view)
+  const asked = parseAddress(address.split('/'))
   let choices = asked
   if (grant.role === 'client') {
     // A client link minted before the theme row carries no `flow`, and one minted before a step
     // was retired names a theme the roster no longer has: both read as the site is.
-    choices = parseChoices(grant.styleSet ?? '', grant.palette ?? '', grantFlow(grant.flow), grant.view ?? '')
+    choices = parseChoices(grant.styleSet ?? '', grant.palette ?? '', grantFlow(grant.flow), grant.view ?? '', grantBackground(grant.background))
     if (choices && (!asked || previewPath(asked) !== previewPath(choices))) {
       return {kind: 'redirect', path: previewPath(choices)}
     }

@@ -3270,8 +3270,8 @@
           "ribbon"
         ],
         "rhythm": "alternate",
-        "paint": "saturated",
-        "texture": "quiet",
+        "ground": "saturated",
+        "sit": "band",
         "close": "dark",
         "closeElse": [
           "saturated",
@@ -3279,8 +3279,18 @@
         ]
       },
       "light": {
-        "paint": "plain",
-        "texture": "quiet"
+        "ground": "plain",
+        "sit": "band"
+      },
+      "on": {
+        "dark": "plain",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
       },
       "divider": {
         "shape": "straight",
@@ -3293,11 +3303,12 @@
       "hero": "site",
       "ghost": "none",
       "overlap": "none",
-      "needs": [],
       "chrome": {
         "header": "light",
         "footer": "light"
       },
+      "ownNeeds": [],
+      "needs": [],
       "id": "quiet.mostlyLight",
       "name": "Quiet",
       "sentence": "A dark hero, the ribbon on the accent, then light all the way down, and one dark band to close.",
@@ -3318,8 +3329,8 @@
           "narrative"
         ],
         "rhythm": "pairs",
-        "paint": "plain",
-        "texture": "quiet",
+        "ground": "plain",
+        "sit": "band",
         "close": "dark",
         "closeElse": [
           "muted",
@@ -3327,8 +3338,18 @@
         ]
       },
       "light": {
-        "paint": "plain",
-        "texture": "quiet"
+        "ground": "plain",
+        "sit": "band"
+      },
+      "on": {
+        "dark": "plain",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
       },
       "divider": {
         "shape": "straight",
@@ -3341,11 +3362,12 @@
       "hero": "site",
       "ghost": "none",
       "overlap": "none",
-      "needs": [],
       "chrome": {
         "header": "light",
         "footer": "dark"
       },
+      "ownNeeds": [],
+      "needs": [],
       "id": "alternating.balanced",
       "name": "Alternating",
       "sentence": "Dark, light, dark, light, with hard edges: the classic law site.",
@@ -3366,8 +3388,8 @@
           "narrative"
         ],
         "rhythm": "pairs",
-        "paint": "pattern",
-        "texture": "alternate",
+        "ground": "plain",
+        "sit": "band",
         "close": "dark",
         "closeElse": [
           "muted",
@@ -3375,8 +3397,18 @@
         ]
       },
       "light": {
-        "paint": "plain",
-        "texture": "quiet"
+        "ground": "plain",
+        "sit": "band"
+      },
+      "on": {
+        "dark": "pattern",
+        "light": "plain",
+        "darkTexture": "alternate",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
       },
       "divider": {
         "shape": "peak",
@@ -3391,13 +3423,14 @@
       "hero": "site",
       "ghost": "none",
       "overlap": "photo",
-      "needs": [
-        "texture"
-      ],
       "chrome": {
         "header": "light",
         "footer": "dark"
       },
+      "ownNeeds": [],
+      "needs": [
+        "texture"
+      ],
       "id": "cutBlocks.balanced",
       "name": "Cut blocks, balanced",
       "sentence": "Navy blocks cut into the page with a peak, each carrying the texture.",
@@ -3420,8 +3453,8 @@
           "badges"
         ],
         "rhythm": "runs",
-        "paint": "pattern",
-        "texture": "alternate",
+        "ground": "plain",
+        "sit": "band",
         "close": "dark",
         "closeElse": [
           "muted",
@@ -3429,8 +3462,18 @@
         ]
       },
       "light": {
-        "paint": "plain",
-        "texture": "quiet"
+        "ground": "plain",
+        "sit": "band"
+      },
+      "on": {
+        "dark": "pattern",
+        "light": "plain",
+        "darkTexture": "alternate",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
       },
       "divider": {
         "shape": "peak",
@@ -3445,13 +3488,14 @@
       "hero": "site",
       "ghost": "none",
       "overlap": "photo",
-      "needs": [
-        "texture"
-      ],
       "chrome": {
         "header": "dark",
         "footer": "dark"
       },
+      "ownNeeds": [],
+      "needs": [
+        "texture"
+      ],
       "id": "cutBlocks.mostlyDark",
       "name": "Cut blocks, mostly dark",
       "sentence": "Navy blocks cut into the page with a peak, each carrying the texture.",
@@ -3478,8 +3522,8 @@
           "reviews"
         ],
         "rhythm": "runs",
-        "paint": "plain",
-        "texture": "quiet",
+        "ground": "plain",
+        "sit": "band",
         "close": "dark",
         "closeElse": [
           "saturated",
@@ -3487,8 +3531,18 @@
         ]
       },
       "light": {
-        "paint": "plain",
-        "texture": "quiet"
+        "ground": "plain",
+        "sit": "band"
+      },
+      "on": {
+        "dark": "plain",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
       },
       "divider": {
         "shape": "straight",
@@ -3501,13 +3555,16 @@
       "hero": "site",
       "ghost": "none",
       "overlap": "none",
-      "needs": [
-        "darkHero"
-      ],
       "chrome": {
         "header": "dark",
         "footer": "dark"
       },
+      "ownNeeds": [
+        "darkHero"
+      ],
+      "needs": [
+        "darkHero"
+      ],
       "id": "typeOnBlack.allDark",
       "name": "Type on black",
       "sentence": "All dark and no photographs: one unbroken dark ground, and a close on the accent.",
@@ -3520,16 +3577,26 @@
         "budget": "none",
         "hosts": [],
         "rhythm": "bookends",
-        "paint": "plain",
-        "texture": "quiet",
+        "ground": "plain",
+        "sit": "band",
         "close": "muted",
         "closeElse": [
           "dark"
         ]
       },
       "light": {
-        "paint": "pattern",
-        "texture": "quiet"
+        "ground": "plain",
+        "sit": "band"
+      },
+      "on": {
+        "dark": "plain",
+        "light": "pattern",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
       },
       "divider": {
         "shape": "straight",
@@ -3542,13 +3609,14 @@
       "hero": "site",
       "ghost": "none",
       "overlap": "none",
-      "needs": [
-        "texture"
-      ],
       "chrome": {
         "header": "light",
         "footer": "light"
       },
+      "ownNeeds": [],
+      "needs": [
+        "texture"
+      ],
       "id": "editorial.mostlyLight",
       "name": "Editorial",
       "sentence": "Light and airy down to a dark close: room around every section, a faint texture, a rule at every join.",
@@ -3563,8 +3631,8 @@
           "ribbon"
         ],
         "rhythm": "alternate",
-        "paint": "saturated",
-        "texture": "quiet",
+        "ground": "saturated",
+        "sit": "band",
         "close": "dark",
         "closeElse": [
           "saturated",
@@ -3572,8 +3640,18 @@
         ]
       },
       "light": {
-        "paint": "plain",
-        "texture": "quiet"
+        "ground": "plain",
+        "sit": "band"
+      },
+      "on": {
+        "dark": "plain",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
       },
       "divider": {
         "shape": "straight",
@@ -3586,13 +3664,16 @@
       "hero": "site",
       "ghost": "none",
       "overlap": "none",
-      "needs": [
-        "ribbons"
-      ],
       "chrome": {
         "header": "light",
         "footer": "light"
       },
+      "ownNeeds": [
+        "ribbons"
+      ],
+      "needs": [
+        "ribbons"
+      ],
       "id": "ribbonRhythm.mostlyLight",
       "name": "Ribbon rhythm",
       "sentence": "A light page punctuated by strips of the accent color.",
@@ -3615,17 +3696,26 @@
           "badges"
         ],
         "rhythm": "runs",
-        "paint": "heroPhoto",
-        "texture": "quiet",
-        "close": "photo",
+        "ground": "plain",
+        "sit": "band",
+        "close": "dark",
         "closeElse": [
-          "dark",
           "muted"
         ]
       },
       "light": {
-        "paint": "plain",
-        "texture": "quiet"
+        "ground": "plain",
+        "sit": "band"
+      },
+      "on": {
+        "dark": "span",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "photo"
       },
       "divider": {
         "shape": "straight",
@@ -3638,13 +3728,14 @@
       "hero": "site",
       "ghost": "none",
       "overlap": "none",
-      "needs": [
-        "heroPhoto"
-      ],
       "chrome": {
         "header": "dark",
         "footer": "light"
       },
+      "ownNeeds": [],
+      "needs": [
+        "heroPhoto"
+      ],
       "id": "photoScrims.mostlyDark",
       "name": "Photo scrims",
       "sentence": "Dark-led: photographs of one place behind groups of dark sections and the close, or pieces of the hero’s own photograph.",
@@ -3665,8 +3756,8 @@
           "narrative"
         ],
         "rhythm": "alternate",
-        "paint": "floating",
-        "texture": "quiet",
+        "ground": "plain",
+        "sit": "floating",
         "close": "dark",
         "closeElse": [
           "muted",
@@ -3674,8 +3765,18 @@
         ]
       },
       "light": {
-        "paint": "plain",
-        "texture": "quiet"
+        "ground": "plain",
+        "sit": "band"
+      },
+      "on": {
+        "dark": "plain",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
       },
       "divider": {
         "shape": "straight",
@@ -3688,11 +3789,12 @@
       "hero": "site",
       "ghost": "none",
       "overlap": "none",
-      "needs": [],
       "chrome": {
         "header": "light",
         "footer": "dark"
       },
+      "ownNeeds": [],
+      "needs": [],
       "id": "floatingPanels.balanced",
       "name": "Floating panels, balanced",
       "sentence": "One calm ground down the page, and the other floating on it as panels.",
@@ -3715,8 +3817,8 @@
           "badges"
         ],
         "rhythm": "runs",
-        "paint": "plain",
-        "texture": "quiet",
+        "ground": "plain",
+        "sit": "band",
         "close": "dark",
         "closeElse": [
           "muted",
@@ -3724,8 +3826,18 @@
         ]
       },
       "light": {
-        "paint": "floating",
-        "texture": "quiet"
+        "ground": "plain",
+        "sit": "floating"
+      },
+      "on": {
+        "dark": "plain",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
       },
       "divider": {
         "shape": "straight",
@@ -3738,11 +3850,12 @@
       "hero": "site",
       "ghost": "none",
       "overlap": "none",
-      "needs": [],
       "chrome": {
         "header": "dark",
         "footer": "dark"
       },
+      "ownNeeds": [],
+      "needs": [],
       "id": "floatingPanels.mostlyDark",
       "name": "Floating panels, mostly dark",
       "sentence": "One calm ground down the page, and the other floating on it as panels.",
@@ -3755,16 +3868,26 @@
         "budget": "none",
         "hosts": [],
         "rhythm": "bookends",
-        "paint": "plain",
-        "texture": "quiet",
+        "ground": "plain",
+        "sit": "band",
         "close": "wash",
         "closeElse": [
           "dark"
         ]
       },
       "light": {
-        "paint": "washes",
-        "texture": "quiet"
+        "ground": "washes",
+        "sit": "band"
+      },
+      "on": {
+        "dark": "plain",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
       },
       "divider": {
         "shape": "straight",
@@ -3777,11 +3900,12 @@
       "hero": "light",
       "ghost": "none",
       "overlap": "none",
-      "needs": [],
       "chrome": {
         "header": "light",
         "footer": "light"
       },
+      "ownNeeds": [],
+      "needs": [],
       "id": "softWash.mostlyLight",
       "name": "Soft wash, mostly light",
       "sentence": "The page and a warm wash of its own background in turn; at balanced, the dark color returns on a few sections down the page.",
@@ -3802,16 +3926,26 @@
           "attorneys"
         ],
         "rhythm": "spread",
-        "paint": "plain",
-        "texture": "quiet",
+        "ground": "plain",
+        "sit": "band",
         "close": "dark",
         "closeElse": [
           "wash"
         ]
       },
       "light": {
-        "paint": "washes",
-        "texture": "quiet"
+        "ground": "washes",
+        "sit": "band"
+      },
+      "on": {
+        "dark": "plain",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
       },
       "divider": {
         "shape": "straight",
@@ -3824,11 +3958,12 @@
       "hero": "light",
       "ghost": "none",
       "overlap": "none",
-      "needs": [],
       "chrome": {
         "header": "light",
         "footer": "light"
       },
+      "ownNeeds": [],
+      "needs": [],
       "id": "softWash.balanced",
       "name": "Soft wash, balanced",
       "sentence": "The page and a warm wash of its own background in turn; at balanced, the dark color returns on a few sections down the page.",
@@ -3851,8 +3986,8 @@
           "badges"
         ],
         "rhythm": "runs",
-        "paint": "glow",
-        "texture": "quiet",
+        "ground": "plain",
+        "sit": "band",
         "close": "dark",
         "closeElse": [
           "saturated",
@@ -3860,8 +3995,18 @@
         ]
       },
       "light": {
-        "paint": "plain",
-        "texture": "quiet"
+        "ground": "plain",
+        "sit": "band"
+      },
+      "on": {
+        "dark": "glow",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
       },
       "divider": {
         "shape": "straight",
@@ -3874,13 +4019,14 @@
       "hero": "dark",
       "ghost": "none",
       "overlap": "photo",
-      "needs": [
-        "glow"
-      ],
       "chrome": {
         "header": "dark",
         "footer": "light"
       },
+      "ownNeeds": [],
+      "needs": [
+        "glow"
+      ],
       "id": "gradientBloom.mostlyDark",
       "name": "Gradient bloom",
       "sentence": "A soft glow from the hero down through every dark run to the close, behind the attorney where a section has a cutout.",
@@ -3901,8 +4047,8 @@
           "narrative"
         ],
         "rhythm": "pairs",
-        "paint": "plain",
-        "texture": "quiet",
+        "ground": "plain",
+        "sit": "band",
         "close": "dark",
         "closeElse": [
           "muted",
@@ -3910,8 +4056,18 @@
         ]
       },
       "light": {
-        "paint": "plain",
-        "texture": "quiet"
+        "ground": "plain",
+        "sit": "band"
+      },
+      "on": {
+        "dark": "plain",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
       },
       "divider": {
         "shape": "steep",
@@ -3927,11 +4083,12 @@
       "hero": "site",
       "ghost": "none",
       "overlap": "photo",
-      "needs": [],
       "chrome": {
         "header": "light",
         "footer": "dark"
       },
+      "ownNeeds": [],
+      "needs": [],
       "id": "wedges.balanced",
       "name": "Wedges",
       "sentence": "Steep diagonal edges wherever the ground changes.",
@@ -3948,5 +4105,185 @@
     "brandGhost",
     "sectionOverlap",
     "sectionGradient"
-  ]
+  ],
+  "backgrounds": [
+    {
+      "id": "plain",
+      "family": "plain",
+      "name": "Plain",
+      "sentence": "Nothing on any section: the colors alone.",
+      "passed": false,
+      "on": {
+        "dark": "plain",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
+      }
+    },
+    {
+      "id": "pattern.touch",
+      "family": "pattern",
+      "name": "Pattern: a touch",
+      "sentence": "The style set’s pattern behind the hero and on one light section in three.",
+      "passed": false,
+      "on": {
+        "dark": "plain",
+        "light": "pattern",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "few",
+        "hero": true,
+        "ends": false,
+        "close": "none"
+      }
+    },
+    {
+      "id": "pattern.light",
+      "family": "pattern",
+      "name": "Pattern: light sections",
+      "sentence": "The pattern behind the hero and on every light section.",
+      "passed": false,
+      "on": {
+        "dark": "plain",
+        "light": "pattern",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": true,
+        "ends": false,
+        "close": "none"
+      }
+    },
+    {
+      "id": "pattern.dark",
+      "family": "pattern",
+      "name": "Pattern: dark sections",
+      "sentence": "The pattern on the dark sections, quiet and strong in turn, the hero and the closing section.",
+      "passed": false,
+      "on": {
+        "dark": "pattern",
+        "light": "plain",
+        "darkTexture": "alternate",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": true,
+        "ends": false,
+        "close": "pattern"
+      }
+    },
+    {
+      "id": "pattern.all",
+      "family": "pattern",
+      "name": "Pattern: everywhere, strong",
+      "sentence": "The pattern at full strength on every section, hero to close.",
+      "passed": false,
+      "on": {
+        "dark": "pattern",
+        "light": "pattern",
+        "darkTexture": "strong",
+        "lightTexture": "strong",
+        "lightEvery": "all",
+        "hero": true,
+        "ends": false,
+        "close": "pattern"
+      }
+    },
+    {
+      "id": "gradient",
+      "family": "gradient",
+      "name": "Gradient",
+      "sentence": "Each group of dark sections deepens from top to bottom, the hero and the closing section with it.",
+      "passed": false,
+      "on": {
+        "dark": "gradient",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": true,
+        "close": "none"
+      }
+    },
+    {
+      "id": "glow",
+      "family": "glow",
+      "name": "Glow",
+      "sentence": "A soft glow down every group of dark sections, from the hero to the closing section.",
+      "passed": false,
+      "on": {
+        "dark": "glow",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none"
+      }
+    },
+    {
+      "id": "fade",
+      "family": "fade",
+      "name": "Faint photographs",
+      "sentence": "Your photographs, faint: behind every group of dark sections with soft edges, and ghosted into every second light section.",
+      "passed": false,
+      "on": {
+        "dark": "fade",
+        "light": "fade",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "photo"
+      }
+    },
+    {
+      "id": "span",
+      "family": "span",
+      "name": "Photographs",
+      "sentence": "A photograph behind each group of two or three dark sections and behind the closing section.",
+      "passed": false,
+      "on": {
+        "dark": "span",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "photo"
+      }
+    },
+    {
+      "id": "windows",
+      "family": "windows",
+      "name": "Hero photograph",
+      "sentence": "Pieces of the hero’s own photograph behind two dark sections and the closing section.",
+      "passed": false,
+      "on": {
+        "dark": "windows",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "photo"
+      }
+    }
+  ],
+  "suggestedWith": {
+    "quiet": "pattern.touch",
+    "typeOnBlack": "fade",
+    "editorial": "pattern.light",
+    "photoScrims": "span",
+    "softWash": "fade",
+    "gradientBloom": "glow"
+  }
 }

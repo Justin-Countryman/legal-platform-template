@@ -118,4 +118,7 @@ export type SkeletonProps = {
   /** The hero's place in the first run Gradient bloom lights, where it is dark and the theme glows (the roster eye of
    *  2026-10-03, `[R-631]`; `walkPage().hero`): `HeroBand` draws the glow as a section draws its own. */
   glow?: import('@/lib/heroGround').HeroGlow | null
+  /** The style set's texture behind the hero, at this strength, where the background puts its pattern there (the
+   *  Background theme, `on.hero`): `HeroBand` draws it only where the band paints its own ground. */
+  texture?: 'quiet' | 'strong' | null
 }

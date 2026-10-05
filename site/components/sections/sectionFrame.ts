@@ -2,7 +2,8 @@ import {
   type SectionAppearance,
 } from '@/components/sections/SectionShell'
 import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
-import {fadeOf, flowOf, glowFillOk, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts, type Close} from '@/lib/flows'
+import {fadeOf, glowFillOk, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts, type Close} from '@/lib/flows'
+import {siteFlowOf} from '@/lib/backgrounds'
 import type {HeroPhoto, SetPhoto} from '@/lib/heroGround'
 import type {HeadingFace} from '@/lib/headingFace'
 import type {DrawnStrength} from '@/lib/designTokens'
@@ -113,6 +114,12 @@ export type Paint = {
    *  band's place `at` in its run of `length` bands under that one photograph. A run longer than one band is drawn once
    *  by the canvas's wrapper (`HomepageCanvas`), and its bands paint no ground of their own. */
   photo?: {index: number; at: number; length: number}
+  /** A photograph of the set faded into this band's own ground (the Background theme's `fade`): its place in
+   *  `site.photoSet`, and the band's place `at` in its run of `length` bands under that one photograph. The band's ground
+   *  stays what the theme gave it, so the seams, the hairline and the rhythm never see a photograph: on a dark band the
+   *  photograph and its scrim fade into the dark ground at the run's head and foot; on a light band it is a ghost, alone
+   *  on its band, from the `side` named. Never on a panel. */
+  photoFade?: {index: number; at: number; length: number; side?: 'left' | 'right'}
   /** The ground a light panel the theme floats sits on (Phase 17D, `light.paint: 'floating'`): the walk
    *  reads the band as this ground and adopts it wherever the band sits, first and last included. */
   onGround?: 'dark'
@@ -188,7 +195,8 @@ export function siteLookOf(d: Record<string, unknown> | null | undefined): SiteL
     imageFrame: s('imageFrame'),
     cardHover: s('cardHover'),
     attorneyCardStyle: s('attorneyCardStyle'),
-    flow: flowOf(d),
+    // The theme with its stored background in place of its own (`lib/backgrounds.ts`), where one is stored.
+    flow: siteFlowOf(d),
     patternTexture: s('patternTexture'),
     saturated: saturatedFillOk(d),
     glow: glowFillOk(d),
@@ -507,13 +515,17 @@ export function walkPage<M>(
   // the hero to the close instead of stopping. The hero's run comes back beside the close's (`hero`), for `HeroBand`.
   // Light runs under the theme, and every run under every other theme, are numbered as they were.
   const RUN_CAP = 8
-  const perBand = flow?.dark.paint === 'gradientPerBand'
+  const perBand = flow?.on.dark === 'gradientPerBand'
   const glows = fade === 'glow'
-  const heroJoins = glows && hero === 'dark'
+  // The ramp's ends (the Background theme's Gradient, `on.ends`): a dark hero and a dark close join its first and last
+  // runs as they join the glow's, so the ramp does not start under the hero and stop above the close. The bridge's ramp
+  // names no ends and is numbered as it was.
+  const joins = glows || (fade === 'gradient' && !!flow?.on.ends)
+  const heroJoins = joins && hero === 'dark'
   const grounds: (VisibleGround | null)[] = [...(heroJoins ? [hero] : []), ...out.map((o) => groundAt.get(o.index) ?? null)]
   const figures: ('left' | 'right' | null)[] = [...(heroJoins ? [site?.heroCutout ?? null] : []), ...out.map((o) => resolve(o.member).cutout ?? null)]
   // The close joins the run only where the theme glows: no other theme draws anything a run's numbering moves.
-  const closeJoins = glows && !!close
+  const closeJoins = joins && !!close
   if (closeJoins) { grounds.push(close); figures.push(null) }
   const runs: NonNullable<SeamProps['run']>[] = new Array(grounds.length)
   {
@@ -735,17 +747,21 @@ export function assignGrounds(
     if (fixed[i]) {
       // A stored dark band takes the theme's texture as a treatment (record §2.8); an
       // inset, image or saturated band does not.
-      const textured = flow.dark.paint === 'pattern' && texture && stored[i] && !inset[i] && visibleGround(r.appearance) === 'dark'
+      const textured = flow.on.dark === 'pattern' && texture && stored[i] && !inset[i] && visibleGround(r.appearance) === 'dark'
       return textured ? {texture: 'quiet'} : null
     }
     if (dark[i]) {
-      switch (flow.dark.paint) {
+      // How it sits (the Layout theme's): a panel on the page's light ground (Phase 17D), which the walk reads as light
+      // and nothing is drawn on (a background never draws inside a panel).
+      if (flow.dark.sit === 'floating') return {ground: 'dark', texture: false, inset: true}
+      // Its ground (the Flow theme's): the accent fill where the palette and the band allow it, on which nothing sits
+      // (no pair is swept there), else the dark ground.
+      if (flow.dark.ground === 'saturated' && site?.saturated && r.content) return {ground: 'saturated', texture: false}
+      // What sits on the dark ground (the Background theme's).
+      switch (flow.on.dark) {
         case 'photo': return {ground: r.photo ? 'image' : 'dark', texture: false}
         case 'pattern': return {ground: 'dark', texture: texture ? 'quiet' : false}
-        case 'saturated': return {ground: site?.saturated && r.content ? 'saturated' : 'dark', texture: false}
-        // A panel on the page's light ground (Phase 17D): the walk reads an inset as light.
-        case 'floating': return {ground: 'dark', texture: false, inset: true}
-        // The photograph's windows are placed below, over the whole page, because they read both
+        // The photographs are placed below, over the whole page, because they read both
         // neighbours; every dark band starts on the dark ground.
         default: return {ground: 'dark', texture: false}
       }
@@ -773,26 +789,29 @@ export function assignGrounds(
   survivors.forEach((r, i) => {
     if (fixed[i]) return
     if (dark[i]) return
-    switch (flow.light.paint) {
-      case 'washes':
-        paints[i] = {ground: washAt(i) ? 'wash' : 'light', texture: false}
-        break
-      case 'pattern':
-        paints[i] = {ground: 'light', texture: texture ? 'quiet' : false}
-        break
-      // A panel on the dark ground, wherever the band sits (Phase 17D).
-      case 'floating':
-        paints[i] = {ground: 'light', texture: false, inset: true, onGround: 'dark'}
-        break
-      case 'panel':
-        paints[i] = i > 0 && i < n - 1 && dark[i - 1] && dark[i + 1]
-          ? {ground: 'light', texture: false, inset: true}
-          : {ground: 'light', texture: false}
-        break
-      default:
-        paints[i] = {ground: 'light', texture: false}
+    // How it sits (the Layout theme's): a panel on the dark ground, wherever the band sits (Phase 17D); or, inside a
+    // dark run, an inset panel that adopts the run. Nothing is drawn inside a panel.
+    if (flow.light.sit === 'floating') {
+      paints[i] = {ground: 'light', texture: false, inset: true, onGround: 'dark'}
+      return
     }
+    if (flow.light.sit === 'panel' && i > 0 && i < n - 1 && dark[i - 1] && dark[i + 1]) {
+      paints[i] = {ground: 'light', texture: false, inset: true}
+      return
+    }
+    // Its ground (the Flow theme's), then what sits on it (the Background theme's): the texture on the light ground
+    // only, since the wash is already the darkest light ground the texture's ink may reach.
+    const ground = flow.light.ground === 'washes' && washAt(i) ? 'wash' : 'light'
+    paints[i] = {ground, texture: flow.on.light === 'pattern' && ground === 'light' && texture ? 'quiet' : false}
   })
+  // A FEW (the Background theme's `lightEvery: 'few'`; Justin of Quiet, 2026-10-03: "one or two light bands take a
+  // texture or pattern to break it up while keeping the colors the same"): of the light bands the pass textured, one in
+  // three keeps it, the second, then the fifth, two at most; a page with one keeps that one.
+  if (flow.on.light === 'pattern' && flow.on.lightEvery === 'few') {
+    const textured = survivors.map((_, i) => i).filter((i) => !fixed[i] && !dark[i] && paints[i]?.texture)
+    const keep = new Set(textured.length < 2 ? textured : textured.filter((_, k) => k % 3 === 1).slice(0, 2))
+    textured.forEach((i) => { if (!keep.has(i)) paints[i] = {...paints[i]!, texture: false} })
+  }
   // THE HERO'S PHOTOGRAPH (Phase 17B session 6, `[R-530]`, record §2.3). A window of it on at
   // most two text-led dark bands the pass filled, never beside another photograph above or
   // below: the photo hero above the first band, an operator's Image band, another window, or the
@@ -811,9 +830,10 @@ export function assignGrounds(
   // Every photograph once: fewer photographs than places leave the later places plain. A set that can place nothing
   // (the close hidden, no run) gives way to the windows below.
   let setPlaced = 0
-  if (flow.dark.paint === 'heroPhoto' && site?.heroPhoto && site.photoSet?.length) {
+  const closeWord = site?.close ?? (flow.on.close === 'photo' ? 'photo' : flow.dark.close)
+  if (flow.on.dark === 'span' && site?.heroPhoto && site.photoSet?.length) {
     const set = site.photoSet
-    const closePhoto = (site.close ?? flow.dark.close) === 'photo' && site.closeShown !== false
+    const closePhoto = closeWord === 'photo' && site.closeShown !== false
     const strongAt = (i: number) => i >= 0 && i < n && (dark[i] || strongOf(survivors[i].appearance))
     const photoAt = (i: number): boolean => {
       if (i < 0) return true
@@ -841,8 +861,8 @@ export function assignGrounds(
       i = run[run.length - 1]
     }
   }
-  if (setPlaced === 0 && flow.dark.paint === 'heroPhoto' && site?.heroPhoto) {
-    const closePhoto = (site.close ?? flow.dark.close) === 'photo' && site.closeShown !== false
+  if (setPlaced === 0 && (flow.on.dark === 'span' || flow.on.dark === 'windows') && site?.heroPhoto) {
+    const closePhoto = closeWord === 'photo' && site.closeShown !== false
     const strongAt = (i: number) => i >= 0 && i < n && (dark[i] || strongOf(survivors[i].appearance))
     const photoAt = (i: number): boolean => {
       if (i < 0) return true
@@ -862,18 +882,55 @@ export function assignGrounds(
       placed++
     }
   }
+  // FAINT PHOTOGRAPHS (the Background theme's `fade`; monorepo WS-V1-BACKGROUND-THEME-DESIGN §7 items 5, 8, 9). Beside an
+  // approved hero photograph only, as the set always is. The close takes the set's first photograph where it is a
+  // photograph (`closeOf`); the rest go down the page IN TURN, repeating, since a faint photograph is a ground, not a
+  // picture shown once (Justin of Type on black, 2026-10-03: "faint BG images to break up things. Some bg images are
+  // across multiple bands"). Behind every stretch of dark bands the pass filled, in runs of at most `SET_RUN_MAX`, each
+  // run one photograph fading into the dark ground at its head and foot; and ghosted into every second light or wash
+  // band that is text-led, from the right, then the left. Never a panel, a textured band, a band whose cards draw their
+  // own photographs, or a band beside a photograph that keeps its hard edge (the photo hero, an operator's Image band).
+  if ((flow.on.dark === 'fade' || flow.on.light === 'fade') && site?.heroPhoto && site.photoSet?.length) {
+    const set = site.photoSet
+    const closePhoto = closeWord === 'photo' && site.closeShown !== false
+    let next = closePhoto && set.length > 1 ? 1 : 0
+    const take = () => { const k = next % set.length; next++; return k }
+    const hard = (i: number): boolean => (i < 0 ? ends.hero === 'image' : i < n && stored[i] && survivors[i].appearance?.surface === 'image')
+    const free = (i: number) => i >= 0 && i < n && !fixed[i] && !paints[i]?.inset && !paints[i]?.texture && !survivors[i].cardPhotos && !hard(i - 1) && !hard(i + 1)
+    if (flow.on.dark === 'fade') {
+      for (let i = 0; i < n; i++) {
+        if (!free(i) || !dark[i] || paints[i]?.ground !== 'dark') continue
+        const run = [i]
+        while (run.length < SET_RUN_MAX && free(i + run.length) && dark[i + run.length] && paints[i + run.length]?.ground === 'dark') run.push(i + run.length)
+        const index = take()
+        run.forEach((k, at) => { paints[k] = {...paints[k]!, photoFade: {index, at, length: run.length}} })
+        i = run[run.length - 1]
+      }
+    }
+    if (flow.on.light === 'fade') {
+      let ghosts = 0
+      let last = -2
+      for (let i = 0; i < n; i++) {
+        const g = paints[i]?.ground
+        if (!free(i) || dark[i] || (g !== 'light' && g !== 'wash') || !PHOTO_HOSTS.includes(survivors[i].host as Host) || i - last < 2) continue
+        paints[i] = {...paints[i]!, photoFade: {index: take(), at: 0, length: 1, side: ghosts % 2 === 0 ? 'right' : 'left'}}
+        ghosts++
+        last = i
+      }
+    }
+  }
   // THE STRENGTH (Phase 17C session 3, `[R-538]`). Every band the pass textured was marked `quiet`
   // above; here the theme's word for its dark and light paints resolves: `strong` everywhere, or
   // `alternate`, the bands that paint textures in page order quiet, strong, quiet (a stored dark band the
   // theme textures counts in the order). A stored Pattern band is not the pass's and stays quiet.
-  const strengthOf = (word: FlowRules['dark']['texture'], n: number): DrawnStrength =>
+  const strengthOf = (word: FlowRules['on']['darkTexture'], n: number): DrawnStrength =>
     word === 'strong' ? 'strong' : word === 'alternate' && n % 2 === 1 ? 'strong' : 'quiet'
   let darkN = 0
   let lightN = 0
   paints.forEach((p, i) => {
     if (!p?.texture) return
     const lightBand = p.ground === 'light' && !fixed[i]
-    const word = lightBand ? flow.light.texture : flow.dark.texture
+    const word = lightBand ? flow.on.lightTexture : flow.on.darkTexture
     paints[i] = {...p, texture: strengthOf(word, lightBand ? lightN++ : darkN++)}
   })
   // The room around the bands the theme filled (Phase 17B session 5, `[R-525]`): a band
@@ -903,7 +960,11 @@ export function closeFrame(
   if (close === 'wash') return {surface: 'light', seam: {...NO_SEAM, paint: {ground: 'wash', texture: false}}}
   // A dark close Gradient bloom lights (Phase 17D session 2): its place in the run above it, from the walk. Every other
   // close is its surface alone, as it was.
-  if (close === 'dark' && walked?.fade === 'glow' && walked.run) return {surface: 'dark', seam: {...NO_SEAM, site, run: walked.run, fade: 'glow'}}
+  // The texture on a dark close, where the background puts its pattern there and the style set has one.
+  const texture = close === 'dark' && site.flow?.on.close === 'pattern' && site.patternTexture
+    ? {paint: {ground: 'dark' as const, texture: site.flow.on.darkTexture === 'strong' ? 'strong' as const : 'quiet' as const}} : null
+  if (close === 'dark' && walked?.fade && walked.run) return {surface: 'dark', seam: {...NO_SEAM, site, run: walked.run, fade: walked.fade, ...texture}}
+  if (texture) return {surface: 'dark', seam: {...NO_SEAM, site, ...texture}}
   return {surface: close}
 }
 
@@ -931,6 +992,7 @@ export function canvasFacts(
     texture: !!site?.patternTexture,
     initials: !!site?.ghost?.text,
     heroPhoto: !!site?.heroPhoto,
+    photoSet: !!site?.photoSet?.length,
     glow: !!site?.glow,
     hero,
     ribbonsFilled: survivors.filter((r, i) => r.host === 'ribbon' && (paints[i]?.ground === 'saturated' || paints[i]?.ground === 'dark')).length,

@@ -236,7 +236,9 @@ export function HomepageCanvas({
   // a band slides. Its bands paint no ground and carry the photo band's mark (`SectionShell`). On a phone the photograph
   // is drawn at the run's head, masked into the navy (`photo-run-head`).
   const out: React.ReactNode[] = []
-  let run: {key: string; photo: NonNullable<SiteLook['photoSet']>[number]; index: number; kids: React.ReactNode[]} | null = null
+  // A run of faint photographs (the Background theme, `photoFade` on dark bands) is drawn the same way, its photograph
+  // and scrim fading into the dark ground at the run's head and foot (`soft`).
+  let run: {key: string; photo: NonNullable<SiteLook['photoSet']>[number]; index: number; soft: boolean; kids: React.ReactNode[]} | null = null
   // A run is drawn when its last band is; a band that renders nothing after all cannot strand the others.
   const flush = () => {
     if (!run) return
@@ -244,7 +246,7 @@ export function HomepageCanvas({
     out.push(
       <div key={`run-${r.key}`} data-photo-run={r.index} className="relative isolate bg-brand-dark">
         <div aria-hidden="true" className="absolute inset-0 -z-10">
-          <SetPhotoLayer photo={r.photo} head />
+          <SetPhotoLayer photo={r.photo} head soft={r.soft} />
         </div>
         {r.kids}
       </div>,
@@ -261,10 +263,11 @@ export function HomepageCanvas({
     // load-bearing. The walk has already dropped the empties, so
     // `surviving === 0` is the first visible band by construction.
     const node = surviving === 0 ? <div key={member._key}>{rendered}</div> : <ScrollReveal key={member._key}>{rendered}</ScrollReveal>
-    const p = seam.paint?.ground === 'image' ? seam.paint.photo : undefined
+    const soft = seam.paint?.ground === 'dark' && !!seam.paint.photoFade
+    const p = seam.paint?.ground === 'image' ? seam.paint.photo : soft ? seam.paint!.photoFade : undefined
     const photo = p && p.length > 1 ? site?.photoSet?.[p.index] ?? null : null
     if (!photo || !p) { flush(); out.push(node); return }
-    if (!run || run.index !== p.index) { flush(); run = {key: member._key, photo, index: p.index, kids: []} }
+    if (!run || run.index !== p.index || p.at === 0) { flush(); run = {key: member._key, photo, index: p.index, soft, kids: []} }
     run.kids.push(node)
     if (p.at === p.length - 1) flush()
   })

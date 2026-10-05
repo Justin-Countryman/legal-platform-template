@@ -2,7 +2,7 @@ import {describe, it, expect} from 'vitest'
 import {RETIRED_STYLE_SETS, STYLE_SETS, matchStyleSet, styleSetPatch} from '@/lib/styleSets'
 import {PALETTE_PRESETS, matchPreset} from '@/lib/palettes'
 import {DEFAULT_FLOW, FLOWS, HIDDEN_FIELDS} from '@/lib/flows'
-import {AS_THE_SITE_IS, grantFlow, grantStyleSet, parseChoices, planPreview, withPreview, ownLooks, ownGrounds, previewPath, type PreviewPlan, type StoredDesign} from '../plan'
+import {AS_THE_SITE_IS, OWN_BACKGROUND, grantBackground, parseAddress, grantFlow, grantStyleSet, parseChoices, planPreview, withPreview, ownLooks, ownGrounds, previewPath, type PreviewPlan, type StoredDesign} from '../plan'
 
 // What a preview choice changes (Phase 17A, monorepo WS-V1-PHASE17A-DESIGN §2.3).
 // The preview renders this plan and Apply writes it, so "shown equals applied"
@@ -172,7 +172,7 @@ describe('withPreview', () => {
 
 describe('parseChoices and previewPath', () => {
   it('reads the three path segments and refuses anything else', () => {
-    expect(parseChoices('graphite', 'navy-brass', 'site', 'grey')).toEqual({styleSet: 'graphite', palette: 'navy-brass', flow: 'site', view: 'grey'})
+    expect(parseChoices('graphite', 'navy-brass', 'site', 'grey')).toEqual({styleSet: 'graphite', palette: 'navy-brass', flow: 'site', background: 'site', view: 'grey'})
     expect(parseChoices('site', 'site', 'site', 'design')).not.toBeNull()
     for (const flow of FLOWS) expect(parseChoices('site', 'site', flow.id, 'design')?.flow).toBe(flow.id)
     expect(parseChoices('nope', 'site', 'site', 'design')).toBeNull()
@@ -263,7 +263,7 @@ describe('the palette built from the firm’s own colors', () => {
   const brand = {darkGround: '#0c5c63', accent: '#e86a24', lightGround: '#f7f2e8', why: 'The firm’s own colors.'}
 
   it('is an address the preview reads', () => {
-    expect(parseChoices('graphite', 'brand', 'site', 'design')).toEqual({styleSet: 'graphite', palette: 'brand', flow: 'site', view: 'design'})
+    expect(parseChoices('graphite', 'brand', 'site', 'design')).toEqual({styleSet: 'graphite', palette: 'brand', flow: 'site', background: 'site', view: 'design'})
   })
 
   it('writes its roles as a preset would, and names itself', () => {
@@ -277,5 +277,83 @@ describe('the palette built from the firm’s own colors', () => {
     const plan = planPreview({_id: 'designSettings', _rev: 'r1'}, {styleSet: 'site', palette: 'brand', flow: 'site'}, null, null)
     expect(plan.palette).toBeNull()
     expect(plan.set).toEqual({})
+  })
+})
+
+// ─── The background row (the Background theme, monorepo WS-V1-BACKGROUND-THEME-DESIGN §4, §7) ─────────────────
+describe('the background', () => {
+  const HERO = 'image-hero-2400x1600-jpg'
+  const SET = [{asset: {_ref: 'image-a-2400x1600-jpg'}, width: 2400, height: 1600}, {asset: {_ref: 'image-b-2400x1600-jpg'}, width: 2400, height: 1600}]
+  const KEYS = ['image-a-2400x1600-jpg', 'image-b-2400x1600-jpg']
+  const site: StoredDesign = {_id: 'designSettings', _rev: 'r', flow: 'cutBlocks.mostlyDark', themePhotos: SET}
+
+  it('a chosen background sets the one field; the one stored is no change; the theme’s own clears it; as the site is contributes nothing', () => {
+    expect(planPreview(plain, {styleSet: 'site', palette: 'site', flow: 'site', background: 'pattern.touch'})).toMatchObject({set: {background: 'pattern.touch'}, unset: []})
+    const stored: StoredDesign = {...plain, background: 'pattern.touch'}
+    expect(planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'site', background: 'pattern.touch'})).toMatchObject({set: {}, unset: []})
+    expect(planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'site', background: OWN_BACKGROUND})).toMatchObject({set: {}, unset: ['background'], background: OWN_BACKGROUND, inForce: null})
+    expect(planPreview(plain, {styleSet: 'site', palette: 'site', flow: 'site', background: OWN_BACKGROUND})).toMatchObject({set: {}, unset: []})
+    expect(planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'site', background: AS_THE_SITE_IS})).toMatchObject({set: {}, unset: [], background: null, inForce: 'pattern.touch'})
+    expect(planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'site'})).toMatchObject({set: {}, unset: [], inForce: 'pattern.touch'})
+  })
+
+  it('names what the site wears and the rules the page will render: the chosen or stored theme under the chosen or stored background', () => {
+    const stored: StoredDesign = {...plain, flow: 'quiet.mostlyLight', background: 'glow'}
+    const kept = planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'cutBlocks.balanced', background: 'site'})
+    expect(kept.wears.background?.id).toBe('glow')
+    expect(kept.shown).toMatchObject({id: 'cutBlocks.balanced', on: {dark: 'glow'}})
+    const own = planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'cutBlocks.balanced', background: OWN_BACKGROUND})
+    expect(own.shown.on.dark).toBe('pattern')
+  })
+
+  // The approvals follow the pair (ADV-BG-A): four cases.
+  it('photographs chosen as the background alone are approved with the photograph shown', () => {
+    const plan = planPreview(site, {styleSet: 'site', palette: 'site', flow: 'site', background: 'span'}, HERO)
+    expect(plan.set).toEqual({background: 'span', flowPhoto: HERO, flowPhotos: KEYS})
+  })
+
+  it('a theme changed under a kept background of photographs keeps its approvals', () => {
+    const approved: StoredDesign = {...site, background: 'fade', flowPhoto: HERO, flowPhotos: KEYS}
+    const plan = planPreview(approved, {styleSet: 'site', palette: 'site', flow: 'typeOnBlack.allDark', background: 'site'}, HERO)
+    expect(plan.set).toEqual({flow: 'typeOnBlack.allDark'})
+    expect(plan.unset).toEqual([])
+  })
+
+  it('a theme and a background chosen together approve for the pair, and a plain background over Photo scrims clears them', () => {
+    expect(planPreview(site, {styleSet: 'site', palette: 'site', flow: 'quiet.mostlyLight', background: 'windows'}, HERO).set).toEqual({flow: 'quiet.mostlyLight', background: 'windows', flowPhoto: HERO, flowPhotos: KEYS})
+    const scrims: StoredDesign = {...site, flow: 'photoScrims.mostlyDark', flowPhoto: HERO, flowPhotos: KEYS}
+    const plan = planPreview(scrims, {styleSet: 'site', palette: 'site', flow: 'site', background: 'plain'}, HERO)
+    expect(plan.set).toEqual({background: 'plain'})
+    expect(plan.unset).toEqual(['flowPhoto', 'flowPhotos'])
+  })
+
+  it('the theme’s own under Photo scrims approves its photographs again', () => {
+    const stored: StoredDesign = {...site, flow: 'photoScrims.mostlyDark', background: 'plain'}
+    const plan = planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'site', background: OWN_BACKGROUND}, HERO)
+    expect(plan.set).toEqual({flowPhoto: HERO, flowPhotos: KEYS})
+    expect(plan.unset).toEqual(['background'])
+  })
+
+  it('the address is one run of segments: the last is the view, the rows fill from the left, a row it does not reach is as the site is', () => {
+    expect(parseAddress(['graphite', 'navy-brass', 'design'])).toEqual({styleSet: 'graphite', palette: 'navy-brass', flow: 'site', background: 'site', view: 'design'})
+    expect(parseAddress(['site', 'site', 'quiet.mostlyLight', 'grey'])).toEqual({styleSet: 'site', palette: 'site', flow: 'quiet.mostlyLight', background: 'site', view: 'grey'})
+    expect(parseAddress(['site', 'site', 'quiet.mostlyLight', 'pattern.touch', 'design'])).toMatchObject({flow: 'quiet.mostlyLight', background: 'pattern.touch'})
+    expect(parseAddress(['site', 'site', 'site', 'own', 'design'])).toMatchObject({background: 'own'})
+    for (const bad of [[], ['site', 'design'], ['site', 'site', 'site', 'nope', 'design'], ['site', 'site', 'site', 'plain', 'extra', 'design'], ['site', 'site', 'site', 'plain']]) expect(parseAddress(bad), bad.join('/')).toBeNull()
+    expect(parseAddress(null)).toBeNull()
+  })
+
+  it('the path carries the background only where one is chosen, so an address minted before the row is still its page’s', () => {
+    expect(previewPath({styleSet: 'site', palette: 'site', flow: 'site', view: 'design'})).toBe('/site-preview/site/site/site/design')
+    expect(previewPath({styleSet: 'site', palette: 'site', flow: 'site', background: 'site', view: 'design'})).toBe('/site-preview/site/site/site/design')
+    const chosen = {styleSet: 'dune', palette: 'navy-brass', flow: 'softWash.balanced', background: 'fade', view: 'design'} as const
+    expect(previewPath(chosen)).toBe('/site-preview/dune/navy-brass/softWash.balanced/fade/design')
+    expect(parseAddress(previewPath(chosen).split('/').slice(2))).toEqual(chosen)
+  })
+
+  it('a grant minted before the row reads as the site is', () => {
+    expect(grantBackground(undefined)).toBe(AS_THE_SITE_IS)
+    expect(grantBackground(null)).toBe(AS_THE_SITE_IS)
+    expect(grantBackground('fade')).toBe('fade')
   })
 })

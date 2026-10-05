@@ -2,6 +2,7 @@ import Link from 'next/link'
 import {STYLE_SETS} from '@/lib/styleSets'
 import {PALETTE_PRESETS} from '@/lib/palettes'
 import {DARKNESS_LABELS, FAMILIES, chromeSchemes, closeOf, drawsHeroPhoto, familyOf, flowById, flowId, needLabel, unmetNeeds, type FlowFamily, type FlowRules} from '@/lib/flows'
+import {BACKGROUND_FAMILIES, CLOSE_NEEDS_LIGHT_FOOTER, HERO_NOT_DARK, SUGGESTED_WITH, backgroundById, describeOn, effectiveFlow} from '@/lib/backgrounds'
 import {photoSetOf, type HeroPhoto, type SetPhoto, type SetPhotoEntry, type SetPhotoStatus} from '@/lib/heroGround'
 import {urlForImage} from '@/lib/sanity/image'
 import {type VisibleGround} from '@/lib/sectionSurface'
@@ -12,7 +13,7 @@ import {type SiteChrome} from '@/components/layout/SiteShell'
 import {
   APPLY_LINK_SECONDS, CLIENT_LINK_SECONDS, nowSeconds, signToken, type PreviewGrant,
 } from '@/lib/preview/session'
-import {AS_THE_SITE_IS, BRAND_PALETTE, BRAND_PALETTE_NAME, ownGrounds, ownLooks, previewPath, type PreviewChoices, type PreviewPlan} from '@/lib/preview/plan'
+import {AS_THE_SITE_IS, BRAND_PALETTE, BRAND_PALETTE_NAME, OWN_BACKGROUND, ownGrounds, ownLooks, previewPath, type PreviewChoices, type PreviewPlan} from '@/lib/preview/plan'
 
 // ─── The switcher ─────────────────────────────────────────────────────────────
 //
@@ -43,6 +44,8 @@ import {AS_THE_SITE_IS, BRAND_PALETTE, BRAND_PALETTE_NAME, ownGrounds, ownLooks,
 /** The row's head, and the bundle sentinel `scripts/ci/check-preview-not-shipped.mjs`
  *  searches for: a value only this row emits. */
 export const ROW_THEME_HEAD = 'Theme, the flow of the page'
+/** The background row's head (the Background theme), and a bundle sentinel as the theme row's is. */
+export const ROW_BACKGROUND_HEAD = 'Background, what sits on the sections'
 
 type Props = {
   grant: PreviewGrant
@@ -118,7 +121,8 @@ function names(plan: PreviewPlan): string {
   const s = plan.styleSet?.name ?? (plan.wears.styleSet ? `${plan.wears.styleSet.styleSet.name} (as the site is)` : 'the site\'s own style')
   const p = plan.palette?.name ?? (plan.wears.palette ? `${plan.wears.palette.name} (as the site is)` : 'the site\'s own colors')
   const f = plan.flow?.name ?? `${plan.wears.flow.name} (as the site is)`
-  return `${s}, ${p}, ${f}`
+  const b = plan.background === OWN_BACKGROUND ? ', the theme\u2019s own background' : plan.background ? `, ${plan.background.name} on the sections` : ''
+  return `${s}, ${p}, ${f}${b}`
 }
 
 const date = (seconds: number) => new Date(seconds * 1000).toISOString().slice(0, 10)
@@ -250,6 +254,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
         styleSet: plan.styleSet ? {id: plan.styleSet.id, name: plan.styleSet.name} : null,
         palette: plan.palette ? {id: plan.palette.id, name: plan.palette.name} : null,
         flow: plan.flow ? {id: plan.flow.id, name: plan.flow.name} : null,
+        background: plan.background === OWN_BACKGROUND ? {id: OWN_BACKGROUND, name: 'the theme\u2019s own background'} : plan.background ? {id: plan.background.id, name: `${plan.background.name} on the sections`} : null,
       })
     : null
   const blocks = (Array.isArray(canvas) ? canvas : []) as HomepageBlock[]
@@ -263,7 +268,9 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
   // The theme the page shows: the chosen one, else what the site renders. Its needs are
   // read against this page and the previewed site (the style set's texture, the firm's
   // initials), as the engine reads them.
-  const shown: FlowRules = plan.flow ?? plan.wears.flow
+  const shown: FlowRules = plan.shown
+  // The theme without the background in force: what "the theme's own" names, and what each background is tried on.
+  const baseFlow: FlowRules = plan.flow ?? plan.wears.flow
   const family = familyOf(shown)
   const survivors = blocks.map(frameOf).filter((r) => !r.empty)
   const look = siteLookOf(chrome?.designTokens)
@@ -277,14 +284,18 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
   // Facts per theme: the ribbons a theme fills are read from that theme's own pass.
   // A need of the palette, not of the page (Phase 17D session 2): Gradient bloom's room to glow is said on its own, so the
   // page is not blamed for the palette (ADV-17D2-C).
-  const unmetOf = (f: FlowRules | null) => (f ? unmetNeeds(f, canvasFacts(survivors, site, heroUnder ? heroUnder(f) : hero, f)) : [])
+  // Every photograph of the stored set the page could draw once approved: choosing a background approves them.
+  const usableSet: SetPhoto[] = (photoSet ?? []).filter((e) => e.status === 'approved' || e.status === 'notApproved').map((e) => e.photo)
+  const unmetOf = (f: FlowRules | null) => (f ? unmetNeeds(f, canvasFacts(survivors, {...site, photoSet: heroPhoto ? usableSet : []}, heroUnder ? heroUnder(f) : hero, f)) : [])
   const lacks = (f: FlowRules | null) => unmetOf(f).filter((n) => n !== 'glow').map(needLabel)
   const noGlow = (f: FlowRules | null) => unmetOf(f).includes('glow')
   const unmet = lacks(shown)
   // The theme's three the Site Builder App suggests (`suggestTheme`), the ones this roster ships and the eye has passed.
   const suggestedFlows = (grant.suggestTheme?.ids ?? []).map((id) => flowById(id)).filter((f): f is FlowRules => !!f && f.passed)
   const familyChoices = FAMILIES.map((f) => {
-    const first = flowById(flowId(f.id, f.defaultStep))
+    const own = flowById(flowId(f.id, f.defaultStep))
+    // Read under the background in force, as the page would draw it.
+    const first = own ? effectiveFlow(own, plan.inForce) : null
     const missing = lacks(first)
     return (
       <Choice key={f.id} href={at({flow: flowId(f.id, f.defaultStep)})} active={choices.flow !== AS_THE_SITE_IS && family?.id === f.id} className="sw-family">
@@ -294,6 +305,49 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
     )
   })
   const headerNote = chromeNote(shown, chrome)
+  // ─── The background row (the Background theme, monorepo WS-V1-BACKGROUND-THEME-DESIGN §2, §7) ────────────────
+  // Every option is tried on this page under the theme shown: the walk the page would run, with every photograph the
+  // set could draw. An option that draws on no section here is dimmed with its reason and stays a link, never hidden
+  // (`[R-632]`); one that draws but cannot reach the hero or the close under this theme says which, and why.
+  const bg = choices.background ?? AS_THE_SITE_IS
+  const footerOf = (f: FlowRules) => chromeSchemes(f, chrome?.header?.mainNavigation, chrome?.footer?.footerSettings, {
+    onLight: chrome?.header?.designSettings?.logoOnLight, onDark: chrome?.header?.designSettings?.logoOnDark,
+  }).footer
+  const reachOf = (id: string): {none: boolean; note: string} => {
+    const f = effectiveFlow(baseFlow, id)
+    if (f.on.dark === 'plain' && f.on.light === 'plain' && !f.on.hero && f.on.close === 'none') return {none: false, note: ''}
+    const heroG = heroUnder ? heroUnder(f) : hero
+    const trySite = {...site, flow: f, photoSet: heroPhoto ? usableSet : [], closeShown}
+    const needs = unmetNeeds(f, canvasFacts(survivors, trySite, heroG, f)).filter((n) => f.ownNeeds.includes(n) === false)
+    const footer = footerOf(f)
+    const above = walkPage(blocks, frameOf, trySite, heroG, null).last ?? heroG
+    const close = closeOf(f, {footer, above, heroPhoto: !!heroPhoto, colors: chrome?.designTokens as Record<string, unknown> | null})
+    const walked = walkPage(blocks, frameOf, {...trySite, close}, heroG, closeGround(close, closeShown))
+    const drawn = walked.bands.filter(({seam}) => !!seam.paint?.texture || !!seam.paint?.photo || !!seam.paint?.window || !!seam.paint?.photoFade || (!!seam.fade && seam.paint?.ground === 'dark')).length
+    if (needs.length > 0) return {none: true, note: ` Needs ${needs.map(needLabel).join(', ')}.`}
+    if (drawn === 0) return {none: true, note: ` ${baseFlow.name} leaves it no section to draw on.`}
+    const partly: string[] = []
+    const wantsClose = f.on.close === 'photo' || f.on.dark === 'glow' || f.on.ends
+    if (closeShown && wantsClose && footer === 'dark') partly.push(CLOSE_NEEDS_LIGHT_FOOTER)
+    if ((f.on.dark === 'glow' || f.on.ends) && heroG !== 'dark') partly.push(HERO_NOT_DARK)
+    return {none: false, note: partly.length ? ` Partly here: ${partly.join('; ')}.` : ''}
+  }
+  const suggestedId = SUGGESTED_WITH[baseFlow.family]
+  const inForce = backgroundById(plan.inForce)
+  const backgroundChoices = BACKGROUND_FAMILIES.map((f) => {
+    const stepIn = inForce?.family === f.id ? inForce.id : null
+    const id = stepIn ?? (suggestedId?.startsWith(`${f.id}.`) ? suggestedId : f.steps[0].step ? `${f.id}.${f.steps[0].step}` : f.id)
+    const entry = backgroundById(id)!
+    const reach = reachOf(id)
+    const suggested = suggestedId === id || (!!suggestedId && suggestedId.split('.')[0] === f.id)
+    return (
+      <Choice key={f.id} href={at({background: id})} active={bg !== AS_THE_SITE_IS && bg !== OWN_BACKGROUND && inForce?.family === f.id} className={reach.none ? 'sw-family sw-dim' : 'sw-family'}>
+        <strong>{f.name}{suggested ? ` (suggested with ${baseFlow.name})` : ''}</strong>
+        <span className="sw-sentence">{entry.sentence}{reach.note}</span>
+      </Choice>
+    )
+  })
+  const backgroundFamily = bg !== AS_THE_SITE_IS && bg !== OWN_BACKGROUND && inForce ? BACKGROUND_FAMILIES.find((f) => f.id === inForce.family) ?? null : null
   // The set as this preview draws it (Phase 17E): choosing the theme approves every photograph of the set in the preview,
   // so the photographs the page places are read from the preview's own walk, with the preview's own look; beside the
   // approved hero photograph only, as the page draws it (none while the hero photograph waits for approval).
@@ -390,6 +444,26 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
             ))}
           </div>
         )}
+        <div className="sw-row">
+          <span className="sw-head">{ROW_BACKGROUND_HEAD}</span>
+          <Choice href={at({background: AS_THE_SITE_IS})} active={bg === AS_THE_SITE_IS}>As the site is: {plan.wears.background?.name ?? 'the theme\u2019s own'}</Choice>
+          <Choice href={at({background: OWN_BACKGROUND})} active={bg === OWN_BACKGROUND} className="sw-family">
+            <strong>The theme&rsquo;s own</strong>
+            <span className="sw-sentence">Under {baseFlow.name}: {describeOn(baseFlow.on)}.</span>
+          </Choice>
+          {backgroundChoices}
+        </div>
+        {backgroundFamily && backgroundFamily.steps.length > 1 && (
+          <div className="sw-row">
+            <span className="sw-head">{backgroundFamily.name}</span>
+            {backgroundFamily.steps.map((st) => (
+              <Choice key={st.step} href={at({background: `${backgroundFamily.id}.${st.step}`})} active={inForce?.id === `${backgroundFamily.id}.${st.step}`}>{st.label}</Choice>
+            ))}
+          </div>
+        )}
+        <p className="sw-note">
+          Background: {inForce ? `${inForce.name}. ${inForce.sentence} It replaces the theme\u2019s own (${describeOn(baseFlow.on)}).` : `the theme\u2019s own: ${describeOn(baseFlow.on)}.`} No background has been judged yet; a dimmed one has nothing to draw on here.
+        </p>
         <p className="sw-note">
           Theme: {shown.name}. {shown.sentence}
           {unmet.length > 0 && ` Needs this page lacks: ${unmet.join(', ')}; it renders without them.`}
@@ -441,6 +515,7 @@ const SWITCHER_CSS = `
 .sw-active{background:#f5f5f5;color:#111;border-color:#f5f5f5}
 .sw-active .sw-sentence{color:#444}
 .sw-inert{color:#888;border-style:dashed;cursor:default}
+.sw-dim{opacity:.6;border-style:dashed}
 .sw-action{background:#2e7d32;border-color:#2e7d32;font-weight:600}
 .sw-swatch{display:inline-block;width:10px;height:10px;border-radius:2px;border:1px solid rgba(255,255,255,.4)}
 .sw-note{font-size:12px;color:#bbb;margin:8px 0 0}
