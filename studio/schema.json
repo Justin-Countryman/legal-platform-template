@@ -1,6 +1,98 @@
 [
   {
     "type": "type",
+    "name": "headerLink",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "label": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "url": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "attorneySectionInline.headerLink",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "label": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "url": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "caseResultsSectionInline.headerLink",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "label": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "url": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
+    "name": "testimonialsGridInline.headerLink",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "label": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "url": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "type": "type",
     "name": "pullQuote",
     "value": {
       "type": "object",
@@ -1309,6 +1401,19 @@
           },
           "optional": true
         },
+        "layout": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "centered"
+              }
+            ]
+          },
+          "optional": true
+        },
         "surface": {
           "type": "objectAttribute",
           "value": {
@@ -1468,6 +1573,14 @@
           "type": "objectAttribute",
           "value": {
             "type": "string"
+          },
+          "optional": true
+        },
+        "headerLink": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "testimonialsGridInline.headerLink"
           },
           "optional": true
         },
@@ -1916,6 +2029,14 @@
           },
           "optional": true
         },
+        "headerLink": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "caseResultsSectionInline.headerLink"
+          },
+          "optional": true
+        },
         "intro": {
           "type": "objectAttribute",
           "value": {
@@ -1942,6 +2063,19 @@
                 "name": "caseResult.reference"
               }
             }
+          },
+          "optional": true
+        },
+        "across": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "four"
+              }
+            ]
           },
           "optional": true
         },
@@ -2184,6 +2318,14 @@
           },
           "optional": true
         },
+        "headerLink": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "attorneySectionInline.headerLink"
+          },
+          "optional": true
+        },
         "description": {
           "type": "objectAttribute",
           "value": {
@@ -2400,6 +2542,14 @@
           "type": "objectAttribute",
           "value": {
             "type": "string"
+          },
+          "optional": true
+        },
+        "headerLink": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "headerLink"
           },
           "optional": true
         },
@@ -3531,6 +3681,19 @@
           "type": "objectAttribute",
           "value": {
             "type": "boolean"
+          },
+          "optional": true
+        },
+        "foregroundSide": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "left"
+              }
+            ]
           },
           "optional": true
         },
@@ -6554,6 +6717,29 @@
         },
         "optional": true
       },
+      "headerLink": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "label": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "url": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            }
+          }
+        },
+        "optional": true
+      },
       "intro": {
         "type": "objectAttribute",
         "value": {
@@ -6580,6 +6766,19 @@
               "name": "caseResult.reference"
             }
           }
+        },
+        "optional": true
+      },
+      "across": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "four"
+            }
+          ]
         },
         "optional": true
       },
@@ -6774,6 +6973,29 @@
         "type": "objectAttribute",
         "value": {
           "type": "string"
+        },
+        "optional": true
+      },
+      "headerLink": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "label": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "url": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            }
+          }
         },
         "optional": true
       },
@@ -7660,6 +7882,29 @@
         "type": "objectAttribute",
         "value": {
           "type": "string"
+        },
+        "optional": true
+      },
+      "headerLink": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "label": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "url": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            }
+          }
         },
         "optional": true
       },
@@ -8709,6 +8954,19 @@
         },
         "optional": true
       },
+      "layout": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "centered"
+            }
+          ]
+        },
+        "optional": true
+      },
       "surface": {
         "type": "objectAttribute",
         "value": {
@@ -8892,6 +9150,29 @@
         "type": "objectAttribute",
         "value": {
           "type": "string"
+        },
+        "optional": true
+      },
+      "headerLink": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "label": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "url": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            }
+          }
         },
         "optional": true
       },

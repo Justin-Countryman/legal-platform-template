@@ -130,6 +130,8 @@ export const homeHeroDesign = defineType({
     // and the asset live together. Shown for left-aligned overlays; the image field
     // reveals once the toggle is on.
     defineField({name: 'foreground', title: 'Foreground figure', type: 'boolean', fieldset: 'foreground', description: 'Cut-out subject in front of the backdrop (left-aligned overlays only).', initialValue: false, hidden: hide(show.foregroundToggle)}),
+    // The premium package (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.3, `[R-641]`): the figure on either side. Blank: the right.
+    defineField({name: 'foregroundSide', title: 'Figure side', type: 'string', fieldset: 'foreground', description: 'Leave blank for the right. Left stands the figure on the left and moves the text to the right.', options: {list: [{title: 'Left', value: 'left'}], layout: 'radio'}, hidden: hide(show.foreground)}),
     heroImageField({name: 'foregroundImage', title: 'Foreground Image (cut-out)', fieldset: 'foreground', description: 'Cut-out subject (attorney, team) shown in front of the background.', altLabel: 'hero foreground image', hidden: hide(show.foreground)}),
 
     // ─── Media ────────────────────────────────────────────────────────────────

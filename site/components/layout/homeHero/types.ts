@@ -45,6 +45,8 @@ export type HeroConfig = {
   // overlay
   backdrop: Backdrop
   foreground: boolean
+  /** The figure's side (monorepo `[R-641]`); absent is the right, as a config built before the option reads. */
+  foregroundSide?: 'left' | 'right'
   scrimStyle: ScrimStyle
   scrimColor: ScrimColor
   scrimDirection: ScrimDirection
@@ -72,6 +74,7 @@ export type HomeHeroData = {
   contentAlign?: ContentAlign | null
   backdrop?: Backdrop | null
   foreground?: boolean | null
+  foregroundSide?: string | null
   scrimStyle?: ScrimStyle | null
   scrimColor?: ScrimColor | null
   scrimDirection?: ScrimDirection | null

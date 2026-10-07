@@ -5,7 +5,7 @@ import {beforeAll, describe, expect, it} from 'vitest'
 import {render} from '@testing-library/react'
 
 import {findUnknown, readPlainCssClasses} from '../../../scripts/check-unknown-utility-classes.mjs'
-import {COUNT_GRID_CLASSES, columnsFor, countGridClasses, countGridPlan, AREA_CARD_TIERS, AREA_ROW_TIERS, AREA_SIDEWAYS_TIERS, CASE_RESULT_TIERS, NARROW_FEW, NARROW_ONE_ROW, itemTiers, type GridTier} from '../countGrid'
+import {COUNT_GRID_CLASSES, columnsFor, countGridClasses, countGridPlan, AREA_CARD_TIERS, AREA_ROW_TIERS, AREA_SIDEWAYS_TIERS, CASE_RESULT_TIERS, CASE_RESULT_TIERS_FOUR, NARROW_FEW, NARROW_ONE_ROW, itemTiers, type GridTier} from '../countGrid'
 import {SiloTileLayout as SiloTile, SiloInline, SiloSpotlight, SiloFeature, SiloSplit, type SiloLayoutProps} from '../silo/SiloLayouts'
 import {ContentSectionBlock} from '../ContentSectionBlock'
 import {CaseResultsSection} from '../CaseResultsSection'
@@ -65,7 +65,7 @@ describe('the plan: columns by count, at every tier', () => {
   })
 
   it('never leaves one item alone on the last row where a column count the tier may choose avoids it', () => {
-    for (const tiers of [AREA_CARD_TIERS, AREA_ROW_TIERS, CASE_RESULT_TIERS, itemTiers(5)]) {
+    for (const tiers of [AREA_CARD_TIERS, AREA_ROW_TIERS, CASE_RESULT_TIERS, CASE_RESULT_TIERS_FOUR, itemTiers(5)]) {
       for (let n = 2; n <= 24; n++) {
         for (const {prefix, columns, lastRow} of countGridPlan(n, tiers)) {
           const widest = tiers.find((t) => t.prefix === prefix)!.widest
@@ -76,6 +76,19 @@ describe('the plan: columns by count, at every tier', () => {
         }
       }
     }
+  })
+
+  // Results four across (the section's `across: 'four'`, monorepo `[R-641]`; brandilaw draws eight as two rows of four).
+  it('case results four across: eight draw four and four, seven four and three, four on one row; blank keeps three', () => {
+    const lg = (n: number, tiers: readonly GridTier[]) => countGridPlan(n, tiers).find((t) => t.prefix === 'lg')!
+    expect(lg(8, CASE_RESULT_TIERS_FOUR)).toEqual({prefix: 'lg', columns: 4, lastRow: 4})
+    expect(lg(7, CASE_RESULT_TIERS_FOUR)).toEqual({prefix: 'lg', columns: 4, lastRow: 3})
+    expect(lg(4, CASE_RESULT_TIERS_FOUR)).toEqual({prefix: 'lg', columns: 4, lastRow: 4})
+    expect(lg(8, CASE_RESULT_TIERS)).toEqual({prefix: 'lg', columns: 2, lastRow: 2})
+    const results = Array.from({length: 8}, (_, i) => ({_id: `r${i}`, amount: '$1M', caption: 'Settlement'}))
+    const list = (across?: string) => render(<CaseResultsSection data={{heading: 'Results', caseResults: results, across} as never} disclaimer="Past results do not guarantee future outcomes." />).container.querySelector('ul')!.className.split(' ')
+    expect(list('four')).toContain('lg:grid-cols-8')
+    expect(list()).not.toContain('lg:grid-cols-8')
   })
 
   it('a section of three items in a column sets them one per row', () => {

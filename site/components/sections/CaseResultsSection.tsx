@@ -1,11 +1,12 @@
 import {Button} from '@/components/ui/Button'
+import {headerLinkOf} from './headerLink'
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {SectionShell} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type CaseResultsSectionProps} from './sectionProps'
 import {headingFit} from '@/lib/headingFit'
-import {CASE_RESULT_TIERS, NARROW_FEW, countGridClasses} from './countGrid'
+import {CASE_RESULT_TIERS, CASE_RESULT_TIERS_FOUR, NARROW_FEW, countGridClasses} from './countGrid'
 
 // ─── Case Results section ─────────────────────────────────────────────────────
 //
@@ -79,7 +80,7 @@ export function CaseResultsSection({
   scale?: 'marketing'
 }) {
   const results = visibleResults(data)
-  const grid = countGridClasses(results.length, CASE_RESULT_TIERS, NARROW_FEW)
+  const grid = countGridClasses(results.length, data.across === 'four' ? CASE_RESULT_TIERS_FOUR : CASE_RESULT_TIERS, NARROW_FEW)
 
   // No results means no results are being published, so there is nothing to
   // disclaim and the section renders nothing at all. This is the ONLY branch in
@@ -89,6 +90,7 @@ export function CaseResultsSection({
 
   const heading = resolveTokenString(data.heading, napTokens)
   const emphasis = resolveTokenString(data.headingEmphasis, napTokens)
+  const link = headerLinkOf(data.headerLink, napTokens)
   const intro = resolveTokenString(data.intro, napTokens)
   const cta = data.ctaButton?.title && data.ctaButton?.url ? data.ctaButton : null
 
@@ -98,7 +100,7 @@ export function CaseResultsSection({
       seam={seam}
     >
       {heading && (
-        <SectionHeader emphasis={emphasis} scale={scale} heading={heading} fit={headingFit(heading, seam.site?.headingFace)} description={intro} className="mx-auto mb-12 max-w-2xl" />
+        <SectionHeader emphasis={emphasis} link={link} scale={scale} heading={heading} fit={headingFit(heading, seam.site?.headingFace)} description={intro} className="mx-auto mb-12 max-w-2xl" />
       )}
 
       {/* Phase 18 session D: the columns follow the count (`countGrid.ts`; a result card lies sideways, so three across

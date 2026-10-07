@@ -44,7 +44,7 @@ function Backdrop({config, surface, content}: {config: HeroConfig; surface: Reso
           <Image src={surface.bgImage.src} alt={surface.bgImage.alt ?? ''} fill priority className="object-cover hero-drift" style={{objectPosition: heroObjectPosition(surface.bgImage)}} sizes={HERO_BACKDROP_SIZES} />
         )
       )}
-      <HeroScrim style={config.scrimStyle} color={config.scrimColor} direction={config.scrimDirection} opacity={surface.scrimOpacity} align={config.contentAlign} tone="dark" />
+      <HeroScrim style={config.scrimStyle} color={config.scrimColor} direction={config.scrimDirection} opacity={surface.scrimOpacity} align={config.contentAlign} tone="dark" textRight={config.foreground && config.foregroundSide === 'left' && config.contentAlign !== 'center'} />
     </div>
   )
 }
@@ -64,6 +64,8 @@ export function Overlay({config, content, surface, sectionBackground, edgeBelow,
   // Foreground figure pairs with left-aligned text (bottom-right two-column) —
   // not applicable when content is centered.
   const hasFigure = config.foreground && surface.hasForeground && config.contentAlign !== 'center'
+  // The figure on the left moves the text column right (`foregroundSide`, monorepo `[R-641]`).
+  const figureLeft = hasFigure && config.foregroundSide === 'left'
 
   const textBlock = (
     <HeroTextBlock
@@ -94,10 +96,10 @@ export function Overlay({config, content, surface, sectionBackground, edgeBelow,
         ].join(' ')}
         style={hasFigure ? heroForegroundVars() : undefined}
       >
-        <div className="w-full" data-hero-heading-reserve={hasFigure ? '' : undefined}>
+        <div className="w-full" data-hero-heading-reserve={hasFigure ? (figureLeft ? 'left' : '') : undefined}>
           {textBlock}
         </div>
-        {hasFigure && <HeroForeground surface={surface} grounded />}
+        {hasFigure && <HeroForeground surface={surface} grounded side={figureLeft ? 'left' : 'right'} />}
       </div>
     </HeroBand>
   )

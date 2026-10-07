@@ -47,9 +47,41 @@ describe('the homepage hero figure', () => {
     expect(box.querySelector('img')!.className.split(' ')).toContain('object-right-bottom')
   })
 
+  // The figure on the left (`foregroundSide`, monorepo `[R-641]`): the box mirrors, the text column starts past it, the
+  // auto gradient darkens behind the text on the right, and the glow peaks on the figure's side.
+  it('on the left, the box and the image mirror and the text column moves right', () => {
+    const left = {...config('fullViewport'), foregroundSide: 'left' as const}
+    const {getByTestId, container} = render(<Overlay config={left} content={content} surface={surface} sectionBackground={null} />)
+    const box = getByTestId('hero-foreground') as HTMLElement
+    expect(box.style.left).toBe('var(--hero-fg-inset)')
+    expect(box.style.right).toBe('')
+    expect(box.querySelector('img')!.className.split(' ')).toContain('object-left-bottom')
+    expect(container.querySelector('[data-hero-heading-reserve]')!.getAttribute('data-hero-heading-reserve')).toBe('left')
+    // On the right, as before: the reserve's value is empty.
+    const right = render(<Overlay config={config('fullViewport')} content={content} surface={surface} sectionBackground={null} />).container
+    expect(right.querySelector('[data-hero-heading-reserve]')!.getAttribute('data-hero-heading-reserve')).toBe('')
+  })
+
   it('an interior hero keeps its fixed box', () => {
     const box = render(<HeroForeground surface={surface} />).getByTestId('hero-foreground') as HTMLElement
     expect(box.style.height).toBe('var(--hero-fg-h)')
     expect(box.style.bottom).toBe('')
+  })
+})
+
+import {HeroScrim} from '@/components/layout/HeroScrim'
+import {heroCutout} from '@/lib/heroGround'
+
+describe('the figure on the left reaches the scrim and the glow', () => {
+  it('the auto gradient darkens behind text on the right', () => {
+    const dir = (textRight: boolean) => (render(<HeroScrim style="gradient" opacity={80} textRight={textRight} />).container.firstElementChild as HTMLElement).style.backgroundImage
+    expect(dir(true)).toMatch(/^linear-gradient\(to left/)
+    expect(dir(false)).toMatch(/^linear-gradient\(to right/)
+  })
+
+  it('the glow peaks on the figure’s side', () => {
+    const hero = (side?: string) => ({heading: 'H', skeleton: 'overlay', contentAlign: 'left', foreground: true, foregroundSide: side, foregroundImage: {src: 'https://cdn.example.com/f.png'}}) as never
+    expect(heroCutout(hero('left'))).toBe('left')
+    expect(heroCutout(hero())).toBe('right')
   })
 })

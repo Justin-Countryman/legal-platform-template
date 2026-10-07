@@ -53,7 +53,7 @@ export const DESIGN_SETTINGS_LAYER: Readonly<Record<string, Claim>> = {
 /** The homepage hero's design (`heroSettings.homepageHero`), by field. */
 export const HOMEPAGE_HERO_LAYER: Readonly<Record<string, Claim>> = {
   skeleton: 'layout', heightMode: 'layout', contentAlign: 'layout', splitMedia: 'layout', splitImageStyle: 'layout', splitImageRatio: 'layout',
-  mediaSide: 'layout', foreground: 'layout', foregroundImage: 'layout', textTreatment: 'layout',
+  mediaSide: 'layout', foreground: 'layout', foregroundSide: 'layout', foregroundImage: 'layout', textTreatment: 'layout',
   schemeOverride: 'flow',
   backdrop: 'background', backgroundImage: 'background', sectionBackgroundImage: 'background', galleryImages: 'background', videoUrl: 'background',
   scrimStyle: 'background', scrimOpacityOverride: 'background', scrimDirection: 'background',

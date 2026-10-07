@@ -2723,6 +2723,26 @@
           "type": "string"
         },
         {
+          "description": "Optional. A text link on the right of the heading, such as \"All practice areas\" or \"All results\". Setting it aligns the heading left.",
+          "jsonType": "object",
+          "path": "headerLink",
+          "title": "Header Link",
+          "type": "object"
+        },
+        {
+          "jsonType": "string",
+          "path": "headerLink.label",
+          "title": "Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /practice-areas/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "headerLink.url",
+          "title": "Page",
+          "type": "string"
+        },
+        {
           "jsonType": "string",
           "path": "description",
           "title": "Description",
@@ -4121,6 +4141,26 @@
           "type": "string"
         },
         {
+          "description": "Optional. A text link on the right of the heading, such as \"All practice areas\" or \"All results\". Setting it aligns the heading left.",
+          "jsonType": "object",
+          "path": "headerLink",
+          "title": "Header Link",
+          "type": "object"
+        },
+        {
+          "jsonType": "string",
+          "path": "headerLink.label",
+          "title": "Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /practice-areas/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "headerLink.url",
+          "title": "Page",
+          "type": "string"
+        },
+        {
           "jsonType": "string",
           "path": "intro",
           "title": "Intro",
@@ -4135,6 +4175,19 @@
           "path": "caseResults",
           "title": "Case Results",
           "type": "array"
+        },
+        {
+          "description": "Leave blank for up to three across. Four across sets eight results in two rows of four; seven in four and three; the count still decides, and one result never sits alone on a row.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "four"
+            ]
+          },
+          "path": "across",
+          "title": "Columns",
+          "type": "string"
         },
         {
           "description": "Optional. Usually a link to a fuller results page.",
@@ -7859,6 +7912,19 @@
           "type": "reference"
         },
         {
+          "description": "Leave blank for the quote left-aligned beside an accent rule. Centered sets the quote centered under a quote mark, in the heading font.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "centered"
+            ]
+          },
+          "path": "layout",
+          "title": "Layout",
+          "type": "string"
+        },
+        {
           "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
           "jsonType": "string",
           "options": {
@@ -9579,6 +9645,20 @@
           "type": "boolean"
         },
         {
+          "description": "Leave blank for the right. Left stands the figure on the left and moves the text to the right.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "left"
+            ]
+          },
+          "path": "homepageHero.foregroundSide",
+          "title": "Figure side",
+          "type": "string"
+        },
+        {
           "description": "Cut-out subject (attorney, team) shown in front of the background.",
           "hidden": "<predicate>",
           "jsonType": "object",
@@ -9983,6 +10063,26 @@
           "type": "string"
         },
         {
+          "description": "Optional. A text link on the right of the heading, such as \"All practice areas\" or \"All results\". Setting it aligns the heading left.",
+          "jsonType": "object",
+          "path": "canvas[]<practiceAreaNavInline>.headerLink",
+          "title": "Header Link",
+          "type": "object"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<practiceAreaNavInline>.headerLink.label",
+          "title": "Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /practice-areas/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "canvas[]<practiceAreaNavInline>.headerLink.url",
+          "title": "Page",
+          "type": "string"
+        },
+        {
           "jsonType": "string",
           "path": "canvas[]<practiceAreaNavInline>.description",
           "title": "Description",
@@ -10277,6 +10377,26 @@
           "type": "string"
         },
         {
+          "description": "Optional. A text link on the right of the heading, such as \"All practice areas\" or \"All results\". Setting it aligns the heading left.",
+          "jsonType": "object",
+          "path": "canvas[]<attorneySectionInline>.headerLink",
+          "title": "Header Link",
+          "type": "object"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<attorneySectionInline>.headerLink.label",
+          "title": "Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /practice-areas/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "canvas[]<attorneySectionInline>.headerLink.url",
+          "title": "Page",
+          "type": "string"
+        },
+        {
           "jsonType": "string",
           "path": "canvas[]<attorneySectionInline>.description",
           "title": "Description",
@@ -10392,6 +10512,26 @@
           "type": "string"
         },
         {
+          "description": "Optional. A text link on the right of the heading, such as \"All practice areas\" or \"All results\". Setting it aligns the heading left.",
+          "jsonType": "object",
+          "path": "canvas[]<caseResultsSectionInline>.headerLink",
+          "title": "Header Link",
+          "type": "object"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<caseResultsSectionInline>.headerLink.label",
+          "title": "Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /practice-areas/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "canvas[]<caseResultsSectionInline>.headerLink.url",
+          "title": "Page",
+          "type": "string"
+        },
+        {
           "jsonType": "string",
           "path": "canvas[]<caseResultsSectionInline>.intro",
           "title": "Intro",
@@ -10406,6 +10546,19 @@
           "path": "canvas[]<caseResultsSectionInline>.caseResults",
           "title": "Case Results",
           "type": "array"
+        },
+        {
+          "description": "Leave blank for up to three across. Four across sets eight results in two rows of four; seven in four and three; the count still decides, and one result never sits alone on a row.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "four"
+            ]
+          },
+          "path": "canvas[]<caseResultsSectionInline>.across",
+          "title": "Columns",
+          "type": "string"
         },
         {
           "description": "Optional. Usually a link to a fuller results page.",
@@ -10669,6 +10822,26 @@
           "type": "string"
         },
         {
+          "description": "Optional. A text link on the right of the heading, such as \"All practice areas\" or \"All results\". Setting it aligns the heading left.",
+          "jsonType": "object",
+          "path": "canvas[]<testimonialsGridInline>.headerLink",
+          "title": "Header Link",
+          "type": "object"
+        },
+        {
+          "jsonType": "string",
+          "path": "canvas[]<testimonialsGridInline>.headerLink.label",
+          "title": "Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /practice-areas/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "canvas[]<testimonialsGridInline>.headerLink.url",
+          "title": "Page",
+          "type": "string"
+        },
+        {
           "jsonType": "string",
           "path": "canvas[]<testimonialsGridInline>.description",
           "title": "Description",
@@ -10772,6 +10945,19 @@
           "path": "canvas[]<featuredTestimonialInline>.testimonial",
           "title": "Testimonial",
           "type": "reference"
+        },
+        {
+          "description": "Leave blank for the quote left-aligned beside an accent rule. Centered sets the quote centered under a quote mark, in the heading font.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "centered"
+            ]
+          },
+          "path": "canvas[]<featuredTestimonialInline>.layout",
+          "title": "Layout",
+          "type": "string"
         },
         {
           "description": "The background this section sits on. Alternate surfaces down a page for rhythm; text contrast resolves automatically.",
@@ -13805,6 +13991,26 @@
           "type": "string"
         },
         {
+          "description": "Optional. A text link on the right of the heading, such as \"All practice areas\" or \"All results\". Setting it aligns the heading left.",
+          "jsonType": "object",
+          "path": "headerLink",
+          "title": "Header Link",
+          "type": "object"
+        },
+        {
+          "jsonType": "string",
+          "path": "headerLink.label",
+          "title": "Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /practice-areas/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "headerLink.url",
+          "title": "Page",
+          "type": "string"
+        },
+        {
           "jsonType": "string",
           "path": "description",
           "title": "Description",
@@ -16724,6 +16930,26 @@
           "jsonType": "string",
           "path": "headingEmphasis",
           "title": "Heading Emphasis",
+          "type": "string"
+        },
+        {
+          "description": "Optional. A text link on the right of the heading, such as \"All practice areas\" or \"All results\". Setting it aligns the heading left.",
+          "jsonType": "object",
+          "path": "headerLink",
+          "title": "Header Link",
+          "type": "object"
+        },
+        {
+          "jsonType": "string",
+          "path": "headerLink.label",
+          "title": "Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /practice-areas/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "headerLink.url",
+          "title": "Page",
           "type": "string"
         },
         {

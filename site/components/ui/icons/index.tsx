@@ -129,6 +129,16 @@ export function BookmarkIcon({className}: IconProps) {
   )
 }
 
+/** A filled quotation mark, drawn above a centered featured testimonial only (monorepo `[R-642]`: the large drawn quote
+ *  mark stays deleted everywhere else, `[R-496]`). Not a chip icon, so it is not in the registry below. */
+export function QuoteIcon({className}: IconProps) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
+      <path d="M9.6 5C6 6.6 3.5 9.9 3.5 14.2c0 2.9 1.7 4.8 4 4.8 2 0 3.5-1.5 3.5-3.4 0-1.9-1.4-3.3-3.2-3.3-.3 0-.7 0-.9.1.4-2.3 2.2-4.5 4.4-5.6L9.6 5Zm9.4 0c-3.6 1.6-6.1 4.9-6.1 9.2 0 2.9 1.7 4.8 4 4.8 2 0 3.5-1.5 3.5-3.4 0-1.9-1.4-3.3-3.2-3.3-.3 0-.7 0-.9.1.4-2.3 2.2-4.5 4.4-5.6L19 5Z" />
+    </svg>
+  )
+}
+
 // ─── Registry ─────────────────────────────────────────────────────────────────
 
 export const ChipIcons: Record<ChipIcon, ComponentType<{className?: string}>> = {

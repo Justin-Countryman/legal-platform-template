@@ -47,6 +47,15 @@ export function fields({inline}: {inline: boolean}) {
       to: [{type: 'testimonial'}],
       validation: (Rule) => Rule.required().warning(),
     }),
+    // The premium package (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.3, `[R-641]`, `[R-642]`): a quote centered under a quote
+    // mark, as nguyenandmaliklaw sets one. Blank keeps the quote left-aligned beside its rule.
+    defineField({
+      name: 'layout',
+      title: 'Layout',
+      type: 'string',
+      description: 'Leave blank for the quote left-aligned beside an accent rule. Centered sets the quote centered under a quote mark, in the heading font.',
+      options: {list: [{title: 'Centered, with a quote mark', value: 'centered'}], layout: 'radio'},
+    }),
     ...appearanceFields({offerPattern: inline}),
   ]
 }

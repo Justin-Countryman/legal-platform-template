@@ -147,6 +147,10 @@
    heading's natural measure). Below lg the foreground is hidden and the heading
    keeps its base max-w-2xl. */
 @media (min-width: 992px) {
+  /* The figure on the left (monorepo `[R-641]`): the text column starts past it. */
+  [data-hero-heading-reserve="left"] {
+    margin-inline-start: calc(var(--hero-fg-col) + var(--hero-fg-gap) + var(--hero-fg-inset));
+  }
   [data-hero-heading-reserve] {
     max-width: min(
       42rem,
@@ -1036,6 +1040,13 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.1em;
   font-size: 0.8125rem;
   font-weight: 600;
+}
+
+/* A centered featured testimonial's quote (monorepo `[R-641]`, `[R-642]`): 20 to 26 px in the heading face, under its mark;
+   nguyenandmaliklaw draws about 22, brandilaw about 24 (ADV-PP-C). */
+@utility quote-centered {
+  font-size: clamp(1.25rem, 1rem + 0.6vw, 1.625rem);
+  line-height: 1.5;
 }
 
 /* ─── Section headings (Phase 16B, `[R-468]`) ──────────────────────────────── */

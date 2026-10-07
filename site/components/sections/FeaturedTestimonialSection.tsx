@@ -1,4 +1,5 @@
 import {StarRating} from '@/components/ui/StarRating'
+import {QuoteIcon} from '@/components/ui/icons'
 import {EmphasisText} from '@/components/ui/EmphasisText'
 import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage} from '@/lib/sanity/image'
@@ -55,6 +56,8 @@ export function FeaturedTestimonialSection({
   // the heading field existed.
   const heading = resolveTokenString(data.heading, napTokens) || 'Client Testimonial'
   const emphasis = resolveTokenString(data.headingEmphasis, napTokens)
+  // The centered layout (`layout: 'centered'`, monorepo `[R-641]`, `[R-642]`); blank draws exactly as before.
+  const centered = data.layout === 'centered'
   // Phase 17C session 3: the widths the heading's words need, in the face the page wears.
   const fit = headingFit(heading, seam.site?.headingFace)
 
@@ -63,7 +66,7 @@ export function FeaturedTestimonialSection({
       appearance={resolveAppearance(data)}
       seam={seam}
     >
-      <div className="mx-auto max-w-4xl">
+      <div className={centered ? 'mx-auto max-w-4xl text-center' : 'mx-auto max-w-4xl'}>
 
         {/* Section heading */}
         {tagline && <Tagline as="p">{tagline}</Tagline>}
@@ -78,14 +81,17 @@ export function FeaturedTestimonialSection({
           <StarRating count={t.numberOfStars} size="md" className="mb-6 justify-center" />
         )}
 
+        {/* The centered layout's quote mark (monorepo `[R-642]`): one glyph above the quote, in the decor color, never behind text. */}
+        {centered && <QuoteIcon className="mx-auto mb-6 h-12 w-12 text-decor" />}
+
         {/* Quote */}
-        <blockquote className="max-w-3xl border-l-4 border-decor pl-8 text-left">
-          <p className="text-xl font-medium leading-relaxed text-foreground md:text-2xl lg:text-3xl">
+        <blockquote className={centered ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl border-l-4 border-decor pl-8 text-left'}>
+          <p className={centered ? 'quote-centered font-heading text-foreground' : 'text-xl font-medium leading-relaxed text-foreground md:text-2xl lg:text-3xl'}>
             {t.quote}
           </p>
 
           {/* eslint-disable-next-line platform/footer-landmark-naming -- attribution footer inside <blockquote>, not a page-footer landmark; SectionShell wraps the <section> so the rule can't see the sectioning ancestor */}
-          <footer className="mt-8 flex items-center gap-3">
+          <footer className={centered ? 'mt-8 flex items-center justify-center gap-3' : 'mt-8 flex items-center gap-3'}>
             {hasImage(t.avatar) && (
               <SanityImage
                 image={t.avatar}

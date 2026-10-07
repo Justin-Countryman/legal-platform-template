@@ -1,4 +1,5 @@
 import {defineType, defineField} from 'sanity'
+import {headerLinkField} from '../../headerLink'
 import {headingEmphasisField} from '../../headingEmphasis'
 import {TokenStringInput} from '../../../components/TokenStringInput'
 import {TokenTextInput} from '../../../components/TokenTextInput'
@@ -58,6 +59,7 @@ export function fields({inline}: {inline: boolean}) {
       validation: (Rule) => Rule.required().warning(),
     }),
     headingEmphasisField(),
+    headerLinkField(),
     defineField({
       name: 'intro',
       title: 'Intro',
@@ -73,6 +75,15 @@ export function fields({inline}: {inline: boolean}) {
         'Select from the case results you have built under Individual Items. Build each result once and reuse it. The results disclaimer renders automatically below them and is not editable here.',
       validation: (Rule) => Rule.min(1).warning('At least one case result is required'),
       of: [{type: 'reference', to: [{type: 'caseResult'}]}],
+    }),
+    // The premium package (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.3, `[R-641]`; brandilaw's ruled results, two rows of four).
+    // Blank keeps the columns that follow the count up to three.
+    defineField({
+      name: 'across',
+      title: 'Columns',
+      type: 'string',
+      description: 'Leave blank for up to three across. Four across sets eight results in two rows of four; seven in four and three; the count still decides, and one result never sits alone on a row.',
+      options: {list: [{title: 'Up to four across', value: 'four'}], layout: 'radio'},
     }),
     defineField({
       name: 'ctaButton',
