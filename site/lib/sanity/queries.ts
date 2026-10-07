@@ -222,6 +222,7 @@ export const SECTION_BODY = `
   imageTreatment,
   textSize,
   across,
+  cutoutEdge,
   "headerLink": headerLink{label, url},
   "body": body ${BLOCK_CONTENT_FRAGMENT},
   "pullQuote": pullQuote{text, attribution},
@@ -308,15 +309,15 @@ export const SECTION_BODY = `
   "attorneys": select(
     mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{
       _id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
-      "photo": photo ${IMAGE_FRAGMENT}
+      "photo": photo ${IMAGE_FRAGMENT}, "photoOpaque": photo.asset->metadata.isOpaque
     },
     mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{
       _id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
-      "photo": photo ${IMAGE_FRAGMENT}
+      "photo": photo ${IMAGE_FRAGMENT}, "photoOpaque": photo.asset->metadata.isOpaque
     },
     mode == 'manual' => attorneys[defined(@->_id)]->{
       _id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
-      "photo": photo ${IMAGE_FRAGMENT}
+      "photo": photo ${IMAGE_FRAGMENT}, "photoOpaque": photo.asset->metadata.isOpaque
     },
     []
   ),
@@ -885,6 +886,7 @@ export const DESIGN_TOKENS_QUERY = groq`
     heroHeadingWeight,
     leadIn,
     labelStyle,
+    cardEdge,
     internalHeroBackground,
     heroScrimOpacity,
     // The texture a Pattern section wears (Phase 16A). Absent means none.

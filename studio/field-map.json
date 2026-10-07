@@ -2776,7 +2776,8 @@
               "portrait",
               "avatar",
               "minimal",
-              "spotlight"
+              "spotlight",
+              "cutout"
             ]
           },
           "path": "cardStyle",
@@ -4985,6 +4986,20 @@
           "type": "reference"
         },
         {
+          "description": "For a cut-out figure. Leave blank to keep it inside the section. On the edge stands it on the section’s bottom edge, beside the text, on wide screens.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "bottom"
+            ]
+          },
+          "path": "cutoutEdge",
+          "title": "Cut-out position",
+          "type": "string"
+        },
+        {
           "description": "How the image is framed. A cutout figure takes only Slab; any other choice shows it plain.",
           "hidden": "<predicate>",
           "jsonType": "string",
@@ -6045,6 +6060,21 @@
           },
           "path": "imageFrame",
           "title": "Photo Frame",
+          "type": "string"
+        },
+        {
+          "description": "Leave blank for cards as the style set draws them. Left draws a 4 px accent edge down the left of every card (practice areas, attorneys, testimonials, results); Bottom a 2 px accent edge along the bottom; Outline a 1 px accent border all round.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "left",
+              "bottom",
+              "outline"
+            ]
+          },
+          "path": "cardEdge",
+          "title": "Card Edge",
           "type": "string"
         },
         {
@@ -10428,7 +10458,8 @@
               "portrait",
               "avatar",
               "minimal",
-              "spotlight"
+              "spotlight",
+              "cutout"
             ]
           },
           "path": "canvas[]<attorneySectionInline>.cardStyle",
@@ -11451,6 +11482,20 @@
           "path": "canvas[]<contentSectionInline>.media.video",
           "title": "Video",
           "type": "reference"
+        },
+        {
+          "description": "For a cut-out figure. Leave blank to keep it inside the section. On the edge stands it on the section’s bottom edge, beside the text, on wide screens.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "bottom"
+            ]
+          },
+          "path": "canvas[]<contentSectionInline>.cutoutEdge",
+          "title": "Cut-out position",
+          "type": "string"
         },
         {
           "description": "How the image is framed. A cutout figure takes only Slab; any other choice shows it plain.",

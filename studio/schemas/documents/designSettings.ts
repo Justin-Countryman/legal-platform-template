@@ -1091,6 +1091,16 @@ export const designSettings = defineType({
         layout: 'radio',
       },
     }),
+    // A card detail (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 14, `[R-641]`; brandilaw's gold-edged results,
+    // stuartmckenzie's practice cards, lewinlawfirm's tiles): the Element theme's, kept by every style set. No initialValue.
+    defineField({
+      name: 'cardEdge',
+      title: 'Card Edge',
+      type: 'string',
+      fieldset: 'uiElements',
+      description: 'Leave blank for cards as the style set draws them. Left draws a 4 px accent edge down the left of every card (practice areas, attorneys, testimonials, results); Bottom a 2 px accent edge along the bottom; Outline a 1 px accent border all round.',
+      options: {list: [{title: 'Left', value: 'left'}, {title: 'Bottom', value: 'bottom'}, {title: 'Outline', value: 'outline'}], layout: 'radio'},
+    }),
     defineField({
       name: 'cardHover',
       title: 'Practice Area Card Hover',
