@@ -18,6 +18,7 @@ vi.mock('@/components/ui/ScrollReveal', () => ({
 }))
 
 import {HomepageCanvas, type HomepageBlock} from '../HomepageCanvas'
+import {SECTION_HEADER_H2_CLASS} from '@/components/ui/SectionHeader'
 import {RESULTS_DISCLAIMER_DEFAULT} from '@/lib/legal'
 
 const badge = (n: number) => ({
@@ -154,8 +155,9 @@ describe('HomepageCanvas — the inline section objects dispatch to the shared s
     )
     expect(getByRole('heading', {level: 2}).textContent).toBe('How we can help')
     expect(container.querySelectorAll('nav')).toHaveLength(1)
-    // The section component, not the old block: SectionHeader's scale, not marketing-h2.
-    expect(container.querySelector('h2')?.className).not.toContain('marketing-h2')
+    // The section component, through SectionHeader, on the homepage's marketing tier: every homepage section draws one
+    // heading size since monorepo `[R-641]` (`HomepageCanvas.headingScale.test.tsx`).
+    expect(container.querySelector('h2')?.className).toBe(SECTION_HEADER_H2_CLASS.marketing)
   })
 
   it('attorneySectionInline renders through AttorneySectionBlock', () => {

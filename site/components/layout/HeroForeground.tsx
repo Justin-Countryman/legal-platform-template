@@ -16,11 +16,18 @@
 // heading or runs off the right) and sits shorter — grounded bottom-right either
 // way. The heading column reserves space via the globals.css rule keyed off the
 // same vars, so the two never overlap. Renders nothing without a foreground.
+//
+// The homepage hero passes `grounded` (monorepo `[R-641]`): its box has no fixed height and reaches the band's bottom
+// edge instead, so the figure stands on the edge at any band height rather than bleeding past a short band or
+// floating above a tall one.
 
 import Image from 'next/image'
 import type {ResolvedHeroSurface} from '@/lib/heroSurface'
+import {HERO_FOREGROUND_FLOOR} from '@/lib/heroLayout'
 
-export function HeroForeground({surface}: {surface: ResolvedHeroSurface}) {
+/** `grounded`: the homepage hero's figure, whose box reaches the band's bottom edge, so the figure stands on it at any
+ *  band height (`HERO_FOREGROUND_FLOOR`). Absent: the fixed box the interior heroes draw. */
+export function HeroForeground({surface, grounded = false}: {surface: ResolvedHeroSurface; grounded?: boolean}) {
   if (!surface.hasForeground || !surface.foreground?.src) return null
   const fg = surface.foreground
 
@@ -29,11 +36,9 @@ export function HeroForeground({surface}: {surface: ResolvedHeroSurface}) {
       className="pointer-events-none absolute top-0 z-10 hidden lg:block"
       // Box geometry from the container's shared CSS vars (heroForegroundVars()):
       // width/height/right inset stay in sync with the heading-column reservation.
-      style={{
-        right: 'var(--hero-fg-inset)',
-        width: 'var(--hero-fg-col)',
-        height: 'var(--hero-fg-h)',
-      }}
+      style={grounded
+        ? {right: 'var(--hero-fg-inset)', width: 'var(--hero-fg-col)', bottom: `-${HERO_FOREGROUND_FLOOR}`}
+        : {right: 'var(--hero-fg-inset)', width: 'var(--hero-fg-col)', height: 'var(--hero-fg-h)'}}
       data-testid="hero-foreground"
     >
       <Image

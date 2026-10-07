@@ -54,11 +54,12 @@ function BadgeList({badges, className, imageClassName}: {badges: BadgeImage[]; c
 
 // ─── Layouts ──────────────────────────────────────────────────────────────────
 
-function CenteredGrid({data, tagline, heading, description, buttons, fit}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]; fit?: HeadingFit | null}) {
+function CenteredGrid({data, tagline, heading, description, buttons, fit, scale}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]; fit?: HeadingFit | null; scale?: 'marketing'}) {
   return (
     <>
         {heading && (
           <SectionHeader
+            scale={scale}
             tagline={tagline}
             heading={heading}
             fit={fit}
@@ -81,12 +82,13 @@ function CenteredGrid({data, tagline, heading, description, buttons, fit}: {data
   )
 }
 
-function InlineBadges({data, tagline, heading, description, buttons, fit}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]; fit?: HeadingFit | null}) {
+function InlineBadges({data, tagline, heading, description, buttons, fit, scale}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]; fit?: HeadingFit | null; scale?: 'marketing'}) {
   return (
     <>
         <div className="heading-grows heading-flex-third shrink-0 max-xl:max-w-2xl xl:w-1/3">
           {heading && (
             <SectionHeader
+              scale={scale}
               tagline={tagline}
               heading={heading}
               fit={fit}
@@ -111,12 +113,13 @@ function InlineBadges({data, tagline, heading, description, buttons, fit}: {data
   )
 }
 
-function SplitBadges({data, tagline, heading, description, buttons, fit}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]; fit?: HeadingFit | null}) {
+function SplitBadges({data, tagline, heading, description, buttons, fit, scale}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]; fit?: HeadingFit | null; scale?: 'marketing'}) {
   return (
     <>
         <div className="heading-grows heading-flex-third shrink-0 max-xl:max-w-2xl xl:w-1/3">
           {heading && (
             <SectionHeader
+              scale={scale}
               tagline={tagline}
               heading={heading}
               fit={fit}
@@ -159,7 +162,7 @@ function SplitBadges({data, tagline, heading, description, buttons, fit}: {data:
 // and Buttons fields did nothing while it painted its own `<section>`. The shell
 // runs without its gutter and container so the strip stays edge to edge; the
 // heading and the buttons sit in a container of their own.
-function ScrollingBadges({data, tagline, heading, description, buttons, fit}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]; fit?: HeadingFit | null}) {
+function ScrollingBadges({data, tagline, heading, description, buttons, fit, scale}: {data: BadgesSectionBlockData; tagline?: string | null; heading?: string | null; description?: string | null; buttons?: CtaButton[]; fit?: HeadingFit | null; scale?: 'marketing'}) {
   const badges = data.badges ?? []
   if (badges.length === 0) return null
 
@@ -167,7 +170,7 @@ function ScrollingBadges({data, tagline, heading, description, buttons, fit}: {d
     <>
       {heading && (
         <div className="container px-[5%]">
-          <SectionHeader tagline={tagline} heading={heading} fit={fit} description={description} className={description ? 'mb-10' : undefined} />
+          <SectionHeader scale={scale} tagline={tagline} heading={heading} fit={fit} description={description} className={description ? 'mb-10' : undefined} />
         </div>
       )}
       {/* Moves by itself, so it carries a Pause control and stands still under reduced
@@ -233,10 +236,14 @@ export function BadgesSectionBlock({
   data,
   napTokens,
   seam = NO_SEAM,
+  scale,
 }: {
   data: BadgesSectionBlockData
   napTokens?: NapTokens | null
   seam?: SeamProps
+  /** The homepage passes `marketing`: the heading takes the marketing scale, as the content section's does, so every
+   *  section on one page draws one heading size (monorepo `[R-641]`). Absent: the interior tier. */
+  scale?: 'marketing'
 }) {
   if (isEmpty(data)) return null
 
@@ -255,15 +262,15 @@ export function BadgesSectionBlock({
     if (!data.badges || data.badges.length === 0) return null
     return (
       <SectionShell appearance={resolveAppearance(data)} contained={false} gutter={false} seam={seam}>
-        <ScrollingBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} fit={fit} />
+        <ScrollingBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} fit={fit} scale={scale} />
       </SectionShell>
     )
   }
 
   const body =
-    data.layout === 'inline' ? <InlineBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} fit={fit} />
-    : data.layout === 'split' ? <SplitBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} fit={fit} />
-    : <CenteredGrid data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} fit={fit} />
+    data.layout === 'inline' ? <InlineBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} fit={fit} scale={scale} />
+    : data.layout === 'split' ? <SplitBadges data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} fit={fit} scale={scale} />
+    : <CenteredGrid data={data} tagline={tagline} heading={heading} description={description} buttons={buttons} fit={fit} scale={scale} />
 
   return (
     <SectionShell

@@ -37,10 +37,14 @@ export function FeaturedTestimonialSection({
   data,
   napTokens,
   seam = NO_SEAM,
+  scale,
 }: {
   data: FeaturedTestimonialSectionData
   napTokens?: NapTokens | null
   seam?: SeamProps
+  /** The homepage passes `marketing`: the heading takes the marketing scale, as the content section's does, so every
+   *  section on one page draws one heading size (monorepo `[R-641]`). Absent: the interior tier. */
+  scale?: 'marketing'
 }) {
   const t = data.testimonial
   if (!t?.quote) return null
@@ -63,7 +67,7 @@ export function FeaturedTestimonialSection({
         {tagline && <Tagline as="p">{tagline}</Tagline>}
         {/* Phase 18 session D (monorepo `[R-615]`): the section tier every `SectionHeader` draws (it was 24 px, smaller than
             every other section's heading), the quote kept under it and at a reading measure. */}
-        <h2 className="section-heading mb-6 font-heading text-3xl font-bold text-heading md:text-4xl" style={headingFitStyle(fit)}>
+        <h2 className={`section-heading mb-6 font-heading font-bold text-heading ${scale === 'marketing' ? 'marketing-h2' : 'text-3xl md:text-4xl'}`} style={headingFitStyle(fit)}>
           <HeadingText fit={fit}>{heading}</HeadingText>
         </h2>
 

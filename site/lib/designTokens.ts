@@ -1306,24 +1306,26 @@ const STRUCTURAL_SLOW  = STRUCTURAL_DURATIONS.slow
 
 export type MarketingScaleTokens = {h1: string; h2: string; h3: string; h4: string}
 
-/** The section heading's ceiling, in rem (Phase 18 session D): a content section's heading and the close's never pass 56 px
- *  at any width. On the study's 53 rated law sites a page's section headings sit at a median of 43 px at 1440 and no page's
- *  median passes 56 (monorepo WS-DESIGN-ENGINE-GAPS-DESIGN.md §16.3 row 4); md drew 64 and lg 70. CC's value (`[R-503]`):
- *  one section set large is a statement layout's, not every content section's. `sectionHeadingCeiling.test.ts`. */
-export const SECTION_HEADING_MAX_REM = 3.5
+/** The section heading's ceiling, in rem (Phase 18 session D): no homepage section heading passes it at any width. On the
+ *  study's 53 rated law sites a page's section headings sit at a median of 43 px at 1440 and no page's median passes 56
+ *  (monorepo WS-DESIGN-ENGINE-GAPS-DESIGN.md §16.3 row 4); md drew 64 and lg 70, and Phase 18 capped them at 56. The five
+ *  premium references draw 43 to 48 px, and since `[R-641]` every homepage section draws this one tier, so the ceiling
+ *  is their 48 (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 3). `sectionHeadingCeiling.test.ts`. */
+export const SECTION_HEADING_MAX_REM = 3
 
 // Exported so the Studio can render a catalog of all options sourced from the
 // canonical map (per BI-FOUNDATIONS.md → "Design Studio = visual contract" →
 // Catalog mode vs active mode). buildDesignTokenCSS reads the same map from
 // the unexported lookup below.
 export const MARKETING_SCALE_MAP: Record<string, MarketingScaleTokens> = {
-  // Perfect Fourth (1.333) — restrained but clearly marketing
-  sm: {h1: '4.214rem', h2: '3.161rem', h3: '2.371rem', h4: '1.778rem'},
-  // Augmented Fourth (1.414) — classic bold marketing; the section heading at the ceiling (`SECTION_HEADING_MAX_REM`, was 4rem)
-  md: {h1: '5.657rem', h2: '3.5rem',   h3: '2.828rem', h4: '2rem'},
+  // Perfect Fourth (1.333) — restrained but clearly marketing; the section heading a step under the ceiling (was 3.161rem,
+  // over it since `[R-641]`'s 48 px)
+  sm: {h1: '4.214rem', h2: '2.75rem',  h3: '2.371rem', h4: '1.778rem'},
+  // Augmented Fourth (1.414) — classic bold marketing; the section heading at the ceiling (`SECTION_HEADING_MAX_REM`, was 4rem, then 3.5rem)
+  md: {h1: '5.657rem', h2: '3rem',     h3: '2.828rem', h4: '2rem'},
   // Golden Ratio (1.618) — dramatic, hero-driven (H1 capped at 8rem; raw value 11.09rem felt broken at large viewports). The
-  // section heading at the ceiling (was 6.854rem), and h3 under it (was 4.236rem, which only the Design Studio's sample draws).
-  lg: {h1: '8rem',     h2: '3.5rem',   h3: '3rem',     h4: '2.618rem'},
+  // section heading at the ceiling (was 6.854rem, then 3.5rem), and h3 under it (was 4.236rem, then 3rem; only the Design Studio's sample draws it).
+  lg: {h1: '8rem',     h2: '3rem',     h3: '2.9rem',   h4: '2.618rem'},
 }
 
 // ─── The heading signature (Phase 16B) ────────────────────────────────────────

@@ -252,8 +252,12 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPr
   // Animation hooks — picked up by [data-button-animation="<mode>"] selectors in
   // globals.css. Tertiary intentionally lacks these, so it's excluded from the
   // hover-animation system (its arrow-nudge is the only hover affordance).
+  // `data-context` picks the fill a sweep or fill-center paints under the label
+  // (`--btn-hover-fill`): the action's hover fill suits only the light context's
+  // label (monorepo backlog 435, `Button.hoverFill.test.tsx`).
   const animProps = {
     'data-variant': variant,
+    'data-context': context,
     'data-button-animatable': 'true',
   } as const
 

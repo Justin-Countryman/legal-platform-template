@@ -641,7 +641,8 @@ describe('buildDesignTokenCSS marketingScale', () => {
   it('sm — Perfect Fourth ratio values', () => {
     const css = buildDesignTokenCSS({marketingScale: 'sm'})
     expect(css).toContain('--marketing-h1:4.214rem')
-    expect(css).toContain('--marketing-h2:3.161rem')
+    // A step under the section heading's ceiling since monorepo `[R-641]` (was 3.161rem).
+    expect(css).toContain('--marketing-h2:2.75rem')
     expect(css).toContain('--marketing-h3:2.371rem')
     expect(css).toContain('--marketing-h4:1.778rem')
   })
@@ -649,7 +650,7 @@ describe('buildDesignTokenCSS marketingScale', () => {
   it('md — Augmented Fourth ratio values, the section heading at its ceiling', () => {
     const css = buildDesignTokenCSS({marketingScale: 'md'})
     expect(css).toContain('--marketing-h1:5.657rem')
-    expect(css).toContain('--marketing-h2:3.5rem')
+    expect(css).toContain('--marketing-h2:3rem')
     expect(css).toContain('--marketing-h3:2.828rem')
     expect(css).toContain('--marketing-h4:2rem')
   })
@@ -657,8 +658,8 @@ describe('buildDesignTokenCSS marketingScale', () => {
   it('lg — Golden Ratio values, H1 capped at 8rem, the section heading at its ceiling', () => {
     const css = buildDesignTokenCSS({marketingScale: 'lg'})
     expect(css).toContain('--marketing-h1:8rem')
-    expect(css).toContain('--marketing-h2:3.5rem')
-    expect(css).toContain('--marketing-h3:3rem')
+    expect(css).toContain('--marketing-h2:3rem')
+    expect(css).toContain('--marketing-h3:2.9rem')
     expect(css).toContain('--marketing-h4:2.618rem')
     // Sanity: capped value (8rem) is less than uncapped ratio⁵ × 16px = 11.09rem
     expect(css).not.toContain('--marketing-h1:11.09rem')

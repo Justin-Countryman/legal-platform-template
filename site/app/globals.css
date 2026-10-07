@@ -312,6 +312,18 @@
    it. `'none'` mode emits no rules; class-string color hover is the only visual.
    Each mode collapses to no-op under `prefers-reduced-motion: reduce`. */
 
+/* The fill a sweep or fill-center paints under the label, by the button's context (monorepo backlog 435). The
+   action's hover fill and the action pair with the light context's labels only: a light primary on a dark band keeps
+   its own hover ground, the light ground's muted step, under its dark label; on the accent fill both buttons keep the
+   fill's text color under their label in the fill's color, the pair the band is built on. Absent, each variant paints
+   what it always did. Held by `components/ui/__tests__/Button.hoverFill.test.tsx` over every preset. */
+[data-button-animatable="true"][data-context="dark"][data-variant="primary"] {
+  --btn-hover-fill: var(--color-muted);
+}
+[data-button-animatable="true"][data-context="saturated"] {
+  --btn-hover-fill: var(--color-accent-fg);
+}
+
 /* Mode: sweep — background fills left-to-right via ::before scaleX. */
 [data-button-animation="sweep"] [data-button-animatable="true"] {
   position: relative;
@@ -329,10 +341,10 @@
   z-index: -1;
 }
 [data-button-animation="sweep"] [data-button-animatable="true"][data-variant="primary"]::before {
-  background: var(--color-action-hover);
+  background: var(--btn-hover-fill, var(--color-action-hover));
 }
 [data-button-animation="sweep"] [data-button-animatable="true"][data-variant="secondary"]::before {
-  background: var(--color-action);
+  background: var(--btn-hover-fill, var(--color-action));
 }
 /* Each effect only where the device can hover: a tap on a phone sets :hover and leaves it set,
    which left a sweep or a fill drawn (monorepo WS-MOTION-LAYER-DESIGN.md §1.2); Tailwind's own
@@ -359,10 +371,10 @@
   z-index: -1;
 }
 [data-button-animation="fill-center"] [data-button-animatable="true"][data-variant="primary"]::before {
-  background: var(--color-action-hover);
+  background: var(--btn-hover-fill, var(--color-action-hover));
 }
 [data-button-animation="fill-center"] [data-button-animatable="true"][data-variant="secondary"]::before {
-  background: var(--color-action);
+  background: var(--btn-hover-fill, var(--color-action));
 }
 @media (hover: hover) {
   [data-button-animation="fill-center"] [data-button-animatable="true"]:hover::before {

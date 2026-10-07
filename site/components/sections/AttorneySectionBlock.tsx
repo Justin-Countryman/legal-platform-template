@@ -39,10 +39,14 @@ export function AttorneySectionBlock({
   data,
   napTokens,
   seam = NO_SEAM,
+  scale,
 }: {
   data: AttorneySectionBlockData
   napTokens?: NapTokens | null
   seam?: SeamProps
+  /** The homepage passes `marketing`: the heading takes the marketing scale, as the content section's does, so every
+   *  section on one page draws one heading size (monorepo `[R-641]`). Absent: the interior tier. */
+  scale?: 'marketing'
 }) {
   let attorneys = (data.attorneys ?? []).filter(Boolean)
   if (data.mode === 'practiceArea' && data.orderedAttorneyIds?.length) {
@@ -70,6 +74,7 @@ export function AttorneySectionBlock({
 
       {heading && (
         <SectionHeader
+          scale={scale}
           tagline={tagline}
           heading={heading}
           fit={headingFit(heading, seam.site?.headingFace)}

@@ -92,23 +92,24 @@ function renderBlock(
     // The inline section objects: the shared section components, the same ones
     // PageSections renders for the referenced documents.
     case 'practiceAreaNavInline':
-      return <PracticeAreaNavBlock data={block} napTokens={napTokens} seam={seam} />
+      return <PracticeAreaNavBlock data={block} napTokens={napTokens} scale="marketing" seam={seam} />
     case 'attorneySectionInline':
-      return <AttorneySectionBlock data={block} napTokens={napTokens} seam={seam} />
+      return <AttorneySectionBlock data={block} napTokens={napTokens} scale="marketing" seam={seam} />
     case 'badgesSectionInline':
-      return <BadgesSectionBlock data={block} napTokens={napTokens} seam={seam} />
+      return <BadgesSectionBlock data={block} napTokens={napTokens} scale="marketing" seam={seam} />
     case 'testimonialsGridInline':
-      return <TestimonialsGridSection data={block} napTokens={napTokens} seam={seam} />
+      return <TestimonialsGridSection data={block} napTokens={napTokens} scale="marketing" seam={seam} />
     case 'featuredTestimonialInline':
-      return <FeaturedTestimonialSection data={block} napTokens={napTokens} seam={seam} />
+      return <FeaturedTestimonialSection data={block} napTokens={napTokens} scale="marketing" seam={seam} />
     case 'videoSectionInline':
-      return <VideoSectionBlock data={block} napTokens={napTokens} seam={seam} />
+      return <VideoSectionBlock data={block} napTokens={napTokens} scale="marketing" seam={seam} />
     case 'caseResultsSectionInline':
       return (
         <CaseResultsSection
           data={block}
           disclaimer={resolveResultsDisclaimer(resultsDisclaimer)}
           napTokens={napTokens}
+          scale="marketing"
           seam={seam}
         />
       )
@@ -127,7 +128,7 @@ function renderBlock(
       )
     // A reviews band is its embed: none, no band, and no ScrollReveal wrapper.
     case 'reviewsSectionInline':
-      return <ReviewsSectionBlock data={block} napTokens={napTokens} seam={seam} />
+      return <ReviewsSectionBlock data={block} napTokens={napTokens} scale="marketing" seam={seam} />
     // No default case that renders something generic. An unknown block type
     // renders nothing rather than a placeholder: a block added to the schema
     // and not to this switch should be invisible, not half-drawn.

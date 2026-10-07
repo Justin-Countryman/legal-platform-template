@@ -13,7 +13,7 @@ import type {HeadingFit} from '@/lib/headingFit'
 // are unchanged — the primitive emits the same h2 and description classes that
 // the hand-rolled callsites produced pre-consolidation.
 
-export type SectionHeaderScale = 'md' | 'lg' | 'xl'
+export type SectionHeaderScale = 'md' | 'lg' | 'xl' | 'marketing'
 export type SectionHeaderAlignment = 'center' | 'left'
 
 export type SectionHeaderProps = {
@@ -73,6 +73,9 @@ export type SectionHeaderProps = {
 // (the roster eye of 2026-10-03, `[R-631]`): the palette's dark ground on a light ground,
 // cascade-aware like `text-foreground` was, so a dark or saturated band swaps it.
 export const SECTION_HEADER_H2_CLASS: Record<SectionHeaderScale, string> = {
+  // The homepage tier (monorepo `[R-641]`): the marketing scale under the section heading's ceiling, the tier the
+  // content section and the close draw (`HEADING_UNIT_TIER_CLASS.marketing`), so a page's sections share one size.
+  marketing: 'mb-4 marketing-h2 section-heading font-heading font-bold text-heading',
   md: 'mb-4 text-3xl font-bold text-heading md:text-4xl section-heading',
   lg: 'mb-5 text-3xl font-bold text-heading md:text-4xl lg:text-5xl section-heading',
   // xl is the marquee bottom-of-page CTA tier (sole consumer: GlobalCta). It

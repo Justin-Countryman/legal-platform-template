@@ -44,10 +44,14 @@ export function ReviewsSectionBlock({
   data,
   napTokens,
   seam = NO_SEAM,
+  scale,
 }: {
   data: ReviewsSectionBlockData
   napTokens?: NapTokens | null
   seam?: SeamProps
+  /** The homepage passes `marketing`: the heading takes the marketing scale, as the content section's does, so every
+   *  section on one page draws one heading size (monorepo `[R-641]`). Absent: the interior tier. */
+  scale?: 'marketing'
 }) {
   // Narrowed locally as well as guarded by `isEmpty`, which the seam walk calls
   // but TypeScript cannot see through.
@@ -68,7 +72,7 @@ export function ReviewsSectionBlock({
       <>
         <div className="heading-grows max-xl:max-w-2xl xl:col-span-5">
           {heading && (
-            <SectionHeader tagline={tagline} heading={heading} fit={fit} description={description} alignment="left" className="mb-6" />
+            <SectionHeader scale={scale} tagline={tagline} heading={heading} fit={fit} description={description} alignment="left" className="mb-6" />
           )}
           {buttons.length > 0 && <ButtonGroup items={buttons} />}
         </div>
@@ -79,7 +83,7 @@ export function ReviewsSectionBlock({
     ) : buttons.length > 0 ? (
       <>
         {heading && (
-          <SectionHeader tagline={tagline} heading={heading} fit={fit} description={description} className="mx-auto mb-6 max-w-2xl" />
+          <SectionHeader scale={scale} tagline={tagline} heading={heading} fit={fit} description={description} className="mx-auto mb-6 max-w-2xl" />
         )}
         <ButtonGroup items={buttons} align="center" className="mb-12" />
         <HtmlEmbed html={embed} />
@@ -87,7 +91,7 @@ export function ReviewsSectionBlock({
     ) : (
       <>
         {heading && (
-          <SectionHeader tagline={tagline} heading={heading} fit={fit} description={description} className="mx-auto mb-12 max-w-2xl" />
+          <SectionHeader scale={scale} tagline={tagline} heading={heading} fit={fit} description={description} className="mx-auto mb-12 max-w-2xl" />
         )}
         <HtmlEmbed html={embed} />
       </>

@@ -8,8 +8,8 @@ import {RETIRED_STYLE_SETS, STYLE_SETS} from '../styleSets'
 //   max(1.25rem, clamp(1.5rem, 0.75rem + 4vw, var(--marketing-h2, 2.25rem)) × the face's capitals scale)
 // so at every width the size is at most the scale's `h2`, and a face set in capitals only lowers it (its scale is
 // at most 1). Measured on the study's 53 rated law sites at 1440, a page's section headings sit at a median of
-// 43 px and no page's median passes 56; the md scale drew 64. The ceiling is CC's value (`[R-503]`), the top of the
-// sites' range: a statement band set large is a layout's, not every content section's (§16.4 item 2). The served
+// 43 px and no page's median passes 56; the md scale drew 64. The ceiling was 56, the top of the sites' range, until
+// `[R-641]` put every homepage section on this tier and took the five premium references' top, 48 px: a statement band set large is a layout's, not every content section's (§16.4 item 2). The served
 // pages hold the same rule in `scripts/ci/flow-metrics.mjs`.
 
 const PX = 16
@@ -18,8 +18,8 @@ const sizeAt = (h2: string | undefined, width: number) =>
 const WIDTHS = [320, 390, 500, 768, 992, 1024, 1279, 1280, 1366, 1440, 1600, 1920, 2560]
 
 describe('the section heading stays inside the sites’ range', () => {
-  it('the ceiling is 56 px', () => {
-    expect(SECTION_HEADING_MAX_REM * PX).toBe(56)
+  it('the ceiling is 48 px, the five premium references\u2019 top (monorepo `[R-641]`)', () => {
+    expect(SECTION_HEADING_MAX_REM * PX).toBe(48)
   })
 
   it('no marketing scale sets a section heading above the ceiling, at any width', () => {
