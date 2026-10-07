@@ -4,7 +4,7 @@
 **Designer:** Cyreal  
 **Google Fonts:** https://fonts.google.com/specimen/Lora
 
-Used in pairings: **6 — Humanist Trust** (heading)
+Used in pairings: **6 — Humanist Trust** (heading), **24 — Modern Warmth** (body)
 
 ## Files
 

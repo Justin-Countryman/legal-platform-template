@@ -28,6 +28,8 @@ export const DESIGN_SETTINGS_LAYER: Readonly<Record<string, Claim>> = {
   cornerPreview: 'element', uiRadius: 'element', buttonShape: 'element', tertiaryStyle: 'element', imageFrame: 'element',
   // An element detail (`lib/details.ts`): the button's fill on a dark section.
   buttonOnDark: 'element',
+  // The type details (`lib/details.ts`).
+  heroHeadingWeight: 'element', leadIn: 'element', labelStyle: 'element',
   attorneyCardStyle: 'element', sidebarNavIconStyle: 'element', sidebarWidgetHeaderLine: 'element', sidebarItemSeparators: 'element',
   // The pattern tile's kind is the Element theme's; where and how strongly it is drawn is the Background theme's, which reads it.
   patternTexture: 'element',

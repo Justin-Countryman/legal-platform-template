@@ -88,6 +88,7 @@ export function CaseResultsSection({
   if (results.length === 0) return null
 
   const heading = resolveTokenString(data.heading, napTokens)
+  const emphasis = resolveTokenString(data.headingEmphasis, napTokens)
   const intro = resolveTokenString(data.intro, napTokens)
   const cta = data.ctaButton?.title && data.ctaButton?.url ? data.ctaButton : null
 
@@ -97,7 +98,7 @@ export function CaseResultsSection({
       seam={seam}
     >
       {heading && (
-        <SectionHeader scale={scale} heading={heading} fit={headingFit(heading, seam.site?.headingFace)} description={intro} className="mx-auto mb-12 max-w-2xl" />
+        <SectionHeader emphasis={emphasis} scale={scale} heading={heading} fit={headingFit(heading, seam.site?.headingFace)} description={intro} className="mx-auto mb-12 max-w-2xl" />
       )}
 
       {/* Phase 18 session D: the columns follow the count (`countGrid.ts`; a result card lies sideways, so three across

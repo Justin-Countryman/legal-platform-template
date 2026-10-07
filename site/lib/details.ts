@@ -26,6 +26,9 @@ export const DETAILS: readonly Detail[] = [
   {field: 'saturatedFrom', kind: 'palette', label: 'Color band', values: {action: 'the button color'}},
   {field: 'accentOnDark', kind: 'palette', label: 'Accent on dark sections', values: {raw: 'as chosen'}},
   {field: 'buttonOnDark', kind: 'element', label: 'Buttons on dark sections', values: {accent: 'accent', action: 'button color', outline: 'accent outline'}},
+  {field: 'heroHeadingWeight', kind: 'element', label: 'Homepage headline', values: {bold: 'bold'}},
+  {field: 'leadIn', kind: 'element', label: 'Lead-in line', values: {lead: 'lead', kicker: 'kicker'}},
+  {field: 'labelStyle', kind: 'element', label: 'Labels', values: {tracked: 'tracked capitals'}},
 ]
 
 /** The palette details: cleared, never set, when a palette choice changes a color role. */

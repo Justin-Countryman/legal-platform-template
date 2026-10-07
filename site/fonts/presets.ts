@@ -769,6 +769,145 @@ export const FONT_PRESETS: FontPreset[] = [
     tone: 'Plain and direct, one humanist family in bold mixed case (mono-pair)',
     bestFor: 'Business law, employment, plaintiff firms that want plain speech',
   },
+  // ─── The premium package (monorepo WS-PREMIUM-PACKAGE-DESIGN §3 item 2.4, `[R-641]`) ─────────────────────────────
+  // Four pairings the five premium references wear: Playfair Display over Geist, PT Serif over Inter, Poppins over Lora
+  // (the first sans heading over a serif body) and Roboto over Assistant. Faces already committed are reused, each file
+  // once; Geist, PT Serif and Assistant are new (Google Fonts, Latin, SIL OFL; `fonts/LICENSES.md`). Each new heading's
+  // capitals are sized as the others measure, cap height times scale near 0.50; fallbacks are Next's capsize arithmetic.
+  {
+    id: 22,
+    name: 'Editorial Modern',
+    heading: {
+      family: 'Playfair Display',
+      voice: 'display serif',
+      slug: 'playfair-display',
+      weights: ['400', '700'],
+      italic: true,
+      variable: true,
+      capsScale: 0.71,
+      fallback: {family: 'serif', metricsKey: 'playfairDisplay', at: {
+        '400': {desktop: {sizeAdjust: '111.26', ascent: '97.25', descent: '22.56', lineGap: '0.00'}, android: {sizeAdjust: '93.97', ascent: '115.14', descent: '26.71', lineGap: '0.00'}},
+        '700': {desktop: {sizeAdjust: '107.02', ascent: '101.10', descent: '23.45', lineGap: '0.00'}, android: {sizeAdjust: '90.43', ascent: '119.65', descent: '27.76', lineGap: '0.00'}},
+      }},
+      files: {
+        regular: '/fonts/files/playfair-display/PlayfairDisplay-Regular.woff2',
+        italic:  '/fonts/files/playfair-display/PlayfairDisplay-Italic.woff2',
+      },
+    },
+    body: {
+      family: 'Geist',
+      slug: 'geist',
+      weights: ['400', '600', '700'],
+      italic: false,
+      variable: true,
+      files: {
+        regular: '/fonts/files/geist/Geist-Regular.woff2',
+      },
+    },
+    tone: 'Classic display headlines over a crisp contemporary sans',
+    bestFor: 'Boutique litigation, business, premium personal injury',
+  },
+  {
+    id: 23,
+    name: 'Measured Counsel',
+    heading: {
+      family: 'PT Serif',
+      voice: 'text serif',
+      slug: 'pt-serif',
+      weights: ['400', '700'],
+      italic: true,
+      variable: false,
+      capsScale: 0.71,
+      fallback: {family: 'serif', metricsKey: 'pTSerif', at: {
+        '400': {desktop: {sizeAdjust: '110.28', ascent: '94.22', descent: '25.93', lineGap: '0.00'}, android: {sizeAdjust: '93.14', ascent: '111.55', descent: '30.71', lineGap: '0.00'}},
+        '700': {desktop: {sizeAdjust: '111.88', ascent: '92.87', descent: '25.56', lineGap: '0.00'}, android: {sizeAdjust: '94.53', ascent: '109.91', descent: '30.25', lineGap: '0.00'}},
+      }},
+      files: {
+        regular: '/fonts/files/pt-serif/PTSerif-Regular.woff2',
+        bold:    '/fonts/files/pt-serif/PTSerif-Bold.woff2',
+        italic:  '/fonts/files/pt-serif/PTSerif-Italic.woff2',
+      },
+    },
+    body: {
+      family: 'Inter',
+      slug: 'inter',
+      weights: ['400', '500', '600', '700'],
+      italic: false,
+      variable: true,
+      files: {
+        regular:  '/fonts/files/inter/Inter-Regular.woff2',
+      },
+    },
+    tone: 'Sober, readable, institutional',
+    bestFor: 'Estate planning, business, government-facing practices',
+  },
+  {
+    id: 24,
+    name: 'Modern Warmth',
+    heading: {
+      family: 'Poppins',
+      voice: 'geometric sans',
+      slug: 'poppins',
+      weights: ['400', '700'],
+      italic: false,
+      variable: false,
+      capsScale: 0.80,
+      fallback: {family: 'sans', metricsKey: 'poppins', at: {
+        '400': {desktop: {sizeAdjust: '112.16', ascent: '93.62', descent: '31.21', lineGap: '8.92'}, android: {sizeAdjust: '112.40', ascent: '93.41', descent: '31.14', lineGap: '8.90'}},
+        '700': {desktop: {sizeAdjust: '107.30', ascent: '97.86', descent: '32.62', lineGap: '9.32'}, android: {sizeAdjust: '113.90', ascent: '92.19', descent: '30.73', lineGap: '8.78'}},
+      }},
+      files: {
+        regular: '/fonts/files/poppins/Poppins-Regular.woff2',
+        bold:    '/fonts/files/poppins/Poppins-Bold.woff2',
+      },
+    },
+    body: {
+      family: 'Lora',
+      slug: 'lora',
+      weights: ['400', '600', '700'],
+      italic: true,
+      variable: true,
+      files: {
+        regular: '/fonts/files/lora/Lora-Regular.woff2',
+        italic:  '/fonts/files/lora/Lora-Italic.woff2',
+      },
+    },
+    tone: 'Contemporary headlines over a warm reading serif',
+    bestFor: 'Family law, personal injury, client-centered practices',
+  },
+  {
+    id: 25,
+    name: 'Plain Speaking',
+    heading: {
+      family: 'Roboto',
+      voice: 'humanist sans',
+      slug: 'roboto',
+      weights: ['400', '700'],
+      italic: true,
+      variable: true,
+      capsScale: 0.7,
+      fallback: {family: 'sans', metricsKey: 'roboto', at: {
+        '400': {desktop: {sizeAdjust: '99.78', ascent: '92.98', descent: '24.47', lineGap: '0.00'}, android: {sizeAdjust: '100.00', ascent: '92.77', descent: '24.41', lineGap: '0.00'}},
+        '700': {desktop: {sizeAdjust: '94.20', ascent: '98.48', descent: '25.92', lineGap: '0.00'}, android: {sizeAdjust: '100.00', ascent: '92.77', descent: '24.41', lineGap: '0.00'}},
+      }},
+      files: {
+        regular: '/fonts/files/roboto/Roboto-Regular.woff2',
+        italic:  '/fonts/files/roboto/Roboto-Italic.woff2',
+      },
+    },
+    body: {
+      family: 'Assistant',
+      slug: 'assistant',
+      weights: ['400', '600', '700'],
+      italic: false,
+      variable: true,
+      files: {
+        regular: '/fonts/files/assistant/Assistant-Regular.woff2',
+      },
+    },
+    tone: 'Clean, direct, approachable',
+    bestFor: 'Consumer practices, immigration, employment',
+  },
 ]
 
 export function getPresetById(id: number): FontPreset | undefined {

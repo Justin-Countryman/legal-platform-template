@@ -725,6 +725,19 @@
           },
           "optional": true
         },
+        "textSize": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "large"
+              }
+            ]
+          },
+          "optional": true
+        },
         "itemsHeading": {
           "type": "objectAttribute",
           "value": {
@@ -1281,6 +1294,13 @@
           },
           "optional": true
         },
+        "headingEmphasis": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
         "testimonial": {
           "type": "objectAttribute",
           "value": {
@@ -1438,6 +1458,13 @@
           "optional": true
         },
         "heading": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "headingEmphasis": {
           "type": "objectAttribute",
           "value": {
             "type": "string"
@@ -1882,6 +1909,13 @@
           },
           "optional": true
         },
+        "headingEmphasis": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
         "intro": {
           "type": "objectAttribute",
           "value": {
@@ -2143,6 +2177,13 @@
           },
           "optional": true
         },
+        "headingEmphasis": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
         "description": {
           "type": "objectAttribute",
           "value": {
@@ -2349,6 +2390,13 @@
           "optional": true
         },
         "heading": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "headingEmphasis": {
           "type": "objectAttribute",
           "value": {
             "type": "string"
@@ -3639,6 +3687,13 @@
           "optional": true
         },
         "heading": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "headingEmphasis": {
           "type": "objectAttribute",
           "value": {
             "type": "string"
@@ -6023,6 +6078,19 @@
         },
         "optional": true
       },
+      "textSize": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "large"
+            }
+          ]
+        },
+        "optional": true
+      },
       "itemsHeading": {
         "type": "objectAttribute",
         "value": {
@@ -6479,6 +6547,13 @@
         },
         "optional": true
       },
+      "headingEmphasis": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "intro": {
         "type": "objectAttribute",
         "value": {
@@ -6689,6 +6764,13 @@
         "optional": true
       },
       "heading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "headingEmphasis": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -7568,6 +7650,13 @@
         "optional": true
       },
       "heading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "headingEmphasis": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -8605,6 +8694,13 @@
         },
         "optional": true
       },
+      "headingEmphasis": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "testimonial": {
         "type": "objectAttribute",
         "value": {
@@ -8786,6 +8882,13 @@
         "optional": true
       },
       "heading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "headingEmphasis": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -18378,6 +18481,19 @@
         },
         "optional": true
       },
+      "heroHeadingWeight": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "bold"
+            }
+          ]
+        },
+        "optional": true
+      },
       "headingWeight": {
         "type": "objectAttribute",
         "value": {
@@ -19063,6 +19179,22 @@
             {
               "type": "number",
               "value": 21
+            },
+            {
+              "type": "number",
+              "value": 22
+            },
+            {
+              "type": "number",
+              "value": 23
+            },
+            {
+              "type": "number",
+              "value": 24
+            },
+            {
+              "type": "number",
+              "value": 25
             }
           ]
         },
@@ -19088,6 +19220,36 @@
             {
               "type": "string",
               "value": "lg"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "labelStyle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "tracked"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "leadIn": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "lead"
+            },
+            {
+              "type": "string",
+              "value": "kicker"
             }
           ]
         },

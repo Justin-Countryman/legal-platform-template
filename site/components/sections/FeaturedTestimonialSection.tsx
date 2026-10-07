@@ -1,4 +1,5 @@
 import {StarRating} from '@/components/ui/StarRating'
+import {EmphasisText} from '@/components/ui/EmphasisText'
 import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage} from '@/lib/sanity/image'
 import {Tagline} from '@/components/ui/Tagline'
@@ -53,6 +54,7 @@ export function FeaturedTestimonialSection({
   // Editable H2; falls back to the original default for sections created before
   // the heading field existed.
   const heading = resolveTokenString(data.heading, napTokens) || 'Client Testimonial'
+  const emphasis = resolveTokenString(data.headingEmphasis, napTokens)
   // Phase 17C session 3: the widths the heading's words need, in the face the page wears.
   const fit = headingFit(heading, seam.site?.headingFace)
 
@@ -68,7 +70,7 @@ export function FeaturedTestimonialSection({
         {/* Phase 18 session D (monorepo `[R-615]`): the section tier every `SectionHeader` draws (it was 24 px, smaller than
             every other section's heading), the quote kept under it and at a reading measure. */}
         <h2 className={`section-heading mb-6 font-heading font-bold text-heading ${scale === 'marketing' ? 'marketing-h2' : 'text-3xl md:text-4xl'}`} style={headingFitStyle(fit)}>
-          <HeadingText fit={fit}>{heading}</HeadingText>
+          <HeadingText fit={fit}>{emphasis ? <EmphasisText text={heading} emphasis={emphasis} /> : heading}</HeadingText>
         </h2>
 
         {/* Stars */}

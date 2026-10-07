@@ -4,7 +4,7 @@
 **Designer:** Rasmus Andersson  
 **Google Fonts:** https://fonts.google.com/specimen/Inter
 
-Used in pairings: **4 — Editorial Authority** (body), **16 — Stately Modern** (body)
+Used in pairings: **4 — Editorial Authority** (body), **16 — Stately Modern** (body), **23 — Measured Counsel** (body)
 
 ## Files
 

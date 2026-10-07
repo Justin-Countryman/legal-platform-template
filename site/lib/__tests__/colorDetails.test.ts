@@ -115,8 +115,8 @@ describe('buttons on dark sections', () => {
 })
 
 describe('the details table', () => {
-  it('names the four fields, three of them palette details a palette choice clears', () => {
-    expect(DETAILS.map((d) => d.field)).toEqual(['headingInk', 'saturatedFrom', 'accentOnDark', 'buttonOnDark'])
+  it('names the details, three of them palette details a palette choice clears', () => {
+    expect(DETAILS.map((d) => d.field)).toEqual(['headingInk', 'saturatedFrom', 'accentOnDark', 'buttonOnDark', 'heroHeadingWeight', 'leadIn', 'labelStyle'])
     expect(COLOR_DETAILS).toEqual(['headingInk', 'saturatedFrom', 'accentOnDark'])
   })
 

@@ -4,7 +4,7 @@
 **Designer:** Claus Eggers Sørensen  
 **Google Fonts:** https://fonts.google.com/specimen/Playfair+Display
 
-Used in pairings: **1 — Classical Authority** (heading)
+Used in pairings: **1 — Classical Authority** (heading), **22 — Editorial Modern** (heading)
 
 ## Files
 

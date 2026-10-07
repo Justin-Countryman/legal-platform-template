@@ -4,7 +4,7 @@
 **Designer:** Indian Type Foundry, Jonny Pinhorn  
 **Google Fonts:** https://fonts.google.com/specimen/Poppins
 
-Used in pairings: **14 — Modern Practice** (heading and body)
+Used in pairings: **14 — Modern Practice** (heading and body), **24 — Modern Warmth** (heading)
 
 ## Files
 

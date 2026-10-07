@@ -1122,6 +1122,72 @@
       "headingFaces": [
         "@font-face{font-family:'heading';src:url('/fonts/files/source-sans-3/SourceSans3-Regular.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;}"
       ]
+    },
+    {
+      "id": 22,
+      "name": "Editorial Modern",
+      "heading": "Playfair Display",
+      "body": "Geist",
+      "headingItalic": true,
+      "headingWeights": [
+        "400",
+        "700"
+      ],
+      "headingVoice": "display serif",
+      "capsScale": 0.71,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/playfair-display/PlayfairDisplay-Regular.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;}"
+      ]
+    },
+    {
+      "id": 23,
+      "name": "Measured Counsel",
+      "heading": "PT Serif",
+      "body": "Inter",
+      "headingItalic": true,
+      "headingWeights": [
+        "400",
+        "700"
+      ],
+      "headingVoice": "text serif",
+      "capsScale": 0.71,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/pt-serif/PTSerif-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;}",
+        "@font-face{font-family:'heading';src:url('/fonts/files/pt-serif/PTSerif-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap;}"
+      ]
+    },
+    {
+      "id": 24,
+      "name": "Modern Warmth",
+      "heading": "Poppins",
+      "body": "Lora",
+      "headingItalic": false,
+      "headingWeights": [
+        "400",
+        "700"
+      ],
+      "headingVoice": "geometric sans",
+      "capsScale": 0.8,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/poppins/Poppins-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;}",
+        "@font-face{font-family:'heading';src:url('/fonts/files/poppins/Poppins-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap;}"
+      ]
+    },
+    {
+      "id": 25,
+      "name": "Plain Speaking",
+      "heading": "Roboto",
+      "body": "Assistant",
+      "headingItalic": true,
+      "headingWeights": [
+        "400",
+        "700"
+      ],
+      "headingVoice": "humanist sans",
+      "capsScale": 0.7,
+      "headingFaces": [
+        "@font-face{font-family:'heading';src:url('/fonts/files/roboto/Roboto-Regular.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;}"
+      ]
     }
   ],
   "matchCases": [

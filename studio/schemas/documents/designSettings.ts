@@ -287,6 +287,16 @@ export const designSettings = defineType({
         ],
       },
     }),
+    // A type detail (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.3, `[R-641]`): the Element theme's, kept by every style set.
+    // Blank renders the homepage headline at the heading weight below. No initialValue.
+    defineField({
+      name: 'heroHeadingWeight',
+      title: 'Homepage Headline Weight',
+      type: 'string',
+      fieldset: 'headings',
+      description: 'Leave blank for the Heading Weight below. Bold draws the homepage headline bold over regular or light section headings, where the font has a bold.',
+      options: {list: [{title: 'Bold', value: 'bold'}], layout: 'radio'},
+    }),
     defineField({
       name: 'headingWeight',
       title: 'Heading Weight',
@@ -694,6 +704,10 @@ export const designSettings = defineType({
           {title: '19 — Industrial Capitals (Oswald + Source Sans 3)', value: 19},
           {title: '20 — Light Geometric (DM Sans + DM Sans, mono)', value: 20},
           {title: '21 — Plain Humanist (Source Sans 3 + Source Sans 3, mono)', value: 21},
+          {title: '22 — Editorial Modern (Playfair Display + Geist)', value: 22},
+          {title: '23 — Measured Counsel (PT Serif + Inter)', value: 23},
+          {title: '24 — Modern Warmth (Poppins + Lora)', value: 24},
+          {title: '25 — Plain Speaking (Roboto + Assistant)', value: 25},
         ],
         layout: 'radio',
       },
@@ -723,6 +737,26 @@ export const designSettings = defineType({
       },
       initialValue: 'default',
     },
+    // A type detail (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 12, `[R-641]`): the Element theme's, kept by every
+    // style set; it reaches the line above a section heading and above the homepage headline only. No initialValue.
+    // A type detail (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 13, `[R-641]`; all five premium references): one
+    // label style on buttons, text links, the main menu and the footer's column headings. No initialValue.
+    defineField({
+      name: 'labelStyle',
+      title: 'Label Style',
+      type: 'string',
+      fieldset: 'typography',
+      description: 'Leave blank for labels as set by the style set. Tracked sets button labels, text links, the main menu and the footer\u2019s column headings in small, spaced capitals, the same everywhere.',
+      options: {list: [{title: 'Tracked capitals', value: 'tracked'}], layout: 'radio'},
+    }),
+    defineField({
+      name: 'leadIn',
+      title: 'Lead-in Line',
+      type: 'string',
+      fieldset: 'typography',
+      description: 'Leave blank for the tagline style below. Lead sets the line above section headings and the homepage headline larger, in the heading font, upright, in the accent. Kicker sets it larger in the heading font, italic, in the heading color. Taglines elsewhere keep the tagline style.',
+      options: {list: [{title: 'Lead', value: 'lead'}, {title: 'Kicker', value: 'kicker'}], layout: 'radio'},
+    }),
     {
       name: 'taglineStyle',
       title: 'Tagline style',

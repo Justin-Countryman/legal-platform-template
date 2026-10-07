@@ -1,4 +1,5 @@
 import {defineType, defineField} from 'sanity'
+import {headingEmphasisField} from '../../headingEmphasis'
 import {TokenStringInput} from '../../../components/TokenStringInput'
 import {TokenTextInput} from '../../../components/TokenTextInput'
 import {appearanceFieldset, appearanceFields} from '../../objects/appearanceFields'
@@ -56,6 +57,7 @@ export function fields({inline}: {inline: boolean}) {
       components: {input: TokenStringInput},
       validation: (Rule) => Rule.required().warning(),
     }),
+    headingEmphasisField(),
     defineField({
       name: 'intro',
       title: 'Intro',
