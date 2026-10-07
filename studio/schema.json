@@ -18944,6 +18944,45 @@
         },
         "optional": true
       },
+      "headingInk": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "action"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "saturatedFrom": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "action"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "accentOnDark": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "raw"
+            }
+          ]
+        },
+        "optional": true
+      },
       "fontPairingPreset": {
         "type": "objectAttribute",
         "value": {
@@ -19430,6 +19469,27 @@
             {
               "type": "string",
               "value": "pill"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "buttonOnDark": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "accent"
+            },
+            {
+              "type": "string",
+              "value": "action"
+            },
+            {
+              "type": "string",
+              "value": "outline"
             }
           ]
         },

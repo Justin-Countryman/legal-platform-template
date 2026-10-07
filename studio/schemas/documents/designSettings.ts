@@ -632,6 +632,35 @@ export const designSettings = defineType({
       validation: (Rule) => Rule.regex(/^#[0-9A-Fa-f]{6}$/, {name: 'hex'}).warning('Enter a 6-digit hex value'),
     }),
 
+    // The color details (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2, `[R-641]`): which role a few things draw from. Each is
+    // blank by default, and blank renders exactly what the site always did; a choice renders only where every color pair
+    // it makes is readable, and the site's usual color elsewhere. Choosing a palette in the design preview clears them,
+    // because they point at the roles the palette replaces. No initialValue (this fieldset refuses one).
+    defineField({
+      name: 'headingInk',
+      title: 'Heading Color',
+      type: 'string',
+      fieldset: 'colors',
+      description: 'The color of headings on light sections. Leave blank for the Dark Ground. Button Color draws them in the button color where it reads on every light section, else a darker shade of it.',
+      options: {list: [{title: 'Button Color', value: 'action'}], layout: 'radio'},
+    }),
+    defineField({
+      name: 'saturatedFrom',
+      title: 'Color Band',
+      type: 'string',
+      fieldset: 'colors',
+      description: 'The color a full-color section is filled with. Leave blank for the Accent. Button Color fills it with the button color where that makes a band of its own (distinct from the dark and light grounds), else the accent.',
+      options: {list: [{title: 'Button Color', value: 'action'}], layout: 'radio'},
+    }),
+    defineField({
+      name: 'accentOnDark',
+      title: 'Accent on Dark Sections',
+      type: 'string',
+      fieldset: 'colors',
+      description: 'Leave blank for a lighter shade of the accent on dark sections, which always reads. As Chosen keeps the accent itself on plain dark sections wherever it reads there; photo and glowing sections keep the lighter shade.',
+      options: {list: [{title: 'As Chosen', value: 'raw'}], layout: 'radio'},
+    }),
+
     // ─── Typography ───────────────────────────────────────────────────────────
     {
       name: 'fontPairingPreset',
@@ -861,6 +890,23 @@ export const designSettings = defineType({
       initialValue: 'rounded',
       validation: (Rule) => Rule.required().warning(),
     },
+    // A button detail (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 8, `[R-641]`): the Element theme's, kept by
+    // every style set. Blank renders the light button on dark sections the site always drew. No initialValue.
+    defineField({
+      name: 'buttonOnDark',
+      title: 'Buttons on Dark Sections',
+      type: 'string',
+      fieldset: 'buttons',
+      description: 'Leave blank for a light button on dark sections. Accent and Button Color fill the button in that color where it stands out from the section (3:1) and its label reads; Accent Outline draws a light label inside an accent line. On a photo or glowing section, or on a palette where the color does not stand out, the light button is drawn.',
+      options: {
+        list: [
+          {title: 'Accent', value: 'accent'},
+          {title: 'Button Color', value: 'action'},
+          {title: 'Accent Outline', value: 'outline'},
+        ],
+        layout: 'radio',
+      },
+    }),
     {
       name: 'buttonAnimation',
       title: 'Button Hover Animation',
