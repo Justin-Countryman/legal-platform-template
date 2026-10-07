@@ -18660,6 +18660,18 @@
             },
             {
               "type": "string",
+              "value": "glow.corner"
+            },
+            {
+              "type": "string",
+              "value": "glow.center"
+            },
+            {
+              "type": "string",
+              "value": "glow.accent"
+            },
+            {
+              "type": "string",
               "value": "fade"
             },
             {
@@ -20198,6 +20210,49 @@
             {
               "type": "string",
               "value": "6"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "cardGlow": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "on"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "photoColor": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "mono"
+            },
+            {
+              "type": "string",
+              "value": "tint"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "photoEdge": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "fade"
             }
           ]
         },

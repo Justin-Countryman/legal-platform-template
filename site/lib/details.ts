@@ -30,6 +30,9 @@ export const DETAILS: readonly Detail[] = [
   {field: 'leadIn', kind: 'element', label: 'Lead-in line', values: {lead: 'lead', kicker: 'kicker'}},
   {field: 'labelStyle', kind: 'element', label: 'Labels', values: {tracked: 'tracked capitals'}},
   {field: 'cardEdge', kind: 'element', label: 'Card edge', values: {left: 'an accent edge on the left', bottom: 'an accent edge below', outline: 'an accent outline'}},
+  {field: 'cardGlow', kind: 'element', label: 'Cards on dark sections', values: {on: 'glowing'}},
+  {field: 'photoColor', kind: 'element', label: 'Photo color', values: {mono: 'black and white', tint: 'an accent tint'}},
+  {field: 'photoEdge', kind: 'element', label: 'Photo edge', values: {fade: 'faded into the section'}},
 ]
 
 /** The palette details: cleared, never set, when a palette choice changes a color role. */

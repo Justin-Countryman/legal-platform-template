@@ -220,6 +220,11 @@ export type BackgroundRules = {
   /** A dark hero and a dark close join the ramp's first and last runs. The glow's always do. */
   ends: boolean
   close: (typeof ON_CLOSES)[number]
+  /** The glow's shape where not the run's soft side light (the premium package, monorepo `[R-641]`): a radial from a
+   *  bottom corner on the figure's side, or one centered in the band. Absent: today's glow. */
+  glowShape?: 'corner' | 'center'
+  /** The glow in the accent's own hue on any ground (`--color-glow-accent`). Absent: the evidence's rule. */
+  glowTint?: 'accent'
 }
 
 /** A background's rules, every word it does not name at its plain value. */

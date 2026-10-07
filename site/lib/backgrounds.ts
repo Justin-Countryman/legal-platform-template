@@ -47,7 +47,15 @@ export const BACKGROUND_FAMILIES: readonly Family[] = [
     ],
   },
   {id: 'gradient', name: 'Gradient', steps: [{step: null, label: 'Gradient', sentence: 'Each group of dark sections deepens from top to bottom, the hero and the closing section with it.', on: own({dark: 'gradient', ends: true})}]},
-  {id: 'glow', name: 'Glow', steps: [{step: null, label: 'Glow', sentence: 'A soft glow down every group of dark sections, from the hero to the closing section.', on: own({dark: 'glow'})}]},
+  {
+    id: 'glow', name: 'Glow', steps: [
+      {step: null, label: 'Glow', sentence: 'A soft glow down every group of dark sections, from the hero to the closing section.', on: own({dark: 'glow'})},
+      // The premium package (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 16, `[R-641]`): unpassed until his eye.
+      {step: 'corner', label: 'From a corner', sentence: 'A glow rising from a bottom corner of each dark section, on the side of any cut-out figure.', on: own({dark: 'glow', glowShape: 'corner'})},
+      {step: 'center', label: 'Centered', sentence: 'A glow centered in each dark section, behind its middle.', on: own({dark: 'glow', glowShape: 'center'})},
+      {step: 'accent', label: 'In the accent', sentence: 'The soft glow down every group of dark sections, in the accent\u2019s own color.', on: own({dark: 'glow', glowTint: 'accent'})},
+    ],
+  },
   {id: 'fade', name: 'Faint photographs', steps: [{step: null, label: 'Faint photographs', sentence: 'Your photographs, faint: behind every group of dark sections with soft edges, and ghosted into every second light section.', on: own({dark: 'fade', light: 'fade', close: 'photo'})}]},
   {id: 'span', name: 'Photographs', steps: [{step: null, label: 'Photographs', sentence: 'A photograph behind each group of two or three dark sections and behind the closing section.', on: own({dark: 'span', close: 'photo'})}]},
   {id: 'windows', name: 'Hero photograph', steps: [{step: null, label: 'Hero photograph', sentence: 'Pieces of the hero’s own photograph behind two dark sections and the closing section.', on: own({dark: 'windows', close: 'photo'})}]},
@@ -57,7 +65,8 @@ export const BACKGROUNDS: readonly Background[] = BACKGROUND_FAMILIES.flatMap((f
   f.steps.map((s) => ({
     id: s.step ? `${f.id}.${s.step}` : f.id,
     family: f.id,
-    name: f.steps.length > 1 ? `${f.name}: ${s.label.toLowerCase()}` : f.name,
+    // A family's unnamed step keeps the family's name (`glow`, which gained steps in the premium package).
+    name: f.steps.length > 1 && s.step ? `${f.name}: ${s.label.toLowerCase()}` : f.name,
     sentence: s.sentence,
     passed: false,
     on: s.on,

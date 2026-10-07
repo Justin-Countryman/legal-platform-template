@@ -39,7 +39,8 @@ const under = (flowId: string, backgroundId: string) => effectiveFlow(flowById(f
 
 describe('the roster', () => {
   it('generates one background per family per step, with unique ids, every word from the closed vocabulary', () => {
-    expect(BACKGROUNDS.map((b) => b.id)).toEqual(['plain', 'pattern.touch', 'pattern.light', 'pattern.dark', 'pattern.all', 'gradient', 'glow', 'fade', 'span', 'windows'])
+    // The premium package (monorepo `[R-641]`) added the glow's corner, center and accent steps.
+    expect(BACKGROUNDS.map((b) => b.id)).toEqual(['plain', 'pattern.touch', 'pattern.light', 'pattern.dark', 'pattern.all', 'gradient', 'glow', 'glow.corner', 'glow.center', 'glow.accent', 'fade', 'span', 'windows'])
     expect(new Set(BACKGROUNDS.map((b) => b.id)).size).toBe(BACKGROUNDS.length)
     for (const b of BACKGROUNDS) {
       expect(b.id, b.id).toMatch(/^[a-z][A-Za-z]{0,23}(\.[a-z][A-Za-z]{0,11})?$/)
