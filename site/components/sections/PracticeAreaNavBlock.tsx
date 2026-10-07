@@ -97,10 +97,14 @@ export function PracticeAreaNavBlock({
   data,
   napTokens,
   seam = NO_SEAM,
+  scale,
 }: {
   data: PracticeAreaNavBlockData
   napTokens?: NapTokens | null
   seam?: SeamProps
+  /** The homepage passes `marketing`: the heading takes the marketing scale, as the content section's does, so every
+   *  section on one page draws one heading size (monorepo `[R-641]`). Absent: the interior tier. */
+  scale?: 'marketing'
 }) {
   // Phase 18 session B: each card's line with its content tokens resolved, once, as the page's own copy is (the line is
   // the practice area's card line or its meta description, which takes tokens).
@@ -164,6 +168,7 @@ export function PracticeAreaNavBlock({
         description={description}
         buttons={buttons}
         fit={headingFit(heading, seam.site?.headingFace)}
+        scale={scale}
       />
     </SectionShell>
   )
@@ -173,7 +178,7 @@ export function PracticeAreaNavBlock({
 // adapts to whatever column width it lands in (SiloNav is a @container), so these
 // layouts stay independent of the chosen button layout.
 function SiloSectionFrame({
-  layout, hasHeader, tagline, heading, description, buttons, fit,
+  layout, hasHeader, tagline, heading, description, buttons, fit, scale,
 }: {
   layout: SiloSectionLayout
   hasHeader: boolean
@@ -182,10 +187,12 @@ function SiloSectionFrame({
   description: string | null
   buttons: React.ReactNode
   fit?: HeadingFit | null
+  scale?: 'marketing'
 }) {
   const header = (alignment: 'center' | 'left', opts?: {withDescription?: boolean; className?: string}) =>
     hasHeader ? (
       <SectionHeader
+        scale={scale}
         tagline={tagline}
         heading={heading ?? ''}
         fit={fit}

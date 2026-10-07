@@ -35,10 +35,14 @@ export function TestimonialsGridSection({
   data,
   napTokens,
   seam = NO_SEAM,
+  scale,
 }: {
   data: TestimonialsGridSectionData
   napTokens?: NapTokens | null
   seam?: SeamProps
+  /** The homepage passes `marketing`: the heading takes the marketing scale, as the content section's does, so every
+   *  section on one page draws one heading size (monorepo `[R-641]`). Absent: the interior tier. */
+  scale?: 'marketing'
 }) {
   // Belt-and-suspenders null filter — paired with GROQ post-projection
   // [defined(_id)] (see queries.ts SECTIONS_FRAGMENT testimonials);
@@ -63,6 +67,7 @@ export function TestimonialsGridSection({
 
       {heading && (
         <SectionHeader
+          scale={scale}
           tagline={tagline}
           heading={heading}
           fit={headingFit(heading, seam.site?.headingFace)}

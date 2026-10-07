@@ -67,12 +67,16 @@ export function CaseResultsSection({
   disclaimer,
   napTokens,
   seam = NO_SEAM,
+  scale,
 }: {
   data: CaseResultsSectionData
   /** Resolved by the dispatcher via resolveResultsDisclaimer(); never empty. Required. */
   disclaimer: string
   napTokens?: NapTokens | null
   seam?: SeamProps
+  /** The homepage passes `marketing`: the heading takes the marketing scale, as the content section's does, so every
+   *  section on one page draws one heading size (monorepo `[R-641]`). Absent: the interior tier. */
+  scale?: 'marketing'
 }) {
   const results = visibleResults(data)
   const grid = countGridClasses(results.length, CASE_RESULT_TIERS, NARROW_FEW)
@@ -93,7 +97,7 @@ export function CaseResultsSection({
       seam={seam}
     >
       {heading && (
-        <SectionHeader heading={heading} fit={headingFit(heading, seam.site?.headingFace)} description={intro} className="mx-auto mb-12 max-w-2xl" />
+        <SectionHeader scale={scale} heading={heading} fit={headingFit(heading, seam.site?.headingFace)} description={intro} className="mx-auto mb-12 max-w-2xl" />
       )}
 
       {/* Phase 18 session D: the columns follow the count (`countGrid.ts`; a result card lies sideways, so three across

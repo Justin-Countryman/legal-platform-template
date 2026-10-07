@@ -409,9 +409,10 @@ function measure() {
 // Two more lines, even at the floor, fail.
 const atFloor = (b, limit) => b.headingSize !== null && b.headingSize <= (b.headingWeight === 300 ? 32 : 20) + 0.05 && b.headingLines <= limit + 1
 
-// The section heading's ceiling (Phase 18 session D; `SECTION_HEADING_MAX_REM` in `lib/designTokens.ts`, 3.5rem): no band
-// below the hero draws its heading above 56 px at any width, under any theme or style set. The sites' range, measured.
-const SECTION_HEADING_MAX_PX = 56
+// The section heading's ceiling (Phase 18 session D; `SECTION_HEADING_MAX_REM` in `lib/designTokens.ts`, 3rem since monorepo
+// `[R-641]`): no band below the hero draws its heading above 48 px at any width, under any theme or style set. The five
+// premium references' top, measured.
+const SECTION_HEADING_MAX_PX = 48
 const overCeiling = (m) => m.bands.filter((b) => b.i > 0 && b.headingSize !== null && b.headingSize > SECTION_HEADING_MAX_PX + 0.05)
 // Two light grounds side by side read apart (Phase 18 session D; `TINT_DE` in `lib/designTokens.ts`): where neighbouring bands
 // sit on two different light grounds, they stand at least 1.5 apart (ΔE2000, the study's measure of two light grounds), so
