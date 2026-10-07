@@ -101,10 +101,14 @@ type SectionShellProps = {
   /** Render as a different landmark element when the default `<section>` isn't right. */
   as?: 'section' | 'nav' | 'div'
   children: React.ReactNode | ((surface: ResolvedSectionSurface) => React.ReactNode)
+  /** A content section's cut-out stands on this band's bottom edge (monorepo `[R-641]`): the band publishes its bottom
+   *  padding (`--band-pb`), unless the band below overlaps it, where the padding is not its own. */
+  bottomBleed?: boolean
 }
 
 export function SectionShell({
   appearance,
+  bottomBleed = false,
   contained = true,
   gutter = true,
   className,
@@ -249,6 +253,7 @@ export function SectionShell({
         // Phase 16E: the band's own top padding, published so the raised photo's
         // utility can cancel it. Only on a band that raises one.
         seam.raisePhoto && steps.ptVar,
+        bottomBleed && seam.nextOverlap === 'none' && steps.pbVar,
         // An inset band's own box is transparent; the panel inside carries the
         // surface. A normal band carries it here.
         !isInset && !inRun && !softRun && resolved.surfaceClass,

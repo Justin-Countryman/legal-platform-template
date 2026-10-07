@@ -172,6 +172,7 @@ export function ContentSectionBlock({
     <SectionShell
       appearance={appearance}
       seam={seam}
+      bottomBleed={standsOnEdge(data, layout) || undefined}
     >
       {(surface) => {
         const center = layout === 'statement' || layout === 'statRow'
@@ -358,6 +359,9 @@ export function ContentSectionBlock({
                   // that amount; `photo-rise` cancels the band's own top padding and its
                   // divider, so what is left is `--photo-rise` and nothing else.
                   seam.raisePhoto ? 'xl:self-start xl:photo-rise' : '',
+                  // A cut-out on the band's bottom edge (`cutoutEdge`, monorepo `[R-641]`): the column sits at the row's foot
+                  // and reaches through the band's own bottom padding (`--band-pb`, published by the band) to the edge.
+                  !seam.raisePhoto && standsOnEdge(data, layout) ? 'xl:self-end xl:cutout-sink' : '',
                 ].filter(Boolean).join(' ')}>
                   <ContentMedia data={data} ground={ground} siteFrame={seam.site?.imageFrame} />
                 </div>
@@ -373,6 +377,11 @@ export function ContentSectionBlock({
 
 /** `siteFrame` is the site's photo frame (`designSettings.imageFrame`, Phase 16B),
  *  which a stored treatment other than `inherit` overrides. */
+/** A split section's cut-out stands on the band's bottom edge (`cutoutEdge`, monorepo `[R-641]`). */
+function standsOnEdge(data: ContentSectionData, layout: string): boolean {
+  return layout === 'split' && data.media?.kind === 'cutout' && data.cutoutEdge === 'bottom'
+}
+
 function ContentMedia({data, ground, siteFrame}: {data: ContentSectionData; ground: TreatmentGround; siteFrame?: string | null}) {
   const media = data.media
   if (media?.kind === 'video' && media.video?.youTubeUrl) {
