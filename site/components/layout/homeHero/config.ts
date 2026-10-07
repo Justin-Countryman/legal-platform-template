@@ -12,6 +12,7 @@ export function resolveHeroConfig(data: HomeHeroData): HeroConfig {
     contentAlign: data.contentAlign ?? 'left',
     backdrop: data.backdrop ?? 'image',
     foreground: data.foreground ?? false,
+    foregroundSide: data.foregroundSide === 'left' ? 'left' : 'right',
     scrimStyle: data.scrimStyle ?? 'flat',
     scrimColor: data.scrimColor ?? 'auto',
     scrimDirection: data.scrimDirection ?? 'auto',

@@ -1,4 +1,5 @@
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
+import {headerLinkOf} from './headerLink'
 import {SectionHeader} from '@/components/ui/SectionHeader'
 import {TestimonialCard, type TestimonialData} from '@/components/ui/TestimonialCard'
 import {SectionShell} from './SectionShell'
@@ -56,6 +57,7 @@ export function TestimonialsGridSection({
   const tagline = resolveTokenString(data.tagline, napTokens)
   const heading = resolveTokenString(data.heading, napTokens)
   const emphasis = resolveTokenString(data.headingEmphasis, napTokens)
+  const link = headerLinkOf(data.headerLink, napTokens)
   const description = resolveTokenString(data.description, napTokens)
   // The columns follow the count (cardGrid.ts): a quote needs its measure, so four go two by two.
   const grid = cardGridClasses(testimonials.length, 3)
@@ -67,7 +69,7 @@ export function TestimonialsGridSection({
     >
 
       {heading && (
-        <SectionHeader emphasis={emphasis}
+        <SectionHeader emphasis={emphasis} link={link}
           scale={scale}
           tagline={tagline}
           heading={heading}

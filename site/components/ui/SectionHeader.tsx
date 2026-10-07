@@ -1,4 +1,5 @@
 import {Tagline} from '@/components/ui/Tagline'
+import {Button} from './Button'
 import {EmphasisText} from './EmphasisText'
 import {HeadingText, headingFitStyle} from '@/components/ui/HeadingText'
 import type {HeadingFit} from '@/lib/headingFit'
@@ -63,6 +64,8 @@ export type SectionHeaderProps = {
   fit?:         HeadingFit | null
   /** A phrase of the heading set in the emphasis style (monorepo `[R-641]`); absent draws the heading as before. */
   emphasis?:    string | null
+  /** The "view all" link on the right of the heading (monorepo `[R-641]`); aligns the header left. Absent: as before. */
+  link?:        {label: string; href: string} | null
 }
 
 // ─── Scale → h2 className mapping ─────────────────────────────────────────────
@@ -117,6 +120,7 @@ export function SectionHeader({
   className,
   fit,
   emphasis,
+  link,
 }: SectionHeaderProps) {
   const wrapperClass = [
     alignment === 'center' ? 'text-center' : null,
@@ -126,6 +130,21 @@ export function SectionHeader({
   const h2Class = noTrailingGap
     ? stripTrailingGap(SECTION_HEADER_H2_CLASS[scale])
     : SECTION_HEADER_H2_CLASS[scale]
+
+  // The header with a "view all" link (monorepo `[R-641]`): the heading left, the link on its right from `md`, under it on
+  // phones, as brandilaw sets its practice and results headers; drawn as the text link, tracked where labels are.
+  if (link?.label && link.href) {
+    return (
+      <div data-header-link="" className={['flex flex-col gap-4 md:flex-row md:items-end md:justify-between', className].filter(Boolean).join(' ')}>
+        <div>
+          {tagline && <Tagline as="p">{tagline}</Tagline>}
+          <h2 className={h2Class} style={headingFitStyle(fit)}><HeadingText fit={fit}>{emphasis ? <EmphasisText text={heading} emphasis={emphasis} /> : heading}</HeadingText></h2>
+          {description && <p className="text-foreground-muted">{description}</p>}
+        </div>
+        <Button variant="tertiary" href={link.href} className="shrink-0 md:mb-5">{link.label}</Button>
+      </div>
+    )
+  }
 
   return (
     <div className={wrapperClass || undefined}>

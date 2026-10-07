@@ -33,6 +33,9 @@ export const AREA_ROW_TIERS: readonly GridTier[] = [{prefix: '@xl', widest: 2}]
 /** Case results: a result card lies sideways (its figure, then its type and caption), so two across from `sm` and
  *  three from `lg`, and four two by two, as session B's sideways cards. */
 export const CASE_RESULT_TIERS: readonly GridTier[] = [{prefix: 'sm', widest: 2}, {prefix: 'lg', widest: 3}]
+/** Case results four across (the section's `across: 'four'`, monorepo `[R-641]`): two from `sm`, up to four from `lg`, under
+ *  the same rule, so eight draw four and four, seven four and three, five three and two. */
+export const CASE_RESULT_TIERS_FOUR: readonly GridTier[] = [{prefix: 'sm', widest: 2}, {prefix: 'lg', widest: 4}]
 /** A content section's items, in a column beside or under the heading: one per row at three (three across a half
  *  column is a cramped line of cards), else two across from `sm`. */
 export function itemTiers(count: number): readonly GridTier[] {

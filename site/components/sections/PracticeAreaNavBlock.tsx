@@ -1,4 +1,5 @@
 import {SectionHeader} from '@/components/ui/SectionHeader'
+import {headerLinkOf} from './headerLink'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {resolveHovers, type SiloHoverEffect} from '@/lib/siloHover'
 import {SectionShell} from './SectionShell'
@@ -114,6 +115,7 @@ export function PracticeAreaNavBlock({
   const tagline = resolveTokenString(data.tagline, napTokens)
   const heading = resolveTokenString(data.heading, napTokens)
   const emphasis = resolveTokenString(data.headingEmphasis, napTokens)
+  const link = headerLinkOf(data.headerLink, napTokens)
   const description = resolveTokenString(data.description, napTokens)
   // Accessible name for the <nav> landmark — the heading when set, else a stable
   // fallback so the landmark is always named (assistive-tech requirement).
@@ -171,6 +173,7 @@ export function PracticeAreaNavBlock({
         fit={headingFit(heading, seam.site?.headingFace)}
         scale={scale}
         emphasis={emphasis}
+        link={link}
       />
     </SectionShell>
   )
@@ -180,7 +183,7 @@ export function PracticeAreaNavBlock({
 // adapts to whatever column width it lands in (SiloNav is a @container), so these
 // layouts stay independent of the chosen button layout.
 function SiloSectionFrame({
-  layout, hasHeader, tagline, heading, description, buttons, fit, scale, emphasis,
+  layout, hasHeader, tagline, heading, description, buttons, fit, scale, emphasis, link,
 }: {
   layout: SiloSectionLayout
   hasHeader: boolean
@@ -191,12 +194,14 @@ function SiloSectionFrame({
   fit?: HeadingFit | null
   scale?: 'marketing'
   emphasis?: string | null
+  link?: {label: string; href: string} | null
 }) {
   const header = (alignment: 'center' | 'left', opts?: {withDescription?: boolean; className?: string}) =>
     hasHeader ? (
       <SectionHeader
         scale={scale}
         emphasis={emphasis}
+        link={link}
         tagline={tagline}
         heading={heading ?? ''}
         fit={fit}

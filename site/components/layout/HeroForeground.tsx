@@ -27,7 +27,7 @@ import {HERO_FOREGROUND_FLOOR} from '@/lib/heroLayout'
 
 /** `grounded`: the homepage hero's figure, whose box reaches the band's bottom edge, so the figure stands on it at any
  *  band height (`HERO_FOREGROUND_FLOOR`). Absent: the fixed box the interior heroes draw. */
-export function HeroForeground({surface, grounded = false}: {surface: ResolvedHeroSurface; grounded?: boolean}) {
+export function HeroForeground({surface, grounded = false, side = 'right'}: {surface: ResolvedHeroSurface; grounded?: boolean; side?: 'left' | 'right'}) {
   if (!surface.hasForeground || !surface.foreground?.src) return null
   const fg = surface.foreground
 
@@ -36,8 +36,9 @@ export function HeroForeground({surface, grounded = false}: {surface: ResolvedHe
       className="pointer-events-none absolute top-0 z-10 hidden lg:block"
       // Box geometry from the container's shared CSS vars (heroForegroundVars()):
       // width/height/right inset stay in sync with the heading-column reservation.
+      // The homepage hero's figure may stand on the left (`foregroundSide`, monorepo `[R-641]`); the box mirrors.
       style={grounded
-        ? {right: 'var(--hero-fg-inset)', width: 'var(--hero-fg-col)', bottom: `-${HERO_FOREGROUND_FLOOR}`}
+        ? {...(side === 'left' ? {left: 'var(--hero-fg-inset)'} : {right: 'var(--hero-fg-inset)'}), width: 'var(--hero-fg-col)', bottom: `-${HERO_FOREGROUND_FLOOR}`}
         : {right: 'var(--hero-fg-inset)', width: 'var(--hero-fg-col)', height: 'var(--hero-fg-h)'}}
       data-testid="hero-foreground"
     >
@@ -48,7 +49,7 @@ export function HeroForeground({surface, grounded = false}: {surface: ResolvedHe
         height={fg.height ?? 1000}
         // Contain within the box, grounded bottom-right — aspect-robust: height
         // wins for tall cut-outs (bleed), the box width caps wide ones.
-        className="h-full w-full object-contain object-right-bottom"
+        className={side === 'left' ? 'h-full w-full object-contain object-left-bottom' : 'h-full w-full object-contain object-right-bottom'}
         sizes="(min-width: 992px) 38vw, 0px"
       />
     </div>

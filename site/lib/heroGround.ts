@@ -29,7 +29,7 @@ export type HeroGlow = {index: number; length: number; peak?: number; side?: 'le
 export function heroCutout(hero: HomeHeroData | null): 'left' | 'right' | null {
   if (!hero) return null
   const c = resolveHeroConfig(hero)
-  return c.skeleton === 'overlay' && c.foreground && c.contentAlign !== 'center' && !!hero.foregroundImage?.src ? 'right' : null
+  return c.skeleton === 'overlay' && c.foreground && c.contentAlign !== 'center' && !!hero.foregroundImage?.src ? (c.foregroundSide ?? 'right') : null
 }
 
 // ─── The hero's bottom ground (Phase 16C) ─────────────────────────────────────

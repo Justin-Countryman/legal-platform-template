@@ -71,6 +71,7 @@ export function HeroScrim({
   tone = 'dark',
   color = 'auto',
   direction = 'auto',
+  textRight = false,
 }: {
   style?: HeroScrimStyle
   opacity: number
@@ -78,6 +79,8 @@ export function HeroScrim({
   tone?: HeroScrimTone
   // Gradient-only: the fade color (from the color system) and direction. 'auto'
   // preserves the derived behavior (tone color, alignment-based direction).
+  /** The text sits on the right (the hero's figure on the left, monorepo `[R-641]`): the auto gradient darkens there. */
+  textRight?: boolean
   color?: HeroScrimColor
   direction?: HeroScrimDirection
 }) {
@@ -88,7 +91,7 @@ export function HeroScrim({
   const base = color !== 'auto' ? COLOR_BASE[color] : `var(${TONE_VAR[tone]})`
   const strong = `color-mix(in srgb, ${base} ${effective}%, transparent)`
   const weak = `color-mix(in srgb, ${base} ${Math.round(effective * 0.25)}%, transparent)`
-  const dir = direction !== 'auto' ? DIR_CSS[direction] : align === 'center' ? 'to top' : 'to right'
+  const dir = direction !== 'auto' ? DIR_CSS[direction] : align === 'center' ? 'to top' : textRight ? 'to left' : 'to right'
   return (
     <div
       className="absolute inset-0"

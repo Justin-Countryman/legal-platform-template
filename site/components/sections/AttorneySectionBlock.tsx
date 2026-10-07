@@ -1,4 +1,5 @@
 import {SectionHeader} from '@/components/ui/SectionHeader'
+import {headerLinkOf} from './headerLink'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {AttorneyCard, type AttorneyCardStyle} from './AttorneyCard'
 import {AttorneySlider} from './AttorneySlider'
@@ -58,6 +59,7 @@ export function AttorneySectionBlock({
   const tagline = resolveTokenString(data.tagline, napTokens)
   const heading = resolveTokenString(data.heading, napTokens)
   const emphasis = resolveTokenString(data.headingEmphasis, napTokens)
+  const link = headerLinkOf(data.headerLink, napTokens)
   const description = resolveTokenString(data.description, napTokens)
   // The section's own style where it has one; otherwise the site's (Phase 16B: a
   // style set sets it, `[R-468]`'s continuity rule), otherwise Classic.
@@ -74,7 +76,7 @@ export function AttorneySectionBlock({
     >
 
       {heading && (
-        <SectionHeader emphasis={emphasis}
+        <SectionHeader emphasis={emphasis} link={link}
           scale={scale}
           tagline={tagline}
           heading={heading}
