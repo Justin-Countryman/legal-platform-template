@@ -105,6 +105,10 @@ export type PaletteOptions = {
   accentOnDark?:  unknown
   /** `accent`, `action`, `outline`: the primary button on a dark band (`--color-btn-dark*`). */
   buttonOnDark?:  unknown
+  /** `on`: cards and panels on a dark band glow (`--color-card-on-dark`, `--color-card-glow`). */
+  cardGlow?:      unknown
+  /** `accent`: the band glow in the accent's hue (`--color-glow-accent`, the Background theme's `glow.accent`). */
+  glowTint?:      unknown
 }
 
 /** A color band's fill reads as a band of its own (Phase 15's gate, moved here so the engine and the theme's walk share
@@ -614,6 +618,21 @@ export function resolvePalette(raw: ColorInputs = {}, options: PaletteOptions = 
   // Gradient bloom's glow (Phase 17D session 2, `[R-557]`): the plain ground where the palette has no room.
   const glow = glowOf(brandDark, accent, tokens)
   tokens['--color-glow'] = glow.ok ? glow.glow : brandDark
+  // Glowing cards (`cardGlow`, monorepo `[R-641]`, ADV-PP-A's mechanism): a card on a dark band is a point on the ramp
+  // from the dark ground to the glow, so every pair it draws is the glow band's, already proven; its corner glows in the
+  // accent's hue, solved under the same ceiling (the ground's glow where the accent's cannot lift). Only where the glow
+  // itself holds.
+  // The band glow in the accent's hue (`glowTint`, the background `glow.accent`): the ground's glow where the accent's cannot
+  // lift, so the band never draws what the solve refused.
+  if (options.glowTint === 'accent' && glow.ok) {
+    const accentGlow = glowOf(brandDark, accent, tokens, 'accent')
+    tokens['--color-glow-accent'] = accentGlow.ok ? accentGlow.glow : glow.glow
+  }
+  if (options.cardGlow === 'on' && glow.ok) {
+    const accentGlow = glowOf(brandDark, accent, tokens, 'accent')
+    tokens['--color-card-on-dark'] = mixOklab(brandDark, glow.glow, 0.5)
+    tokens['--color-card-glow'] = accentGlow.ok ? accentGlow.glow : glow.glow
+  }
   // A photograph ghosted into a light band (the Background theme, monorepo WS-V1-BACKGROUND-THEME-DESIGN §7 item 8):
   // its opacity, and the tiers the band's text takes over it.
   // A heading in the button color keeps today's heading in the solve, so the ghost's opacity never moves for it (ADV-PP-A:
@@ -910,12 +929,15 @@ export const GLOW_DE = 24
 export const GLOW_MIN_LIFT = 0.05
 export const GLOW_MIN_DE = 6
 
-export function glowOf(ground: string, accent: string, t: Record<string, string>): {glow: string; ok: boolean} {
+export function glowOf(ground: string, accent: string, t: Record<string, string>, tint: 'ground' | 'accent' = 'ground'): {glow: string; ok: boolean} {
   const g = parseOklch(ground)
   const a = parseOklch(accent)
   const neutral = g.c < 0.03
-  const hue = neutral ? (a.c >= 0.02 ? a.h : null) : g.h
-  const cap = hue === null ? 0 : neutral ? GLOW_CHROMA_NEUTRAL : Math.max(g.c, GLOW_CHROMA_COLORED)
+  // `accent` (the premium package, monorepo `[R-641]`): the accent's own hue on any ground, at the neutral ground's chroma
+  // cap; the same bisection, the same ceiling, the same `ok`. The evidence's rule (the ground's hue on a colored ground)
+  // stays the default.
+  const hue = tint === 'accent' ? (a.c >= 0.02 ? a.h : null) : neutral ? (a.c >= 0.02 ? a.h : null) : g.h
+  const cap = hue === null ? 0 : (neutral || tint === 'accent') ? GLOW_CHROMA_NEUTRAL : Math.max(g.c, GLOW_CHROMA_COLORED)
   const ceiling = pairsCeiling(photoBandPairs(t), t['--color-action'], t['--color-action-state-cue-on-scrim'])
   const at = (l: number, c: number) => mapped(l, c, hue ?? 0)
   const holds = (hex: string) => rampDrawnMax(ground, hex) <= ceiling + 1e-12 && deltaE(ground, hex) <= GLOW_DE
@@ -1206,6 +1228,12 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
   if (t['--color-accent-on-dark-raw']) {
     check('accent-on-dark-raw on brand-dark', t['--color-accent-on-dark-raw'], dark, 4.5)
     check('accent-on-dark-raw on section-texture-dark', t['--color-accent-on-dark-raw'], darkTexture, 4.5)
+  }
+  if (t['--color-glow-accent']) for (const [tier, min] of photoBandPairs(t)) check(`${tier} on the accent glow`, tier, t['--color-glow-accent'], min)
+  if (t['--color-card-on-dark']) {
+    for (const [name, ground] of [['a glowing card', t['--color-card-on-dark']], ['a glowing card\u2019s corner', t['--color-card-glow']]] as const) {
+      for (const [tier, min] of photoBandPairs(t)) check(`${tier} on ${name}`, tier, ground, min)
+    }
   }
   for (const [suffix, grounds] of [['', [dark, darkTexture]], ['-on-scrim', [photoFloor, t['--color-glow']]]] as const) {
     const fill = t[`--color-btn-dark${suffix}`]

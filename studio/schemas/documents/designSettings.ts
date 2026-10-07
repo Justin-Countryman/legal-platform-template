@@ -1076,6 +1076,35 @@ export const designSettings = defineType({
     // ─── Photos and cards (Phase 16B) ─────────────────────────────────────────
     // Site values a section follows unless it sets its own ([R-468]'s continuity
     // rule). No `initialValue`, as the note at the top of the fields explains.
+    // The photo details (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 16, `[R-641]`): one treatment for the site's
+    // photographs, set once; the Element theme's, kept by every style set. Never people or cut-outs; a section's own photo
+    // treatment still wins on its photo; background photographs keep the Background theme's. No initialValue.
+    // A card detail (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 16, `[R-641]`; lewinlawfirm's glowing panels and cards).
+    // No initialValue.
+    defineField({
+      name: 'cardGlow',
+      title: 'Glowing Cards',
+      type: 'string',
+      fieldset: 'uiElements',
+      description: 'Leave blank for light cards on dark sections. Glow draws cards on dark sections as a raised dark surface with an accent edge and an accent glow in one corner, on palettes whose dark ground has room to glow; elsewhere the cards stay light.',
+      options: {list: [{title: 'Glow', value: 'on'}], layout: 'radio'},
+    }),
+    defineField({
+      name: 'photoColor',
+      title: 'Photo Color',
+      type: 'string',
+      fieldset: 'uiElements',
+      description: 'Leave blank for photographs in their own colors. Black and white, or Accent tint (black and white washed in the accent), on feature photos and practice-area photos. People and cut-outs are never changed.',
+      options: {list: [{title: 'Black and white', value: 'mono'}, {title: 'Accent tint', value: 'tint'}], layout: 'radio'},
+    }),
+    defineField({
+      name: 'photoEdge',
+      title: 'Photo Edge',
+      type: 'string',
+      fieldset: 'uiElements',
+      description: 'Leave blank for a hard edge. Fade softens a feature photo into its section at the edge facing the text.',
+      options: {list: [{title: 'Fade', value: 'fade'}], layout: 'radio'},
+    }),
     defineField({
       name: 'imageFrame',
       title: 'Photo Frame',

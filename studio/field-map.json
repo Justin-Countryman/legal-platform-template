@@ -5340,6 +5340,9 @@
               "pattern.all",
               "gradient",
               "glow",
+              "glow.corner",
+              "glow.center",
+              "glow.accent",
               "fade",
               "span",
               "windows"
@@ -6045,6 +6048,46 @@
           },
           "path": "elevationStyle",
           "title": "Card Elevation Style",
+          "type": "string"
+        },
+        {
+          "description": "Leave blank for light cards on dark sections. Glow draws cards on dark sections as a raised dark surface with an accent edge and an accent glow in one corner, on palettes whose dark ground has room to glow; elsewhere the cards stay light.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "on"
+            ]
+          },
+          "path": "cardGlow",
+          "title": "Glowing Cards",
+          "type": "string"
+        },
+        {
+          "description": "Leave blank for photographs in their own colors. Black and white, or Accent tint (black and white washed in the accent), on feature photos and practice-area photos. People and cut-outs are never changed.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "mono",
+              "tint"
+            ]
+          },
+          "path": "photoColor",
+          "title": "Photo Color",
+          "type": "string"
+        },
+        {
+          "description": "Leave blank for a hard edge. Fade softens a feature photo into its section at the edge facing the text.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "fade"
+            ]
+          },
+          "path": "photoEdge",
+          "title": "Photo Edge",
           "type": "string"
         },
         {

@@ -11,13 +11,14 @@
 // check compares the prerendered pages before and after the move.
 
 import {solidBehindBox} from '@/components/ui/LogoImage'
+import {siteFlowOf} from '@/lib/backgrounds'
 import {detailValue} from '@/lib/details'
 import type {LogoFacts} from '@/lib/logoFacts'
 import {type getSiteChrome} from '@/lib/sanity/fetchers'
 import {resolveTokenString, formatPhone} from '@/lib/tokens'
 import {buildDesignTokenCSS, buildColorCSS, buildFontCSS, resolveSidebarDesignSettings} from '@/lib/designTokens'
 import {dividerShape} from '@/lib/dividers'
-import {chromeSchemes, flowOf} from '@/lib/flows'
+import {chromeSchemes, flowOf, glowFillOk} from '@/lib/flows'
 import {HeroSchemeProvider} from '@/lib/heroSchemeContext'
 import {HeroSurfaceProvider} from '@/lib/heroSurfaceContext'
 import {DEFAULT_SCRIM_OPACITY, resolveHeroSurface, resolveMergedHeaderScheme} from '@/lib/heroSurface'
@@ -146,6 +147,8 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
     saturatedFrom: designTokens?.saturatedFrom,
     accentOnDark:  designTokens?.accentOnDark,
     buttonOnDark:  designTokens?.buttonOnDark,
+    cardGlow:      designTokens?.cardGlow,
+    glowTint:      siteFlowOf(designTokens as Record<string, unknown> | null | undefined).on.glowTint,
   })
   // The primary button on a dark band draws from its tokens only under this attribute (`globals.css`).
   const buttonOnDark = detailValue(designTokens as Record<string, unknown> | null | undefined, 'buttonOnDark') ?? undefined
@@ -154,6 +157,10 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
   const leadIn = detailValue(designTokens as Record<string, unknown> | null | undefined, 'leadIn') ?? undefined
   const labelStyle = detailValue(designTokens as Record<string, unknown> | null | undefined, 'labelStyle') ?? undefined
   const cardEdge = detailValue(designTokens as Record<string, unknown> | null | undefined, 'cardEdge') ?? undefined
+  const photoColor = detailValue(designTokens as Record<string, unknown> | null | undefined, 'photoColor') ?? undefined
+  const photoEdge = detailValue(designTokens as Record<string, unknown> | null | undefined, 'photoEdge') ?? undefined
+  // Glowing cards only where the palette's dark ground has room to glow (`glowFillOk`); elsewhere the cards stay light.
+  const cardGlow = detailValue(designTokens as Record<string, unknown> | null | undefined, 'cardGlow') === 'on' && glowFillOk(designTokens) ? 'on' : undefined
   const {heading: resolvedHeading, body: resolvedBody} = resolvefonts(
     designTokens?.fontPairingPreset,
     designTokens?.headingFont,
@@ -276,6 +283,10 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
         data-lead-in={leadIn}
         data-label-style={labelStyle}
         data-card-edge={cardEdge}
+        data-photo-color={photoColor}
+        data-photo-edge={photoEdge}
+        data-card-glow={cardGlow}
+        data-glow-tint={siteFlowOf(designTokens as Record<string, unknown> | null | undefined).on.glowTint}
         data-image-frame={imageFrame}
         data-ornament={ornaments || undefined}
         data-carry-cards={carry.includes('cards') ? '' : undefined}

@@ -4293,6 +4293,60 @@
       }
     },
     {
+      "id": "glow.corner",
+      "family": "glow",
+      "name": "Glow: from a corner",
+      "sentence": "A glow rising from a bottom corner of each dark section, on the side of any cut-out figure.",
+      "passed": false,
+      "on": {
+        "dark": "glow",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none",
+        "glowShape": "corner"
+      }
+    },
+    {
+      "id": "glow.center",
+      "family": "glow",
+      "name": "Glow: centered",
+      "sentence": "A glow centered in each dark section, behind its middle.",
+      "passed": false,
+      "on": {
+        "dark": "glow",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none",
+        "glowShape": "center"
+      }
+    },
+    {
+      "id": "glow.accent",
+      "family": "glow",
+      "name": "Glow: in the accent",
+      "sentence": "The soft glow down every group of dark sections, in the accent’s own color.",
+      "passed": false,
+      "on": {
+        "dark": "glow",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none",
+        "glowTint": "accent"
+      }
+    },
+    {
       "id": "fade",
       "family": "fade",
       "name": "Faint photographs",

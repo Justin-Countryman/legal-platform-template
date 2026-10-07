@@ -887,6 +887,9 @@ export const DESIGN_TOKENS_QUERY = groq`
     leadIn,
     labelStyle,
     cardEdge,
+    cardGlow,
+    photoColor,
+    photoEdge,
     internalHeroBackground,
     heroScrimOpacity,
     // The texture a Pattern section wears (Phase 16A). Absent means none.

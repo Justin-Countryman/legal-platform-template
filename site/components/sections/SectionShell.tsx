@@ -273,6 +273,9 @@ export function SectionShell({
         fade && `grad-n-${Math.min(seam.run?.length ?? 1, 8)}`,
         fade === 'glow' && `grad-p-${Math.min(seam.run?.peak ?? 0, 7)}`,
         fade === 'glow' && seam.run?.side === 'left' && 'glow-from-left',
+        // The glow's shape where the background names one (monorepo `[R-641]`); absent, today's glow.
+        fade === 'glow' && seam.site?.flow?.on.glowShape === 'corner' && 'glow-corner',
+        fade === 'glow' && seam.site?.flow?.on.glowShape === 'center' && 'glow-center',
         // Phase 17B: the theme's hairline, a decorative line at the top of this band; in the
         // accent where the theme says so (session 5, `[R-524]`).
         seam.hairline && 'hairline-top',

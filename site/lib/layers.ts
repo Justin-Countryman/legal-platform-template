@@ -31,7 +31,7 @@ export const DESIGN_SETTINGS_LAYER: Readonly<Record<string, Claim>> = {
   // The type details (`lib/details.ts`).
   heroHeadingWeight: 'element', leadIn: 'element', labelStyle: 'element',
   // The card detail (`lib/details.ts`).
-  cardEdge: 'element',
+  cardEdge: 'element', photoColor: 'element', photoEdge: 'element', cardGlow: 'element',
   attorneyCardStyle: 'element', sidebarNavIconStyle: 'element', sidebarWidgetHeaderLine: 'element', sidebarItemSeparators: 'element',
   // The pattern tile's kind is the Element theme's; where and how strongly it is drawn is the Background theme's, which reads it.
   patternTexture: 'element',

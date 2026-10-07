@@ -1476,10 +1476,25 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
     linear-gradient(to var(--glow-side, right), var(--color-brand-dark) 0%, transparent 70%),
     linear-gradient(in oklab,
       var(--color-brand-dark) calc(var(--grad-i, 0) * -100%),
-      var(--color-glow) calc((var(--grad-p, 0.5) - var(--grad-i, 0)) * 100%),
+      var(--glow-color, var(--color-glow)) calc((var(--grad-p, 0.5) - var(--grad-i, 0)) * 100%),
       var(--color-brand-dark) calc((var(--grad-n, 1) - var(--grad-i, 0)) * 100%));
 }
 @utility glow-from-left { --glow-side: left; }
+/* The glow's shapes and tint (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 16, `[R-641]`): a band of the Background
+   theme's `glow.corner` or `glow.center` draws one radial per band instead of the run's soft side light, in the same
+   solved color (its drawn maximum is the glow itself, which the glow pairs bound); `glow.accent` swaps the color for
+   the accent's solved glow. The corner's ellipse rises from a bottom corner on the figure's side; the center's sits low
+   enough that a merged header never stands on its peak. */
+.band-glow.glow-corner {
+  background-image: radial-gradient(ellipse 55% 70% at 100% 100%, var(--glow-color, var(--color-glow)), transparent 72%);
+}
+.band-glow.glow-corner.glow-from-left {
+  background-image: radial-gradient(ellipse 55% 70% at 0% 100%, var(--glow-color, var(--color-glow)), transparent 72%);
+}
+.band-glow.glow-center {
+  background-image: radial-gradient(ellipse 60% 55% at 50% 60%, var(--glow-color, var(--color-glow)), transparent 72%);
+}
+[data-glow-tint="accent"] { --glow-color: var(--color-glow-accent); }
 /* The peak's band in its run, as real utilities written out (the Tailwind scanner cannot see a built name). */
 @utility grad-p-0 { --grad-p: 0.5; }
 @utility grad-p-1 { --grad-p: 1.5; }
@@ -1491,9 +1506,9 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 @utility grad-p-7 { --grad-p: 7.5; }
 /* The ground stays: forced colors and print drop the image, and a visitor asking for more contrast gets the plain
    ground, the glow being the ground a pair holds on with the least room (ADV-17D2-C). */
-@media (forced-colors: active) { .band-glow { background-image: none; } }
-@media print { .band-glow { background-image: none; } }
-@media (prefers-contrast: more) { .band-glow { background-image: none; } }
+@media (forced-colors: active) { .band-glow, .band-glow:is(.glow-corner, .glow-center), .band-glow.glow-corner.glow-from-left { background-image: none; } }
+@media print { .band-glow, .band-glow:is(.glow-corner, .glow-center), .band-glow.glow-corner.glow-from-left { background-image: none; } }
+@media (prefers-contrast: more) { .band-glow, .band-glow:is(.glow-corner, .glow-center), .band-glow.glow-corner.glow-from-left { background-image: none; } }
 
 /* The resting card edge (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 14, `[R-641]`): every card on the page (a
    practice area, an attorney, a testimonial, a result: `[data-card]`, which list rows do not carry) takes an accent edge
@@ -1515,6 +1530,78 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   background-color: var(--color-accent-fill);
   --color-foreground: var(--color-accent-fg);
   --color-foreground-muted: var(--color-accent-fg);
+}
+
+/* Glowing cards (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 16, `[R-641]`; ADV-PP-A's mechanism): on a dark band,
+   wherever the shell carries `data-card-glow` (only where the palette's glow holds), a card stops being a light island and
+   becomes a dark one: a surface on the ramp from the dark ground to the glow (`--color-card-on-dark`), an accent edge at
+   about half strength, an accent glow in its top corner (`--color-card-glow`), and the glow band's own text values, under
+   which every pair is already proven. Light bands keep light cards. */
+[data-card-glow="on"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] {
+  background-color: var(--color-card-on-dark);
+  background-image: radial-gradient(ellipse 70% 60% at 100% 0%, var(--color-card-glow), transparent 70%);
+  border-color: color-mix(in srgb, var(--color-accent-on-dark) 48%, transparent);
+  box-shadow: 0 18px 40px -24px color-mix(in srgb, var(--color-accent-on-dark) 40%, transparent);
+  --color-foreground:        var(--color-foreground-on-dark);
+  --color-foreground-muted:  var(--color-foreground-muted-on-dark);
+  --color-foreground-subtle: var(--color-foreground-subtle-on-dark);
+  --color-heading:           var(--color-foreground-on-dark);
+  --color-accent:            var(--color-accent-on-dark);
+  --color-accent-text:       var(--color-accent-on-dark);
+  --color-action-text:       var(--color-foreground-on-dark);
+  --color-action-text-hover: var(--color-foreground-on-dark);
+  --color-ring-focus:        var(--color-foreground-on-dark);
+  --color-border:            var(--color-border-on-dark);
+  --color-border-control:    var(--color-border-control-on-scrim);
+  --color-star-outline:      var(--color-star-outline-on-dark);
+  --color-hover-wash:        var(--color-hover-wash-on-dark);
+}
+
+/* Photo color and edge (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 16, `[R-641]`): one treatment for the site's
+   photographs, set once (`data-photo-color`, `data-photo-edge`). They reach a content section's feature photo where its
+   own treatment is plain or slab (`[data-feature-photo]`, which leaves `::after` free) and a practice card's photo
+   (`nav [data-card] img`), never its icon, never an attorney's photo or a cut-out. Mono is grayscale. The tint is
+   grayscale washed in the accent (`mix-blend-mode: color`), drawn UNDER any text: on a practice card whose words sit on
+   the photo, it replaces the decorative gradient below the card's text block, whose own scrim (`tile-text-scrim`) holds
+   every word over the lightest photograph, so no text pair changes (ADV-PP-A). */
+:is([data-photo-color="mono"], [data-photo-color="tint"]) :is([data-feature-photo] img, nav [data-card] img:not([data-tile-icon] img)) {
+  filter: grayscale(1);
+}
+[data-photo-color="tint"] [data-feature-photo] { isolation: isolate; }
+[data-photo-color="tint"] [data-feature-photo]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-ui);
+  background-color: var(--color-accent);
+  mix-blend-mode: color;
+  opacity: 0.6;
+  pointer-events: none;
+}
+[data-photo-color="tint"] nav [data-card] img.tile-photo + div {
+  background-image: none;
+  background-color: var(--color-accent);
+  mix-blend-mode: color;
+  opacity: 0.6;
+}
+[data-photo-color="tint"] nav [data-card] div:has(> img:not(.tile-photo)) { isolation: isolate; }
+[data-photo-color="tint"] nav [data-card] div:has(> img:not(.tile-photo)):not([data-tile-icon])::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-accent);
+  mix-blend-mode: color;
+  opacity: 0.6;
+  pointer-events: none;
+}
+/* The fade: a feature photo beside its text softens into the section at the edge facing the text (where the split sits
+   side by side), and at its foot where it stacks above the text. No text sits on the photo, so no pair changes. */
+[data-photo-edge="fade"] [data-feature-photo] img {
+  mask-image: linear-gradient(to bottom, #000 70%, transparent);
+}
+@media (min-width: 1280px) {
+  [data-photo-edge="fade"] .xl\:order-first > [data-feature-photo] img { mask-image: linear-gradient(to right, #000 60%, transparent); }
+  [data-photo-edge="fade"] .xl\:order-last > [data-feature-photo] img { mask-image: linear-gradient(to left, #000 60%, transparent); }
 }
 
 /* ─── The carried pieces (Phase 16C, `[R-483]`) ──────────────────────────────── */
