@@ -57,6 +57,7 @@ export function AttorneySectionBlock({
 
   const tagline = resolveTokenString(data.tagline, napTokens)
   const heading = resolveTokenString(data.heading, napTokens)
+  const emphasis = resolveTokenString(data.headingEmphasis, napTokens)
   const description = resolveTokenString(data.description, napTokens)
   // The section's own style where it has one; otherwise the site's (Phase 16B: a
   // style set sets it, `[R-468]`'s continuity rule), otherwise Classic.
@@ -73,7 +74,7 @@ export function AttorneySectionBlock({
     >
 
       {heading && (
-        <SectionHeader
+        <SectionHeader emphasis={emphasis}
           scale={scale}
           tagline={tagline}
           heading={heading}

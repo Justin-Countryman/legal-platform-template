@@ -196,9 +196,11 @@ export function ContentSectionBlock({
         // quotation mark, bracket or digit WITH the letter and draws both at 52px —
         // and on a centred layout a float detaches from the text it opens. Both were
         // rendered wrong before they were ruled out here.
-        const capOk = !center && proseTakesDropCap(data.body)
+        // A large first paragraph (`textSize`, monorepo `[R-641]`) opens the body in the heading face, so it takes no drop cap.
+        const large = data.textSize === 'large'
+        const capOk = !center && !large && proseTakesDropCap(data.body)
         const body = (data.body?.length ?? 0) > 0 ? (
-          <div data-prose={capOk ? 'cap' : undefined} className={layout === 'twoColumnText' ? 'text-foreground' : 'mt-6 text-foreground'}>
+          <div data-prose={capOk ? 'cap' : undefined} data-lede={large ? '' : undefined} className={layout === 'twoColumnText' ? 'text-foreground' : 'mt-6 text-foreground'}>
             <BlockProse value={data.body} napTokens={napTokens} />
           </div>
         ) : null

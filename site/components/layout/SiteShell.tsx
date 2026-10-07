@@ -79,6 +79,15 @@ function buildNavItems(rawItems: unknown[]): NavItem[] {
 /** The chrome the shell draws from: `getSiteChrome()`'s answer, or a preview's copy of it. */
 export type SiteChrome = Awaited<ReturnType<typeof getSiteChrome>>
 
+/** `bold` where Design Settings asks the homepage headline to be bold and the heading face draws a bold (`drawableWeight`);
+ *  else nothing, and the headline follows the heading weight (monorepo `[R-641]`, ADV-PP-B: pairings 2, 13 and 19 have
+ *  no bold face). */
+export function heroWeightOf(tokens: Record<string, unknown> | null | undefined): 'bold' | undefined {
+  if (detailValue(tokens, 'heroHeadingWeight') !== 'bold') return undefined
+  const pairing = typeof tokens?.fontPairingPreset === 'number' ? tokens.fontPairingPreset : null
+  return drawableWeight(pairing, 'bold') === 'bold' ? 'bold' : undefined
+}
+
 export function SiteShell({chrome: given, children}: {chrome: SiteChrome; children: React.ReactNode}) {
   const chrome = given ?? {}
   const {header: headerData, footer: footerData, designTokens, heroSettings} = chrome
@@ -140,6 +149,10 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
   })
   // The primary button on a dark band draws from its tokens only under this attribute (`globals.css`).
   const buttonOnDark = detailValue(designTokens as Record<string, unknown> | null | undefined, 'buttonOnDark') ?? undefined
+  // The homepage headline bold over the section headings (`heroHeadingWeight`, `[R-641]`): only where the face draws a bold.
+  const heroWeight = heroWeightOf(designTokens as Record<string, unknown> | null | undefined)
+  const leadIn = detailValue(designTokens as Record<string, unknown> | null | undefined, 'leadIn') ?? undefined
+  const labelStyle = detailValue(designTokens as Record<string, unknown> | null | undefined, 'labelStyle') ?? undefined
   const {heading: resolvedHeading, body: resolvedBody} = resolvefonts(
     designTokens?.fontPairingPreset,
     designTokens?.headingFont,
@@ -258,6 +271,9 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
         data-heading-rule={headingRule}
         data-heading-weight={headingWeight}
         data-button-on-dark={buttonOnDark}
+        data-hero-weight={heroWeight}
+        data-lead-in={leadIn}
+        data-label-style={labelStyle}
         data-image-frame={imageFrame}
         data-ornament={ornaments || undefined}
         data-carry-cards={carry.includes('cards') ? '' : undefined}

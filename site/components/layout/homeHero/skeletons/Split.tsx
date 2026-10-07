@@ -14,7 +14,7 @@ import {MdPlayArrow} from 'react-icons/md'
 import {DialogPanel} from '@/components/ui/DialogPanel'
 import {HeroBackdrop} from '@/components/layout/HeroBackdrop'
 import {getEmbedUrl} from '@/lib/videoEmbed'
-import {HeroBand, HeroTextBlock, HERO_HEADER_CLEARANCE} from '../shared'
+import {HeroBand, HeroTextBlock, HERO_HEADER_CLEARANCE, heroHeadingText} from '../shared'
 import type {HeroConfig, ResolvedHomeContent, SkeletonProps, SplitImageRatio} from '../types'
 import {heroObjectPosition, type ResolvedHeroSurface, type HeroImage} from '@/lib/heroSurface'
 
@@ -195,7 +195,7 @@ export function Split({config, content, surface, sectionBackground, edgeBelow, g
   const textBlock = (
     <HeroTextBlock
       eyebrow={content.eyebrow}
-      heading={content.heading}
+      heading={heroHeadingText(content)}
       description={content.description}
       ctas={content.ctas}
       isDark={isOverlap ? false : surface.isDark}
@@ -268,7 +268,7 @@ export function Split({config, content, surface, sectionBackground, edgeBelow, g
           >
             <HeroTextBlock
               eyebrow={content.eyebrow}
-              heading={content.heading}
+              heading={heroHeadingText(content)}
               description={content.description}
               ctas={content.ctas}
               isDark={surface.isDark}

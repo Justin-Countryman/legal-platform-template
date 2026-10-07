@@ -12,7 +12,7 @@ import {HeroForeground} from '@/components/layout/HeroForeground'
 import {HeroBackdrop} from '@/components/layout/HeroBackdrop'
 import {HeroScrim} from '@/components/layout/HeroScrim'
 import {heroForegroundVars, HERO_BAND_MIN_H_LG} from '@/lib/heroLayout'
-import {HeroBand, HeroTextBlock} from '../shared'
+import {HeroBand, HeroTextBlock, heroHeadingText} from '../shared'
 import type {HeroConfig, ResolvedHomeContent, SkeletonProps} from '../types'
 import {HERO_BACKDROP_SIZES, heroObjectPosition, type ResolvedHeroSurface, type HeroImage} from '@/lib/heroSurface'
 
@@ -68,7 +68,7 @@ export function Overlay({config, content, surface, sectionBackground, edgeBelow,
   const textBlock = (
     <HeroTextBlock
       eyebrow={content.eyebrow}
-      heading={content.heading}
+      heading={heroHeadingText(content)}
       description={content.description}
       ctas={content.ctas}
       isDark={surface.isDark}

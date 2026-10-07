@@ -113,6 +113,7 @@ export function PracticeAreaNavBlock({
 
   const tagline = resolveTokenString(data.tagline, napTokens)
   const heading = resolveTokenString(data.heading, napTokens)
+  const emphasis = resolveTokenString(data.headingEmphasis, napTokens)
   const description = resolveTokenString(data.description, napTokens)
   // Accessible name for the <nav> landmark — the heading when set, else a stable
   // fallback so the landmark is always named (assistive-tech requirement).
@@ -169,6 +170,7 @@ export function PracticeAreaNavBlock({
         buttons={buttons}
         fit={headingFit(heading, seam.site?.headingFace)}
         scale={scale}
+        emphasis={emphasis}
       />
     </SectionShell>
   )
@@ -178,7 +180,7 @@ export function PracticeAreaNavBlock({
 // adapts to whatever column width it lands in (SiloNav is a @container), so these
 // layouts stay independent of the chosen button layout.
 function SiloSectionFrame({
-  layout, hasHeader, tagline, heading, description, buttons, fit, scale,
+  layout, hasHeader, tagline, heading, description, buttons, fit, scale, emphasis,
 }: {
   layout: SiloSectionLayout
   hasHeader: boolean
@@ -188,11 +190,13 @@ function SiloSectionFrame({
   buttons: React.ReactNode
   fit?: HeadingFit | null
   scale?: 'marketing'
+  emphasis?: string | null
 }) {
   const header = (alignment: 'center' | 'left', opts?: {withDescription?: boolean; className?: string}) =>
     hasHeader ? (
       <SectionHeader
         scale={scale}
+        emphasis={emphasis}
         tagline={tagline}
         heading={heading ?? ''}
         fit={fit}

@@ -996,6 +996,48 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-accent-text);
 }
 
+/* The lead-in line (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 12, `[R-641]`): the tagline directly above a
+   section heading or the homepage headline, larger and in the heading face, wherever the shell carries `data-lead-in`.
+   Lead is upright in the accent text (lewinlawfirm); kicker italic in the heading's ink (stuartmckenzie), upright where the
+   face has no italic. Every other tagline keeps the tagline style. The hero's is a quarter larger. */
+[data-lead-in] .tagline:is(:has(+ .section-heading), :has(+ [data-hero-heading])) {
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 0.9rem + 1vw, 1.75rem);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+[data-lead-in] .tagline:has(+ [data-hero-heading]) {
+  font-size: clamp(1.5625rem, 1.125rem + 1.25vw, 2.1875rem);
+}
+[data-lead-in] .tagline:is(:has(+ .section-heading), :has(+ [data-hero-heading]))::before {
+  display: none;
+}
+[data-lead-in="kicker"] .tagline:is(:has(+ .section-heading), :has(+ [data-hero-heading])) {
+  font-style: italic;
+  font-synthesis-style: none;
+  color: var(--color-heading);
+}
+
+/* Tracked labels (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 13, `[R-641]`): one label style, small spaced
+   capitals, on the primary and secondary buttons, the text links (the tertiary's own variables), the main menu's top
+   items and the footer's column headings, wherever the shell carries `data-label-style`. The menu measures what fits
+   after the labels are drawn, so a wider menu folds into the drawer as any other would. */
+[data-label-style="tracked"] {
+  --tertiary-text-transform: uppercase;
+  --tertiary-letter-spacing: 0.1em;
+}
+[data-label-style="tracked"] :is([data-variant="primary"], [data-variant="secondary"]),
+[data-label-style="tracked"] nav[aria-label="Main navigation"] > ul > li > :is(a, span, button),
+[data-label-style="tracked"] nav[aria-label="Main navigation"] > ul > li > div > :is(a, button),
+[data-label-style="tracked"] nav[aria-label="Main navigation"] > ul > li > div > div > a,
+[data-label-style="tracked"] footer h3.font-semibold:not(.font-heading) {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
 /* ─── Section headings (Phase 16B, `[R-468]`) ──────────────────────────────── */
 /* Every section's <h2> carries `section-heading` (a rendered test holds it), so a
    style set's heading signature reaches all of them: capitals from `--heading-case`,
@@ -1201,6 +1243,11 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 @media (min-width: 500px) { [data-heading-weight="light"] .section-heading.marketing-h2 { font-weight: 300; } }
 @media (min-width: 768px) { [data-heading-weight="light"] :is(h1, .section-heading):is(.md\:text-4xl, .md\:text-5xl) { font-weight: 300; } }
 @media (min-width: 992px) { [data-heading-weight="light"] .section-heading.lg\:text-4xl { font-weight: 300; } }
+/* The homepage headline bold over regular or light section headings (monorepo `[R-641]`): the shell sets
+   `data-hero-weight` only where Design Settings asks for it and the face draws a bold. Equal in weight to the rules above
+   and after them, so it wins on the homepage hero's headline alone (`data-hero-heading`); interior headlines follow the
+   heading weight. */
+[data-hero-weight="bold"] h1[data-hero-heading] { font-weight: 700; }
 /* A fitted heading that draws 300 is never set under 32 px (Phase 17C session 3): the same
    selectors, so the floor rises exactly where the light weight draws. */
 [data-heading-weight="light"] .section-heading.text-4xl > .heading-fit { --heading-floor: 2rem; }
@@ -1670,6 +1717,16 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
    intrudes into whatever follows the paragraph. The component decides eligibility —
    `::first-letter` takes a leading quote or bracket with the letter, and on a centred
    layout a float detaches from its text. */
+/* A large first paragraph (a content section's `textSize`, monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 12): the
+   firm's promise in the heading face, between body size and the section heading (22 to 36 px), in the heading's ink,
+   which every context swaps (dark, saturated, a ghosted band); the rest stays at body size. */
+[data-lede] > p:first-child {
+  font-family: var(--font-heading);
+  font-size: clamp(1.375rem, 1rem + 1.5vw, 2.25rem);
+  line-height: 1.35;
+  font-weight: 400;
+  color: var(--color-heading);
+}
 [data-ornament~="dropCap"] [data-prose="cap"] > p:first-child { display: flow-root; }
 [data-ornament~="dropCap"] [data-prose="cap"] > p:first-child::first-letter {
   float: inline-start;

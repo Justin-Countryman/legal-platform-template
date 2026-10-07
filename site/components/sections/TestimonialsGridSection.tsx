@@ -55,6 +55,7 @@ export function TestimonialsGridSection({
 
   const tagline = resolveTokenString(data.tagline, napTokens)
   const heading = resolveTokenString(data.heading, napTokens)
+  const emphasis = resolveTokenString(data.headingEmphasis, napTokens)
   const description = resolveTokenString(data.description, napTokens)
   // The columns follow the count (cardGrid.ts): a quote needs its measure, so four go two by two.
   const grid = cardGridClasses(testimonials.length, 3)
@@ -66,7 +67,7 @@ export function TestimonialsGridSection({
     >
 
       {heading && (
-        <SectionHeader
+        <SectionHeader emphasis={emphasis}
           scale={scale}
           tagline={tagline}
           heading={heading}

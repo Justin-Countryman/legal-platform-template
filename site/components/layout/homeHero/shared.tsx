@@ -5,6 +5,7 @@
 // plumbing lives here and is reused from the existing internal-hero system.
 
 import {type CSSProperties, type ReactNode} from 'react'
+import {EmphasisText} from '@/components/ui/EmphasisText'
 import {
   resolveHeroSurface,
   type HeroScheme,
@@ -177,6 +178,12 @@ export function HeroEyebrow({
   )
 }
 
+/** The headline's words, its emphasis set in the site's emphasis style where Design Settings names one (monorepo
+ *  `[R-641]`; nguyenandmaliklaw's hero); the plain string otherwise, so the hero's markup is unchanged. */
+export function heroHeadingText(content: {heading: string; headingEmphasis?: string | null}): ReactNode {
+  return content.headingEmphasis ? <EmphasisText text={content.heading} emphasis={content.headingEmphasis} /> : content.heading
+}
+
 export function HeroHeading({
   children,
   className,
@@ -186,7 +193,7 @@ export function HeroHeading({
 }) {
   return (
     // `text-heading` (the roster eye of 2026-10-03, `[R-631]`): the dark ground on a light hero, the on-dark text on a dark one.
-    <h1 className={['marketing-h1 font-heading font-bold text-heading', className ?? ''].filter(Boolean).join(' ')}>
+    <h1 data-hero-heading="" className={['marketing-h1 font-heading font-bold text-heading', className ?? ''].filter(Boolean).join(' ')}>
       {children}
     </h1>
   )

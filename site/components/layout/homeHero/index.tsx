@@ -86,6 +86,7 @@ export function HomepageHero({data, napTokens, edgeBelow, lightGround, glow, tex
   const content: ResolvedHomeContent = {
     eyebrow: resolveStr(data.eyebrow, napTokens),
     heading: resolveStr(data.heading, napTokens) ?? data.heading,
+    headingEmphasis: resolveStr(data.headingEmphasis, napTokens),
     description: resolveStr(data.description, napTokens),
     ctas: resolveCtas(data.buttons, napTokens),
     galleryImages,

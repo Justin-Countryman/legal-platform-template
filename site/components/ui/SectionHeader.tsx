@@ -1,4 +1,5 @@
 import {Tagline} from '@/components/ui/Tagline'
+import {EmphasisText} from './EmphasisText'
 import {HeadingText, headingFitStyle} from '@/components/ui/HeadingText'
 import type {HeadingFit} from '@/lib/headingFit'
 
@@ -60,6 +61,8 @@ export type SectionHeaderProps = {
    * only where its words would wrap past the rule in its column. Absent renders as before.
    */
   fit?:         HeadingFit | null
+  /** A phrase of the heading set in the emphasis style (monorepo `[R-641]`); absent draws the heading as before. */
+  emphasis?:    string | null
 }
 
 // ─── Scale → h2 className mapping ─────────────────────────────────────────────
@@ -113,6 +116,7 @@ export function SectionHeader({
   noTrailingGap = false,
   className,
   fit,
+  emphasis,
 }: SectionHeaderProps) {
   const wrapperClass = [
     alignment === 'center' ? 'text-center' : null,
@@ -126,7 +130,7 @@ export function SectionHeader({
   return (
     <div className={wrapperClass || undefined}>
       {tagline && <Tagline as="p">{tagline}</Tagline>}
-      <h2 className={h2Class} style={headingFitStyle(fit)}><HeadingText fit={fit}>{heading}</HeadingText></h2>
+      <h2 className={h2Class} style={headingFitStyle(fit)}><HeadingText fit={fit}>{emphasis ? <EmphasisText text={heading} emphasis={emphasis} /> : heading}</HeadingText></h2>
       {description && <p className="text-foreground-muted">{description}</p>}
     </div>
   )

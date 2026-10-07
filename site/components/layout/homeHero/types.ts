@@ -63,6 +63,7 @@ export type HomeHeroData = {
   // Content
   eyebrow?: string | null
   heading: string
+  headingEmphasis?: string | null
   description?: string | null
   buttons?: CtaButtonData[] | null
   // Layout (direct values)
@@ -98,6 +99,8 @@ export type HomeHeroData = {
 export type ResolvedHomeContent = {
   eyebrow?: string | null
   heading: string
+  /** A phrase of the headline set in the emphasis style (monorepo `[R-641]`). */
+  headingEmphasis?: string | null
   description?: string | null
   ctas: CtaItem[]
   galleryImages: HeroImage[]
