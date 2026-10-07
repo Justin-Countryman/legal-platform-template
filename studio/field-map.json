@@ -2716,6 +2716,13 @@
           "type": "string"
         },
         {
+          "description": "A word or phrase from the heading to set in the accent style. Write it exactly as it appears in the heading, tokens included; it is case-sensitive. Only its first occurrence is emphasised.",
+          "jsonType": "string",
+          "path": "headingEmphasis",
+          "title": "Heading Emphasis",
+          "type": "string"
+        },
+        {
           "jsonType": "string",
           "path": "description",
           "title": "Description",
@@ -4107,6 +4114,13 @@
           "type": "string"
         },
         {
+          "description": "A word or phrase from the heading to set in the accent style. Write it exactly as it appears in the heading, tokens included; it is case-sensitive. Only its first occurrence is emphasised.",
+          "jsonType": "string",
+          "path": "headingEmphasis",
+          "title": "Heading Emphasis",
+          "type": "string"
+        },
+        {
           "jsonType": "string",
           "path": "intro",
           "title": "Intro",
@@ -4739,6 +4753,20 @@
           "type": "number"
         },
         {
+          "description": "Leave blank for body size. Large first paragraph sets the opening paragraph in the heading font, between body size and the heading, for a firm’s promise; the rest stays at body size.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "large"
+            ]
+          },
+          "path": "textSize",
+          "title": "Body size",
+          "type": "string"
+        },
+        {
           "description": "Optional. A heading of its own over the items, so one section carries two halves: the heading and body first (what the visitor is worried about), then this heading and the items (what the firm promises). Left empty, the items follow the body with no heading.",
           "hidden": "<predicate>",
           "jsonType": "string",
@@ -5303,6 +5331,19 @@
           "type": "string"
         },
         {
+          "description": "Leave blank for the Heading Weight below. Bold draws the homepage headline bold over regular or light section headings, where the font has a bold.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "bold"
+            ]
+          },
+          "path": "heroHeadingWeight",
+          "title": "Homepage Headline Weight",
+          "type": "string"
+        },
+        {
           "description": "How heavy the display headings are: section headings, the homepage headline and page titles. Regular needs a font that has one; where the font has only a bold or only a regular, that is what renders. Light draws the headline and large headings thin and the smaller ones regular, and needs a font that has a light, else it renders regular. Leave blank for Bold.",
           "jsonType": "string",
           "options": {
@@ -5625,6 +5666,33 @@
           },
           "path": "marketingScale",
           "title": "Marketing Type Scale",
+          "type": "string"
+        },
+        {
+          "description": "Leave blank for labels as set by the style set. Tracked sets button labels, text links, the main menu and the footer’s column headings in small, spaced capitals, the same everywhere.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "tracked"
+            ]
+          },
+          "path": "labelStyle",
+          "title": "Label Style",
+          "type": "string"
+        },
+        {
+          "description": "Leave blank for the tagline style below. Lead sets the line above section headings and the homepage headline larger, in the heading font, upright, in the accent. Kicker sets it larger in the heading font, italic, in the heading color. Taglines elsewhere keep the tagline style.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "lead",
+              "kicker"
+            ]
+          },
+          "path": "leadIn",
+          "title": "Lead-in Line",
           "type": "string"
         },
         {
@@ -7772,6 +7840,13 @@
           "type": "string"
         },
         {
+          "description": "A word or phrase from the heading to set in the accent style. Write it exactly as it appears in the heading, tokens included; it is case-sensitive. Only its first occurrence is emphasised.",
+          "jsonType": "string",
+          "path": "headingEmphasis",
+          "title": "Heading Emphasis",
+          "type": "string"
+        },
+        {
           "jsonType": "object",
           "path": "testimonial",
           "required": "warning",
@@ -9817,6 +9892,13 @@
           "type": "string"
         },
         {
+          "description": "A word or phrase from the heading to set in the accent style. Write it exactly as it appears in the heading, tokens included; it is case-sensitive. Only its first occurrence is emphasised.",
+          "jsonType": "string",
+          "path": "hero.headingEmphasis",
+          "title": "Heading Emphasis",
+          "type": "string"
+        },
+        {
           "jsonType": "string",
           "path": "hero.description",
           "title": "Description",
@@ -9887,6 +9969,13 @@
           "jsonType": "string",
           "path": "canvas[]<practiceAreaNavInline>.heading",
           "title": "Heading",
+          "type": "string"
+        },
+        {
+          "description": "A word or phrase from the heading to set in the accent style. Write it exactly as it appears in the heading, tokens included; it is case-sensitive. Only its first occurrence is emphasised.",
+          "jsonType": "string",
+          "path": "canvas[]<practiceAreaNavInline>.headingEmphasis",
+          "title": "Heading Emphasis",
           "type": "string"
         },
         {
@@ -10177,6 +10266,13 @@
           "type": "string"
         },
         {
+          "description": "A word or phrase from the heading to set in the accent style. Write it exactly as it appears in the heading, tokens included; it is case-sensitive. Only its first occurrence is emphasised.",
+          "jsonType": "string",
+          "path": "canvas[]<attorneySectionInline>.headingEmphasis",
+          "title": "Heading Emphasis",
+          "type": "string"
+        },
+        {
           "jsonType": "string",
           "path": "canvas[]<attorneySectionInline>.description",
           "title": "Description",
@@ -10282,6 +10378,13 @@
           "jsonType": "string",
           "path": "canvas[]<caseResultsSectionInline>.heading",
           "title": "Heading",
+          "type": "string"
+        },
+        {
+          "description": "A word or phrase from the heading to set in the accent style. Write it exactly as it appears in the heading, tokens included; it is case-sensitive. Only its first occurrence is emphasised.",
+          "jsonType": "string",
+          "path": "canvas[]<caseResultsSectionInline>.headingEmphasis",
+          "title": "Heading Emphasis",
           "type": "string"
         },
         {
@@ -10555,6 +10658,13 @@
           "type": "string"
         },
         {
+          "description": "A word or phrase from the heading to set in the accent style. Write it exactly as it appears in the heading, tokens included; it is case-sensitive. Only its first occurrence is emphasised.",
+          "jsonType": "string",
+          "path": "canvas[]<testimonialsGridInline>.headingEmphasis",
+          "title": "Heading Emphasis",
+          "type": "string"
+        },
+        {
           "jsonType": "string",
           "path": "canvas[]<testimonialsGridInline>.description",
           "title": "Description",
@@ -10644,6 +10754,13 @@
           "jsonType": "string",
           "path": "canvas[]<featuredTestimonialInline>.heading",
           "title": "H2 Heading",
+          "type": "string"
+        },
+        {
+          "description": "A word or phrase from the heading to set in the accent style. Write it exactly as it appears in the heading, tokens included; it is case-sensitive. Only its first occurrence is emphasised.",
+          "jsonType": "string",
+          "path": "canvas[]<featuredTestimonialInline>.headingEmphasis",
+          "title": "Heading Emphasis",
           "type": "string"
         },
         {
@@ -10965,6 +11082,20 @@
           "path": "canvas[]<contentSectionInline>.body[]<block>.level",
           "title": "Indentation",
           "type": "number"
+        },
+        {
+          "description": "Leave blank for body size. Large first paragraph sets the opening paragraph in the heading font, between body size and the heading, for a firm’s promise; the rest stays at body size.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "large"
+            ]
+          },
+          "path": "canvas[]<contentSectionInline>.textSize",
+          "title": "Body size",
+          "type": "string"
         },
         {
           "description": "Optional. A heading of its own over the items, so one section carries two halves: the heading and body first (what the visitor is worried about), then this heading and the items (what the firm promises). Left empty, the items follow the body with no heading.",
@@ -13660,6 +13791,13 @@
           "jsonType": "string",
           "path": "heading",
           "title": "Heading",
+          "type": "string"
+        },
+        {
+          "description": "A word or phrase from the heading to set in the accent style. Write it exactly as it appears in the heading, tokens included; it is case-sensitive. Only its first occurrence is emphasised.",
+          "jsonType": "string",
+          "path": "headingEmphasis",
+          "title": "Heading Emphasis",
           "type": "string"
         },
         {
@@ -16575,6 +16713,13 @@
           "jsonType": "string",
           "path": "heading",
           "title": "Heading",
+          "type": "string"
+        },
+        {
+          "description": "A word or phrase from the heading to set in the accent style. Write it exactly as it appears in the heading, tokens included; it is case-sensitive. Only its first occurrence is emphasised.",
+          "jsonType": "string",
+          "path": "headingEmphasis",
+          "title": "Heading Emphasis",
           "type": "string"
         },
         {

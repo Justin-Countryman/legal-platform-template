@@ -220,6 +220,7 @@ export const SECTION_BODY = `
   showPhone,
   marquee,
   imageTreatment,
+  textSize,
   "body": body ${BLOCK_CONTENT_FRAGMENT},
   "pullQuote": pullQuote{text, attribution},
   "proof": proof{number, caption},
@@ -784,6 +785,7 @@ export const INTERNAL_HERO_FRAGMENT = groq`{
 // content fields (description / buttons).
 export const HOME_HERO_CONTENT_FRAGMENT = groq`{
   heading,
+  headingEmphasis,
   eyebrow,
   description,
   "buttons": buttons[]{title, url, variant}
@@ -877,6 +879,9 @@ export const DESIGN_TOKENS_QUERY = groq`
     saturatedFrom,
     accentOnDark,
     buttonOnDark,
+    heroHeadingWeight,
+    leadIn,
+    labelStyle,
     internalHeroBackground,
     heroScrimOpacity,
     // The texture a Pattern section wears (Phase 16A). Absent means none.

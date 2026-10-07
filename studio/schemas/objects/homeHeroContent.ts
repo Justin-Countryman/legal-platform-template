@@ -1,4 +1,5 @@
 import {defineType, defineField} from 'sanity'
+import {headingEmphasisField} from '../headingEmphasis'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
 
@@ -15,6 +16,7 @@ export const homeHeroContent = defineType({
   fields: [
     defineField({name: 'eyebrow', title: 'Eyebrow / Tagline', type: 'string', components: {input: TokenStringInput}, description: 'Optional small label above the headline.'}),
     defineField({name: 'heading', title: 'Heading (H1)', type: 'string', components: {input: TokenStringInput}, validation: (Rule) => Rule.required().warning()}),
+    headingEmphasisField(),
     defineField({name: 'description', title: 'Description', type: 'text', rows: 3, components: {input: TokenTextInput}}),
     defineField({name: 'buttons', title: 'Buttons', type: 'array', of: [{type: 'ctaButton'}]}),
   ],

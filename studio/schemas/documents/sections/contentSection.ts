@@ -156,6 +156,16 @@ export function fields({inline}: {inline: boolean}) {
       type: 'blockProse',
       hidden: hiddenUnless('split', 'twoColumnText', 'statement'),
     }),
+    // The premium package (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 12, `[R-641]`): a firm's promise set large.
+    // Blank draws the body at body size, as before.
+    defineField({
+      name: 'textSize',
+      title: 'Body size',
+      type: 'string',
+      description: 'Leave blank for body size. Large first paragraph sets the opening paragraph in the heading font, between body size and the heading, for a firm\u2019s promise; the rest stays at body size.',
+      options: {list: [{title: 'Large first paragraph', value: 'large'}], layout: 'radio'},
+      hidden: hiddenUnless('split', 'twoColumnText', 'statement'),
+    }),
     // Phase 18 session B (`[R-603]`): one section, two headed halves. Beat 2 is pain then value in one section; the
     // promises get a heading of their own over the items, one step under the section's.
     defineField({
