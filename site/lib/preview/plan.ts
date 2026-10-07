@@ -1,3 +1,4 @@
+import {COLOR_DETAILS} from '../details'
 import {RETIRED_STYLE_SETS, STYLE_SETS, matchStyleSet, styleSetPatch, updatePatch, type StyleSet, type StyleSetDoc, type StyleSetMatch} from '@/lib/styleSets'
 import {PALETTE_PRESETS, matchPreset, presetInputs, type PalettePreset} from '@/lib/palettes'
 import {FLOWS, HIDDEN_FIELDS, RETIRED_FLOWS, drawsHeroPhoto, flowById, flowOf, type FlowRules} from '@/lib/flows'
@@ -184,6 +185,11 @@ export function planPreview(
       } else if (present(doc[role])) {
         unset.push(role)
       }
+    }
+    // The palette details point at roles (monorepo `[R-641]`, `lib/details.ts`): a palette that changes a role clears them,
+    // so a heading "in the button color" never outlives the button color it was chosen for (ADV-PP-B).
+    if (COLOR_ROLES.some((role) => role in set || unset.includes(role))) {
+      for (const field of COLOR_DETAILS) if (present(doc[field])) unset.push(field)
     }
   }
 

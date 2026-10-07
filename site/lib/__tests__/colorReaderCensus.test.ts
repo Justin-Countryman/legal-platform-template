@@ -82,6 +82,14 @@ const UNREAD: Record<string, Reason> = Object.fromEntries([
     '--color-heading-on-light',
     '--color-hover-wash-on-dark', '--color-star-outline-on-dark', '--color-star-outline-on-light',
   ].map((name) => [name, 'cascade' as Reason]),
+  // The color details (monorepo `[R-641]`): read by the dark, saturated, fade and photo blocks and by the rule that
+  // draws the primary button on a dark band under the shell's `data-button-on-dark`, never by a component.
+  ...[
+    '--color-accent-on-dark-raw', '--color-saturated-decor', '--color-heading-on-fade',
+    '--color-btn-dark', '--color-btn-dark-fg', '--color-btn-dark-edge', '--color-btn-dark-hover', '--color-btn-dark-hover-fg',
+    '--color-btn-dark-on-scrim', '--color-btn-dark-fg-on-scrim', '--color-btn-dark-edge-on-scrim', '--color-btn-dark-hover-on-scrim',
+    '--color-btn-dark-hover-fg-on-scrim',
+  ].map((name) => [name, 'cascade' as Reason]),
   // Tailwind v4 does not generate a ring utility from a color name, so globals.css
   // bridges these with `@utility ring-focus` / `@utility ring-focus-on-dark`.
   ...['--color-ring-focus', '--color-ring-focus-on-dark', '--color-ring-focus-on-light'].map((name) => [name, 'utility-bridge' as Reason]),

@@ -22,7 +22,7 @@
 
 import {describe, expect, it} from 'vitest'
 import {converter, clampChroma, formatHex} from 'culori'
-import {lightTextureCap, parseHexInput, resolvePalette, SECTION_TEXTURE_OPACITY, validateWcag, type ColorInputs} from '../designTokens'
+import {lightTextureCap, parseHexInput, resolvePalette, SECTION_TEXTURE_OPACITY, validateWcag, type ColorInputs, type PaletteOptions} from '../designTokens'
 import {PALETTE_PRESETS, presetInputs} from '../palettes'
 import before from './fixtures/color-tokens-before-phase14.json'
 import {nearBlack} from './sweeps'
@@ -57,11 +57,22 @@ function seeded(n: number, seed: number): ColorInputs[] {
   return Array.from({length: n}, () => ({darkGround: hex(), lightGround: hex(), accent: hex(), action: rnd() < 0.5 ? hex() : null}))
 }
 
-function failures(label: string, inputs: ColorInputs): string[] {
-  return validateWcag(resolvePalette(inputs))
+function failures(label: string, inputs: ColorInputs, options: PaletteOptions = {}): string[] {
+  return validateWcag(resolvePalette(inputs, options))
     .filter((r) => r.blocking && !r.passes)
-    .map((r) => `${label} ${JSON.stringify(inputs)}: ${r.pair} = ${r.ratio} < ${r.min}`)
+    .map((r) => `${label} ${JSON.stringify(inputs)} ${JSON.stringify(options)}: ${r.pair} = ${r.ratio} < ${r.min}`)
 }
+
+// The color details (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 17, `[R-641]`): every value each option can take.
+const DETAIL_VALUES: PaletteOptions[] = [
+  {headingInk: 'action'}, {saturatedFrom: 'action'}, {accentOnDark: 'raw'},
+  {buttonOnDark: 'accent'}, {buttonOnDark: 'action'}, {buttonOnDark: 'outline'},
+]
+const EVERY_DETAIL: PaletteOptions[] = [
+  {headingInk: 'action', saturatedFrom: 'action', accentOnDark: 'raw', buttonOnDark: 'accent'},
+  {headingInk: 'action', saturatedFrom: 'action', accentOnDark: 'raw', buttonOnDark: 'action'},
+  {headingInk: 'action', saturatedFrom: 'action', accentOnDark: 'raw', buttonOnDark: 'outline'},
+]
 
 function expectNone(found: string[]) {
   expect(found.length, `${found.length} failing pairs. First:\n${found.slice(0, 20).join('\n')}`).toBe(0)
@@ -126,6 +137,26 @@ describe('color guarantee: every blocking pair passes for any operator input', (
     expect(nearBlack(2000, 17).filter((inputs) => !within(inputs))).toEqual([])
     expect(lightTextureCap('#ffffff', '#13294b')).toBe(0.03294)
   }, 60_000)
+
+  // The color details (`[R-641]`): each value alone over the presets and 500 seeded palettes, then every option on at once
+  // over the full sweeps, which are the expensive ones (about 85 s a pass on the runner), run once per button mode.
+  it('each color detail alone, over every preset and 500 seeded palettes', () => {
+    const palettes: [string, ColorInputs][] = [['placeholder', {}], ...PALETTE_PRESETS.map((p) => [p.id, presetInputs(p)] as [string, ColorInputs]),
+      ...seeded(500, 641).map((inputs, i) => [`detail-sample#${i}`, inputs] as [string, ColorInputs])]
+    const found: string[] = []
+    for (const options of DETAIL_VALUES) for (const [name, inputs] of palettes) found.push(...failures(name, inputs, options))
+    expectNone(found)
+  }, 120_000)
+
+  it('every color detail on at once, over the grid, 5,000 seeded palettes and the near-black ones', () => {
+    const found: string[] = []
+    for (const options of EVERY_DETAIL) {
+      for (const role of ROLES) for (const hex of grid()) found.push(...failures(`every-detail/${role}`, {[role]: hex}, options))
+      found.push(...seeded(5000, 20261007).flatMap((inputs, i) => failures(`every-detail#${i}`, inputs, options)))
+      found.push(...nearBlack(2000, 641).flatMap((inputs, i) => failures(`every-detail-near-black#${i}`, inputs, options)))
+    }
+    expectNone(found)
+  }, 600_000)
 
   it('the render margin reaches a dark band only where its ink is lighter than the ground', () => {
     // Every preset solves a black ink, which only raises contrast, so its dark bands render as solved.

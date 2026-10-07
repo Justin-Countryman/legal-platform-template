@@ -873,6 +873,10 @@ export const DESIGN_TOKENS_QUERY = groq`
     lightGround,
     accent,
     action,
+    headingInk,
+    saturatedFrom,
+    accentOnDark,
+    buttonOnDark,
     internalHeroBackground,
     heroScrimOpacity,
     // The texture a Pattern section wears (Phase 16A). Absent means none.

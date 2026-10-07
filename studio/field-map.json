@@ -5541,6 +5541,45 @@
           "type": "string"
         },
         {
+          "description": "The color of headings on light sections. Leave blank for the Dark Ground. Button Color draws them in the button color where it reads on every light section, else a darker shade of it.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "action"
+            ]
+          },
+          "path": "headingInk",
+          "title": "Heading Color",
+          "type": "string"
+        },
+        {
+          "description": "The color a full-color section is filled with. Leave blank for the Accent. Button Color fills it with the button color where that makes a band of its own (distinct from the dark and light grounds), else the accent.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "action"
+            ]
+          },
+          "path": "saturatedFrom",
+          "title": "Color Band",
+          "type": "string"
+        },
+        {
+          "description": "Leave blank for a lighter shade of the accent on dark sections, which always reads. As Chosen keeps the accent itself on plain dark sections wherever it reads there; photo and glowing sections keep the lighter shade.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "raw"
+            ]
+          },
+          "path": "accentOnDark",
+          "title": "Accent on Dark Sections",
+          "type": "string"
+        },
+        {
           "description": "Select a curated heading + body combination. When set, this overrides the individual font upload fields below — the preset fonts are self-hosted in the template and load with no external requests. Leave blank to use your own uploaded fonts.",
           "jsonType": "number",
           "options": {
@@ -5753,6 +5792,21 @@
           "required": "warning",
           "requiredMessage": "validation:generic.required",
           "title": "Button Shape",
+          "type": "string"
+        },
+        {
+          "description": "Leave blank for a light button on dark sections. Accent and Button Color fill the button in that color where it stands out from the section (3:1) and its label reads; Accent Outline draws a light label inside an accent line. On a photo or glowing section, or on a palette where the color does not stand out, the light button is drawn.",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "accent",
+              "action",
+              "outline"
+            ]
+          },
+          "path": "buttonOnDark",
+          "title": "Buttons on Dark Sections",
           "type": "string"
         },
         {

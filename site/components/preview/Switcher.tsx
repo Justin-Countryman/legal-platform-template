@@ -1,3 +1,4 @@
+import {COLOR_DETAILS, DETAILS, detailsOf} from '@/lib/details'
 import Link from 'next/link'
 import {STYLE_SETS} from '@/lib/styleSets'
 import {PALETTE_PRESETS} from '@/lib/palettes'
@@ -259,6 +260,9 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
     : null
   const blocks = (Array.isArray(canvas) ? canvas : []) as HomepageBlock[]
   const keep = ownLooks(blocks)
+  // The details the page draws (`lib/details.ts`, monorepo `[R-641]`), and the palette details this palette clears.
+  const details = detailsOf(chrome?.designTokens as Record<string, unknown> | null | undefined)
+  const clearedDetails = plan.unset.filter((f) => COLOR_DETAILS.includes(f)).map((f) => DETAILS.find((d) => d.field === f)!.label.toLowerCase())
   const grounds = ownGrounds(blocks)
   // A retired style set (Phase 17C session 2b, `[R-534]`) is named where the site wears it and
   // never offered; a style set the eye has not passed says so, as a theme family does.
@@ -477,6 +481,12 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
         <p className="sw-note">{headerNote}</p>
         {keep.length > 0 && (
           <p className="sw-note">Kept as set on the section, whatever the style set: {keptLine(keep)}.</p>
+        )}
+        {details.length > 0 && (
+          <p className="sw-note">Details from Design Settings, whatever the style set: {details.map((d) => `${d.label.toLowerCase()} ${d.value}`).join('; ')}.</p>
+        )}
+        {clearedDetails.length > 0 && (
+          <p className="sw-note">This palette clears {clearedDetails.join(', ')}, which pointed at the colors it replaces.</p>
         )}
         <p className="sw-note">Links on this page open the live site. Interior pages are not previewed.</p>
         {shareUrl && (

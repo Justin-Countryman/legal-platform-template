@@ -20,10 +20,14 @@ export type Claim = Layer | 'none' | readonly [Layer, Layer]
 export const DESIGN_SETTINGS_LAYER: Readonly<Record<string, Claim>> = {
   // Palette: the four roles, from which every token is derived.
   darkGround: 'palette', lightGround: 'palette', accent: 'palette', action: 'palette', colorPreview: 'palette',
+  // The color details (`lib/details.ts`): which role a heading, a color band and the accent on dark draw from.
+  headingInk: 'palette', saturatedFrom: 'palette', accentOnDark: 'palette',
   // Element theme (the style set): what each element looks like.
   styleSetPicker: 'element', fontPairingPreset: 'element', customFonts: 'element', marketingScale: 'element', taglineStyle: 'element',
   headingEmphasisStyle: 'element', headingRule: 'element', headingWeight: 'element', headingCase: 'element', dropCap: 'element',
   cornerPreview: 'element', uiRadius: 'element', buttonShape: 'element', tertiaryStyle: 'element', imageFrame: 'element',
+  // An element detail (`lib/details.ts`): the button's fill on a dark section.
+  buttonOnDark: 'element',
   attorneyCardStyle: 'element', sidebarNavIconStyle: 'element', sidebarWidgetHeaderLine: 'element', sidebarItemSeparators: 'element',
   // The pattern tile's kind is the Element theme's; where and how strongly it is drawn is the Background theme's, which reads it.
   patternTexture: 'element',

@@ -357,3 +357,24 @@ describe('the background', () => {
     expect(grantBackground('fade')).toBe('fade')
   })
 })
+
+describe('the details (monorepo `[R-641]`, `lib/details.ts`)', () => {
+  const navy: StoredDesign = {darkGround: '#14213d', accent: '#c9a227', action: '#1f7a8c', headingInk: 'action', saturatedFrom: 'action', accentOnDark: 'raw', buttonOnDark: 'accent'}
+
+  it('a palette that changes a role clears the palette details, never the element detail, and sets none', () => {
+    const plan = planPreview(navy, {styleSet: 'site', palette: PALETTE_PRESETS[0].id, flow: 'site'})
+    expect(plan.unset).toEqual(expect.arrayContaining(['headingInk', 'saturatedFrom', 'accentOnDark']))
+    expect(plan.unset).not.toContain('buttonOnDark')
+    for (const f of ['headingInk', 'saturatedFrom', 'accentOnDark', 'buttonOnDark']) expect(plan.set, f).not.toHaveProperty(f)
+  })
+
+  it('a style set, a theme or the site’s own palette keeps every detail', () => {
+    for (const styleSet of ['graphite', 'site']) {
+      const plan = planPreview(navy, {styleSet, palette: 'site', flow: 'site'})
+      for (const f of ['headingInk', 'saturatedFrom', 'accentOnDark', 'buttonOnDark']) {
+        expect(plan.unset, f).not.toContain(f)
+        expect(plan.set, f).not.toHaveProperty(f)
+      }
+    }
+  })
+})
