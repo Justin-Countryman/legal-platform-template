@@ -296,6 +296,16 @@ export function fields({inline}: {inline: boolean}) {
         }),
       ],
     }),
+    // The premium package (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 15, `[R-641]`; nguyenandmaliklaw, lovellfirm and
+    // lewinlawfirm stand their people on a band's edge). Blank keeps a cut-out inside the band's padding.
+    defineField({
+      name: 'cutoutEdge',
+      title: 'Cut-out position',
+      type: 'string',
+      description: 'For a cut-out figure. Leave blank to keep it inside the section. On the edge stands it on the section\u2019s bottom edge, beside the text, on wide screens.',
+      options: {list: [{title: 'On the bottom edge', value: 'bottom'}], layout: 'radio'},
+      hidden: ({parent}) => (parent as {layout?: string; media?: {kind?: string}} | undefined)?.layout !== 'split' || (parent as {media?: {kind?: string}} | undefined)?.media?.kind !== 'cutout',
+    }),
     defineField({
       name: 'imageTreatment',
       title: 'Image Treatment',

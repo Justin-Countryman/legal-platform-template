@@ -4,11 +4,12 @@ import {
   AttorneyCardAvatar,
   AttorneyCardMinimal,
   AttorneyCardSpotlight,
+  AttorneyCardCutout,
 } from './AttorneyCardVariants'
 import type {AttorneyCard as AttorneyCardData} from './AttorneyCardParts'
 
 // 'editorial' retained as a legacy alias — that style was rebuilt as 'avatar'.
-export type AttorneyCardStyle = 'classic' | 'portrait' | 'avatar' | 'editorial' | 'minimal' | 'spotlight'
+export type AttorneyCardStyle = 'classic' | 'portrait' | 'avatar' | 'editorial' | 'minimal' | 'spotlight' | 'cutout'
 
 // Picks the card style chosen on the section. Defaults to Classic (the original
 // horizontal card) so existing sections and unset values render unchanged.
@@ -29,6 +30,8 @@ export function AttorneyCard({
       return <AttorneyCardMinimal attorney={attorney} />
     case 'spotlight':
       return <AttorneyCardSpotlight attorney={attorney} />
+    case 'cutout':
+      return <AttorneyCardCutout attorney={attorney} />
     default:
       return <AttorneyCardItem attorney={attorney} />
   }

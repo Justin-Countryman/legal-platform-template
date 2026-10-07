@@ -14,6 +14,8 @@ export type AttorneyCard = {
   jobTitle?: string | null
   bio?: string | null
   photo?: SanityImageData | null
+  /** The photo's asset says it has no transparency (Sanity's `isOpaque`); `false` is a cut-out (monorepo `[R-641]`). */
+  photoOpaque?: boolean | null
 }
 
 // The card's label is the projected `title`, which the three attorney-card
@@ -67,6 +69,7 @@ export function CardImage({
   imgClassName,
   className,
   frameable = true,
+  contain = false,
 }: {
   attorney: AttorneyCard
   ratio?: string
@@ -80,8 +83,21 @@ export function CardImage({
    *  (globals.css, Phase 16B): `framed` only, drawn by an ::after, so it adds no
    *  element and cannot move the photo; a square frame inside a circle breaks. */
   frameable?: boolean
+  /** A transparent cut-out standing on the box's floor, whole, unframed (the cut-out card, monorepo `[R-641]`). */
+  contain?: boolean
 }) {
   const name = attorneyName(attorney)
+  if (contain) {
+    return (
+      <div className={['absolute inset-0 flex items-end justify-center overflow-hidden', className].filter(Boolean).join(' ')}>
+        {hasImage(attorney.photo) ? (
+          <SanityImage image={attorney.photo} mode="natural" alt={attorney.photo.alt ?? name} sizes={sizes} className="h-full w-auto max-w-full object-contain object-bottom" />
+        ) : (
+          <AttorneyMonogram name={name} />
+        )}
+      </div>
+    )
+  }
   const wrapper = fill
     ? ['absolute inset-0 overflow-hidden', className]
     : ['relative overflow-hidden', ratio, className]

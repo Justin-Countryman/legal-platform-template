@@ -1396,6 +1396,17 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 @utility band-pt-normal   { --band-pt: 4rem;   @variant md { --band-pt: 6rem; } @variant lg { --band-pt: 7rem; } }
 @utility band-pt-spacious { --band-pt: 6rem;   @variant md { --band-pt: 8rem; } @variant lg { --band-pt: 10rem; } }
 @utility band-pt-tight    { --band-pt: 2.5rem; @variant md { --band-pt: 3rem; } }
+/* The bottom twins (monorepo `[R-641]`): a band whose content section stands a cut-out on its bottom edge publishes its own
+   bottom padding, so the cut-out reaches through it to the edge. */
+@utility band-pb-compact  { --band-pb: 3rem;   @variant md { --band-pb: 4rem; } }
+@utility band-pb-normal   { --band-pb: 4rem;   @variant md { --band-pb: 6rem; } @variant lg { --band-pb: 7rem; } }
+@utility band-pb-spacious { --band-pb: 6rem;   @variant md { --band-pb: 8rem; } @variant lg { --band-pb: 10rem; } }
+@utility band-pb-tight    { --band-pb: 2.5rem; @variant md { --band-pb: 3rem; } }
+/* A cut-out standing on its band's bottom edge (used from `xl`, where the split sits side by side): its column reaches
+   through the band's own bottom padding. */
+@utility cutout-sink {
+  margin-bottom: calc(-1 * var(--band-pb, 0px));
+}
 @utility photo-rise {
   margin-top: calc(-1 * (var(--band-pt, 0px) + var(--band-divider, 0px) + var(--photo-rise)));
 }
@@ -1483,6 +1494,28 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 @media (forced-colors: active) { .band-glow { background-image: none; } }
 @media print { .band-glow { background-image: none; } }
 @media (prefers-contrast: more) { .band-glow { background-image: none; } }
+
+/* The resting card edge (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 14, `[R-641]`): every card on the page (a
+   practice area, an attorney, a testimonial, a result: `[data-card]`, which list rows do not carry) takes an accent edge
+   at rest, wherever the shell carries `data-card-edge`; the footer's cards are not the page's. Decorative, so the decor
+   color (the accent, swapped in each context). */
+[data-card-edge="left"] main [data-card] { border-left: 4px solid var(--color-decor); }
+[data-card-edge="bottom"] main [data-card] { border-bottom: 2px solid var(--color-decor); }
+[data-card-edge="outline"] main [data-card] { border: 1px solid var(--color-decor); }
+
+/* The cut-out attorney card's name plate (monorepo `[R-641]`): opaque, so its text never sits on the figure. The dark
+   ground in its on-dark text on a light band; on a dark band, where the dark plate would vanish, the accent fill in its
+   own text. Both pairs are the guarantee's (`validateWcag`). */
+.cutout-plate {
+  background-color: var(--color-brand-dark);
+  --color-foreground: var(--color-foreground-on-dark);
+  --color-foreground-muted: var(--color-foreground-muted-on-dark);
+}
+:is(.bg-brand-dark, [data-ring-context="dark"]) .cutout-plate {
+  background-color: var(--color-accent-fill);
+  --color-foreground: var(--color-accent-fg);
+  --color-foreground-muted: var(--color-accent-fg);
+}
 
 /* ─── The carried pieces (Phase 16C, `[R-483]`) ──────────────────────────────── */
 /* Cards: a small piece in the bottom corner, following the card's own radius. */

@@ -10,7 +10,7 @@ import {headingFit} from '@/lib/headingFit'
 import {cardGridClasses} from './cardGrid'
 
 /** The attorney card styles drawn upright (`AttorneyCard`); 'editorial' is Avatar's old name. */
-const UPRIGHT: readonly string[] = ['portrait', 'avatar', 'editorial', 'minimal', 'spotlight']
+const UPRIGHT: readonly string[] = ['portrait', 'avatar', 'editorial', 'minimal', 'spotlight', 'cutout']
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -63,7 +63,10 @@ export function AttorneySectionBlock({
   const description = resolveTokenString(data.description, napTokens)
   // The section's own style where it has one; otherwise the site's (Phase 16B: a
   // style set sets it, `[R-468]`'s continuity rule), otherwise Classic.
-  const cardStyle = followSite(data.cardStyle as string | null | undefined, seam.site?.attorneyCardStyle) as AttorneyCardStyle | null
+  const chosen = followSite(data.cardStyle as string | null | undefined, seam.site?.attorneyCardStyle) as AttorneyCardStyle | null
+  // The cut-out card (monorepo `[R-641]`) only where every photo is a transparent cut-out; else the whole section is
+  // Portrait, so a row never mixes figures and boxes (the `photosAllOrNone` precedent, `[R-556]`).
+  const cardStyle: AttorneyCardStyle | null = chosen === 'cutout' && !attorneys.every((a) => a.photoOpaque === false) ? 'portrait' : chosen
   const isSlider = data.layout === 'slider'
   // The columns follow the count (cardGrid.ts): Classic lies sideways, so four of it go two by two. Only the styles the
   // card draws upright plan four across; anything else, a retired or unknown value included, draws as Classic.

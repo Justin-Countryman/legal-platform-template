@@ -956,6 +956,19 @@
           },
           "optional": true
         },
+        "cutoutEdge": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "bottom"
+              }
+            ]
+          },
+          "optional": true
+        },
         "imageTreatment": {
           "type": "objectAttribute",
           "value": {
@@ -2378,6 +2391,10 @@
               {
                 "type": "string",
                 "value": "spotlight"
+              },
+              {
+                "type": "string",
+                "value": "cutout"
               }
             ]
           },
@@ -6494,6 +6511,19 @@
         },
         "optional": true
       },
+      "cutoutEdge": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "bottom"
+            }
+          ]
+        },
+        "optional": true
+      },
       "imageTreatment": {
         "type": "objectAttribute",
         "value": {
@@ -7960,6 +7990,10 @@
             {
               "type": "string",
               "value": "spotlight"
+            },
+            {
+              "type": "string",
+              "value": "cutout"
             }
           ]
         },
@@ -20185,6 +20219,27 @@
             {
               "type": "string",
               "value": "slab"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "cardEdge": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "type": "string",
+              "value": "bottom"
+            },
+            {
+              "type": "string",
+              "value": "outline"
             }
           ]
         },

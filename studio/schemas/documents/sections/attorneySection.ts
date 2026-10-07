@@ -135,6 +135,8 @@ export function fields({inline}: {inline: boolean}) {
           {title: 'Avatar — round headshot, centered', value: 'avatar'},
           {title: 'Minimal — frameless photo, lots of whitespace', value: 'minimal'},
           {title: 'Spotlight — photo with bio revealed on hover', value: 'spotlight'},
+          // The premium package (monorepo `[R-641]`): drawn only when every photo in the section is a transparent cut-out.
+          {title: 'Cut-out — transparent photos standing on one line, a name plate below (every photo a cut-out, else Portrait)', value: 'cutout'},
         ],
         layout: 'radio',
       },

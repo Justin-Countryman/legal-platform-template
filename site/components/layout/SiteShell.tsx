@@ -153,6 +153,7 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
   const heroWeight = heroWeightOf(designTokens as Record<string, unknown> | null | undefined)
   const leadIn = detailValue(designTokens as Record<string, unknown> | null | undefined, 'leadIn') ?? undefined
   const labelStyle = detailValue(designTokens as Record<string, unknown> | null | undefined, 'labelStyle') ?? undefined
+  const cardEdge = detailValue(designTokens as Record<string, unknown> | null | undefined, 'cardEdge') ?? undefined
   const {heading: resolvedHeading, body: resolvedBody} = resolvefonts(
     designTokens?.fontPairingPreset,
     designTokens?.headingFont,
@@ -274,6 +275,7 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
         data-hero-weight={heroWeight}
         data-lead-in={leadIn}
         data-label-style={labelStyle}
+        data-card-edge={cardEdge}
         data-image-frame={imageFrame}
         data-ornament={ornaments || undefined}
         data-carry-cards={carry.includes('cards') ? '' : undefined}

@@ -113,3 +113,27 @@ export function AttorneyCardSpotlight({attorney}: {attorney: AttorneyCard}) {
     </CardLink>
   )
 }
+
+// ─── Cut-out (the premium package, monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 15, `[R-641]`) ─────────────────────
+// The attorney's transparent photograph standing on the card's floor with no panel behind it, so a row of them stands on
+// one line, and an opaque name plate over the foot: the dark ground in its on-dark text on a light band, the accent fill in
+// its own text on a dark one (`.cutout-plate`, globals.css), both pairs the guarantee holds. Drawn only when every photo
+// in the section is a cut-out (`AttorneySectionBlock`), so it is never a mix of figures and boxes.
+export function AttorneyCardCutout({attorney}: {attorney: AttorneyCard}) {
+  const name = attorneyName(attorney)
+  return (
+    <Link
+      href={`/${attorney.slug}/`}
+      aria-label={`View profile for ${name}`}
+      className="group relative flex aspect-[4/5] flex-col justify-end rounded-ui focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
+    >
+      <div className="relative min-h-0 flex-1">
+        <CardImage attorney={attorney} fill contain sizes={PORTRAIT_SIZES} />
+      </div>
+      <div className="cutout-plate relative z-10 px-5 py-4">
+        <p className="font-heading text-lg font-semibold leading-snug text-foreground">{name}</p>
+        {attorney.jobTitle && <p className="mt-1 text-sm text-foreground-muted">{attorney.jobTitle}</p>}
+      </div>
+    </Link>
+  )
+}

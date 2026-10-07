@@ -29,6 +29,7 @@ export const DETAILS: readonly Detail[] = [
   {field: 'heroHeadingWeight', kind: 'element', label: 'Homepage headline', values: {bold: 'bold'}},
   {field: 'leadIn', kind: 'element', label: 'Lead-in line', values: {lead: 'lead', kicker: 'kicker'}},
   {field: 'labelStyle', kind: 'element', label: 'Labels', values: {tracked: 'tracked capitals'}},
+  {field: 'cardEdge', kind: 'element', label: 'Card edge', values: {left: 'an accent edge on the left', bottom: 'an accent edge below', outline: 'an accent outline'}},
 ]
 
 /** The palette details: cleared, never set, when a palette choice changes a color role. */
