@@ -9,6 +9,7 @@ import {
   usesCustomFonts, type StyleSet, type StyleSetDoc,
 } from '../../site/lib/styleSets'
 import {HEADING_LINE_DESIGNS} from '../../site/lib/headingLines'
+import {detailsOf} from '../../site/lib/details'
 
 // The Style set field (Phase 16B, [R-468], [R-469], [R-477]; named for the style set in
 // Phase 17C, [R-535]). It stores nothing itself, like the palette and corner fields. It
@@ -107,10 +108,18 @@ export function StyleSetPicker() {
     patch.execute([{set}, ...(unset.length ? [{unset}] : [])])
   }
   const swapped = match ? swappedPicks(doc, match) : []
+  // The details (monorepo `[R-641]`, `site/lib/details.ts`): kept by every style set, so named here, where a reader of
+  // "Graphite" would otherwise take it for the whole look.
+  const details = detailsOf(doc as Record<string, unknown>)
 
   return (
     <div style={{display: 'flex', flexDirection: 'column', gap: 12, padding: '12px 0'}}>
       <p style={label}>Style set · {status}</p>
+      {details.length > 0 && (
+        <p style={{fontSize: 11, color: '#555', margin: 0}}>
+          Details kept by every style set: {details.map((d) => `${d.label} · ${d.value}`).join('  —  ')}
+        </p>
+      )}
       {swapped.length > 0 && (
         <p style={{fontSize: 11, color: '#555', margin: 0}}>
           {swapped

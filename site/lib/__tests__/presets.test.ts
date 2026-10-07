@@ -1,3 +1,4 @@
+import {COLOR_DETAILS} from '../details'
 import {describe, expect, it} from 'vitest'
 import {FONT_PRESETS, headingWeights} from '../../fonts/presets'
 import {buildFontFaces, resolvefonts} from '../../fonts/loader'
@@ -146,6 +147,9 @@ function presets() {
     // reads; absent renders the theme's own, so there is no default id. And the pair that answers each verdict.
     backgrounds: BACKGROUNDS,
     suggestedWith: SUGGESTED_WITH,
+    // The palette details (`lib/details.ts`, monorepo `[R-641]`): a palette choice that changes a role clears them, so
+    // Apply may clear them and never set them.
+    colorDetails: COLOR_DETAILS,
   }
 }
 

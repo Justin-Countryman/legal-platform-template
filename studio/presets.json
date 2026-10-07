@@ -4285,5 +4285,10 @@
     "photoScrims": "span",
     "softWash": "fade",
     "gradientBloom": "glow"
-  }
+  },
+  "colorDetails": [
+    "headingInk",
+    "saturatedFrom",
+    "accentOnDark"
+  ]
 }
