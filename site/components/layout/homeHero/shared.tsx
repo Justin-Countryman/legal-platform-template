@@ -129,6 +129,8 @@ export function HeroBand({
         lit && !ramp ? `band-glow grad-i-${Math.min(lit.index, 7)} grad-n-${Math.min(lit.length, 8)} grad-p-${Math.min(lit.peak ?? 0, 7)}` : '',
         lit && ramp ? `band-gradient grad-i-${Math.min(lit.index, 7)} grad-n-${Math.min(lit.length, 8)}` : '',
         lit && !ramp && lit.side === 'left' ? 'glow-from-left' : '',
+        lit && !ramp && lit.shape === 'corner' ? 'glow-corner' : '',
+        lit && !ramp && lit.shape === 'center' ? 'glow-center' : '',
         flush ? '' : 'px-[5%] pb-12 md:pb-16 lg:pb-20',
         '[--hero-pt:2rem] md:[--hero-pt:3rem] lg:[--hero-pt:4rem]',
         'flex flex-col',
