@@ -97,7 +97,7 @@ export function Overlay({config, content, surface, sectionBackground, edgeBelow,
         <div className="w-full" data-hero-heading-reserve={hasFigure ? '' : undefined}>
           {textBlock}
         </div>
-        {hasFigure && <HeroForeground surface={surface} />}
+        {hasFigure && <HeroForeground surface={surface} grounded />}
       </div>
     </HeroBand>
   )

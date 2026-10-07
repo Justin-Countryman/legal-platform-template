@@ -43,6 +43,11 @@ export const HERO_FOREGROUND_HEIGHT = '28rem'        // figure box height; > ban
 export const HERO_FOREGROUND_MAX_WIDTH = '40%'       // figure column width (of the content container) — heading can never enter this zone
 export const HERO_FOREGROUND_GAP = '6%'              // gap between the heading column and the foreground column
 export const HERO_FOREGROUND_RIGHT_INSET = '0%'       // extra inset from the content container's right edge (the px-[5%] gutter already insets it)
+// The homepage hero's figure stands on the band's bottom edge (monorepo `[R-641]`, WS-PREMIUM-PACKAGE-DESIGN §7.2
+// amendment 4): its box runs from the content container's top, under the header's clearance, past the container's foot
+// by the band's own bottom padding (`HeroBand`'s `lg:pb-20`; the figure shows only from lg), so the image's foot is the
+// band's edge at any band height. The fixed box above left the feet floating on a band taller than about 21rem.
+export const HERO_FOREGROUND_FLOOR = '5rem'
 
 // CSS variables shared by the foreground box (its size/inset) and the heading
 // column reservation rule, so the two stay in sync from one source. Applied to
