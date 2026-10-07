@@ -8,9 +8,11 @@ Full license text: https://scripts.sil.org/OFL
 
 | Font | Designer / Foundry | Google Fonts URL |
 |------|--------------------|-----------------|
+| Assistant | Ben Nathan | https://fonts.google.com/specimen/Assistant |
 | DM Sans | Colophon Foundry | https://fonts.google.com/specimen/DM+Sans |
 | DM Serif Display | Colophon Foundry | https://fonts.google.com/specimen/DM+Serif+Display |
 | Fraunces | Undercase Type | https://fonts.google.com/specimen/Fraunces |
+| Geist | Vercel | https://fonts.google.com/specimen/Geist |
 | Inter | Rasmus Andersson | https://fonts.google.com/specimen/Inter |
 | Libre Baskerville | Impallari Type | https://fonts.google.com/specimen/Libre+Baskerville |
 | Lora | Cyreal | https://fonts.google.com/specimen/Lora |
@@ -21,6 +23,7 @@ Full license text: https://scripts.sil.org/OFL
 | Petrona | Andrés Torresi | https://fonts.google.com/specimen/Petrona |
 | Playfair Display | Claus Eggers Sørensen | https://fonts.google.com/specimen/Playfair+Display |
 | Poppins | Indian Type Foundry / Jonny Pinhorn | https://fonts.google.com/specimen/Poppins |
+| PT Serif | ParaType | https://fonts.google.com/specimen/PT+Serif |
 | Roboto | Google | https://fonts.google.com/specimen/Roboto |
 | Sorts Mill Goudy | Barry Schwartz | https://fonts.google.com/specimen/Sorts+Mill+Goudy |
 | Source Sans 3 | Adobe | https://fonts.google.com/specimen/Source+Sans+3 |

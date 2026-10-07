@@ -2986,7 +2986,11 @@ export type DesignSettings = {
     | 18
     | 19
     | 20
-    | 21;
+    | 21
+    | 22
+    | 23
+    | 24
+    | 25;
   marketingScale?: "default" | "sm" | "md" | "lg";
   labelStyle?: "tracked";
   leadIn?: "lead" | "kicker";
@@ -4206,6 +4210,10 @@ export type DESIGN_TOKENS_QUERY_RESULT = {
     | 2
     | 20
     | 21
+    | 22
+    | 23
+    | 24
+    | 25
     | 4
     | 5
     | 6
@@ -19814,6 +19822,10 @@ export type SITE_CHROME_QUERY_RESULT = {
       | 2
       | 20
       | 21
+      | 22
+      | 23
+      | 24
+      | 25
       | 4
       | 5
       | 6
@@ -21247,6 +21259,10 @@ export type PREVIEW_STORED_DESIGN_QUERY_RESULT = {
     | 2
     | 20
     | 21
+    | 22
+    | 23
+    | 24
+    | 25
     | 4
     | 5
     | 6

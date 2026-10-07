@@ -4,7 +4,7 @@
 **Designer:** Google (Christian Robertson)  
 **Google Fonts:** https://fonts.google.com/specimen/Roboto
 
-Used in pairings: **10 — Accessible Modern** (body)
+Used in pairings: **10 — Accessible Modern** (body), **25 — Plain Speaking** (heading)
 
 ## Files
 

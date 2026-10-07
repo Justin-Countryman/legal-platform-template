@@ -10,13 +10,13 @@ import {fontFileKind, fontTables, readFontKind, variableUploadWarning} from '../
 // ─── Preset library shape ─────────────────────────────────────────────────────
 
 describe('FONT_PRESETS library', () => {
-  it('has 19 presets (culled 2 of 13 original, added 5 in WS-Polish, 3 in Phase 17C)', () => {
-    expect(FONT_PRESETS).toHaveLength(19)
+  it('has 23 presets (culled 2 of 13 original, added 5 in WS-Polish, 3 in Phase 17C, 4 in the premium package)', () => {
+    expect(FONT_PRESETS).toHaveLength(23)
   })
 
   it('preserves ids 1, 2, 4, 5, 6, 7, 9, 10, 11, 12, 13 from the original library', () => {
     const ids = FONT_PRESETS.map((p) => p.id).sort((a, b) => a - b)
-    expect(ids).toEqual([1, 2, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21])
+    expect(ids).toEqual([1, 2, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25])
   })
 
   it('does NOT include the culled ids 3 (Refined Practice) and 8 (Space Age Authority)', () => {
@@ -315,7 +315,7 @@ describe('the committed font files', () => {
     // Checked file for file against fontTools when written (the monorepo record's §8).
     const kinds = committedFonts().map((p) => isVariable(p))
     // Phase 17C session 2b: Oswald Medium, one static weight, is the 21st static file.
-    expect({variable: kinds.filter(Boolean).length, static: kinds.filter((k) => !k).length}).toEqual({variable: 14, static: 21})
+    expect({variable: kinds.filter(Boolean).length, static: kinds.filter((k) => !k).length}).toEqual({variable: 16, static: 24})
     expect(isVariable(onDisk('/fonts/files/fraunces/Fraunces-Regular.woff2'))).toBe(true)
     expect(isVariable(onDisk('/fonts/files/fraunces/Fraunces-Italic.woff2'))).toBe(false)
     expect(isVariable(onDisk('/fonts/files/spectral/Spectral-Bold.woff2'))).toBe(false)
@@ -368,6 +368,12 @@ const FACES: Record<number, string[]> = {
     19: ['Oswald | 500 | normal | Oswald-Medium.woff2', 'Source Sans 3 | 400 700 | normal | SourceSans3-Regular.woff2', 'Source Sans 3 | 400 | italic | SourceSans3-Italic.woff2'],
     20: ['DM Sans | 300 700 | normal | DMSans-Regular.woff2', 'DM Sans | 400 | italic | DMSans-Italic.woff2'],
     21: ['Source Sans 3 | 400 700 | normal | SourceSans3-Regular.woff2', 'Source Sans 3 | 400 | italic | SourceSans3-Italic.woff2'],
+    // The premium package (monorepo `[R-641]`): faces already committed reused, each file once; Geist, PT Serif and
+    // Assistant new. 24 is the first sans heading over a serif body.
+    22: ['Playfair Display | 400 700 | normal | PlayfairDisplay-Regular.woff2', 'Playfair Display | 400 | italic | PlayfairDisplay-Italic.woff2', 'Geist | 400 700 | normal | Geist-Regular.woff2'],
+    23: ['PT Serif | 400 | normal | PTSerif-Regular.woff2', 'PT Serif | 700 | normal | PTSerif-Bold.woff2', 'PT Serif | 400 | italic | PTSerif-Italic.woff2', 'Inter | 400 700 | normal | Inter-Regular.woff2'],
+    24: ['Poppins | 400 | normal | Poppins-Regular.woff2', 'Poppins | 700 | normal | Poppins-Bold.woff2', 'Lora | 400 700 | normal | Lora-Regular.woff2', 'Lora | 400 | italic | Lora-Italic.woff2'],
+    25: ['Roboto | 400 700 | normal | Roboto-Regular.woff2', 'Roboto | 400 | italic | Roboto-Italic.woff2', 'Assistant | 400 700 | normal | Assistant-Regular.woff2'],
 }
 
 const faceOf = (rule: string) => {
