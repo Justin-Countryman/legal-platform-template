@@ -91,7 +91,14 @@ export function ColorPreview() {
     action:      useFormValue(['action'])      as string | undefined,
   }
 
-  const palette = resolvePalette(inputs)
+  // The color details (monorepo `[R-641]`): the preview resolves what the site renders with them, so a pass list never
+  // speaks for a palette the page does not draw.
+  const palette = resolvePalette(inputs, {
+    headingInk:    useFormValue(['headingInk']),
+    saturatedFrom: useFormValue(['saturatedFrom']),
+    accentOnDark:  useFormValue(['accentOnDark']),
+    buttonOnDark:  useFormValue(['buttonOnDark']),
+  })
   const t = palette.tokens
   const results = validateWcag(palette)
   const active = matchPreset(inputs)

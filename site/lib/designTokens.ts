@@ -93,6 +93,27 @@ export type ColorInputs = {
   action?:      string | null
 }
 
+/** The color details (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2, `[R-641]`; `lib/details.ts`): which role a few tokens draw
+ *  from. Each renders its value only where every pair it makes passes, else today's value, and absent renders today's
+ *  exactly. Read as the site reads a stored value: anything but the named string is absent. */
+export type PaletteOptions = {
+  /** `action`: headings on a light ground in the button color, stepped darker where it does not read. */
+  headingInk?:    unknown
+  /** `action`: the color band (`bg-accent-fill`) filled with the button color where it makes a band of its own. */
+  saturatedFrom?: unknown
+  /** `raw`: the accent itself on a plain dark band where it reads there, not the lightened accent. */
+  accentOnDark?:  unknown
+  /** `accent`, `action`, `outline`: the primary button on a dark band (`--color-btn-dark*`). */
+  buttonOnDark?:  unknown
+}
+
+/** A color band's fill reads as a band of its own (Phase 15's gate, moved here so the engine and the theme's walk share
+ *  it): chroma at least 0.05 and ΔE2000 at least 20 from both grounds. */
+export function saturatedGate(fill: string, brandDark: string, background: string): boolean {
+  const chroma = (toOklch(fill)?.c as number | undefined) ?? 0
+  return chroma >= 0.05 && deltaE(fill, brandDark) >= 20 && deltaE(fill, background) >= 20
+}
+
 // The code defaults ARE the render every Site-Build client already has: it
 // stores analogous-accent + #333333 + #666666, which rendered brand-dark #141414
 // and accent #666666. A fresh build now stores no color at all and lands on the
@@ -350,7 +371,7 @@ export type ResolvedPalette = {
   glowOk: boolean
 }
 
-export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
+export function resolvePalette(raw: ColorInputs = {}, options: PaletteOptions = {}): ResolvedPalette {
   const darkIn   = parseHexInput(raw.darkGround)  ?? COLOR_DEFAULTS.darkGround
   const lightIn  = parseHexInput(raw.lightGround) ?? COLOR_DEFAULTS.lightGround
   const accentIn = parseHexInput(raw.accent)      ?? COLOR_DEFAULTS.accent
@@ -412,6 +433,11 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
   const heading = passesOn(brandDark, lightGrounds, 4.5)
     ? brandDark
     : stepLightness(parseOklch(brandDark), -1, (h) => passesOn(h, lightGrounds, 4.5)) ?? '#000000'
+  // The heading in the button color (`headingInk`, `[R-641]`): the action where it reads on every light ground, else the
+  // action stepped darker at its own hue, the `accentText` rule; today's heading where stepping bottoms out.
+  const headingAction = options.headingInk === 'action'
+    ? (passesOn(action, lightGrounds, 4.5) ? action : stepLightness(parseOklch(action), -1, (h) => passesOn(h, lightGrounds, 4.5)) ?? heading)
+    : null
 
   // Action forms.
   const actionFg    = textOn(action)
@@ -536,8 +562,8 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
     '--color-accent-text':              accentText,
     '--color-accent-text-on-light':     accentText,
     // The heading's ink, cascade-aware, and its static on-light twin for a light island.
-    '--color-heading':                  heading,
-    '--color-heading-on-light':         heading,
+    '--color-heading':                  headingAction ?? heading,
+    '--color-heading-on-light':         headingAction ?? heading,
     // Action.
     '--color-action':                   action,
     '--color-action-fg':                actionFg,
@@ -590,9 +616,21 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
   tokens['--color-glow'] = glow.ok ? glow.glow : brandDark
   // A photograph ghosted into a light band (the Background theme, monorepo WS-V1-BACKGROUND-THEME-DESIGN §7 item 8):
   // its opacity, and the tiers the band's text takes over it.
-  Object.assign(tokens, fadeOnLight(tokens).tokens)
+  // A heading in the button color keeps today's heading in the solve, so the ghost's opacity never moves for it (ADV-PP-A:
+  // solved for the action it fell from 0.14 to 0.03 or less on 13 of 15 presets); it takes its own value on a ghosted
+  // band instead, declared in `[data-fade="light"]`.
+  const fade = fadeOnLight({...tokens, '--color-heading': heading})
+  Object.assign(tokens, fade.tokens)
+  if (headingAction) {
+    tokens['--color-heading-on-fade'] = passesOn(headingAction, fade.floors, 4.5)
+      ? headingAction
+      : stepLightness(parseOklch(headingAction), -1, (h) => passesOn(h, fade.floors, 4.5)) ?? brandDark
+  }
   tokens['--color-texture-ink-on-dark'] = texture.ink
   tokens['--section-texture-opacity-on-dark'] = String(texture.opacity)
+  Object.assign(tokens, colorDetails(options, {accent, accentFg, action, actionFg, actionHover, brandDark, background, accentOnDark,
+    darkTexture: blendOver(brandDark, texture.ink, texture.opacity), photoFloor, glow: tokens['--color-glow'],
+    onDark: inverse['color-foreground-on-dark'], light: {fill: background, fg: foreground, hover: muted}}))
   // Phase 17C session 3: the render margin applies on a dark band only where its ink is lighter than
   // the ground (the on-dark text color on a near-black ground), the one case where a line drawn a level
   // toward its ink moves toward the text. A black ink moves away, so those bands render as solved.
@@ -614,6 +652,69 @@ export function resolvePalette(raw: ColorInputs = {}): ResolvedPalette {
     tokens,
     glowOk: glow.ok,
   }
+}
+
+// ─── The color details (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendments 8 to 10, `[R-641]`) ─────────────────────
+//
+// Each emits tokens only when its option is set and its pairs pass, so an absent option emits nothing and the `@theme`
+// defaults in `globals.css` render today's values. The values on a plain dark band and on a photo or glowing band are
+// separate (the scrim, glow and hero-image block re-declares them), because those grounds are lighter than brand-dark and
+// the engine solves every on-dark tier for them already.
+
+type DetailFacts = {
+  accent: string; accentFg: string; action: string; actionFg: string; actionHover: string; brandDark: string; background: string
+  accentOnDark: string; darkTexture: string; photoFloor: string; glow: string; onDark: string
+  light: {fill: string; fg: string; hover: string}
+}
+
+function colorDetails(options: PaletteOptions, f: DetailFacts): Record<string, string> {
+  const out: Record<string, string> = {}
+  const plainDark = [f.brandDark, f.darkTexture]
+  const litDark = [f.photoFloor, f.glow]
+
+  // The accent itself on a plain dark band (`accentOnDark: 'raw'`): where it reads 4.5:1 on brand-dark and the dark
+  // texture; the photo, glow and hero-image bands keep the lightened accent. Never fed back into a solve (ADV-PP-A).
+  if (options.accentOnDark === 'raw' && passesOn(f.accent, plainDark, 4.5)) out['--color-accent-on-dark-raw'] = f.accent
+
+  // The color band in the button color (`saturatedFrom: 'action'`): the fill and its text re-pointed at the root (every
+  // reader of `accent-fg` pairs it with `accent-fill`), where the action makes a band of its own; else the accent, as
+  // today. Inside the band, rules and icons keep the accent where it reaches 3:1 on the fill (`--color-saturated-decor`).
+  if (options.saturatedFrom === 'action' && f.action !== f.accent && saturatedGate(f.action, f.brandDark, f.background)) {
+    out['--color-accent-fill'] = f.action
+    out['--color-accent-fg'] = f.actionFg
+    out['--color-saturated-decor'] = contrast(f.accent, f.action) >= 3 ? f.accent : f.actionFg
+  }
+
+  // The primary button on a dark band (`buttonOnDark`). A fill stands 3:1 off its ground (a platform bar: WCAG 1.4.11 asks
+  // nothing of a labelled control's edge) with its label on it a blocking pair; the outline is the on-dark text inside a
+  // keyline of the accent where it reaches 3:1 there, else the lightened accent, filling with the accent on hover. Where
+  // a fill fails, the light button.
+  const mode = options.buttonOnDark
+  if (mode === 'accent' || mode === 'action' || mode === 'outline') {
+    const accentHover = actionHoverOf(f.accent, f.accentFg)
+    const solid = mode === 'action'
+      ? {fill: f.action, fg: f.actionFg, hover: f.actionHover}
+      : {fill: f.accent, fg: f.accentFg, hover: accentHover}
+    const set = (grounds: string[], suffix: string) => {
+      let v: {fill: string; fg: string; edge: string; hover: string; hoverFg: string}
+      if (mode === 'outline') {
+        const edge = passesOn(f.accent, grounds, 3) ? f.accent : passesOn(f.accentOnDark, grounds, 3) ? f.accentOnDark : f.onDark
+        v = {fill: 'transparent', fg: f.onDark, edge, hover: f.accent, hoverFg: f.accentFg}
+      } else if (passesOn(solid.fill, grounds, 3)) {
+        v = {fill: solid.fill, fg: solid.fg, edge: 'transparent', hover: solid.hover, hoverFg: solid.fg}
+      } else {
+        v = {fill: f.light.fill, fg: f.light.fg, edge: 'transparent', hover: f.light.hover, hoverFg: f.light.fg}
+      }
+      out[`--color-btn-dark${suffix}`] = v.fill
+      out[`--color-btn-dark-fg${suffix}`] = v.fg
+      out[`--color-btn-dark-edge${suffix}`] = v.edge
+      out[`--color-btn-dark-hover${suffix}`] = v.hover
+      out[`--color-btn-dark-hover-fg${suffix}`] = v.hoverFg
+    }
+    set(plainDark, '')
+    set(litDark, '-on-scrim')
+  }
+  return out
 }
 
 // ─── The texture on a dark band (Phase 16B, `[R-479]`) ────────────────────────
@@ -990,11 +1091,14 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
   // A photograph ghosted into a light band (the Background theme): the band's floor under the page ground and under
   // the wash, black at the ghost's opacity as drawn, against the tiers a ghosted band reads (`fadeOnLight`).
   {
-    const fade = fadeOnLight(t)
+    // The floors as the engine drew them (its emitted opacity), so a heading in the button color, which the solve does not
+    // take, is held at its own ghost-band value (`--color-heading-on-fade`) rather than moving the floors.
+    const opacity = Number(t['--fade-opacity-on-light'])
+    const floors = [t['--color-background'], t['--color-wash']].map((g) => fadeFloor(g, opacity))
     const names = ['the ghost floor over the page', 'the ghost floor over a wash band']
-    fade.floors.forEach((floor, i) => {
+    floors.forEach((floor, i) => {
       check(`brand-dark on ${names[i]}`, t['--color-brand-dark'], floor, 4.5)
-      check(`heading on ${names[i]}`, t['--color-heading'], floor, 4.5)
+      check(`heading on ${names[i]}`, t['--color-heading-on-fade'] ?? t['--color-heading'], floor, 4.5)
       check(`foreground on ${names[i]}`, t['--color-foreground'], floor, 4.5)
       for (const [name, min] of FADE_TIERS) check(`${name}-on-fade on ${names[i]}`, t[`--color-${name}-on-fade`], floor, min)
       const cue = t['--color-action-state-cue-on-fade']
@@ -1094,7 +1198,28 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
   // The accent strip and the saturated band paint `bg-accent-fill` (the anchored
   // accent) with `accent-fg` text, and the saturated band's inverse primary button
   // is the same pair reversed, which has the same ratio (Phase 15).
-  check('accent-fg on accent-fill',               t['--color-accent-fg'], t['--color-accent'],       4.5)
+  check('accent-fg on accent-fill',               t['--color-accent-fg'], t['--color-accent-fill'] ?? t['--color-accent'], 4.5)
+  // The color details (`[R-641]`), held only where an option emitted them.
+  if (t['--color-saturated-decor'] && t['--color-saturated-decor'] !== t['--color-accent-fg']) {
+    check('saturated-decor on accent-fill (graphics)', t['--color-saturated-decor'], t['--color-accent-fill'], 3)
+  }
+  if (t['--color-accent-on-dark-raw']) {
+    check('accent-on-dark-raw on brand-dark', t['--color-accent-on-dark-raw'], dark, 4.5)
+    check('accent-on-dark-raw on section-texture-dark', t['--color-accent-on-dark-raw'], darkTexture, 4.5)
+  }
+  for (const [suffix, grounds] of [['', [dark, darkTexture]], ['-on-scrim', [photoFloor, t['--color-glow']]]] as const) {
+    const fill = t[`--color-btn-dark${suffix}`]
+    if (!fill) continue
+    const where = suffix ? 'a photo or glowing band' : 'a plain dark band'
+    if (fill === 'transparent') {
+      for (const g of grounds) check(`btn-dark-edge${suffix} against ${where}`, t[`--color-btn-dark-edge${suffix}`], g, 3)
+      for (const g of grounds) check(`btn-dark-fg${suffix} on ${where}`, t[`--color-btn-dark-fg${suffix}`], g, 4.5)
+    } else {
+      check(`btn-dark-fg${suffix} on btn-dark${suffix}`, t[`--color-btn-dark-fg${suffix}`], fill, 4.5)
+      if (fill !== t['--color-background']) for (const g of grounds) check(`btn-dark${suffix} against ${where}`, fill, g, 3)
+    }
+    check(`btn-dark-hover-fg${suffix} on btn-dark-hover${suffix}`, t[`--color-btn-dark-hover-fg${suffix}`], t[`--color-btn-dark-hover${suffix}`], 4.5)
+  }
   // Warnings: design signals, not WCAG requirements. An accent icon beside its
   // own text is exempt from 1.4.11, so the raw accent on the page is a warning;
   // heading emphasis that reads too close to the heading's own color is a design
@@ -1566,8 +1691,8 @@ export function buildDesignTokenCSS({
 // client already has, so a site with no brand color renders as it always did
 // except where a pair failed WCAG 2.2 AA (§7 amendment 19).
 
-export function buildColorCSS(inputs: ColorInputs = {}): string {
-  const {tokens} = resolvePalette(inputs)
+export function buildColorCSS(inputs: ColorInputs = {}, options: PaletteOptions = {}): string {
+  const {tokens} = resolvePalette(inputs, options)
   return `:root{${Object.entries(tokens).map(([k, v]) => `${k}:${v}`).join(';')}}`
 }
 

@@ -312,13 +312,30 @@
    it. `'none'` mode emits no rules; class-string color hover is the only visual.
    Each mode collapses to no-op under `prefers-reduced-motion: reduce`. */
 
+/* The primary button on a dark band (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 8, `[R-641]`): drawn from the
+   `--color-btn-dark*` tokens wherever the shell carries `data-button-on-dark`, which it does only when Design Settings
+   chooses a fill or an outline. The tokens are the engine's (the chosen fill where it stands 3:1 off the band, else the
+   light button), re-declared on a photo or glowing band. The keyline is an inset shadow, so the button keeps its size.
+   Without the attribute nothing here applies and the variant's own classes draw the light button. */
+[data-button-on-dark] [data-variant="primary"][data-context="dark"] {
+  background-color: var(--color-btn-dark);
+  color: var(--color-btn-dark-fg);
+  box-shadow: inset 0 0 0 1px var(--color-btn-dark-edge);
+}
+@media (hover: hover) {
+  [data-button-on-dark] [data-variant="primary"][data-context="dark"]:hover {
+    background-color: var(--color-btn-dark-hover);
+    color: var(--color-btn-dark-hover-fg);
+  }
+}
+
 /* The fill a sweep or fill-center paints under the label, by the button's context (monorepo backlog 435). The
    action's hover fill and the action pair with the light context's labels only: a light primary on a dark band keeps
    its own hover ground, the light ground's muted step, under its dark label; on the accent fill both buttons keep the
    fill's text color under their label in the fill's color, the pair the band is built on. Absent, each variant paints
    what it always did. Held by `components/ui/__tests__/Button.hoverFill.test.tsx` over every preset. */
 [data-button-animatable="true"][data-context="dark"][data-variant="primary"] {
-  --btn-hover-fill: var(--color-muted);
+  --btn-hover-fill: var(--color-btn-dark-hover);
 }
 [data-button-animatable="true"][data-context="saturated"] {
   --btn-hover-fill: var(--color-accent-fg);
@@ -721,6 +738,23 @@
      button painted with it stays the accent inside a dark or saturated context,
      where --color-accent itself is swapped. Pair it with --color-accent-fg. */
   --color-accent-fill:              var(--color-accent-on-light);
+  /* The color details (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2, `[R-641]`). The engine emits each only for a set option
+     whose pairs pass; these defaults are today's values, so a site without one renders as it always did. The accent on a
+     plain dark band; a color band's rules and icons; a ghosted band's heading; the primary button on a dark band, plain
+     and on a photo or glowing band. */
+  --color-accent-on-dark-raw:       var(--color-accent-on-dark);
+  --color-saturated-decor:          var(--color-accent-fg);
+  --color-heading-on-fade:          var(--color-heading-on-light);
+  --color-btn-dark:                 var(--color-background);
+  --color-btn-dark-fg:              var(--color-foreground-on-light);
+  --color-btn-dark-edge:            transparent;
+  --color-btn-dark-hover:           var(--color-muted);
+  --color-btn-dark-hover-fg:        var(--color-foreground-on-light);
+  --color-btn-dark-on-scrim:        var(--color-background);
+  --color-btn-dark-fg-on-scrim:     var(--color-foreground-on-light);
+  --color-btn-dark-edge-on-scrim:   transparent;
+  --color-btn-dark-hover-on-scrim:  var(--color-muted);
+  --color-btn-dark-hover-fg-on-scrim: var(--color-foreground-on-light);
   --color-accent-text-on-light:     #666666;
   --color-action-text-on-light:     #666666;
   --color-action-text-hover:        #2f2f2f;
@@ -799,11 +833,11 @@ h1, h2, h3, h4, h5, h6 {
   --color-ring-focus:        var(--color-ring-focus-on-dark);
   --color-border:            var(--color-border-on-dark);
   --color-border-control:    var(--color-border-control-on-dark);
-  --color-accent:            var(--color-accent-on-dark);
+  --color-accent:            var(--color-accent-on-dark-raw);
   /* The accent as text on dark is the brightened accent, which reaches 4.5:1 on
      every accepted dark ground. Without this line a kicker on a dark band
      renders the LIGHT text form (measured #846700 on navy at 2.98:1). */
-  --color-accent-text:       var(--color-accent-on-dark);
+  --color-accent-text:       var(--color-accent-on-dark-raw);
   --color-action-text:       var(--color-action-text-on-dark);
   --color-action-text-hover: var(--color-action-text-hover-on-dark);
   --color-action-state-cue:  var(--color-action-state-cue-on-dark);
@@ -816,7 +850,7 @@ h1, h2, h3, h4, h5, h6 {
   --color-hover-wash:        var(--color-hover-wash-on-dark);
   --color-star-outline:      var(--color-star-outline-on-dark);
   /* A slab in the dark ground would vanish on a dark band; it takes the accent. */
-  --color-slab:              var(--color-accent-on-dark);
+  --color-slab:              var(--color-accent-on-dark-raw);
 }
 
 /* Light-surface containers nested inside dark-context ancestors: re-declare
@@ -857,7 +891,7 @@ h1, h2, h3, h4, h5, h6 {
   --color-ring-focus:        var(--color-accent-fg);
   --color-border:            color-mix(in srgb, var(--color-accent-fg) 25%, transparent);
   --color-border-control:    var(--color-accent-fg);
-  --color-accent:            var(--color-accent-fg);
+  --color-accent:            var(--color-saturated-decor);
   --color-accent-text:       var(--color-accent-fg);
   --color-action-text:       var(--color-accent-fg);
   --color-action-text-hover: var(--color-accent-fg);
@@ -894,6 +928,22 @@ h1, h2, h3, h4, h5, h6 {
   --color-action-text-hover: var(--color-foreground-on-dark);
   --color-ring-focus:        var(--color-foreground-on-dark);
 }
+/* The color details on a photo or glowing band (monorepo `[R-641]`): the accent keeps its lightened form, the one every
+   on-dark solve holds there (the raw accent is the plain dark band's only), and the primary button takes its values
+   solved against the photo floor and the glow, which are today's light button wherever the chosen fill would not
+   stand out. Absent options leave each at today's value. */
+[data-scrim="true"],
+[data-glow="true"],
+[data-hero-image="true"] {
+  --color-accent:            var(--color-accent-on-dark);
+  --color-accent-text:       var(--color-accent-on-dark);
+  --color-slab:              var(--color-accent-on-dark);
+  --color-btn-dark:          var(--color-btn-dark-on-scrim);
+  --color-btn-dark-fg:       var(--color-btn-dark-fg-on-scrim);
+  --color-btn-dark-edge:     var(--color-btn-dark-edge-on-scrim);
+  --color-btn-dark-hover:    var(--color-btn-dark-hover-on-scrim);
+  --color-btn-dark-hover-fg: var(--color-btn-dark-hover-fg-on-scrim);
+}
 /* A photo band, built by hand or by a theme (Phase 17B session 6, `[R-533]`): the boundary of an
    empty star or an inactive carousel dot, and the ring on the active dot, reach 3:1 over the
    photograph's lightest point. Each scrim value equals the on-dark one wherever that already
@@ -913,6 +963,8 @@ h1, h2, h3, h4, h5, h6 {
    floor). The hover wash is off: a 6% ink over a tier solved to its ratio would take it under. A dark card or panel
    inside the band sets its own values, as it does anywhere. */
 [data-fade="light"] {
+  /* A heading in the button color takes its own ghost-band value (monorepo `[R-641]`); otherwise today's heading. */
+  --color-heading:            var(--color-heading-on-fade);
   --color-foreground-muted:   var(--color-foreground-muted-on-fade);
   --color-foreground-subtle:  var(--color-foreground-subtle-on-fade);
   --color-accent-text:        var(--color-accent-text-on-fade);

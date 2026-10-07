@@ -1,7 +1,7 @@
-import {converter, differenceCiede2000} from 'culori'
+import {differenceCiede2000} from 'culori'
 import {DIVIDERS, type Divider, type CarryPiece, dividerShape, readCarry} from './dividers'
 import {readOverlap, type SectionOverlap} from './overlaps'
-import {parseHexInput, resolvePalette, type ColorInputs} from './designTokens'
+import {parseHexInput, resolvePalette, saturatedGate, type ColorInputs} from './designTokens'
 import type {VisibleGround} from './sectionSurface'
 
 // ─── Themes: the flow of the page (Phase 17B) ─────────────────────────────────
@@ -822,7 +822,6 @@ export function fadeOf(flow: FlowRules | null | undefined, glow: boolean | undef
   return flow?.on.dark === 'glow' && glow ? 'glow' : null
 }
 
-const toOklch = converter('oklch')
 const deltaE = differenceCiede2000()
 
 /** The saturated fill reads as a fill on this palette: the accent has chroma of at least
@@ -835,10 +834,13 @@ const resolved = new Map<string, ReturnType<typeof resolvePalette>>()
 function paletteOf(inputs: ColorInputs | Record<string, unknown> | null | undefined) {
   const raw = (inputs ?? {}) as Record<string, unknown>
   const roles = {darkGround: parseHexInput(raw.darkGround), lightGround: parseHexInput(raw.lightGround), accent: parseHexInput(raw.accent), action: parseHexInput(raw.action)}
-  const key = JSON.stringify(roles)
+  // The color details the gates read (monorepo `[R-641]`): the band in the button color moves what a color band is filled
+  // with, so the walk asks its gates of the palette the page renders.
+  const options = {headingInk: raw.headingInk, saturatedFrom: raw.saturatedFrom, accentOnDark: raw.accentOnDark, buttonOnDark: raw.buttonOnDark}
+  const key = JSON.stringify([roles, options])
   let p = resolved.get(key)
   if (!p) {
-    p = resolvePalette(roles)
+    p = resolvePalette(roles, options)
     if (resolved.size >= 64) resolved.delete(resolved.keys().next().value!)
     resolved.set(key, p)
   }
@@ -854,9 +856,13 @@ export function glowFillOk(inputs: ColorInputs | Record<string, unknown> | null 
 
 export function saturatedFillOk(inputs: ColorInputs | Record<string, unknown> | null | undefined): boolean {
   const t = paletteOf(inputs).tokens
-  const fill = t['--color-accent']
-  const chroma = toOklch(fill)?.c ?? 0
-  return chroma >= 0.05 && deltaE(fill, t['--color-brand-dark']) >= 20 && deltaE(fill, t['--color-background']) >= 20
+  return saturatedGate(fillOf(t), t['--color-brand-dark'], t['--color-background'])
+}
+
+/** What a color band is filled with: the button color where the engine re-pointed the fill at it (`saturatedFrom`,
+ *  `[R-641]`), else the accent. */
+function fillOf(t: Record<string, string>): string {
+  return t['--color-accent-fill'] ?? t['--color-accent']
 }
 
 // ─── The close apart from the footer (Phase 18 session B, `[R-597]`, `[R-603]`) ──────────────────────
@@ -890,7 +896,7 @@ export type CloseFacts = {
 
 const GROUND_TOKEN: Partial<Record<VisibleGround | Close, string>> = {
   dark: '--color-brand-dark', light: '--color-background', tint: '--color-hero-tint', muted: '--color-muted',
-  wash: '--color-wash', saturated: '--color-accent', image: '--color-brand-dark',
+  wash: '--color-wash', saturated: '--color-accent-fill', image: '--color-brand-dark',
 }
 
 /** The closing call to action's ground under a theme, beside the footer and the band above it. */
@@ -901,13 +907,15 @@ export function closeOf(flow: FlowRules | null | undefined, facts: CloseFacts): 
   // The background's photograph first, where it asks for one (Photo scrims' own does), then the theme's grounds.
   const order: Close[] = [...(flow?.on.close === 'photo' ? ['photo' as const] : []), flow?.dark.close ?? 'muted', ...(flow?.dark.closeElse ?? [])]
   const drawable = order.filter((c) => (c !== 'photo' || facts.heroPhoto) && (c !== 'saturated' || satOk))
-  const fromFooter = (c: Close) => (c === 'photo' ? facts.footer === 'light' : deltaE(t[GROUND_TOKEN[c]!], footerHex) >= CLOSE_APART_DE)
-  const aboveHex = facts.above ? t[GROUND_TOKEN[facts.above] ?? '--color-background'] : null
+  // A ground's color as drawn; the color band's is its fill (`fillOf`).
+  const hexOf = (token: string) => (token === '--color-accent-fill' ? fillOf(t) : t[token])
+  const fromFooter = (c: Close) => (c === 'photo' ? facts.footer === 'light' : deltaE(hexOf(GROUND_TOKEN[c]!), footerHex) >= CLOSE_APART_DE)
+  const aboveHex = facts.above ? hexOf(GROUND_TOKEN[facts.above] ?? '--color-background') : null
   // A dark close the theme lights does not melt into the dark run above it: its glow peaks in its own middle, as the
   // run's last band (the roster eye of 2026-10-03, `[R-631]`: the glow carries through to the close). Gradient bloom
   // alone, and only where the palette has room to glow; the ruling against the footer's color holds as always.
   const lit = (flow?.on.dark === 'glow' && paletteOf(facts.colors).glowOk) || (flow?.on.dark === 'gradient' && flow.on.ends)
-  const fromAbove = (c: Close) => c === 'photo' || (c === 'dark' && lit) || !aboveHex || deltaE(t[GROUND_TOKEN[c]!], aboveHex) >= CLOSE_ABOVE_DE
+  const fromAbove = (c: Close) => c === 'photo' || (c === 'dark' && lit) || !aboveHex || deltaE(hexOf(GROUND_TOKEN[c]!), aboveHex) >= CLOSE_ABOVE_DE
   return drawable.find((c) => fromFooter(c) && fromAbove(c)) ?? drawable.find(fromFooter) ?? (facts.footer === 'dark' ? 'muted' : 'dark')
 }
 

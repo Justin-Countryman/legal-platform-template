@@ -11,6 +11,7 @@
 // check compares the prerendered pages before and after the move.
 
 import {solidBehindBox} from '@/components/ui/LogoImage'
+import {detailValue} from '@/lib/details'
 import type {LogoFacts} from '@/lib/logoFacts'
 import {type getSiteChrome} from '@/lib/sanity/fetchers'
 import {resolveTokenString, formatPhone} from '@/lib/tokens'
@@ -125,12 +126,20 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
     sectionJoin:          flow.divider.shape,
     headingRule:          designTokens?.headingRule,
   })
+  // The color details (`lib/details.ts`, monorepo `[R-641]`): each absent renders today's tokens.
   const colorCSS = buildColorCSS({
     darkGround:  designTokens?.darkGround,
     lightGround: designTokens?.lightGround,
     accent:      designTokens?.accent,
     action:      designTokens?.action,
+  }, {
+    headingInk:    designTokens?.headingInk,
+    saturatedFrom: designTokens?.saturatedFrom,
+    accentOnDark:  designTokens?.accentOnDark,
+    buttonOnDark:  designTokens?.buttonOnDark,
   })
+  // The primary button on a dark band draws from its tokens only under this attribute (`globals.css`).
+  const buttonOnDark = detailValue(designTokens as Record<string, unknown> | null | undefined, 'buttonOnDark') ?? undefined
   const {heading: resolvedHeading, body: resolvedBody} = resolvefonts(
     designTokens?.fontPairingPreset,
     designTokens?.headingFont,
@@ -248,6 +257,7 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
         data-button-animation={buttonAnimation}
         data-heading-rule={headingRule}
         data-heading-weight={headingWeight}
+        data-button-on-dark={buttonOnDark}
         data-image-frame={imageFrame}
         data-ornament={ornaments || undefined}
         data-carry-cards={carry.includes('cards') ? '' : undefined}
