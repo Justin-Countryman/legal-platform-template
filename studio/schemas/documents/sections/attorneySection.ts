@@ -1,4 +1,5 @@
 import {defineType, defineField} from 'sanity'
+import {headerLinkField} from '../../headerLink'
 import {headingEmphasisField} from '../../headingEmphasis'
 import {TokenStringInput} from '../../../components/TokenStringInput'
 import {TokenTextInput} from '../../../components/TokenTextInput'
@@ -96,6 +97,7 @@ export function fields({inline}: {inline: boolean}) {
       components: {input: TokenStringInput},
     }),
     headingEmphasisField(),
+    headerLinkField(),
     defineField({
       name: 'description',
       title: 'Description',
