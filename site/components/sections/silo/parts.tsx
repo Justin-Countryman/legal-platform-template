@@ -112,27 +112,30 @@ export function TileBorder({fx}: {fx: SiloHoverClasses}) {
   )
 }
 
-/** Icon chip. `onImage` → solid white badge (reads over a photo); else accent-tinted.
+/** Icon chip. `onImage` → solid white badge (reads over a photo); else accent-tinted. `bare` → the glyph alone, larger,
+ *  with no chip: the no-photo Feature and Split cards, which the icon leads (monorepo backlog 427, `[R-641]`).
  *  Renders nothing without an icon (graceful degrade). */
 export function TileIcon({
-  item, fx, onImage, size = 'md',
+  item, fx, onImage, size = 'md', bare = false,
 }: {
   item: SiloNavItem
   fx: SiloHoverClasses
   onImage?: boolean
   size?: 'sm' | 'md' | 'lg'
+  bare?: boolean
 }) {
   if (!hasImage(item.icon)) return null
   const chip = size === 'lg' ? 'size-16' : size === 'sm' ? 'size-10' : 'size-12'
-  const glyph = size === 'lg' ? 'size-9' : size === 'sm' ? 'size-5' : 'size-7'
+  const glyph = bare ? 'size-10' : size === 'lg' ? 'size-9' : size === 'sm' ? 'size-5' : 'size-7'
   return (
     <span
+      data-tile-icon={bare ? 'bare' : 'chip'}
       className={[
         'grid shrink-0 place-items-center rounded-ui transition-transform duration-ui-base ease-gentle',
-        chip,
-        onImage ? 'bg-white/90' : 'bg-decor/10',
+        bare ? 'size-10 justify-items-start' : chip,
+        bare ? '' : onImage ? 'bg-white/90' : 'bg-decor/10',
         fx.icon,
-      ].join(' ')}
+      ].filter(Boolean).join(' ')}
     >
       <SanityImage image={item.icon} mode="natural" alt="" width={36} height={36} className={`${glyph} object-contain`} />
     </span>

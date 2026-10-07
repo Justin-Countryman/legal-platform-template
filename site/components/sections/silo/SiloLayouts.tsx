@@ -89,6 +89,8 @@ export function SiloSpotlight({items, ariaLabel, hoverEffects, showArrow, iconPo
 // ── 2. Feature — image card · photo on top · content panel below ─────────────────
 // The vertical sibling of Split: photo header (no scrim — no text overlaps it) with
 // the icon chip straddling the seam, then label + blurb + arrow on a light panel.
+// Without photos (`photosAllOrNone`: a list has all or none) there is no photo header:
+// the card is its panel, led by the bare icon, never an empty grey box (monorepo backlog 427).
 export function SiloFeature({items, ariaLabel, hoverEffects, showArrow, iconPosition}: SiloLayoutProps) {
   const fx = siloHover(hoverEffects)
   const showIcon = iconPosition !== 'none'
@@ -99,17 +101,20 @@ export function SiloFeature({items, ariaLabel, hoverEffects, showArrow, iconPosi
         const onImage = hasImage(item.image)
         return (
           <li key={item._key} className={grid.items[i]}>
-            <TileLink href={item.href ?? '#'} className={`${CARD} min-h-[20rem] overflow-hidden ${fx.container}`}>
-              <div className="relative h-44 w-full shrink-0 overflow-hidden">
-                {onImage ? <TileImage item={item} fx={fx} scrim={false} /> : <TileFill />}
-              </div>
+            <TileLink href={item.href ?? '#'} className={`${CARD} ${onImage ? 'min-h-[20rem]' : ''} overflow-hidden ${fx.container}`}>
+              {onImage && (
+                <div className="relative h-44 w-full shrink-0 overflow-hidden">
+                  <TileImage item={item} fx={fx} scrim={false} />
+                </div>
+              )}
               <div className="relative z-10 flex flex-1 flex-col p-6">
                 {/* The chip rides up over the photo's bottom edge, so its wrapper
                     exists only when there is a chip: without one, the -mt-12 pulled
-                    the title up over the photo (Phase 16A, found in the catalog). */}
+                    the title up over the photo (Phase 16A, found in the catalog).
+                    With no photo there is no edge to ride: the bare icon leads. */}
                 {showIcon && hasImage(item.icon) && (
-                  <div className="-mt-12 mb-3">
-                    <TileIcon item={item} fx={fx} onImage={onImage} />
+                  <div className={onImage ? '-mt-12 mb-3' : 'mb-4'}>
+                    <TileIcon item={item} fx={fx} onImage={onImage} bare={!onImage} />
                   </div>
                 )}
                 <div>
@@ -217,11 +222,14 @@ export function SiloSplit({items, ariaLabel, hoverEffects, showArrow, iconPositi
               href={item.href ?? '#'}
               className={`flex flex-col overflow-hidden rounded-ui border border-border sm:min-h-[11rem] sm:flex-row ${fx.container}`}
             >
-              <div className="relative h-36 w-full shrink-0 overflow-hidden sm:h-auto sm:w-2/5">
-                {onImage ? <TileImage item={item} fx={fx} scrim={false} /> : <TileFill />}
-              </div>
+              {/* No photo panel without photos (monorepo backlog 427): the card is its text, led by the bare icon. */}
+              {onImage && (
+                <div className="relative h-36 w-full shrink-0 overflow-hidden sm:h-auto sm:w-2/5">
+                  <TileImage item={item} fx={fx} scrim={false} />
+                </div>
+              )}
               <div className="relative z-10 flex min-w-0 flex-1 flex-col p-6">
-                {showIcon && <TileIcon item={item} fx={fx} size="sm" />}
+                {showIcon && <TileIcon item={item} fx={fx} size="sm" bare={!onImage} />}
                 <div className="mt-3">
                   <TileLabel item={item} fx={fx} className="font-heading card-title font-semibold tracking-tight text-foreground" />
                   <TileBlurb item={item} className="mt-2 text-sm leading-relaxed text-foreground-muted line-clamp-2" />
