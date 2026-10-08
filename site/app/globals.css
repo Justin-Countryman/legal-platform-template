@@ -959,6 +959,24 @@ h1, h2, h3, h4, h5, h6 {
   --color-border-control:    var(--color-border-control-on-scrim);
   --color-action-state-cue:  var(--color-action-state-cue-on-scrim);
 }
+/* The transparent header over a hero carrying the glow's light (`[R-648]`, monorepo WS-PREMIUM-PACKAGE-DESIGN §10.2) takes
+   the lit band's values of the three blocks above: its links, ring, buttons and controls stand over the light, which is
+   solved under every one of them; the plain on-dark values are not (the control border measured 1.63 to 2.71 there). */
+:root:has(.glow-light-hero) header.bg-transparent {
+  --color-action-text:       var(--color-foreground-on-dark);
+  --color-action-text-hover: var(--color-foreground-on-dark);
+  --color-ring-focus:        var(--color-foreground-on-dark);
+  --color-accent:            var(--color-accent-on-dark);
+  --color-accent-text:       var(--color-accent-on-dark);
+  --color-slab:              var(--color-accent-on-dark);
+  --color-btn-dark:          var(--color-btn-dark-on-scrim);
+  --color-btn-dark-fg:       var(--color-btn-dark-fg-on-scrim);
+  --color-btn-dark-edge:     var(--color-btn-dark-edge-on-scrim);
+  --color-btn-dark-hover:    var(--color-btn-dark-hover-on-scrim);
+  --color-btn-dark-hover-fg: var(--color-btn-dark-hover-fg-on-scrim);
+  --color-border-control:    var(--color-border-control-on-scrim);
+  --color-action-state-cue:  var(--color-action-state-cue-on-scrim);
+}
 /* A photograph ghosted into a light band (the Background theme's faint photographs, `data-fade`; monorepo
    WS-V1-BACKGROUND-THEME-DESIGN §7 item 8). The band's floor is its ground with black over it at the ghost's opacity,
    and under the tiers every light band shares that leaves room for 4% of black, which shows no photograph. So the band
@@ -1507,18 +1525,32 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 .glow-veil-flat   { --glow-veil-image: linear-gradient(rgb(0 0 0 / 0.36), rgb(0 0 0 / 0.36)); }
 .glow-veil-top    { --glow-veil-image: linear-gradient(rgb(0 0 0 / 0), rgb(0 0 0 / 0.36) 55%); }
 .glow-veil-bottom { --glow-veil-image: linear-gradient(rgb(0 0 0 / 0.36) 45%, rgb(0 0 0 / 0)); }
-.glow-light-right  { --glow-light-image: radial-gradient(ellipse 860px 46% at 100% 54%, var(--glow-stops)); }
-.glow-light-left   { --glow-light-image: radial-gradient(ellipse 860px 46% at 0% 54%, var(--glow-stops)); }
-.glow-light-center { --glow-light-image: radial-gradient(ellipse 760px 46% at 50% 50%, var(--glow-stops)); }
-.glow-light-right.glow-light-edge { --glow-light-image: radial-gradient(ellipse 860px 90% at 100% 100%, var(--glow-stops)); }
-.glow-light-left.glow-light-edge  { --glow-light-image: radial-gradient(ellipse 860px 90% at 0% 100%, var(--glow-stops)); }
-.glow-light-hero.glow-light-right  { --glow-light-image: radial-gradient(ellipse 860px 38% at 100% 60%, var(--glow-stops)); }
-.glow-light-hero.glow-light-left   { --glow-light-image: radial-gradient(ellipse 860px 38% at 0% 60%, var(--glow-stops)); }
-.glow-light-hero.glow-light-center { --glow-light-image: radial-gradient(ellipse 760px 36% at 50% 62%, var(--glow-stops)); }
+/* The light, one radial whose anchor the position's classes set (`[R-648]`, §10.2): the column its side, the row its height
+   in the band, inside it (a share of the band's height, so it never reaches an edge it does not stand on) or on its seam
+   (`glow-light-edge`: the top seam below the band's own divider, `--band-divider`; the bottom seam where a light band
+   follows); in the hero below the header's clearance, whatever the row. Below md the light narrows to 80vw, so its side
+   still reads on a phone. Variables, not `min()`, inside the radial: Chromium draws a `min()` size as nothing. */
+.glow-lit {
+  --glow-w: 860px;
+  --glow-x: 50%;
+  --glow-y: 50%;
+  --glow-ry: 46%;
+  --glow-light-image: radial-gradient(ellipse var(--glow-w) var(--glow-ry) at var(--glow-x) var(--glow-y), var(--glow-stops));
+}
+.glow-light-left   { --glow-x: 0%; }
+.glow-light-right  { --glow-x: 100%; }
+.glow-light-center { --glow-x: 50%; --glow-w: 760px; }
+.glow-light-top    { --glow-y: 30%; --glow-ry: 30%; }
+.glow-light-bottom { --glow-y: 70%; --glow-ry: 30%; }
+.glow-light-top.glow-light-edge    { --glow-y: var(--band-divider, 0px); --glow-ry: 90%; }
+.glow-light-bottom.glow-light-edge { --glow-y: 100%; --glow-ry: 90%; }
+.glow-light-hero                    { --glow-y: 60%; --glow-ry: 38%; }
+.glow-light-hero.glow-light-center  { --glow-y: 62%; --glow-ry: 36%; }
+@media (max-width: 47.999rem) { .glow-lit { --glow-w: 80vw; } }
 /* A see-through card on a lit band stands on it: a solid surface between the dark ground and the light
    (`--color-glow-surface`), a black shadow (an accent shadow adds light where the light has none to spare, §9.3). A
    light island (`data-ring-context="light"`) and a photo card keep their own. */
-:is(.glow-light-left, .glow-light-right, .glow-light-center) [data-card]:not([data-ring-context="light"]):not(:has(img)) {
+.glow-lit [data-card]:not([data-ring-context="light"]):not(:has(img)) {
   background-color: var(--color-glow-surface, var(--color-brand-dark));
   box-shadow: 0 18px 40px -24px rgb(0 0 0 / 0.55);
 }
@@ -1534,8 +1566,8 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 /* The ground stays: forced colors and print drop the image, and a visitor asking for more contrast gets the plain
    ground, the glow being the ground a pair holds on with the least room (ADV-17D2-C). */
 @media (forced-colors: active) { .band-glow, .band-glow:is(.glow-corner, .glow-center) { background-image: none; } }
-@media print { .band-glow, .band-glow:is(.glow-corner, .glow-center) { background-image: none; } :is(.glow-light-left, .glow-light-right, .glow-light-center) [data-card] { box-shadow: none; } }
-@media (prefers-contrast: more) { .band-glow, .band-glow:is(.glow-corner, .glow-center) { background-image: none; } :is(.glow-light-left, .glow-light-right, .glow-light-center) [data-card] { box-shadow: none; } }
+@media print { .band-glow, .band-glow:is(.glow-corner, .glow-center) { background-image: none; } .glow-lit [data-card] { box-shadow: none; } }
+@media (prefers-contrast: more) { .band-glow, .band-glow:is(.glow-corner, .glow-center) { background-image: none; } .glow-lit [data-card] { box-shadow: none; } }
 
 /* The resting card edge (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 14, `[R-641]`): every card on the page (a
    practice area, an attorney, a testimonial, a result: `[data-card]`, which list rows do not carry) takes an accent edge

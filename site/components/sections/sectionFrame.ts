@@ -255,6 +255,8 @@ export type SeamProps = {
      *  below is not dark (`edge`); and every band of a lit group draws the surround's veil, fading in its first and last
      *  band so the group meets its neighbours on the ground. */
     light?: 'left' | 'right' | 'center'; edge?: boolean; veil?: 'flat' | 'top' | 'bottom'
+    /** The light's row where it is not the middle (`[R-648]`): at the band's top or bottom, on that seam where `edge`. */
+    row?: 'top' | 'bottom'
   }
   /** What this band draws over a dark ground, from the theme (Phase 17D session 2, `fadeOf`): the bridge's ramp,
    *  Gradient bloom's glow where the palette has room, or nothing. The shell reads it, and draws it only where the band
@@ -581,7 +583,7 @@ export function walkPage<M>(
       if (r.appearance?.inset || o.seam.paint?.inset) return 0
       return r.host ? LIGHT_RANK[r.host] : 3
     }
-    const candidates: {k: number; rank: number; end: number}[] = []
+    const candidates: {k: number; rank: number; start: number; end: number}[] = []
     let s = 0
     for (let i = 1; i <= grounds.length; i++) {
       if (i < grounds.length && grounds[i] === grounds[s]) continue
@@ -593,17 +595,36 @@ export function walkPage<M>(
           const r = rankAt(k)
           if (r > 0 && (best < 0 || r > rankAt(best) || (r === rankAt(best) && Math.abs(k - mid) < Math.abs(best - mid)))) best = k
         }
-        if (best >= 0) candidates.push({k: best, rank: rankAt(best), end: i - 1})
+        if (best >= 0) candidates.push({k: best, rank: rankAt(best), start: s, end: i - 1})
       }
       s = i
     }
     const chosen = [...candidates].sort((a, b) => b.rank - a.rank || a.k - b.k).slice(0, GLOW_LIGHTS_PER_PAGE).sort((a, b) => a.k - b.k)
+    // The position (`[R-648]`, monorepo WS-PREMIUM-PACKAGE-DESIGN §10.2): the row picks the band in each chosen run, its
+    // first band that carries a light for the top, its last for the bottom (the automatic corner's row), its best for the
+    // middle (the centered light's), the automatic corner a run's cut-out figure where it has one; the column the side, a
+    // cut-out figure's band mirrored to the figure. A light stands on
+    // its row's seam only where the run meets the page there: a run's first band below a light band (not the hero, whose
+    // top meets the header, nor a band drawing a rise, whose wedge would cut it), a run's last band above a light band
+    // that draws no cut into it (the close never: the footer may be dark); elsewhere it sits inside its band.
+    const at = flow?.on.glowAt
+    const row: 'top' | 'middle' | 'bottom' = at ? (at.startsWith('top') ? 'top' : at.startsWith('bottom') ? 'bottom' : 'middle') : shape === 'center' ? 'middle' : 'bottom'
+    const column: 'left' | 'right' | 'center' | null = at ? (at === 'left' || at.endsWith('Left') ? 'left' : at === 'right' || at.endsWith('Right') ? 'right' : 'center') : shape === 'center' ? 'center' : null
+    const bandAt = (k: number) => (k - head >= 0 && k - head < out.length ? out[k - head] : null)
     let turn = 0
     for (const c of chosen) {
-      const side = shape === 'center' ? 'center' : figures[c.k] ?? (turn++ % 2 === 0 ? 'right' : 'left')
-      // On the seam only where the band below is light: the run's last band, never the close (the footer may be dark).
-      const edge = c.k === c.end && !(closeJoins && c.k === last)
-      runs[c.k] = {...runs[c.k], light: side, ...(edge ? {edge: true} : {})}
+      const carriers = Array.from({length: c.end - c.start + 1}, (_, j) => c.start + j).filter((k) => rankAt(k) > 0)
+      // The automatic corner keeps the light behind a run's cut-out figure, as the references draw it.
+      const k = !at && figures[c.k] ? c.k : row === 'top' ? carriers[0] : row === 'bottom' ? carriers[carriers.length - 1] : c.k
+      const auto = figures[k] ?? (turn++ % 2 === 0 ? 'right' : 'left')
+      const side = column === 'center' ? 'center' : column && figures[k] ? figures[k]! : column ?? auto
+      const hero = heroJoins && k === 0
+      const edge = row === 'top'
+        ? k === c.start && !hero && bandAt(k)?.seam.divider?.mode !== 'rise'
+        : row === 'bottom'
+          ? k === c.end && !(closeJoins && k === last) && bandAt(k + 1)?.seam.divider?.mode !== 'cut'
+          : false
+      runs[k] = {...runs[k], light: side, ...(row !== 'middle' && !hero ? {row} : {}), ...(edge ? {edge: true} : {})}
     }
   }
   out.forEach((o, k) => { o.seam = {...o.seam, run: runs[k + head]} })
