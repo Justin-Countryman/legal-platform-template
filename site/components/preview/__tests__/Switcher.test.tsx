@@ -446,7 +446,9 @@ describe('Switcher, the background row', () => {
     // Quiet darkens only its ribbons, and this page has none: a dark-section device has no section.
     expect(reasons.some((r) => r.startsWith('Gradient') && r.includes('leaves it no section to draw on'))).toBe(true)
     for (const a of dim) expect(a.getAttribute('href')).toMatch(/^\/site-preview\//)
-    expect(c.textContent).toContain('a dimmed one has nothing to draw on here')
+    expect(c.textContent).toContain('A dimmed one has nothing to draw on here')
+    // The backgrounds his eye has passed are named ([R-647]).
+    expect(c.textContent).toContain('Judged so far: Glow: from a corner, Glow: centered; the rest are not yet judged.')
   })
 
   it('marks the background that answers the theme’s verdict, and says where one draws only in part', () => {

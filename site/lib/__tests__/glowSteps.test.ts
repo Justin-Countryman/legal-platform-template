@@ -23,12 +23,12 @@ const toOklch = converter('oklch')
 const lch = (hex: string) => toOklch(hex) as unknown as {l: number; c?: number; h?: number}
 
 describe('the glow steps', () => {
-  it('keep `glow` as it was, add the corner and the center, unpassed, and retire PR 4’s accent wash', () => {
+  it('keep `glow` as it was, add the corner and the center, passed by his eye ([R-647]), and retire PR 4’s accent wash', () => {
     const glow = BACKGROUNDS.filter((b) => b.family === 'glow')
     expect(glow.map((b) => b.id)).toEqual(['glow', 'glow.corner', 'glow.center'])
     expect(backgroundById('glow')!.name).toBe('Glow')
     expect(backgroundById('glow')!.on.glowShape).toBeUndefined()
-    expect(glow.every((b) => b.passed === false)).toBe(true)
+    expect(glow.map((b) => b.passed)).toEqual([false, true, true])
     expect(backgroundById('glow.corner')!.on).toMatchObject({dark: 'glow', glowShape: 'corner'})
     expect(backgroundById('glow.center')!.on).toMatchObject({dark: 'glow', glowShape: 'center'})
     expect(backgroundById('glow.accent')).toBeNull()

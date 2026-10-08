@@ -56,8 +56,8 @@ describe('the roster', () => {
     expect(BACKGROUND_FAMILIES.map((f) => f.id)).toEqual(Object.keys(BACKGROUND_CONTRACT))
   })
 
-  it('none has passed his eye: a pass moves only with a verdict ([R-517])', () => {
-    expect(BACKGROUNDS.filter((b) => b.passed)).toEqual([])
+  it('a pass moves only with a verdict ([R-517]): the glow’s corner and centered light, 2026-10-08 ([R-647])', () => {
+    expect(BACKGROUNDS.filter((b) => b.passed).map((b) => b.id)).toEqual(['glow.corner', 'glow.center'])
   })
 
   it('no background draws the ghosted initials ([R-497]): that is a theme’s word, off on every theme', () => {

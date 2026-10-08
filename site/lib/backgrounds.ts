@@ -15,9 +15,9 @@ import {flowOf, impliedNeeds, own, type BackgroundRules, type FlowRules} from '.
 // one place the two meet: the page (`siteFlowOf`), the preview's plan and the switcher all read the rules through it.
 //
 // THE ROSTER answers Justin's seven background verdicts of 2026-10-03 (monorepo
-// WS-V1-ROSTER-EYE-2026-10-03/verdicts.txt), and `SUGGESTED_WITH` names the pair that answers each. Nothing here has
-// passed his eye: `passed` moves only with a verdict (`[R-517]`), and until then it gates the row's label alone, since
-// no build writes a background (`[R-537]`).
+// WS-V1-ROSTER-EYE-2026-10-03/verdicts.txt), and `SUGGESTED_WITH` names the pair that answers each. `passed` moves only
+// with a verdict (`[R-517]`), and it gates the row's label alone, since no build writes a background (`[R-537]`): the
+// glow's corner and centered light passed his eye on 2026-10-08 (`[R-647]`); nothing else has.
 //
 // NO BACKGROUND MOVES. His rule (2026-10-03): no layer but the Motion theme says how anything moves. No option here
 // animates, transitions or fixes a photograph to the viewport; a photograph that holds still while the page scrolls
@@ -34,7 +34,7 @@ export type Background = {
   on: BackgroundRules
 }
 
-type Family = {id: string; name: string; steps: readonly {step: string | null; label: string; sentence: string; on: BackgroundRules}[]}
+type Family = {id: string; name: string; steps: readonly {step: string | null; label: string; sentence: string; on: BackgroundRules; passed?: boolean}[]}
 
 export const BACKGROUND_FAMILIES: readonly Family[] = [
   {id: 'plain', name: 'Plain', steps: [{step: null, label: 'Plain', sentence: 'Nothing on any section: the colors alone.', on: own({})}]},
@@ -51,9 +51,9 @@ export const BACKGROUND_FAMILIES: readonly Family[] = [
     id: 'glow', name: 'Glow', steps: [
       {step: null, label: 'Glow', sentence: 'A soft glow down every group of dark sections, from the hero to the closing section.', on: own({dark: 'glow'})},
       // The glow as a light (monorepo WS-PREMIUM-PACKAGE-DESIGN §9.3, `[R-646]`, which retired PR 4's `glow.accent` into it):
-      // unpassed until his eye at 1440 and 390.
-      {step: 'corner', label: 'From a corner', sentence: 'A light in your accent color rising from a bottom corner of up to three groups of dark sections, the groups deepened around it, on the side of any cut-out figure.', on: own({dark: 'glow', glowShape: 'corner'})},
-      {step: 'center', label: 'Centered', sentence: 'A light in your accent color behind the middle of up to three groups of dark sections, the groups deepened around it.', on: own({dark: 'glow', glowShape: 'center'})},
+      // both passed his eye on the fake client at 1440 and 390, 2026-10-08 (`[R-647]`).
+      {step: 'corner', label: 'From a corner', sentence: 'A light in your accent color rising from a bottom corner of up to three groups of dark sections, the groups deepened around it, on the side of any cut-out figure.', on: own({dark: 'glow', glowShape: 'corner'}), passed: true},
+      {step: 'center', label: 'Centered', sentence: 'A light in your accent color behind the middle of up to three groups of dark sections, the groups deepened around it.', on: own({dark: 'glow', glowShape: 'center'}), passed: true},
     ],
   },
   {id: 'fade', name: 'Faint photographs', steps: [{step: null, label: 'Faint photographs', sentence: 'Your photographs, faint: behind every group of dark sections with soft edges, and ghosted into every second light section.', on: own({dark: 'fade', light: 'fade', close: 'photo'})}]},
@@ -68,7 +68,7 @@ export const BACKGROUNDS: readonly Background[] = BACKGROUND_FAMILIES.flatMap((f
     // A family's unnamed step keeps the family's name (`glow`, which gained steps in the premium package).
     name: f.steps.length > 1 && s.step ? `${f.name}: ${s.label.toLowerCase()}` : f.name,
     sentence: s.sentence,
-    passed: false,
+    passed: s.passed ?? false,
     on: s.on,
   })),
 )

@@ -4297,7 +4297,7 @@
       "family": "glow",
       "name": "Glow: from a corner",
       "sentence": "A light in your accent color rising from a bottom corner of up to three groups of dark sections, the groups deepened around it, on the side of any cut-out figure.",
-      "passed": false,
+      "passed": true,
       "on": {
         "dark": "glow",
         "light": "plain",
@@ -4315,7 +4315,7 @@
       "family": "glow",
       "name": "Glow: centered",
       "sentence": "A light in your accent color behind the middle of up to three groups of dark sections, the groups deepened around it.",
-      "passed": false,
+      "passed": true,
       "on": {
         "dark": "glow",
         "light": "plain",
