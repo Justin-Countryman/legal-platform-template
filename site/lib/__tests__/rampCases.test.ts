@@ -50,6 +50,17 @@ function glowCase(label: string, inputs: ColorInputs) {
   return {label, ramp: 'glow', ground, from: ground, to: t['--color-glow'], ceiling, model: rampDrawnMax(ground, t['--color-glow']), ok: p.glowOk}
 }
 
+/** The glow's light (`[R-646]`): the light falling to transparent over the surround's veil, a lit band's solid card, and
+ *  a glowing card's corner over its surface, each against the photo band's ceiling, where the palette has room. */
+function lightCase(label: string, inputs: ColorInputs) {
+  const p = resolvePalette(inputs, {glowShape: 'corner', cardGlow: 'on'})
+  const t = p.tokens
+  const ground = t['--color-brand-dark']
+  const light = t['--color-glow-light'] ?? ground
+  const ceiling = pairsCeiling(photoBandPairs(t), t['--color-action'], t['--color-action-state-cue-on-scrim'])
+  return {label, ground, light, surface: t['--color-glow-surface'] ?? ground, card: t['--color-card-on-dark'] ?? ground, ceiling, model: rampDrawnMax(ground, light), ok: p.glowLightOk}
+}
+
 function cases() {
   const margin = (c: ReturnType<typeof bridgeCase>) => (c.ceiling + 0.05) / (c.model + 0.05)
   const swept = [
@@ -78,7 +89,13 @@ function cases() {
   // A calibration strip, reported and not asserted: what each engine draws against the model on plain ramps, so a new
   // engine's drawing is read before it is trusted (`[R-550]` found WebKit on Linux a level past the model).
   const calibration = [['#000000', '#ffffff'], ['#141414', '#000000'], ['#1c2b4a', '#201a2c'], ['#0b2545', '#2f496c'], ['#111111', '#473400']]
-  return {method: 'the bridge ramp for the presets, the placeholder, two flat grounds and the 150 nearest their ceiling over two seeded sweeps; the glow, from the ground to the glow and back under its side layer, for every glowing preset, the placeholder and the 100 nearest the photo band ceiling; a calibration strip; written by lib/__tests__/rampCases.test.ts, drawn by scripts/ci/ramp-pixels.mjs', ramps, calibration}
+  const lightMargin = (c: ReturnType<typeof lightCase>) => (c.ceiling + 0.05) / (c.model + 0.05)
+  const lights = [
+    ...[lightCase('placeholder', {}), ...PALETTE_PRESETS.map((p) => lightCase(p.id, presetInputs(p)))].filter((c) => c.ok),
+    // The lights nearest the photo band's ceiling.
+    ...seeded(1500, 20261007).map((inputs, i) => lightCase(`s20261007#${i}`, inputs)).filter((c) => c.ok).sort((a, b) => lightMargin(a) - lightMargin(b)).slice(0, 60),
+  ]
+  return {method: 'the bridge ramp for the presets, the placeholder, two flat grounds and the 150 nearest their ceiling over two seeded sweeps; the glow, from the ground to the glow and back under its side layer, for every glowing preset, the placeholder and the 100 nearest the photo band ceiling; the glow\u2019s light over its veil, a lit band\u2019s solid card and a glowing card\u2019s corner, for every lit preset, the placeholder and the 60 nearest the ceiling; a calibration strip; written by lib/__tests__/rampCases.test.ts, drawn by scripts/ci/ramp-pixels.mjs', ramps, lights, calibration}
 }
 
 // The cases live beside the script that reads them, under `scripts/ci/`, which the press prunes from a client's
@@ -90,6 +107,8 @@ describe('scripts/ci/__snapshots__/ramp-cases.json', () => {
     const c = cases()
     expect(c.ramps.length).toBeGreaterThan(150)
     for (const r of c.ramps) expect(r.model, r.label).toBeLessThanOrEqual(r.ceiling + 1e-12)
+    expect(c.lights.length).toBeGreaterThan(60)
+    for (const r of c.lights) expect(r.model, r.label).toBeLessThanOrEqual(r.ceiling + 1e-12)
     await expect(JSON.stringify(c) + '\n').toMatchFileSnapshot('../../scripts/ci/__snapshots__/ramp-cases.json')
   }, 180_000)
 })

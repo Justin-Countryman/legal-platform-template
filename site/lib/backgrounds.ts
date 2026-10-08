@@ -50,10 +50,10 @@ export const BACKGROUND_FAMILIES: readonly Family[] = [
   {
     id: 'glow', name: 'Glow', steps: [
       {step: null, label: 'Glow', sentence: 'A soft glow down every group of dark sections, from the hero to the closing section.', on: own({dark: 'glow'})},
-      // The premium package (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 16, `[R-641]`): unpassed until his eye.
-      {step: 'corner', label: 'From a corner', sentence: 'A glow rising from a bottom corner of each dark section, on the side of any cut-out figure.', on: own({dark: 'glow', glowShape: 'corner'})},
-      {step: 'center', label: 'Centered', sentence: 'A glow centered in each dark section, behind its middle.', on: own({dark: 'glow', glowShape: 'center'})},
-      {step: 'accent', label: 'In the accent', sentence: 'The soft glow down every group of dark sections, in the accent\u2019s own color.', on: own({dark: 'glow', glowTint: 'accent'})},
+      // The glow as a light (monorepo WS-PREMIUM-PACKAGE-DESIGN §9.3, `[R-646]`, which retired PR 4's `glow.accent` into it):
+      // unpassed until his eye at 1440 and 390.
+      {step: 'corner', label: 'From a corner', sentence: 'A light in your accent color rising from a bottom corner of up to three groups of dark sections, the groups deepened around it, on the side of any cut-out figure.', on: own({dark: 'glow', glowShape: 'corner'})},
+      {step: 'center', label: 'Centered', sentence: 'A light in your accent color behind the middle of up to three groups of dark sections, the groups deepened around it.', on: own({dark: 'glow', glowShape: 'center'})},
     ],
   },
   {id: 'fade', name: 'Faint photographs', steps: [{step: null, label: 'Faint photographs', sentence: 'Your photographs, faint: behind every group of dark sections with soft edges, and ghosted into every second light section.', on: own({dark: 'fade', light: 'fade', close: 'photo'})}]},

@@ -220,11 +220,10 @@ export type BackgroundRules = {
   /** A dark hero and a dark close join the ramp's first and last runs. The glow's always do. */
   ends: boolean
   close: (typeof ON_CLOSES)[number]
-  /** The glow's shape where not the run's soft side light (the premium package, monorepo `[R-641]`): a radial from a
-   *  bottom corner on the figure's side, or one centered in the band. Absent: today's glow. */
+  /** The glow as a light (monorepo WS-PREMIUM-PACKAGE-DESIGN §9.3, `[R-646]`): one light in the accent's hue per group of
+   *  dark sections, at most three a page, from a bottom corner or centered, over a deeper surround, where the palette has
+   *  room (`glowLightOk`). Absent: the run's soft glow, as before. */
   glowShape?: 'corner' | 'center'
-  /** The glow in the accent's own hue on any ground (`--color-glow-accent`). Absent: the evidence's rule. */
-  glowTint?: 'accent'
 }
 
 /** A background's rules, every word it does not name at its plain value. */
@@ -852,6 +851,16 @@ function paletteOf(inputs: ColorInputs | Record<string, unknown> | null | undefi
   return p
 }
 
+/** The palette has room for the glow's light (`glowLightOf`, `[R-646]`): the Background theme's corner and centered glow. */
+export function glowLightFillOk(inputs: ColorInputs | Record<string, unknown> | null | undefined): boolean {
+  return paletteOf(inputs).glowLightOk
+}
+
+/** The room a theme's glow needs on this palette: the light's where the background positions it, else the glow's. */
+export function glowGateOf(flow: Pick<FlowRules, 'on'> | null | undefined, inputs: ColorInputs | Record<string, unknown> | null | undefined): boolean {
+  return flow?.on.glowShape ? glowLightFillOk(inputs) : glowFillOk(inputs)
+}
+
 /** The palette's dark ground has room for Gradient bloom's glow (`glowOf`, Phase 17D session 2, `[R-557]`): it lifts at
  *  least OKLab L 0.05 and ΔE2000 6 under every pair a glowing band draws. Nine presets and the placeholder do; the six
  *  whose dark ground is already as light as white text allows do not. */
@@ -919,7 +928,7 @@ export function closeOf(flow: FlowRules | null | undefined, facts: CloseFacts): 
   // A dark close the theme lights does not melt into the dark run above it: its glow peaks in its own middle, as the
   // run's last band (the roster eye of 2026-10-03, `[R-631]`: the glow carries through to the close). Gradient bloom
   // alone, and only where the palette has room to glow; the ruling against the footer's color holds as always.
-  const lit = (flow?.on.dark === 'glow' && paletteOf(facts.colors).glowOk) || (flow?.on.dark === 'gradient' && flow.on.ends)
+  const lit = (flow?.on.dark === 'glow' && glowGateOf(flow, facts.colors)) || (flow?.on.dark === 'gradient' && flow.on.ends)
   const fromAbove = (c: Close) => c === 'photo' || (c === 'dark' && lit) || !aboveHex || deltaE(hexOf(GROUND_TOKEN[c]!), aboveHex) >= CLOSE_ABOVE_DE
   return drawable.find((c) => fromFooter(c) && fromAbove(c)) ?? drawable.find(fromFooter) ?? (facts.footer === 'dark' ? 'muted' : 'dark')
 }

@@ -66,10 +66,10 @@ function failures(label: string, inputs: ColorInputs, options: PaletteOptions = 
 // The color details (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 17, `[R-641]`): every value each option can take.
 const DETAIL_VALUES: PaletteOptions[] = [
   {headingInk: 'action'}, {saturatedFrom: 'action'}, {accentOnDark: 'raw'},
-  {buttonOnDark: 'accent'}, {buttonOnDark: 'action'}, {buttonOnDark: 'outline'}, {cardGlow: 'on'}, {glowTint: 'accent'},
+  {buttonOnDark: 'accent'}, {buttonOnDark: 'action'}, {buttonOnDark: 'outline'}, {cardGlow: 'on'}, {glowShape: 'corner'}, {glowShape: 'center'},
 ]
 const EVERY_DETAIL: PaletteOptions[] = [
-  {headingInk: 'action', saturatedFrom: 'action', accentOnDark: 'raw', buttonOnDark: 'accent', cardGlow: 'on', glowTint: 'accent'},
+  {headingInk: 'action', saturatedFrom: 'action', accentOnDark: 'raw', buttonOnDark: 'accent', cardGlow: 'on', glowShape: 'corner'},
   {headingInk: 'action', saturatedFrom: 'action', accentOnDark: 'raw', buttonOnDark: 'action'},
   {headingInk: 'action', saturatedFrom: 'action', accentOnDark: 'raw', buttonOnDark: 'outline'},
 ]

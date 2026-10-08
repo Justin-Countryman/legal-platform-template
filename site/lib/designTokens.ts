@@ -107,8 +107,9 @@ export type PaletteOptions = {
   buttonOnDark?:  unknown
   /** `on`: cards and panels on a dark band glow (`--color-card-on-dark`, `--color-card-glow`). */
   cardGlow?:      unknown
-  /** `accent`: the band glow in the accent's hue (`--color-glow-accent`, the Background theme's `glow.accent`). */
-  glowTint?:      unknown
+  /** `corner`, `center`: the Background theme positions the glow's light (`--color-glow-light`, `--color-glow-surface`;
+   *  monorepo WS-PREMIUM-PACKAGE-DESIGN §9.3, `[R-646]`). */
+  glowShape?:     unknown
 }
 
 /** A color band's fill reads as a band of its own (Phase 15's gate, moved here so the engine and the theme's walk share
@@ -373,6 +374,9 @@ export type ResolvedPalette = {
   /** The palette's dark ground has room to glow (`glowOf`, Phase 17D session 2, `[R-557]`): Gradient bloom draws its
    *  glow only where this holds, and the plain ground elsewhere. Not a token: nothing in CSS reads it. */
   glowOk: boolean
+  /** The palette has room for the glow's light (`glowLightOf`, `[R-646]`): the Background theme's corner and centered glow
+   *  draw only where this holds, and their steps are withheld elsewhere. Not a token. */
+  glowLightOk: boolean
 }
 
 export function resolvePalette(raw: ColorInputs = {}, options: PaletteOptions = {}): ResolvedPalette {
@@ -622,16 +626,25 @@ export function resolvePalette(raw: ColorInputs = {}, options: PaletteOptions = 
   // from the dark ground to the glow, so every pair it draws is the glow band's, already proven; its corner glows in the
   // accent's hue, solved under the same ceiling (the ground's glow where the accent's cannot lift). Only where the glow
   // itself holds.
-  // The band glow in the accent's hue (`glowTint`, the background `glow.accent`): the ground's glow where the accent's cannot
-  // lift, so the band never draws what the solve refused.
-  if (options.glowTint === 'accent' && glow.ok) {
-    const accentGlow = glowOf(brandDark, accent, tokens, 'accent')
-    tokens['--color-glow-accent'] = accentGlow.ok ? accentGlow.glow : glow.glow
+  // The glow's light (monorepo WS-PREMIUM-PACKAGE-DESIGN §9.3, `[R-646]`): where the Background theme positions it, the
+  // light and the solid surface see-through cards take on its band; a glowing card's corner is the same light and its
+  // surface a point between the dark ground and it. Every value lies between the dark ground and the light, which is
+  // solved under every pair the band draws, so every pair holds. Only where the palette has room.
+  // Solved once, and only when something reads it: the solve walks the ramp model, and most palettes never draw it.
+  // The pairs as they stand here, so a late read solves exactly what an early one would.
+  const lightTokens = {...tokens}
+  let solvedLight: {light: string; ok: boolean} | null = null
+  const lightOf = () => (solvedLight ??= glowLightOf(brandDark, accent, lightTokens))
+  const shaped = options.glowShape === 'corner' || options.glowShape === 'center'
+  if (shaped && lightOf().ok) {
+    const light = lightOf()
+    tokens['--color-glow-light'] = light.light
+    tokens['--color-glow-surface'] = mixOklab(brandDark, light.light, GLOW_SURFACE_MIX)
   }
-  if (options.cardGlow === 'on' && glow.ok) {
-    const accentGlow = glowOf(brandDark, accent, tokens, 'accent')
-    tokens['--color-card-on-dark'] = mixOklab(brandDark, glow.glow, 0.5)
-    tokens['--color-card-glow'] = accentGlow.ok ? accentGlow.glow : glow.glow
+  if (options.cardGlow === 'on' && lightOf().ok) {
+    const light = lightOf()
+    tokens['--color-card-on-dark'] = mixOklab(brandDark, light.light, GLOW_SURFACE_MIX)
+    tokens['--color-card-glow'] = light.light
   }
   // A photograph ghosted into a light band (the Background theme, monorepo WS-V1-BACKGROUND-THEME-DESIGN §7 item 8):
   // its opacity, and the tiers the band's text takes over it.
@@ -648,7 +661,7 @@ export function resolvePalette(raw: ColorInputs = {}, options: PaletteOptions = 
   tokens['--color-texture-ink-on-dark'] = texture.ink
   tokens['--section-texture-opacity-on-dark'] = String(texture.opacity)
   Object.assign(tokens, colorDetails(options, {accent, accentFg, action, actionFg, actionHover, brandDark, background, accentOnDark,
-    darkTexture: blendOver(brandDark, texture.ink, texture.opacity), photoFloor, glow: tokens['--color-glow'],
+    darkTexture: blendOver(brandDark, texture.ink, texture.opacity), photoFloor, glow: tokens['--color-glow'], glowLight: tokens['--color-glow-light'] ?? null,
     onDark: inverse['color-foreground-on-dark'], light: {fill: background, fg: foreground, hover: muted}}))
   // Phase 17C session 3: the render margin applies on a dark band only where its ink is lighter than
   // the ground (the on-dark text color on a near-black ground), the one case where a line drawn a level
@@ -670,6 +683,7 @@ export function resolvePalette(raw: ColorInputs = {}, options: PaletteOptions = 
     acceptance: {darkGround: darkA, lightGround: lightA, accent: accentA, action: actionA},
     tokens,
     glowOk: glow.ok,
+    get glowLightOk() { return lightOf().ok },
   }
 }
 
@@ -683,13 +697,15 @@ export function resolvePalette(raw: ColorInputs = {}, options: PaletteOptions = 
 type DetailFacts = {
   accent: string; accentFg: string; action: string; actionFg: string; actionHover: string; brandDark: string; background: string
   accentOnDark: string; darkTexture: string; photoFloor: string; glow: string; onDark: string
+  /** The glow's light where the Background theme draws it (`[R-646]`): a lit band's lightest ground. */
+  glowLight: string | null
   light: {fill: string; fg: string; hover: string}
 }
 
 function colorDetails(options: PaletteOptions, f: DetailFacts): Record<string, string> {
   const out: Record<string, string> = {}
   const plainDark = [f.brandDark, f.darkTexture]
-  const litDark = [f.photoFloor, f.glow]
+  const litDark = [f.photoFloor, f.glow, ...(f.glowLight ? [f.glowLight] : [])]
 
   // The accent itself on a plain dark band (`accentOnDark: 'raw'`): where it reads 4.5:1 on brand-dark and the dark
   // texture; the photo, glow and hero-image bands keep the lightened accent. Never fed back into a solve (ADV-PP-A).
@@ -952,6 +968,46 @@ export function glowOf(ground: string, accent: string, t: Record<string, string>
     return {glow, ok: parseOklch(glow).l - g.l >= GLOW_MIN_LIFT && deltaE(ground, glow) >= GLOW_MIN_DE}
   }
   return {glow: ground, ok: false}
+}
+
+// ─── The glow's light (monorepo WS-PREMIUM-PACKAGE-DESIGN §9, `[R-646]`) ──────────────────────────────────────────────
+//
+// The Background theme's corner and centered glow draw a light, not a fill, as Nguyen & Malik, Lewin and the Figma kit
+// do: one radial per group of dark sections over a deeper surround (a veil of black, `GLOW_VEIL`). Its color is chosen,
+// never mixed: the accent's hue (the ground's where the accent is near-neutral), at the references' saturation and inside
+// the gamut's edge (an edge color reads as umber, electric violet or blood red, §9.3), at the lightest lightness whose
+// drawn maximum still holds every pair the band draws, so text reads anywhere on it (WCAG F83). It draws only where it
+// lifts clearly over the veiled ground.
+export const GLOW_LIGHT_CHROMA = 0.07
+export const GLOW_LIGHT_EDGE = 0.85
+export const GLOW_LIGHT_LIFT = 0.10
+/** The surround's veil, the black drawn over every band of a lit group (`globals.css` writes the same number). */
+export const GLOW_VEIL = 0.36
+/** How far a lit band's solid card and a glowing card sit from the dark ground toward the light. */
+export const GLOW_SURFACE_MIX = 0.3
+
+/** The ground under the surround's veil, as drawn: each channel darkened by the veil's black. */
+export function veilOf(ground: string, veil: number = GLOW_VEIL): string {
+  const c = channelsOf(ground)
+  return '#' + c.map((v) => Math.round(v * (1 - veil)).toString(16).padStart(2, '0')).join('')
+}
+
+export function glowLightOf(ground: string, accent: string, t: Record<string, string>): {light: string; ok: boolean} {
+  const g = parseOklch(ground)
+  const a = parseOklch(accent)
+  const hue = a.c >= 0.02 ? a.h : g.c >= 0.02 ? g.h : null
+  const ceiling = pairsCeiling(photoBandPairs(t), t['--color-action'], t['--color-action-state-cue-on-scrim'])
+  const at = (l: number) => (hue === null ? mapped(l, 0, 0) : mapped(l, Math.min(GLOW_LIGHT_CHROMA, GLOW_LIGHT_EDGE * parseOklch(mapped(l, 0.5, hue)).c), hue))
+  const holds = (l: number) => rampDrawnMax(ground, at(l)) <= ceiling + 1e-12
+  // The lightest holding lightness: a coarse walk up from the ground, then a bisection inside the last step that held.
+  let lo = -1
+  for (let l = g.l; l <= 1 + 1e-9; l = round6(l + 0.01)) if (holds(l)) lo = l
+  if (lo < 0) return {light: ground, ok: false}
+  let hi = Math.min(1, lo + 0.01)
+  if (!holds(hi)) for (let i = 0; i < 10; i++) { const mid = (lo + hi) / 2; if (holds(mid)) lo = mid; else hi = mid }
+  else lo = hi
+  const light = at(lo)
+  return {light, ok: parseOklch(light).l - parseOklch(veilOf(ground)).l >= GLOW_LIGHT_LIFT}
 }
 
 // ─── A photograph ghosted into a light band (the Background theme, `[R-632]`) ───────────────────────────
@@ -1229,13 +1285,17 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
     check('accent-on-dark-raw on brand-dark', t['--color-accent-on-dark-raw'], dark, 4.5)
     check('accent-on-dark-raw on section-texture-dark', t['--color-accent-on-dark-raw'], darkTexture, 4.5)
   }
-  if (t['--color-glow-accent']) for (const [tier, min] of photoBandPairs(t)) check(`${tier} on the accent glow`, tier, t['--color-glow-accent'], min)
+  if (t['--color-glow-light']) {
+    for (const [name, ground] of [['the glow\u2019s light', t['--color-glow-light']], ['a lit band\u2019s solid card', t['--color-glow-surface']]] as const) {
+      for (const [tier, min] of photoBandPairs(t)) check(`${tier} on ${name}`, tier, ground, min)
+    }
+  }
   if (t['--color-card-on-dark']) {
     for (const [name, ground] of [['a glowing card', t['--color-card-on-dark']], ['a glowing card\u2019s corner', t['--color-card-glow']]] as const) {
       for (const [tier, min] of photoBandPairs(t)) check(`${tier} on ${name}`, tier, ground, min)
     }
   }
-  for (const [suffix, grounds] of [['', [dark, darkTexture]], ['-on-scrim', [photoFloor, t['--color-glow']]]] as const) {
+  for (const [suffix, grounds] of [['', [dark, darkTexture]], ['-on-scrim', [photoFloor, t['--color-glow'], ...(t['--color-glow-light'] ? [t['--color-glow-light']] : [])]]] as const) {
     const fill = t[`--color-btn-dark${suffix}`]
     if (!fill) continue
     const where = suffix ? 'a photo or glowing band' : 'a plain dark band'

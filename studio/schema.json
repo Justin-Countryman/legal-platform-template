@@ -18668,10 +18668,6 @@
             },
             {
               "type": "string",
-              "value": "glow.accent"
-            },
-            {
-              "type": "string",
               "value": "fade"
             },
             {
