@@ -459,6 +459,14 @@ describe('Switcher, the background row', () => {
     expect(glow.textContent).toContain('dark footer keeps the closing section plain')
   })
 
+  it('the Glow family’s step row links its unnamed step to `glow`, never `glow.null` ([R-646], a PR 4 defect)', () => {
+    const c = draw(operator, stored, {...at('cutBlocks.mostlyDark'), background: 'glow.corner'}, canvas, chromeWithTexture, 'dark')
+    const hrefs = [...c.querySelectorAll('a')].map((a) => a.getAttribute('href') ?? '')
+    expect(hrefs.some((h) => h.includes('glow.null'))).toBe(false)
+    expect(hrefs.some((h) => /\/glow\/design/.test(h))).toBe(true)
+    expect(hrefs.some((h) => h.includes('glow.accent'))).toBe(false)
+  })
+
   it('the Apply link carries the one field and names the background; the theme’s own clears it', () => {
     const applyOf = (c: Element) => verifyToken(new URL([...c.querySelectorAll('a')].find((a) => (a.textContent ?? '').startsWith('Apply'))!.getAttribute('href')!.replace('/#/design', '/design')).searchParams.get('t'), SECRET) as {set: Record<string, unknown>; unset: string[]; background: {id: string; name: string} | null}
     const set = applyOf(draw(operator, stored, {...choices, styleSet: 'site', palette: 'site', background: 'glow'}, canvas, chromeWithTexture, 'dark'))
