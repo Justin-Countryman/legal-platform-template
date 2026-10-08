@@ -17,7 +17,8 @@ import {GLOW_POSITIONS, flowOf, impliedNeeds, own, type BackgroundRules, type Fl
 // THE ROSTER answers Justin's seven background verdicts of 2026-10-03 (monorepo
 // WS-V1-ROSTER-EYE-2026-10-03/verdicts.txt), and `SUGGESTED_WITH` names the pair that answers each. `passed` moves only
 // with a verdict (`[R-517]`), and it gates the row's label alone, since no build writes a background (`[R-537]`): the
-// glow's corner and centered light passed his eye on 2026-10-08 (`[R-647]`); nothing else has.
+// glow's corner and centered light passed his eye on 2026-10-08 (`[R-647]`), its eight fixed positions the same day
+// (`[R-649]`); nothing else has.
 //
 // NO BACKGROUND MOVES. His rule (2026-10-03): no layer but the Motion theme says how anything moves. No option here
 // animates, transitions or fixes a photograph to the viewport; a photograph that holds still while the page scrolls
@@ -69,9 +70,9 @@ export const BACKGROUND_FAMILIES: readonly Family[] = [
       {step: 'corner', label: 'From a corner', sentence: 'A light in your accent color in a bottom corner of up to three groups of dark sections, the groups deepened around it, on the side of any cut-out figure, else turn and turn about.', on: own({dark: 'glow', glowShape: 'corner'}), passed: true},
       {step: 'center', label: 'Centered', sentence: 'A light in your accent color behind the middle of up to three groups of dark sections, the groups deepened around it.', on: own({dark: 'glow', glowShape: 'center'}), passed: true},
       // The eight fixed positions (`[R-648]`, §10.2): the row picks the band in each lit group (its first, its best, its
-      // last), the column the side; a cut-out figure's band takes the figure's side, the hero the side only. Unpassed
-      // until his eye.
-      ...GLOW_POSITIONS.map((at) => ({step: at, label: POSITION_LABEL[at], sentence: POSITION_SENTENCE[at], on: own({dark: 'glow', glowShape: 'corner', glowAt: at})})),
+      // last), the column the side; a cut-out figure's band takes the figure's side, the hero the side only. All passed his
+      // eye live on the fake client, 2026-10-08 (`[R-649]`).
+      ...GLOW_POSITIONS.map((at) => ({step: at, label: POSITION_LABEL[at], sentence: POSITION_SENTENCE[at], on: own({dark: 'glow', glowShape: 'corner', glowAt: at}), passed: true})),
     ],
   },
   {id: 'fade', name: 'Faint photographs', steps: [{step: null, label: 'Faint photographs', sentence: 'Your photographs, faint: behind every group of dark sections with soft edges, and ghosted into every second light section.', on: own({dark: 'fade', light: 'fade', close: 'photo'})}]},

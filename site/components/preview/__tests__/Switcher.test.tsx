@@ -448,7 +448,7 @@ describe('Switcher, the background row', () => {
     for (const a of dim) expect(a.getAttribute('href')).toMatch(/^\/site-preview\//)
     expect(c.textContent).toContain('A dimmed one has nothing to draw on here')
     // The backgrounds his eye has passed are named ([R-647]).
-    expect(c.textContent).toContain('Judged so far: Glow: from a corner, Glow: centered; the rest are not yet judged.')
+    expect(c.textContent).toContain('Judged so far: Glow: from a corner, Glow: centered, Glow: top left, Glow: top, Glow: top right, Glow: left, Glow: right, Glow: bottom left, Glow: bottom, Glow: bottom right; the rest are not yet judged.')
   })
 
   it('marks the background that answers the theme’s verdict, and says where one draws only in part', () => {

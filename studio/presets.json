@@ -4333,7 +4333,7 @@
       "family": "glow",
       "name": "Glow: top left",
       "sentence": "The light at the top left of each lit group’s first section.",
-      "passed": false,
+      "passed": true,
       "on": {
         "dark": "glow",
         "light": "plain",
@@ -4352,7 +4352,7 @@
       "family": "glow",
       "name": "Glow: top",
       "sentence": "The light at the top of each lit group’s first section, centered.",
-      "passed": false,
+      "passed": true,
       "on": {
         "dark": "glow",
         "light": "plain",
@@ -4371,7 +4371,7 @@
       "family": "glow",
       "name": "Glow: top right",
       "sentence": "The light at the top right of each lit group’s first section.",
-      "passed": false,
+      "passed": true,
       "on": {
         "dark": "glow",
         "light": "plain",
@@ -4390,7 +4390,7 @@
       "family": "glow",
       "name": "Glow: left",
       "sentence": "The light at the left of each lit group’s main section.",
-      "passed": false,
+      "passed": true,
       "on": {
         "dark": "glow",
         "light": "plain",
@@ -4409,7 +4409,7 @@
       "family": "glow",
       "name": "Glow: right",
       "sentence": "The light at the right of each lit group’s main section.",
-      "passed": false,
+      "passed": true,
       "on": {
         "dark": "glow",
         "light": "plain",
@@ -4428,7 +4428,7 @@
       "family": "glow",
       "name": "Glow: bottom left",
       "sentence": "The light at the bottom left of each lit group’s last section.",
-      "passed": false,
+      "passed": true,
       "on": {
         "dark": "glow",
         "light": "plain",
@@ -4447,7 +4447,7 @@
       "family": "glow",
       "name": "Glow: bottom",
       "sentence": "The light at the bottom of each lit group’s last section, centered.",
-      "passed": false,
+      "passed": true,
       "on": {
         "dark": "glow",
         "light": "plain",
@@ -4466,7 +4466,7 @@
       "family": "glow",
       "name": "Glow: bottom right",
       "sentence": "The light at the bottom right of each lit group’s last section.",
-      "passed": false,
+      "passed": true,
       "on": {
         "dark": "glow",
         "light": "plain",

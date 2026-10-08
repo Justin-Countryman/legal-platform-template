@@ -58,8 +58,9 @@ describe('the roster', () => {
     expect(BACKGROUND_FAMILIES.map((f) => f.id)).toEqual(Object.keys(BACKGROUND_CONTRACT))
   })
 
-  it('a pass moves only with a verdict ([R-517]): the glow’s corner and centered light, 2026-10-08 ([R-647])', () => {
-    expect(BACKGROUNDS.filter((b) => b.passed).map((b) => b.id)).toEqual(['glow.corner', 'glow.center'])
+  it('a pass moves only with a verdict ([R-517]): the glow’s corner and centered light ([R-647]) and its eight positions ([R-649]), 2026-10-08', () => {
+    expect(BACKGROUNDS.filter((b) => b.passed).map((b) => b.id)).toEqual(['glow.corner', 'glow.center',
+      'glow.topLeft', 'glow.top', 'glow.topRight', 'glow.left', 'glow.right', 'glow.bottomLeft', 'glow.bottom', 'glow.bottomRight'])
   })
 
   it('no background draws the ghosted initials ([R-497]): that is a theme’s word, off on every theme', () => {
