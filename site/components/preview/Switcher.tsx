@@ -166,6 +166,9 @@ export function chromeNote(flow: Pick<FlowRules, 'chrome'>, chrome: StoredChrome
   return out
 }
 
+/** The glow's nine positions in reading order, the pad's three rows (`[R-648]`). */
+export const GLOW_PAD: readonly string[] = ['topLeft', 'top', 'topRight', 'left', 'center', 'right', 'bottomLeft', 'bottom', 'bottomRight']
+
 /** Which backgrounds have passed his eye (`[R-517]`; the glow's two lights, `[R-647]`), in words for the row. */
 export function judgedNote(): string {
   const judged = BACKGROUNDS.filter((b) => b.passed).map((b) => b.name)
@@ -464,15 +467,29 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
           </Choice>
           {backgroundChoices}
         </div>
-        {backgroundFamily && backgroundFamily.steps.length > 1 && (
-          <div className="sw-row">
-            <span className="sw-head">{backgroundFamily.name}</span>
-            {backgroundFamily.steps.map((st) => (
-              // The family's unnamed step is the family's own id (`glow`), never `glow.null`, which the plan refuses.
-              <Choice key={st.step ?? backgroundFamily.id} href={at({background: st.step ? `${backgroundFamily.id}.${st.step}` : backgroundFamily.id})} active={inForce?.id === (st.step ? `${backgroundFamily.id}.${st.step}` : backgroundFamily.id)}>{st.label}{st.passed ? '' : ' (not yet judged)'}</Choice>
-            ))}
-          </div>
-        )}
+        {backgroundFamily && backgroundFamily.steps.length > 1 && (() => {
+          const idOf = (st: {step: string | null}) => (st.step ? `${backgroundFamily.id}.${st.step}` : backgroundFamily.id)
+          // The family's unnamed step is the family's own id (`glow`), never `glow.null`, which the plan refuses.
+          const choice = (st: (typeof backgroundFamily.steps)[number]) => (
+            <Choice key={st.step ?? backgroundFamily.id} href={at({background: idOf(st)})} active={inForce?.id === idOf(st)}>{st.label}{st.passed ? '' : ' (not yet judged)'}</Choice>
+          )
+          const padded = backgroundFamily.steps.filter((st) => st.step && GLOW_PAD.includes(st.step))
+          return (
+            <>
+              <div className="sw-row">
+                <span className="sw-head">{backgroundFamily.name}</span>
+                {backgroundFamily.steps.filter((st) => !padded.includes(st)).map(choice)}
+              </div>
+              {/* The glow's nine positions as a pad (`[R-648]`): top row, middle row with Centered, bottom row. */}
+              {padded.length > 0 && (
+                <div className="sw-row">
+                  <span className="sw-head">Position</span>
+                  <div className="sw-pad">{GLOW_PAD.map((step) => padded.find((st) => st.step === step)).filter((st): st is NonNullable<typeof st> => !!st).map(choice)}</div>
+                </div>
+              )}
+            </>
+          )
+        })()}
         <p className="sw-note">
           Background: {inForce ? `${inForce.name}. ${inForce.sentence} It replaces the theme\u2019s own (${describeOn(baseFlow.on)}).` : `the theme\u2019s own: ${describeOn(baseFlow.on)}.`} {judgedNote()} A dimmed one has nothing to draw on here.
         </p>
@@ -526,6 +543,7 @@ const SWITCHER_CSS = `
 .sw *{font-family:inherit;letter-spacing:normal;text-transform:none}
 .sw-line{margin:0;cursor:pointer}
 .sw-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 0}
+.sw-pad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
 .sw-head{font-size:12px;color:#aaa;min-width:72px}
 .sw-choice,.sw-action{display:inline-flex;align-items:center;gap:4px;border:1px solid #8a8a8a;border-radius:4px;padding:4px 8px;color:#f5f5f5;text-decoration:none;font-size:13px;background:transparent}
 .sw-family{flex-direction:column;align-items:flex-start;gap:0;max-width:30ch}

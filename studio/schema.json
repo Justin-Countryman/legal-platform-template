@@ -18668,6 +18668,38 @@
             },
             {
               "type": "string",
+              "value": "glow.topLeft"
+            },
+            {
+              "type": "string",
+              "value": "glow.top"
+            },
+            {
+              "type": "string",
+              "value": "glow.topRight"
+            },
+            {
+              "type": "string",
+              "value": "glow.left"
+            },
+            {
+              "type": "string",
+              "value": "glow.right"
+            },
+            {
+              "type": "string",
+              "value": "glow.bottomLeft"
+            },
+            {
+              "type": "string",
+              "value": "glow.bottom"
+            },
+            {
+              "type": "string",
+              "value": "glow.bottomRight"
+            },
+            {
+              "type": "string",
               "value": "fade"
             },
             {

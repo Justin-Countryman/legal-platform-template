@@ -4296,7 +4296,7 @@
       "id": "glow.corner",
       "family": "glow",
       "name": "Glow: from a corner",
-      "sentence": "A light in your accent color rising from a bottom corner of up to three groups of dark sections, the groups deepened around it, on the side of any cut-out figure.",
+      "sentence": "A light in your accent color in a bottom corner of up to three groups of dark sections, the groups deepened around it, on the side of any cut-out figure, else turn and turn about.",
       "passed": true,
       "on": {
         "dark": "glow",
@@ -4326,6 +4326,158 @@
         "ends": false,
         "close": "none",
         "glowShape": "center"
+      }
+    },
+    {
+      "id": "glow.topLeft",
+      "family": "glow",
+      "name": "Glow: top left",
+      "sentence": "The light at the top left of each lit group’s first section.",
+      "passed": false,
+      "on": {
+        "dark": "glow",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none",
+        "glowShape": "corner",
+        "glowAt": "topLeft"
+      }
+    },
+    {
+      "id": "glow.top",
+      "family": "glow",
+      "name": "Glow: top",
+      "sentence": "The light at the top of each lit group’s first section, centered.",
+      "passed": false,
+      "on": {
+        "dark": "glow",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none",
+        "glowShape": "corner",
+        "glowAt": "top"
+      }
+    },
+    {
+      "id": "glow.topRight",
+      "family": "glow",
+      "name": "Glow: top right",
+      "sentence": "The light at the top right of each lit group’s first section.",
+      "passed": false,
+      "on": {
+        "dark": "glow",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none",
+        "glowShape": "corner",
+        "glowAt": "topRight"
+      }
+    },
+    {
+      "id": "glow.left",
+      "family": "glow",
+      "name": "Glow: left",
+      "sentence": "The light at the left of each lit group’s main section.",
+      "passed": false,
+      "on": {
+        "dark": "glow",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none",
+        "glowShape": "corner",
+        "glowAt": "left"
+      }
+    },
+    {
+      "id": "glow.right",
+      "family": "glow",
+      "name": "Glow: right",
+      "sentence": "The light at the right of each lit group’s main section.",
+      "passed": false,
+      "on": {
+        "dark": "glow",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none",
+        "glowShape": "corner",
+        "glowAt": "right"
+      }
+    },
+    {
+      "id": "glow.bottomLeft",
+      "family": "glow",
+      "name": "Glow: bottom left",
+      "sentence": "The light at the bottom left of each lit group’s last section.",
+      "passed": false,
+      "on": {
+        "dark": "glow",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none",
+        "glowShape": "corner",
+        "glowAt": "bottomLeft"
+      }
+    },
+    {
+      "id": "glow.bottom",
+      "family": "glow",
+      "name": "Glow: bottom",
+      "sentence": "The light at the bottom of each lit group’s last section, centered.",
+      "passed": false,
+      "on": {
+        "dark": "glow",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none",
+        "glowShape": "corner",
+        "glowAt": "bottom"
+      }
+    },
+    {
+      "id": "glow.bottomRight",
+      "family": "glow",
+      "name": "Glow: bottom right",
+      "sentence": "The light at the bottom right of each lit group’s last section.",
+      "passed": false,
+      "on": {
+        "dark": "glow",
+        "light": "plain",
+        "darkTexture": "quiet",
+        "lightTexture": "quiet",
+        "lightEvery": "all",
+        "hero": false,
+        "ends": false,
+        "close": "none",
+        "glowShape": "corner",
+        "glowAt": "bottomRight"
       }
     },
     {
