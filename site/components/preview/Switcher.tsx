@@ -3,7 +3,7 @@ import Link from 'next/link'
 import {STYLE_SETS} from '@/lib/styleSets'
 import {PALETTE_PRESETS} from '@/lib/palettes'
 import {DARKNESS_LABELS, FAMILIES, chromeSchemes, closeOf, drawsHeroPhoto, familyOf, flowById, flowId, glowGateOf, needLabel, unmetNeeds, type FlowFamily, type FlowRules} from '@/lib/flows'
-import {BACKGROUND_FAMILIES, CLOSE_NEEDS_LIGHT_FOOTER, HERO_NOT_DARK, SUGGESTED_WITH, backgroundById, describeOn, effectiveFlow} from '@/lib/backgrounds'
+import {BACKGROUNDS, BACKGROUND_FAMILIES, CLOSE_NEEDS_LIGHT_FOOTER, HERO_NOT_DARK, SUGGESTED_WITH, backgroundById, describeOn, effectiveFlow} from '@/lib/backgrounds'
 import {photoSetOf, type HeroPhoto, type SetPhoto, type SetPhotoEntry, type SetPhotoStatus} from '@/lib/heroGround'
 import {urlForImage} from '@/lib/sanity/image'
 import {type VisibleGround} from '@/lib/sectionSurface'
@@ -164,6 +164,12 @@ export function chromeNote(flow: Pick<FlowRules, 'chrome'>, chrome: StoredChrome
   if (kept.length > 0) out += ` Stored, so no theme reaches them: ${kept.join(', ')}; clear them in Header Settings and Footer Settings to hand them to the theme.`
   if (s.darkLogoMissing) out += ' The theme wants a dark header, which needs a logo for dark grounds with no white or colored box of its own; it stays light until one is uploaded.'
   return out
+}
+
+/** Which backgrounds have passed his eye (`[R-517]`; the glow's two lights, `[R-647]`), in words for the row. */
+export function judgedNote(): string {
+  const judged = BACKGROUNDS.filter((b) => b.passed).map((b) => b.name)
+  return judged.length ? `Judged so far: ${judged.join(', ')}; the rest are not yet judged.` : 'No background has been judged yet.'
 }
 
 /** What the switcher says where Gradient bloom's palette has no room to glow (`glowOk`, `[R-557]`). */
@@ -463,12 +469,12 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
             <span className="sw-head">{backgroundFamily.name}</span>
             {backgroundFamily.steps.map((st) => (
               // The family's unnamed step is the family's own id (`glow`), never `glow.null`, which the plan refuses.
-              <Choice key={st.step ?? backgroundFamily.id} href={at({background: st.step ? `${backgroundFamily.id}.${st.step}` : backgroundFamily.id})} active={inForce?.id === (st.step ? `${backgroundFamily.id}.${st.step}` : backgroundFamily.id)}>{st.label}</Choice>
+              <Choice key={st.step ?? backgroundFamily.id} href={at({background: st.step ? `${backgroundFamily.id}.${st.step}` : backgroundFamily.id})} active={inForce?.id === (st.step ? `${backgroundFamily.id}.${st.step}` : backgroundFamily.id)}>{st.label}{st.passed ? '' : ' (not yet judged)'}</Choice>
             ))}
           </div>
         )}
         <p className="sw-note">
-          Background: {inForce ? `${inForce.name}. ${inForce.sentence} It replaces the theme\u2019s own (${describeOn(baseFlow.on)}).` : `the theme\u2019s own: ${describeOn(baseFlow.on)}.`} No background has been judged yet; a dimmed one has nothing to draw on here.
+          Background: {inForce ? `${inForce.name}. ${inForce.sentence} It replaces the theme\u2019s own (${describeOn(baseFlow.on)}).` : `the theme\u2019s own: ${describeOn(baseFlow.on)}.`} {judgedNote()} A dimmed one has nothing to draw on here.
         </p>
         <p className="sw-note">
           Theme: {shown.name}. {shown.sentence}
