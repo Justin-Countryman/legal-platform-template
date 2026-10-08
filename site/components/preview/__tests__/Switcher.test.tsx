@@ -467,6 +467,10 @@ describe('Switcher, the background row', () => {
     expect(hrefs.some((h) => h.includes('glow.null'))).toBe(false)
     expect(hrefs.some((h) => /\/glow\/design/.test(h))).toBe(true)
     expect(hrefs.some((h) => h.includes('glow.accent'))).toBe(false)
+    // The nine positions as a pad, in reading order ([R-648]).
+    const pad = c.querySelector('.sw-pad')!
+    const order = [...pad.querySelectorAll('a')].map((a) => (a.getAttribute('href') ?? '').match(/glow\.([a-zA-Z]+)/)?.[1])
+    expect(order).toEqual(['topLeft', 'top', 'topRight', 'left', 'center', 'right', 'bottomLeft', 'bottom', 'bottomRight'])
   })
 
   it('the Apply link carries the one field and names the background; the theme’s own clears it', () => {

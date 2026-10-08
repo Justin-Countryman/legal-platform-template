@@ -112,7 +112,10 @@ function glowLightClasses(run: SeamProps['run']): string {
   if (!run) return ''
   return [
     run.veil === 'flat' ? 'glow-veil-flat' : run.veil === 'top' ? 'glow-veil-top' : run.veil === 'bottom' ? 'glow-veil-bottom' : '',
+    run.light ? 'glow-lit' : '',
     run.light === 'left' ? 'glow-light-left' : run.light === 'right' ? 'glow-light-right' : run.light === 'center' ? 'glow-light-center' : '',
+    // The light's row where not the middle, and its seam (`[R-648]`).
+    run.light && run.row === 'top' ? 'glow-light-top' : run.light && run.row === 'bottom' ? 'glow-light-bottom' : '',
     run.light && run.edge ? 'glow-light-edge' : '',
   ].filter(Boolean).join(' ')
 }

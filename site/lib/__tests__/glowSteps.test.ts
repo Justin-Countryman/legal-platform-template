@@ -7,7 +7,7 @@ import {BACKGROUNDS, backgroundById, effectiveFlow} from '../backgrounds'
 import {
   GLOW_LIGHT_CHROMA, GLOW_LIGHT_LIFT, GLOW_VEIL, glowLightOf, pairsCeiling, photoBandPairs, rampDrawnMax, resolvePalette, veilOf,
 } from '../designTokens'
-import {FLOWS, flowById, type FlowRules} from '../flows'
+import {FLOWS, GLOW_POSITIONS, flowById, type FlowRules} from '../flows'
 import {PALETTE_PRESETS, presetInputs} from '../palettes'
 import {GLOW_LIGHTS_PER_PAGE, walkPage, type FlowInputs, type SiteLook} from '@/components/sections/sectionFrame'
 import type {SectionAppearance} from '@/components/sections/SectionShell'
@@ -23,12 +23,15 @@ const toOklch = converter('oklch')
 const lch = (hex: string) => toOklch(hex) as unknown as {l: number; c?: number; h?: number}
 
 describe('the glow steps', () => {
-  it('keep `glow` as it was, add the corner and the center, passed by his eye ([R-647]), and retire PR 4’s accent wash', () => {
+  it('keep `glow` as it was, the corner and the center passed by his eye ([R-647]), eight fixed positions unpassed ([R-648]), and retire PR 4’s accent wash', () => {
     const glow = BACKGROUNDS.filter((b) => b.family === 'glow')
-    expect(glow.map((b) => b.id)).toEqual(['glow', 'glow.corner', 'glow.center'])
+    expect(glow.map((b) => b.id)).toEqual(['glow', 'glow.corner', 'glow.center', ...GLOW_POSITIONS.map((p) => `glow.${p}`)])
     expect(backgroundById('glow')!.name).toBe('Glow')
     expect(backgroundById('glow')!.on.glowShape).toBeUndefined()
-    expect(glow.map((b) => b.passed)).toEqual([false, true, true])
+    expect(glow.map((b) => b.passed)).toEqual([false, true, true, ...GLOW_POSITIONS.map(() => false)])
+    // A fixed position is always the corner shape, never the center (§10.2: no contradictory pair).
+    for (const p of GLOW_POSITIONS) expect(backgroundById(`glow.${p}`)!.on, p).toMatchObject({dark: 'glow', glowShape: 'corner', glowAt: p})
+    expect(backgroundById('glow.center')!.on.glowAt).toBeUndefined()
     expect(backgroundById('glow.corner')!.on).toMatchObject({dark: 'glow', glowShape: 'corner'})
     expect(backgroundById('glow.center')!.on).toMatchObject({dark: 'glow', glowShape: 'center'})
     expect(backgroundById('glow.accent')).toBeNull()
@@ -83,19 +86,36 @@ describe('the light’s color', () => {
 })
 
 describe('the shapes', () => {
-  const rules = [...CSS.matchAll(/^(\.glow-light-[^{]+)\{ --glow-light-image: radial-gradient\(ellipse (\d+)px (\d+)% at (\d+)% (\d+)%/gm)]
-    .map((m) => ({sel: m[1].trim(), ry: +m[3], y: +m[5]}))
+  // The light's anchor as the position's classes set it (`[R-648]`): read each class's custom properties from the CSS and
+  // combine them as the cascade does, the later and more specific rule winning.
+  const decl = (sel: string) => {
+    const m = CSS.match(new RegExp(`^${sel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`, 'm'))
+    expect(m, sel).not.toBeNull()
+    return Object.fromEntries([...m![1].matchAll(/(--glow-[a-z-]+):\s*([^;]+);/g)].map((d) => [d[1], d[2].trim()]))
+  }
+  const anchor = (...classes: string[]) => Object.assign({}, decl('.glow-lit'), ...classes.map((c) => decl(c)))
+  const pct = (v: string) => (v.endsWith('%') ? +v.slice(0, -1) : NaN)
 
-  it('draws every light inside its band, on the seam only where the band below is light, below the hero’s header', () => {
-    expect(rules.length).toBe(8)
-    for (const r of rules) {
-      if (r.sel.includes('glow-light-edge')) { expect(r.y, r.sel).toBe(100); continue }
-      const floor = r.sel.includes('glow-light-hero') ? 20 : 0
-      expect(r.y - r.ry, r.sel).toBeGreaterThanOrEqual(floor)
-      expect(r.y + r.ry, r.sel).toBeLessThanOrEqual(100)
+  it('draws every light inside its band, on a seam only where its row meets a light band, below the hero’s header', () => {
+    const inside = [[], ['.glow-light-top'], ['.glow-light-bottom']]
+    for (const col of ['.glow-light-left', '.glow-light-right', '.glow-light-center']) {
+      for (const row of inside) {
+        const a = anchor(col, ...row)
+        expect(pct(a['--glow-y']) - pct(a['--glow-ry']), `${col} ${row}`).toBeGreaterThanOrEqual(0)
+        expect(pct(a['--glow-y']) + pct(a['--glow-ry']), `${col} ${row}`).toBeLessThanOrEqual(100)
+      }
     }
-    // Chromium refuses `min()` inside a radial's size and draws nothing (§9.3).
+    // The rows are three places, not one squeezed line (§10.2).
+    expect(new Set(inside.map((row) => anchor('.glow-light-left', ...row)['--glow-y'])).size).toBe(3)
+    // On a seam: the top below the band's own divider, the bottom on its edge.
+    expect(decl('.glow-light-top.glow-light-edge')['--glow-y']).toBe('var(--band-divider, 0px)')
+    expect(decl('.glow-light-bottom.glow-light-edge')['--glow-y']).toBe('100%')
+    for (const hero of [decl('.glow-light-hero'), decl('.glow-light-hero.glow-light-center')]) expect(pct(hero['--glow-y']) - pct(hero['--glow-ry'])).toBeGreaterThanOrEqual(20)
+    // A phone keeps the side: the light narrows below md.
+    expect(CSS).toContain('@media (max-width: 47.999rem) { .glow-lit { --glow-w: 80vw; } }')
+    // Chromium refuses `min()` inside a radial's size and draws nothing (§9.3): plain lengths and variables only.
     expect(CSS).not.toMatch(/radial-gradient\(ellipse min\(/)
+    expect(decl('.glow-lit')['--glow-light-image']).toBe('radial-gradient(ellipse var(--glow-w) var(--glow-ry) at var(--glow-x) var(--glow-y), var(--glow-stops))')
   })
 
   it('draws the veil at the engine’s strength, and stands every layer down under forced colors, print and more contrast', () => {
@@ -125,11 +145,14 @@ const PAGE: Band[] = [
 const runsOf = (flow: FlowRules, page: Band[] = PAGE, hero: 'dark' | 'light' = 'light') => walkPage(page, resolve, look(flow), hero, null).bands.map(({seam}) => seam.run)
 
 describe('the lights', () => {
-  it('one per run of dark sections, on the band that best carries it, never a ribbon or a panel', () => {
-    const runs = runsOf(effectiveFlow(ALL_DARK, 'glow.corner'))
-    const lit = runs.flatMap((r, k) => (r?.light ? [k] : []))
-    expect(lit.length).toBe(1)
-    expect(PAGE[lit[0]].host).toBe('attorneys')
+  it('one per run of dark sections, the row picking the band: the best for the middle, the last for the bottom, the first for the top, never a ribbon or a panel', () => {
+    const litAt = (bg: string) => runsOf(effectiveFlow(ALL_DARK, bg)).flatMap((r, k) => (r?.light ? [k] : []))
+    expect(litAt('glow.center').map((k) => PAGE[k].host)).toEqual(['attorneys'])
+    expect(litAt('glow.left').map((k) => PAGE[k].host)).toEqual(['attorneys'])
+    // The automatic corner is the bottom row: the run's last band that carries a light (the ribbon after it does not).
+    expect(litAt('glow.corner').map((k) => PAGE[k].host)).toEqual(['differentiators'])
+    expect(litAt('glow.bottomRight').map((k) => PAGE[k].host)).toEqual(['differentiators'])
+    expect(litAt('glow.topLeft').map((k) => PAGE[k].host)).toEqual(['areas'])
     const panel = runsOf(effectiveFlow(ALL_DARK, 'glow.corner'), [{host: 'narrative'}, {host: 'attorneys', inset: true}, {host: 'split'}])
     expect(panel[1]?.light).toBeUndefined()
   })
@@ -147,6 +170,27 @@ describe('the lights', () => {
     expect(figure[1]?.light).toBe('left')
   })
 
+  it('stands on its row’s seam only where the run meets a light band there, else inside; the column sets the side', () => {
+    // A run whose ends carry lights, between light bands: the top row on the first band's top seam, the bottom on the last's.
+    const page: Band[] = [{host: 'split'}, {host: 'attorneys'}, {host: 'narrative'}]
+    const top = runsOf(effectiveFlow(ALL_DARK, 'glow.topRight'), page)
+    expect(top[0]).toMatchObject({light: 'right', row: 'top', edge: true})
+    const bottom = runsOf(effectiveFlow(ALL_DARK, 'glow.bottomLeft'), page)
+    expect(bottom[2]).toMatchObject({light: 'left', row: 'bottom', edge: true})
+    const mid = runsOf(effectiveFlow(ALL_DARK, 'glow.right'), page)
+    expect(mid[1]?.light).toBe('right')
+    expect(mid[1]?.row).toBeUndefined()
+    expect(mid[1]?.edge).toBeUndefined()
+    expect(runsOf(effectiveFlow(ALL_DARK, 'glow.top'), page)[0]?.light).toBe('center')
+    // A ribbon first: the top light goes to the first band that carries one, inside it, since a dark band is above it.
+    const ribboned = runsOf(effectiveFlow(ALL_DARK, 'glow.topLeft'))
+    expect(ribboned[1]).toMatchObject({light: 'left', row: 'top'})
+    expect(ribboned[1]?.edge).toBeUndefined()
+    // A cut-out figure's band takes the figure's side whatever the column.
+    const figure = runsOf(effectiveFlow(ALL_DARK, 'glow.topRight'), [{host: 'split', cutout: 'left'}, {host: 'attorneys'}])
+    expect(figure[0]?.light).toBe('left')
+  })
+
   it('veils every band of a lit run, flat inside, fading at its two ends, none on a run of one', () => {
     const runs = runsOf(effectiveFlow(ALL_DARK, 'glow.corner'))
     expect(runs[0]?.veil).toBe('top')
@@ -159,11 +203,11 @@ describe('the lights', () => {
   it('moves nothing under any other background: every theme’s runs under a shape are the plain glow’s but for the light’s keys', () => {
     for (const f of FLOWS) {
       const plain = runsOf(effectiveFlow(f, 'glow'), PAGE, 'dark')
-      for (const bg of ['glow.corner', 'glow.center']) {
+      for (const bg of BACKGROUNDS.filter((b) => b.on.glowShape).map((b) => b.id)) {
         const shaped = runsOf(effectiveFlow(f, bg), PAGE, 'dark').map((r) => {
           if (!r) return r
-          const {light, edge, veil, ...rest} = r
-          void light; void edge; void veil
+          const {light, edge, veil, row, ...rest} = r
+          void light; void edge; void veil; void row
           return rest
         })
         expect(shaped, `${f.id} ${bg}`).toEqual(plain)

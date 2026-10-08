@@ -224,7 +224,14 @@ export type BackgroundRules = {
    *  dark sections, at most three a page, from a bottom corner or centered, over a deeper surround, where the palette has
    *  room (`glowLightOk`). Absent: the run's soft glow, as before. */
   glowShape?: 'corner' | 'center'
+  /** A fixed position for the light (`[R-648]`, §10.2), under the corner shape: the row picks the band in each lit run,
+   *  the column the side. Absent: the corner's automatic place (a bottom corner, the figure's side else alternating). */
+  glowAt?: GlowPosition
 }
+
+/** The eight fixed positions of the glow's light; the ninth, the center, is the `center` shape (`[R-648]`). */
+export const GLOW_POSITIONS = ['topLeft', 'top', 'topRight', 'left', 'right', 'bottomLeft', 'bottom', 'bottomRight'] as const
+export type GlowPosition = (typeof GLOW_POSITIONS)[number]
 
 /** A background's rules, every word it does not name at its plain value. */
 export function own(on: Partial<BackgroundRules>): BackgroundRules {

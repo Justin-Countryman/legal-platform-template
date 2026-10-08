@@ -1,4 +1,4 @@
-import {flowOf, impliedNeeds, own, type BackgroundRules, type FlowRules} from './flows'
+import {GLOW_POSITIONS, flowOf, impliedNeeds, own, type BackgroundRules, type FlowRules, type GlowPosition} from './flows'
 
 // ─── Background themes: what sits on the grounds ──────────────────────────────
 //
@@ -36,6 +36,20 @@ export type Background = {
 
 type Family = {id: string; name: string; steps: readonly {step: string | null; label: string; sentence: string; on: BackgroundRules; passed?: boolean}[]}
 
+const POSITION_LABEL: Record<GlowPosition, string> = {
+  topLeft: 'Top left', top: 'Top', topRight: 'Top right', left: 'Left', right: 'Right', bottomLeft: 'Bottom left', bottom: 'Bottom', bottomRight: 'Bottom right',
+}
+const POSITION_SENTENCE: Record<GlowPosition, string> = {
+  topLeft: 'The light at the top left of each lit group\u2019s first section.',
+  top: 'The light at the top of each lit group\u2019s first section, centered.',
+  topRight: 'The light at the top right of each lit group\u2019s first section.',
+  left: 'The light at the left of each lit group\u2019s main section.',
+  right: 'The light at the right of each lit group\u2019s main section.',
+  bottomLeft: 'The light at the bottom left of each lit group\u2019s last section.',
+  bottom: 'The light at the bottom of each lit group\u2019s last section, centered.',
+  bottomRight: 'The light at the bottom right of each lit group\u2019s last section.',
+}
+
 export const BACKGROUND_FAMILIES: readonly Family[] = [
   {id: 'plain', name: 'Plain', steps: [{step: null, label: 'Plain', sentence: 'Nothing on any section: the colors alone.', on: own({})}]},
   {
@@ -52,8 +66,12 @@ export const BACKGROUND_FAMILIES: readonly Family[] = [
       {step: null, label: 'Glow', sentence: 'A soft glow down every group of dark sections, from the hero to the closing section.', on: own({dark: 'glow'})},
       // The glow as a light (monorepo WS-PREMIUM-PACKAGE-DESIGN §9.3, `[R-646]`, which retired PR 4's `glow.accent` into it):
       // both passed his eye on the fake client at 1440 and 390, 2026-10-08 (`[R-647]`).
-      {step: 'corner', label: 'From a corner', sentence: 'A light in your accent color rising from a bottom corner of up to three groups of dark sections, the groups deepened around it, on the side of any cut-out figure.', on: own({dark: 'glow', glowShape: 'corner'}), passed: true},
+      {step: 'corner', label: 'From a corner', sentence: 'A light in your accent color in a bottom corner of up to three groups of dark sections, the groups deepened around it, on the side of any cut-out figure, else turn and turn about.', on: own({dark: 'glow', glowShape: 'corner'}), passed: true},
       {step: 'center', label: 'Centered', sentence: 'A light in your accent color behind the middle of up to three groups of dark sections, the groups deepened around it.', on: own({dark: 'glow', glowShape: 'center'}), passed: true},
+      // The eight fixed positions (`[R-648]`, §10.2): the row picks the band in each lit group (its first, its best, its
+      // last), the column the side; a cut-out figure's band takes the figure's side, the hero the side only. Unpassed
+      // until his eye.
+      ...GLOW_POSITIONS.map((at) => ({step: at, label: POSITION_LABEL[at], sentence: POSITION_SENTENCE[at], on: own({dark: 'glow', glowShape: 'corner', glowAt: at})})),
     ],
   },
   {id: 'fade', name: 'Faint photographs', steps: [{step: null, label: 'Faint photographs', sentence: 'Your photographs, faint: behind every group of dark sections with soft edges, and ghosted into every second light section.', on: own({dark: 'fade', light: 'fade', close: 'photo'})}]},

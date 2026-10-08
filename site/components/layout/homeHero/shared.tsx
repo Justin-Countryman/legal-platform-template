@@ -63,6 +63,16 @@ export function resolveVariantSurface(
 //   • the cascade context attributes (data-ring-context / data-hero-image)
 //   • the optional full-bleed backdrop image + scrim (backdrop variants)
 // Variants render their own `container` inside `children`.
+/** The glow's light and veil in the hero (`[R-646]`, `[R-648]`) as one string, kept out of the band's class list, whose every
+ *  optional entry a lint rule walks in combination: the side only, below the header's clearance (`glow-light-hero`). */
+function heroLightClasses(lit: HeroGlow): string {
+  return [
+    lit.veil === 'flat' ? 'glow-veil-flat' : lit.veil === 'top' ? 'glow-veil-top' : lit.veil === 'bottom' ? 'glow-veil-bottom' : '',
+    lit.light ? 'glow-lit glow-light-hero' : '',
+    lit.light === 'left' ? 'glow-light-left' : lit.light === 'right' ? 'glow-light-right' : lit.light === 'center' ? 'glow-light-center' : '',
+  ].filter(Boolean).join(' ')
+}
+
 export function HeroBand({
   surface,
   fullViewport,
@@ -132,13 +142,7 @@ export function HeroBand({
         lit && !ramp && lit.shape === 'corner' ? 'glow-corner' : '',
         lit && !ramp && lit.shape === 'center' ? 'glow-center' : '',
         // The glow as a light (`[R-646]`): in the hero it sits below the header's clearance (`glow-light-hero`).
-        lit && !ramp && lit.shape && lit.veil === 'flat' ? 'glow-veil-flat' : '',
-        lit && !ramp && lit.shape && lit.veil === 'top' ? 'glow-veil-top' : '',
-        lit && !ramp && lit.shape && lit.veil === 'bottom' ? 'glow-veil-bottom' : '',
-        lit && !ramp && lit.shape && lit.light ? 'glow-light-hero' : '',
-        lit && !ramp && lit.shape && lit.light === 'left' ? 'glow-light-left' : '',
-        lit && !ramp && lit.shape && lit.light === 'right' ? 'glow-light-right' : '',
-        lit && !ramp && lit.shape && lit.light === 'center' ? 'glow-light-center' : '',
+        lit && !ramp && lit.shape ? heroLightClasses(lit) : '',
         flush ? '' : 'px-[5%] pb-12 md:pb-16 lg:pb-20',
         '[--hero-pt:2rem] md:[--hero-pt:3rem] lg:[--hero-pt:4rem]',
         'flex flex-col',
