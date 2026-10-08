@@ -106,6 +106,17 @@ type SectionShellProps = {
   bottomBleed?: boolean
 }
 
+/** The glow's light and veil classes (`globals.css`, `[R-646]`) as one string: written out so the class check sees each
+ *  name, and kept out of the shell's class list, whose every optional entry a lint rule walks in combination. */
+function glowLightClasses(run: SeamProps['run']): string {
+  if (!run) return ''
+  return [
+    run.veil === 'flat' ? 'glow-veil-flat' : run.veil === 'top' ? 'glow-veil-top' : run.veil === 'bottom' ? 'glow-veil-bottom' : '',
+    run.light === 'left' ? 'glow-light-left' : run.light === 'right' ? 'glow-light-right' : run.light === 'center' ? 'glow-light-center' : '',
+    run.light && run.edge ? 'glow-light-edge' : '',
+  ].filter(Boolean).join(' ')
+}
+
 export function SectionShell({
   appearance,
   bottomBleed = false,
@@ -273,9 +284,11 @@ export function SectionShell({
         fade && `grad-n-${Math.min(seam.run?.length ?? 1, 8)}`,
         fade === 'glow' && `grad-p-${Math.min(seam.run?.peak ?? 0, 7)}`,
         fade === 'glow' && seam.run?.side === 'left' && 'glow-from-left',
-        // The glow's shape where the background names one (monorepo `[R-641]`); absent, today's glow.
+        // The glow as a light where the background positions it (monorepo WS-PREMIUM-PACKAGE-DESIGN §9.3, `[R-646]`): the
+        // shape, the surround's veil on every band of a lit group, and the light on the band that carries it.
         fade === 'glow' && seam.site?.flow?.on.glowShape === 'corner' && 'glow-corner',
         fade === 'glow' && seam.site?.flow?.on.glowShape === 'center' && 'glow-center',
+        fade === 'glow' && glowLightClasses(seam.run),
         // Phase 17B: the theme's hairline, a decorative line at the top of this band; in the
         // accent where the theme says so (session 5, `[R-524]`).
         seam.hairline && 'hairline-top',

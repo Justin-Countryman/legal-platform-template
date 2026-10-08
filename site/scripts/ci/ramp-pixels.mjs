@@ -92,6 +92,54 @@ for (const path of ['headless shell', 'full Chromium', 'WebKit']) {
   }
   await browser.close()
 }
+// ─── The glow's light (monorepo WS-PREMIUM-PACKAGE-DESIGN §9.3, `[R-646]`) ───────────────────────────────────────
+// Each lit palette in three cells as the page draws them: the light falling to transparent over the surround's veil (the
+// stops read from `globals.css`, so the drawing here is the page's), a lit band's solid card, and a glowing card's corner
+// over its surface. No pixel past the photo band's ceiling.
+if (data.lights?.length) {
+  const css = readFileSync(resolve('app/globals.css'), 'utf8')
+  const stops = css.match(/--glow-stops:([^;]+);/)[1].replace(/\s+/g, ' ').trim()
+  const veil = css.match(/\.glow-veil-flat\s+\{ --glow-veil-image: (linear-gradient\([^;]+\)); \}/)[1]
+  const S = 120, PERROW = 8
+  const cellsOf = (x) => [
+    `background-color:${x.ground};background-image:radial-gradient(ellipse 100% 100% at 100% 100%, ${stops.replaceAll('var(--color-glow-light, transparent)', x.light)}),${veil}`,
+    `background-color:${x.surface}`,
+    `background-color:${x.card};background-image:radial-gradient(ellipse 70% 60% at 100% 0%, ${x.light}, transparent 70%)`,
+  ]
+  for (const path of ['headless shell', 'full Chromium', 'WebKit']) {
+    const browser = path === 'WebKit' ? await webkit.launch() : await chromium.launch(path === 'full Chromium' ? {channel: 'chromium'} : {})
+    for (const dpr of [1, 3]) {
+      const context = await browser.newContext({viewport: {width: S * 3 * PERROW, height: S * 4}, deviceScaleFactor: dpr})
+      const page = await context.newPage()
+      let past = 0, lowest = Infinity
+      for (let b0 = 0; b0 < data.lights.length; b0 += PERROW * 4) {
+        const batch = data.lights.slice(b0, b0 + PERROW * 4)
+        await page.setContent(`<!doctype html><html><body style="margin:0;display:grid;grid-template-columns:repeat(${3 * PERROW},${S}px);grid-auto-rows:${S}px">` +
+          batch.flatMap((x) => cellsOf(x).map((st) => `<div style="${st}"></div>`)).join('') + '</body></html>')
+        const png = await page.screenshot({clip: {x: 0, y: 0, width: S * 3 * PERROW, height: S * Math.ceil(batch.length / PERROW)}, animations: 'disabled'})
+        const {data: px, info} = await sharp(png).raw().toBuffer({resolveWithObject: true})
+        batch.forEach((x, i) => {
+          let max = 0
+          for (let c = 0; c < 3; c++) {
+            const slot = i * 3 + c
+            const cx = (slot % (3 * PERROW)) * S * dpr, cy = Math.floor(slot / (3 * PERROW)) * S * dpr
+            for (let y = cy + 1; y < cy + S * dpr - 1; y++) for (let xx = cx + 1; xx < cx + S * dpr - 1; xx++) {
+              const o = (y * info.width + xx) * info.channels
+              const L = lum(px[o], px[o + 1], px[o + 2])
+              if (L > max) max = L
+            }
+          }
+          lowest = Math.min(lowest, (x.ceiling + 0.05) / (max + 0.05))
+          if (max > x.ceiling + 1e-12) { past++; failures.push(`${path}, DPR ${dpr}: ${x.label} (the glow's light ${x.light} on ${x.ground}): drew a pixel at luminance ${max.toFixed(5)}, past its ceiling ${x.ceiling.toFixed(5)}`) }
+        })
+      }
+      console.log(`ramp-pixels: ${path}, DPR ${dpr}: ${data.lights.length} lights, ${past} past their ceiling, the lowest margin ${lowest.toFixed(4)}`)
+      await context.close()
+    }
+    await browser.close()
+  }
+}
+
 if (failures.length) {
   for (const f of failures.slice(0, 80)) console.log(`::error::${f}`)
   console.log(`ramp-pixels: ${failures.length} failure(s)${failures.length > 80 ? ' (the first 80 printed)' : ''}`)

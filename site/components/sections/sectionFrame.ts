@@ -2,7 +2,7 @@ import {
   type SectionAppearance,
 } from '@/components/sections/SectionShell'
 import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
-import {fadeOf, glowFillOk, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts, type Close} from '@/lib/flows'
+import {fadeOf, glowGateOf, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts, type Close} from '@/lib/flows'
 import {siteFlowOf} from '@/lib/backgrounds'
 import type {HeroPhoto, SetPhoto} from '@/lib/heroGround'
 import type {HeadingFace} from '@/lib/headingFace'
@@ -199,7 +199,7 @@ export function siteLookOf(d: Record<string, unknown> | null | undefined): SiteL
     flow: siteFlowOf(d),
     patternTexture: s('patternTexture'),
     saturated: saturatedFillOk(d),
-    glow: glowFillOk(d),
+    glow: glowGateOf(siteFlowOf(d), d),
     ghost: null,
   }
 }
@@ -248,7 +248,14 @@ export type SeamProps = {
    *  per band numbers every band as a run of one. Since Phase 17D session 2 the run also
    *  names where Gradient bloom's glow peaks (`peak`, the band carrying a cutout figure,
    *  else the run's middle band) and the side its light comes from (`side`, the figure's). */
-  run?: {index: number; length: number; peak?: number; side?: 'left' | 'right'}
+  run?: {
+    index: number; length: number; peak?: number; side?: 'left' | 'right'
+    /** The glow as a light (monorepo WS-PREMIUM-PACKAGE-DESIGN §9.3, `[R-646]`), set only under a background that
+     *  positions it: this band carries its group's light, from this side or centered, on its bottom edge where the band
+     *  below is not dark (`edge`); and every band of a lit group draws the surround's veil, fading in its first and last
+     *  band so the group meets its neighbours on the ground. */
+    light?: 'left' | 'right' | 'center'; edge?: boolean; veil?: 'flat' | 'top' | 'bottom'
+  }
   /** What this band draws over a dark ground, from the theme (Phase 17D session 2, `fadeOf`): the bridge's ramp,
    *  Gradient bloom's glow where the palette has room, or nothing. The shell reads it, and draws it only where the band
    *  paints the dark ground. */
@@ -555,6 +562,50 @@ export function walkPage<M>(
     }
   }
   const head = heroJoins ? 1 : 0
+  // ─── The glow as a light (monorepo WS-PREMIUM-PACKAGE-DESIGN §9.3, `[R-646]`) ─────────────────────────────────
+  // Under a background that positions the glow, the run's linear glow gives way to a light: one per dark run, on the band
+  // that best carries it (a cut-out figure's, else the tallest kind of band by its host, never a ribbon or an inset
+  // panel, the run's middle on a tie), at most `GLOW_LIGHTS_PER_PAGE` a page, the strongest kept; from the figure's side,
+  // else alternating, or centered. Every band of a dark run of two or more draws the surround's veil, flat inside and
+  // fading in the run's first and last band (the hero's top meets the page, so the hero holds it). Added as keys of
+  // their own beside the run's numbering, so Gradient bloom's runs, peaks and sides do not move.
+  const shape = glows ? flow?.on.glowShape : undefined
+  if (shape) {
+    const last = grounds.length - 1
+    const rankAt = (k: number): number => {
+      if (figures[k]) return 10
+      if (heroJoins && k === 0) return 5
+      if (closeJoins && k === last) return 3
+      const o = out[k - head]
+      const r = resolve(o.member)
+      if (r.appearance?.inset || o.seam.paint?.inset) return 0
+      return r.host ? LIGHT_RANK[r.host] : 3
+    }
+    const candidates: {k: number; rank: number; end: number}[] = []
+    let s = 0
+    for (let i = 1; i <= grounds.length; i++) {
+      if (i < grounds.length && grounds[i] === grounds[s]) continue
+      if (grounds[s] === 'dark') {
+        if (i - s > 1) for (let k = s; k < i; k++) runs[k] = {...runs[k], veil: k === s && !(heroJoins && k === 0) ? 'top' : k === i - 1 ? 'bottom' : 'flat'}
+        const mid = (s + i - 1) / 2
+        let best = -1
+        for (let k = s; k < i; k++) {
+          const r = rankAt(k)
+          if (r > 0 && (best < 0 || r > rankAt(best) || (r === rankAt(best) && Math.abs(k - mid) < Math.abs(best - mid)))) best = k
+        }
+        if (best >= 0) candidates.push({k: best, rank: rankAt(best), end: i - 1})
+      }
+      s = i
+    }
+    const chosen = [...candidates].sort((a, b) => b.rank - a.rank || a.k - b.k).slice(0, GLOW_LIGHTS_PER_PAGE).sort((a, b) => a.k - b.k)
+    let turn = 0
+    for (const c of chosen) {
+      const side = shape === 'center' ? 'center' : figures[c.k] ?? (turn++ % 2 === 0 ? 'right' : 'left')
+      // On the seam only where the band below is light: the run's last band, never the close (the footer may be dark).
+      const edge = c.k === c.end && !(closeJoins && c.k === last)
+      runs[c.k] = {...runs[c.k], light: side, ...(edge ? {edge: true} : {})}
+    }
+  }
   out.forEach((o, k) => { o.seam = {...o.seam, run: runs[k + head]} })
   // ─── A ribbon's edges (Phase 17E, `[R-576]`) ─────────────────────────────────
   // A ribbon on the ground of the band above it (the hero, for the first band) or below it (the close, for the
@@ -601,6 +652,15 @@ type Survivor = {appearance: SectionAppearance | null | undefined} & FlowInputs
  *  eye of 2026-10-03, `[R-631]`): the glow in and out over three bands, as the study's pages draw several glows down a
  *  page, so a long run never goes flat past one middle. */
 export const GLOW_RUN_CAP = 3
+/** At most this many lights a page under a background that positions the glow (§9.3, `[R-646]`): Nguyen & Malik draws
+ *  three, each by a figure or a section of its own. */
+export const GLOW_LIGHTS_PER_PAGE = 3
+/** How well a band carries the glow's light, by its host (§9.3: the platform's own band heights at 1440, from
+ *  `flow-metrics.json`): attorneys tallest; a ribbon (136 to 312 px) never. A band with no host ranks as a text band. */
+export const LIGHT_RANK: Record<Host, number> = {
+  attorneys: 6, testimonials: 4, areas: 4, caseResults: 4, video: 4, reviews: 4, split: 4, differentiators: 4,
+  narrative: 3, statement: 3, statRow: 3, badges: 1, ribbon: 0,
+}
 /** The bands the hero's photograph may sit behind: text-led ones (record §2.3). */
 export const PHOTO_HOSTS: readonly Host[] = ['narrative', 'split', 'testimonials', 'differentiators', 'statement']
 /** At most this many windows mid-page, plus the close: a fourth window shows the hero again. */

@@ -2918,7 +2918,6 @@ export type DesignSettings = {
     | "glow"
     | "glow.corner"
     | "glow.center"
-    | "glow.accent"
     | "fade"
     | "span"
     | "windows";
@@ -4347,7 +4346,6 @@ export type DESIGN_TOKENS_QUERY_RESULT = {
   flowPhotos: Array<string> | null;
   background:
     | "fade"
-    | "glow.accent"
     | "glow.center"
     | "glow.corner"
     | "glow"
@@ -20382,7 +20380,6 @@ export type SITE_CHROME_QUERY_RESULT = {
     flowPhotos: Array<string> | null;
     background:
       | "fade"
-      | "glow.accent"
       | "glow.center"
       | "glow.corner"
       | "glow"
@@ -21672,7 +21669,6 @@ export type PREVIEW_STORED_DESIGN_QUERY_RESULT = {
   flowPhotos?: Array<string>;
   background?:
     | "fade"
-    | "glow.accent"
     | "glow.center"
     | "glow.corner"
     | "glow"

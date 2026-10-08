@@ -1480,21 +1480,48 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
       var(--color-brand-dark) calc((var(--grad-n, 1) - var(--grad-i, 0)) * 100%));
 }
 @utility glow-from-left { --glow-side: left; }
-/* The glow's shapes and tint (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 16, `[R-641]`): a band of the Background
-   theme's `glow.corner` or `glow.center` draws one radial per band instead of the run's soft side light, in the same
-   solved color (its drawn maximum is the glow itself, which the glow pairs bound); `glow.accent` swaps the color for
-   the accent's solved glow. The corner's ellipse rises from a bottom corner on the figure's side; the center's sits low
-   enough that a merged header never stands on its peak. */
-.band-glow.glow-corner {
-  background-image: radial-gradient(ellipse 55% 70% at 100% 100%, var(--glow-color, var(--color-glow)), transparent 72%);
+/* The glow as a light (monorepo WS-PREMIUM-PACKAGE-DESIGN §9.3, `[R-646]`; drawn as Nguyen & Malik, Lewin and the Figma
+   kit draw it). Under the Background theme's `glow.corner` and `glow.center` every band of a lit group drops the run's
+   soft glow for two layers: the surround's veil (black at `GLOW_VEIL`, `lib/designTokens.ts`; flat inside the group,
+   fading in its first and last band, none on a group of one) and, on the one band the walk picks, the light: the
+   accent's solved color (`--color-glow-light`) falling to transparent over eight eased stops. The light's size is fixed
+   across (a percentage smeared up tall bands) and a share of the band down, inside the band so no seam cuts it, except on
+   the bottom edge where the band below is light (`glow-light-edge`); in the hero it starts below the header's clearance.
+   `min()` is not accepted inside a radial's size (Chromium computes the image to none): plain lengths. Its drawn maximum
+   is the light itself over a darker veil, which every pair the band draws holds on. */
+.band-glow:is(.glow-corner, .glow-center) {
+  --glow-stops:
+    var(--color-glow-light, transparent) 0%,
+    color-mix(in srgb, var(--color-glow-light, transparent) 97%, transparent) 12%,
+    color-mix(in srgb, var(--color-glow-light, transparent) 88%, transparent) 25%,
+    color-mix(in srgb, var(--color-glow-light, transparent) 72%, transparent) 38%,
+    color-mix(in srgb, var(--color-glow-light, transparent) 52%, transparent) 51%,
+    color-mix(in srgb, var(--color-glow-light, transparent) 32%, transparent) 64%,
+    color-mix(in srgb, var(--color-glow-light, transparent) 15%, transparent) 77%,
+    color-mix(in srgb, var(--color-glow-light, transparent) 4%, transparent) 89%,
+    transparent 100%;
+  background-image:
+    var(--glow-light-image, linear-gradient(transparent, transparent)),
+    var(--glow-veil-image, linear-gradient(transparent, transparent));
 }
-.band-glow.glow-corner.glow-from-left {
-  background-image: radial-gradient(ellipse 55% 70% at 0% 100%, var(--glow-color, var(--color-glow)), transparent 72%);
+.glow-veil-flat   { --glow-veil-image: linear-gradient(rgb(0 0 0 / 0.36), rgb(0 0 0 / 0.36)); }
+.glow-veil-top    { --glow-veil-image: linear-gradient(rgb(0 0 0 / 0), rgb(0 0 0 / 0.36) 55%); }
+.glow-veil-bottom { --glow-veil-image: linear-gradient(rgb(0 0 0 / 0.36) 45%, rgb(0 0 0 / 0)); }
+.glow-light-right  { --glow-light-image: radial-gradient(ellipse 860px 46% at 100% 54%, var(--glow-stops)); }
+.glow-light-left   { --glow-light-image: radial-gradient(ellipse 860px 46% at 0% 54%, var(--glow-stops)); }
+.glow-light-center { --glow-light-image: radial-gradient(ellipse 760px 46% at 50% 50%, var(--glow-stops)); }
+.glow-light-right.glow-light-edge { --glow-light-image: radial-gradient(ellipse 860px 90% at 100% 100%, var(--glow-stops)); }
+.glow-light-left.glow-light-edge  { --glow-light-image: radial-gradient(ellipse 860px 90% at 0% 100%, var(--glow-stops)); }
+.glow-light-hero.glow-light-right  { --glow-light-image: radial-gradient(ellipse 860px 38% at 100% 60%, var(--glow-stops)); }
+.glow-light-hero.glow-light-left   { --glow-light-image: radial-gradient(ellipse 860px 38% at 0% 60%, var(--glow-stops)); }
+.glow-light-hero.glow-light-center { --glow-light-image: radial-gradient(ellipse 760px 36% at 50% 62%, var(--glow-stops)); }
+/* A see-through card on a lit band stands on it: a solid surface between the dark ground and the light
+   (`--color-glow-surface`), a black shadow (an accent shadow adds light where the light has none to spare, §9.3). A
+   light island (`data-ring-context="light"`) and a photo card keep their own. */
+:is(.glow-light-left, .glow-light-right, .glow-light-center) [data-card]:not([data-ring-context="light"]):not(:has(img)) {
+  background-color: var(--color-glow-surface, var(--color-brand-dark));
+  box-shadow: 0 18px 40px -24px rgb(0 0 0 / 0.55);
 }
-.band-glow.glow-center {
-  background-image: radial-gradient(ellipse 60% 55% at 50% 60%, var(--glow-color, var(--color-glow)), transparent 72%);
-}
-[data-glow-tint="accent"] { --glow-color: var(--color-glow-accent); }
 /* The peak's band in its run, as real utilities written out (the Tailwind scanner cannot see a built name). */
 @utility grad-p-0 { --grad-p: 0.5; }
 @utility grad-p-1 { --grad-p: 1.5; }
@@ -1506,9 +1533,9 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 @utility grad-p-7 { --grad-p: 7.5; }
 /* The ground stays: forced colors and print drop the image, and a visitor asking for more contrast gets the plain
    ground, the glow being the ground a pair holds on with the least room (ADV-17D2-C). */
-@media (forced-colors: active) { .band-glow, .band-glow:is(.glow-corner, .glow-center), .band-glow.glow-corner.glow-from-left { background-image: none; } }
-@media print { .band-glow, .band-glow:is(.glow-corner, .glow-center), .band-glow.glow-corner.glow-from-left { background-image: none; } }
-@media (prefers-contrast: more) { .band-glow, .band-glow:is(.glow-corner, .glow-center), .band-glow.glow-corner.glow-from-left { background-image: none; } }
+@media (forced-colors: active) { .band-glow, .band-glow:is(.glow-corner, .glow-center) { background-image: none; } }
+@media print { .band-glow, .band-glow:is(.glow-corner, .glow-center) { background-image: none; } :is(.glow-light-left, .glow-light-right, .glow-light-center) [data-card] { box-shadow: none; } }
+@media (prefers-contrast: more) { .band-glow, .band-glow:is(.glow-corner, .glow-center) { background-image: none; } :is(.glow-light-left, .glow-light-right, .glow-light-center) [data-card] { box-shadow: none; } }
 
 /* The resting card edge (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 14, `[R-641]`): every card on the page (a
    practice area, an attorney, a testimonial, a result: `[data-card]`, which list rows do not carry) takes an accent edge
@@ -1533,15 +1560,19 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 }
 
 /* Glowing cards (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 16, `[R-641]`; ADV-PP-A's mechanism): on a dark band,
-   wherever the shell carries `data-card-glow` (only where the palette's glow holds), a card stops being a light island and
-   becomes a dark one: a surface on the ramp from the dark ground to the glow (`--color-card-on-dark`), an accent edge at
-   about half strength, an accent glow in its top corner (`--color-card-glow`), and the glow band's own text values, under
-   which every pair is already proven. Light bands keep light cards. */
+   wherever the shell carries `data-card-glow` (only where the palette has room for the glow's light), a card stops being a
+   light island and becomes a dark one: a surface between the dark ground and the light (`--color-card-on-dark`), an accent
+   edge at about half strength on a real border (forced colors drop the glow, the border stays), the light in its top
+   corner (`--color-card-glow`, `[R-646]`), a black shadow (an accent one added light the light had none to spare for,
+   §9.3), and the glow band's own text values, under which every pair is already proven. Light bands keep light cards. */
 [data-card-glow="on"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] {
   background-color: var(--color-card-on-dark);
   background-image: radial-gradient(ellipse 70% 60% at 100% 0%, var(--color-card-glow), transparent 70%);
+  border-width: 1px;
+  border-style: solid;
   border-color: color-mix(in srgb, var(--color-accent-on-dark) 48%, transparent);
-  box-shadow: 0 18px 40px -24px color-mix(in srgb, var(--color-accent-on-dark) 40%, transparent);
+  box-shadow: 0 18px 40px -24px rgb(0 0 0 / 0.55);
+  --color-action-state-cue:  var(--color-action-state-cue-on-scrim);
   --color-foreground:        var(--color-foreground-on-dark);
   --color-foreground-muted:  var(--color-foreground-muted-on-dark);
   --color-foreground-subtle: var(--color-foreground-subtle-on-dark);
@@ -1556,6 +1587,8 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   --color-star-outline:      var(--color-star-outline-on-dark);
   --color-hover-wash:        var(--color-hover-wash-on-dark);
 }
+@media (prefers-contrast: more) { [data-card-glow="on"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] { background-image: none; box-shadow: none; } }
+@media print { [data-card-glow="on"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] { background-image: none; box-shadow: none; } }
 
 /* Photo color and edge (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 16, `[R-641]`): one treatment for the site's
    photographs, set once (`data-photo-color`, `data-photo-edge`). They reach a content section's feature photo where its

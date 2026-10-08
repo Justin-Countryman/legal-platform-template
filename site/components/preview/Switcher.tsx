@@ -2,7 +2,7 @@ import {COLOR_DETAILS, DETAILS, detailsOf} from '@/lib/details'
 import Link from 'next/link'
 import {STYLE_SETS} from '@/lib/styleSets'
 import {PALETTE_PRESETS} from '@/lib/palettes'
-import {DARKNESS_LABELS, FAMILIES, chromeSchemes, closeOf, drawsHeroPhoto, familyOf, flowById, flowId, needLabel, unmetNeeds, type FlowFamily, type FlowRules} from '@/lib/flows'
+import {DARKNESS_LABELS, FAMILIES, chromeSchemes, closeOf, drawsHeroPhoto, familyOf, flowById, flowId, glowGateOf, needLabel, unmetNeeds, type FlowFamily, type FlowRules} from '@/lib/flows'
 import {BACKGROUND_FAMILIES, CLOSE_NEEDS_LIGHT_FOOTER, HERO_NOT_DARK, SUGGESTED_WITH, backgroundById, describeOn, effectiveFlow} from '@/lib/backgrounds'
 import {photoSetOf, type HeroPhoto, type SetPhoto, type SetPhotoEntry, type SetPhotoStatus} from '@/lib/heroGround'
 import {urlForImage} from '@/lib/sanity/image'
@@ -321,7 +321,8 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
     const f = effectiveFlow(baseFlow, id)
     if (f.on.dark === 'plain' && f.on.light === 'plain' && !f.on.hero && f.on.close === 'none') return {none: false, note: ''}
     const heroG = heroUnder ? heroUnder(f) : hero
-    const trySite = {...site, flow: f, photoSet: heroPhoto ? usableSet : [], closeShown}
+    // The room the option's glow needs on this palette: the light's where it positions one (`[R-646]`), else the glow's.
+    const trySite = {...site, flow: f, photoSet: heroPhoto ? usableSet : [], closeShown, glow: glowGateOf(f, chrome?.designTokens as Record<string, unknown> | null)}
     const needs = unmetNeeds(f, canvasFacts(survivors, trySite, heroG, f)).filter((n) => f.ownNeeds.includes(n) === false)
     const footer = footerOf(f)
     const above = walkPage(blocks, frameOf, trySite, heroG, null).last ?? heroG
@@ -461,7 +462,8 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
           <div className="sw-row">
             <span className="sw-head">{backgroundFamily.name}</span>
             {backgroundFamily.steps.map((st) => (
-              <Choice key={st.step} href={at({background: `${backgroundFamily.id}.${st.step}`})} active={inForce?.id === `${backgroundFamily.id}.${st.step}`}>{st.label}</Choice>
+              // The family's unnamed step is the family's own id (`glow`), never `glow.null`, which the plan refuses.
+              <Choice key={st.step ?? backgroundFamily.id} href={at({background: st.step ? `${backgroundFamily.id}.${st.step}` : backgroundFamily.id})} active={inForce?.id === (st.step ? `${backgroundFamily.id}.${st.step}` : backgroundFamily.id)}>{st.label}</Choice>
             ))}
           </div>
         )}
