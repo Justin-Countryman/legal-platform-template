@@ -23,12 +23,12 @@ const toOklch = converter('oklch')
 const lch = (hex: string) => toOklch(hex) as unknown as {l: number; c?: number; h?: number}
 
 describe('the glow steps', () => {
-  it('keep `glow` as it was, the corner and the center passed by his eye ([R-647]), eight fixed positions unpassed ([R-648]), and retire PR 4’s accent wash', () => {
+  it('keep `glow` as it was, the corner and the center passed by his eye ([R-647]), eight fixed positions passed too ([R-648], [R-649]), and retire PR 4’s accent wash', () => {
     const glow = BACKGROUNDS.filter((b) => b.family === 'glow')
     expect(glow.map((b) => b.id)).toEqual(['glow', 'glow.corner', 'glow.center', ...GLOW_POSITIONS.map((p) => `glow.${p}`)])
     expect(backgroundById('glow')!.name).toBe('Glow')
     expect(backgroundById('glow')!.on.glowShape).toBeUndefined()
-    expect(glow.map((b) => b.passed)).toEqual([false, true, true, ...GLOW_POSITIONS.map(() => false)])
+    expect(glow.map((b) => b.passed)).toEqual([false, true, true, ...GLOW_POSITIONS.map(() => true)])
     // A fixed position is always the corner shape, never the center (§10.2: no contradictory pair).
     for (const p of GLOW_POSITIONS) expect(backgroundById(`glow.${p}`)!.on, p).toMatchObject({dark: 'glow', glowShape: 'corner', glowAt: p})
     expect(backgroundById('glow.center')!.on.glowAt).toBeUndefined()
