@@ -114,16 +114,16 @@ describe('the crossings: up to two, a figure out of a panel among them', () => {
     expect(out.filter((o) => o.seam.raisePhoto || o.seam.raiseFigure).length).toBeLessThanOrEqual(MAX_CROSSINGS)
   })
 
-  it('the dark panel’s cut-out figure rises out of it, from the second band on, the band above reserving it', () => {
+  it('the dark panel’s cut-out figure rises out of it, the band above reserving it; under the hero, inside its own band', () => {
     const page = [b('ribbon', 'dark'), b('split', 'light', {raisesPhoto: true, cutout: 'left'}), b('areas', 'light')]
     const out = walk(page, light())
     expect(out[1].seam.paint?.onPanel?.fill).toBe('ground')
-    expect(out[1].seam.raiseFigure).toBe(true)
+    expect(out[1].seam.raiseFigure).toBe('seam')
     expect(out[0].seam.nextOverlap).toBe('photo')
-    // The first band under the hero: the panel, the figure standing in it.
+    // The first band under the hero: the panel, the figure rising inside its own band.
     const first = walk(page.slice(1), light())
     expect(first[0].seam.paint?.onPanel?.fill).toBe('ground')
-    expect(first[0].seam.raiseFigure).toBeFalsy()
+    expect(first[0].seam.raiseFigure).toBe('band')
   })
 })
 
@@ -157,7 +157,7 @@ describe('the shell: the two panels as drawn', () => {
   })
 
   it('a figure out of either lets it out above, as a Panels panel does', () => {
-    const out = render(<SectionShell appearance={{surface: 'light'}} seam={seam('ground', {raiseFigure: true})}>x</SectionShell>).container
+    const out = render(<SectionShell appearance={{surface: 'light'}} seam={seam('ground', {raiseFigure: 'seam'})}>x</SectionShell>).container
     expect(out.querySelector('[data-dark-panel="ground"]')!.className.split(' ')).toContain('panel-clip')
   })
 })

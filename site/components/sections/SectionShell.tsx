@@ -157,7 +157,8 @@ export function SectionShell({
   // whose band never shares its ground with the band above, or a figure out of a panel (ADV-LO amendment 5), which may,
   // and then cancels the halved padding the band draws there. One value, not two entries in the class list below, whose
   // every optional entry a lint rule walks in combination (traps.md, the glow redo).
-  const ptVar = seam.raisePhoto ? steps.ptVar : seam.raiseFigure ? (seam.seamTop ? steps.ptSeamVar : steps.ptVar) : ''
+  // The first band's figure stops inside its own band (`figure-inside`), under the hero, which reserves nothing.
+  const ptVar = seam.raisePhoto ? steps.ptVar : seam.raiseFigure ? `${seam.seamTop ? steps.ptSeamVar : steps.ptVar}${seam.raiseFigure === 'band' ? ' figure-inside' : ''}` : ''
 
   const overlap = overlapOf(appearance)
   // The three top-padding states are exclusive, most specific first. An

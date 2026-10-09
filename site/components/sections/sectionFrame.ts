@@ -250,10 +250,12 @@ export type SeamProps = {
   /** This band raises its feature photo into the band above (Phase 16E). At most one
    *  band on a page does. */
   raisePhoto?: boolean
-  /** This band's cut-out figure stands on its panel's bottom edge and rises past the panel's top edge, across the seam
-   *  into the band above by the raised photo's depth, which the band above reserves (the Layout theme's figure out of a
-   *  panel, ADV-LO amendment 5). From `xl` only; one of the page's crossings (`MAX_CROSSINGS`). */
-  raiseFigure?: boolean
+  /** This band's cut-out figure stands on its panel's bottom edge and rises past the panel's top edge (the Layout theme's
+   *  figure out of a panel, ADV-LO amendment 5): across the seam into the band above by the raised photo's depth, which
+   *  the band above reserves (`seam`); or, on the first band, under the hero, which reserves nothing, through the band's
+   *  own top padding to 2rem under its top edge (`band`), where Lewin's and Calesaric's attorneys stop (38 and 30 px). From
+   *  `xl` only; one of the page's crossings (`MAX_CROSSINGS`). */
+  raiseFigure?: 'seam' | 'band'
   /** The ground an INSET band's own `<section>` paints (Phase 16F). Normally an inset
    *  band paints nothing and the page's light ground runs around its panel; where the
    *  band above and the band below both show one strong ground, the panel sits ON that
@@ -511,26 +513,27 @@ export function walkPage<M>(
   // layout's, which may allow none (Contained).
   //
   // THE FIGURE OUT OF A PANEL (ADV-LO amendment 5; Lewin and Calesaric, measured live 2026-10-09: the attorney stands on
-  // the panel's bottom edge and rises 72 to 143 px past its top). Where the layout allows it, a band whose words sit on a
-  // layout's panel and whose split draws a cut-out figure is eligible too, from the second band on (the band above
-  // reserves the crossing, as it does for a photograph; the hero above the first band cannot), whatever ground the band
-  // above shows: the figure breaks the panel, not a change of ground. It joins the photographs in one pick, nearest the
-  // middle, and counts against the same cap. A photograph still never rises out of a panel.
+  // the panel's bottom edge and rises 72 to 143 px past its top, stopping 30 to 38 px under its band's top). Where the
+  // layout allows it, a band whose words sit on a layout's panel and whose split draws a cut-out figure is eligible too,
+  // whatever ground the band above shows: the figure breaks the panel, not a change of ground. From the second band on it
+  // crosses the seam, which the band above reserves as it does for a photograph; on the first band, under the hero, which
+  // reserves nothing, it rises inside its own band (`raiseFigure: 'band'`). It joins the photographs in one pick, nearest
+  // the middle, and counts against the same cap. A photograph still never rises out of a panel.
   const cross = flow ? layoutRulesOf(flow).cross : null
   const outOfPanels = !!cross && cross.kinds.includes('figure')
   if (cross && (cross.kinds.includes('photo') || outOfPanels) && cross.max > 0) {
     const eligible: number[] = []
     const figureAt = new Set<number>()
-    for (let i = 1; i < out.length; i++) {
+    for (let i = 0; i < out.length; i++) {
       const r = resolve(out[i].member)
       if (outOfPanels && out[i].seam.paint?.onPanel && r.raisesPhoto && r.cutout && !isInset(r, out[i].seam.paint ?? null)) {
         eligible.push(i)
         figureAt.add(i)
         continue
       }
-      // Nor a band whose words sit on a raised panel (the Layout theme's): the panel clips its photograph, as an inset's
-      // does; only a cut-out figure leaves a panel (above).
-      if (!cross.kinds.includes('photo')) continue
+      // A photograph never rises from the first band (nothing above it); nor from a band whose words sit on a raised panel
+      // (the Layout theme's): the panel clips its photograph, as an inset's does; only a cut-out figure leaves a panel (above).
+      if (i === 0 || !cross.kinds.includes('photo')) continue
       if (!r.raisesPhoto || isInset(r, out[i].seam.paint ?? null) || out[i].seam.paint?.onPanel) continue
       const g = groundAt.get(out[i].index) ?? visibleGround(r.appearance)
       const prev = groundAt.get(out[i - 1].index) ?? visibleGround(resolve(out[i - 1].member).appearance)
@@ -553,8 +556,9 @@ export function walkPage<M>(
       picks.push(i)
     }
     for (const pick of picks) {
-      out[pick].seam = {...out[pick].seam, ...(figureAt.has(pick) ? {raiseFigure: true} : {raisePhoto: true})}
-      out[pick - 1].seam = {...out[pick - 1].seam, nextOverlap: 'photo'}
+      // The first band's figure rises inside its own band, under the hero; every other crossing is reserved above.
+      out[pick].seam = {...out[pick].seam, ...(figureAt.has(pick) ? {raiseFigure: pick === 0 ? 'band' as const : 'seam' as const} : {raisePhoto: true})}
+      if (pick > 0) out[pick - 1].seam = {...out[pick - 1].seam, nextOverlap: 'photo'}
     }
   }
 

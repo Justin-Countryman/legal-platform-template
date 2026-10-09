@@ -30,7 +30,8 @@ import {LOOK} from './flowFixtures'
 // 143 px (Lewin) and 72 px (Calesaric) past its top; on a phone neither crosses. Under a layout that lets a figure out
 // (Panels), a band whose words sit on a panel and whose split draws a cut-out raises it: on the panel's bottom edge,
 // past its top, across the seam by the raised photograph's depth, which the band above reserves. One of the page's
-// crossings; never the first band; a photograph never rises out of a panel.
+// crossings; on the first band, under the hero, which reserves nothing, it stops inside its own band, where the references'
+// attorneys stop (Lewin 38 px, Calesaric 30 px, under their band's top); a photograph never rises out of a panel.
 
 const CSS = fs.readFileSync(path.resolve(__dirname, '../../../app/globals.css'), 'utf8')
 
@@ -48,7 +49,7 @@ describe('the walk: which panel lets its figure out', () => {
     const page = [prose('narrative', 'light'), figure('dark'), prose('narrative', 'light')]
     const out = walk(page, panels())
     expect(out[1].seam.paint?.onPanel).toBeTruthy()
-    expect(out[1].seam.raiseFigure).toBe(true)
+    expect(out[1].seam.raiseFigure).toBe('seam')
     expect(out[1].seam.raisePhoto).toBeFalsy()
     expect(out.map((o) => o.seam.nextOverlap)).toEqual(['photo', 'none', 'none'])
   })
@@ -58,14 +59,16 @@ describe('the walk: which panel lets its figure out', () => {
     const run = [prose('narrative', 'dark'), prose('statement', 'dark'), figure('dark')]
     const out = walk(run, panels())
     expect(out.map((o) => !!o.seam.paint?.onPanel)).toEqual([true, false, true])
-    expect(out[2].seam.raiseFigure).toBe(true)
+    expect(out[2].seam.raiseFigure).toBe('seam')
     expect(out[2].seam.seamTop).toBe(true)
     expect(out[1].seam.nextOverlap).toBe('photo')
   })
 
-  it('never the first band (the hero above it reserves nothing), never a band without a cut-out, never a photograph', () => {
-    expect(figuresOf([figure('dark'), prose('narrative', 'light')], panels())).toEqual([])
-    expect(walk([figure('dark'), prose('narrative', 'light')], panels())[0].seam.paint?.onPanel).toBeTruthy()
+  it('on the first band it rises inside its own band, reserving nothing above; never a band without a cut-out, never a photograph', () => {
+    const first = walk([figure('dark'), prose('narrative', 'light')], panels())
+    expect(first[0].seam.paint?.onPanel).toBeTruthy()
+    expect(first[0].seam.raiseFigure).toBe('band')
+    expect(first.map((o) => o.seam.nextOverlap)).toEqual(['none', 'none'])
     // A panel band whose split draws a photograph: neither the figure nor a raised photograph.
     const out = walk([prose('narrative', 'light'), photo('dark'), prose('narrative', 'light')], panels())
     expect(out[1].seam.paint?.onPanel).toBeTruthy()
@@ -107,7 +110,7 @@ describe('the walk: which panel lets its figure out', () => {
     // The middle is 4: 3 and 5 tie and are two apart, so both are kept; 1 and 7 are left for want of room under the cap.
     expect(crossings).toEqual([3, 5])
     expect(out[3].seam.raisePhoto).toBe(true)
-    expect(out[5].seam.raiseFigure).toBe(true)
+    expect(out[5].seam.raiseFigure).toBe('seam')
     expect(out.flatMap((o, i) => (o.seam.nextOverlap === 'photo' ? [i] : []))).toEqual([2, 4])
   })
 })
@@ -118,7 +121,7 @@ const seam = (extra: Partial<SeamProps> = {}): SeamProps =>
 
 describe('the shell and the split: the figure as drawn', () => {
   it('the panel lets it out above and below and keeps the clip sideways; every other panel keeps its clip', () => {
-    const out = render(<SectionShell appearance={{surface: 'dark'}} seam={seam({raiseFigure: true})}>x</SectionShell>).container
+    const out = render(<SectionShell appearance={{surface: 'dark'}} seam={seam({raiseFigure: 'seam'})}>x</SectionShell>).container
     const panel = out.querySelector('[data-dark-panel]')!
     expect(panel.className.split(' ')).toEqual(['relative', 'mx-auto', 'max-w-7xl', 'panel-clip', 'rounded-ui', 'panel-pad'])
     const plain = render(<SectionShell appearance={{surface: 'dark'}} seam={seam()}>x</SectionShell>).container
@@ -127,9 +130,12 @@ describe('the shell and the split: the figure as drawn', () => {
 
   it('the band publishes the top padding it draws, halved at a seam, so the figure cancels exactly that', () => {
     const classes = (s: Partial<SeamProps>) => render(<SectionShell appearance={{surface: 'dark'}} seam={seam(s)}>x</SectionShell>).container.querySelector('section')!.className.split(' ')
-    expect(classes({raiseFigure: true})).toEqual(expect.arrayContaining(['band-pt-normal', 'pt-16', 'md:pt-24', 'lg:pt-28']))
-    expect(classes({raiseFigure: true, seamTop: true})).toEqual(expect.arrayContaining(['band-pt-seam-normal', 'pt-8', 'md:pt-12', 'lg:pt-14']))
-    expect(classes({raiseFigure: true, seamTop: true})).not.toContain('band-pt-normal')
+    expect(classes({raiseFigure: 'seam'})).toEqual(expect.arrayContaining(['band-pt-normal', 'pt-16', 'md:pt-24', 'lg:pt-28']))
+    expect(classes({raiseFigure: 'seam', seamTop: true})).toEqual(expect.arrayContaining(['band-pt-seam-normal', 'pt-8', 'md:pt-12', 'lg:pt-14']))
+    expect(classes({raiseFigure: 'seam', seamTop: true})).not.toContain('band-pt-normal')
+    // The first band's figure stops inside its band: it crosses by minus 2rem (`figure-inside`), and only it does.
+    expect(classes({raiseFigure: 'band'})).toEqual(expect.arrayContaining(['band-pt-normal', 'figure-inside']))
+    expect(classes({raiseFigure: 'seam'})).not.toContain('figure-inside')
     expect(classes({}).filter((c) => c.startsWith('band-pt'))).toEqual([])
   })
 
@@ -142,7 +148,7 @@ describe('the shell and the split: the figure as drawn', () => {
       const img = render(<ContentSectionBlock data={data} disclaimer="d" scale="marketing" seam={s} />).container.querySelector('img')!
       return img.closest('.stacked-cutout')!.parentElement!.className.split(' ')
     }
-    const risen = column(seam({raiseFigure: true}))
+    const risen = column(seam({raiseFigure: 'seam'}))
     expect(risen).toEqual(expect.arrayContaining(['xl:self-end', 'xl:figure-rise']))
     for (const c of ['xl:photo-rise', 'xl:self-start', 'xl:cutout-sink']) expect(risen).not.toContain(c)
     expect(column(seam()).filter((c) => c.includes('rise'))).toEqual([])
@@ -151,7 +157,8 @@ describe('the shell and the split: the figure as drawn', () => {
   it('the rise cancels the panel’s top padding, the band’s, its divider, and crosses by the raised photograph’s depth', () => {
     const rule = CSS.slice(CSS.indexOf('@utility figure-rise {'), CSS.indexOf('\n}\n', CSS.indexOf('@utility figure-rise {')) + 2)
     expect(rule).toContain('margin-bottom: calc(-1 * var(--band-pb, 0px));')
-    expect(rule).toContain('margin-top: calc(-1 * (var(--panel-pt, 0px) + var(--band-pt, 0px) + var(--band-divider, 0px) + var(--photo-rise)));')
+    expect(rule).toContain('margin-top: calc(-1 * (var(--panel-pt, 0px) + var(--band-pt, 0px) + var(--band-divider, 0px) + var(--figure-cross, var(--photo-rise))));')
+    expect(CSS).toContain('@utility figure-inside { --figure-cross: -2rem; }')
     // Only where the panel can let it out: an engine without `overflow: clip` keeps the clip and the figure inside it.
     expect(rule.indexOf('@supports (overflow: clip)')).toBeLessThan(rule.indexOf('margin-top'))
     const clip = CSS.slice(CSS.indexOf('@utility panel-clip {'), CSS.indexOf('\n}\n', CSS.indexOf('@utility panel-clip {')) + 2)

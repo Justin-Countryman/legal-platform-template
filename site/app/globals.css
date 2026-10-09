@@ -1438,7 +1438,8 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
    Lewin and Calesaric draw it (measured live 2026-10-09 at 1440: the attorney stands on the panel's bottom edge and rises
    125 to 143 px, and 72 px, past its top), a split's cut-out stands on its panel's bottom edge and rises past the panel's
    top, through the band's own top padding and its divider, and across the seam by the raised photograph's depth, which
-   the band above reserves (`bottomBeforeOverlap.photo`), so it covers padding added for it and never a word. From `xl`
+   the band above reserves (`bottomBeforeOverlap.photo`), so it covers padding added for it and never a word; on the first
+   band, under the hero, which reserves nothing, it stops inside its own band (`figure-inside`). From `xl`
    only, where the split sits side by side; on a phone it stands in its panel. The panel lets it out only above and below:
    `panel-clip` clips sideways (a marquee, a long word) and nowhere else. An engine without `overflow: clip` keeps the
    panel's old clip and the figure stays inside, standing on the edge, rather than losing its head to the clip. */
@@ -1449,9 +1450,12 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 @utility figure-rise {
   margin-bottom: calc(-1 * var(--band-pb, 0px));
   @supports (overflow: clip) {
-    margin-top: calc(-1 * (var(--panel-pt, 0px) + var(--band-pt, 0px) + var(--band-divider, 0px) + var(--photo-rise)));
+    margin-top: calc(-1 * (var(--panel-pt, 0px) + var(--band-pt, 0px) + var(--band-divider, 0px) + var(--figure-cross, var(--photo-rise))));
   }
 }
+/* The first band's figure, under the hero, which reserves nothing: it stops 2rem under its own band's top edge, where the
+   references' attorneys stop (Lewin 38 px, Calesaric 30 px), instead of crossing. */
+@utility figure-inside { --figure-cross: -2rem; }
 
 /* ─── The gradient on a dark band (Phase 16F) ────────────────────────────────── */
 /* The ground fades from the brand dark into the deep stop the engine derived for

@@ -316,7 +316,7 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
   // The Layout theme's panel (Panels): its padding, which publishes its bottom padding to a cut-out, and its lane.
   'panel-pad', 'max-w-7xl', 'mx-auto',
   // The figure out of a panel (ADV-LO amendment 5): the panel that lets it out, and the figure's column.
-  'panel-clip', 'xl:figure-rise', 'xl:self-end',
+  'panel-clip', 'xl:figure-rise', 'xl:self-end', 'figure-inside',
 ]
   .join(' ')
   .split(/\s+/)
