@@ -16,6 +16,9 @@ vi.mock('@/components/ui/SanityImage', () => ({
 import {PracticeAreaNavBlock} from '../PracticeAreaNavBlock'
 import {AttorneySectionBlock} from '../AttorneySectionBlock'
 import {ContentSectionBlock} from '../ContentSectionBlock'
+import {VideoEmbed} from '@/components/media/VideoEmbed'
+import {resolvePalette, type ColorInputs} from '@/lib/designTokens'
+import {PALETTE_PRESETS} from '@/lib/palettes'
 
 // PHOTO COLOR AND EDGE (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 16, `[R-641]`): one treatment for the site's
 // photographs, set once. The rules reach feature photos and practice-card photos, never an icon, an attorney's photo or a
@@ -50,5 +53,96 @@ describe('photo color', () => {
     expect(CSS).toMatch(/\[data-photo-color="tint"\] \[data-feature-photo\]::after \{[^}]*mix-blend-mode: color;/)
     expect(CSS).toMatch(/\[data-photo-color="tint"\] nav \[data-card\] img\.tile-photo \+ div \{[^}]*background-image: none;[^}]*mix-blend-mode: color;/)
     expect(CSS).toMatch(/\[data-photo-edge="fade"\] \.xl\\:order-first > \[data-feature-photo\] img \{ mask-image: linear-gradient\(to right/)
+  })
+})
+
+// ONE TINT ON EVERY BAND (monorepo backlog 438): a feature photo's and a video poster's tint is the accent as chosen
+// (`--color-accent-on-light`), as the hero's is and the practice tiles' (light cards) is. A dark band re-points
+// `--color-accent` to the lightened accent, a text form, which washed a photograph on a dark band paler than the same
+// photograph on a light one. No text sits on either photograph; the one mark on a poster holds over every tinted pixel.
+
+const ch = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+const lin = (v: number) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)
+const lum = (c: number[]) => 0.2126 * lin(c[0]) + 0.7152 * lin(c[1]) + 0.0722 * lin(c[2])
+const ratio = (a: number[], b: number[]) => {
+  const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p)
+  return (x + 0.05) / (y + 0.05)
+}
+const bits = (c: number[]) => c.map((v) => Math.round(v * 255) / 255)
+const over = (ground: number[], ink: number[], alpha: number) => bits(ground.map((v, i) => v * (1 - alpha) + ink[i] * alpha))
+const blendLum = (c: number[]) => 0.3 * c[0] + 0.59 * c[1] + 0.11 * c[2]
+function clipColor(c: number[]): number[] {
+  const l = blendLum(c), n = Math.min(...c), x = Math.max(...c)
+  let o = c
+  if (n < 0) o = o.map((v) => l + ((v - l) * l) / (l - n))
+  if (x > 1) o = o.map((v) => l + ((v - l) * (1 - l)) / (x - l))
+  return o
+}
+/** Grayscale, then the accent in the `color` blend (W3C Compositing) at 60%, at eight bits a channel. */
+const tinted = (pixel: number[], accent: number[]) => {
+  const g = 0.2126 * pixel[0] + 0.7152 * pixel[1] + 0.0722 * pixel[2]
+  const blended = clipColor(accent.map((v) => v + (blendLum([g, g, g]) - blendLum(accent))))
+  return bits([g, g, g].map((v, i) => v * 0.4 + blended[i] * 0.6))
+}
+function seeded(n: number, seed: number): ColorInputs[] {
+  let s = seed >>> 0
+  const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 2 ** 32
+  const hex = () => '#' + Math.floor(rnd() * 0x1000000).toString(16).padStart(6, '0')
+  return Array.from({length: n}, () => ({darkGround: hex(), lightGround: hex(), accent: hex(), action: rnd() < 0.5 ? hex() : null}))
+}
+const PALETTES = [...PALETTE_PRESETS.map((p) => p as unknown as ColorInputs), ...seeded(500, 4381)]
+
+describe('backlog 438: one photo tint on every band', () => {
+  it('the feature photo, the poster and the hero tint in the accent as chosen, which no band re-points', () => {
+    for (const box of ['\\[data-feature-photo\\]', '\\[data-video-poster\\]', '\\[data-hero-photo\\]']) {
+      expect(CSS).toMatch(new RegExp(`\\[data-photo-color="tint"\\] ${box}::after \\{[^}]*background-color: var\\(--color-accent-on-light\\);[^}]*mix-blend-mode: color;[^}]*opacity: 0\\.6;`))
+    }
+    // Declared once, at the root, as a color: no dark, photo, glow or island block re-points it.
+    expect(CSS.match(/--color-accent-on-light\s*:/g)).toHaveLength(1)
+    expect(CSS).toMatch(/--color-accent-on-light:\s*#[0-9a-f]{6};/i)
+    // The engine emits it as the accent itself on every palette (a dark band's --color-accent is not).
+    for (const inputs of PALETTES) {
+      const t = resolvePalette(inputs).tokens as Record<string, string>
+      expect(t['--color-accent-on-light'], JSON.stringify(inputs)).toBe(t['--color-accent'])
+    }
+  })
+
+  it('no text sits on a treated feature photo or a poster on a dark band; the poster carries only its mark, above the tint', () => {
+    const {container} = render(
+      <div data-photo-color="tint"><main><section className="bg-brand-dark" data-ring-context="dark">
+        <ContentSectionBlock data={{_type: 'contentSection', _id: 'c', layout: 'split', heading: 'Why', body: [{_type: 'block', _key: 'b', style: 'normal', children: [{_type: 'span', _key: 's', text: 'Plain answers.', marks: []}], markDefs: []}], media: {kind: 'image', image: {...photo, alt: 'Office'}}} as never} disclaimer="Past results do not guarantee future outcomes." scale="marketing" />
+        <VideoEmbed video={{_id: 'v', title: 'Meet the firm', youTubeUrl: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', thumbnail: {...photo, alt: 'A first conversation'}} as never} />
+      </section></main></div>,
+    )
+    const feature = container.querySelector('[data-feature-photo]')!
+    expect(feature.textContent!.trim()).toBe('')
+    expect(feature.querySelector('h1, h2, h3, h4, h5, h6, p, a, button, svg')).toBeNull()
+    const poster = container.querySelector('[data-video-poster]')!
+    expect(poster.textContent!.trim()).toBe('')
+    const mark = poster.querySelector('svg')!
+    expect(mark.getAttribute('aria-hidden')).toBe('true')
+    // The mark's layer is stacked above the photograph's tint (`::after`, z auto).
+    expect(mark.closest('span.z-\\[1\\]')).not.toBeNull()
+  })
+
+  it('the poster’s play mark holds 3:1 over every tinted pixel, at rest and hovered, on the presets and 500 seeded palettes', () => {
+    // The mark: the dark ground's triangle on a disc of the page ground at 90%, over the dark ground's veil (10% at rest,
+    // 25% hovered or focused) over the tinted photograph (`VideoPoster.tsx`).
+    let s = 4382
+    const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 2 ** 32
+    const pixels = [...Array.from({length: 52}, (_, i) => [i / 51, i / 51, i / 51]), ...Array.from({length: 52}, () => bits([rnd(), rnd(), rnd()]))]
+    const failures: string[] = []
+    for (const inputs of PALETTES) {
+      const t = resolvePalette(inputs).tokens as Record<string, string>
+      const [accent, dark, ground] = [ch(t['--color-accent-on-light']), ch(t['--color-brand-dark']), ch(t['--color-background'])]
+      for (const pixel of pixels) {
+        for (const veil of [0.1, 0.25]) {
+          const disc = over(over(tinted(pixel, accent), dark, veil), ground, 0.9)
+          const r = ratio(dark, disc)
+          if (r < 3) failures.push(`${JSON.stringify(inputs)} pixel ${pixel} veil ${veil}: ${r.toFixed(2)}`)
+        }
+      }
+    }
+    expect(failures.length, failures.slice(0, 10).join('\n')).toBe(0)
   })
 })
