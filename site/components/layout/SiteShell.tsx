@@ -12,6 +12,7 @@
 
 import {solidBehindBox} from '@/components/ui/LogoImage'
 import {siteFlowOf} from '@/lib/backgrounds'
+import {asksForPanels} from '@/lib/layouts'
 import {detailValue} from '@/lib/details'
 import type {LogoFacts} from '@/lib/logoFacts'
 import {type getSiteChrome} from '@/lib/sanity/fetchers'
@@ -136,7 +137,9 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
     sectionJoin:          flow.divider.shape,
     headingRule:          designTokens?.headingRule,
   })
-  // The color details (`lib/details.ts`, monorepo `[R-641]`): each absent renders today's tokens.
+  // The color details (`lib/details.ts`, monorepo `[R-641]`): each absent renders today's tokens. The page's theme with its
+  // stored background and layout, read once: the glow's shape and the Layout theme's panel are theirs, never stored.
+  const siteFlow = siteFlowOf(designTokens as Record<string, unknown> | null | undefined)
   const colorCSS = buildColorCSS({
     darkGround:  designTokens?.darkGround,
     lightGround: designTokens?.lightGround,
@@ -148,7 +151,9 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
     accentOnDark:  designTokens?.accentOnDark,
     buttonOnDark:  designTokens?.buttonOnDark,
     cardGlow:      designTokens?.cardGlow,
-    glowShape:     siteFlowOf(designTokens as Record<string, unknown> | null | undefined).on.glowShape,
+    glowShape:     siteFlow.on.glowShape,
+    // The panel's surface and light, only under a layout that sets dark bands' words on panels (`lib/layouts.ts`).
+    darkPanel:     asksForPanels(siteFlow) ? 'on' : undefined,
   })
   // The primary button on a dark band draws from its tokens only under this attribute (`globals.css`).
   const buttonOnDark = detailValue(designTokens as Record<string, unknown> | null | undefined, 'buttonOnDark') ?? undefined

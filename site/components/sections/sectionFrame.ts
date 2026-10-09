@@ -2,9 +2,9 @@ import {
   type SectionAppearance,
 } from '@/components/sections/SectionShell'
 import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
-import {fadeOf, glowGateOf, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts, type Close} from '@/lib/flows'
+import {fadeOf, glowGateOf, glowLightFillOk, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts, type Close} from '@/lib/flows'
 import {siteFlowOf} from '@/lib/backgrounds'
-import {layoutRulesOf, type LayoutRules} from '@/lib/layouts'
+import {PANEL_HOSTS, asksForPanels, layoutRulesOf, type LayoutRules} from '@/lib/layouts'
 import type {HeroPhoto, SetPhoto} from '@/lib/heroGround'
 import type {HeadingFace} from '@/lib/headingFace'
 import type {DrawnStrength} from '@/lib/designTokens'
@@ -124,6 +124,11 @@ export type Paint = {
   /** The ground a light panel the theme floats sits on (Phase 17D, `light.paint: 'floating'`): the walk
    *  reads the band as this ground and adopts it wherever the band sits, first and last included. */
   onGround?: 'dark'
+  /** The band keeps its dark ground and everything drawn on it, and its words sit on a raised panel in the column (the
+   *  Layout theme's Panels, `dark.sit: 'onPanel'`): the glowing card's surface where the palette has room for the light,
+   *  else the light island; the light in its top corner on the side given, turn and turn about down the page. The walk
+   *  reads the band as its own ground: the panel is a card on it, not a gutter around it. */
+  onPanel?: {fill: 'surface' | 'light'; corner: 'left' | 'right'}
 }
 
 /** A quadrant of the hero's photograph: `x` 0 is the left half, `y` 0 the top half. */
@@ -161,6 +166,9 @@ export type SiteLook = {
   /** The palette's dark ground has room to glow (`glowFillOk`, Phase 17D session 2, `[R-557]`), so Gradient bloom may
    *  light its dark runs. */
   glow?: boolean
+  /** The palette has room for the light a dark panel takes (`glowLightFillOk`; the Layout theme's Panels): the panel is the
+   *  glowing card's surface, else the light island on the dark band. Set only under a layout that asks for panels. */
+  panelRoom?: boolean
   /** The initials the ghost draws (Phase 16D, `[R-492]`), or null when the theme draws
    *  none. Derived from the firm's name, never stored; set by `HomeBody`. */
   ghost?: {text: string} | null
@@ -203,6 +211,8 @@ export function siteLookOf(d: Record<string, unknown> | null | undefined): SiteL
     saturated: saturatedFillOk(d),
     glow: glowGateOf(flow, d),
     ghost: null,
+    // The room the panel's surface needs, the same gate the palette emits it under (`darkPanel`, `designTokens.ts`).
+    ...(asksForPanels(flow) ? {panelRoom: glowLightFillOk(d)} : {}),
   }
 }
 
@@ -369,7 +379,7 @@ export function walkPage<M>(
   // the stored layout then applies to every band's visible ground, stored or painted, before adoption: a designed page
   // stores a surface on every band, which the ground pass never touches, so a layout read inside it would draw nothing.
   const filled = flow ? assignGrounds(survivors, pageLayout ? withoutOwnLayout(flow) : flow, site, {close, hero}) : survivors.map(() => null)
-  const paints = flow && pageLayout ? applyLayout(survivors, filled, pageLayout.rules) : filled
+  const paints = flow && pageLayout ? applyLayout(survivors, filled, pageLayout.rules, site) : filled
   const paintAt = new Map<number, Paint | null>()
   survivors.forEach((r, i) => paintAt.set(r.index, paints[i]))
   const isInset = (r: {appearance: SectionAppearance | null | undefined}, paint: Paint | null) =>
@@ -475,7 +485,7 @@ export function walkPage<M>(
     const eligible = out.filter(({member, seam}) => {
       const a = resolve(member).appearance
       const g = groundAt.get(out.find((o) => o.member === member)!.index) ?? visibleGround(a)
-      return g !== 'saturated' && g !== 'image' && g !== 'wash' && a?.surface !== 'pattern' && !seam.paint?.texture && !isInset({appearance: a}, seam.paint ?? null)
+      return g !== 'saturated' && g !== 'image' && g !== 'wash' && a?.surface !== 'pattern' && !seam.paint?.texture && !isInset({appearance: a}, seam.paint ?? null) && !seam.paint?.onPanel
     })
     const host =
       eligible.find(({index}) => groundAt.get(index) === 'dark') ??
@@ -497,7 +507,9 @@ export function walkPage<M>(
     const eligible: number[] = []
     for (let i = 1; i < out.length; i++) {
       const r = resolve(out[i].member)
-      if (!r.raisesPhoto || isInset(r, out[i].seam.paint ?? null)) continue
+      // Nor a band whose words sit on a raised panel (the Layout theme's): the panel clips, as an inset's does; the figure
+      // out of a panel is a later slice (ADV-LO amendment 5).
+      if (!r.raisesPhoto || isInset(r, out[i].seam.paint ?? null) || out[i].seam.paint?.onPanel) continue
       const g = groundAt.get(out[i].index) ?? visibleGround(r.appearance)
       const prev = groundAt.get(out[i - 1].index) ?? visibleGround(resolve(out[i - 1].member).appearance)
       if (!same(g, prev)) eligible.push(i)
@@ -594,6 +606,9 @@ export function walkPage<M>(
       const o = out[k - head]
       const r = resolve(o.member)
       if (r.appearance?.inset || o.seam.paint?.inset) return 0
+      // A band whose words sit on a raised panel hides most of its own ground behind the panel, so it carries the group's
+      // light only where no other band can (the Layout theme's Panels; never under a theme's own layout).
+      if (o.seam.paint?.onPanel) return 1
       return r.host ? LIGHT_RANK[r.host] : 3
     }
     const candidates: {k: number; rank: number; start: number; end: number}[] = []
@@ -1066,9 +1081,11 @@ export function applyLayout(
   survivors: readonly Survivor[],
   paints: readonly (Paint | null)[],
   rules: LayoutRules,
+  site: Pick<SiteLook, 'panelRoom'> | null = null,
 ): (Paint | null)[] {
   const n = survivors.length
   const ground = survivors.map((r, i) => paints[i]?.ground ?? visibleGround(r.appearance))
+  let panels = 0
   return survivors.map((r, i) => {
     const p = paints[i] ?? null
     if (r.appearance?.inset) return p
@@ -1076,6 +1093,12 @@ export function applyLayout(
     if (g === 'dark') {
       // A full band; or the dark ground as a panel on the page's light ground.
       if (rules.dark.sit === 'floating') return {...bare(p), inset: true}
+      // Or the full dark band with its words on a raised panel (Panels, ADV-LO amendment 4): the text-led bands only,
+      // never every dark band, so a grid of practice areas, attorneys or results and a ribbon stay on the band, as the
+      // references leave them. The band keeps its ground and what is drawn on it; the panel is the card on top.
+      if (rules.dark.sit === 'onPanel' && r.host && PANEL_HOSTS.includes(r.host)) {
+        return {...(p ?? {texture: false}), onPanel: {fill: site?.panelRoom ? 'surface' : 'light', corner: panels++ % 2 === 0 ? 'right' : 'left'}}
+      }
       return p
     }
     if (LIGHTISH.includes(g)) {

@@ -64,12 +64,16 @@ function failures(label: string, inputs: ColorInputs, options: PaletteOptions = 
 }
 
 // The color details (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 17, `[R-641]`): every value each option can take.
+// The Layout theme's panel (`darkPanel`, monorepo WS-V1-LAYOUT-OPTIONS-DESIGN, ADV-LO amendment 4) is not a stored detail, but
+// it emits a surface and a light every pair on a panel is held on, so it is swept as one: alone, with each button on dark
+// (its fill held 3:1 off the panel), and with every detail on at once over the full sweeps.
 const DETAIL_VALUES: PaletteOptions[] = [
   {headingInk: 'action'}, {saturatedFrom: 'action'}, {accentOnDark: 'raw'},
   {buttonOnDark: 'accent'}, {buttonOnDark: 'action'}, {buttonOnDark: 'outline'}, {cardGlow: 'on'}, {glowShape: 'corner'}, {glowShape: 'center'},
+  {darkPanel: 'on'}, {darkPanel: 'on', buttonOnDark: 'accent'}, {darkPanel: 'on', buttonOnDark: 'action'}, {darkPanel: 'on', buttonOnDark: 'outline'},
 ]
 const EVERY_DETAIL: PaletteOptions[] = [
-  {headingInk: 'action', saturatedFrom: 'action', accentOnDark: 'raw', buttonOnDark: 'accent', cardGlow: 'on', glowShape: 'corner'},
+  {headingInk: 'action', saturatedFrom: 'action', accentOnDark: 'raw', buttonOnDark: 'accent', cardGlow: 'on', glowShape: 'corner', darkPanel: 'on'},
   {headingInk: 'action', saturatedFrom: 'action', accentOnDark: 'raw', buttonOnDark: 'action'},
   {headingInk: 'action', saturatedFrom: 'action', accentOnDark: 'raw', buttonOnDark: 'outline'},
 ]
@@ -157,6 +161,37 @@ describe('color guarantee: every blocking pair passes for any operator input', (
     }
     expectNone(found)
   }, 600_000)
+
+  it('the dark panel draws on every preset with room for the light, and every pair it draws holds there (ADV-LO amendment 4)', () => {
+    let drawn = 0
+    for (const p of PALETTE_PRESETS) {
+      const palette = resolvePalette(presetInputs(p), {darkPanel: 'on'})
+      const t = palette.tokens
+      // Emitted exactly where the palette has room for the light, and nowhere without the layout asking.
+      expect(!!t['--color-panel-surface'], p.id).toBe(palette.glowLightOk)
+      expect(resolvePalette(presetInputs(p)).tokens['--color-panel-surface'], p.id).toBeUndefined()
+      if (!t['--color-panel-surface']) continue
+      drawn++
+      // The glowing card's surface and light, as the layout asks for them (one derivation, two names).
+      expect(t['--color-panel-surface'], p.id).toBe(resolvePalette(presetInputs(p), {cardGlow: 'on'}).tokens['--color-card-on-dark'])
+      const pairs = validateWcag(palette).filter((r) => r.pair.includes('a dark panel'))
+      expect(pairs.length, p.id).toBeGreaterThan(14)
+      expectNone(pairs.filter((r) => r.blocking && !r.passes).map((r) => `${p.id}: ${r.pair} = ${r.ratio} < ${r.min}`))
+      // The dark button's fill against the panel at 3:1, under each button on dark: held wherever the fill is drawn, and
+      // where it cannot stand off the panel the light button, whose label carries it (the platform's bar, `colorDetails`). Four
+      // grounds: the photo floor, the glow, the panel and its light.
+      for (const mode of ['accent', 'action'] as const) {
+        const withButton = resolvePalette(presetInputs(p), {darkPanel: 'on', buttonOnDark: mode})
+        const held = validateWcag(withButton).filter((r) => r.pair.startsWith('btn-dark-on-scrim against a photo or glowing band or a dark panel'))
+        const light = withButton.tokens['--color-btn-dark-on-scrim'] === withButton.tokens['--color-background']
+        expect(held.length, `${p.id} ${mode}`).toBe(light ? 0 : 4)
+        expectNone(held.filter((r) => !r.passes).map((r) => `${p.id} ${mode}: ${r.pair} = ${r.ratio}`))
+      }
+    }
+    // Thirteen of the fifteen presets have room for the glow's light (`[R-646]`); the rest draw the light island.
+    expect(drawn).toBe(PALETTE_PRESETS.filter((p) => resolvePalette(presetInputs(p)).glowLightOk).length)
+    expect(drawn).toBeGreaterThanOrEqual(13)
+  })
 
   it('the render margin reaches a dark band only where its ink is lighter than the ground', () => {
     // Every preset solves a black ink, which only raises contrast, so its dark bands render as solved.

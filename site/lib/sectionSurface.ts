@@ -305,6 +305,8 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
   'grad-n-1', 'grad-n-2', 'grad-n-3', 'grad-n-4', 'grad-n-5', 'grad-n-6', 'grad-n-7', 'grad-n-8',
   // Phase 17D session 2 (`[R-557]`): Gradient bloom's glow, the band its peak sits in and the side its light comes from.
   'band-glow', 'glow-from-left', 'grad-p-0', 'grad-p-1', 'grad-p-2', 'grad-p-3', 'grad-p-4', 'grad-p-5', 'grad-p-6', 'grad-p-7',
+  // The Layout theme's panel (Panels): its padding, which publishes its bottom padding to a cut-out, and its lane.
+  'panel-pad', 'max-w-7xl', 'mx-auto',
 ]
   .join(' ')
   .split(/\s+/)

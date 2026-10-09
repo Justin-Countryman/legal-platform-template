@@ -170,7 +170,11 @@ export function SectionShell({
   const setPhoto = setPaint ? seam.site?.photoSet?.[setPaint.index] ?? null : null
   const inRun = resolved.isImage && !!setPhoto && setPaint!.length > 1 && !showImage
   const showSet = resolved.isImage && !!setPhoto && setPaint!.length === 1 && !showImage
-  const inner = typeof children === 'function' ? children(resolved) : children
+  // The Layout theme's panel (Panels, `seam.paint.onPanel`; monorepo WS-V1-LAYOUT-OPTIONS-DESIGN, ADV-LO amendment 4): the
+  // band keeps its ground and everything drawn on it, and its words sit on a raised panel in the column. The light island
+  // hands the band's content a light surface, so a button there takes the light context; the dark panel keeps the band's.
+  const panel = appearance?.inset !== true && seam.paint?.inset !== true ? seam.paint?.onPanel ?? null : null
+  const inner = typeof children === 'function' ? children(panel?.fill === 'light' ? sectionSurface('light') : resolved) : children
 
   // An inset band is a panel: the surface, the radius and `overflow-hidden` move
   // onto an inner element so the page ground runs past it, and the <section>
@@ -337,7 +341,23 @@ export function SectionShell({
           <div className="absolute inset-0 bg-scrim/80" aria-hidden="true" />
         </>
       )}
-      {isInset ? (
+      {panel ? (
+        <>
+          {texture}
+          {ghost}
+          <div
+            // The panel's own fill: the glowing card's surface and the light in one top corner, with the lit band's text
+            // values (`globals.css`, `[data-dark-panel]`); or the light island, which resets the dark cascade. Its padding
+            // publishes its own bottom padding, so a cut-out stands on the panel's bottom edge (`panel-pad`).
+            data-dark-panel={panel.fill}
+            data-panel-corner={panel.fill === 'surface' && panel.corner === 'left' ? 'left' : undefined}
+            data-ring-context={panel.fill === 'light' ? 'light' : undefined}
+            className={['relative mx-auto max-w-7xl overflow-hidden rounded-ui panel-pad', panel.fill === 'light' && 'bg-background', seam.divider?.mode === 'cut' && 'mt-divider'].filter(Boolean).join(' ')}
+          >
+            <div data-band-content className={[contained ? 'container relative' : 'relative', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
+          </div>
+        </>
+      ) : isInset ? (
         <div
           // The panel's own polarity. Required, not decorative: `.bg-brand-dark` on the
           // <section> above is itself a cascade trigger (globals.css), so a light panel

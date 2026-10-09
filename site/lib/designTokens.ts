@@ -110,6 +110,9 @@ export type PaletteOptions = {
   /** `corner`, `center`: the Background theme positions the glow's light (`--color-glow-light`, `--color-glow-surface`;
    *  monorepo WS-PREMIUM-PACKAGE-DESIGN §9.3, `[R-646]`). */
   glowShape?:     unknown
+  /** `on`: the page layout sets dark bands' words on a raised panel (the Layout theme's Panels, `lib/layouts.ts`;
+   *  `--color-panel-surface`, `--color-panel-light`). Set by the layout, never stored. */
+  darkPanel?:     unknown
 }
 
 /** A color band's fill reads as a band of its own (Phase 15's gate, moved here so the engine and the theme's walk share
@@ -646,6 +649,15 @@ export function resolvePalette(raw: ColorInputs = {}, options: PaletteOptions = 
     tokens['--color-card-on-dark'] = mixOklab(brandDark, light.light, GLOW_SURFACE_MIX)
     tokens['--color-card-glow'] = light.light
   }
+  // The Layout theme's panel (Panels, monorepo WS-V1-LAYOUT-OPTIONS-DESIGN, ADV-LO amendment 4): a dark band's words on a
+  // raised panel take the glowing card's surface, a point between the dark ground and the light, with the light in one top
+  // corner, emitted only when the layout asks and only where the palette has room; elsewhere the walk sets the panel as the
+  // light island. Every value lies between the dark ground and the light, solved under every pair the band draws.
+  if (options.darkPanel === 'on' && lightOf().ok) {
+    const light = lightOf()
+    tokens['--color-panel-surface'] = mixOklab(brandDark, light.light, GLOW_SURFACE_MIX)
+    tokens['--color-panel-light'] = light.light
+  }
   // A photograph ghosted into a light band (the Background theme, monorepo WS-V1-BACKGROUND-THEME-DESIGN §7 item 8):
   // its opacity, and the tiers the band's text takes over it.
   // A heading in the button color keeps today's heading in the solve, so the ghost's opacity never moves for it (ADV-PP-A:
@@ -662,6 +674,7 @@ export function resolvePalette(raw: ColorInputs = {}, options: PaletteOptions = 
   tokens['--section-texture-opacity-on-dark'] = String(texture.opacity)
   Object.assign(tokens, colorDetails(options, {accent, accentFg, action, actionFg, actionHover, brandDark, background, accentOnDark,
     darkTexture: blendOver(brandDark, texture.ink, texture.opacity), photoFloor, glow: tokens['--color-glow'], glowLight: tokens['--color-glow-light'] ?? null,
+    panel: tokens['--color-panel-surface'] ? [tokens['--color-panel-surface'], tokens['--color-panel-light']] : [],
     onDark: inverse['color-foreground-on-dark'], light: {fill: background, fg: foreground, hover: muted}}))
   // Phase 17C session 3: the render margin applies on a dark band only where its ink is lighter than
   // the ground (the on-dark text color on a near-black ground), the one case where a line drawn a level
@@ -699,13 +712,17 @@ type DetailFacts = {
   accentOnDark: string; darkTexture: string; photoFloor: string; glow: string; onDark: string
   /** The glow's light where the Background theme draws it (`[R-646]`): a lit band's lightest ground. */
   glowLight: string | null
+  /** The Layout theme's panel where the layout draws it: its surface and its corner light, the grounds its button sits on. */
+  panel: string[]
   light: {fill: string; fg: string; hover: string}
 }
 
 function colorDetails(options: PaletteOptions, f: DetailFacts): Record<string, string> {
   const out: Record<string, string> = {}
   const plainDark = [f.brandDark, f.darkTexture]
-  const litDark = [f.photoFloor, f.glow, ...(f.glowLight ? [f.glowLight] : [])]
+  // A panel on a dark band (the Layout theme's) takes the lit band's values, its button among them, so its fill stands 3:1
+  // off the panel's surface and its light as well as off a photograph and the glow.
+  const litDark = [f.photoFloor, f.glow, ...(f.glowLight ? [f.glowLight] : []), ...f.panel]
 
   // The accent itself on a plain dark band (`accentOnDark: 'raw'`): where it reads 4.5:1 on brand-dark and the dark
   // texture; the photo, glow and hero-image bands keep the lightened accent. Never fed back into a solve (ADV-PP-A).
@@ -1295,10 +1312,20 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
       for (const [tier, min] of photoBandPairs(t)) check(`${tier} on ${name}`, tier, ground, min)
     }
   }
-  for (const [suffix, grounds] of [['', [dark, darkTexture]], ['-on-scrim', [photoFloor, t['--color-glow'], ...(t['--color-glow-light'] ? [t['--color-glow-light']] : [])]]] as const) {
+  // The Layout theme's panel (ADV-LO amendment 4): every pair the panel's words draw, on its surface and on the light in its
+  // corner, the active state among them; its button is held below with the lit band's.
+  const panel = t['--color-panel-surface'] ? [t['--color-panel-surface'], t['--color-panel-light']] : []
+  for (const [i, ground] of panel.entries()) {
+    const name = i === 0 ? 'a dark panel' : 'a dark panel\u2019s corner light'
+    for (const [tier, min] of photoBandPairs(t)) check(`${tier} on ${name}`, tier, ground, min)
+    const cue = t['--color-action-state-cue-on-scrim']
+    const shown = Math.max(contrast(t['--color-action'], ground), cue === 'transparent' ? 0 : contrast(cue, ground))
+    results.push({pair: `the active state (action fill or cue) on ${name}`, ratio: Math.round(shown * 100) / 100, min: 3, passes: shown >= 3, blocking: true})
+  }
+  for (const [suffix, grounds] of [['', [dark, darkTexture]], ['-on-scrim', [photoFloor, t['--color-glow'], ...(t['--color-glow-light'] ? [t['--color-glow-light']] : []), ...panel]]] as const) {
     const fill = t[`--color-btn-dark${suffix}`]
     if (!fill) continue
-    const where = suffix ? 'a photo or glowing band' : 'a plain dark band'
+    const where = suffix ? (panel.length ? 'a photo or glowing band or a dark panel' : 'a photo or glowing band') : 'a plain dark band'
     if (fill === 'transparent') {
       for (const g of grounds) check(`btn-dark-edge${suffix} against ${where}`, t[`--color-btn-dark-edge${suffix}`], g, 3)
       for (const g of grounds) check(`btn-dark-fg${suffix} on ${where}`, t[`--color-btn-dark-fg${suffix}`], g, 4.5)
