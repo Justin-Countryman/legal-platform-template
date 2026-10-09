@@ -1772,6 +1772,27 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   opacity: 0.6;
   pointer-events: none;
 }
+/* The homepage hero's photograph (monorepo backlog 438) takes the same treatment: the split's panel, collage tiles,
+   full-bleed half, card image and video poster, and the backdrop's photograph and mosaic tiles. The hero marks the box
+   that holds only the photograph (`data-hero-photo`, `heroPhotoMark`) where Design Settings sets a photo color, so a hero
+   without one renders as before; its scrim, text, buttons, play mark, section background and cut-out figure are never
+   inside the box. The tint is the accent as chosen (`--color-accent-on-light`, which no band re-points), so a dark or
+   photo hero washes its photograph as the practice tiles do: the lightened accent those bands give `--color-accent` is
+   for marks and text and washes paler. On the backdrop it sits under the scrim, whose pairs are held over a white pixel
+   (`validateWcag`, the photo floor); a tinted pixel is never lighter than white, so every pair on the scrim holds. */
+:is([data-photo-color="mono"], [data-photo-color="tint"]) [data-hero-photo] img {
+  filter: grayscale(1);
+}
+[data-photo-color="tint"] [data-hero-photo] { isolation: isolate; }
+[data-photo-color="tint"] [data-hero-photo]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-accent-on-light);
+  mix-blend-mode: color;
+  opacity: 0.6;
+  pointer-events: none;
+}
 /* The fade: a feature photo beside its text softens into the section at the edge facing the text (where the split sits
    side by side), and at its foot where it stacks above the text. No text sits on the photo, so no pair changes. */
 [data-photo-edge="fade"] [data-feature-photo] img {

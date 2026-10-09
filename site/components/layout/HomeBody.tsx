@@ -6,6 +6,7 @@ import {firstBandRises, frameOf} from '@/components/layout/HomepageCanvas'
 import {heroCutout, heroGround, heroPaint, heroPhotoOf, photoSetOf, themedHero} from '@/lib/heroGround'
 import {chromeSchemes, closeOf, flowOf, type FlowRules} from '@/lib/flows'
 import {withCtaOverride} from '@/lib/ctaOverride'
+import {detailValue} from '@/lib/details'
 import {HomepageCanvas, type HomepageBlock} from '@/components/layout/HomepageCanvas'
 import {HomepageCta, type HomepageCtaData} from '@/components/layout/HomepageCta'
 import {HomepageHero} from '@/components/layout/homeHero'
@@ -123,11 +124,14 @@ export function HomeBody({chrome, all}: {chrome: SiteChrome; all: HomePageData})
   const on = look.flow?.on
   const heroDark = ground === 'dark'
   const heroTexture = on?.hero && look.patternTexture ? ((heroDark ? on.darkTexture : on.lightTexture) === 'strong' ? 'strong' as const : 'quiet' as const) : null
+  // The site's photo color reaches the hero's photograph (monorepo backlog 438), read as the shell reads it for its wrapper
+  // (`data-photo-color`). Handed over only where one is set, so a hero without one receives exactly the props it did.
+  const photoColor = detailValue(chrome?.designTokens as Record<string, unknown> | null | undefined, 'photoColor')
 
   return (
     <>
       {hero ? (
-        <HomepageHero data={hero} napTokens={tokens} edgeBelow={edgeBelow} lightGround={site.heroPaint === 'wash' ? 'wash' : 'tint'} glow={heroGlow} texture={heroTexture} />
+        <HomepageHero data={hero} napTokens={tokens} edgeBelow={edgeBelow} lightGround={site.heroPaint === 'wash' ? 'wash' : 'tint'} glow={heroGlow} texture={heroTexture} {...(photoColor ? {photoColor} : {})} />
       ) : (
         // Fallback when the homepage hero hasn't been authored yet.
         //
