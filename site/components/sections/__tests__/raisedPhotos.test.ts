@@ -75,7 +75,7 @@ describe('under a stored layout', () => {
     expect(raised(ALTERNATING, effectiveFlow(flowById('cutBlocks.balanced')!, null, 'contained'))).toEqual([])
   })
 
-  it('a split whose words sit on a panel never rises out of it (the figure out of a panel is a later slice)', () => {
+  it('a photograph whose words sit on a panel never rises out of it (only a cut-out figure does, layoutFigure.test.tsx)', () => {
     // Every dark split is a panel under Panels, so only the light splits rise.
     const picks = raised(ALTERNATING, effectiveFlow(flowById('quiet.mostlyLight')!, null, 'panels'), {panelRoom: true})
     for (const i of picks) expect(ALTERNATING[i].appearance?.surface, `band ${i}`).toBe('light')

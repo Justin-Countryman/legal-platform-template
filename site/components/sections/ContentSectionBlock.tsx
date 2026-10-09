@@ -361,7 +361,11 @@ export function ContentSectionBlock({
                   seam.raisePhoto ? 'xl:self-start xl:photo-rise' : '',
                   // A cut-out on the band's bottom edge (`cutoutEdge`, monorepo `[R-641]`): the column sits at the row's foot
                   // and reaches through the band's own bottom padding (`--band-pb`, published by the band) to the edge.
-                  !seam.raisePhoto && standsOnEdge(data, layout) ? 'xl:self-end xl:cutout-sink' : '',
+                  !seam.raisePhoto && !seam.raiseFigure && standsOnEdge(data, layout) ? 'xl:self-end xl:cutout-sink' : '',
+                  // The figure out of a panel (the Layout theme, ADV-LO amendment 5): it stands on the panel's bottom edge
+                  // whatever its `cutoutEdge`, as the references' attorneys do, and rises past the panel's top across the
+                  // seam the band above reserves (`figure-rise`).
+                  seam.raiseFigure ? 'xl:self-end xl:figure-rise' : '',
                 ].filter(Boolean).join(' ')}>
                   <ContentMedia data={data} ground={ground} siteFrame={seam.site?.imageFrame} />
                 </div>

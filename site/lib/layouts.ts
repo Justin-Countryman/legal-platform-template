@@ -21,8 +21,8 @@ import type {FlowRules, Host} from './flows'
 // band's own `surface` is the Flow theme's and never blocks a layout; a stored `inset` or `overlapPrevious` stays the
 // operator's override on its band.
 //
-// THE ROSTER LISTS ONLY WHAT IS BUILT (amendment 3). Edge to edge (the bleed), Overlap (the strip and the float) and the
-// figure out of a panel wait for their slices; Floating is the Floating panels theme and left v1 (amendment 11).
+// THE ROSTER LISTS ONLY WHAT IS BUILT (amendment 3). Edge to edge (the bleed) and Overlap (the strip and the float) wait
+// for their slices; Floating is the Floating panels theme and left v1 (amendment 11).
 //
 // NO `passed` FLAG. His sign-off on a firm's own page is his eye (`[R-656]`), so the draft writes the judged pair with no
 // gate on a roster flag, and a flag no reader gates on would only drift from the truth.
@@ -34,8 +34,10 @@ export const LAYOUT_DARK_SITS = ['band', 'floating', 'onPanel'] as const
 /** How a light band sits: a full band; inside a dark run, an inset panel that adopts the run (`panel`); or a panel on the
  *  dark ground wherever it sits (`floating`). The theme's own words, unchanged. */
 export const LAYOUT_LIGHT_SITS = ['band', 'panel', 'floating'] as const
-/** What may cross a seam: a split's photograph rising into the band above it. The strip and the figure are later slices. */
-export const CROSS_KINDS = ['photo'] as const
+/** What may cross a seam: a split's photograph rising into the band above it; or a split's cut-out figure standing on its
+ *  panel's bottom edge and rising past the panel's top edge across the seam above (`figure`, ADV-LO amendment 5: Lewin's and
+ *  Calesaric's attorney out of the panel). The strip is a later slice. */
+export const CROSS_KINDS = ['photo', 'figure'] as const
 /** Crossings a page at most (ADV-LO amendment 9, the premium study's "one or two crossings per page, never every band"). */
 export const MAX_CROSSINGS = 2
 
@@ -74,11 +76,12 @@ export const LAYOUTS: readonly Layout[] = [
   },
   {
     id: 'panels', name: 'Panels',
-    sentence: 'Dark sections of words keep their color and set them on a raised panel, never two panels in a row, lit in one corner where the colors have room; a photograph may rise across up to two section edges.',
+    sentence: 'Dark sections of words keep their color and set them on a raised panel, never two panels in a row, lit in one corner where the colors have room; a photograph, or a cut-out figure out of its panel, may rise across up to two section edges.',
     // The references (monorepo WS-V1-LAYOUT-P1-EYE-2026-10-09): two panels a page on a dark run, each on the run's own color
     // a step lighter (Lewin) or the same (Calesaric), a light in one top corner, a hairline in the accent, as wide as the
     // column (86 to 90 percent of a 1440 screen). Where the palette has no room for the light, the panel is the light island.
-    rules: {dark: {sit: 'onPanel'}, light: {sit: 'band'}, cross: {kinds: ['photo'], at: 'middle', max: 2}},
+    // A panel's cut-out figure rises out of it (ADV-LO amendment 5), one of the page's two crossings.
+    rules: {dark: {sit: 'onPanel'}, light: {sit: 'band'}, cross: {kinds: ['photo', 'figure'], at: 'middle', max: 2}},
   },
 ]
 

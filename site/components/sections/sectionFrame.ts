@@ -248,6 +248,10 @@ export type SeamProps = {
   /** This band raises its feature photo into the band above (Phase 16E). At most one
    *  band on a page does. */
   raisePhoto?: boolean
+  /** This band's cut-out figure stands on its panel's bottom edge and rises past the panel's top edge, across the seam
+   *  into the band above by the raised photo's depth, which the band above reserves (the Layout theme's figure out of a
+   *  panel, ADV-LO amendment 5). From `xl` only; one of the page's crossings (`MAX_CROSSINGS`). */
+  raiseFigure?: boolean
   /** The ground an INSET band's own `<section>` paints (Phase 16F). Normally an inset
    *  band paints nothing and the page's light ground runs around its panel; where the
    *  band above and the band below both show one strong ground, the panel sits ON that
@@ -503,13 +507,28 @@ export function walkPage<M>(
   // the divider counts them.
   // Since the Layout theme the crossing is the layout's (`layoutRulesOf`): the theme's own `overlap`, else a stored page
   // layout's, which may allow none (Contained).
+  //
+  // THE FIGURE OUT OF A PANEL (ADV-LO amendment 5; Lewin and Calesaric, measured live 2026-10-09: the attorney stands on
+  // the panel's bottom edge and rises 72 to 143 px past its top). Where the layout allows it, a band whose words sit on a
+  // layout's panel and whose split draws a cut-out figure is eligible too, from the second band on (the band above
+  // reserves the crossing, as it does for a photograph; the hero above the first band cannot), whatever ground the band
+  // above shows: the figure breaks the panel, not a change of ground. It joins the photographs in one pick, nearest the
+  // middle, and counts against the same cap. A photograph still never rises out of a panel.
   const cross = flow ? layoutRulesOf(flow).cross : null
-  if (cross && cross.kinds.includes('photo') && cross.max > 0) {
+  const outOfPanels = !!cross && cross.kinds.includes('figure')
+  if (cross && (cross.kinds.includes('photo') || outOfPanels) && cross.max > 0) {
     const eligible: number[] = []
+    const figureAt = new Set<number>()
     for (let i = 1; i < out.length; i++) {
       const r = resolve(out[i].member)
-      // Nor a band whose words sit on a raised panel (the Layout theme's): the panel clips, as an inset's does; the figure
-      // out of a panel is a later slice (ADV-LO amendment 5).
+      if (outOfPanels && out[i].seam.paint?.onPanel && r.raisesPhoto && r.cutout && !isInset(r, out[i].seam.paint ?? null)) {
+        eligible.push(i)
+        figureAt.add(i)
+        continue
+      }
+      // Nor a band whose words sit on a raised panel (the Layout theme's): the panel clips its photograph, as an inset's
+      // does; only a cut-out figure leaves a panel (above).
+      if (!cross.kinds.includes('photo')) continue
       if (!r.raisesPhoto || isInset(r, out[i].seam.paint ?? null) || out[i].seam.paint?.onPanel) continue
       const g = groundAt.get(out[i].index) ?? visibleGround(r.appearance)
       const prev = groundAt.get(out[i - 1].index) ?? visibleGround(resolve(out[i - 1].member).appearance)
@@ -532,7 +551,7 @@ export function walkPage<M>(
       picks.push(i)
     }
     for (const pick of picks) {
-      out[pick].seam = {...out[pick].seam, raisePhoto: true}
+      out[pick].seam = {...out[pick].seam, ...(figureAt.has(pick) ? {raiseFigure: true} : {raisePhoto: true})}
       out[pick - 1].seam = {...out[pick - 1].seam, nextOverlap: 'photo'}
     }
   }

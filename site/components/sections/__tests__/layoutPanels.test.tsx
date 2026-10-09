@@ -166,8 +166,8 @@ describe('the shell: the panel as drawn', () => {
   it('a cut-out on the band’s edge stands on the panel’s: the panel publishes its own bottom padding', () => {
     const rule = CSS.slice(CSS.indexOf('@utility panel-pad {'), CSS.indexOf('\n}\n', CSS.indexOf('@utility panel-pad {')) + 2)
     expect(rule).toContain('padding: 2.5rem 1.25rem;\n  --band-pb: 2.5rem;')
-    expect(rule).toContain('@variant md { padding: 3.5rem 3rem; --band-pb: 3.5rem; }')
-    expect(rule).toContain('@variant lg { padding: 4.5rem; --band-pb: 4.5rem; }')
+    expect(rule).toContain('@variant md { padding: 3.5rem 3rem; --band-pb: 3.5rem;')
+    expect(rule).toContain('@variant lg { padding: 4.5rem; --band-pb: 4.5rem;')
   })
 
   it('keeps its gutter on a section that draws full-bleed, as an inset panel does', () => {

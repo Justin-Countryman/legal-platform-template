@@ -123,6 +123,10 @@ export type SectionSpacingSteps = {
    *  raised photo can cancel it at every breakpoint (Phase 16E). Put on a band that
    *  raises a photo and on no other, so nothing else gains a class. */
   ptVar: string
+  /** The same at a same-ground join (`seamTop`), published only on a band whose cut-out figure rises out of its panel
+   *  (the Layout theme, ADV-LO amendment 5): that band may share its ground with the band above, where a photograph that
+   *  rises never does. */
+  ptSeamVar: string
   /** The band's own bottom padding as `--band-pb`, published only on a band whose cut-out stands on its bottom edge
    *  (monorepo `[R-641]`). */
   pbVar: string
@@ -146,6 +150,7 @@ export const SECTION_SPACING: Record<SectionSpacing, SectionSpacingSteps> = {
     topOverlap: 'pt-12 md:pt-0',
     bottomBeforeOverlap: {small: 'pb-12 md:pb-28', large: 'pb-12 md:pb-40', photo: 'pb-12 md:pb-16 xl:pb-32'},
     ptVar: 'band-pt-compact',
+    ptSeamVar: 'band-pt-seam-compact',
     pbVar: 'band-pb-compact',
   },
   normal: {
@@ -155,6 +160,7 @@ export const SECTION_SPACING: Record<SectionSpacing, SectionSpacingSteps> = {
     topOverlap: 'pt-16 md:pt-0',
     bottomBeforeOverlap: {small: 'pb-16 md:pb-36 lg:pb-40', large: 'pb-16 md:pb-48 lg:pb-52', photo: 'pb-16 md:pb-24 lg:pb-28 xl:pb-44'},
     ptVar: 'band-pt-normal',
+    ptSeamVar: 'band-pt-seam-normal',
     pbVar: 'band-pb-normal',
   },
   spacious: {
@@ -164,6 +170,7 @@ export const SECTION_SPACING: Record<SectionSpacing, SectionSpacingSteps> = {
     topOverlap: 'pt-24 md:pt-0',
     bottomBeforeOverlap: {small: 'pb-24 md:pb-44 lg:pb-52', large: 'pb-24 md:pb-56 lg:pb-64', photo: 'pb-24 md:pb-32 lg:pb-40 xl:pb-56'},
     ptVar: 'band-pt-spacious',
+    ptSeamVar: 'band-pt-seam-spacious',
     pbVar: 'band-pb-spacious',
   },
 }
@@ -179,6 +186,7 @@ export const TIGHT_SPACING: SectionSpacingSteps = {
   topOverlap: 'pt-10 md:pt-0',
   bottomBeforeOverlap: {small: 'pb-10 md:pb-24', large: 'pb-10 md:pb-36', photo: 'pb-10 md:pb-12 xl:pb-28'},
   ptVar: 'band-pt-tight',
+  ptSeamVar: 'band-pt-seam-tight',
     pbVar: 'band-pb-tight',
 }
 
@@ -269,7 +277,7 @@ export function visibleGround(
 export const ALL_FRAME_CLASSES: readonly string[] = [
   ...[...Object.values(SECTION_SPACING), TIGHT_SPACING].flatMap((s) => [
     s.top, s.bottom, s.seamTop, s.topOverlap, s.bottomBeforeOverlap.small, s.bottomBeforeOverlap.large,
-    s.bottomBeforeOverlap.photo, s.ptVar, s.pbVar,
+    s.bottomBeforeOverlap.photo, s.ptVar, s.ptSeamVar, s.pbVar,
   ]),
   'bg-brand-dark', 'bg-hero-tint', 'bg-muted', 'bg-background', 'bg-accent-fill', 'bg-wash',
   // Phase 16C: the divider's own classes, which live in `SectionShell`'s maps and in the
@@ -307,6 +315,8 @@ export const ALL_FRAME_CLASSES: readonly string[] = [
   'band-glow', 'glow-from-left', 'grad-p-0', 'grad-p-1', 'grad-p-2', 'grad-p-3', 'grad-p-4', 'grad-p-5', 'grad-p-6', 'grad-p-7',
   // The Layout theme's panel (Panels): its padding, which publishes its bottom padding to a cut-out, and its lane.
   'panel-pad', 'max-w-7xl', 'mx-auto',
+  // The figure out of a panel (ADV-LO amendment 5): the panel that lets it out, and the figure's column.
+  'panel-clip', 'xl:figure-rise', 'xl:self-end',
 ]
   .join(' ')
   .split(/\s+/)

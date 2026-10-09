@@ -48,7 +48,7 @@ describe('the roster', () => {
 
   it('Contained: every band full width and nothing crossing; Panels: dark text bands on a panel, up to two crossings', () => {
     expect(layoutById('contained')!.rules).toEqual({dark: {sit: 'band'}, light: {sit: 'band'}, cross: {kinds: [], at: 'middle', max: 0}})
-    expect(layoutById('panels')!.rules).toEqual({dark: {sit: 'onPanel'}, light: {sit: 'band'}, cross: {kinds: ['photo'], at: 'middle', max: 2}})
+    expect(layoutById('panels')!.rules).toEqual({dark: {sit: 'onPanel'}, light: {sit: 'band'}, cross: {kinds: ['photo', 'figure'], at: 'middle', max: 2}})
   })
 
   it('an unknown or absent id is no layout', () => {

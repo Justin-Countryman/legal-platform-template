@@ -4562,7 +4562,7 @@
     {
       "id": "panels",
       "name": "Panels",
-      "sentence": "Dark sections of words keep their color and set them on a raised panel, never two panels in a row, lit in one corner where the colors have room; a photograph may rise across up to two section edges.",
+      "sentence": "Dark sections of words keep their color and set them on a raised panel, never two panels in a row, lit in one corner where the colors have room; a photograph, or a cut-out figure out of its panel, may rise across up to two section edges.",
       "rules": {
         "dark": {
           "sit": "onPanel"
@@ -4572,7 +4572,8 @@
         },
         "cross": {
           "kinds": [
-            "photo"
+            "photo",
+            "figure"
           ],
           "at": "middle",
           "max": 2
