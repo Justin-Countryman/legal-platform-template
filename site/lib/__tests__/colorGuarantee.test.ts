@@ -22,7 +22,7 @@
 
 import {describe, expect, it} from 'vitest'
 import {converter, clampChroma, formatHex} from 'culori'
-import {lightTextureCap, parseHexInput, resolvePalette, SECTION_TEXTURE_OPACITY, validateWcag, type ColorInputs, type PaletteOptions} from '../designTokens'
+import {lightTextureCap, parseHexInput, resolvePalette, PANEL_LIFT, SECTION_TEXTURE_OPACITY, validateWcag, type ColorInputs, type PaletteOptions} from '../designTokens'
 import {PALETTE_PRESETS, presetInputs} from '../palettes'
 import before from './fixtures/color-tokens-before-phase14.json'
 import {nearBlack} from './sweeps'
@@ -172,8 +172,13 @@ describe('color guarantee: every blocking pair passes for any operator input', (
       expect(resolvePalette(presetInputs(p)).tokens['--color-panel-surface'], p.id).toBeUndefined()
       if (!t['--color-panel-surface']) continue
       drawn++
-      // The glowing card's surface and light, as the layout asks for them (one derivation, two names).
-      expect(t['--color-panel-surface'], p.id).toBe(resolvePalette(presetInputs(p), {cardGlow: 'on'}).tokens['--color-card-on-dark'])
+      // The ground lifted in its own hue, never toward the accent (`panelSurfaceOf`); the light is the glowing card's.
+      const ground = toOklch(t['--color-brand-dark'])!
+      const surface = toOklch(t['--color-panel-surface'])!
+      expect(surface.l, p.id).toBeGreaterThanOrEqual(ground.l - 0.002)
+      expect(surface.l, p.id).toBeLessThanOrEqual(ground.l + PANEL_LIFT + 0.002)
+      if ((ground.c ?? 0) > 0.02) expect(Math.abs(((surface.h ?? 0) - (ground.h ?? 0) + 540) % 360 - 180), p.id).toBeLessThan(6)
+      expect(t['--color-panel-light'], p.id).toBe(resolvePalette(presetInputs(p), {cardGlow: 'on'}).tokens['--color-card-glow'])
       const pairs = validateWcag(palette).filter((r) => r.pair.includes('a dark panel'))
       expect(pairs.length, p.id).toBeGreaterThan(14)
       expectNone(pairs.filter((r) => r.blocking && !r.passes).map((r) => `${p.id}: ${r.pair} = ${r.ratio} < ${r.min}`))

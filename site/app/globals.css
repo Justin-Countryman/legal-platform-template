@@ -1634,7 +1634,7 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   @variant md { padding: 3.5rem 3rem; --band-pb: 3.5rem; }
   @variant lg { padding: 4.5rem; --band-pb: 4.5rem; }
 }
-/* The glowing card's surface (`--color-panel-surface`, a point between the dark ground and the glow's light) with the light
+/* The dark ground lifted in its own hue (`--color-panel-surface`, `panelSurfaceOf`; never toward the accent) with the light
    in one top corner (`--color-panel-light`), the side turn and turn about down the page as Calesaric turns it; a real
    border at half the accent (forced colors drop the light, the border stays); a black shadow (an accent one adds light the
    light has none to spare for, `[R-646]`); and the lit band's values, under which every pair on the panel and its light is

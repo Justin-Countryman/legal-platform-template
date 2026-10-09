@@ -27,7 +27,7 @@ import {LOOK} from './flowFixtures'
 
 // ─── Panels, the Layout theme's first layout beyond the baseline (ADV-LO amendment 4, `[R-655]`) ──────────────────
 //
-// A dark band of words keeps its ground and sets them on a raised panel in the column: the glowing card's surface where
+// A dark band of words keeps its ground and sets them on a raised panel in the column: the ground lifted in its own hue where
 // the palette has room for the light, else the light island. Text-led dark bands only, never every dark band; the walk
 // reads the band as its own dark ground; the panel takes the lit band's values; a card inside it sits on the dark ground.
 
@@ -70,7 +70,7 @@ describe('the walk: which bands take a panel', () => {
     expect(corners).toEqual(['right', 'left', 'right', 'left'])
   })
 
-  it('the glowing card’s surface where the palette has room for the light, else the light island', () => {
+  it('the lifted ground where the palette has room for the light, else the light island', () => {
     expect(walk(DESIGNED, panels('quiet.mostlyLight'), {panelRoom: true})[0].seam.paint?.onPanel?.fill).toBe('surface')
     expect(walk(DESIGNED, panels('quiet.mostlyLight'), {panelRoom: false})[0].seam.paint?.onPanel?.fill).toBe('light')
     // The site look carries the room only under a layout that asks for panels, by the gate the palette emits it under.
@@ -132,7 +132,7 @@ describe('the shell: the panel as drawn', () => {
     expect(panel.getAttribute('data-ring-context')).toBe('light')
     expect(panel.className.split(' ')).toContain('bg-background')
     expect(light.querySelector('[data-context]')?.getAttribute('data-context')).toBe('light')
-    // On the glowing card's surface the button keeps the band's dark context.
+    // On the lifted dark panel the button keeps the band's dark context.
     const dark = render(<ContentSectionBlock data={data} disclaimer="d" scale="marketing" seam={seam({fill: 'surface', corner: 'right'}, {paint: {ground: 'dark', texture: false, onPanel: {fill: 'surface', corner: 'right'}}})} />).container
     expect(dark.querySelector('[data-context]')?.getAttribute('data-context')).toBe('dark')
   })

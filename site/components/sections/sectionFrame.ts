@@ -125,7 +125,7 @@ export type Paint = {
    *  reads the band as this ground and adopts it wherever the band sits, first and last included. */
   onGround?: 'dark'
   /** The band keeps its dark ground and everything drawn on it, and its words sit on a raised panel in the column (the
-   *  Layout theme's Panels, `dark.sit: 'onPanel'`): the glowing card's surface where the palette has room for the light,
+   *  Layout theme's Panels, `dark.sit: 'onPanel'`): the dark ground lifted in its own hue where the palette has room for the light,
    *  else the light island; the light in its top corner on the side given, turn and turn about down the page. The walk
    *  reads the band as its own ground: the panel is a card on it, not a gutter around it. */
   onPanel?: {fill: 'surface' | 'light'; corner: 'left' | 'right'}
@@ -167,7 +167,8 @@ export type SiteLook = {
    *  light its dark runs. */
   glow?: boolean
   /** The palette has room for the light a dark panel takes (`glowLightFillOk`; the Layout theme's Panels): the panel is the
-   *  glowing card's surface, else the light island on the dark band. Set only under a layout that asks for panels. */
+   *  dark ground lifted in its own hue, the light in its corner, else the light island on the dark band. Set only under a
+   *  layout that asks for panels. */
   panelRoom?: boolean
   /** The initials the ghost draws (Phase 16D, `[R-492]`), or null when the theme draws
    *  none. Derived from the firm's name, never stored; set by `HomeBody`. */

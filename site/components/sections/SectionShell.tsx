@@ -346,7 +346,7 @@ export function SectionShell({
           {texture}
           {ghost}
           <div
-            // The panel's own fill: the glowing card's surface and the light in one top corner, with the lit band's text
+            // The panel's own fill: the dark ground lifted in its own hue and the light in one top corner, with the lit band's text
             // values (`globals.css`, `[data-dark-panel]`); or the light island, which resets the dark cascade. Its padding
             // publishes its own bottom padding, so a cut-out stands on the panel's bottom edge (`panel-pad`).
             data-dark-panel={panel.fill}

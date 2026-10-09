@@ -650,13 +650,12 @@ export function resolvePalette(raw: ColorInputs = {}, options: PaletteOptions = 
     tokens['--color-card-glow'] = light.light
   }
   // The Layout theme's panel (Panels, monorepo WS-V1-LAYOUT-OPTIONS-DESIGN, ADV-LO amendment 4): a dark band's words on a
-  // raised panel take the glowing card's surface, a point between the dark ground and the light, with the light in one top
-  // corner, emitted only when the layout asks and only where the palette has room; elsewhere the walk sets the panel as the
-  // light island. Every value lies between the dark ground and the light, solved under every pair the band draws.
+  // raised panel, the dark ground lifted in its own hue (`panelSurfaceOf`) with the glow's light in one top corner, emitted
+  // only when the layout asks and only where the palette has room for the light; elsewhere the walk sets the panel as the
+  // light island. The surface is solved under every pair the panel draws, and the light already is.
   if (options.darkPanel === 'on' && lightOf().ok) {
-    const light = lightOf()
-    tokens['--color-panel-surface'] = mixOklab(brandDark, light.light, GLOW_SURFACE_MIX)
-    tokens['--color-panel-light'] = light.light
+    tokens['--color-panel-surface'] = panelSurfaceOf(brandDark, tokens)
+    tokens['--color-panel-light'] = lightOf().light
   }
   // A photograph ghosted into a light band (the Background theme, monorepo WS-V1-BACKGROUND-THEME-DESIGN §7 item 8):
   // its opacity, and the tiers the band's text takes over it.
@@ -998,6 +997,28 @@ export function glowOf(ground: string, accent: string, t: Record<string, string>
 export const GLOW_LIGHT_CHROMA = 0.07
 export const GLOW_LIGHT_EDGE = 0.85
 export const GLOW_LIGHT_LIFT = 0.10
+/** How far the Layout theme's panel lifts the dark ground, in OKLab lightness (its eye pass, monorepo
+ *  WS-V1-LAYOUT-P1-EYE-2026-10-09): the references' panels are their ground's own color a step lighter (Lewin's navy from
+ *  L 0.18 to 0.27) or the ground itself (Calesaric's near-black), the accent kept for the light in the corner and the
+ *  border. The glowing card's surface, a point toward the accent's light, read as a grey slab on navy and as mud on green
+ *  at a panel's size: a warm accent over a near-complementary ground crosses grey. */
+export const PANEL_LIFT = 0.06
+
+/** The Layout theme's panel surface: the dark ground at its own hue and chroma, `PANEL_LIFT` lighter, or less where a
+ *  lighter one would take a pair a photo or glowing band draws under its ratio (each level drawn a level lighter, as
+ *  `rampDrawnMax` draws the ramp from the ground); the ground itself where no lift holds. */
+export function panelSurfaceOf(ground: string, t: Record<string, string>): string {
+  const g = parseOklch(ground)
+  const ceiling = pairsCeiling(photoBandPairs(t), t['--color-action'], t['--color-action-state-cue-on-scrim'])
+  const at = (l: number) => mapped(l, g.c, g.h ?? 0)
+  const holds = (hex: string) => rampDrawnMax(ground, hex) <= ceiling + 1e-12
+  let lo = g.l
+  let hi = Math.min(1, g.l + PANEL_LIFT)
+  if (holds(at(hi))) return at(hi)
+  for (let i = 0; i < 14; i++) { const mid = (lo + hi) / 2; if (holds(at(mid))) lo = mid; else hi = mid }
+  return lo > g.l + 0.002 ? at(lo) : ground
+}
+
 /** The surround's veil, the black drawn over every band of a lit group (`globals.css` writes the same number). */
 export const GLOW_VEIL = 0.36
 /** How far a lit band's solid card and a glowing card sit from the dark ground toward the light. */
