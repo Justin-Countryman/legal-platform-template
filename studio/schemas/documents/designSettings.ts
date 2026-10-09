@@ -8,6 +8,7 @@ import {HeadingLinePicker} from '../../components/HeadingLinePicker'
 import {DividerPicker} from '../../components/DividerPicker'
 import {FLOWS, DEFAULT_FLOW} from '../../../site/lib/flows'
 import {BACKGROUNDS} from '../../../site/lib/backgrounds'
+import {LAYOUTS} from '../../../site/lib/layouts'
 import {readFontKind, variableUploadWarning, type FontFileKind} from '../../../site/fonts/fileKind'
 
 // Phase 17C (`[R-541]`; monorepo WS-V1-PHASE17C2A-DESIGN §7.6 amendment 4): an upload's
@@ -231,6 +232,24 @@ export const designSettings = defineType({
         'What sits on the section colors the theme lays down: nothing, the style set\u2019s pattern, a gradient or glow down the dark sections, or your photographs, faint or behind groups of sections. It never changes which sections are dark or light; that is the Theme. Photographs show only once they are approved by choosing the background in the design preview and applying it. Leave blank for the theme\u2019s own background.',
       options: {
         list: BACKGROUNDS.map((b) => ({title: `${b.name} \u2014 ${b.sentence}`, value: b.id})),
+        layout: 'radio',
+      },
+    }),
+
+    // ─── The layout: how the sections sit and what crosses their edges (the Layout theme, [R-655]) ──
+    // ONE STORED ID, read by the site at render beside the theme and the background (`site/lib/layouts.ts`). NO
+    // `initialValue` (item 308): absent renders the theme's own layout, so a site that stores none renders as it did
+    // before this field existed. It applies to every section's color as the page shows it, a section's own Surface
+    // included; a section's own Inset and Overlap still win on that section. The options are the layouts that are built.
+    defineField({
+      name: 'pageLayout',
+      title: 'Layout',
+      type: 'string',
+      fieldset: 'theme',
+      description:
+        'How the sections sit on the page and what crosses from one into the next: every section full width, or the dark sections of words set on raised panels. It never changes which sections are dark or light (the Theme) or what sits on their colors (the Background). A section\u2019s own Inset and Overlap still win on that section. Leave blank for the theme\u2019s own layout.',
+      options: {
+        list: LAYOUTS.map((l) => ({title: `${l.name} \u2014 ${l.sentence}`, value: l.id})),
         layout: 'radio',
       },
     }),

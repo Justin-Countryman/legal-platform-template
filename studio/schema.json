@@ -18714,6 +18714,23 @@
         },
         "optional": true
       },
+      "pageLayout": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "contained"
+            },
+            {
+              "type": "string",
+              "value": "panels"
+            }
+          ]
+        },
+        "optional": true
+      },
       "headingEmphasisStyle": {
         "type": "objectAttribute",
         "value": {

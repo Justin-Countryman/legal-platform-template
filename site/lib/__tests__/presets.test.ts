@@ -11,6 +11,7 @@ import {
 import {PREVIEW_TOKEN_VECTOR, signToken} from '../preview/session'
 import {DARKNESS, DEFAULT_FLOW, FAMILIES, FLOWS, HIDDEN_FIELDS, HOSTS} from '../flows'
 import {BACKGROUNDS, SUGGESTED_WITH} from '../backgrounds'
+import {LAYOUTS, LAYOUT_SUGGESTED_WITH} from '../layouts'
 
 // studio/presets.json (Phase 16B amendment 4, widened in 16C): the style sets with their
 // picks, the corner families, the palettes and the font pairings as data, for the readers
@@ -147,6 +148,10 @@ function presets() {
     // reads; absent renders the theme's own, so there is no default id. And the pair that answers each verdict.
     backgrounds: BACKGROUNDS,
     suggestedWith: SUGGESTED_WITH,
+    // The Layout theme (`lib/layouts.ts`): the roster a stored `pageLayout` names, which Apply's allow-list and roster check
+    // read; absent renders the theme's own layout, so there is no default id. And the layout each family's sites draw.
+    layouts: LAYOUTS,
+    layoutSuggestedWith: LAYOUT_SUGGESTED_WITH,
     // The palette details (`lib/details.ts`, monorepo `[R-641]`): a palette choice that changes a role clears them, so
     // Apply may clear them and never set them.
     colorDetails: COLOR_DETAILS,

@@ -44,10 +44,17 @@ describe.skipIf(!existsSync(MAP))('every stored design field belongs to one laye
     check('appearance', declared.filter((n) => names.includes(n) || n === 'backgroundImage'), APPEARANCE_LAYER)
   })
 
-  it('a field under two layers is a split still owed, and there are exactly three', () => {
+  it('a field under two layers is a split still owed, and there are exactly two: the theme\u2019s id is the theme\u2019s alone', () => {
     const shared = Object.entries(DESIGN_SETTINGS_LAYER).filter(([, c]) => typeof c !== 'string').map(([n]) => n)
-    expect(shared).toEqual(['cardHover', 'elevationStyle', 'flow'])
+    expect(shared).toEqual(['cardHover', 'elevationStyle'])
+    expect(DESIGN_SETTINGS_LAYER.flow).toBe('flow')
     for (const claims of [HOMEPAGE_HERO_LAYER, APPEARANCE_LAYER]) expect(Object.values(claims).every((c) => typeof c === 'string')).toBe(true)
+  })
+
+  it('the Layout theme owns its one field (monorepo WS-V1-LAYOUT-OPTIONS-DESIGN): how a band sits is no longer the theme\u2019s', () => {
+    expect(DESIGN_SETTINGS_LAYER.pageLayout).toBe('layout')
+    expect(APPEARANCE_LAYER.inset).toBe('layout')
+    expect(APPEARANCE_LAYER.overlapPrevious).toBe('layout')
   })
 
   it('the Background theme owns its one field, its photographs and their approvals, and nothing of the grounds', () => {

@@ -4540,6 +4540,52 @@
     "softWash": "fade",
     "gradientBloom": "glow"
   },
+  "layouts": [
+    {
+      "id": "contained",
+      "name": "Contained",
+      "sentence": "Every section full width, its content in the column, and nothing crossing from one section into the next.",
+      "rules": {
+        "dark": {
+          "sit": "band"
+        },
+        "light": {
+          "sit": "band"
+        },
+        "cross": {
+          "kinds": [],
+          "at": "middle",
+          "max": 0
+        }
+      }
+    },
+    {
+      "id": "panels",
+      "name": "Panels",
+      "sentence": "Every dark section of words keeps its color and sets them on a raised panel, lit in one corner where the colors have room; a photograph may rise across up to two section edges.",
+      "rules": {
+        "dark": {
+          "sit": "onPanel"
+        },
+        "light": {
+          "sit": "band"
+        },
+        "cross": {
+          "kinds": [
+            "photo"
+          ],
+          "at": "middle",
+          "max": 2
+        }
+      }
+    }
+  ],
+  "layoutSuggestedWith": {
+    "quiet": "contained",
+    "alternating": "contained",
+    "typeOnBlack": "panels",
+    "gradientBloom": "panels"
+  },
   "colorDetails": [
     "headingInk",
     "saturatedFrom",
