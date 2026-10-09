@@ -364,8 +364,9 @@ export function ContentSectionBlock({
                   !seam.raisePhoto && !seam.raiseFigure && standsOnEdge(data, layout) ? 'xl:self-end xl:cutout-sink' : '',
                   // The figure out of a panel (the Layout theme, ADV-LO amendment 5): it stands on the panel's bottom edge
                   // whatever its `cutoutEdge`, as the references' attorneys do, and rises past the panel's top across the
-                  // seam the band above reserves (`figure-rise`).
-                  seam.raiseFigure ? 'xl:self-end xl:figure-rise' : '',
+                  // seam the band above reserves (`figure-rise`), in front of the seam's own lines (the hairline and the
+                  // divider the band draws over its top, both later in the paint order), as a figure that breaks a seam does.
+                  seam.raiseFigure ? 'xl:self-end xl:figure-rise xl:relative xl:z-10' : '',
                 ].filter(Boolean).join(' ')}>
                   <ContentMedia data={data} ground={ground} siteFrame={seam.site?.imageFrame} />
                 </div>

@@ -149,7 +149,8 @@ describe('the shell and the split: the figure as drawn', () => {
       return img.closest('.stacked-cutout')!.parentElement!.className.split(' ')
     }
     const risen = column(seam({raiseFigure: 'seam'}))
-    expect(risen).toEqual(expect.arrayContaining(['xl:self-end', 'xl:figure-rise']))
+    // In front of the seam's hairline and divider, which the band draws after its content.
+    expect(risen).toEqual(expect.arrayContaining(['xl:self-end', 'xl:figure-rise', 'xl:relative', 'xl:z-10']))
     for (const c of ['xl:photo-rise', 'xl:self-start', 'xl:cutout-sink']) expect(risen).not.toContain(c)
     expect(column(seam()).filter((c) => c.includes('rise'))).toEqual([])
   })
