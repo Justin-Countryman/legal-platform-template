@@ -144,6 +144,11 @@ describe('the shell: the panel as drawn', () => {
     expect(rule).toContain('@variant lg { padding: 4.5rem; --band-pb: 4.5rem; }')
   })
 
+  it('keeps its gutter on a section that draws full-bleed, as an inset panel does', () => {
+    const {container} = render(<SectionShell appearance={{surface: 'dark'}} gutter={false} contained={false} seam={seam({fill: 'surface', corner: 'right'})}>x</SectionShell>)
+    expect(container.querySelector('section')!.className.split(' ')).toContain('px-[5%]')
+  })
+
   it('an inset band is still the operator’s panel, whatever the paint says', () => {
     const {container} = render(<SectionShell appearance={{surface: 'dark', inset: true}} seam={seam({fill: 'surface', corner: 'right'})}>x</SectionShell>)
     expect(container.querySelector('[data-dark-panel]')).toBeNull()
