@@ -17,12 +17,14 @@ vi.mock('next/image', () => ({
 
 import {SectionShell, type SectionAppearance} from '../SectionShell'
 import {ContentSectionBlock, type ContentSectionData} from '../ContentSectionBlock'
-import {NO_SEAM, walkFrame, type SeamProps, type SiteLook} from '../sectionFrame'
+import {NO_SEAM, walkFrame, walkPage, type SeamProps, type SiteLook} from '../sectionFrame'
 import {FLOWS, flowById, type FlowRules, type Host} from '@/lib/flows'
 import {effectiveFlow} from '@/lib/backgrounds'
 import {MAX_CROSSINGS} from '@/lib/layouts'
 import {SECTION_SPACING, TIGHT_SPACING} from '@/lib/sectionSurface'
 import {LOOK} from './flowFixtures'
+import {stubCanvas} from './stubCanvases'
+import {frameOf} from '@/components/layout/HomepageCanvas'
 
 // ─── The figure out of a panel (the Layout theme, ADV-LO amendment 5, `[R-655]`) ──────────────────────────────────
 //
@@ -112,6 +114,26 @@ describe('the walk: which panel lets its figure out', () => {
     expect(out[3].seam.raisePhoto).toBe(true)
     expect(out[5].seam.raiseFigure).toBe('seam')
     expect(out.flatMap((o, i) => (o.seam.nextOverlap === 'photo' ? [i] : []))).toEqual([2, 4])
+  })
+})
+
+// The figure canvas (`scripts/ci/record-figure-panel.ndjson`), the flow-metrics rows that draw the device on a served page:
+// the cut-out canvas as a design file stores it, every band a surface of its own.
+describe('the figure canvas, as flow-metrics serves it', () => {
+  const canvas = stubCanvas('record-figure-panel.ndjson')
+  const drawn = (flowId: string, layout: string) => walkPage(canvas!.blocks, frameOf, {...LOOK, panelRoom: true, flow: effectiveFlow(flowById(flowId)!, null, layout)}, canvas!.hero, 'dark').bands
+    .map((o) => `${o.seam.paint?.onPanel?.fill ?? 'band'}${o.seam.raiseFigure ? '+figure' : ''}${o.seam.raisePhoto ? '+photo' : ''}${o.seam.nextOverlap === 'photo' ? '+reserves' : ''}`)
+
+  it.skipIf(!canvas)('Panels: the first cut-out’s panel lets its figure out into the practice areas, and the light split raises its photograph', () => {
+    expect(drawn('gradientBloom.mostlyDark', 'panels')).toEqual(['band', 'band+reserves', 'surface+figure', 'band', 'surface+reserves', 'band+photo'])
+  })
+
+  it.skipIf(!canvas)('Panels on light: the light cut-out split is the dark panel, its figure rising into the dark band of words above', () => {
+    expect(drawn('editorial.mostlyLight', 'panelsOnLight')).toEqual(['band', 'band', 'band', 'band', 'band+reserves', 'ground+figure'])
+  })
+
+  it.skipIf(!canvas)('under Contained it draws neither: every band full, nothing crossing', () => {
+    expect(drawn('gradientBloom.mostlyDark', 'contained').every((d) => d === 'band')).toBe(true)
   })
 })
 

@@ -130,6 +130,10 @@ const CANVASES = [
   // Phase 17E (`[R-575]`, `[R-576]`): the composer's own canvas for a synthetic firm, a ribbon after the hero and one before
   // the close, under every theme.
   ['composed-ribbons', 'scripts/ci/record-composed-ribbons.ndjson'],
+  // The Layout theme's figure out of a panel (ADV-LO amendment 5): the cut-out canvas as a design file stores it, every band
+  // a surface of its own, a dark run where the first cut-out split follows the practice areas and a light cut-out split
+  // under a dark band of words. Measured under the layout rows only (`ONLY_FLOWS`).
+  ['figure-panel', 'scripts/ci/record-figure-panel.ndjson'],
 ]
 // THE BACKGROUND MATRIX (the Background theme; monorepo WS-V1-BACKGROUND-THEME-DESIGN §6). Every background of the roster
 // under a theme that gives it something to draw on, written `<theme>+<background>` and measured as a theme is, on the one
@@ -145,12 +149,25 @@ const BACKGROUND_PAGES = [
 // theme, with the theme's own background, on the canvas whose dark run carries the most text-led bands and two cut-out
 // figures, written `<theme>+<background or site>+<layout>`. A theme alone, or with a background, is measured with no layout
 // in its address, so every row above this one is the theme's own layout, as it was before the layer.
+// The figure out of a panel (ADV-LO amendment 5) and Panels on light (the light-led layout, the fast path's P4) add three rows:
+// on the figure canvas, Panels under Gradient bloom, where the first cut-out split's panel lets the figure out into the
+// practice areas above it (a dark run, as Lewin's and Calesaric's are) and the light split under the About panel raises
+// its photograph, and Panels on light under its suggested theme, Editorial, where the light cut-out split is the dark
+// panel and its figure rises into the dark band of words above; and Panels on light under Editorial on the planning
+// photo-hero canvas, whose light run carries four bands of words (the dark panel, then two on the wash). Under no theme
+// does the cut-out canvas itself put a cut-out on a panel: the alternation leaves both on full bands.
 const LAYOUT_PAGES = {
   'adversarial-cutout': ['gradientBloom.mostlyDark+site+panels'],
+  'planning-photo-hero': ['editorial.mostlyLight+site+panelsOnLight'],
+  'figure-panel': ['gradientBloom.mostlyDark+site+panels', 'editorial.mostlyLight+site+panelsOnLight'],
 }
+// The rows that must draw a figure out of a panel.
+const FIGURE_PAGES = ['figure-panel / gradientBloom.mostlyDark+site+panels', 'figure-panel / editorial.mostlyLight+site+panelsOnLight']
 // The set canvases are measured under the theme that draws the set and its dark-led neighbour only: every other theme
 // draws them as it draws the photo-hero canvases, whose rows the golden already holds (Phase 17E).
 const ONLY_FLOWS = {
+  // The figure canvas is the layout rows' alone: under a theme's own layout it draws what the cut-out canvas does.
+  'figure-panel': [],
   'adversarial-photo-set': ['photoScrims.mostlyDark', 'cutBlocks.mostlyDark'],
   'planning-photo-set': ['photoScrims.mostlyDark', 'cutBlocks.mostlyDark'],
   'multi-practice-photo-set': ['photoScrims.mostlyDark', 'cutBlocks.mostlyDark', ...BACKGROUND_PAGES],
@@ -392,7 +409,8 @@ function measure() {
         } : {}),
         // Phase 17D: an inset band's panel, its own ground and ring, recorded only where a band draws one: the
         // band's own box is the gutter around it (ADV-17D-A, -B: a dark panel recorded as transparent).
-        ...(s.querySelector(':scope > div.rounded-ui.overflow-hidden') ? {panel: {ring: s.querySelector(':scope > div.rounded-ui.overflow-hidden').getAttribute('data-ring-context'), bg: getComputedStyle(s.querySelector(':scope > div.rounded-ui.overflow-hidden')).backgroundColor}} : {}),
+        // A Layout panel that lets its figure out clips sideways only (`panel-clip`) and is the same panel.
+        ...(s.querySelector(':scope > div.rounded-ui:is(.overflow-hidden, .panel-clip)') ? {panel: {ring: s.querySelector(':scope > div.rounded-ui:is(.overflow-hidden, .panel-clip)').getAttribute('data-ring-context'), bg: getComputedStyle(s.querySelector(':scope > div.rounded-ui:is(.overflow-hidden, .panel-clip)')).backgroundColor}} : {}),
         // Phase 17D (`[R-556]`): a band's card photos, recorded only where it shows them: the visible cards, how many
         // draw a photo and hold their text over the photo scrim, and how many links carry a dark context (none may:
         // a card's focus ring is drawn outside it, on the band).
@@ -704,7 +722,7 @@ try {
         const m = await page.evaluate(measure)
         results[key] = m
         // The layout row: Panels draws its panels in the column (inside the 5% gutter, never past 80rem) and no photograph
-        // rises out of one (the figure out of a panel is a later slice).
+        // rises out of one.
         if (layout === 'panels') {
           const panels = await page.evaluate(() => [...document.querySelectorAll('main [data-dark-panel]')].map((el) => {
             const r = el.getBoundingClientRect()
@@ -714,6 +732,50 @@ try {
           for (const p of panels) {
             if (p.x < 0.05 * device.viewport.width - 1 || p.w > 1280 + 1) fail(`${key}: a panel ${Math.round(p.w)} px wide at ${Math.round(p.x)}, outside the column`)
             if (p.raised) fail(`${key}: a photograph rises out of a panel`)
+          }
+        }
+        // Panels on light: one dark panel, the dark ground itself, among the light bands; the rest on the wash; every panel
+        // in the column; never two panels in a row.
+        if (layout === 'panelsOnLight') {
+          const lit = await page.evaluate(() => {
+            const bands = [...document.querySelectorAll('main section')].filter((x) => !x.parentElement.closest('main section'))
+            return bands.map((s) => {
+              const p = s.querySelector(':scope > :is([data-dark-panel], [data-wash-panel])')
+              const r = p?.getBoundingClientRect()
+              return p ? {fill: p.getAttribute('data-dark-panel') ?? 'wash', x: r.left, w: r.width, bg: getComputedStyle(p).backgroundColor, band: getComputedStyle(s).backgroundColor} : null
+            })
+          })
+          const drawn = lit.filter(Boolean)
+          if (drawn.filter((p) => p.fill === 'ground').length !== 1) fail(`${key}: Panels on light drew ${drawn.filter((p) => p.fill === 'ground').length} dark panels, not one`)
+          if (drawn.some((p) => p.fill !== 'ground' && p.fill !== 'wash')) fail(`${key}: Panels on light drew a panel of Panels' own`)
+          lit.forEach((p, k) => { if (p && lit[k - 1]) fail(`${key}: two panels back to back at bands ${k - 1} and ${k}`) })
+          for (const p of drawn) {
+            if (p.x < 0.05 * device.viewport.width - 1 || p.w > 1280 + 1) fail(`${key}: a panel ${Math.round(p.w)} px wide at ${Math.round(p.x)}, outside the column`)
+            if (p.bg === p.band) fail(`${key}: a ${p.fill} panel draws the band's own ground (${p.bg})`)
+          }
+        }
+        // The figure out of a panel (ADV-LO amendment 5), wherever a layout draws one: from xl it stands on its panel's
+        // bottom edge, rises past the panel's top, and stops short of every word and control of the band above (the band
+        // above reserves the crossing, WCAG 2.4.11); on a phone it stays inside its panel.
+        {
+          const figs = await page.evaluate(() => [...document.querySelectorAll('main section > div.panel-clip')].map((panel) => {
+            const img = panel.querySelector('.xl\\:figure-rise img')
+            // The band above: the outermost section before this one in <main> (a band may sit in a reveal wrapper).
+            const bands = [...document.querySelectorAll('main section')].filter((x) => !x.parentElement.closest('main section'))
+            const band = bands[bands.indexOf(panel.closest('section')) - 1] ?? null
+            const words = band ? [...band.querySelectorAll('[data-band-content] :is(h1, h2, h3, h4, p, li, a, button, blockquote, img)')].map((e) => e.getBoundingClientRect()).filter((r) => r.height > 0) : []
+            const p = panel.getBoundingClientRect()
+            const f = img?.getBoundingClientRect()
+            return {panelTop: p.top, panelBottom: p.bottom, top: f?.top ?? null, bottom: f?.bottom ?? null, above: words.length ? Math.max(...words.map((r) => r.bottom)) : null}
+          }))
+          if (FIGURE_PAGES.includes(`${canvas} / ${flow}`) && !figs.length) fail(`${key}: drew no figure out of a panel`)
+          for (const f of figs) {
+            if (f.top === null) { fail(`${key}: a panel lets a figure out and holds none`); continue }
+            if (Number(width) >= 1280) {
+              if (Math.abs(f.bottom - f.panelBottom) > 2) fail(`${key}: a figure out of a panel ends ${Math.round(f.bottom - f.panelBottom)} px from the panel's bottom edge`)
+              if (f.top >= f.panelTop) fail(`${key}: a figure out of a panel does not rise past its top`)
+              if (f.above !== null && f.top < f.above) fail(`${key}: a figure out of a panel covers the band above by ${Math.round(f.above - f.top)} px`)
+            } else if (f.top < f.panelTop - 1) fail(`${key}: a figure crosses its panel's edge at ${width}`)
           }
         }
         if (m.innerWidth !== device.viewport.width) fail(`${key}: innerWidth is ${m.innerWidth}, not ${device.viewport.width} (the layout is not at this width)`)
