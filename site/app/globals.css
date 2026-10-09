@@ -1645,6 +1645,15 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 }
 @media (prefers-contrast: more) { [data-card-glow="on"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] { background-image: none; box-shadow: none; } }
 @media print { [data-card-glow="on"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] { background-image: none; box-shadow: none; } }
+/* The resting card edge over the glowing card's border (monorepo backlog 441, decided under `[R-503]`): the glow's real
+   border used to replace the edge on a dark band, so a page setting both drew an edge on its light cards and none on its
+   dark ones. The approved Figma design of 2026-10-08 drew both, the stripe on top, and so does the page: the edge the
+   setting names, in the decor color as the glowing card resolves it (the accent on dark, which every glowing card already
+   holds at 4.5:1 on its surface and its light), over the half-accent border on the other sides; the outline is the edge's
+   whole border at full strength. Decorative, as the edge is everywhere; forced colors draw both as the border. */
+[data-card-glow="on"][data-card-edge="left"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] { border-left: 4px solid --theme(--color-decor); }
+[data-card-glow="on"][data-card-edge="bottom"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] { border-bottom: 2px solid --theme(--color-decor); }
+[data-card-glow="on"][data-card-edge="outline"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] { border-color: --theme(--color-decor); }
 
 /* ─── The Layout theme's panel (Panels; monorepo WS-V1-LAYOUT-OPTIONS-DESIGN, ADV-LO amendment 4, `[R-655]`) ───────── */
 /* A dark band of words keeps its ground and everything drawn on it (a glow, a faint photograph, the texture), and its words
