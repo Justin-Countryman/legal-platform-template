@@ -17,7 +17,7 @@ import {PracticeAreaNavBlock} from '../PracticeAreaNavBlock'
 import {AttorneySectionBlock} from '../AttorneySectionBlock'
 import {ContentSectionBlock} from '../ContentSectionBlock'
 import {VideoEmbed} from '@/components/media/VideoEmbed'
-import {resolvePalette, type ColorInputs} from '@/lib/designTokens'
+import {photoBandPairs, resolvePalette, type ColorInputs} from '@/lib/designTokens'
 import {PALETTE_PRESETS} from '@/lib/palettes'
 
 // PHOTO COLOR AND EDGE (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 16, `[R-641]`): one treatment for the site's
@@ -56,10 +56,11 @@ describe('photo color', () => {
   })
 })
 
-// ONE TINT ON EVERY BAND (monorepo backlog 438): a feature photo's and a video poster's tint is the accent as chosen
-// (`--color-accent-on-light`), as the hero's is and the practice tiles' (light cards) is. A dark band re-points
-// `--color-accent` to the lightened accent, a text form, which washed a photograph on a dark band paler than the same
-// photograph on a light one. No text sits on either photograph; the one mark on a poster holds over every tinted pixel.
+// ONE TINT ON EVERY BAND (monorepo backlog 438): every photo tint, a feature photo's, a video poster's, a practice card's
+// and the hero's, is the accent as chosen (`--color-accent-on-light`). A dark band, and a glowing card on one, re-points
+// `--color-accent` to the lightened accent, a text form, which washed a photograph there paler than the same photograph
+// on a light band. No text sits on a feature photo or a poster, and the one mark on a poster holds over every tinted
+// pixel; a practice card's words sit on their own scrim above the tint, which holds over every tinted pixel too.
 
 const ch = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
 const lin = (v: number) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)
@@ -93,10 +94,19 @@ function seeded(n: number, seed: number): ColorInputs[] {
 const PALETTES = [...PALETTE_PRESETS.map((p) => p as unknown as ColorInputs), ...seeded(500, 4381)]
 
 describe('backlog 438: one photo tint on every band', () => {
-  it('the feature photo, the poster and the hero tint in the accent as chosen, which no band re-points', () => {
-    for (const box of ['\\[data-feature-photo\\]', '\\[data-video-poster\\]', '\\[data-hero-photo\\]']) {
-      expect(CSS).toMatch(new RegExp(`\\[data-photo-color="tint"\\] ${box}::after \\{[^}]*background-color: var\\(--color-accent-on-light\\);[^}]*mix-blend-mode: color;[^}]*opacity: 0\\.6;`))
+  it('every photo tint, the practice cards’ included, is the accent as chosen, which no band re-points', () => {
+    const TINTS = [
+      '\\[data-feature-photo\\]::after', '\\[data-video-poster\\]::after', '\\[data-hero-photo\\]::after',
+      'nav \\[data-card\\] img\\.tile-photo \\+ div',
+      'nav \\[data-card\\] div:has\\(> img:not\\(\\.tile-photo\\)\\):not\\(\\[data-tile-icon\\]\\)::after',
+    ]
+    for (const rule of TINTS) {
+      expect(CSS).toMatch(new RegExp(`\\[data-photo-color="tint"\\] ${rule} \\{[^}]*background-color: var\\(--color-accent-on-light\\);[^}]*mix-blend-mode: color;[^}]*opacity: 0\\.6;`))
     }
+    // Nothing in the photo color rules reads the band's accent.
+    const region = CSS.slice(CSS.indexOf('/* Photo color and edge'), CSS.indexOf('/* The fade:'))
+    expect(region.length).toBeGreaterThan(1000)
+    expect(region).not.toContain('var(--color-accent)')
     // Declared once, at the root, as a color: no dark, photo, glow or island block re-points it.
     expect(CSS.match(/--color-accent-on-light\s*:/g)).toHaveLength(1)
     expect(CSS).toMatch(/--color-accent-on-light:\s*#[0-9a-f]{6};/i)
@@ -140,6 +150,45 @@ describe('backlog 438: one photo tint on every band', () => {
           const disc = over(over(tinted(pixel, accent), dark, veil), ground, 0.9)
           const r = ratio(dark, disc)
           if (r < 3) failures.push(`${JSON.stringify(inputs)} pixel ${pixel} veil ${veil}: ${r.toFixed(2)}`)
+        }
+      }
+    }
+    expect(failures.length, failures.slice(0, 10).join('\n')).toBe(0)
+  })
+
+  it('a practice card’s words on a glowing card on a dark band sit on their own scrim, above the tint', () => {
+    const {container} = render(
+      <div data-photo-color="tint" data-card-glow="on"><main><section className="bg-brand-dark" data-ring-context="dark">
+        <PracticeAreaNavBlock data={{heading: 'Areas', layout: 'spotlight', mobileDisplay: 'stacked', items: [{_key: 'a', label: 'Wills', href: '/wills/', image: photo}]} as never} />
+      </section></main></div>,
+    )
+    const card = container.querySelector('nav [data-card]')!
+    const tint = card.querySelector('img.tile-photo + div')!
+    const words = card.querySelector('.tile-text-scrim')!
+    expect(tint.getAttribute('aria-hidden')).toBe('true')
+    expect(tint.textContent).toBe('')
+    expect(tint.compareDocumentPosition(words) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(words.textContent).toContain('Wills')
+    // The words' layer is stacked above the tint's (`z-10` over `z-[1]`).
+    expect(words.closest('.z-10')).not.toBeNull()
+    expect(tint.className.split(' ')).toContain('z-[1]')
+  })
+
+  it('a practice card’s words hold over every tinted pixel under their scrim, on the presets and 500 seeded palettes', () => {
+    // The words sit on `tile-text-scrim`: the scrim at 80% at least, over the tinted photograph. Every photo-band pair
+    // (the on-dark tiers, the stars, the control border) is checked against that composite at eight bits.
+    let s = 4383
+    const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 2 ** 32
+    const pixels = [...Array.from({length: 52}, (_, i) => [i / 51, i / 51, i / 51]), ...Array.from({length: 52}, () => bits([rnd(), rnd(), rnd()]))]
+    const failures: string[] = []
+    for (const inputs of PALETTES) {
+      const t = resolvePalette(inputs).tokens as Record<string, string>
+      const [accent, scrim] = [ch(t['--color-accent-on-light']), ch(t['--color-scrim'])]
+      for (const pixel of pixels) {
+        const ground = over(tinted(pixel, accent), scrim, 0.8)
+        for (const [fg, min] of photoBandPairs(t)) {
+          const r = ratio(ch(fg), ground)
+          if (r < min) failures.push(`${JSON.stringify(inputs)} pixel ${pixel}: ${fg} at ${r.toFixed(2)} < ${min}`)
         }
       }
     }
