@@ -55,9 +55,13 @@ export type Layout = {
   rules: LayoutRules
 }
 
-/** The bands whose content may sit on a panel: the text-led ones, the code's one meaning of the word (`PHOTO_HOSTS`): never
- *  a ribbon, a stat row, a grid of practice areas, attorneys or results, which the references leave on the band. */
-export const PANEL_HOSTS: readonly Host[] = ['narrative', 'split', 'testimonials', 'differentiators', 'statement']
+/** The bands whose words may sit on a panel: the prose-led content sections only (a statement, two-column text, the
+ *  narrative and the differentiators, a split by its text side), never a grid of cards (the lead's ruling on PR #77: Panels
+ *  never wraps a card grid). So narrower than the code's text-led bands (`PHOTO_HOSTS`), which count the testimonials: a
+ *  testimonials grid, practice areas, attorneys, results, a ribbon and a stat row stay full bands, as the references leave
+ *  them. The walk asks the band to be a content section too (`FlowInputs.content`), so no other type that shares a host
+ *  takes one. */
+export const PANEL_HOSTS: readonly Host[] = ['narrative', 'split', 'differentiators', 'statement']
 
 const NO_CROSSING: LayoutRules['cross'] = {kinds: [], at: 'middle', max: 0}
 

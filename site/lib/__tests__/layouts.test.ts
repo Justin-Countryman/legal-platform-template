@@ -55,9 +55,10 @@ describe('the roster', () => {
     for (const id of [undefined, null, '', 'floating', 'edgeToEdge', 'overlap', 42]) expect(layoutById(id)).toBeNull()
   })
 
-  it('the panel takes the text-led bands, the code’s one meaning of the word', () => {
-    expect(PANEL_HOSTS).toEqual(PHOTO_HOSTS)
-    for (const host of ['ribbon', 'statRow', 'areas', 'attorneys', 'caseResults'] as const) expect(PANEL_HOSTS).not.toContain(host)
+  it('the panel takes the prose-led bands, never a card grid: the text-led ones less the testimonials', () => {
+    expect(PANEL_HOSTS).toEqual(['narrative', 'split', 'differentiators', 'statement'])
+    expect(PHOTO_HOSTS.filter((h) => !PANEL_HOSTS.includes(h))).toEqual(['testimonials'])
+    for (const host of ['ribbon', 'statRow', 'areas', 'attorneys', 'caseResults', 'testimonials', 'reviews', 'badges', 'video'] as const) expect(PANEL_HOSTS).not.toContain(host)
   })
 
   it('each suggestion pairs a shipped family with a built layout, never a default', () => {

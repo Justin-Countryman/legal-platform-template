@@ -28,14 +28,17 @@ import {LOOK} from './flowFixtures'
 // ─── Panels, the Layout theme's first layout beyond the baseline (ADV-LO amendment 4, `[R-655]`) ──────────────────
 //
 // A dark band of words keeps its ground and sets them on a raised panel in the column: the ground lifted in its own hue where
-// the palette has room for the light, else the light island. Text-led dark bands only, never every dark band; the walk
+// the palette has room for the light, else the light island. Prose-led dark bands only, never a card grid; the walk
 // reads the band as its own dark ground; the panel takes the lit band's values; a card inside it sits on the dark ground.
 
 const CSS = fs.readFileSync(path.resolve(__dirname, '../../../app/globals.css'), 'utf8')
 
-type Band = {host: Host | null; appearance?: SectionAppearance | null; raisesPhoto?: boolean; cutout?: 'left' | 'right' | null}
-const b = (host: Host | null, appearance?: SectionAppearance | null, extra: Partial<Band> = {}): Band => ({host, appearance, ...extra})
-const resolveBand = (m: Band) => ({appearance: m.appearance, empty: false, stored: !!m.appearance?.surface, host: m.host, raisesPhoto: m.raisesPhoto, cutout: m.cutout})
+type Band = {host: Host | null; appearance?: SectionAppearance | null; raisesPhoto?: boolean; cutout?: 'left' | 'right' | null; content?: boolean}
+/** The hosts only a content section carries (`hostOf`: a role key on the composer's content sections, else its layout). */
+const CONTENT_HOSTS: readonly Host[] = ['narrative', 'split', 'differentiators', 'statement', 'ribbon', 'statRow']
+const b = (host: Host | null, appearance?: SectionAppearance | null, extra: Partial<Band> = {}): Band =>
+  ({host, appearance, content: !!host && CONTENT_HOSTS.includes(host), ...extra})
+const resolveBand = (m: Band) => ({appearance: m.appearance, empty: false, stored: !!m.appearance?.surface, host: m.host, raisesPhoto: m.raisesPhoto, cutout: m.cutout, content: m.content})
 const panels = (flowId: string) => effectiveFlow(flowById(flowId)!, null, 'panels')
 const walk = (bands: Band[], flow: FlowRules, site: Partial<SiteLook> = {}) => walkFrame(bands, resolveBand, {...LOOK, panelRoom: true, ...site, flow}, 'dark')
 
@@ -45,7 +48,16 @@ const DESIGNED: Band[] = [
 ]
 
 describe('the walk: which bands take a panel', () => {
-  it('every text-led dark band, stored or painted, and no other band', () => {
+  it('a card grid never takes one (the lead\u2019s ruling on PR #77): the testimonials, dark, stay a full band', () => {
+    // A testimonials grid and a featured testimonial are both `testimonials`, text-led to the code, and neither is prose.
+    const out = walk([b('statement', {surface: 'dark'}), b('areas', {surface: 'light'}), b('testimonials', {surface: 'dark'}), b('attorneys', {surface: 'light'}), b('caseResults', {surface: 'dark'})], panels('quiet.mostlyLight'))
+    expect(out.map((o) => !!o.seam.paint?.onPanel)).toEqual([true, false, false, false, false])
+    // A prose host on a band that is not a content section takes none either: the host alone is not enough.
+    expect(walk([b('narrative', {surface: 'dark'}, {content: false})], panels('quiet.mostlyLight'))[0].seam.paint?.onPanel).toBeUndefined()
+    expect(PANEL_HOSTS).not.toContain('testimonials')
+  })
+
+  it('every prose-led dark band, stored or painted, and no other band', () => {
     const out = walk(DESIGNED, panels('quiet.mostlyLight'))
     expect(out.map((o) => !!o.seam.paint?.onPanel)).toEqual([true, false, true, false, true, false, false, true])
     // A painted dark ground the same way: Gradient bloom's own dark run on a canvas that stores nothing.
@@ -53,7 +65,7 @@ describe('the walk: which bands take a panel', () => {
     const lit = walk(fresh, panels('gradientBloom.mostlyDark'))
     lit.forEach((o) => {
       const dark = o.seam.paint?.ground === 'dark'
-      expect(!!o.seam.paint?.onPanel, `${o.member.host}`).toBe(dark && PANEL_HOSTS.includes(o.member.host!))
+      expect(!!o.seam.paint?.onPanel, `${o.member.host}`).toBe(dark && !!o.member.content && PANEL_HOSTS.includes(o.member.host!))
     })
     expect(lit.some((o) => o.seam.paint?.onPanel)).toBe(true)
   })

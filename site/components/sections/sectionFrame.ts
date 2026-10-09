@@ -1104,10 +1104,11 @@ export function applyLayout(
     if (g === 'dark') {
       // A full band; or the dark ground as a panel on the page's light ground.
       if (rules.dark.sit === 'floating') return {...bare(p), inset: true}
-      // Or the full dark band with its words on a raised panel (Panels, ADV-LO amendment 4): the text-led bands only,
-      // never every dark band, so a grid of practice areas, attorneys or results and a ribbon stay on the band, as the
-      // references leave them. The band keeps its ground and what is drawn on it; the panel is the card on top.
-      if (rules.dark.sit === 'onPanel' && r.host && PANEL_HOSTS.includes(r.host)) {
+      // Or the full dark band with its words on a raised panel (Panels, ADV-LO amendment 4): a prose-led content section
+      // only, never a grid of cards (testimonials, practice areas, attorneys, results) nor a ribbon or a stat row, which
+      // stay full bands, as the references leave them. The band keeps its ground and what is drawn on it; the panel is
+      // the card on top.
+      if (rules.dark.sit === 'onPanel' && r.content && r.host && PANEL_HOSTS.includes(r.host)) {
         return {...(p ?? {texture: false}), onPanel: {fill: site?.panelRoom ? 'surface' : 'light', corner: panels++ % 2 === 0 ? 'right' : 'left'}}
       }
       return p

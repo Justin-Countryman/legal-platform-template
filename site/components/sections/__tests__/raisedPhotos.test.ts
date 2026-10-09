@@ -15,7 +15,8 @@ import {LOOK} from './flowFixtures'
 type Band = {host: Host | null; appearance?: SectionAppearance | null; raisesPhoto?: boolean}
 const split = (surface: 'dark' | 'light', raisesPhoto = true): Band => ({host: 'split', appearance: {surface}, raisesPhoto})
 const text = (surface: 'dark' | 'light'): Band => ({host: 'narrative', appearance: {surface}})
-const resolveBand = (m: Band) => ({appearance: m.appearance, empty: false, stored: !!m.appearance?.surface, host: m.host, raisesPhoto: m.raisesPhoto})
+// Every band here is a content section (a split or two-column text), as the composer writes them.
+const resolveBand = (m: Band) => ({appearance: m.appearance, empty: false, stored: !!m.appearance?.surface, host: m.host, raisesPhoto: m.raisesPhoto, content: true})
 const raised = (bands: Band[], flow: FlowRules, site: Partial<SiteLook> = {}) =>
   walkFrame(bands, resolveBand, {...LOOK, ...site, flow}, 'dark').flatMap((o, i) => (o.seam.raisePhoto ? [i] : []))
 
