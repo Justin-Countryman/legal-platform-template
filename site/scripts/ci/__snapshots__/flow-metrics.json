@@ -87438,7 +87438,7 @@
     "innerWidth": 1440,
     "clientWidth": 1440,
     "scrollWidth": 1440,
-    "scrollHeight": 5960,
+    "scrollHeight": 5794,
     "bands": [
       {
         "i": 0,
@@ -87576,12 +87576,8 @@
         ],
         "texture": false,
         "ghost": false,
-        "panel": {
-          "ring": null,
-          "bg": "rgb(43, 59, 91)"
-        },
         "top": 3045,
-        "height": 586,
+        "height": 440,
         "pt": 112,
         "pb": 112,
         "headingLines": 1,
@@ -87609,7 +87605,7 @@
           "ring": null,
           "bg": "rgb(43, 59, 91)"
         },
-        "top": 3631,
+        "top": 3485,
         "height": 478,
         "pt": 56,
         "pb": 112,
@@ -87634,12 +87630,8 @@
         ],
         "texture": false,
         "ghost": false,
-        "panel": {
-          "ring": null,
-          "bg": "rgb(43, 59, 91)"
-        },
-        "top": 4109,
-        "height": 1149,
+        "top": 3963,
+        "height": 1129,
         "pt": 56,
         "pb": 112,
         "headingLines": 2,
@@ -87663,7 +87655,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 5257,
+        "top": 5092,
         "height": 410,
         "pt": 112,
         "pb": 112,
@@ -90758,7 +90750,7 @@
     "innerWidth": 390,
     "clientWidth": 390,
     "scrollWidth": 390,
-    "scrollHeight": 5351,
+    "scrollHeight": 5163,
     "bands": [
       {
         "i": 0,
@@ -90896,12 +90888,8 @@
         ],
         "texture": false,
         "ghost": false,
-        "panel": {
-          "ring": null,
-          "bg": "rgb(43, 59, 91)"
-        },
         "top": 2891,
-        "height": 419,
+        "height": 337,
         "pt": 64,
         "pb": 64,
         "headingLines": 1,
@@ -90929,7 +90917,7 @@
           "ring": null,
           "bg": "rgb(43, 59, 91)"
         },
-        "top": 3311,
+        "top": 3229,
         "height": 466,
         "pt": 32,
         "pb": 64,
@@ -90954,12 +90942,8 @@
         ],
         "texture": false,
         "ghost": false,
-        "panel": {
-          "ring": null,
-          "bg": "rgb(43, 59, 91)"
-        },
-        "top": 3777,
-        "height": 933,
+        "top": 3695,
+        "height": 827,
         "pt": 32,
         "pb": 64,
         "headingLines": 2,
@@ -90983,7 +90967,7 @@
         ],
         "texture": false,
         "ghost": false,
-        "top": 4710,
+        "top": 4522,
         "height": 304,
         "pt": 64,
         "pb": 64,
