@@ -46,7 +46,7 @@ export const video = defineType({
       title: 'Custom Thumbnail',
       type: 'image',
       description:
-        'Optional. A branded poster for the Video Library grid. If left blank, the video\'s YouTube/Vimeo thumbnail is used automatically.',
+        'Optional. The poster for this video. On a video section it shows in the site\'s photo treatment and the player loads when it is pressed (on iPhones and iPads a second tap starts it); on the Video Library grid it is the tile. If left blank, a video section shows the player itself and the library the YouTube/Vimeo thumbnail.',
       options: {hotspot: true},
       fields: [
         {

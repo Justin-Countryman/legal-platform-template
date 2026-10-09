@@ -230,7 +230,7 @@ export const SECTION_BODY = `
   "media": media{
     kind,
     "image": image ${IMAGE_FRAGMENT},
-    "video": video->{_id, title, youTubeUrl, description, videoType}
+    "video": video->{_id, title, youTubeUrl, description, videoType, "thumbnail": thumbnail ${IMAGE_FRAGMENT}}
   },
   // The appearance fieldset. EXPLICIT, not a splat, so every field the schema
   // gains must be added HERE too or it never reaches the component. Phase 13's
@@ -322,7 +322,7 @@ export const SECTION_BODY = `
     []
   ),
   "videos": videos[defined(@->_id)]->{
-    _id, title, youTubeUrl, description, videoType
+    _id, title, youTubeUrl, description, videoType, "thumbnail": thumbnail ${IMAGE_FRAGMENT}
   }
 `
 
@@ -1441,7 +1441,7 @@ export const ATTORNEY_PAGE_QUERY = groq`
     "representativeCases": representativeCases ${BLOCK_CONTENT_FRAGMENT},
     "pastPositions": pastPositions ${BLOCK_CONTENT_FRAGMENT},
     "videos": videos[defined(@->_id)]->{
-      _id, title, youTubeUrl, description, videoType
+      _id, title, youTubeUrl, description, videoType, "thumbnail": thumbnail ${IMAGE_FRAGMENT}
     },
     hideCtaForm,
     "ctaFormOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT}
