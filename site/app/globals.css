@@ -1725,7 +1725,10 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
    (`nav [data-card] img`), never its icon, never an attorney's photo or a cut-out. Mono is grayscale. The tint is
    grayscale washed in the accent (`mix-blend-mode: color`), drawn UNDER any text: on a practice card whose words sit on
    the photo, it replaces the decorative gradient below the card's text block, whose own scrim (`tile-text-scrim`) holds
-   every word over the lightest photograph, so no text pair changes (ADV-PP-A). */
+   every word over the lightest photograph, so no text pair changes (ADV-PP-A). A feature photo's, a poster's and the
+   hero's tint is the accent as chosen (`--color-accent-on-light`, which no band re-points), so a photograph on a dark
+   band tints exactly as one on a light band and the practice tiles do: the lightened accent a dark band gives
+   `--color-accent` is for marks and text, and washes paler (monorepo backlog 438). No text sits on either photograph. */
 :is([data-photo-color="mono"], [data-photo-color="tint"]) :is([data-feature-photo] img, nav [data-card] img:not([data-tile-icon] img)) {
   filter: grayscale(1);
 }
@@ -1735,7 +1738,7 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   position: absolute;
   inset: 0;
   border-radius: var(--radius-ui);
-  background-color: var(--color-accent);
+  background-color: var(--color-accent-on-light);
   mix-blend-mode: color;
   opacity: 0.6;
   pointer-events: none;
@@ -1757,8 +1760,8 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   pointer-events: none;
 }
 /* A video's poster (monorepo WS-PREMIUM-PACKAGE-DESIGN §11) takes the same treatment as a feature photo: gray, and the
-   tint washed in the accent under its play mark (the mark sits above, `z-[1]`). Never the fade: a poster has no text
-   beside it to soften toward. */
+   tint washed in the accent as chosen under its play mark (the mark sits above, `z-[1]`). Never the fade: a poster has no
+   text beside it to soften toward. */
 :is([data-photo-color="mono"], [data-photo-color="tint"]) [data-video-poster] img {
   filter: grayscale(1);
 }
@@ -1767,7 +1770,7 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   content: '';
   position: absolute;
   inset: 0;
-  background-color: var(--color-accent);
+  background-color: var(--color-accent-on-light);
   mix-blend-mode: color;
   opacity: 0.6;
   pointer-events: none;
