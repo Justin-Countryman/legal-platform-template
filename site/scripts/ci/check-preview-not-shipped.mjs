@@ -11,7 +11,7 @@
 //
 //   built   no preview string in the browser's files (`.next/static`) or in any
 //           prerendered page (`.html`, `.rsc`); `/` is still in the prerender
-//           manifest at 3600 seconds; no preview route was prerendered.
+//           manifest at 86400 seconds; no preview route was prerendered.
 //   served  a visitor's `/` is the cached page, makes no Sanity query once warm, and
 //           carries no preview string; the preview without a cookie is a 404 that
 //           costs no more than any missing page and serves nothing of the preview, as
@@ -95,7 +95,7 @@ for (const f of pages) {
   if (hit.length) fail(`prerendered ${f} carries ${hit.join(', ')}`)
 }
 const manifest = JSON.parse(readFileSync('.next/prerender-manifest.json', 'utf8'))
-if (manifest.routes?.['/']?.initialRevalidateSeconds !== 3600) fail('/ is not prerendered at 3600 seconds')
+if (manifest.routes?.['/']?.initialRevalidateSeconds !== 86400) fail('/ is not prerendered at 86400 seconds')
 for (const route of Object.keys(manifest.routes ?? {})) if (route.startsWith('/site-preview')) fail(`${route} was prerendered`)
 console.log(`built: ${staticFiles.length} browser file(s) and ${pages.length} prerendered page file(s) scanned for ${SENTINELS.length} sentinels`)
 
@@ -137,7 +137,7 @@ if (base) {
   await get('/')
   const visitor = await get('/')
   check(visitor.res.status === 200, `/ answered ${visitor.res.status}`)
-  check((visitor.res.headers.get('cache-control') ?? '').includes('s-maxage=3600'), `/ cache-control: ${visitor.res.headers.get('cache-control')}`)
+  check((visitor.res.headers.get('cache-control') ?? '').includes('s-maxage=86400'), `/ cache-control: ${visitor.res.headers.get('cache-control')}`)
   check(visitor.queries === 0, `a warm / made ${visitor.queries} Sanity queries`)
   check(found(visitor.body).length === 0, `/ carries ${found(visitor.body).join(', ')}`)
   // The stub is a fresh client, hidden until launch, so / is noindex by design; what

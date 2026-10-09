@@ -18,7 +18,7 @@ import {parseBody} from 'next-sanity/webhook'
 // contained to its own URL, so a type-to-paths map would read "everything" for
 // most rows and be wrong for the rest. `revalidatePath('/', 'layout')` is one
 // tag write at event time; every route regenerates on its next visit (blocking,
-// not stale-while-revalidate). The 1h time-based revalidate stays the backstop.
+// not stale-while-revalidate). The time-based revalidate (a day; an hour for events) stays the backstop.
 //
 // This is also why there is no per-path branch. The 2026-08-13 defect (the
 // homepage's slug is `home`, the handler called `revalidatePath('/home/')`, a

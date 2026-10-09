@@ -1,3 +1,5 @@
+// An hour, not the site's day (monorepo [R-660]): this route splits upcoming from past
+// when it renders, so a day's cache would show a finished event as upcoming.
 export const revalidate = 3600
 
 import type {Metadata} from 'next'

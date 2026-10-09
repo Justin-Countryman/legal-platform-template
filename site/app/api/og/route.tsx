@@ -15,7 +15,8 @@ import {resolvePalette} from '@/lib/designTokens'
 // Query params:
 //   ?title=<page title>   — page heading; URL-encoded; truncated at 140 chars
 //
-// Caching: revalidate 3600s aligns with the rest of the site; ImageResponse
+// Caching: revalidate 3600s (pages moved to a day in 2026-10, monorepo [R-660]; an
+// image keyed by its title gains nothing from the change); ImageResponse
 // is also CDN-cacheable via Vercel's image cache.
 
 export const runtime = 'edge'
