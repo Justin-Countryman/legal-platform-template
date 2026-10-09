@@ -4,6 +4,7 @@ import {
 import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
 import {fadeOf, glowGateOf, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts, type Close} from '@/lib/flows'
 import {siteFlowOf} from '@/lib/backgrounds'
+import {layoutRulesOf, type LayoutRules} from '@/lib/layouts'
 import type {HeroPhoto, SetPhoto} from '@/lib/heroGround'
 import type {HeadingFace} from '@/lib/headingFace'
 import type {DrawnStrength} from '@/lib/designTokens'
@@ -191,15 +192,16 @@ export type SiteLook = {
 /** The site look from the projected Design Settings (`DESIGN_TOKENS_QUERY`). */
 export function siteLookOf(d: Record<string, unknown> | null | undefined): SiteLook {
   const s = (k: string) => (typeof d?.[k] === 'string' && d[k] !== '' ? (d[k] as string) : null)
+  // The theme with its stored background and page layout in place of its own (`lib/backgrounds.ts`), where one is stored.
+  const flow = siteFlowOf(d)
   return {
     imageFrame: s('imageFrame'),
     cardHover: s('cardHover'),
     attorneyCardStyle: s('attorneyCardStyle'),
-    // The theme with its stored background in place of its own (`lib/backgrounds.ts`), where one is stored.
-    flow: siteFlowOf(d),
+    flow,
     patternTexture: s('patternTexture'),
     saturated: saturatedFillOk(d),
-    glow: glowGateOf(siteFlowOf(d), d),
+    glow: glowGateOf(flow, d),
     ghost: null,
   }
 }
@@ -326,6 +328,9 @@ export function walkPage<M>(
 ): {bands: Array<{member: M; index: number; seam: SeamProps}>; hero: {run?: SeamProps['run']; fade: SeamProps['fade']}; close: {run?: SeamProps['run']; fade: SeamProps['fade']}; last: VisibleGround | null} {
   // The theme (Phase 17B). Null on an interior page, where no page-level device fires.
   const flow = site?.flow ?? null
+  // A stored page layout (the Layout theme, `lib/layouts.ts`), which replaces the theme's own whole. Null where none is
+  // stored, and then nothing below differs from the walk before the layer, byte for byte.
+  const pageLayout = flow?.layout ?? null
   const fade = fadeOf(flow, site?.glow)
   // Where a divider goes: the theme's placement (`flow.divider.at`). `intoDark` is
   // `[R-481]`'s law: under the hero, and wherever the page enters a strong ground — dark
@@ -359,7 +364,12 @@ export function walkPage<M>(
   // ─── The ground pass (Phase 17B) ────────────────────────────────────────────
   // Before the adoption pass, because adoption reads the grounds, and the theme is what
   // decides a ground where none is stored.
-  const paints = flow ? assignGrounds(survivors, flow, site, {close, hero}) : survivors.map(() => null)
+  // ─── The precedence pass (the Layout theme; monorepo WS-V1-LAYOUT-OPTIONS-DESIGN, ADV-LO amendment 1) ──────────
+  // Under a stored page layout the ground pass runs without the theme's own layout (every band it fills a full band), and
+  // the stored layout then applies to every band's visible ground, stored or painted, before adoption: a designed page
+  // stores a surface on every band, which the ground pass never touches, so a layout read inside it would draw nothing.
+  const filled = flow ? assignGrounds(survivors, pageLayout ? withoutOwnLayout(flow) : flow, site, {close, hero}) : survivors.map(() => null)
+  const paints = flow && pageLayout ? applyLayout(survivors, filled, pageLayout.rules) : filled
   const paintAt = new Map<number, Paint | null>()
   survivors.forEach((r, i) => paintAt.set(r.index, paints[i]))
   const isInset = (r: {appearance: SectionAppearance | null | undefined}, paint: Paint | null) =>
@@ -480,7 +490,10 @@ export function walkPage<M>(
   // (the panel's own `overflow-hidden` cuts the photo dead flat, measured), and whose
   // band above shows a different ground, where light and tint count as one exactly as
   // the divider counts them.
-  if (flow?.overlap === 'photo') {
+  // Since the Layout theme the crossing is the layout's (`layoutRulesOf`): the theme's own `overlap`, else a stored page
+  // layout's, which may allow none (Contained).
+  const cross = flow ? layoutRulesOf(flow).cross : null
+  if (cross && cross.kinds.includes('photo') && cross.max > 0) {
     const eligible: number[] = []
     for (let i = 1; i < out.length; i++) {
       const r = resolve(out[i].member)
@@ -1020,6 +1033,60 @@ export function assignGrounds(
     paints.forEach((p, i) => { if (p?.ground && !fixed[i]) paints[i] = {...p, spacing: 'spacious'} })
   }
   return paints
+}
+
+// ─── The precedence pass (the Layout theme, ADV-LO amendment 1) ───────────────
+//
+// What a stored page layout does to each band, after the theme's ground pass and before adoption. It reads the ground the
+// visitor will see on each band, the one the pass painted or the band's own stored surface (`surface` is the Flow theme's
+// and never blocks a layout rule, `lib/layers.ts`), and applies the layout's word for that kind of ground, so the layout
+// fires at every place of its kind (his continuity rule, record §1.3). A band storing `inset` keeps its panel, and one
+// storing `overlapPrevious` its overlap: the operator's own word on one band, an override as it always was. A panel is a
+// card on its ground, so nothing the Background theme draws reaches inside one (the texture, a faint photograph).
+
+/** The theme with every band it fills a full band: its ground pass run without its own layout, which a stored page
+ *  layout replaces. */
+function withoutOwnLayout(flow: FlowRules): FlowRules {
+  return {...flow, dark: {...flow.dark, sit: 'band'}, light: {...flow.light, sit: 'band'}}
+}
+
+/** A paint with nothing of the Background theme's on it, for a band that becomes a panel. */
+function bare(p: Paint | null): Paint {
+  const {texture: _texture, photoFade: _photoFade, ...rest} = p ?? {texture: false}
+  void _texture
+  void _photoFade
+  return {...rest, texture: false}
+}
+
+const LIGHTISH: readonly VisibleGround[] = ['light', 'tint', 'wash', 'muted']
+const STRONG: readonly VisibleGround[] = ['dark', 'saturated', 'image']
+
+/** Apply a stored page layout's words to every band's visible ground. Exported for the tests. */
+export function applyLayout(
+  survivors: readonly Survivor[],
+  paints: readonly (Paint | null)[],
+  rules: LayoutRules,
+): (Paint | null)[] {
+  const n = survivors.length
+  const ground = survivors.map((r, i) => paints[i]?.ground ?? visibleGround(r.appearance))
+  return survivors.map((r, i) => {
+    const p = paints[i] ?? null
+    if (r.appearance?.inset) return p
+    const g = ground[i]
+    if (g === 'dark') {
+      // A full band; or the dark ground as a panel on the page's light ground.
+      if (rules.dark.sit === 'floating') return {...bare(p), inset: true}
+      return p
+    }
+    if (LIGHTISH.includes(g)) {
+      // A full band; a panel on the dark ground wherever it sits; or, inside a strong run, an inset panel that adopts it.
+      if (rules.light.sit === 'floating') return {...bare(p), inset: true, onGround: 'dark'}
+      if (rules.light.sit === 'panel' && i > 0 && i < n - 1 && STRONG.includes(ground[i - 1]) && STRONG.includes(ground[i + 1])) {
+        return {...bare(p), inset: true}
+      }
+    }
+    return p
+  })
 }
 
 /** The closing call to action's surface and seam under the theme's close (`closeOf`): a photo close
