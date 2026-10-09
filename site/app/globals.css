@@ -1725,10 +1725,10 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
    (`nav [data-card] img`), never its icon, never an attorney's photo or a cut-out. Mono is grayscale. The tint is
    grayscale washed in the accent (`mix-blend-mode: color`), drawn UNDER any text: on a practice card whose words sit on
    the photo, it replaces the decorative gradient below the card's text block, whose own scrim (`tile-text-scrim`) holds
-   every word over the lightest photograph, so no text pair changes (ADV-PP-A). A feature photo's, a poster's and the
-   hero's tint is the accent as chosen (`--color-accent-on-light`, which no band re-points), so a photograph on a dark
-   band tints exactly as one on a light band and the practice tiles do: the lightened accent a dark band gives
-   `--color-accent` is for marks and text, and washes paler (monorepo backlog 438). No text sits on either photograph. */
+   every word over the lightest photograph, so no text pair changes (ADV-PP-A). Every tint is the accent as chosen
+   (`--color-accent-on-light`, which no band re-points), so a photograph tints the same on every band, a glowing card's
+   on a dark band included: the lightened accent a dark band or a glowing card gives `--color-accent` is for marks and
+   text, and washes paler (monorepo backlog 438). No text sits on a feature photo or a poster. */
 :is([data-photo-color="mono"], [data-photo-color="tint"]) :is([data-feature-photo] img, nav [data-card] img:not([data-tile-icon] img)) {
   filter: grayscale(1);
 }
@@ -1745,7 +1745,7 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 }
 [data-photo-color="tint"] nav [data-card] img.tile-photo + div {
   background-image: none;
-  background-color: var(--color-accent);
+  background-color: var(--color-accent-on-light);
   mix-blend-mode: color;
   opacity: 0.6;
 }
@@ -1754,7 +1754,7 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   content: '';
   position: absolute;
   inset: 0;
-  background-color: var(--color-accent);
+  background-color: var(--color-accent-on-light);
   mix-blend-mode: color;
   opacity: 0.6;
   pointer-events: none;
