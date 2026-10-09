@@ -175,8 +175,8 @@ describe('color guarantee: every blocking pair passes for any operator input', (
       // The ground lifted in its own hue, never toward the accent (`panelSurfaceOf`); the light is the glowing card's.
       const ground = toOklch(t['--color-brand-dark'])!
       const surface = toOklch(t['--color-panel-surface'])!
-      expect(surface.l, p.id).toBeGreaterThanOrEqual(ground.l - 0.002)
-      expect(surface.l, p.id).toBeLessThanOrEqual(ground.l + PANEL_LIFT + 0.002)
+      expect(surface.l ?? 0, p.id).toBeGreaterThanOrEqual((ground.l ?? 0) - 0.002)
+      expect(surface.l ?? 0, p.id).toBeLessThanOrEqual((ground.l ?? 0) + PANEL_LIFT + 0.002)
       if ((ground.c ?? 0) > 0.02) expect(Math.abs(((surface.h ?? 0) - (ground.h ?? 0) + 540) % 360 - 180), p.id).toBeLessThan(6)
       expect(t['--color-panel-light'], p.id).toBe(resolvePalette(presetInputs(p), {cardGlow: 'on'}).tokens['--color-card-glow'])
       const pairs = validateWcag(palette).filter((r) => r.pair.includes('a dark panel'))
