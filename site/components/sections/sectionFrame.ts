@@ -4,7 +4,7 @@ import {
 import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
 import {fadeOf, glowGateOf, glowLightFillOk, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts, type Close} from '@/lib/flows'
 import {siteFlowOf} from '@/lib/backgrounds'
-import {PANEL_HOSTS, asksForPanels, layoutRulesOf, type LayoutRules} from '@/lib/layouts'
+import {MAX_CROSSINGS, PANEL_HOSTS, asksForPanels, layoutRulesOf, type LayoutRules} from '@/lib/layouts'
 import type {HeroPhoto, SetPhoto} from '@/lib/heroGround'
 import type {HeadingFace} from '@/lib/headingFace'
 import type {DrawnStrength} from '@/lib/designTokens'
@@ -493,7 +493,7 @@ export function walkPage<M>(
     if (host) host.seam = {...host.seam, ghost: true}
   }
 
-  // THE RAISED PHOTO (Phase 16E). One band per page, as the study's sites do: a median
+  // THE RAISED PHOTO (Phase 16E). One band per page under a theme's own layout, as the study's sites do: a median
   // of one mid-page overlap and a maximum of two, against two to four eligible bands on
   // an ordinary canvas. Eligible is a content section whose `split` media renders as a
   // photo, that is not the first band (nothing above it), that is not an inset panel
@@ -517,10 +517,20 @@ export function walkPage<M>(
     // NEAREST THE MIDDLE OF THE LIST, never the first: live, the first ground-change
     // band holds 1 of 35 rising overlaps, and the median normalised position is 0.50
     // with 18 of 35 in the middle third (ADV-16E-B). A tie takes the earlier band.
+    //
+    // UP TO TWO A PAGE (the Layout theme, ADV-LO amendment 9; `MAX_CROSSINGS`): the layout says how many, a theme's own
+    // one, Panels two, and never more than two, the study's median of one and maximum of two. The next pick is the next
+    // nearest the middle that touches no band a crossing already uses, so no band both rises and makes room for another.
+    // With one allowed this is the pick it always was.
     const mid = (out.length - 1) / 2
-    const pick = eligible.reduce<number | null>(
-      (best, i) => (best === null || Math.abs(i - mid) < Math.abs(best - mid) ? i : best), null)
-    if (pick !== null) {
+    const allowed = Math.min(cross.max, MAX_CROSSINGS)
+    const picks: number[] = []
+    for (const i of [...eligible].sort((a, z) => Math.abs(a - mid) - Math.abs(z - mid) || a - z)) {
+      if (picks.length >= allowed) break
+      if (picks.some((p) => Math.abs(p - i) < 2)) continue
+      picks.push(i)
+    }
+    for (const pick of picks) {
       out[pick].seam = {...out[pick].seam, raisePhoto: true}
       out[pick - 1].seam = {...out[pick - 1].seam, nextOverlap: 'photo'}
     }
