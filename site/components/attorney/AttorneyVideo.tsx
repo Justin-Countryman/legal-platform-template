@@ -27,7 +27,7 @@ export function AttorneyVideo({attorney}: {attorney: Attorney}) {
 
         {isSingle ? (
           <div className="mx-auto max-w-3xl">
-            <VideoEmbed video={videos[0]} />
+            <VideoEmbed video={videos[0]} treatment={false} />
           </div>
         ) : (
           <ul
@@ -37,7 +37,7 @@ export function AttorneyVideo({attorney}: {attorney: Attorney}) {
           >
             {videos.map((video) => (
               <li key={video._id}>
-                <VideoEmbed video={video} />
+                <VideoEmbed video={video} treatment={false} />
               </li>
             ))}
           </ul>

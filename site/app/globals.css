@@ -1659,6 +1659,22 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
   opacity: 0.6;
   pointer-events: none;
 }
+/* A video's poster (monorepo WS-PREMIUM-PACKAGE-DESIGN §11) takes the same treatment as a feature photo: gray, and the
+   tint washed in the accent under its play mark (the mark sits above, `z-[1]`). Never the fade: a poster has no text
+   beside it to soften toward. */
+:is([data-photo-color="mono"], [data-photo-color="tint"]) [data-video-poster] img {
+  filter: grayscale(1);
+}
+[data-photo-color="tint"] [data-video-poster] { isolation: isolate; }
+[data-photo-color="tint"] [data-video-poster]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-accent);
+  mix-blend-mode: color;
+  opacity: 0.6;
+  pointer-events: none;
+}
 /* The fade: a feature photo beside its text softens into the section at the edge facing the text (where the split sits
    side by side), and at its foot where it stacks above the text. No text sits on the photo, so no pair changes. */
 [data-photo-edge="fade"] [data-feature-photo] img {
