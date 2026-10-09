@@ -1,4 +1,5 @@
 import {GLOW_POSITIONS, flowOf, impliedNeeds, own, type BackgroundRules, type FlowRules, type GlowPosition} from './flows'
+import {layoutById} from './layouts'
 
 // ─── Background themes: what sits on the grounds ──────────────────────────────
 //
@@ -108,17 +109,23 @@ export const SUGGESTED_WITH: Readonly<Record<string, string>> = {
   gradientBloom: 'glow',
 }
 
-/** The rules the page reads: the theme, with a stored or chosen background in place of its own. An unknown or absent
- *  id is the theme's own. The needs are the theme's own and what the background in force implies. */
-export function effectiveFlow(flow: FlowRules, backgroundId: unknown): FlowRules {
+/** The rules the page reads: the theme, with a stored or chosen background in place of its own, and a stored or chosen
+ *  page layout in place of its own (the Layout theme, `lib/layouts.ts`). An unknown or absent id is the theme's own, and
+ *  with neither the theme itself is returned. The needs are the theme's own and what the background in force implies. */
+export function effectiveFlow(flow: FlowRules, backgroundId: unknown, layoutId?: unknown): FlowRules {
   const background = backgroundById(backgroundId)
-  if (!background) return flow
-  return {...flow, on: background.on, needs: [...flow.ownNeeds, ...impliedNeeds({on: background.on, ghost: flow.ghost})]}
+  const layout = layoutById(layoutId)
+  if (!background && !layout) return flow
+  const withBackground = background
+    ? {...flow, on: background.on, needs: [...flow.ownNeeds, ...impliedNeeds({on: background.on, ghost: flow.ghost})]}
+    : flow
+  return layout ? {...withBackground, layout} : withBackground
 }
 
-/** The theme a stored Design Settings document renders, with its stored background (`flowOf`, then `effectiveFlow`). */
+/** The theme a stored Design Settings document renders, with its stored background and page layout (`flowOf`, then
+ *  `effectiveFlow`). */
 export function siteFlowOf(d: Record<string, unknown> | null | undefined): FlowRules {
-  return effectiveFlow(flowOf(d), d?.background)
+  return effectiveFlow(flowOf(d), d?.background, d?.pageLayout)
 }
 
 /** A theme's own background in words, for the row: what an absent choice draws under this theme. */
