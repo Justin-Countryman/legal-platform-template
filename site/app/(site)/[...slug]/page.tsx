@@ -1,7 +1,7 @@
 // Catch-all route per locked decision D3b: opt into on-demand SSG via
 // `dynamicParams: true` (the default — declared explicitly to document
 // the intent) with no build-time enumeration. Any slug not yet rendered
-// gets generated and cached on first request, then revalidated every 3600s
+// gets generated and cached on first request, then revalidated every 86400s
 // (or sooner: the Sanity webhook invalidates the whole layout).
 //
 // THE EMPTY `generateStaticParams` IS WHAT MAKES THAT SENTENCE TRUE. A dynamic
@@ -15,10 +15,10 @@
 // Measured after: the second request is `x-nextjs-cache: HIT` with zero Sanity
 // calls (monorepo WS-V1-PHASE8-DESIGN §0). `build-against-stub.sh` asserts the
 // route is in the prerender manifest. Two consequences to know: an unknown
-// slug's 404 is cached for the hour too (the webhook's layout-wide
+// slug's 404 is cached for the day too (the webhook's layout-wide
 // invalidation clears it when the page is published), and enabling Next's
 // `cacheComponents` turns an empty return into a build error.
-export const revalidate = 3600
+export const revalidate = 86400
 export const dynamicParams = true
 export async function generateStaticParams() {
   return []

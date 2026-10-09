@@ -10,7 +10,11 @@
 //
 // The webhook is the fast path; this is the safety net. Keep both — that defect
 // stayed invisible precisely because the fast path reported success.
-export const revalidate = 3600
+//
+// A DAY SINCE 2026-10-09 (monorepo [R-660]), every page route but the two events
+// routes: a refresh that finds nothing new writes nothing, so the hour bought
+// little but Sanity calls and function time; a publish still lands at once.
+export const revalidate = 86400
 
 import type {Metadata} from 'next'
 import {chromeNap, getHomePage, getSiteChrome} from '@/lib/sanity/fetchers'

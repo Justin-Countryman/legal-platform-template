@@ -1,5 +1,5 @@
-// Per-route `revalidate` controls cache TTL (3600s baseline; tag-based
-// instant revalidation lands in Batch 6 alongside the Sanity webhook).
+// Per-route `revalidate` controls cache TTL (86400s baseline, 3600s for the two
+// events routes; monorepo [R-660]); the Sanity webhook revalidates on publish.
 // Layout itself has no revalidate export — Next inherits the route's.
 //
 // The layout's body is `SiteShell` (Phase 17A); this file fetches the chrome and

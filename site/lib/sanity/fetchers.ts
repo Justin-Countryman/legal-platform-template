@@ -30,7 +30,7 @@ import {withLogoFacts} from '@/lib/logoFacts'
 //
 // Nothing here passes `cache:` or `next:` to the transport. Fetches stay
 // uncached at the fetch layer, so a `revalidatePath` re-renders from live data
-// and the Full Route Cache (`revalidate = 3600` per route, the webhook's
+// and the Full Route Cache (`revalidate` per route, a day and an hour for events, the webhook's
 // layout-wide invalidation) is the only cache to keep in step.
 
 /** The site chrome: layouts, robots decision, NAP tokens, global CTA. One call per request. */
