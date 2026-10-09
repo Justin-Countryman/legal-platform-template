@@ -81,10 +81,11 @@ describe('the walk: which panel lets its figure out', () => {
   })
 
   it('a cut-out on a full band does not rise as a figure: only a panel lets one out', () => {
-    // The second dark split in a run stays a full band (never two panels back to back), so its cut-out is a photograph to
-    // the walk, which rises only at a change of ground: here none.
-    const out = walk([prose('narrative', 'light'), prose('narrative', 'dark'), figure('dark')], panels())
+    // Two cut-out splits back to back: the first takes the panel (the cut-out first), so the second stays a full band
+    // (never two panels in a row), and its cut-out is a photograph to the walk, which rises only at a change of ground.
+    const out = walk([prose('narrative', 'light'), figure('dark'), figure('dark')], panels())
     expect(out.map((o) => !!o.seam.paint?.onPanel)).toEqual([false, true, false])
+    expect(out[1].seam.raiseFigure).toBe('seam')
     expect(out[2].seam.raiseFigure).toBeFalsy()
     expect(out[2].seam.raisePhoto).toBeFalsy()
   })
