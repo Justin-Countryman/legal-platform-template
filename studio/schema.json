@@ -18726,6 +18726,10 @@
             {
               "type": "string",
               "value": "panels"
+            },
+            {
+              "type": "string",
+              "value": "panelsOnLight"
             }
           ]
         },

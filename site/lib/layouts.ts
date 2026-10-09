@@ -21,8 +21,9 @@ import type {FlowRules, Host} from './flows'
 // band's own `surface` is the Flow theme's and never blocks a layout; a stored `inset` or `overlapPrevious` stays the
 // operator's override on its band.
 //
-// THE ROSTER LISTS ONLY WHAT IS BUILT (amendment 3). Edge to edge (the bleed) and Overlap (the strip and the float) wait
-// for their slices; Floating is the Floating panels theme and left v1 (amendment 11).
+// THE ROSTER LISTS ONLY WHAT IS BUILT (amendment 3). Panels on light is the light-led layout (the fast path's P4): Edge to
+// edge's sites without the mid-page bleed, which waits with Overlap (the strip and the float); Floating is the Floating
+// panels theme and left v1 (amendment 11).
 //
 // NO `passed` FLAG. His sign-off on a firm's own page is his eye (`[R-656]`), so the draft writes the judged pair with no
 // gate on a roster flag, and a flag no reader gates on would only drift from the truth.
@@ -32,8 +33,11 @@ import type {FlowRules, Host} from './flows'
  *  light side's `panel`, ADV-LO amendment 14). */
 export const LAYOUT_DARK_SITS = ['band', 'floating', 'onPanel'] as const
 /** How a light band sits: a full band; inside a dark run, an inset panel that adopts the run (`panel`); or a panel on the
- *  dark ground wherever it sits (`floating`). The theme's own words, unchanged. */
-export const LAYOUT_LIGHT_SITS = ['band', 'panel', 'floating'] as const
+ *  dark ground wherever it sits (`floating`), the theme's own words, unchanged. Or, the light-led layout's (`onPanel`,
+ *  Panels on light): a light band of words keeps its ground and sets them on a panel, the first such band on the page's
+ *  dark ground (one a page) and the rest on the wash where the theme paints none, never two panels in a row and never a
+ *  wash beside a wash. */
+export const LAYOUT_LIGHT_SITS = ['band', 'panel', 'floating', 'onPanel'] as const
 /** What may cross a seam: a split's photograph rising into the band above it; or a split's cut-out figure standing on its
  *  panel's bottom edge and rising past the panel's top edge across the seam above (`figure`, ADV-LO amendment 5: Lewin's and
  *  Calesaric's attorney out of the panel). The strip is a later slice. */
@@ -48,6 +52,11 @@ export type LayoutRules = {
   cross: {kinds: readonly (typeof CROSS_KINDS)[number][]; at: 'middle'; max: 0 | 1 | 2}
 }
 
+/** The hero a layout expects (record §1.3: each layout names the hero form it expects, and the draft writes it). The
+ *  hero answers through its stored skeleton (stored wins, `[R-501]`): the page never rewrites it at render, so this is
+ *  data for the automatic draft, which writes it where the firm's hero has a photograph. */
+export type LayoutHero = {skeleton: 'split'; splitMedia: 'image'; splitImageStyle: 'full'}
+
 export type Layout = {
   /** The stored value. */
   id: string
@@ -55,6 +64,8 @@ export type Layout = {
   /** What the operator will see, in plain words. */
   sentence: string
   rules: LayoutRules
+  /** The hero form the draft writes with this layout, where it names one. */
+  hero?: LayoutHero
 }
 
 /** The bands whose words may sit on a panel: the prose-led content sections only (a statement, two-column text, the
@@ -82,6 +93,16 @@ export const LAYOUTS: readonly Layout[] = [
     // column (86 to 90 percent of a 1440 screen). Where the palette has no room for the light, the panel is the light island.
     // A panel's cut-out figure rises out of it (ADV-LO amendment 5), one of the page's two crossings.
     rules: {dark: {sit: 'onPanel'}, light: {sit: 'band'}, cross: {kinds: ['photo', 'figure'], at: 'middle', max: 2}},
+  },
+  {
+    id: 'panelsOnLight', name: 'Panels on light',
+    sentence: 'Light sections of words sit on panels, the first on the dark color and only that one, the rest on the soft wash where the page has none of its own, never two panels in a row; a photograph, or a cut-out figure out of its panel, may rise across up to two section edges. Made to pair with a hero whose photograph runs to the page edge.',
+    // The light-led layout (BDG, Edwards, Garza, read live 2026-10-03 and 2026-10-09): a mostly light page with one dark
+    // panel among its light bands (BDG's team, Edwards' attorneys, Garza's "personalized help"), the light bands' words
+    // on the page's soft second ground, photographs crossing seams, and the hero's photograph bled to its edge. Every
+    // panel ground is one the engine already solves (the dark ground and the wash); it adds no color.
+    rules: {dark: {sit: 'band'}, light: {sit: 'onPanel'}, cross: {kinds: ['photo', 'figure'], at: 'middle', max: 2}},
+    hero: {skeleton: 'split', splitMedia: 'image', splitImageStyle: 'full'},
   },
 ]
 
@@ -116,4 +137,6 @@ export const LAYOUT_SUGGESTED_WITH: Readonly<Record<string, string>> = {
   alternating: 'contained',
   typeOnBlack: 'panels',
   gradientBloom: 'panels',
+  // Edge to edge's sites (record §2) are the light-led layout's, the bleed mid-page aside, which waits.
+  editorial: 'panelsOnLight',
 }

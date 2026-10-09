@@ -31,8 +31,8 @@ const OWN: Record<string, {dark: string; light: string; raises: boolean}> = {
 }
 
 describe('the roster', () => {
-  it('lists only the layouts that are built (ADV-LO amendment 3): Contained and Panels', () => {
-    expect(LAYOUTS.map((l) => l.id)).toEqual(['contained', 'panels'])
+  it('lists only the layouts that are built (ADV-LO amendment 3): Contained, Panels and Panels on light', () => {
+    expect(LAYOUTS.map((l) => l.id)).toEqual(['contained', 'panels', 'panelsOnLight'])
     for (const l of LAYOUTS) {
       expect(l.name, l.id).toBeTruthy()
       expect(l.sentence.length, l.id).toBeGreaterThan(40)
@@ -49,6 +49,11 @@ describe('the roster', () => {
   it('Contained: every band full width and nothing crossing; Panels: dark text bands on a panel, up to two crossings', () => {
     expect(layoutById('contained')!.rules).toEqual({dark: {sit: 'band'}, light: {sit: 'band'}, cross: {kinds: [], at: 'middle', max: 0}})
     expect(layoutById('panels')!.rules).toEqual({dark: {sit: 'onPanel'}, light: {sit: 'band'}, cross: {kinds: ['photo', 'figure'], at: 'middle', max: 2}})
+    // The light-led layout (the fast path's P4): light text bands on a panel, dark bands full, up to two crossings, and the
+    // hero it expects, which only the draft writes (the stored skeleton wins at render).
+    expect(layoutById('panelsOnLight')!.rules).toEqual({dark: {sit: 'band'}, light: {sit: 'onPanel'}, cross: {kinds: ['photo', 'figure'], at: 'middle', max: 2}})
+    expect(layoutById('panelsOnLight')!.hero).toEqual({skeleton: 'split', splitMedia: 'image', splitImageStyle: 'full'})
+    expect(LAYOUTS.filter((l) => l.hero).map((l) => l.id)).toEqual(['panelsOnLight'])
   })
 
   it('an unknown or absent id is no layout', () => {
@@ -123,6 +128,8 @@ describe('effectiveFlow, the one place the layers meet', () => {
       expect(asksForPanels(f), f.id).toBe(false)
       expect(asksForPanels(effectiveFlow(f, null, 'contained')), f.id).toBe(false)
       expect(asksForPanels(effectiveFlow(f, null, 'panels')), f.id).toBe(true)
+      // The light-led layout's panels are grounds the palette already emits: it asks for nothing.
+      expect(asksForPanels(effectiveFlow(f, null, 'panelsOnLight')), f.id).toBe(false)
     }
     expect(asksForPanels(null)).toBe(false)
   })

@@ -127,8 +127,10 @@ export type Paint = {
   /** The band keeps its dark ground and everything drawn on it, and its words sit on a raised panel in the column (the
    *  Layout theme's Panels, `dark.sit: 'onPanel'`): the dark ground lifted in its own hue where the palette has room for the light,
    *  else the light island; the light in its top corner on the side given, turn and turn about down the page. The walk
-   *  reads the band as its own ground: the panel is a card on it, not a gutter around it. */
-  onPanel?: {fill: 'surface' | 'light'; corner: 'left' | 'right'}
+   *  reads the band as its own ground: the panel is a card on it, not a gutter around it. On a light band (Panels on light,
+   *  `light.sit: 'onPanel'`) the panel is the page's dark ground itself (`ground`, one a page) or the wash (`wash`), and the
+   *  band keeps its light ground. */
+  onPanel?: {fill: 'surface' | 'light' | 'ground' | 'wash'; corner: 'left' | 'right'}
 }
 
 /** A quadrant of the hero's photograph: `x` 0 is the left half, `y` 0 the top half. */
@@ -384,7 +386,7 @@ export function walkPage<M>(
   // the stored layout then applies to every band's visible ground, stored or painted, before adoption: a designed page
   // stores a surface on every band, which the ground pass never touches, so a layout read inside it would draw nothing.
   const filled = flow ? assignGrounds(survivors, pageLayout ? withoutOwnLayout(flow) : flow, site, {close, hero}) : survivors.map(() => null)
-  const paints = flow && pageLayout ? applyLayout(survivors, filled, pageLayout.rules, site) : filled
+  const paints = flow && pageLayout ? applyLayout(survivors, filled, pageLayout.rules, site, {hero: site?.heroPaint === 'wash' ? 'wash' : hero, close}) : filled
   const paintAt = new Map<number, Paint | null>()
   survivors.forEach((r, i) => paintAt.set(r.index, paints[i]))
   const isInset = (r: {appearance: SectionAppearance | null | undefined}, paint: Paint | null) =>
@@ -1106,12 +1108,14 @@ function bare(p: Paint | null): Paint {
 const LIGHTISH: readonly VisibleGround[] = ['light', 'tint', 'wash', 'muted']
 const STRONG: readonly VisibleGround[] = ['dark', 'saturated', 'image']
 
-/** Apply a stored page layout's words to every band's visible ground. Exported for the tests. */
+/** Apply a stored page layout's words to every band's visible ground. Exported for the tests. `ends` are the hero's and
+ *  the close's grounds where they show (the hero's own wash paint included), which the light-led layout reads for a wash. */
 export function applyLayout(
   survivors: readonly Survivor[],
   paints: readonly (Paint | null)[],
   rules: LayoutRules,
   site: Pick<SiteLook, 'panelRoom'> | null = null,
+  ends: {hero?: VisibleGround | null; close?: VisibleGround | null} = {},
 ): (Paint | null)[] {
   const n = survivors.length
   const ground = survivors.map((r, i) => paints[i]?.ground ?? visibleGround(r.appearance))
@@ -1120,6 +1124,11 @@ export function applyLayout(
   // eligible dark bands one after another, the first takes a panel, the next stays a full band, and so on (panel, band,
   // panel), as Lewin's and Calesaric's dark runs set them.
   let lastPanel = -2
+  // The light-led layout (Panels on light): its one dark panel is placed yet, and whether the page already wears the wash
+  // somewhere (the theme's own wash bands, a wash hero or a wash close), where no wash panel is drawn: a wash never
+  // touches a wash (`[R-603]`), and a second, panel-shaped wash on a page that alternates its own would blur both.
+  let darkPlaced = false
+  const washed = ground.includes('wash') || ends.hero === 'wash' || ends.close === 'wash'
   return survivors.map((r, i) => {
     const p = paints[i] ?? null
     if (r.appearance?.inset) return p
@@ -1138,6 +1147,22 @@ export function applyLayout(
       return p
     }
     if (LIGHTISH.includes(g)) {
+      // The light-led layout (Panels on light; BDG, Edwards, Garza): a prose-led light band, never a card grid, keeps its
+      // ground and sets its words on a panel, never two in a row. The first on the page takes the dark ground itself, the
+      // one dark panel among the light bands; the rest, on the page ground only, take the wash where the page wears none.
+      // Nothing the Background theme draws reaches a band whose words sit on a panel on a light ground (its texture, a
+      // faint photograph): it would draw in the gutter around the panel only.
+      if (rules.light.sit === 'onPanel' && r.content && r.host && PANEL_HOSTS.includes(r.host) && lastPanel !== i - 1) {
+        if (!darkPlaced) {
+          darkPlaced = true
+          lastPanel = i
+          return {...bare(p), onPanel: {fill: 'ground', corner: 'right'}}
+        }
+        if (g === 'light' && !washed) {
+          lastPanel = i
+          return {...bare(p), onPanel: {fill: 'wash', corner: 'right'}}
+        }
+      }
       // A full band; a panel on the dark ground wherever it sits; or, inside a strong run, an inset panel that adopts it.
       if (rules.light.sit === 'floating') return {...bare(p), inset: true, onGround: 'dark'}
       if (rules.light.sit === 'panel' && i > 0 && i < n - 1 && STRONG.includes(ground[i - 1]) && STRONG.includes(ground[i + 1])) {

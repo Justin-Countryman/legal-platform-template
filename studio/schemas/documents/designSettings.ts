@@ -247,7 +247,7 @@ export const designSettings = defineType({
       type: 'string',
       fieldset: 'theme',
       description:
-        'How the sections sit on the page and what crosses from one into the next: every section full width, or the dark sections of words set on raised panels. It never changes which sections are dark or light (the Theme) or what sits on their colors (the Background). A section\u2019s own Inset and Overlap still win on that section. Leave blank for the theme\u2019s own layout.',
+        'How the sections sit on the page and what crosses from one into the next: every section full width, the dark sections of words set on raised panels, or, on a light page, the light ones set on panels of their own, the first on the dark color. It never changes which sections are dark or light (the Theme) or what sits on their colors (the Background). A section\u2019s own Inset and Overlap still win on that section. Leave blank for the theme\u2019s own layout.',
       options: {
         list: LAYOUTS.map((l) => ({title: `${l.name} \u2014 ${l.sentence}`, value: l.id})),
         layout: 'radio',

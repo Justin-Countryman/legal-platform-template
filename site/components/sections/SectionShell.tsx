@@ -70,6 +70,12 @@ const DIVIDER_OWN: Record<string, string> = {
   'bg-brand-dark': 'before:bg-brand-dark', 'bg-accent-fill': 'before:bg-accent-fill', 'bg-wash': 'before:bg-wash',
 }
 
+/** A layout panel's own fill: the lifted dark ground is the rule's (`[data-dark-panel="surface"]`); the light island, the
+ *  dark ground on a light band and the wash are the grounds' own utilities. */
+const PANEL_FILL: Record<'surface' | 'light' | 'ground' | 'wash', string> = {
+  surface: '', light: 'bg-background', ground: 'bg-brand-dark', wash: 'bg-wash',
+}
+
 const OVERLAP_CLASS: Record<'none' | 'small' | 'large' | 'photo', string> = {
   none:  '',
   small: 'md:-mt-12 md:relative md:z-10',
@@ -180,7 +186,10 @@ export function SectionShell({
   // band keeps its ground and everything drawn on it, and its words sit on a raised panel in the column. The light island
   // hands the band's content a light surface, so a button there takes the light context; the dark panel keeps the band's.
   const panel = appearance?.inset !== true && seam.paint?.inset !== true ? seam.paint?.onPanel ?? null : null
-  const inner = typeof children === 'function' ? children(panel?.fill === 'light' ? sectionSurface('light') : resolved) : children
+  // On a light band (Panels on light) the panel's own ground is the content's: the dark ground (its button a dark one) or
+  // the wash.
+  const panelSurface = panel?.fill === 'light' ? sectionSurface('light') : panel?.fill === 'ground' ? sectionSurface('dark') : panel?.fill === 'wash' ? sectionSurface('wash') : resolved
+  const inner = typeof children === 'function' ? children(panelSurface) : children
 
   // An inset band is a panel: the surface, the radius and `overflow-hidden` move
   // onto an inner element so the page ground runs past it, and the <section>
@@ -358,10 +367,13 @@ export function SectionShell({
             // A panel whose band raises its cut-out figure lets it out above and keeps the clip sideways (`panel-clip`,
             // ADV-LO amendment 5); nothing of the band's is inside a layout's panel to clip (its texture, ghost and
             // photographs draw on the band, around it), so only the clip moves.
-            data-dark-panel={panel.fill}
+            // Panels on light: the page's dark ground itself, which is its own dark cascade (`bg-brand-dark`), or the wash on
+            // the light band, which needs no reset (`data-wash-panel`). Both grounds every pair is already solved on.
+            data-dark-panel={panel.fill === 'wash' ? undefined : panel.fill}
+            data-wash-panel={panel.fill === 'wash' ? '' : undefined}
             data-panel-corner={panel.fill === 'surface' && panel.corner === 'left' ? 'left' : undefined}
-            data-ring-context={panel.fill === 'light' ? 'light' : undefined}
-            className={['relative mx-auto max-w-7xl', seam.raiseFigure ? 'panel-clip' : 'overflow-hidden', 'rounded-ui panel-pad', panel.fill === 'light' && 'bg-background', seam.divider?.mode === 'cut' && 'mt-divider'].filter(Boolean).join(' ')}
+            data-ring-context={panel.fill === 'light' ? 'light' : panel.fill === 'ground' ? 'dark' : undefined}
+            className={['relative mx-auto max-w-7xl', seam.raiseFigure ? 'panel-clip' : 'overflow-hidden', 'rounded-ui panel-pad', PANEL_FILL[panel.fill], seam.divider?.mode === 'cut' && 'mt-divider'].filter(Boolean).join(' ')}
           >
             <div data-band-content className={[contained ? 'container relative' : 'relative', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
           </div>

@@ -4579,13 +4579,40 @@
           "max": 2
         }
       }
+    },
+    {
+      "id": "panelsOnLight",
+      "name": "Panels on light",
+      "sentence": "Light sections of words sit on panels, the first on the dark color and only that one, the rest on the soft wash where the page has none of its own, never two panels in a row; a photograph, or a cut-out figure out of its panel, may rise across up to two section edges. Made to pair with a hero whose photograph runs to the page edge.",
+      "rules": {
+        "dark": {
+          "sit": "band"
+        },
+        "light": {
+          "sit": "onPanel"
+        },
+        "cross": {
+          "kinds": [
+            "photo",
+            "figure"
+          ],
+          "at": "middle",
+          "max": 2
+        }
+      },
+      "hero": {
+        "skeleton": "split",
+        "splitMedia": "image",
+        "splitImageStyle": "full"
+      }
     }
   ],
   "layoutSuggestedWith": {
     "quiet": "contained",
     "alternating": "contained",
     "typeOnBlack": "panels",
-    "gradientBloom": "panels"
+    "gradientBloom": "panels",
+    "editorial": "panelsOnLight"
   },
   "colorDetails": [
     "headingInk",

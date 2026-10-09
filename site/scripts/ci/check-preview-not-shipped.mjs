@@ -241,6 +241,9 @@ if (base) {
   const containedAt = await get('/site-preview/graphite/navy-brass/gradientBloom.mostlyDark/site/contained/design', cookie(operator))
   check(panelsAt.res.status === 200 && panelsAt.body.includes('the Panels layout') && panelsAt.body.includes('--color-panel-surface:#'), `the Panels address answered ${panelsAt.res.status}, or drew no panel color`)
   check(containedAt.res.status === 200 && containedAt.body.includes('the Contained layout') && !containedAt.body.includes('--color-panel-surface:#'), `the Contained address answered ${containedAt.res.status}, or drew a panel color`)
+  // Panels on light (the light-led layout) adds no color: its panels are the dark ground and the wash.
+  const onLightAt = await get('/site-preview/graphite/navy-brass/editorial.mostlyLight/site/panelsOnLight/design', cookie(operator))
+  check(onLightAt.res.status === 200 && onLightAt.body.includes('the Panels on light layout') && !onLightAt.body.includes('--color-panel-surface:#'), `the Panels on light address answered ${onLightAt.res.status}, or drew a panel color`)
   const unknownLayout = await get('/site-preview/site/site/site/site/nope/design', cookie(operator))
   check(unknownLayout.res.status === 404, `an unknown layout answered ${unknownLayout.res.status}`)
   const threeNoCookie = await get('/site-preview/graphite/navy-brass/design')
