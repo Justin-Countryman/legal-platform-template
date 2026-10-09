@@ -55,8 +55,8 @@ import {type PreviewView} from './session'
 // (the chosen or stored theme under the chosen or stored background): a background of photographs chosen alone approves
 // them, and a theme changed under a kept background of photographs keeps them.
 
-// The Layout theme (monorepo WS-V1-LAYOUT-OPTIONS-DESIGN §1.4, ADV-LO amendment 13): the fifth row, the address's fifth
-// segment. A layout IS stored by name (`designSettings.pageLayout`), so its block is one key, as the background's is: a
+// The Layout theme (monorepo WS-V1-LAYOUT-OPTIONS-DESIGN §1.4, ADV-LO amendment 13): the fifth row of the address, after
+// the background. A layout IS stored by name (`designSettings.pageLayout`), so its block is one key, as the background's is: a
 // chosen layout that differs from the stored one sets it, and "the theme's own" clears it. The switcher draws no row for it
 // yet (its widget waits, amendment 13); the address is how CC compares layouts on a firm's hidden site and how the metrics
 // run measures one, and Apply writes what the address showed once the monorepo's allow-list names the field.

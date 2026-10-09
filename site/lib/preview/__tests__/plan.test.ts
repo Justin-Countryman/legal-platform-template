@@ -383,7 +383,7 @@ describe('the details (monorepo `[R-641]`, `lib/details.ts`)', () => {
 describe('the layout', () => {
   const plain: StoredDesign = {_id: 'designSettings', _rev: 'r1'}
 
-  it('is the fifth segment: a roster id, the theme\u2019s own or as the site is; an address minted before it opens the same page', () => {
+  it('is the fifth row, after the background: a roster id, the theme\u2019s own or as the site is; an address minted before it opens the same page', () => {
     expect(parseAddress(['site', 'site', 'gradientBloom.mostlyDark', 'glow.corner', 'panels', 'design'])).toEqual(
       {styleSet: 'site', palette: 'site', flow: 'gradientBloom.mostlyDark', background: 'glow.corner', layout: 'panels', view: 'design'})
     expect(parseAddress(['site', 'site', 'site', 'site', 'own', 'grey'])).toMatchObject({background: 'site', layout: 'own'})
