@@ -70,6 +70,20 @@ describe('the walk: which bands take a panel', () => {
     expect(lit.some((o) => o.seam.paint?.onPanel)).toBe(true)
   })
 
+  it('never two panels back to back (the lead\u2019s ruling on PR #77): panel, band, panel down a run of eligible bands', () => {
+    const run: Band[] = ['narrative', 'split', 'statement', 'differentiators', 'narrative'].map((h) => b(h as Host, {surface: 'dark'}))
+    expect(walk(run, panels('quiet.mostlyLight')).map((o) => !!o.seam.paint?.onPanel)).toEqual([true, false, true, false, true])
+    // A band between them that takes none (a card grid, a light band, an operator's inset) parts two panels: neither is skipped.
+    for (const between of [b('testimonials', {surface: 'dark'}), b('areas', {surface: 'light'}), b('split', {surface: 'dark', inset: true})]) {
+      const out = walk([b('statement', {surface: 'dark'}), between, b('narrative', {surface: 'dark'})], panels('quiet.mostlyLight'))
+      expect(out.map((o) => !!o.seam.paint?.onPanel), JSON.stringify(between)).toEqual([true, false, true])
+    }
+    // Painted grounds the same way: no two panels touch on Gradient bloom's own dark run.
+    const lit = walk(['statement', 'narrative', 'split', 'differentiators', 'areas', 'narrative', 'statement'].map((h) => b(h as Host)), panels('gradientBloom.mostlyDark'))
+    lit.forEach((o, k) => { if (k > 0 && o.seam.paint?.onPanel) expect(!!lit[k - 1].seam.paint?.onPanel, `band ${k}`).toBe(false) })
+    expect(lit.filter((o) => o.seam.paint?.onPanel).length).toBeGreaterThan(1)
+  })
+
   it('never under a theme’s own layout, and never under Contained', () => {
     for (const f of FLOWS) {
       expect(walk(DESIGNED, f).some((o) => o.seam.paint?.onPanel), f.id).toBe(false)

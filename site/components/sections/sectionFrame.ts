@@ -1097,6 +1097,10 @@ export function applyLayout(
   const n = survivors.length
   const ground = survivors.map((r, i) => paints[i]?.ground ?? visibleGround(r.appearance))
   let panels = 0
+  // The band that last took a panel, so no two panels stand back to back (the lead's ruling on PR #77): in a run of
+  // eligible dark bands one after another, the first takes a panel, the next stays a full band, and so on (panel, band,
+  // panel), as Lewin's and Calesaric's dark runs set them.
+  let lastPanel = -2
   return survivors.map((r, i) => {
     const p = paints[i] ?? null
     if (r.appearance?.inset) return p
@@ -1108,7 +1112,8 @@ export function applyLayout(
       // only, never a grid of cards (testimonials, practice areas, attorneys, results) nor a ribbon or a stat row, which
       // stay full bands, as the references leave them. The band keeps its ground and what is drawn on it; the panel is
       // the card on top.
-      if (rules.dark.sit === 'onPanel' && r.content && r.host && PANEL_HOSTS.includes(r.host)) {
+      if (rules.dark.sit === 'onPanel' && r.content && r.host && PANEL_HOSTS.includes(r.host) && lastPanel !== i - 1) {
+        lastPanel = i
         return {...(p ?? {texture: false}), onPanel: {fill: site?.panelRoom ? 'surface' : 'light', corner: panels++ % 2 === 0 ? 'right' : 'left'}}
       }
       return p

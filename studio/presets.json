@@ -4562,7 +4562,7 @@
     {
       "id": "panels",
       "name": "Panels",
-      "sentence": "Every dark section of words keeps its color and sets them on a raised panel, lit in one corner where the colors have room; a photograph may rise across up to two section edges.",
+      "sentence": "Dark sections of words keep their color and set them on a raised panel, never two panels in a row, lit in one corner where the colors have room; a photograph may rise across up to two section edges.",
       "rules": {
         "dark": {
           "sit": "onPanel"

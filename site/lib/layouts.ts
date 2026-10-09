@@ -74,7 +74,7 @@ export const LAYOUTS: readonly Layout[] = [
   },
   {
     id: 'panels', name: 'Panels',
-    sentence: 'Every dark section of words keeps its color and sets them on a raised panel, lit in one corner where the colors have room; a photograph may rise across up to two section edges.',
+    sentence: 'Dark sections of words keep their color and set them on a raised panel, never two panels in a row, lit in one corner where the colors have room; a photograph may rise across up to two section edges.',
     // The references (monorepo WS-V1-LAYOUT-P1-EYE-2026-10-09): two panels a page on a dark run, each on the run's own color
     // a step lighter (Lewin) or the same (Calesaric), a light in one top corner, a hairline in the accent, as wide as the
     // column (86 to 90 percent of a 1440 screen). Where the palette has no room for the light, the panel is the light island.
