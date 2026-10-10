@@ -55,6 +55,16 @@ export function resolveVariantSurface(
   return {...base, scheme, isDark: scheme === 'dark'}
 }
 
+// ─── The photo treatment's mark (monorepo backlog 438) ───────────────────────
+// The site's one photo treatment (`photoColor` mono or tint; `globals.css`, the photo color rules) reaches the hero's
+// photograph through `data-hero-photo` on the box that holds only the photograph: the split's panel, collage tiles,
+// full-bleed half, card image and video poster, the backdrop's photograph and its mosaic tiles. Never the scrim, the
+// text, the buttons, the play mark, the section background or the cut-out figure, none of which sits inside a marked
+// box. Placed only where Design Settings sets a photo color, so a hero without one renders exactly as before.
+export function heroPhotoMark(treated: boolean | undefined): {'data-hero-photo'?: ''} {
+  return treated ? {'data-hero-photo': ''} : {}
+}
+
 // ─── Band wrapper ─────────────────────────────────────────────────────────────
 // The <section> shell shared by all variants. Owns:
 //   • the hero-merge contract (paddingTop reserves the overlaid header height)

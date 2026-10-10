@@ -127,4 +127,7 @@ export type SkeletonProps = {
   /** The style set's texture behind the hero, at this strength, where the background puts its pattern there (the
    *  Background theme, `on.hero`): `HeroBand` draws it only where the band paints its own ground. */
   texture?: 'quiet' | 'strong' | null
+  /** Design Settings sets the site's photo color (`photoColor`, monorepo backlog 438): the hero marks the box that holds
+   *  only its photograph (`heroPhotoMark`), so the one photo treatment reaches it. Absent, nothing is marked. */
+  photoTreated?: boolean
 }
