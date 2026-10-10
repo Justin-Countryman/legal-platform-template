@@ -35,6 +35,14 @@ describe('GET /site-preview/enter', () => {
     expect(new URL(res.headers.get('location')!).pathname).toBe('/site-preview/marble/black-gold/cutBlocks.balanced/grey')
   })
 
+  it('sends a client to the layout the link was sent with, the background\u2019s slot written out (the Layout theme\u2019s row)', async () => {
+    const token = signToken({v: 1, role: 'client', exp: now() + 600, styleSet: 'site', palette: 'navy-brass', flow: 'gradientBloom.mostlyDark', layout: 'panels', view: 'design'}, SECRET)!
+    const res = await enter(token)
+    expect(new URL(res.headers.get('location')!).pathname).toBe('/site-preview/site/navy-brass/gradientBloom.mostlyDark/site/panels/design')
+    const unknown = signToken({v: 1, role: 'client', exp: now() + 600, styleSet: 'site', palette: 'site', layout: 'floating', view: 'design'}, SECRET)!
+    expect((await enter(unknown)).status).toBe(404)
+  })
+
   it('a client link minted before the theme row (no flow in the grant) enters as the site is', async () => {
     const token = signToken({v: 1, role: 'client', exp: now() + 600, styleSet: 'marble', palette: 'black-gold', view: 'grey'}, SECRET)!
     const res = await enter(token)

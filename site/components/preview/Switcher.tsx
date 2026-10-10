@@ -14,7 +14,7 @@ import {type SiteChrome} from '@/components/layout/SiteShell'
 import {
   APPLY_LINK_SECONDS, CLIENT_LINK_SECONDS, nowSeconds, signToken, type PreviewGrant,
 } from '@/lib/preview/session'
-import {AS_THE_SITE_IS, BRAND_PALETTE, BRAND_PALETTE_NAME, OWN_BACKGROUND, ownGrounds, ownLooks, previewPath, type PreviewChoices, type PreviewPlan} from '@/lib/preview/plan'
+import {AS_THE_SITE_IS, BRAND_PALETTE, BRAND_PALETTE_NAME, OWN_BACKGROUND, OWN_LAYOUT, ownGrounds, ownLooks, previewPath, type PreviewChoices, type PreviewPlan} from '@/lib/preview/plan'
 
 // ─── The switcher ─────────────────────────────────────────────────────────────
 //
@@ -123,7 +123,9 @@ function names(plan: PreviewPlan): string {
   const p = plan.palette?.name ?? (plan.wears.palette ? `${plan.wears.palette.name} (as the site is)` : 'the site\'s own colors')
   const f = plan.flow?.name ?? `${plan.wears.flow.name} (as the site is)`
   const b = plan.background === OWN_BACKGROUND ? ', the theme\u2019s own background' : plan.background ? `, ${plan.background.name} on the sections` : ''
-  return `${s}, ${p}, ${f}${b}`
+  // The layout (the Layout theme): named where the address chose one; its row in the switcher waits (ADV-LO amendment 13).
+  const l = plan.layout === OWN_LAYOUT ? ', the theme\u2019s own layout' : plan.layout ? `, the ${plan.layout.name} layout` : ''
+  return `${s}, ${p}, ${f}${b}${l}`
 }
 
 const date = (seconds: number) => new Date(seconds * 1000).toISOString().slice(0, 10)
@@ -265,6 +267,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
         palette: plan.palette ? {id: plan.palette.id, name: plan.palette.name} : null,
         flow: plan.flow ? {id: plan.flow.id, name: plan.flow.name} : null,
         background: plan.background === OWN_BACKGROUND ? {id: OWN_BACKGROUND, name: 'the theme\u2019s own background'} : plan.background ? {id: plan.background.id, name: `${plan.background.name} on the sections`} : null,
+        layout: plan.layout === OWN_LAYOUT ? {id: OWN_LAYOUT, name: 'the theme\u2019s own layout'} : plan.layout ? {id: plan.layout.id, name: `the ${plan.layout.name} layout`} : null,
       })
     : null
   const blocks = (Array.isArray(canvas) ? canvas : []) as HomepageBlock[]
@@ -308,7 +311,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
   const familyChoices = FAMILIES.map((f) => {
     const own = flowById(flowId(f.id, f.defaultStep))
     // Read under the background in force, as the page would draw it.
-    const first = own ? effectiveFlow(own, plan.inForce) : null
+    const first = own ? effectiveFlow(own, plan.inForce, plan.layoutInForce) : null
     const missing = lacks(first)
     return (
       <Choice key={f.id} href={at({flow: flowId(f.id, f.defaultStep)})} active={choices.flow !== AS_THE_SITE_IS && family?.id === f.id} className="sw-family">
@@ -327,7 +330,7 @@ export function Switcher({grant, choices, plan, canvas, chrome, origin, hero = n
     onLight: chrome?.header?.designSettings?.logoOnLight, onDark: chrome?.header?.designSettings?.logoOnDark,
   }).footer
   const reachOf = (id: string): {none: boolean; note: string} => {
-    const f = effectiveFlow(baseFlow, id)
+    const f = effectiveFlow(baseFlow, id, plan.layoutInForce)
     if (f.on.dark === 'plain' && f.on.light === 'plain' && !f.on.hero && f.on.close === 'none') return {none: false, note: ''}
     const heroG = heroUnder ? heroUnder(f) : hero
     // The room the option's glow needs on this palette: the light's where it positions one (`[R-646]`), else the glow's.

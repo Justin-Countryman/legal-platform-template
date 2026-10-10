@@ -912,6 +912,8 @@ export const DESIGN_TOKENS_QUERY = groq`
     flowPhotos,
     // What sits on the grounds, beside the theme: one stored id; absent renders the theme's own.
     background,
+    // How the sections sit and what crosses their edges: one stored id; absent renders the theme's own layout.
+    pageLayout,
     // The style set's settings (Phase 16B): a style set in the Studio writes them with
     // the fields above. The site never reads which style set it is.
     // patternGround, sectionJoin, dividerCarry, brandGhost, sectionOverlap and

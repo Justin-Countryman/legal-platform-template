@@ -56,6 +56,8 @@ export type PreviewGrant = {
   flow?: string
   /** The background's id (the Background theme's row). Absent on a link minted before the row, and read as `site`. */
   background?: string
+  /** The layout's id (the Layout theme's row). Absent on a link minted before the row, and read as `site`. */
+  layout?: string
   view?: PreviewView
   apply?: ApplyTarget
   /** The meeting's preselection (Phase 17C session 3, `[R-537]`): the style sets and palettes the
@@ -187,6 +189,10 @@ export function asGrant(payload: unknown): PreviewGrant | null {
   if (p.background !== undefined) {
     if (!isText(p.background)) return null
     grant.background = p.background
+  }
+  if (p.layout !== undefined) {
+    if (!isText(p.layout)) return null
+    grant.layout = p.layout
   }
   if (p.view !== undefined) {
     if (!isView(p.view)) return null

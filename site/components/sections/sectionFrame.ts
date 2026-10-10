@@ -2,8 +2,9 @@ import {
   type SectionAppearance,
 } from '@/components/sections/SectionShell'
 import {type VisibleGround, visibleGround} from '@/lib/sectionSurface'
-import {fadeOf, glowGateOf, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts, type Close} from '@/lib/flows'
+import {fadeOf, glowGateOf, glowLightFillOk, saturatedFillOk, darkBudget, type FlowRules, type Host, type CanvasFacts, type Close} from '@/lib/flows'
 import {siteFlowOf} from '@/lib/backgrounds'
+import {MAX_CROSSINGS, PANEL_HOSTS, asksForPanels, layoutRulesOf, type LayoutRules} from '@/lib/layouts'
 import type {HeroPhoto, SetPhoto} from '@/lib/heroGround'
 import type {HeadingFace} from '@/lib/headingFace'
 import type {DrawnStrength} from '@/lib/designTokens'
@@ -123,6 +124,11 @@ export type Paint = {
   /** The ground a light panel the theme floats sits on (Phase 17D, `light.paint: 'floating'`): the walk
    *  reads the band as this ground and adopts it wherever the band sits, first and last included. */
   onGround?: 'dark'
+  /** The band keeps its dark ground and everything drawn on it, and its words sit on a raised panel in the column (the
+   *  Layout theme's Panels, `dark.sit: 'onPanel'`): the dark ground lifted in its own hue where the palette has room for the light,
+   *  else the light island; the light in its top corner on the side given, turn and turn about down the page. The walk
+   *  reads the band as its own ground: the panel is a card on it, not a gutter around it. */
+  onPanel?: {fill: 'surface' | 'light'; corner: 'left' | 'right'}
 }
 
 /** A quadrant of the hero's photograph: `x` 0 is the left half, `y` 0 the top half. */
@@ -160,6 +166,10 @@ export type SiteLook = {
   /** The palette's dark ground has room to glow (`glowFillOk`, Phase 17D session 2, `[R-557]`), so Gradient bloom may
    *  light its dark runs. */
   glow?: boolean
+  /** The palette has room for the light a dark panel takes (`glowLightFillOk`; the Layout theme's Panels): the panel is the
+   *  dark ground lifted in its own hue, the light in its corner, else the light island on the dark band. Set only under a
+   *  layout that asks for panels. */
+  panelRoom?: boolean
   /** The initials the ghost draws (Phase 16D, `[R-492]`), or null when the theme draws
    *  none. Derived from the firm's name, never stored; set by `HomeBody`. */
   ghost?: {text: string} | null
@@ -191,16 +201,19 @@ export type SiteLook = {
 /** The site look from the projected Design Settings (`DESIGN_TOKENS_QUERY`). */
 export function siteLookOf(d: Record<string, unknown> | null | undefined): SiteLook {
   const s = (k: string) => (typeof d?.[k] === 'string' && d[k] !== '' ? (d[k] as string) : null)
+  // The theme with its stored background and page layout in place of its own (`lib/backgrounds.ts`), where one is stored.
+  const flow = siteFlowOf(d)
   return {
     imageFrame: s('imageFrame'),
     cardHover: s('cardHover'),
     attorneyCardStyle: s('attorneyCardStyle'),
-    // The theme with its stored background in place of its own (`lib/backgrounds.ts`), where one is stored.
-    flow: siteFlowOf(d),
+    flow,
     patternTexture: s('patternTexture'),
     saturated: saturatedFillOk(d),
-    glow: glowGateOf(siteFlowOf(d), d),
+    glow: glowGateOf(flow, d),
     ghost: null,
+    // The room the panel's surface needs, the same gate the palette emits it under (`darkPanel`, `designTokens.ts`).
+    ...(asksForPanels(flow) ? {panelRoom: glowLightFillOk(d)} : {}),
   }
 }
 
@@ -326,6 +339,9 @@ export function walkPage<M>(
 ): {bands: Array<{member: M; index: number; seam: SeamProps}>; hero: {run?: SeamProps['run']; fade: SeamProps['fade']}; close: {run?: SeamProps['run']; fade: SeamProps['fade']}; last: VisibleGround | null} {
   // The theme (Phase 17B). Null on an interior page, where no page-level device fires.
   const flow = site?.flow ?? null
+  // A stored page layout (the Layout theme, `lib/layouts.ts`), which replaces the theme's own whole. Null where none is
+  // stored, and then nothing below differs from the walk before the layer, byte for byte.
+  const pageLayout = flow?.layout ?? null
   const fade = fadeOf(flow, site?.glow)
   // Where a divider goes: the theme's placement (`flow.divider.at`). `intoDark` is
   // `[R-481]`'s law: under the hero, and wherever the page enters a strong ground — dark
@@ -359,7 +375,12 @@ export function walkPage<M>(
   // ─── The ground pass (Phase 17B) ────────────────────────────────────────────
   // Before the adoption pass, because adoption reads the grounds, and the theme is what
   // decides a ground where none is stored.
-  const paints = flow ? assignGrounds(survivors, flow, site, {close, hero}) : survivors.map(() => null)
+  // ─── The precedence pass (the Layout theme; monorepo WS-V1-LAYOUT-OPTIONS-DESIGN, ADV-LO amendment 1) ──────────
+  // Under a stored page layout the ground pass runs without the theme's own layout (every band it fills a full band), and
+  // the stored layout then applies to every band's visible ground, stored or painted, before adoption: a designed page
+  // stores a surface on every band, which the ground pass never touches, so a layout read inside it would draw nothing.
+  const filled = flow ? assignGrounds(survivors, pageLayout ? withoutOwnLayout(flow) : flow, site, {close, hero}) : survivors.map(() => null)
+  const paints = flow && pageLayout ? applyLayout(survivors, filled, pageLayout.rules, site) : filled
   const paintAt = new Map<number, Paint | null>()
   survivors.forEach((r, i) => paintAt.set(r.index, paints[i]))
   const isInset = (r: {appearance: SectionAppearance | null | undefined}, paint: Paint | null) =>
@@ -465,7 +486,7 @@ export function walkPage<M>(
     const eligible = out.filter(({member, seam}) => {
       const a = resolve(member).appearance
       const g = groundAt.get(out.find((o) => o.member === member)!.index) ?? visibleGround(a)
-      return g !== 'saturated' && g !== 'image' && g !== 'wash' && a?.surface !== 'pattern' && !seam.paint?.texture && !isInset({appearance: a}, seam.paint ?? null)
+      return g !== 'saturated' && g !== 'image' && g !== 'wash' && a?.surface !== 'pattern' && !seam.paint?.texture && !isInset({appearance: a}, seam.paint ?? null) && !seam.paint?.onPanel
     })
     const host =
       eligible.find(({index}) => groundAt.get(index) === 'dark') ??
@@ -473,18 +494,23 @@ export function walkPage<M>(
     if (host) host.seam = {...host.seam, ghost: true}
   }
 
-  // THE RAISED PHOTO (Phase 16E). One band per page, as the study's sites do: a median
+  // THE RAISED PHOTO (Phase 16E). One band per page under a theme's own layout, as the study's sites do: a median
   // of one mid-page overlap and a maximum of two, against two to four eligible bands on
   // an ordinary canvas. Eligible is a content section whose `split` media renders as a
   // photo, that is not the first band (nothing above it), that is not an inset panel
   // (the panel's own `overflow-hidden` cuts the photo dead flat, measured), and whose
   // band above shows a different ground, where light and tint count as one exactly as
   // the divider counts them.
-  if (flow?.overlap === 'photo') {
+  // Since the Layout theme the crossing is the layout's (`layoutRulesOf`): the theme's own `overlap`, else a stored page
+  // layout's, which may allow none (Contained).
+  const cross = flow ? layoutRulesOf(flow).cross : null
+  if (cross && cross.kinds.includes('photo') && cross.max > 0) {
     const eligible: number[] = []
     for (let i = 1; i < out.length; i++) {
       const r = resolve(out[i].member)
-      if (!r.raisesPhoto || isInset(r, out[i].seam.paint ?? null)) continue
+      // Nor a band whose words sit on a raised panel (the Layout theme's): the panel clips, as an inset's does; the figure
+      // out of a panel is a later slice (ADV-LO amendment 5).
+      if (!r.raisesPhoto || isInset(r, out[i].seam.paint ?? null) || out[i].seam.paint?.onPanel) continue
       const g = groundAt.get(out[i].index) ?? visibleGround(r.appearance)
       const prev = groundAt.get(out[i - 1].index) ?? visibleGround(resolve(out[i - 1].member).appearance)
       if (!same(g, prev)) eligible.push(i)
@@ -492,10 +518,20 @@ export function walkPage<M>(
     // NEAREST THE MIDDLE OF THE LIST, never the first: live, the first ground-change
     // band holds 1 of 35 rising overlaps, and the median normalised position is 0.50
     // with 18 of 35 in the middle third (ADV-16E-B). A tie takes the earlier band.
+    //
+    // UP TO TWO A PAGE (the Layout theme, ADV-LO amendment 9; `MAX_CROSSINGS`): the layout says how many, a theme's own
+    // one, Panels two, and never more than two, the study's median of one and maximum of two. The next pick is the next
+    // nearest the middle that touches no band a crossing already uses, so no band both rises and makes room for another.
+    // With one allowed this is the pick it always was.
     const mid = (out.length - 1) / 2
-    const pick = eligible.reduce<number | null>(
-      (best, i) => (best === null || Math.abs(i - mid) < Math.abs(best - mid) ? i : best), null)
-    if (pick !== null) {
+    const allowed = Math.min(cross.max, MAX_CROSSINGS)
+    const picks: number[] = []
+    for (const i of [...eligible].sort((a, z) => Math.abs(a - mid) - Math.abs(z - mid) || a - z)) {
+      if (picks.length >= allowed) break
+      if (picks.some((p) => Math.abs(p - i) < 2)) continue
+      picks.push(i)
+    }
+    for (const pick of picks) {
       out[pick].seam = {...out[pick].seam, raisePhoto: true}
       out[pick - 1].seam = {...out[pick - 1].seam, nextOverlap: 'photo'}
     }
@@ -581,6 +617,9 @@ export function walkPage<M>(
       const o = out[k - head]
       const r = resolve(o.member)
       if (r.appearance?.inset || o.seam.paint?.inset) return 0
+      // A band whose words sit on a raised panel hides most of its own ground behind the panel, so it carries the group's
+      // light only where no other band can (the Layout theme's Panels; never under a theme's own layout).
+      if (o.seam.paint?.onPanel) return 1
       return r.host ? LIGHT_RANK[r.host] : 3
     }
     const candidates: {k: number; rank: number; start: number; end: number}[] = []
@@ -1020,6 +1059,74 @@ export function assignGrounds(
     paints.forEach((p, i) => { if (p?.ground && !fixed[i]) paints[i] = {...p, spacing: 'spacious'} })
   }
   return paints
+}
+
+// ─── The precedence pass (the Layout theme, ADV-LO amendment 1) ───────────────
+//
+// What a stored page layout does to each band, after the theme's ground pass and before adoption. It reads the ground the
+// visitor will see on each band, the one the pass painted or the band's own stored surface (`surface` is the Flow theme's
+// and never blocks a layout rule, `lib/layers.ts`), and applies the layout's word for that kind of ground, so the layout
+// fires at every place of its kind (his continuity rule, record §1.3). A band storing `inset` keeps its panel, and one
+// storing `overlapPrevious` its overlap: the operator's own word on one band, an override as it always was. A panel is a
+// card on its ground, so nothing the Background theme draws reaches inside one (the texture, a faint photograph).
+
+/** The theme with every band it fills a full band: its ground pass run without its own layout, which a stored page
+ *  layout replaces. */
+function withoutOwnLayout(flow: FlowRules): FlowRules {
+  return {...flow, dark: {...flow.dark, sit: 'band'}, light: {...flow.light, sit: 'band'}}
+}
+
+/** A paint with nothing of the Background theme's on it, for a band that becomes a panel. */
+function bare(p: Paint | null): Paint {
+  const {texture: _texture, photoFade: _photoFade, ...rest} = p ?? {texture: false}
+  void _texture
+  void _photoFade
+  return {...rest, texture: false}
+}
+
+const LIGHTISH: readonly VisibleGround[] = ['light', 'tint', 'wash', 'muted']
+const STRONG: readonly VisibleGround[] = ['dark', 'saturated', 'image']
+
+/** Apply a stored page layout's words to every band's visible ground. Exported for the tests. */
+export function applyLayout(
+  survivors: readonly Survivor[],
+  paints: readonly (Paint | null)[],
+  rules: LayoutRules,
+  site: Pick<SiteLook, 'panelRoom'> | null = null,
+): (Paint | null)[] {
+  const n = survivors.length
+  const ground = survivors.map((r, i) => paints[i]?.ground ?? visibleGround(r.appearance))
+  let panels = 0
+  // The band that last took a panel, so no two panels stand back to back (the lead's ruling on PR #77): in a run of
+  // eligible dark bands one after another, the first takes a panel, the next stays a full band, and so on (panel, band,
+  // panel), as Lewin's and Calesaric's dark runs set them.
+  let lastPanel = -2
+  return survivors.map((r, i) => {
+    const p = paints[i] ?? null
+    if (r.appearance?.inset) return p
+    const g = ground[i]
+    if (g === 'dark') {
+      // A full band; or the dark ground as a panel on the page's light ground.
+      if (rules.dark.sit === 'floating') return {...bare(p), inset: true}
+      // Or the full dark band with its words on a raised panel (Panels, ADV-LO amendment 4): a prose-led content section
+      // only, never a grid of cards (testimonials, practice areas, attorneys, results) nor a ribbon or a stat row, which
+      // stay full bands, as the references leave them. The band keeps its ground and what is drawn on it; the panel is
+      // the card on top.
+      if (rules.dark.sit === 'onPanel' && r.content && r.host && PANEL_HOSTS.includes(r.host) && lastPanel !== i - 1) {
+        lastPanel = i
+        return {...(p ?? {texture: false}), onPanel: {fill: site?.panelRoom ? 'surface' : 'light', corner: panels++ % 2 === 0 ? 'right' : 'left'}}
+      }
+      return p
+    }
+    if (LIGHTISH.includes(g)) {
+      // A full band; a panel on the dark ground wherever it sits; or, inside a strong run, an inset panel that adopts it.
+      if (rules.light.sit === 'floating') return {...bare(p), inset: true, onGround: 'dark'}
+      if (rules.light.sit === 'panel' && i > 0 && i < n - 1 && STRONG.includes(ground[i - 1]) && STRONG.includes(ground[i + 1])) {
+        return {...bare(p), inset: true}
+      }
+    }
+    return p
+  })
 }
 
 /** The closing call to action's surface and seam under the theme's close (`closeOf`): a photo close

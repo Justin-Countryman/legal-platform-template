@@ -75,6 +75,13 @@ describe('asGrant', () => {
     expect(asGrant({...client, flow: ''})).toBeNull()
   })
 
+  it('carries the layout when a link names one (the Layout theme\u2019s row); a link minted before the row is still a grant', () => {
+    expect(asGrant({...client, layout: 'panels'})).toEqual({...client, layout: 'panels'})
+    expect(asGrant(client)?.layout).toBeUndefined()
+    expect(asGrant({...client, layout: 7})).toBeNull()
+    expect(asGrant({...client, layout: ''})).toBeNull()
+  })
+
   it('refuses an unknown role, version or a missing expiry', () => {
     expect(asGrant({...operator, role: 'admin'})).toBeNull()
     expect(asGrant({...operator, v: 2})).toBeNull()

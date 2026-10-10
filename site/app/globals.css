@@ -1622,6 +1622,64 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 @media (prefers-contrast: more) { [data-card-glow="on"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] { background-image: none; box-shadow: none; } }
 @media print { [data-card-glow="on"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] { background-image: none; box-shadow: none; } }
 
+/* ─── The Layout theme's panel (Panels; monorepo WS-V1-LAYOUT-OPTIONS-DESIGN, ADV-LO amendment 4, `[R-655]`) ───────── */
+/* A dark band of words keeps its ground and everything drawn on it (a glow, a faint photograph, the texture), and its words
+   sit on a raised panel in the column, as Lewin's and Calesaric's panels sit on their dark runs (measured live at 1440: 1,236
+   and 1,296 px wide, 20 px corners, the words about 72 px in; at 375 the 5% gutter, about 20 px in). The panel is as wide
+   as the band's column up to 80rem, its corners the style set's (`rounded-ui`), its padding one gutter, not a second 5%.
+   It publishes its own bottom padding, so a cut-out standing on the band's edge stands on the panel's (`cutout-sink`). */
+@utility panel-pad {
+  padding: 2.5rem 1.25rem;
+  --band-pb: 2.5rem;
+  @variant md { padding: 3.5rem 3rem; --band-pb: 3.5rem; }
+  @variant lg { padding: 4.5rem; --band-pb: 4.5rem; }
+}
+/* The dark ground lifted in its own hue (`--color-panel-surface`, `panelSurfaceOf`; never toward the accent) with the light
+   in one top corner (`--color-panel-light`), the side turn and turn about down the page as Calesaric turns it; a real
+   border at half the accent (forced colors drop the light, the border stays); a black shadow (an accent one adds light the
+   light has none to spare for, `[R-646]`); and the lit band's values, under which every pair on the panel and its light is
+   proven (`validateWcag`, "a dark panel"), its button among them. The engine emits the two colors only where the palette
+   has room; elsewhere the walk draws the light island instead, so the fallback ground here is never what a visitor sees. */
+[data-dark-panel="surface"] {
+  background-color: var(--color-panel-surface, var(--color-brand-dark));
+  background-image: radial-gradient(circle at 100% 0%, var(--color-panel-light, transparent), transparent 40%);
+  border: 1px solid color-mix(in srgb, var(--color-accent-on-dark) 48%, transparent);
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.6);
+  --color-action-state-cue:  var(--color-action-state-cue-on-scrim);
+  --color-foreground:        var(--color-foreground-on-dark);
+  --color-foreground-muted:  var(--color-foreground-muted-on-dark);
+  --color-foreground-subtle: var(--color-foreground-subtle-on-dark);
+  --color-heading:           var(--color-foreground-on-dark);
+  --color-accent:            var(--color-accent-on-dark);
+  --color-accent-text:       var(--color-accent-on-dark);
+  --color-slab:              var(--color-accent-on-dark);
+  --color-action-text:       var(--color-foreground-on-dark);
+  --color-action-text-hover: var(--color-foreground-on-dark);
+  --color-ring-focus:        var(--color-foreground-on-dark);
+  --color-border:            var(--color-border-on-dark);
+  --color-border-control:    var(--color-border-control-on-scrim);
+  --color-star-outline:      var(--color-star-outline-on-dark);
+  --color-hover-wash:        var(--color-hover-wash-on-dark);
+  --color-btn-dark:          var(--color-btn-dark-on-scrim);
+  --color-btn-dark-fg:       var(--color-btn-dark-fg-on-scrim);
+  --color-btn-dark-edge:     var(--color-btn-dark-edge-on-scrim);
+  --color-btn-dark-hover:    var(--color-btn-dark-hover-on-scrim);
+  --color-btn-dark-hover-fg: var(--color-btn-dark-hover-fg-on-scrim);
+}
+[data-dark-panel="surface"][data-panel-corner="left"] {
+  background-image: radial-gradient(circle at 0% 0%, var(--color-panel-light, transparent), transparent 40%);
+}
+/* A card inside a panel (ADV-LO amendment 4): a glowing card, or a see-through card on a lit band, would take the panel's
+   own surface and vanish into it, so it sits on the dark ground instead, the panel's values unchanged: every pair it draws
+   is lighter than that ground and holds on the lighter panel already. */
+[data-card-glow="on"] main [data-dark-panel="surface"] [data-card],
+.glow-lit [data-dark-panel="surface"] [data-card]:not([data-ring-context="light"]):not(:has(img)) {
+  background-color: var(--color-brand-dark);
+}
+@media (prefers-contrast: more) { [data-dark-panel="surface"] { background-image: none; box-shadow: none; } }
+@media print { [data-dark-panel="surface"] { background-image: none; box-shadow: none; } }
+@media (forced-colors: active) { [data-dark-panel="surface"] { background-image: none; } }
+
 /* Photo color and edge (monorepo WS-PREMIUM-PACKAGE-DESIGN §7.2 amendment 16, `[R-641]`): one treatment for the site's
    photographs, set once (`data-photo-color`, `data-photo-edge`). They reach a content section's feature photo where its
    own treatment is plain or slab (`[data-feature-photo]`, which leaves `::after` free) and a practice card's photo

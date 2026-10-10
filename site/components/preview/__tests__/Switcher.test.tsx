@@ -490,3 +490,32 @@ describe('Switcher, the background row', () => {
     expect(c.textContent).not.toContain(ROW_BACKGROUND_HEAD)
   })
 })
+
+// ─── The layout (the Layout theme, monorepo WS-V1-LAYOUT-OPTIONS-DESIGN, ADV-LO amendment 13): no row yet, an address ──
+describe('Switcher, the layout chosen in the address', () => {
+  const band = (key: string, layout: string) => ({_type: 'contentSectionInline', _key: key, layout, heading: 'A heading', body: [{_type: 'block', children: [{_type: 'span', text: 'Words.'}]}]})
+  const canvas = [band('a', 'statement'), band('b', 'twoColumnText')]
+  const applyOf = (c: Element) => verifyToken(new URL([...c.querySelectorAll('a')].find((a) => (a.textContent ?? '').startsWith('Apply'))!.getAttribute('href')!.replace('/#/design', '/design')).searchParams.get('t'), SECRET) as {set: Record<string, unknown>; unset: string[]; layout: {id: string; name: string} | null}
+
+  it('is named in the bar, rides every other row\u2019s links, and is not offered as a row', () => {
+    const c = draw(operator, stored, {...choices, flow: 'gradientBloom.mostlyDark', layout: 'panels'}, canvas, chromeWithTexture, 'dark')
+    expect(c.querySelector('summary')!.textContent).toContain('the Panels layout')
+    const links = hrefs(c)
+    expect(links).toContain('/site-preview/graphite/navy-brass/quiet.mostlyLight/site/panels/design')
+    expect(links.filter((h) => h.endsWith('/contained/design'))).toEqual([])
+  })
+
+  it('the Apply link carries the one field and names the layout; the theme\u2019s own clears it', () => {
+    const set = applyOf(draw(operator, stored, {...choices, styleSet: 'site', palette: 'site', layout: 'panels'}, canvas, chromeWithTexture, 'dark'))
+    expect(set.set).toEqual({pageLayout: 'panels'})
+    expect(set.layout).toEqual({id: 'panels', name: 'the Panels layout'})
+    const cleared = applyOf(draw(operator, {...stored, pageLayout: 'panels'}, {...choices, styleSet: 'site', palette: 'site', layout: 'own'}, canvas, chromeWithTexture, 'dark'))
+    expect(cleared.unset).toEqual(['pageLayout'])
+    expect(cleared.layout).toEqual({id: 'own', name: 'the theme\u2019s own layout'})
+  })
+
+  it('a client sees it named in its one line', () => {
+    const c = draw({...client, layout: 'panels'}, stored, {...choices, flow: 'alternating.balanced', layout: 'panels'})
+    expect(c.textContent).toContain('the Panels layout')
+  })
+})

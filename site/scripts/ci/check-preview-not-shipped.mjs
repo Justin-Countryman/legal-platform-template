@@ -26,7 +26,8 @@
 //           one catch-all segment since the Background theme, so an address minted before a
 //           row existed needs no redirect) and reaches nobody without a session, a client
 //           link minted at the old pin (no theme in the grant) still enters, and the
-//           background in the fifth segment changes the page.
+//           background in the fifth segment changes the page; (the Layout theme) the layout
+//           in the sixth reaches the page and an unknown one is a 404.
 //
 // Sentinels are VALUES a visitor could only receive from preview code, never attribute
 // names alone (a conditional prop can put an attribute's name in every page's flight
@@ -234,6 +235,14 @@ if (base) {
   check(ownBg.res.status === 200 && ownBg.body.includes('data-section-texture') && !plainBg.body.includes('data-section-texture'), 'Plain under Cut blocks still drew the texture, or the theme\'s own did not')
   const unknownBg = await get('/site-preview/site/site/site/nope/design', cookie(operator))
   check(unknownBg.res.status === 404, `an unknown background answered ${unknownBg.res.status}`)
+  // The layout in the sixth segment (the Layout theme): the bar names it, and Panels asks the palette for the panel's surface
+  // (the stub's canvas has no band of words to set on one, so the color is the page's proof), which Contained does not.
+  const panelsAt = await get('/site-preview/graphite/navy-brass/gradientBloom.mostlyDark/site/panels/design', cookie(operator))
+  const containedAt = await get('/site-preview/graphite/navy-brass/gradientBloom.mostlyDark/site/contained/design', cookie(operator))
+  check(panelsAt.res.status === 200 && panelsAt.body.includes('the Panels layout') && panelsAt.body.includes('--color-panel-surface:#'), `the Panels address answered ${panelsAt.res.status}, or drew no panel color`)
+  check(containedAt.res.status === 200 && containedAt.body.includes('the Contained layout') && !containedAt.body.includes('--color-panel-surface:#'), `the Contained address answered ${containedAt.res.status}, or drew a panel color`)
+  const unknownLayout = await get('/site-preview/site/site/site/site/nope/design', cookie(operator))
+  check(unknownLayout.res.status === 404, `an unknown layout answered ${unknownLayout.res.status}`)
   const threeNoCookie = await get('/site-preview/graphite/navy-brass/design')
   check(threeNoCookie.res.status === 404 && !threeNoCookie.res.headers.get('location'), `the three-segment address without a session answered ${threeNoCookie.res.status}`)
 

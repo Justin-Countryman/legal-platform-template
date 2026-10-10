@@ -141,6 +141,13 @@ const BACKGROUND_PAGES = [
   'typeOnBlack.allDark+fade', 'softWash.balanced+fade', 'cutBlocks.mostlyDark+span', 'cutBlocks.mostlyDark+windows',
   'alternating.balanced+gradient', 'alternating.balanced+glow', 'cutBlocks.balanced+plain',
 ]
+// THE LAYOUT ROW (the Layout theme; monorepo WS-V1-LAYOUT-OPTIONS-DESIGN, ADV-LO amendment 15): Panels under its suggested
+// theme, with the theme's own background, on the canvas whose dark run carries the most text-led bands and two cut-out
+// figures, written `<theme>+<background or site>+<layout>`. A theme alone, or with a background, is measured with no layout
+// in its address, so every row above this one is the theme's own layout, as it was before the layer.
+const LAYOUT_PAGES = {
+  'adversarial-cutout': ['gradientBloom.mostlyDark+site+panels'],
+}
 // The set canvases are measured under the theme that draws the set and its dark-led neighbour only: every other theme
 // draws them as it draws the photo-hero canvases, whose rows the golden already holds (Phase 17E).
 const ONLY_FLOWS = {
@@ -634,12 +641,13 @@ try {
           .observe({type: 'largest-contentful-paint', buffered: true})
       })
       const page = await context.newPage()
-      for (const flow of ONLY_FLOWS[canvas] ?? FLOWS) {
+      for (const flow of [...(ONLY_FLOWS[canvas] ?? FLOWS), ...(LAYOUT_PAGES[canvas] ?? [])]) {
         const key = `${canvas} / ${flow} / ${width}`
         watch(key)
         // A row of the background matrix names its background after the theme.
-        const [flowId, background] = flow.split('+')
-        const url = `${BASE}/site-preview/${STYLE_SET}/${PALETTE}/${flowId}${background ? `/${background}` : ''}/design`
+        // A row of the layout row names the background (or site) and the layout after it.
+        const [flowId, background, layout] = flow.split('+')
+        const url = `${BASE}/site-preview/${STYLE_SET}/${PALETTE}/${flowId}${background ? `/${background}` : ''}${layout ? `/${layout}` : ''}/design`
         // `load`, then the fonts: `networkidle` never settled on some pages (a kept-alive
         // connection is enough to hold it), and what the measure needs is the layout.
         let res = null
@@ -651,11 +659,13 @@ try {
         // must be the address asked for, and must say it wears the theme asked for.
         if (page.url() !== url) { fail(`${key}: landed on ${page.url()}, not ${url}`); continue }
         const flowName = presets.flows.find((f) => f.id === flowId)?.name
-        const backgroundName = background ? presets.backgrounds.find((b) => b.id === background)?.name : null
+        const backgroundName = background && background !== 'site' ? presets.backgrounds.find((b) => b.id === background)?.name : null
         phase('reading the switcher')
         const bar = await page.evaluate(() => document.querySelector('.sw summary')?.textContent ?? '')
         if (!flowName || !bar.includes(flowName)) { fail(`${key}: the page's bar reads "${bar}", not the theme "${flowName}"`); continue }
-        if (background && (!backgroundName || !bar.includes(backgroundName))) { fail(`${key}: the page's bar reads "${bar}", not the background "${backgroundName}"`); continue }
+        if (background && background !== 'site' && (!backgroundName || !bar.includes(backgroundName))) { fail(`${key}: the page's bar reads "${bar}", not the background "${backgroundName}"`); continue }
+        const layoutName = layout ? presets.layouts.find((l) => l.id === layout)?.name : null
+        if (layout && (!layoutName || !bar.includes(`the ${layoutName} layout`))) { fail(`${key}: the page's bar reads "${bar}", not the layout "${layoutName}"`); continue }
         // The hero reaches the switcher (Phase 17B session 5, ADV-17B5-2 F2b): a theme that wants a
         // dark hero names the need exactly where this canvas's hero is not dark.
         if (flow === 'typeOnBlack.allDark') {
@@ -693,6 +703,19 @@ try {
         phase('the measure')
         const m = await page.evaluate(measure)
         results[key] = m
+        // The layout row: Panels draws its panels in the column (inside the 5% gutter, never past 80rem) and no photograph
+        // rises out of one (the figure out of a panel is a later slice).
+        if (layout === 'panels') {
+          const panels = await page.evaluate(() => [...document.querySelectorAll('main [data-dark-panel]')].map((el) => {
+            const r = el.getBoundingClientRect()
+            return {x: r.left, w: r.width, raised: !!el.querySelector('.xl\\:photo-rise')}
+          }))
+          if (!panels.length) fail(`${key}: Panels drew no panel on a canvas with dark bands of words`)
+          for (const p of panels) {
+            if (p.x < 0.05 * device.viewport.width - 1 || p.w > 1280 + 1) fail(`${key}: a panel ${Math.round(p.w)} px wide at ${Math.round(p.x)}, outside the column`)
+            if (p.raised) fail(`${key}: a photograph rises out of a panel`)
+          }
+        }
         if (m.innerWidth !== device.viewport.width) fail(`${key}: innerWidth is ${m.innerWidth}, not ${device.viewport.width} (the layout is not at this width)`)
         if (m.scrollWidth > m.clientWidth) fail(`${key}: horizontal scroll: scrollWidth ${m.scrollWidth} over ${m.clientWidth}`)
         if (width === '390') for (const b of m.bands) if (b.headingLines > 4 && !atFloor(b, 4)) fail(`${key}: band ${b.i} heading wraps to ${b.headingLines} lines at 390: ${b.heading}`)

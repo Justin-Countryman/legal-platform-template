@@ -2,7 +2,7 @@ import {describe, it, expect} from 'vitest'
 import {RETIRED_STYLE_SETS, STYLE_SETS, matchStyleSet, styleSetPatch} from '@/lib/styleSets'
 import {PALETTE_PRESETS, matchPreset} from '@/lib/palettes'
 import {DEFAULT_FLOW, FLOWS, HIDDEN_FIELDS} from '@/lib/flows'
-import {AS_THE_SITE_IS, OWN_BACKGROUND, grantBackground, parseAddress, grantFlow, grantStyleSet, parseChoices, planPreview, withPreview, ownLooks, ownGrounds, previewPath, type PreviewPlan, type StoredDesign} from '../plan'
+import {AS_THE_SITE_IS, OWN_BACKGROUND, OWN_LAYOUT, grantBackground, grantLayout, parseAddress, grantFlow, grantStyleSet, parseChoices, planPreview, withPreview, ownLooks, ownGrounds, previewPath, type PreviewPlan, type StoredDesign} from '../plan'
 
 // What a preview choice changes (Phase 17A, monorepo WS-V1-PHASE17A-DESIGN §2.3).
 // The preview renders this plan and Apply writes it, so "shown equals applied"
@@ -172,7 +172,7 @@ describe('withPreview', () => {
 
 describe('parseChoices and previewPath', () => {
   it('reads the three path segments and refuses anything else', () => {
-    expect(parseChoices('graphite', 'navy-brass', 'site', 'grey')).toEqual({styleSet: 'graphite', palette: 'navy-brass', flow: 'site', background: 'site', view: 'grey'})
+    expect(parseChoices('graphite', 'navy-brass', 'site', 'grey')).toEqual({styleSet: 'graphite', palette: 'navy-brass', flow: 'site', background: 'site', layout: 'site', view: 'grey'})
     expect(parseChoices('site', 'site', 'site', 'design')).not.toBeNull()
     for (const flow of FLOWS) expect(parseChoices('site', 'site', flow.id, 'design')?.flow).toBe(flow.id)
     expect(parseChoices('nope', 'site', 'site', 'design')).toBeNull()
@@ -263,7 +263,7 @@ describe('the palette built from the firm’s own colors', () => {
   const brand = {darkGround: '#0c5c63', accent: '#e86a24', lightGround: '#f7f2e8', why: 'The firm’s own colors.'}
 
   it('is an address the preview reads', () => {
-    expect(parseChoices('graphite', 'brand', 'site', 'design')).toEqual({styleSet: 'graphite', palette: 'brand', flow: 'site', background: 'site', view: 'design'})
+    expect(parseChoices('graphite', 'brand', 'site', 'design')).toEqual({styleSet: 'graphite', palette: 'brand', flow: 'site', background: 'site', layout: 'site', view: 'design'})
   })
 
   it('writes its roles as a preset would, and names itself', () => {
@@ -335,11 +335,11 @@ describe('the background', () => {
   })
 
   it('the address is one run of segments: the last is the view, the rows fill from the left, a row it does not reach is as the site is', () => {
-    expect(parseAddress(['graphite', 'navy-brass', 'design'])).toEqual({styleSet: 'graphite', palette: 'navy-brass', flow: 'site', background: 'site', view: 'design'})
-    expect(parseAddress(['site', 'site', 'quiet.mostlyLight', 'grey'])).toEqual({styleSet: 'site', palette: 'site', flow: 'quiet.mostlyLight', background: 'site', view: 'grey'})
+    expect(parseAddress(['graphite', 'navy-brass', 'design'])).toEqual({styleSet: 'graphite', palette: 'navy-brass', flow: 'site', background: 'site', layout: 'site', view: 'design'})
+    expect(parseAddress(['site', 'site', 'quiet.mostlyLight', 'grey'])).toEqual({styleSet: 'site', palette: 'site', flow: 'quiet.mostlyLight', background: 'site', layout: 'site', view: 'grey'})
     expect(parseAddress(['site', 'site', 'quiet.mostlyLight', 'pattern.touch', 'design'])).toMatchObject({flow: 'quiet.mostlyLight', background: 'pattern.touch'})
     expect(parseAddress(['site', 'site', 'site', 'own', 'design'])).toMatchObject({background: 'own'})
-    for (const bad of [[], ['site', 'design'], ['site', 'site', 'site', 'nope', 'design'], ['site', 'site', 'site', 'plain', 'extra', 'design'], ['site', 'site', 'site', 'plain']]) expect(parseAddress(bad), bad.join('/')).toBeNull()
+    for (const bad of [[], ['site', 'design'], ['site', 'site', 'site', 'nope', 'design'], ['site', 'site', 'site', 'plain', 'extra', 'design'], ['site', 'site', 'site', 'plain'], ['site', 'site', 'site', 'plain', 'panels', 'extra', 'design']]) expect(parseAddress(bad), bad.join('/')).toBeNull()
     expect(parseAddress(null)).toBeNull()
   })
 
@@ -348,7 +348,7 @@ describe('the background', () => {
     expect(previewPath({styleSet: 'site', palette: 'site', flow: 'site', background: 'site', view: 'design'})).toBe('/site-preview/site/site/site/design')
     const chosen = {styleSet: 'dune', palette: 'navy-brass', flow: 'softWash.balanced', background: 'fade', view: 'design'} as const
     expect(previewPath(chosen)).toBe('/site-preview/dune/navy-brass/softWash.balanced/fade/design')
-    expect(parseAddress(previewPath(chosen).split('/').slice(2))).toEqual(chosen)
+    expect(parseAddress(previewPath(chosen).split('/').slice(2))).toEqual({...chosen, layout: 'site'})
   })
 
   it('a grant minted before the row reads as the site is', () => {
@@ -376,5 +376,60 @@ describe('the details (monorepo `[R-641]`, `lib/details.ts`)', () => {
         expect(plan.set, f).not.toHaveProperty(f)
       }
     }
+  })
+})
+
+// ─── The layout row (the Layout theme, monorepo WS-V1-LAYOUT-OPTIONS-DESIGN §1.4, ADV-LO amendment 13) ─────────────────
+describe('the layout', () => {
+  const plain: StoredDesign = {_id: 'designSettings', _rev: 'r1'}
+
+  it('is the fifth row, after the background: a roster id, the theme\u2019s own or as the site is; an address minted before it opens the same page', () => {
+    expect(parseAddress(['site', 'site', 'gradientBloom.mostlyDark', 'glow.corner', 'panels', 'design'])).toEqual(
+      {styleSet: 'site', palette: 'site', flow: 'gradientBloom.mostlyDark', background: 'glow.corner', layout: 'panels', view: 'design'})
+    expect(parseAddress(['site', 'site', 'site', 'site', 'own', 'grey'])).toMatchObject({background: 'site', layout: 'own'})
+    expect(parseAddress(['site', 'site', 'site', 'plain', 'design'])).toMatchObject({layout: 'site'})
+    for (const bad of [['site', 'site', 'site', 'site', 'floating', 'design'], ['site', 'site', 'site', 'site', 'edgeToEdge', 'design'], ['site', 'site', 'site', 'site', 'contained', 'x', 'design']]) {
+      expect(parseAddress(bad), bad.join('/')).toBeNull()
+    }
+  })
+
+  it('the path writes the background\u2019s slot out where only a layout is chosen, and round-trips', () => {
+    const onlyLayout = {styleSet: 'site', palette: 'navy-brass', flow: 'site', background: 'site', layout: 'panels', view: 'design'} as const
+    expect(previewPath(onlyLayout)).toBe('/site-preview/site/navy-brass/site/site/panels/design')
+    expect(parseAddress(previewPath(onlyLayout).split('/').slice(2))).toEqual(onlyLayout)
+    const both = {styleSet: 'graphite', palette: 'site', flow: 'typeOnBlack.allDark', background: 'fade', layout: 'contained', view: 'grey'} as const
+    expect(previewPath(both)).toBe('/site-preview/graphite/site/typeOnBlack.allDark/fade/contained/grey')
+    expect(parseAddress(previewPath(both).split('/').slice(2))).toEqual(both)
+    // No layout chosen: the address of the page before the row, unchanged.
+    expect(previewPath({styleSet: 'site', palette: 'site', flow: 'site', background: 'site', layout: 'site', view: 'design'})).toBe('/site-preview/site/site/site/design')
+    expect(previewPath({styleSet: 'site', palette: 'site', flow: 'site', background: 'fade', layout: 'site', view: 'design'})).toBe('/site-preview/site/site/site/fade/design')
+  })
+
+  it('a chosen layout sets the one field; the one stored is no change; the theme\u2019s own clears it; as the site is contributes nothing', () => {
+    expect(planPreview(plain, {styleSet: 'site', palette: 'site', flow: 'site', layout: 'panels'})).toMatchObject({set: {pageLayout: 'panels'}, unset: [], layoutInForce: 'panels'})
+    const stored: StoredDesign = {...plain, pageLayout: 'panels'}
+    expect(planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'site', layout: 'panels'})).toMatchObject({set: {}, unset: []})
+    expect(planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'site', layout: OWN_LAYOUT})).toMatchObject({set: {}, unset: ['pageLayout'], layout: OWN_LAYOUT, layoutInForce: null})
+    expect(planPreview(plain, {styleSet: 'site', palette: 'site', flow: 'site', layout: OWN_LAYOUT})).toMatchObject({set: {}, unset: []})
+    expect(planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'site', layout: AS_THE_SITE_IS})).toMatchObject({set: {}, unset: [], layout: null, layoutInForce: 'panels'})
+    expect(planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'site'}).wears.layout?.id).toBe('panels')
+  })
+
+  it('the page renders the chosen or stored theme under the chosen or stored background and layout, and the layout approves nothing', () => {
+    const stored: StoredDesign = {...plain, flow: 'quiet.mostlyLight', background: 'glow', pageLayout: 'contained'}
+    const plan = planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'gradientBloom.mostlyDark', background: 'glow.corner', layout: 'panels'})
+    expect(plan.shown.id).toBe('gradientBloom.mostlyDark')
+    expect(plan.shown.on.glowShape).toBe('corner')
+    expect(plan.shown.layout?.id).toBe('panels')
+    expect(Object.keys(plan.set).sort()).toEqual(['background', 'flow', 'pageLayout'])
+    expect(planPreview(stored, {styleSet: 'site', palette: 'site', flow: 'site'}).shown.layout?.id).toBe('contained')
+    // withPreview carries it to the page the layout and the shell read.
+    expect((withPreview({designTokens: {pageLayout: 'contained'}}, plan) as {designTokens: Record<string, unknown>}).designTokens.pageLayout).toBe('panels')
+  })
+
+  it('a grant minted before the row reads as the site is', () => {
+    expect(grantLayout(undefined)).toBe(AS_THE_SITE_IS)
+    expect(grantLayout(null)).toBe(AS_THE_SITE_IS)
+    expect(grantLayout('panels')).toBe('panels')
   })
 })

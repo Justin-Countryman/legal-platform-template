@@ -16,7 +16,8 @@ import {flowOf} from '@/lib/flows'
 // in a slot means "as the site is" and the view is `design` or `grey`. It is the live
 // site's own shell (`SiteShell`) and homepage (`HomeBody`) over a chrome carrying the
 // choice. The theme slot is Phase 17B session 3's (record §2.10) and the background's the Background theme's
-// (monorepo WS-V1-BACKGROUND-THEME-DESIGN §7 item 2): `/site-preview/<style set>/<palette>/<theme>/<background>/<view>`.
+// (monorepo WS-V1-BACKGROUND-THEME-DESIGN §7 item 2), and the layout's the Layout theme's (monorepo
+// WS-V1-LAYOUT-OPTIONS-DESIGN, ADV-LO amendment 13): `/site-preview/<style set>/<palette>/<theme>/<background>/<layout>/<view>`.
 // ONE CATCH-ALL SEGMENT, read by `parseAddress` (`lib/preview/plan.ts`): the last word is the view and the rows fill
 // from the left, so an address minted before a row existed still opens its page, with no redirect page to keep, and
 // the next layer appends a word.

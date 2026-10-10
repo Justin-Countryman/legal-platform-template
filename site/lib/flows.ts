@@ -3,6 +3,7 @@ import {DIVIDERS, type Divider, type CarryPiece, dividerShape, readCarry} from '
 import {readOverlap, type SectionOverlap} from './overlaps'
 import {parseHexInput, resolvePalette, saturatedGate, type ColorInputs} from './designTokens'
 import type {VisibleGround} from './sectionSurface'
+import type {Layout} from './layouts'
 
 // ─── Themes: the flow of the page (Phase 17B) ─────────────────────────────────
 //
@@ -67,8 +68,10 @@ export const DARK_RHYTHMS = ['alternate', 'pairs', 'runs', 'bookends', 'spread']
 // 2026-10-05 one word per ground, `paint`, held three layers' decisions. It is three fields now, one per layer:
 // which GROUND a band takes is this layer's, the Flow theme's (`ground`); what sits ON the ground is the Background
 // theme's (`on`, below); how the band SITS on the page, as a band or as a panel, is the Layout theme's (`sit`), which
-// this layer carries unchanged until that layer is built. No rule moved with the split: every roster theme renders
-// byte for byte what it rendered before, which the reproduction goldens and the metrics golden hold unregenerated.
+// this layer carries as the theme's OWN layout (`layoutOf`, `lib/layouts.ts`): a stored page layout replaces it whole,
+// as a stored background replaces `on` (monorepo WS-V1-LAYOUT-OPTIONS-DESIGN, ADV-LO amendment 2: an overlay, not a
+// move). No rule moved with the split: every roster theme renders byte for byte what it rendered before, which the
+// reproduction goldens and the metrics golden hold unregenerated.
 export const DARK_GROUNDS = ['plain', 'saturated'] as const
 export const DARK_SITS = ['band', 'floating'] as const
 export const LIGHT_GROUNDS = ['plain', 'washes'] as const
@@ -152,8 +155,8 @@ export type FlowRules = {
     /** The ground a dark band takes: the dark ground; or the accent fill where the palette and the band allow
      *  it, else the dark ground (`saturated`). */
     ground: (typeof DARK_GROUNDS)[number]
-    /** How a dark band sits (the Layout theme's, carried here until that layer is built): a full band; or the dark
-     *  ground as a panel on the page's light ground, a gutter around it (`floating`, Phase 17D). */
+    /** How a dark band sits (the theme's own layout, `layoutOf`; a stored page layout replaces it): a full band; or the
+     *  dark ground as a panel on the page's light ground, a gutter around it (`floating`, Phase 17D). */
     sit: (typeof DARK_SITS)[number]
     /** The closing call to action's ground; `wash` is Soft wash's ground. A photograph behind the close is the
      *  background's (`on.close`). */
@@ -166,8 +169,9 @@ export type FlowRules = {
     /** The ground a light band takes: one ground; or the light ground and the wash in turn, counted from the foot of
      *  each light stretch (`washes`, Phase 17D, `[R-551]`). */
     ground: (typeof LIGHT_GROUNDS)[number]
-    /** How a light band sits (the Layout theme's): a full band; inside a dark run, an inset panel that adopts the
-     *  run (`panel`); or, wherever it sits, a panel on the dark ground (`floating`). */
+    /** How a light band sits (the theme's own layout, `layoutOf`; a stored page layout replaces it): a full band;
+     *  inside a dark run, an inset panel that adopts the run (`panel`); or, wherever it sits, a panel on the dark ground
+     *  (`floating`). */
     sit: (typeof LIGHT_SITS)[number]
   }
   /** What sits on the grounds: the Background theme's (`lib/backgrounds.ts`). On a roster theme this is THE THEME'S
@@ -195,7 +199,8 @@ export type FlowRules = {
   hero: (typeof HERO_GROUNDS)[number]
   /** Placement as before: once, the first dark band, else the first eligible (`[R-492]`). */
   ghost: (typeof GHOSTS)[number]
-  /** Placement as before: once, nearest the middle, at a change of visible ground (`[R-499]`). */
+  /** Placement as before: once, nearest the middle, at a change of visible ground (`[R-499]`). The theme's own layout's
+   *  crossing (`layoutOf`); a stored page layout replaces it. */
   overlap: SectionOverlap
   /** What the canvas and the site must hold for the theme to look like itself. The switcher
    *  names an unmet need; the build's picker never picks a theme whose needs are unmet. */
@@ -204,6 +209,10 @@ export type FlowRules = {
    *  and the footer, site-wide, every page. A scheme stored on Header Settings or Footer
    *  Settings wins, per field (`chromeSchemes`, `[R-518]`). */
   chrome: {header: ChromeScheme; footer: ChromeScheme}
+  /** A stored page layout (`lib/layouts.ts`), set only by `effectiveFlow`: it replaces the theme's own layout (`dark.sit`,
+   *  `light.sit`, `overlap`, read together by `layoutOf`) whole. Absent on every roster theme, so a site storing none
+   *  renders the theme's own, byte for byte. */
+  layout?: Layout | null
 }
 
 /** What sits on the grounds under a theme: the Background theme's rules (monorepo WS-V1-BACKGROUND-THEME-DESIGN §2). */

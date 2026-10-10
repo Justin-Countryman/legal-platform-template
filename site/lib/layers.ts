@@ -7,9 +7,9 @@
 // claimed here, and a name here the schema no longer has fails it too.
 //
 // A field named under TWO layers is a split still owed, recorded so it is seen: `cardHover` and `elevationStyle` each
-// hold an Element theme's look and a Motion theme's movement in one value, and `flow`, the theme's id, still carries how
-// a band sits (`sit`, `lib/flows.ts`) until the Layout theme stores its own. What sits on the grounds is no longer among
-// them: the Background theme stores its own field, and a theme's own background is what an absent one renders.
+// hold an Element theme's look and a Motion theme's movement in one value. `flow` is no longer among them: how a band sits
+// is the Layout theme's own field (`pageLayout`, `lib/layouts.ts`), and the `sit` and `overlap` a theme carries are its
+// own layout, what an absent one renders, as its `on` is its own background (monorepo WS-V1-LAYOUT-OPTIONS-DESIGN).
 
 export const LAYERS = ['palette', 'element', 'flow', 'background', 'layout', 'motion'] as const
 export type Layer = (typeof LAYERS)[number]
@@ -37,14 +37,14 @@ export const DESIGN_SETTINGS_LAYER: Readonly<Record<string, Claim>> = {
   patternTexture: 'element',
   cardHover: ['element', 'motion'], elevationStyle: ['element', 'motion'],
   // Flow theme: where the color goes down the page.
-  flow: ['flow', 'layout'], internalHeroBackground: 'flow',
+  flow: 'flow', internalHeroBackground: 'flow',
   // The retired fields the compat bridge reads for one pin, each under the layer its rule went to.
   sectionJoin: 'flow', dividerCarry: 'flow', sectionOverlap: 'layout', patternGround: 'background', brandGhost: 'background', sectionGradient: 'background',
   // Background theme: what sits on the grounds, its photographs and their approval, the scrim's strength.
   background: 'background', themePhotos: 'background', flowPhoto: 'background', flowPhotos: 'background',
   siteHeroBackgroundImage: 'background', heroScrimOpacity: 'background',
-  // Layout theme: how things sit in and across the bands.
-  siteHeroForegroundImage: 'layout',
+  // Layout theme: how things sit in and across the bands, its one stored id first.
+  pageLayout: 'layout', siteHeroForegroundImage: 'layout',
   // Motion theme: how things move.
   motionTempo: 'motion', buttonAnimation: 'motion',
   // Not a layer.
