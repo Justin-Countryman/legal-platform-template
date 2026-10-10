@@ -92,8 +92,8 @@ describe.skipIf(!present)('scripts/ci photo canvases and stand-in photographs (s
 
   // Phase 17D session 2 (`[R-558]`): the cutout canvas, the adversarial record with a figure on a transparent ground in
   // every split band.
-  it('the cutout canvas: its splits carry the stand-in cutout, a transparent PNG at its real size', () => {
-    const file = 'record-adversarial-cutout.ndjson'
+  // The figure canvas (the Layout theme's figure out of a panel) is the cutout canvas as a design file stores it.
+  it.each(['record-adversarial-cutout.ndjson', 'record-figure-panel.ndjson'])('%s: its splits carry the stand-in cutout, a transparent PNG at its real size', (file) => {
     const docs = read(file)
     const asset = docs.find((d) => d._type === 'sanity.imageAsset')!
     expect(asset.url).toBe('/stand-ins/stand-in-bust.png')

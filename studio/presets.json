@@ -4562,7 +4562,7 @@
     {
       "id": "panels",
       "name": "Panels",
-      "sentence": "Dark sections of words keep their color and set them on a raised panel, never two panels in a row, lit in one corner where the colors have room; a photograph may rise across up to two section edges.",
+      "sentence": "Dark sections of words keep their color and set them on a raised panel, never two panels in a row, lit in one corner where the colors have room; a photograph, or a cut-out figure out of its panel, may rise across up to two section edges.",
       "rules": {
         "dark": {
           "sit": "onPanel"
@@ -4572,11 +4572,38 @@
         },
         "cross": {
           "kinds": [
-            "photo"
+            "photo",
+            "figure"
           ],
           "at": "middle",
           "max": 2
         }
+      }
+    },
+    {
+      "id": "panelsOnLight",
+      "name": "Panels on light",
+      "sentence": "Light sections of words sit on panels, the first on the dark color and only that one, the rest on the soft wash where the page has none of its own, never two panels in a row; a photograph, or a cut-out figure out of its panel, may rise across up to two section edges. Made to pair with a hero whose photograph runs to the page edge.",
+      "rules": {
+        "dark": {
+          "sit": "band"
+        },
+        "light": {
+          "sit": "onPanel"
+        },
+        "cross": {
+          "kinds": [
+            "photo",
+            "figure"
+          ],
+          "at": "middle",
+          "max": 2
+        }
+      },
+      "hero": {
+        "skeleton": "split",
+        "splitMedia": "image",
+        "splitImageStyle": "full"
       }
     }
   ],
@@ -4584,7 +4611,8 @@
     "quiet": "contained",
     "alternating": "contained",
     "typeOnBlack": "panels",
-    "gradientBloom": "panels"
+    "gradientBloom": "panels",
+    "editorial": "panelsOnLight"
   },
   "colorDetails": [
     "headingInk",

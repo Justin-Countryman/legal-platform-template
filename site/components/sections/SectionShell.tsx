@@ -70,6 +70,12 @@ const DIVIDER_OWN: Record<string, string> = {
   'bg-brand-dark': 'before:bg-brand-dark', 'bg-accent-fill': 'before:bg-accent-fill', 'bg-wash': 'before:bg-wash',
 }
 
+/** A layout panel's own fill: the lifted dark ground is the rule's (`[data-dark-panel="surface"]`); the light island, the
+ *  dark ground on a light band and the wash are the grounds' own utilities. */
+const PANEL_FILL: Record<'surface' | 'light' | 'ground' | 'wash', string> = {
+  surface: '', light: 'bg-background', ground: 'bg-brand-dark', wash: 'bg-wash',
+}
+
 const OVERLAP_CLASS: Record<'none' | 'small' | 'large' | 'photo', string> = {
   none:  '',
   small: 'md:-mt-12 md:relative md:z-10',
@@ -147,6 +153,13 @@ export function SectionShell({
     // the theme's room around a band it filled (Phase 17B session 5, `seam.paint.spacing`).
     : SECTION_SPACING[appearance?.spacing ?? seam.paint?.spacing ?? DEFAULT_SECTION_SPACING]
 
+  // The band's own top padding, published where something rises out of the band (`--band-pt`): a raised photo (Phase 16E),
+  // whose band never shares its ground with the band above, or a figure out of a panel (ADV-LO amendment 5), which may,
+  // and then cancels the halved padding the band draws there. One value, not two entries in the class list below, whose
+  // every optional entry a lint rule walks in combination (traps.md, the glow redo).
+  // The first band's figure stops inside its own band (`figure-inside`), under the hero, which reserves nothing.
+  const ptVar = seam.raisePhoto ? steps.ptVar : seam.raiseFigure ? `${seam.seamTop ? steps.ptSeamVar : steps.ptVar}${seam.raiseFigure === 'band' ? ' figure-inside' : ''}` : ''
+
   const overlap = overlapOf(appearance)
   // The three top-padding states are exclusive, most specific first. An
   // overlapping panel takes no top padding from `md`, because the negative margin
@@ -174,7 +187,10 @@ export function SectionShell({
   // band keeps its ground and everything drawn on it, and its words sit on a raised panel in the column. The light island
   // hands the band's content a light surface, so a button there takes the light context; the dark panel keeps the band's.
   const panel = appearance?.inset !== true && seam.paint?.inset !== true ? seam.paint?.onPanel ?? null : null
-  const inner = typeof children === 'function' ? children(panel?.fill === 'light' ? sectionSurface('light') : resolved) : children
+  // On a light band (Panels on light) the panel's own ground is the content's: the dark ground (its button a dark one) or
+  // the wash.
+  const panelSurface = panel?.fill === 'light' ? sectionSurface('light') : panel?.fill === 'ground' ? sectionSurface('dark') : panel?.fill === 'wash' ? sectionSurface('wash') : resolved
+  const inner = typeof children === 'function' ? children(panelSurface) : children
 
   // An inset band is a panel: the surface, the radius and `overflow-hidden` move
   // onto an inner element so the page ground runs past it, and the <section>
@@ -269,8 +285,8 @@ export function SectionShell({
         seam.divider?.flip && 'divider-flip',
         OVERLAP_CLASS[overlap],
         // Phase 16E: the band's own top padding, published so the raised photo's
-        // utility can cancel it. Only on a band that raises one.
-        seam.raisePhoto && steps.ptVar,
+        // utility can cancel it. Only on a band that raises one (or its figure, above).
+        ptVar,
         bottomBleed && seam.nextOverlap === 'none' && steps.pbVar,
         // An inset band's own box is transparent; the panel inside carries the
         // surface. A normal band carries it here.
@@ -349,10 +365,16 @@ export function SectionShell({
             // The panel's own fill: the dark ground lifted in its own hue and the light in one top corner, with the lit
             // band's text values (`globals.css`, `[data-dark-panel]`); or the light island, which resets the dark cascade.
             // Its padding publishes its own bottom padding, so a cut-out stands on the panel's bottom edge (`panel-pad`).
-            data-dark-panel={panel.fill}
+            // A panel whose band raises its cut-out figure lets it out above and keeps the clip sideways (`panel-clip`,
+            // ADV-LO amendment 5); nothing of the band's is inside a layout's panel to clip (its texture, ghost and
+            // photographs draw on the band, around it), so only the clip moves.
+            // Panels on light: the page's dark ground itself, which is its own dark cascade (`bg-brand-dark`), or the wash on
+            // the light band, which needs no reset (`data-wash-panel`). Both grounds every pair is already solved on.
+            data-dark-panel={panel.fill === 'wash' ? undefined : panel.fill}
+            data-wash-panel={panel.fill === 'wash' ? '' : undefined}
             data-panel-corner={panel.fill === 'surface' && panel.corner === 'left' ? 'left' : undefined}
-            data-ring-context={panel.fill === 'light' ? 'light' : undefined}
-            className={['relative mx-auto max-w-7xl overflow-hidden rounded-ui panel-pad', panel.fill === 'light' && 'bg-background', seam.divider?.mode === 'cut' && 'mt-divider'].filter(Boolean).join(' ')}
+            data-ring-context={panel.fill === 'light' ? 'light' : panel.fill === 'ground' ? 'dark' : undefined}
+            className={['relative mx-auto max-w-7xl', seam.raiseFigure ? 'panel-clip' : 'overflow-hidden', 'rounded-ui panel-pad', PANEL_FILL[panel.fill], seam.divider?.mode === 'cut' && 'mt-divider'].filter(Boolean).join(' ')}
           >
             <div data-band-content className={[contained ? 'container relative' : 'relative', innerClassName].filter(Boolean).join(' ')}>{inner}</div>
           </div>

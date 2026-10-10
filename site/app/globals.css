@@ -1428,6 +1428,34 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 @utility photo-rise {
   margin-top: calc(-1 * (var(--band-pt, 0px) + var(--band-divider, 0px) + var(--photo-rise)));
 }
+/* The top padding at a same-ground join (`seamTop`), published on a band whose cut-out figure rises out of its panel
+   (below): that band may share its ground with the band above, where a raised photograph never does. */
+@utility band-pt-seam-compact  { --band-pt: 1.5rem;  @variant md { --band-pt: 2rem; } }
+@utility band-pt-seam-normal   { --band-pt: 2rem;    @variant md { --band-pt: 3rem; } @variant lg { --band-pt: 3.5rem; } }
+@utility band-pt-seam-spacious { --band-pt: 3rem;    @variant md { --band-pt: 4rem; } @variant lg { --band-pt: 5rem; } }
+@utility band-pt-seam-tight    { --band-pt: 1.25rem; @variant md { --band-pt: 1.5rem; } }
+/* THE FIGURE OUT OF A PANEL (the Layout theme, monorepo WS-V1-LAYOUT-OPTIONS-DESIGN, ADV-LO amendment 5, `[R-655]`). As
+   Lewin and Calesaric draw it (measured live 2026-10-09 at 1440: the attorney stands on the panel's bottom edge and rises
+   125 to 143 px, and 72 px, past its top), a split's cut-out stands on its panel's bottom edge and rises past the panel's
+   top, through the band's own top padding and its divider, and across the seam by the raised photograph's depth, which
+   the band above reserves (`bottomBeforeOverlap.photo`), so it covers padding added for it and never a word; on the first
+   band, under the hero, which reserves nothing, it stops inside its own band (`figure-inside`). From `xl`
+   only, where the split sits side by side; on a phone it stands in its panel. The panel lets it out only above and below:
+   `panel-clip` clips sideways (a marquee, a long word) and nowhere else. An engine without `overflow: clip` keeps the
+   panel's old clip and the figure stays inside, standing on the edge, rather than losing its head to the clip. */
+@utility panel-clip {
+  overflow: hidden;
+  @supports (overflow: clip) { overflow-x: clip; overflow-y: visible; }
+}
+@utility figure-rise {
+  margin-bottom: calc(-1 * var(--band-pb, 0px));
+  @supports (overflow: clip) {
+    margin-top: calc(-1 * (var(--panel-pt, 0px) + var(--band-pt, 0px) + var(--band-divider, 0px) + var(--figure-cross, var(--photo-rise))));
+  }
+}
+/* The first band's figure, under the hero, which reserves nothing: it stops 2rem under its own band's top edge, where the
+   references' attorneys stop (Lewin 38 px, Calesaric 30 px), instead of crossing. */
+@utility figure-inside { --figure-cross: -2rem; }
 
 /* ─── The gradient on a dark band (Phase 16F) ────────────────────────────────── */
 /* The ground fades from the brand dark into the deep stop the engine derived for
@@ -1621,18 +1649,29 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 }
 @media (prefers-contrast: more) { [data-card-glow="on"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] { background-image: none; box-shadow: none; } }
 @media print { [data-card-glow="on"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] { background-image: none; box-shadow: none; } }
+/* The resting card edge over the glowing card's border (monorepo backlog 441, decided under `[R-503]`): the glow's real
+   border used to replace the edge on a dark band, so a page setting both drew an edge on its light cards and none on its
+   dark ones. The approved Figma design of 2026-10-08 drew both, the stripe on top, and so does the page: the edge the
+   setting names, in the decor color as the glowing card resolves it (the accent on dark, which every glowing card already
+   holds at 4.5:1 on its surface and its light), over the half-accent border on the other sides; the outline is the edge's
+   whole border at full strength. Decorative, as the edge is everywhere; forced colors draw both as the border. */
+[data-card-glow="on"][data-card-edge="left"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] { border-left: 4px solid --theme(--color-decor); }
+[data-card-glow="on"][data-card-edge="bottom"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] { border-bottom: 2px solid --theme(--color-decor); }
+[data-card-glow="on"][data-card-edge="outline"] main :is(.bg-brand-dark, [data-ring-context="dark"]) [data-card] { border-color: --theme(--color-decor); }
 
 /* ─── The Layout theme's panel (Panels; monorepo WS-V1-LAYOUT-OPTIONS-DESIGN, ADV-LO amendment 4, `[R-655]`) ───────── */
 /* A dark band of words keeps its ground and everything drawn on it (a glow, a faint photograph, the texture), and its words
    sit on a raised panel in the column, as Lewin's and Calesaric's panels sit on their dark runs (measured live at 1440: 1,236
    and 1,296 px wide, 20 px corners, the words about 72 px in; at 375 the 5% gutter, about 20 px in). The panel is as wide
    as the band's column up to 80rem, its corners the style set's (`rounded-ui`), its padding one gutter, not a second 5%.
-   It publishes its own bottom padding, so a cut-out standing on the band's edge stands on the panel's (`cutout-sink`). */
+   It publishes its own bottom padding, so a cut-out standing on the band's edge stands on the panel's (`cutout-sink`), and
+   its top padding, which a figure rising out of it cancels (`figure-rise`). */
 @utility panel-pad {
   padding: 2.5rem 1.25rem;
   --band-pb: 2.5rem;
-  @variant md { padding: 3.5rem 3rem; --band-pb: 3.5rem; }
-  @variant lg { padding: 4.5rem; --band-pb: 4.5rem; }
+  --panel-pt: 2.5rem;
+  @variant md { padding: 3.5rem 3rem; --band-pb: 3.5rem; --panel-pt: 3.5rem; }
+  @variant lg { padding: 4.5rem; --band-pb: 4.5rem; --panel-pt: 4.5rem; }
 }
 /* The dark ground lifted in its own hue (`--color-panel-surface`, `panelSurfaceOf`; never toward the accent) with the light
    in one top corner (`--color-panel-light`), the side turn and turn about down the page as Calesaric turns it; a real

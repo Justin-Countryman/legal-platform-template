@@ -2929,7 +2929,7 @@ export type DesignSettings = {
     | "fade"
     | "span"
     | "windows";
-  pageLayout?: "contained" | "panels";
+  pageLayout?: "contained" | "panels" | "panelsOnLight";
   headingEmphasisStyle?: "color" | "italic";
   headingRule?:
     | "none"
@@ -4375,7 +4375,7 @@ export type DESIGN_TOKENS_QUERY_RESULT = {
     | "span"
     | "windows"
     | null;
-  pageLayout: "contained" | "panels" | null;
+  pageLayout: "contained" | "panels" | "panelsOnLight" | null;
   patternGround: "dark" | "light" | null;
   headingEmphasisStyle: "color" | "italic" | null;
   headingRule:
@@ -20628,7 +20628,7 @@ export type SITE_CHROME_QUERY_RESULT = {
       | "span"
       | "windows"
       | null;
-    pageLayout: "contained" | "panels" | null;
+    pageLayout: "contained" | "panels" | "panelsOnLight" | null;
     patternGround: "dark" | "light" | null;
     headingEmphasisStyle: "color" | "italic" | null;
     headingRule:
@@ -21945,7 +21945,7 @@ export type PREVIEW_STORED_DESIGN_QUERY_RESULT = {
     | "plain"
     | "span"
     | "windows";
-  pageLayout?: "contained" | "panels";
+  pageLayout?: "contained" | "panels" | "panelsOnLight";
   headingEmphasisStyle?: "color" | "italic";
   headingRule?:
     | "broken"

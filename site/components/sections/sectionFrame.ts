@@ -127,8 +127,10 @@ export type Paint = {
   /** The band keeps its dark ground and everything drawn on it, and its words sit on a raised panel in the column (the
    *  Layout theme's Panels, `dark.sit: 'onPanel'`): the dark ground lifted in its own hue where the palette has room for the light,
    *  else the light island; the light in its top corner on the side given, turn and turn about down the page. The walk
-   *  reads the band as its own ground: the panel is a card on it, not a gutter around it. */
-  onPanel?: {fill: 'surface' | 'light'; corner: 'left' | 'right'}
+   *  reads the band as its own ground: the panel is a card on it, not a gutter around it. On a light band (Panels on light,
+   *  `light.sit: 'onPanel'`) the panel is the page's dark ground itself (`ground`, one a page) or the wash (`wash`), and the
+   *  band keeps its light ground. */
+  onPanel?: {fill: 'surface' | 'light' | 'ground' | 'wash'; corner: 'left' | 'right'}
 }
 
 /** A quadrant of the hero's photograph: `x` 0 is the left half, `y` 0 the top half. */
@@ -248,6 +250,12 @@ export type SeamProps = {
   /** This band raises its feature photo into the band above (Phase 16E). At most one
    *  band on a page does. */
   raisePhoto?: boolean
+  /** This band's cut-out figure stands on its panel's bottom edge and rises past the panel's top edge (the Layout theme's
+   *  figure out of a panel, ADV-LO amendment 5): across the seam into the band above by the raised photo's depth, which
+   *  the band above reserves (`seam`); or, on the first band, under the hero, which reserves nothing, through the band's
+   *  own top padding to 2rem under its top edge (`band`), where Lewin's and Calesaric's attorneys stop (38 and 30 px). From
+   *  `xl` only; one of the page's crossings (`MAX_CROSSINGS`). */
+  raiseFigure?: 'seam' | 'band'
   /** The ground an INSET band's own `<section>` paints (Phase 16F). Normally an inset
    *  band paints nothing and the page's light ground runs around its panel; where the
    *  band above and the band below both show one strong ground, the panel sits ON that
@@ -380,7 +388,7 @@ export function walkPage<M>(
   // the stored layout then applies to every band's visible ground, stored or painted, before adoption: a designed page
   // stores a surface on every band, which the ground pass never touches, so a layout read inside it would draw nothing.
   const filled = flow ? assignGrounds(survivors, pageLayout ? withoutOwnLayout(flow) : flow, site, {close, hero}) : survivors.map(() => null)
-  const paints = flow && pageLayout ? applyLayout(survivors, filled, pageLayout.rules, site) : filled
+  const paints = flow && pageLayout ? applyLayout(survivors, filled, pageLayout.rules, site, {hero: site?.heroPaint === 'wash' ? 'wash' : hero, close}) : filled
   const paintAt = new Map<number, Paint | null>()
   survivors.forEach((r, i) => paintAt.set(r.index, paints[i]))
   const isInset = (r: {appearance: SectionAppearance | null | undefined}, paint: Paint | null) =>
@@ -503,13 +511,29 @@ export function walkPage<M>(
   // the divider counts them.
   // Since the Layout theme the crossing is the layout's (`layoutRulesOf`): the theme's own `overlap`, else a stored page
   // layout's, which may allow none (Contained).
+  //
+  // THE FIGURE OUT OF A PANEL (ADV-LO amendment 5; Lewin and Calesaric, measured live 2026-10-09: the attorney stands on
+  // the panel's bottom edge and rises 72 to 143 px past its top, stopping 30 to 38 px under its band's top). Where the
+  // layout allows it, a band whose words sit on a layout's panel and whose split draws a cut-out figure is eligible too,
+  // whatever ground the band above shows: the figure breaks the panel, not a change of ground. From the second band on it
+  // crosses the seam, which the band above reserves as it does for a photograph; on the first band, under the hero, which
+  // reserves nothing, it rises inside its own band (`raiseFigure: 'band'`). It joins the photographs in one pick, nearest
+  // the middle, and counts against the same cap. A photograph still never rises out of a panel.
   const cross = flow ? layoutRulesOf(flow).cross : null
-  if (cross && cross.kinds.includes('photo') && cross.max > 0) {
+  const outOfPanels = !!cross && cross.kinds.includes('figure')
+  if (cross && (cross.kinds.includes('photo') || outOfPanels) && cross.max > 0) {
     const eligible: number[] = []
-    for (let i = 1; i < out.length; i++) {
+    const figureAt = new Set<number>()
+    for (let i = 0; i < out.length; i++) {
       const r = resolve(out[i].member)
-      // Nor a band whose words sit on a raised panel (the Layout theme's): the panel clips, as an inset's does; the figure
-      // out of a panel is a later slice (ADV-LO amendment 5).
+      if (outOfPanels && out[i].seam.paint?.onPanel && r.raisesPhoto && r.cutout && !isInset(r, out[i].seam.paint ?? null)) {
+        eligible.push(i)
+        figureAt.add(i)
+        continue
+      }
+      // A photograph never rises from the first band (nothing above it); nor from a band whose words sit on a raised panel
+      // (the Layout theme's): the panel clips its photograph, as an inset's does; only a cut-out figure leaves a panel (above).
+      if (i === 0 || !cross.kinds.includes('photo')) continue
       if (!r.raisesPhoto || isInset(r, out[i].seam.paint ?? null) || out[i].seam.paint?.onPanel) continue
       const g = groundAt.get(out[i].index) ?? visibleGround(r.appearance)
       const prev = groundAt.get(out[i - 1].index) ?? visibleGround(resolve(out[i - 1].member).appearance)
@@ -532,8 +556,9 @@ export function walkPage<M>(
       picks.push(i)
     }
     for (const pick of picks) {
-      out[pick].seam = {...out[pick].seam, raisePhoto: true}
-      out[pick - 1].seam = {...out[pick - 1].seam, nextOverlap: 'photo'}
+      // The first band's figure rises inside its own band, under the hero; every other crossing is reserved above.
+      out[pick].seam = {...out[pick].seam, ...(figureAt.has(pick) ? {raiseFigure: pick === 0 ? 'band' as const : 'seam' as const} : {raisePhoto: true})}
+      if (pick > 0) out[pick - 1].seam = {...out[pick - 1].seam, nextOverlap: 'photo'}
     }
   }
 
@@ -1087,12 +1112,14 @@ function bare(p: Paint | null): Paint {
 const LIGHTISH: readonly VisibleGround[] = ['light', 'tint', 'wash', 'muted']
 const STRONG: readonly VisibleGround[] = ['dark', 'saturated', 'image']
 
-/** Apply a stored page layout's words to every band's visible ground. Exported for the tests. */
+/** Apply a stored page layout's words to every band's visible ground. Exported for the tests. `ends` are the hero's and
+ *  the close's grounds where they show (the hero's own wash paint included), which the light-led layout reads for a wash. */
 export function applyLayout(
   survivors: readonly Survivor[],
   paints: readonly (Paint | null)[],
   rules: LayoutRules,
   site: Pick<SiteLook, 'panelRoom'> | null = null,
+  ends: {hero?: VisibleGround | null; close?: VisibleGround | null} = {},
 ): (Paint | null)[] {
   const n = survivors.length
   const ground = survivors.map((r, i) => paints[i]?.ground ?? visibleGround(r.appearance))
@@ -1101,6 +1128,30 @@ export function applyLayout(
   // eligible dark bands one after another, the first takes a panel, the next stays a full band, and so on (panel, band,
   // panel), as Lewin's and Calesaric's dark runs set them.
   let lastPanel = -2
+  // The light-led layout (Panels on light): its one dark panel is placed yet, and whether the page already wears the wash
+  // somewhere (the theme's own wash bands, a wash hero or a wash close), where no wash panel is drawn: a wash never
+  // touches a wash (`[R-603]`), and a second, panel-shaped wash on a page that alternates its own would blur both.
+  const washed = ground.includes('wash') || ends.hero === 'wash' || ends.close === 'wash'
+  // THE CUT-OUT FIRST (the lead's rule on PR #81): a prose-led band carrying a cut-out figure is preferred for the panel,
+  // so its figure can stand on one and rise out of it (P3), as the references' attorneys do. The bands that may take a
+  // layout's panel run in stretches of consecutive bands; in a stretch holding a cut-out the alternation counts from the
+  // first such band (the bands an even step from it take panels, the rest stay full), so never two panels in a row still
+  // holds; a stretch without one counts from its first band, as it always did. Panels on light's one dark panel goes to the
+  // first band carrying a cut-out, else to the first band that may take a panel, as before.
+  const mayTake = survivors.map((r, i) => !r.appearance?.inset && !!r.content && !!r.host && PANEL_HOSTS.includes(r.host) && (
+    (rules.dark.sit === 'onPanel' && ground[i] === 'dark') || (rules.light.sit === 'onPanel' && LIGHTISH.includes(ground[i]))))
+  const anchor: (number | null)[] = new Array(n).fill(null)
+  for (let i = 0; i < n;) {
+    if (!mayTake[i]) { i++; continue }
+    let j = i
+    while (j < n && mayTake[j]) j++
+    const first = survivors.slice(i, j).findIndex((r) => !!r.cutout)
+    for (let k = i; k < j; k++) anchor[k] = first >= 0 ? i + first : null
+    i = j
+  }
+  const lightTakers = rules.light.sit === 'onPanel' ? survivors.map((_, i) => i).filter((i) => mayTake[i] && LIGHTISH.includes(ground[i])) : []
+  const darkPanelAt = lightTakers.find((i) => !!survivors[i].cutout) ?? lightTakers[0] ?? -1
+  const onTurn = (i: number) => mayTake[i] && lastPanel !== i - 1 && (anchor[i] === null || (i - anchor[i]!) % 2 === 0)
   return survivors.map((r, i) => {
     const p = paints[i] ?? null
     if (r.appearance?.inset) return p
@@ -1112,13 +1163,28 @@ export function applyLayout(
       // only, never a grid of cards (testimonials, practice areas, attorneys, results) nor a ribbon or a stat row, which
       // stay full bands, as the references leave them. The band keeps its ground and what is drawn on it; the panel is
       // the card on top.
-      if (rules.dark.sit === 'onPanel' && r.content && r.host && PANEL_HOSTS.includes(r.host) && lastPanel !== i - 1) {
+      if (rules.dark.sit === 'onPanel' && onTurn(i)) {
         lastPanel = i
         return {...(p ?? {texture: false}), onPanel: {fill: site?.panelRoom ? 'surface' : 'light', corner: panels++ % 2 === 0 ? 'right' : 'left'}}
       }
       return p
     }
     if (LIGHTISH.includes(g)) {
+      // The light-led layout (Panels on light; BDG, Edwards, Garza): a prose-led light band, never a card grid, keeps its
+      // ground and sets its words on a panel, never two in a row. One on the page takes the dark ground itself, the one
+      // dark panel among the light bands (the first carrying a cut-out, else the first, above); the rest, on the page
+      // ground only, take the wash where the page wears none. Nothing the Background theme draws reaches a band whose words
+      // sit on a panel on a light ground (its texture, a faint photograph): it would draw in the gutter around it only.
+      if (rules.light.sit === 'onPanel' && onTurn(i)) {
+        if (i === darkPanelAt) {
+          lastPanel = i
+          return {...bare(p), onPanel: {fill: 'ground', corner: 'right'}}
+        }
+        if (g === 'light' && !washed) {
+          lastPanel = i
+          return {...bare(p), onPanel: {fill: 'wash', corner: 'right'}}
+        }
+      }
       // A full band; a panel on the dark ground wherever it sits; or, inside a strong run, an inset panel that adopts it.
       if (rules.light.sit === 'floating') return {...bare(p), inset: true, onGround: 'dark'}
       if (rules.light.sit === 'panel' && i > 0 && i < n - 1 && STRONG.includes(ground[i - 1]) && STRONG.includes(ground[i + 1])) {
