@@ -63,7 +63,8 @@ describe('the video poster', () => {
 
   it('takes the photo treatment on its photograph, under the play mark, and never the fade', () => {
     expect(CSS).toContain(`${GRAY} {\n  filter: grayscale(1);`)
-    expect(CSS).toMatch(/\[data-photo-color="tint"\] \[data-video-poster\]::after \{[^}]*background-color: var\(--color-accent\);[^}]*mix-blend-mode: color;[^}]*opacity: 0\.6;/)
+    // The accent as chosen, which no band re-points: a poster on a dark band tints as one on a light band (backlog 438).
+    expect(CSS).toMatch(/\[data-photo-color="tint"\] \[data-video-poster\]::after \{[^}]*background-color: var\(--color-accent-on-light\);[^}]*mix-blend-mode: color;[^}]*opacity: 0\.6;/)
     expect(CSS).not.toMatch(/data-photo-edge[^{]*data-video-poster/)
     const {getByRole} = render(<div data-photo-color="tint"><VideoEmbed video={{...base, thumbnail}} /></div>)
     expect(getByRole('link').querySelector('img')!.matches(GRAY)).toBe(true)

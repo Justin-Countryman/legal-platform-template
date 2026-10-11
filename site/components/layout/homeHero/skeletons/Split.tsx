@@ -14,7 +14,7 @@ import {MdPlayArrow} from 'react-icons/md'
 import {DialogPanel} from '@/components/ui/DialogPanel'
 import {HeroBackdrop} from '@/components/layout/HeroBackdrop'
 import {getEmbedUrl} from '@/lib/videoEmbed'
-import {HeroBand, HeroTextBlock, HERO_HEADER_CLEARANCE, heroHeadingText} from '../shared'
+import {HeroBand, HeroTextBlock, HERO_HEADER_CLEARANCE, heroHeadingText, heroPhotoMark} from '../shared'
 import type {HeroConfig, ResolvedHomeContent, SkeletonProps, SplitImageRatio} from '../types'
 import {heroObjectPosition, type ResolvedHeroSurface, type HeroImage} from '@/lib/heroSurface'
 
@@ -33,18 +33,19 @@ const RATIO_ASPECT: Record<Exclude<SplitImageRatio, 'auto'>, string> = {
 }
 
 // ─── Image media (Vista) — single panel image at the chosen ratio ─────────────
-function StaticImage({img, aspect}: {img: NonNullable<HeroImage>; aspect: string}) {
+function StaticImage({img, aspect, treated}: {img: NonNullable<HeroImage>; aspect: string; treated?: boolean}) {
   return (
-    <div className={`${PANEL_BASE} ${aspect}`}>
+    <div className={`${PANEL_BASE} ${aspect}`} {...heroPhotoMark(treated)}>
       <Image src={img.src} alt={img.alt ?? ''} fill priority sizes={MEDIA_SIZES} className="object-cover" style={{objectPosition: heroObjectPosition(img)}} />
     </div>
   )
 }
 
 // Natural ('auto' ratio): keeps the image's intrinsic aspect ratio (no crop).
-function NaturalImage({img}: {img: NonNullable<HeroImage>}) {
+// Marked for the photo treatment, it is positioned, so the tint's layer covers the photograph; unmarked, as before.
+function NaturalImage({img, treated}: {img: NonNullable<HeroImage>; treated?: boolean}) {
   return (
-    <div className="overflow-hidden rounded-ui shadow-elevation-md">
+    <div className={treated ? 'relative overflow-hidden rounded-ui shadow-elevation-md' : 'overflow-hidden rounded-ui shadow-elevation-md'} {...heroPhotoMark(treated)}>
       <Image
         src={img.src}
         alt={img.alt ?? ''}
@@ -58,25 +59,25 @@ function NaturalImage({img}: {img: NonNullable<HeroImage>}) {
   )
 }
 
-function ImageMedia({config, surface}: {config: HeroConfig; surface: ResolvedHeroSurface}) {
+function ImageMedia({config, surface, treated}: {config: HeroConfig; surface: ResolvedHeroSurface; treated?: boolean}) {
   const img = surface.bgImage
   if (!img?.src) return null
-  if (config.splitImageRatio === 'auto') return <NaturalImage img={img} />
-  return <StaticImage img={img} aspect={RATIO_ASPECT[config.splitImageRatio]} />
+  if (config.splitImageRatio === 'auto') return <NaturalImage img={img} treated={treated} />
+  return <StaticImage img={img} aspect={RATIO_ASPECT[config.splitImageRatio]} treated={treated} />
 }
 
 // ─── Overlap collage — layered 3-image cluster (portrait center, landscape
 // bottom-left, square top-right). Uses galleryImages (falls back to the single
 // background image for the centerpiece). ─────────────────────────────────────
-function CollageTile({img, className, sizes, priority}: {img: NonNullable<HeroImage>; className: string; sizes: string; priority?: boolean}) {
+function CollageTile({img, className, sizes, priority, treated}: {img: NonNullable<HeroImage>; className: string; sizes: string; priority?: boolean; treated?: boolean}) {
   return (
-    <div className={['relative overflow-hidden rounded-ui shadow-elevation-md', className].join(' ')}>
+    <div className={['relative overflow-hidden rounded-ui shadow-elevation-md', className].join(' ')} {...heroPhotoMark(treated)}>
       <Image src={img.src} alt={img.alt ?? ''} fill priority={priority} sizes={sizes} className="object-cover" style={{objectPosition: heroObjectPosition(img)}} />
     </div>
   )
 }
 
-function OverlapCollage({surface, content}: {surface: ResolvedHeroSurface; content: ResolvedHomeContent}) {
+function OverlapCollage({surface, content, treated}: {surface: ResolvedHeroSurface; content: ResolvedHomeContent; treated?: boolean}) {
   const imgs = content.galleryImages.filter((g) => g?.src)
   const center = imgs[0] ?? surface.bgImage
   const second = imgs[1]
@@ -86,15 +87,15 @@ function OverlapCollage({surface, content}: {surface: ResolvedHeroSurface; conte
     <div className="relative flex w-full py-8 lg:py-0">
       {second?.src && (
         <div className="absolute bottom-[10%] left-0 z-10 w-[45%]">
-          <CollageTile img={second} className="aspect-[3/2]" sizes="(min-width:1024px) 22vw, 45vw" />
+          <CollageTile img={second} className="aspect-[3/2]" sizes="(min-width:1024px) 22vw, 45vw" treated={treated} />
         </div>
       )}
       <div className="mx-[15%] w-full">
-        <CollageTile img={center} priority className="aspect-[2/3]" sizes="(min-width:1024px) 30vw, 70vw" />
+        <CollageTile img={center} priority className="aspect-[2/3]" sizes="(min-width:1024px) 30vw, 70vw" treated={treated} />
       </div>
       {third?.src && (
         <div className="absolute right-0 top-[10%] z-10 w-[40%]">
-          <CollageTile img={third} className="aspect-square" sizes="(min-width:1024px) 20vw, 40vw" />
+          <CollageTile img={third} className="aspect-square" sizes="(min-width:1024px) 20vw, 40vw" treated={treated} />
         </div>
       )}
     </div>
@@ -102,14 +103,15 @@ function OverlapCollage({surface, content}: {surface: ResolvedHeroSurface; conte
 }
 
 // ─── Video media (Reel) — poster + play affordance opening an embed dialog ─────
-// The poster follows the Ratio control (defaults to 16:9 to match the video).
-function VideoMedia({content, surface, aspect}: {content: ResolvedHomeContent; surface: ResolvedHeroSurface; aspect: string}) {
+// The poster follows the Ratio control (defaults to 16:9 to match the video). Marked for the photo treatment, the poster
+// sits in its own box under the play mark, so the tint never reaches the mark; unmarked, the markup is as before.
+function VideoMedia({content, surface, aspect, treated}: {content: ResolvedHomeContent; surface: ResolvedHeroSurface; aspect: string; treated?: boolean}) {
   const img = surface.bgImage
   const embedUrl = content.videoUrl ? getEmbedUrl(content.videoUrl) : null
 
   if (!img?.src) return null
 
-  const poster = (
+  const photo = (
     <Image
       src={img.src}
       alt={img.alt ?? ''}
@@ -120,6 +122,7 @@ function VideoMedia({content, surface, aspect}: {content: ResolvedHomeContent; s
       style={{objectPosition: heroObjectPosition(img)}}
     />
   )
+  const poster = treated ? <div className="absolute inset-0" {...heroPhotoMark(treated)}>{photo}</div> : photo
 
   // No playable URL → static poster alone.
   if (!embedUrl) {
@@ -154,7 +157,7 @@ function VideoMedia({content, surface, aspect}: {content: ResolvedHomeContent; s
   )
 }
 
-export function Split({config, content, surface, sectionBackground, edgeBelow, glow, texture}: SkeletonProps) {
+export function Split({config, content, surface, sectionBackground, edgeBelow, glow, texture, photoTreated}: SkeletonProps) {
   const fullViewport = config.heightMode === 'fullViewport'
   const mediaLeft = config.mediaSide === 'left'
   const isOverlap = config.textTreatment === 'overlap'
@@ -173,15 +176,15 @@ export function Split({config, content, surface, sectionBackground, edgeBelow, g
     case 'image':
       media =
         config.splitImageStyle === 'overlap' ? (
-          <OverlapCollage surface={surface} content={content} />
+          <OverlapCollage surface={surface} content={content} treated={photoTreated} />
         ) : (
-          <ImageMedia config={config} surface={surface} />
+          <ImageMedia config={config} surface={surface} treated={photoTreated} />
         )
       break
     case 'video': {
       // Poster follows the Ratio control; 'auto' maps to 16:9 (matches the video).
       const vAspect = config.splitImageRatio === 'auto' ? 'aspect-video' : RATIO_ASPECT[config.splitImageRatio]
-      media = <VideoMedia content={content} surface={surface} aspect={vAspect} />
+      media = <VideoMedia content={content} surface={surface} aspect={vAspect} treated={photoTreated} />
       break
     }
   }
@@ -217,7 +220,7 @@ export function Split({config, content, surface, sectionBackground, edgeBelow, g
     // stretches/clips and always overlaps).
     const cardImg = config.splitMedia === 'image' && surface.bgImage?.src ? surface.bgImage : null
     const imageEl = cardImg ? (
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-ui shadow-elevation-md lg:aspect-[3/2]">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-ui shadow-elevation-md lg:aspect-[3/2]" {...heroPhotoMark(photoTreated)}>
         <Image src={cardImg.src} alt={cardImg.alt ?? ''} fill priority sizes="(min-width:1024px) 60vw, 100vw" className="object-cover" style={{objectPosition: heroObjectPosition(cardImg)}} />
       </div>
     ) : (
@@ -278,7 +281,7 @@ export function Split({config, content, surface, sectionBackground, edgeBelow, g
             />
           </div>
           {/* Image fills its half to all edges — no padding above/below. */}
-          <div className={['relative min-h-[20rem] lg:min-h-0', mediaLeft ? 'lg:order-1' : ''].join(' ')}>
+          <div className={['relative min-h-[20rem] lg:min-h-0', mediaLeft ? 'lg:order-1' : ''].join(' ')} {...heroPhotoMark(photoTreated)}>
             <Image src={im.src} alt={im.alt ?? ''} fill priority sizes="(min-width:1024px) 50vw, 100vw" className="object-cover" style={{objectPosition: heroObjectPosition(im)}} />
           </div>
         </div>
