@@ -1,5 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "regions": ["iad1"],
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "routes": [
+    {"src": "^/(?:(?:.*/)?(?:wp-login\\.php|xmlrpc\\.php|wp-config\\.[^/]*|wp-admin(?:/.*)?|wp-includes(?:/.*)?|wp-content/(?:plugins|themes)(?:/.*)?|wp-content/uploads/.*\\.php[^/]*|\\.(?:env[^/]*|git|svn|hg|aws|ssh|DS_Store)(?:/.*)?)|phpmyadmin(?:/.*)?|pma(?:/.*)?|adminer[^/]*\\.php|cgi-bin(?:/.*)?|vendor/phpunit(?:/.*)?)/?$", "mitigate": {"action": "deny"}}
+  ]
 }

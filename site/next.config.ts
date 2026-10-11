@@ -7,6 +7,7 @@ import {
   loadRedirects,
   resolveRedirects,
 } from './lib/redirects'
+import {assertNoEdgeCollisions} from './lib/edgeBlock'
 import {loadRetired, retiredRewritesAtBuild} from './lib/retired'
 import {securityHeaders} from './lib/securityHeaders'
 
@@ -42,6 +43,8 @@ const CS_REDIRECTS_CSV = resolve(__dirname, '../CS/redirects.csv')
 export const CS_SITEMAP_CSV = resolve(__dirname, '../CS/CS-SITEMAP.csv')
 // Retired URLs answer 410 (monorepo [R-562]); `lib/retired.ts` says how.
 const CS_RETIRED_CSV = resolve(__dirname, '../CS/retired.csv')
+// Scanner addresses denied at the edge (monorepo [R-660]); `lib/edgeBlock.ts` says how.
+const VERCEL_JSON = resolve(__dirname, 'vercel.json')
 
 // NOTE: experimental.inlineCss was tested here (2026-06-23) to drop the one
 // render-blocking stylesheet. It cleared that diagnostic but REGRESSED prod LCP/score
@@ -97,7 +100,8 @@ const nextConfig: NextConfig = {
     ]
   },
   async redirects() {
-    const {rules, report} = resolveRedirects(loadRedirects(CS_REDIRECTS_CSV, CS_SITEMAP_CSV))
+    const rows = loadRedirects(CS_REDIRECTS_CSV, CS_SITEMAP_CSV)
+    const {rules, report} = resolveRedirects(rows)
     // Printed on EVERY build, not only when something is wrong: a guard that only
     // speaks on failure is indistinguishable from a guard that is not running.
     // The lines name every row that could not be served as it was written — a
@@ -107,6 +111,12 @@ const nextConfig: NextConfig = {
     // duplicated, flattened or looped — that is what tells the operator which
     // ones are safe to remove.
     assertRedirectCapNotExceeded(rules.length, 'CS/redirects.csv', loadRetired(CS_RETIRED_CSV).paths.length)
+    // The edge's deny routes run BEFORE this map, so none may match a row of it or of the retired list; a
+    // collision fails the build naming the row (`lib/edgeBlock.ts`).
+    assertNoEdgeCollisions(VERCEL_JSON, [
+      {label: 'CS/redirects.csv', paths: rows.map((r) => r.source)},
+      {label: 'CS/retired.csv', paths: loadRetired(CS_RETIRED_CSV).paths},
+    ])
     return rules
   },
   // Each retired URL rewrites to `/api/gone`, which answers 410. `afterFiles`:
