@@ -187,11 +187,30 @@ export function useHeaderFits(rowRef: React.RefObject<HTMLElement | null>): bool
 // can apply padding-top equal to the header height without any prop drilling.
 // When heroMerge is off the header is in normal flow, so the variable is set to 0
 // and internal banners add no extra padding (the sticky header already pushes content down).
+//
+// It also writes --sticky-header-h: the tallest the header has been while it is sticky or
+// fixed (0 in flow), which globals.css reserves as the page's scroll padding so keyboard
+// focus never lands under the header (monorepo backlog 331). The tallest, not the current:
+// a header that compacts on scroll grows again near the top, over what focus just reached.
 export function useHeaderHeight(
   ref: React.RefObject<HTMLElement | null>,
   heroMerge: boolean,
   scrolled: boolean,
 ) {
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    let tallest = 0
+    const update = () => {
+      const position = getComputedStyle(el).position
+      tallest = position === 'sticky' || position === 'fixed' ? Math.max(tallest, el.offsetHeight) : 0
+      document.documentElement.style.setProperty('--sticky-header-h', `${tallest}px`)
+    }
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [ref])
   useEffect(() => {
     const update = () => {
       const height = heroMerge && ref.current ? ref.current.offsetHeight : 0

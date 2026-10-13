@@ -96,14 +96,13 @@ export function AttorneySlider({
     <div className="relative" role="region" aria-roledescription="carousel" aria-label="Attorneys">
       {/* Shared carousel scroller (see carouselClasses): bleeds for shadow room
           AND scroll-padding-aligns the first card to the section content edge. */}
-      <ul ref={scroller} role="list" aria-label="Attorneys" className={CAROUSEL_SCROLLER}>
-        {attorneys.map((attorney, i) => (
+      {/* Plain list items (monorepo backlog 329): the list announces each card's position, and a slide role inside
+          a list breaks it (WCAG 1.3.1). The region above names the carousel, so the list carries no second label. */}
+      <ul ref={scroller} role="list" className={CAROUSEL_SCROLLER}>
+        {attorneys.map((attorney) => (
           <li
             key={attorney._id}
             data-slide
-            role="group"
-            aria-roledescription="slide"
-            aria-label={`${i + 1} of ${attorneys.length}`}
             className={`shrink-0 snap-start ${CAROUSEL_SLIDE_BASIS} lg:basis-[calc((100%-2rem)/3)]`}
           >
             <AttorneyCard attorney={attorney} cardStyle={cardStyle} />

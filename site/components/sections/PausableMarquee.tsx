@@ -34,7 +34,8 @@ export function PausableMarquee({label, children}: {label: string; children: Rea
           Pause
         </button>
       </div>
-      <div className="w-full overflow-hidden" aria-label={label}>
+      {/* A named group: a name on a role-less div is never announced (ARIA 1.2 prohibits naming it). */}
+      <div className="w-full overflow-hidden" role="group" aria-label={label}>
         <div
           data-testid="marquee-track"
           className={[
