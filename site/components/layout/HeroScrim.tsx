@@ -4,8 +4,9 @@
 // light tone logic can never drift between those call sites.
 //
 //   • style 'flat'     — even overlay at `opacity` (the legacy backdrop scrim).
-//   • style 'gradient' — full strength on the text side fading to ~25% toward the
-//                        photo; horizontal for left content, bottom-up for centered.
+//   • style 'gradient' — the stored strength on the text side, deepening from the
+//                        floor toward it; horizontal for left content, bottom-up for
+//                        centered. It never fades below the floor (monorepo backlog 321).
 //   • tone  'dark'     — brand-dark overlay → white text (photo / dark band).
 //   • tone  'light'    — page-background overlay → dark text (subtle light pattern).
 //
@@ -43,14 +44,20 @@ const TONE_BG: Record<HeroScrimTone, string> = {
 // the scrim is --color-scrim (the dark ground capped at L 0.20) at 80% or more
 // (Phase 14, WS-V1-PHASE14-DESIGN §7 amendment 21). So a dark scrim never renders
 // weaker than that; the operator's stored opacity is untouched and still deepens
-// it above 80. What this cannot guarantee, and the record names: the faded end of
-// a gradient scrim, a light-tone scrim, and a gradient in the action color.
+// it above 80.
 export const MIN_TEXT_SCRIM_OPACITY = 80
-// Editor-chosen gradient base color. 'action' is the color-system action token
-// (reliably emitted as a CSS var); 'black' is a palette-independent neutral darken.
-// 'auto' is handled separately (derived from the tone).
-const COLOR_BASE: Record<Exclude<HeroScrimColor, 'auto'>, string> = {
-  action: 'var(--color-action)',
+// On a light band the scrim is the page background, and the worst photo pixel is
+// black: every light text tier, the action text and the accent text reach 4.5:1
+// only at 97% (swept in colorGuarantee.test.ts), so a light band's image draws at
+// about the strength of the site's own light texture (monorepo backlog 321).
+export const MIN_LIGHT_SCRIM_OPACITY = 97
+// No point of a scrim is lighter than its tone's floor: a gradient deepens from the
+// floor toward the stored opacity, never fades below it, and the action color, a
+// brand color of any lightness, never sits under text (monorepo `[R-462]`, backlog 321).
+// Editor-chosen gradient base color. 'black' is a palette-independent neutral darken,
+// darker than the dark scrim at every opacity, so it holds wherever the scrim does.
+// 'auto' and a stored 'action' (retired, `[R-462]`) draw the tone's own color.
+const COLOR_BASE: Record<'black', string> = {
   black: '#000000',
 }
 const DIR_CSS: Record<Exclude<HeroScrimDirection, 'auto'>, string> = {
@@ -84,13 +91,14 @@ export function HeroScrim({
   color?: HeroScrimColor
   direction?: HeroScrimDirection
 }) {
-  const effective = tone === 'dark' ? Math.max(opacity, MIN_TEXT_SCRIM_OPACITY) : opacity
+  const floor = tone === 'dark' ? MIN_TEXT_SCRIM_OPACITY : MIN_LIGHT_SCRIM_OPACITY
+  const effective = Math.max(opacity, floor)
   if (style !== 'gradient') {
     return <div className={`absolute inset-0 ${TONE_BG[tone]}`} style={{opacity: effective / 100}} data-testid="hero-scrim" />
   }
-  const base = color !== 'auto' ? COLOR_BASE[color] : `var(${TONE_VAR[tone]})`
+  const base = color === 'black' && tone === 'dark' ? COLOR_BASE.black : `var(${TONE_VAR[tone]})`
   const strong = `color-mix(in srgb, ${base} ${effective}%, transparent)`
-  const weak = `color-mix(in srgb, ${base} ${Math.round(effective * 0.25)}%, transparent)`
+  const weak = `color-mix(in srgb, ${base} ${floor}%, transparent)`
   const dir = direction !== 'auto' ? DIR_CSS[direction] : align === 'center' ? 'to top' : textRight ? 'to left' : 'to right'
   return (
     <div

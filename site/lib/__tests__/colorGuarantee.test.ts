@@ -21,10 +21,11 @@
 // that is too slow for CI and is recorded in the design record, not repeated here.
 
 import {describe, expect, it} from 'vitest'
-import {converter, clampChroma, formatHex} from 'culori'
+import {converter, clampChroma, formatHex, wcagContrast} from 'culori'
 import {lightTextureCap, parseHexInput, resolvePalette, PANEL_LIFT, SECTION_TEXTURE_OPACITY, validateWcag, type ColorInputs, type PaletteOptions} from '../designTokens'
 import {PALETTE_PRESETS, presetInputs} from '../palettes'
 import before from './fixtures/color-tokens-before-phase14.json'
+import {MIN_LIGHT_SCRIM_OPACITY} from '../../components/layout/HeroScrim'
 import {nearBlack} from './sweeps'
 
 const toOklch = converter('oklch')
@@ -114,6 +115,41 @@ describe('color guarantee: every blocking pair passes for any operator input', (
     // Near-black grounds with saturated accents: 35 of 24,066 failed on the texture's blend before the
     // solve took it as a ground (ADV-17C3-PRB), and the uniform sweeps above never generate them.
     expectNone(nearBlack(5000, 17).flatMap((inputs, i) => failures(`near-black#${i}`, inputs)))
+  }, 120_000)
+
+  // Monorepo backlog 321 (`[R-462]`, `[R-466]`): on a light band, a background image sits under the page background at
+  // MIN_LIGHT_SCRIM_OPACITY (HeroScrim.tsx), and the worst photo pixel is black. Every light text tier, the accent text
+  // and the action text hold 4.5:1 over that blend, drawn one level darker than exact in every channel (the harshest
+  // engine the texture cap models), on every preset, each role alone over the grid, 5,000 seeded and the near-black set.
+  it('a light band\'s image under the scrim at its floor leaves every light text tier at 4.5:1 over a black pixel', () => {
+    // Text at 4.5:1; the focus ring at 3:1 (ADV-A11Y-C added the heading, the brand dark, the hover and the ring, and
+    // the heading in the button color, which needs exactly the floor on Black & Gold).
+    const pairs: [string, number][] = [
+      ['--color-foreground', 4.5], ['--color-foreground-muted', 4.5], ['--color-foreground-subtle', 4.5],
+      ['--color-heading', 4.5], ['--color-brand-dark', 4.5], ['--color-accent-text', 4.5],
+      ['--color-action-text', 4.5], ['--color-action-text-hover', 4.5], ['--color-ring-focus', 3],
+    ]
+    const rgb = converter('rgb')
+    const a = MIN_LIGHT_SCRIM_OPACITY / 100
+    const below = (label: string, inputs: ColorInputs, options: PaletteOptions = {}): string[] => {
+      const t = resolvePalette(inputs, options).tokens
+      const g = rgb(t['--color-background']) as unknown as {r: number; g: number; b: number}
+      const level = (v: number) => Math.max(0, Math.floor(Math.round(v * 255) * a) - 1) / 255
+      const ground = formatHex({mode: 'rgb', r: level(g.r), g: level(g.g), b: level(g.b)})
+      return pairs.filter(([tier, min]) => (wcagContrast(t[tier], ground) as number) < min)
+        .map(([tier]) => `${label} ${JSON.stringify(inputs)} ${JSON.stringify(options)}: ${tier} ${t[tier]} on ${ground}`)
+    }
+    const found: string[] = []
+    for (const options of [{}, ...DETAIL_VALUES, ...EVERY_DETAIL]) {
+      for (const p of PALETTE_PRESETS) found.push(...below(p.id, presetInputs(p), options))
+    }
+    for (const [context, base] of Object.entries(CONTEXTS)) {
+      for (const role of ROLES) for (const hex of grid()) found.push(...below(`${context}/${role}`, {...base, [role]: hex}))
+    }
+    found.push(...seeded(5000, 321).flatMap((inputs, i) => below(`sample#${i}`, inputs)))
+    found.push(...seeded(500, 3211).flatMap((inputs, i) => EVERY_DETAIL.flatMap((options) => below(`detail#${i}`, inputs, options))))
+    found.push(...nearBlack(2000, 321).flatMap((inputs, i) => below(`near-black#${i}`, inputs)))
+    expectNone(found)
   }, 120_000)
 
   it('the light texture never renders above the step an engine one level darker than Chromium draws within the swept blend', () => {
