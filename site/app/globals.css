@@ -801,6 +801,20 @@
    smooth scrolls (Back to Top button, attorney slider) call
    scrollTo({behavior: 'smooth'}) in JS, so they are unaffected. */
 
+/* Keyboard focus is never hidden under the sticky header (monorepo backlog 331; WCAG 2.4.11 and 2.4.12). A browser
+   scrolls a focused element just into view, and for one above the viewport that is the top edge, under the header:
+   the scroll padding reserves the header's tallest height, which the headers measure into --sticky-header-h (0 when
+   the header is in flow; headers/shared.tsx useHeaderHeight). The header's own links take the same margin back, or
+   the browser would scroll the page to bring a sticky link "below the padding", a jump of hundreds of pixels. Held by
+   scripts/ci/focus-walk.mjs. */
+html {
+  scroll-padding-top: calc(var(--sticky-header-h, 0px) + 0.5rem);
+}
+
+:where(header.sticky, header.fixed) * {
+  scroll-margin-top: calc(-1 * (var(--sticky-header-h, 0px) + 0.5rem));
+}
+
 body {
   font-family: var(--dynamic-font-body, system-ui), sans-serif;
   color: var(--color-foreground);
