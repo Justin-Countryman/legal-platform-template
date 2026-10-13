@@ -126,11 +126,11 @@ export const heroSettings = defineType({
       group: 'internal',
       fieldset: 'internalDefaults',
       description:
-        'Color of the gradient scrim. Auto follows the Background Scheme (brand color on dark heroes, page background on light). Action uses your CTA color; Black is a neutral darken.',
+        'Color of the gradient scrim. Auto follows the Background Scheme (brand color on dark heroes, page background on light). Black is a neutral darken on a dark hero; Action is retired and draws as Auto. A gradient never fades below the strength the text needs to stay readable.',
       options: {
         list: [
           {title: 'Auto — from scheme', value: 'auto'},
-          {title: 'Action (CTA color)', value: 'action'},
+          {title: 'Action (retired: draws as Auto)', value: 'action'},
           {title: 'Black (neutral darken)', value: 'black'},
         ],
         layout: 'radio',

@@ -119,7 +119,7 @@ export const internalHero = defineType({
         list: [
           {title: 'Inherit site default', value: 'inherit'},
           {title: 'Auto — from scheme', value: 'auto'},
-          {title: 'Action (CTA color)', value: 'action'},
+          {title: 'Action (retired: draws as Auto)', value: 'action'},
           {title: 'Black (neutral darken)', value: 'black'},
         ],
         layout: 'radio',
