@@ -75,15 +75,14 @@ export function SiloCarousel({
   return (
     <nav aria-label={ariaLabel} className={className}>
       <ul ref={scroller} role="list" className={CAROUSEL_SCROLLER}>
-        {items.map((item, i) => {
+        {items.map((item) => {
           const onImage = hasImage(item.image)
           return (
+            // A plain list item (monorepo backlog 329): the list already announces "1 of 3", and a slide role
+            // inside a list breaks it (WCAG 1.3.1). The scroller keeps its list role for Safari's list-style: none.
             <li
               key={item._key}
               data-slide
-              role="group"
-              aria-roledescription="slide"
-              aria-label={`${i + 1} of ${items.length}`}
               className={`shrink-0 snap-start ${CAROUSEL_SLIDE_BASIS}`}
             >
               <TileLink href={item.href ?? '#'} className={`${CARD} min-h-[15rem] ${fx.container}`}>

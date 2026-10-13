@@ -14,6 +14,7 @@ vi.mock('next/image', () => ({
 }))
 
 import {SiloCarousel} from '../SiloCarousel'
+import {axeViolations} from '@/lib/__tests__/axe'
 
 const ITEMS = [
   {_key: 'a', label: 'Family Law', href: '/family-law/', image: {asset: {_ref: 'image-test-200x200-jpg', _type: 'reference'}}, icon: {asset: {_ref: 'image-test-200x200-jpg', _type: 'reference'}}},
@@ -41,11 +42,19 @@ describe('SiloCarousel — mobile swipe carousel a11y + structure', () => {
     expect(ul.className).toContain('p-4')
   })
 
-  it('each item is a slide (role=group, "N of M") wrapping a whole-tile link', () => {
-    renderCarousel()
-    const slides = screen.getAllByRole('group', {name: /of 3$/})
+  // Backlog 329 (WCAG 1.3.1, level A): a slide was `<li role="group">` inside `<ul role="list">`, which axe reports as
+  // aria-required-children (critical) and a screen reader reads as a list with no items. A plain list item already
+  // carries its position ("1 of 3") natively, so the slide takes no role, no roledescription and no label.
+  it('each slide is a plain list item wrapping a whole-tile link, and the carousel passes axe', async () => {
+    const {container} = renderCarousel()
+    expect(await axeViolations(container)).toEqual([])
+    const slides = within(screen.getByRole('navigation', {name: 'Practice areas'})).getAllByRole('listitem')
     expect(slides).toHaveLength(3)
-    expect(slides[0].getAttribute('aria-label')).toBe('1 of 3')
+    for (const slide of slides) {
+      expect(slide.tagName).toBe('LI')
+      expect([slide.getAttribute('role'), slide.getAttribute('aria-roledescription'), slide.getAttribute('aria-label')])
+        .toEqual([null, null, null])
+    }
     const links = screen.getAllByRole('link')
     expect(links).toHaveLength(3)
     expect(links[0].getAttribute('href')).toBe('/family-law/')
