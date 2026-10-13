@@ -9,6 +9,7 @@ vi.mock('next/image', () => ({
 }))
 
 import {BadgesSectionBlock} from '../BadgesSectionBlock'
+import {axeViolations} from '@/lib/__tests__/axe'
 
 // ─── The scrolling layout honours its fields (Phase 16A) ──────────────────────
 // Found in the block catalog on 2026-09-18: the scrolling marquee painted its own
@@ -50,6 +51,15 @@ const many = [
 ]
 
 describe('BadgesSectionBlock, scrolling, WCAG 2.2.2', () => {
+  // ADV-A11Y-B (monorepo WS-V1-ACCESSIBILITY-DESIGN-2026-10-13.md §5.2 B7): the strip's name sat on a role-less
+  // div, which ARIA 1.2 prohibits naming, so it was never announced. The strip is a named group.
+  it('names the moving strip as a group, and the band passes axe', async () => {
+    const {container, getByRole} = render(<BadgesSectionBlock data={{layout: 'scrolling', heading: 'Awards', badges} as never} />)
+    expect(getByRole('group', {name: 'Awards and recognition badges'}).querySelector('[data-testid="marquee-track"]'))
+      .not.toBeNull()
+    expect(await axeViolations(container)).toEqual([])
+  })
+
   it('has a visible Pause control that pauses the row', () => {
     const {getByRole, getByTestId} = render(<BadgesSectionBlock data={{layout: 'scrolling', heading: 'Awards', badges: many} as never} />)
     const pause = getByRole('button', {name: 'Pause'})
