@@ -67,6 +67,8 @@ describe('the transparent header over a lit hero', () => {
     const header = decls(bodyOf(':root:has(.glow-light-hero) header.bg-transparent'))
     expect(Object.keys(lit).length).toBeGreaterThanOrEqual(13)
     expect(header).toEqual(lit)
+    // The same rule serves the header over a photo hero (monorepo backlog 321): the photo floor's values are the lit band's.
+    expect(CSS).toContain(':root:has([data-hero-image="true"]) header.bg-transparent,\n:root:has(.glow-light-hero) header.bg-transparent {')
   })
 
   it('every header draws its transparent state with the class the rule names', () => {
