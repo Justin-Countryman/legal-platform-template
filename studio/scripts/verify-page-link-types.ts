@@ -18,7 +18,7 @@
  * The route map below is the platform's, written down once: the catch-all
  * serves the content types by slug; the named directories serve the rest.
  * A type with a slug and no route (`blogTag`) stays OUT of the picker; a type
- * with no slug (`pressItem`, `caseResult`, `eventCategory`) cannot be in it.
+ * with no slug (`pressItem`, `eventCategory`) cannot be in it.
  *
  * Reads the picker's own exported list, so the assertion is against the
  * artifact the Studio ships. Exits non-zero on any failure.
@@ -60,6 +60,8 @@ const ROUTE_FOR: Record<string, string> = {
   testimonialsPage: 'testimonials',
   videoIndex: 'videos',
   homePage: '',
+  caseResultIndex: 'case-results',
+  caseResult: 'case-results/[slug]',
 }
 
 // Routed types the picker deliberately does not offer, with the reason.

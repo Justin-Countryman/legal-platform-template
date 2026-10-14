@@ -1,4 +1,5 @@
 import {groq} from 'next-sanity'
+import {CASE_RESULT_HAS_PAGE} from '../caseResultPage'
 
 // ─── Reusable Fragments ───────────────────────────────────────────────────────
 // Declared first — used by queries throughout this file.
@@ -193,11 +194,9 @@ const GATED_STREET_FRAGMENT = `
 // CaseResultsSection.tsx is the same test for data already fetched;
 // caseResults.test.ts holds the two equal.
 export const CASE_RESULT_SHOWN = `(count(string::split(coalesce(amount, ""), " ")[@ != ""]) > 0 || count(string::split(coalesce(caption, ""), " ")[@ != ""]) > 0)`
-// CASE_RESULT_HAS_PAGE: the result is a page. Its switch is on and its address
-// is `case-results/` and one name, the one segment `case-results/[slug]` takes,
-// so `case-results/a/b` is never listed and never linked (ADV-CR-C). The Studio's
-// link picker carries the same test (PageLinkInput.tsx; the test holds them equal).
-export const CASE_RESULT_HAS_PAGE = `(hasPage == true && string::startsWith(slug.current, "case-results/") && count(string::split(slug.current, "/")) == 2)`
+// CASE_RESULT_HAS_PAGE: the result is a page (`lib/caseResultPage.ts`, a module
+// of its own because the Studio's link picker reads the same string).
+export {CASE_RESULT_HAS_PAGE}
 // Newest year first, then the newest entered; a result with no year goes last
 // (`order(year desc)` puts a null first), as the build's composer reads it.
 const CASE_RESULT_ORDER = `order(coalesce(year, 0) desc, _createdAt desc)`
@@ -502,6 +501,12 @@ export const SITEMAP_QUERY = groq`{
   "videoIndex":       *[_type == "videoIndex"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
   "testimonials":     *[_type == "testimonialsPage"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
   "contact":          *[_type == "contactPage"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
+  // The Case Results page is served whenever a result has something to show,
+  // with or without its document (backlog 454); a result's own page is listed
+  // when it passes the page test.
+  "caseResultIndex":  *[_type == "caseResultIndex"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
+  "caseResultsShown": count(*[_type == "caseResult" && !(_id in path("drafts.**")) && ${CASE_RESULT_SHOWN}]) > 0,
+  "caseResults":      *[_type == "caseResult" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && ${CASE_RESULT_HAS_PAGE}]{"slug": slug.current, _updatedAt},
   "attorneys":        *[_type == "attorneyPage" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},
   "staff":            *[_type == "staffPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},
   "blogPosts":        *[_type == "blogPost"     && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},
@@ -1600,6 +1605,62 @@ export const EVENT_PAGE_QUERY = groq`
     },
     hideCtaForm,
     "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT}
+  }
+`
+
+// ─── The Case Results page, and a result's own page (backlog 454) ─────────────
+// `/case-results` lists every result that has something to show, newest first,
+// one list (Justin, 2026-10-14: "a case results index page which would just be a
+// big list of cards"); the page document is optional, and the route reads the
+// preset name when there is none. `/case-results/<name>` serves only a result
+// that passes the page test, so a result whose switch is off has no page.
+// The page's own fields are spread into the top level, as HOME_METADATA_QUERY
+// spreads the homepage's: a missing document spreads to nothing.
+export const CASE_RESULT_INDEX_QUERY = groq`{
+  ...(*[_type == "caseResultIndex"][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
+    seoTitle,
+    metaDescription,
+    ogTitle,
+    ogDescription,
+    noIndex,
+    noFollow,
+    canonicalUrl,
+    "hero": hero ${INTERNAL_HERO_FRAGMENT},
+    title,
+    navLabel,
+    hideCtaForm,
+    "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT}
+  }),
+  "results": *[_type == "caseResult" && !(_id in path("drafts.**")) && ${CASE_RESULT_SHOWN}] | ${CASE_RESULT_ORDER} ${CASE_RESULT_CARD_FRAGMENT},
+  "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer
+}`
+
+export const CASE_RESULT_SLUGS_QUERY = groq`
+  *[_type == "caseResult" && !(_id in path("drafts.**")) && ${CASE_RESULT_HAS_PAGE}].slug.current
+`
+
+export const CASE_RESULT_PAGE_QUERY = groq`
+  *[_type == "caseResult" && slug.current == $slug && ${CASE_RESULT_HAS_PAGE}][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
+    title,
+    navLabel,
+    "slug": slug.current,
+    seoTitle,
+    metaDescription,
+    ogTitle,
+    ogDescription,
+    noIndex,
+    noFollow,
+    canonicalUrl,
+    amount,
+    caseType,
+    caption,
+    year,
+    "areaOfLaw": areaOfLaw->{"label": ${NAV_LABEL_EXPR}, "slug": slug.current},
+    "practiceArea": practiceArea->{"label": ${NAV_LABEL_EXPR}, "slug": slug.current},
+    "body": body ${BLOCK_CONTENT_FRAGMENT},
+    "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer
   }
 `
 

@@ -45,6 +45,7 @@ export const SITE_ROUTES = [
   '/',
   '/attorneys',
   '/blog',
+  '/case-results',
   '/contact',
   '/design-studio',
   '/events',

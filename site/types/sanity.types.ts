@@ -3718,7 +3718,7 @@ export type REVIEW_SLUGS_QUERY_RESULT = Array<string | null>;
 
 // Source: ../site/lib/sanity/queries.ts
 // Variable: SITEMAP_QUERY
-// Query: {  "hideFromSearch": *[_type == "siteSettings"][0].hideFromSearch,  "home":             *[_type == "homePage"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "attorneyIndex":    *[_type == "attorneyIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "staffIndex":       *[_type == "staffIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "blogIndex":        *[_type == "blogIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "eventIndex":       *[_type == "eventIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "serviceAreaIndex": *[_type == "serviceAreaIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "videoIndex":       *[_type == "videoIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "testimonials":     *[_type == "testimonialsPage"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "contact":          *[_type == "contactPage"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "attorneys":        *[_type == "attorneyPage" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "staff":            *[_type == "staffPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "blogPosts":        *[_type == "blogPost"     && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "blogCategories":   *[_type == "blogCategory" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "events":           *[_type == "eventPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "catchAll":         *[    _type in ["practiceArea","locationPage","geoPracticeArea","generalPage","landingPage","aboutPage","faqPage","serviceAreaPage"]    && !(_id in path("drafts.**"))    && coalesce(noIndex, false) == false    && defined(slug.current)  ]{"slug": slug.current, _updatedAt}}
+// Query: {  "hideFromSearch": *[_type == "siteSettings"][0].hideFromSearch,  "home":             *[_type == "homePage"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "attorneyIndex":    *[_type == "attorneyIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "staffIndex":       *[_type == "staffIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "blogIndex":        *[_type == "blogIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "eventIndex":       *[_type == "eventIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "serviceAreaIndex": *[_type == "serviceAreaIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "videoIndex":       *[_type == "videoIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "testimonials":     *[_type == "testimonialsPage"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "contact":          *[_type == "contactPage"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  // The Case Results page is served whenever a result has something to show,  // with or without its document (backlog 454); a result's own page is listed  // when it passes the page test.  "caseResultIndex":  *[_type == "caseResultIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},  "caseResultsShown": count(*[_type == "caseResult" && !(_id in path("drafts.**")) && (count(string::split(coalesce(amount, ""), " ")[@ != ""]) > 0 || count(string::split(coalesce(caption, ""), " ")[@ != ""]) > 0)]) > 0,  "caseResults":      *[_type == "caseResult" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && (hasPage == true && string::startsWith(slug.current, "case-results/") && count(string::split(slug.current, "/")) == 2)]{"slug": slug.current, _updatedAt},  "attorneys":        *[_type == "attorneyPage" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "staff":            *[_type == "staffPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "blogPosts":        *[_type == "blogPost"     && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "blogCategories":   *[_type == "blogCategory" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "events":           *[_type == "eventPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},  "catchAll":         *[    _type in ["practiceArea","locationPage","geoPracticeArea","generalPage","landingPage","aboutPage","faqPage","serviceAreaPage"]    && !(_id in path("drafts.**"))    && coalesce(noIndex, false) == false    && defined(slug.current)  ]{"slug": slug.current, _updatedAt}}
 export type SITEMAP_QUERY_RESULT = {
   hideFromSearch: boolean | null;
   home: {
@@ -3757,6 +3757,15 @@ export type SITEMAP_QUERY_RESULT = {
     _updatedAt: string;
     noIndex: boolean | false;
   } | null;
+  caseResultIndex: {
+    _updatedAt: string;
+    noIndex: boolean | false;
+  } | null;
+  caseResultsShown: boolean;
+  caseResults: Array<{
+    slug: string | null;
+    _updatedAt: string;
+  }>;
   attorneys: Array<{
     slug: string | null;
     _updatedAt: string;
@@ -8251,6 +8260,231 @@ export type EVENT_PAGE_QUERY_RESULT = {
       variant: "link" | "primary" | "secondary" | null;
     }> | null;
   } | null;
+} | null;
+
+// Source: ../site/lib/sanity/queries.ts
+// Variable: CASE_RESULT_INDEX_QUERY
+// Query: {  ...(*[_type == "caseResultIndex"][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    seoTitle,    metaDescription,    ogTitle,    ogDescription,    noIndex,    noFollow,    canonicalUrl,    "hero": hero {  heading,    description,  "buttons": buttons[]{title, url, variant},  buttonsNone,  schemeOverride,  backgroundNone,  foregroundNone,  scrimOpacityOverride,  "backgroundImage": backgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  "foregroundImage": foregroundImage{    "src": asset->url,    "alt": alt,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  },  scrimStyleOverride,  scrimColorOverride,  scrimDirectionOverride,  sectionBackgroundNone,  "sectionBackgroundImage": sectionBackgroundImage{    "src": asset->url,    "alt": alt,    "fit": fit,    "hotspot": hotspot{x, y},    "width": asset->metadata.dimensions.width,    "height": asset->metadata.dimensions.height  }},    title,    navLabel,    hideCtaForm,    "ctaOverride": ctaFormOverride {  tagline,  heading,  description,  "buttons": buttons[]{title, url, variant}}  }),  "results": *[_type == "caseResult" && !(_id in path("drafts.**")) && (count(string::split(coalesce(amount, ""), " ")[@ != ""]) > 0 || count(string::split(coalesce(caption, ""), " ")[@ != ""]) > 0)] | order(coalesce(year, 0) desc, _createdAt desc) {  _id, amount, caseType, caption, year,  "areaOfLaw": areaOfLaw._ref,  "href": select((hasPage == true && string::startsWith(slug.current, "case-results/") && count(string::split(slug.current, "/")) == 2) => "/" + slug.current, null)},  "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer}
+export type CASE_RESULT_INDEX_QUERY_RESULT =
+  | {
+      ogImage: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        _type: "image";
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+      seoTitle: string | null;
+      metaDescription: string | null;
+      ogTitle: string | null;
+      ogDescription: string | null;
+      noIndex: boolean | null;
+      noFollow: boolean | null;
+      canonicalUrl: string | null;
+      hero: {
+        heading: string | null;
+        description: string | null;
+        buttons: Array<{
+          title: string | null;
+          url: string | null;
+          variant: "link" | "primary" | "secondary" | null;
+        }> | null;
+        buttonsNone: boolean | null;
+        schemeOverride: "dark" | "inherit" | "light" | null;
+        backgroundNone: boolean | null;
+        foregroundNone: boolean | null;
+        scrimOpacityOverride: number | null;
+        backgroundImage: {
+          src: string | null;
+          alt: string | null;
+          fit: "cover" | "tile" | null;
+          hotspot: {
+            x: number | null;
+            y: number | null;
+          } | null;
+          width: number | null;
+          height: number | null;
+        } | null;
+        foregroundImage: {
+          src: string | null;
+          alt: string | null;
+          hotspot: {
+            x: number | null;
+            y: number | null;
+          } | null;
+          width: number | null;
+          height: number | null;
+        } | null;
+        scrimStyleOverride: "flat" | "gradient" | "inherit" | null;
+        scrimColorOverride: "action" | "auto" | "black" | "inherit" | null;
+        scrimDirectionOverride:
+          | "auto"
+          | "inherit"
+          | "to-bottom-left"
+          | "to-bottom-right"
+          | "to-bottom"
+          | "to-left"
+          | "to-right"
+          | "to-top-left"
+          | "to-top-right"
+          | "to-top"
+          | null;
+        sectionBackgroundNone: boolean | null;
+        sectionBackgroundImage: {
+          src: string | null;
+          alt: string | null;
+          fit: "cover" | "tile" | null;
+          hotspot: {
+            x: number | null;
+            y: number | null;
+          } | null;
+          width: number | null;
+          height: number | null;
+        } | null;
+      } | null;
+      title: string | null;
+      navLabel: string | null;
+      hideCtaForm: boolean | null;
+      ctaOverride: {
+        tagline: string | null;
+        heading: string | null;
+        description: string | null;
+        buttons: Array<{
+          title: string | null;
+          url: string | null;
+          variant: "link" | "primary" | "secondary" | null;
+        }> | null;
+      } | null;
+      results: Array<{
+        _id: string;
+        amount: string | null;
+        caseType: string | null;
+        caption: string | null;
+        year: number | null;
+        areaOfLaw: string | null;
+        href: string | null;
+      }>;
+      resultsDisclaimer: string | null;
+    }
+  | {
+      results: Array<{
+        _id: string;
+        amount: string | null;
+        caseType: string | null;
+        caption: string | null;
+        year: number | null;
+        areaOfLaw: string | null;
+        href: string | null;
+      }>;
+      resultsDisclaimer: string | null;
+    };
+
+// Source: ../site/lib/sanity/queries.ts
+// Variable: CASE_RESULT_SLUGS_QUERY
+// Query: *[_type == "caseResult" && !(_id in path("drafts.**")) && (hasPage == true && string::startsWith(slug.current, "case-results/") && count(string::split(slug.current, "/")) == 2)].slug.current
+export type CASE_RESULT_SLUGS_QUERY_RESULT = Array<string | null>;
+
+// Source: ../site/lib/sanity/queries.ts
+// Variable: CASE_RESULT_PAGE_QUERY
+// Query: *[_type == "caseResult" && slug.current == $slug && (hasPage == true && string::startsWith(slug.current, "case-results/") && count(string::split(slug.current, "/")) == 2)][0]{    "ogImage": ogImageOverride {  ...,  "alt": coalesce(alt, ""),  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    title,    navLabel,    "slug": slug.current,    seoTitle,    metaDescription,    ogTitle,    ogDescription,    noIndex,    noFollow,    canonicalUrl,    amount,    caseType,    caption,    year,    "areaOfLaw": areaOfLaw->{"label": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current},    "practiceArea": practiceArea->{"label": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current},    "body": body []{  _type,  _key,  style,  markDefs,  children,  listItem,  level,  _type == "image" => {    ...,    "alt": coalesce(alt, ""),    caption,    "lqip": asset->metadata.lqip,    "dimensions": asset->metadata.dimensions  },  _type == "officeHours" => {    title  }},    "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer  }
+export type CASE_RESULT_PAGE_QUERY_RESULT = {
+  ogImage: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | "";
+    _type: "image";
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
+  title: string | null;
+  navLabel: string | null;
+  slug: string | null;
+  seoTitle: string | null;
+  metaDescription: string | null;
+  ogTitle: string | null;
+  ogDescription: string | null;
+  noIndex: boolean | null;
+  noFollow: boolean | null;
+  canonicalUrl: string | null;
+  amount: string | null;
+  caseType: string | null;
+  caption: string | null;
+  year: number | null;
+  areaOfLaw: {
+    label: string | null;
+    slug: string | null;
+  } | null;
+  practiceArea: {
+    label: string | null;
+    slug: string | null;
+  } | null;
+  body: Array<
+    | {
+        _type: "block";
+        _key: string;
+        style:
+          "blockquote" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal" | null;
+        markDefs: Array<
+          | {
+              tokenKey?: string;
+              _type: "contentToken";
+              _key: string;
+            }
+          | {
+              href?: string;
+              blank?: boolean;
+              _type: "link";
+              _key: string;
+            }
+        > | null;
+        children: Array<
+          | ({
+              _key: string;
+            } & ContentToken)
+          | {
+              marks?: Array<string>;
+              text?: string;
+              _type: "span";
+              _key: string;
+            }
+        > | null;
+        listItem: "bullet" | "number" | null;
+        level: number | null;
+      }
+    | {
+        _type: "image";
+        _key: string;
+        style: null;
+        markDefs: null;
+        children: null;
+        listItem: null;
+        level: null;
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string | "";
+        caption: string | null;
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      }
+    | {
+        _type: "officeHours";
+        _key: string;
+        style: null;
+        markDefs: null;
+        children: null;
+        listItem: null;
+        level: null;
+        title: string | null;
+      }
+  > | null;
+  resultsDisclaimer: string | null;
 } | null;
 
 // Source: ../site/lib/sanity/queries.ts
@@ -22283,7 +22517,7 @@ declare global {
     '\n  *[_type == "blogCategory" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)].slug.current\n': BLOG_CATEGORY_SLUGS_QUERY_RESULT;
     '\n  *[_type == "eventPage" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)].slug.current\n': EVENT_SLUGS_QUERY_RESULT;
     '\n  *[_type == "reviewPage" && !(_id in path("drafts.**")) && defined(slug.current)].slug.current\n': REVIEW_SLUGS_QUERY_RESULT;
-    '{\n  "hideFromSearch": *[_type == "siteSettings"][0].hideFromSearch,\n  "home":             *[_type == "homePage"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "attorneyIndex":    *[_type == "attorneyIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "staffIndex":       *[_type == "staffIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "blogIndex":        *[_type == "blogIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "eventIndex":       *[_type == "eventIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "serviceAreaIndex": *[_type == "serviceAreaIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "videoIndex":       *[_type == "videoIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "testimonials":     *[_type == "testimonialsPage"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "contact":          *[_type == "contactPage"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "attorneys":        *[_type == "attorneyPage" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},\n  "staff":            *[_type == "staffPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},\n  "blogPosts":        *[_type == "blogPost"     && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},\n  "blogCategories":   *[_type == "blogCategory" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},\n  "events":           *[_type == "eventPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},\n  "catchAll":         *[\n    _type in ["practiceArea","locationPage","geoPracticeArea","generalPage","landingPage","aboutPage","faqPage","serviceAreaPage"]\n    && !(_id in path("drafts.**"))\n    && coalesce(noIndex, false) == false\n    && defined(slug.current)\n  ]{"slug": slug.current, _updatedAt}\n}': SITEMAP_QUERY_RESULT;
+    '{\n  "hideFromSearch": *[_type == "siteSettings"][0].hideFromSearch,\n  "home":             *[_type == "homePage"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "attorneyIndex":    *[_type == "attorneyIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "staffIndex":       *[_type == "staffIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "blogIndex":        *[_type == "blogIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "eventIndex":       *[_type == "eventIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "serviceAreaIndex": *[_type == "serviceAreaIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "videoIndex":       *[_type == "videoIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "testimonials":     *[_type == "testimonialsPage"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "contact":          *[_type == "contactPage"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  // The Case Results page is served whenever a result has something to show,\n  // with or without its document (backlog 454); a result\'s own page is listed\n  // when it passes the page test.\n  "caseResultIndex":  *[_type == "caseResultIndex"][0]{_updatedAt, "noIndex": coalesce(noIndex, false)},\n  "caseResultsShown": count(*[_type == "caseResult" && !(_id in path("drafts.**")) && (count(string::split(coalesce(amount, ""), " ")[@ != ""]) > 0 || count(string::split(coalesce(caption, ""), " ")[@ != ""]) > 0)]) > 0,\n  "caseResults":      *[_type == "caseResult" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && (hasPage == true && string::startsWith(slug.current, "case-results/") && count(string::split(slug.current, "/")) == 2)]{"slug": slug.current, _updatedAt},\n  "attorneys":        *[_type == "attorneyPage" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},\n  "staff":            *[_type == "staffPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},\n  "blogPosts":        *[_type == "blogPost"     && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},\n  "blogCategories":   *[_type == "blogCategory" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},\n  "events":           *[_type == "eventPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},\n  "catchAll":         *[\n    _type in ["practiceArea","locationPage","geoPracticeArea","generalPage","landingPage","aboutPage","faqPage","serviceAreaPage"]\n    && !(_id in path("drafts.**"))\n    && coalesce(noIndex, false) == false\n    && defined(slug.current)\n  ]{"slug": slug.current, _updatedAt}\n}': SITEMAP_QUERY_RESULT;
     '{\n  "siteSettings": *[_type == "siteSettings"][0]{\n    firmName,\n    firmNameShort,\n    "phone": primaryLocation->officePhone,\n    "tollFreePhone": primaryLocation->tollFreePhone\n  },\n  "designSettings": *[_type == "designSettings"][0]{\n    "logoOnLight": logoOnLight{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      crop\n    },\n    "logoOnDark": logoOnDark{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      crop\n    },\n    "logoMarkOnLight": logoMarkOnLight{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      crop\n    },\n    "logoMarkOnDark": logoMarkOnDark{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      crop\n    }\n  },\n  "mainNavigation": *[_type == "mainNavigation"][0]{\n    headerLayout,\n    mobileLayout,\n    heroMerge,\n    sticky,\n    stickyHideSupplementary,\n    compactStyle,\n    defaultScheme,\n    scrolledScheme,\n    topBarDesktop,\n    topBarMobile,\n    topBarPinSide,\n    topBarLeft,\n    topBarRight,\n    topBarStyle,\n    headerPhone,\n    headerPhone2,\n    headerPhoneTagline,\n    headerCtaLabel,\n    headerCtaUrl,\n    headerCtaLabel2,\n    headerCtaUrl2,\n    "navItems": items[]{\n      _type,\n      label,\n      href,\n      displayMode,\n      "children": select(\n        _type == "navItemStandard" => children[]{label, href},\n        _type == "navItemAttorneys" => select(\n          count(attorneyOrder) > 0 => attorneyOrder[defined(@->_id)]->{\n            "_id": _id,\n            "label": coalesce(firstName, "") + " " + coalesce(lastName, ""),\n            "href": "/" + slug.current + "/"\n          },\n          *[_type == "attorneyPage"]{\n            "label": coalesce(firstName, "") + " " + coalesce(lastName, ""),\n            "href": "/" + slug.current + "/"\n          } | order(lastName asc, firstName asc)\n        ),\n        // The Zite-ranked order first, then every practice area it does not\n        // list, by label; children ride flat with parentRef and the header\n        // groups them. Until [R-201] an order hid every page it did not list.\n        // No backticks in this comment: it sits inside a groq template literal.\n        _type == "navItemPracticeAreas" => [\n          ...(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[defined(@->slug.current)][defined(@->_id)]->{\n  "_id": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  "parentRef": parentPage._ref\n}),\n          ...(*[_type == "practiceArea" && defined(slug.current) && !(_id in coalesce(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[]._ref, []))]{\n  "_id": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  "parentRef": parentPage._ref\n} | order(label asc))\n        ]\n      )\n    }\n  }\n}': HEADER_QUERY_RESULT;
     '{\n  "designSettings": *[_type == "designSettings"][0]{\n    "logoOnDark": logoOnDark{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      crop\n    },\n    "logoOnLight": logoOnLight{\n      "src": asset->url,\n      "alt": alt,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      crop\n    },\n    "showBackToTop": coalesce(showBackToTop, true)\n  },\n  "siteSettings": *[_type == "siteSettings"][0]{\n    firmName,\n    privacyPolicyUrl,\n    disclaimerUrl,\n    cookiesUrl,\n    "address": primaryLocation->{\n      \n  "address1": select(locationType in ["Physical", "Shared"] => address1, null),\n  "address2": select(locationType in ["Physical", "Shared"] => address2, null),\n  "address3": select(locationType in ["Physical", "Shared"] => address3, null),\n  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),\n\n      city,\n      state,\n      officePhone,\n      tollFreePhone,\n      emergency24_7,\n      emergencyPhone,\n      appointmentRequired,\n      hours\n    }\n  },\n  "footerSettings": *[_type == "footerSettings"][0]{\n    footerLayout,\n    footerScheme,\n    ctaText,\n    ctaUrl,\n    actionButton1Label,\n    actionButton1Url,\n    actionButton2Label,\n    actionButton2Url,\n    // Practice Areas column auto-lists top-level areas of law LIVE from the\n    // practiceArea docs \u2014 label = the nav-label expression, href = slug \u2014 so it\n    // stays in sync with the header nav and sidebar nav (single source of truth\n    // = the practiceArea document). The stored column1 field is ignored.\n    "column1": [\n      ...(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[defined(@->slug.current) && !defined(@->parentPage)][defined(@->_id)]->{\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/"\n}),\n      ...(*[_type == "practiceArea" && defined(slug.current) && !defined(parentPage) && !(_id in coalesce(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[]._ref, []))]{\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/"\n} | order(label asc))\n    ],\n    "column2": column2[]{label, href},\n    facebookUrl,\n    instagramUrl,\n    twitterUrl,\n    linkedInUrl,\n    youTubeUrl,\n    "formEmbed": form->formEmbed,\n  },\n  "locations": *[_type == "location" && locationStatus == "Active" && displayOnWebsite == true] | order(isPrimary desc, city asc) {\n    _id,\n    city,\n    \n  "address1": select(locationType in ["Physical", "Shared"] => address1, null),\n  "address2": select(locationType in ["Physical", "Shared"] => address2, null),\n  "address3": select(locationType in ["Physical", "Shared"] => address3, null),\n  "zip":      select(locationType in ["Physical", "Shared"] => zip, null),\n\n    state,\n    officePhone,\n    tollFreePhone,\n    emergency24_7,\n    emergencyPhone,\n    appointmentRequired,\n    hours,\n    "pageSlug": *[_type == "locationPage" && references(^._id)][0].slug.current\n  }\n}': FOOTER_QUERY_RESULT;
     'sidebar[]{\n  _type,\n  _key,\n  _type == "sidebarTableOfContents" => {\n    "_componentType": "sidebarTableOfContents"\n  },\n  _type == "reference" => @->{\n    "_componentType": _type,\n    name,\n    header,\n    description,\n    mode,\n    layout,\n    postCount,\n    "formEmbed": form->formEmbed,\n    tagline,\n    supportingText1,\n    supportingText2,\n    phoneNumber,\n    "button": button{title, url, variant},\n    "orderedAolIds": *[_type == "mainNavigation"][0]\n      .items[_type == "navItemPracticeAreas"][0]\n      .practiceAreaOrder[]._ref,\n    // The title key here holds the RENDERED nav label, not the stored Name. The\n    // key keeps its name so no consumer changes, and the value obeys NAME-1 and\n    // NAME-2. The order(title asc) clauses below sort the PROJECTED key, so the\n    // tree sorts by the same string it displays.\n    "areasOfLaw": *[\n      _type == "practiceArea" && !defined(parentPage) && defined(slug.current)\n    ]{\n      _id,\n      "slug": slug.current,\n      "title": coalesce(select(navLabel != "" => navLabel), title),\n      "children": *[\n        _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)\n      ]{\n        _id,\n        "slug": slug.current,\n        "title": coalesce(select(navLabel != "" => navLabel), title),\n        "grandchildren": *[\n          _type == "practiceArea" && parentPage._ref == ^._id && defined(slug.current)\n        ]{\n          "slug": slug.current,\n          "title": coalesce(select(navLabel != "" => navLabel), title),\n        } | order(title asc),\n      } | order(title asc),\n    },\n    "orderedAttorneyIds": select(\n      mode == \'practiceArea\' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,\n      null\n    ),\n    // Ruled 2026-08-07, Pass D.2. The attorney widget and the related-links\n    // widget are sidebar surfaces the 2026-08-07 nav ruling did not name; both\n    // now resolve the label in the projection, like the tree above. The title\n    // keys hold the RENDERED label and the consumer keys are unchanged.\n    "attorneys": select(\n      mode == \'all\' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}},\n      mode == \'practiceArea\' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}},\n      attorneys[defined(@->_id)]->{_id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}}\n    ),\n    "links": links[defined(@->_id)]->{\n      _id,\n      _type,\n      "slug": slug.current,\n      "title": coalesce(select(navLabel != "" => navLabel), title)\n    }\n  }\n}': SIDEBAR_FRAGMENT_RESULT;
@@ -22313,6 +22547,9 @@ declare global {
     '\n  *[_type == "eventIndex"][0]{\n    "ogImage": ogImageOverride {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    "slug": slug.current,\n    title,\n    navLabel,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    "hero": hero {\n  heading,\n  \n  description,\n  "buttons": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  "backgroundImage": backgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "foregroundImage": foregroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  }\n,\n  scrimStyleOverride,\n  scrimColorOverride,\n  scrimDirectionOverride,\n  sectionBackgroundNone,\n  "sectionBackgroundImage": sectionBackgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  }\n},\n    "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer,\n    "sections": sections [defined(@->_id)]->{\n  _id,\n  _type,\n  \n  name,\n  tagline,\n  heading,\n  intro,\n  description,\n  layout,\n  sectionLayout,\n  gridMode,\n  mobileDisplay,\n  cardStyle,\n  hoverEffects,\n  showArrow,\n  iconPosition,\n  mode,\n  reviewsEmbed,\n  footerHeading,\n  footerDescription,\n  // contentSection (Phase 11): its eyebrow is the shared tagline key above;\n  // the rest are its own. Flat, like every other key here: a nested select\n  // would type-check against the flat props while every key read undefined.\n  headingEmphasis,\n  itemsHeading,\n  mediaSide,\n  showPhone,\n  marquee,\n  imageTreatment,\n  textSize,\n  across,\n  cutoutEdge,\n  "headerLink": headerLink{label, url},\n  "body": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == "image" => {\n    ...,\n    "alt": coalesce(alt, ""),\n    caption,\n    "lqip": asset->metadata.lqip,\n    "dimensions": asset->metadata.dimensions\n  },\n  _type == "officeHours" => {\n    title\n  }\n},\n  "pullQuote": pullQuote{text, attribution},\n  "proof": proof{number, caption},\n  "media": media{\n    kind,\n    "image": image {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    "video": video->{_id, title, youTubeUrl, description, videoType, "thumbnail": thumbnail {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}}\n  },\n  // The appearance fieldset. EXPLICIT, not a splat, so every field the schema\n  // gains must be added HERE too or it never reaches the component. Phase 13\'s\n  // three frame fields were built, tested, merged and propagated before anyone\n  // noticed the query did not carry them: the unit tests pass props directly,\n  // the golden renders components directly, and the stub fixture sets none of\n  // them, so nothing in CI could see it. Only the live page did.\n  // sectionBody.test.ts now asserts the whole key set.\n  "appearance": {\n    "surface": surface,\n    "spacing": spacing,\n    "inset": inset,\n    "overlapPrevious": overlapPrevious,\n    "backgroundImage": sectionBackgroundImage {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n  },\n  // practiceAreaNav (silo nav): resolve each item\'s page reference to an href +\n  // auto-pulled title/description, with per-item overrides; or auto-list all\n  // top-level practice areas. href mirrors navItemPracticeAreas ("/" + slug + "/").\n  "items": select(\n    _type in ["practiceAreaNav", "practiceAreaNavInline"] && mode == "allTopLevel" => [\n      ...(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[defined(@->slug.current) && !defined(@->parentPage)][defined(@->_id)]->{\n  "_key": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  // Phase 18 session B (R-603): the card line first, else the meta description. A line counts only where it holds a\n  // word: in GROQ null != "" is true, so a bare comparison answers null for every area with no card line, and a line of\n  // spaces split on spaces has no word.\n  "description": select(count(string::split(coalesce(cardLine, ""), " ")[@ != ""]) > 0 => cardLine, metaDescription),\n  "icon": null,\n  "image": cardImage {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  "featured": false\n}),\n      ...(*[_type == "practiceArea" && defined(slug.current) && !defined(parentPage) && !(_id in coalesce(*[_type == "mainNavigation"][0].items[_type == "navItemPracticeAreas"][0].practiceAreaOrder[]._ref, []))]{\n  "_key": _id,\n  "label": coalesce(select(navLabel != "" => navLabel), title),\n  "href": "/" + slug.current + "/",\n  // Phase 18 session B (R-603): the card line first, else the meta description. A line counts only where it holds a\n  // word: in GROQ null != "" is true, so a bare comparison answers null for every area with no card line, and a line of\n  // spaces split on spaces has no word.\n  "description": select(count(string::split(coalesce(cardLine, ""), " ")[@ != ""]) > 0 => cardLine, metaDescription),\n  "icon": null,\n  "image": cardImage {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  "featured": false\n} | order(label asc))\n    ],\n    _type in ["practiceAreaNav", "practiceAreaNavInline"] =>\n      items[defined(page->slug.current)]{\n        _key,\n        "label": coalesce(label, coalesce(select(page->navLabel != "" => page->navLabel), page->title)),\n        "href": "/" + page->slug.current + "/",\n        // The item\'s own line, then the page\'s card line, then its meta description (Phase 18 session B), each guarded\n        // for null and empty: an emptied override used to print nothing.\n        "description": select(\n          count(string::split(coalesce(description, ""), " ")[@ != ""]) > 0 => description,\n          count(string::split(coalesce(page->cardLine, ""), " ")[@ != ""]) > 0 => page->cardLine,\n          page->metaDescription\n        ),\n        "icon": icon {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n        // The item\'s own photo, else the practice area\'s Card Photo (Phase 17D, R-556); select, not\n        // coalesce: an image object with no asset would win a coalesce and hide the page\'s photo.\n        "image": select(defined(image.asset) => image {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}, page->cardImage {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}),\n        "featured": featured\n      },\n    // contentSection\'s items: a title and a body (on a stat row, the number\n    // and its caption). Without this branch the select yields null.\n    _type in ["contentSection", "contentSectionInline"] => items[]{_key, title, body}\n  ),\n  "buttons": buttons[]{title, url, variant},\n  "footerButton": footerButton{title, url, variant},\n  "ctaButton": ctaButton{title, url, variant},\n  "image": image {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  "testimonials": testimonials[defined(@->_id)]->{\n  _id, quote, name, caseType, numberOfStars,\n  "avatar": avatar {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n},\n  "testimonial": testimonial->{\n  _id, quote, name, caseType, numberOfStars,\n  "avatar": avatar {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n},\n  "questions": questions[defined(@->_id)]->{\n    question,\n    "answer": answer []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == "image" => {\n    ...,\n    "alt": coalesce(alt, ""),\n    caption,\n    "lqip": asset->metadata.lqip,\n    "dimensions": asset->metadata.dimensions\n  },\n  _type == "officeHours" => {\n    title\n  }\n},\n    category,\n    "slug": slug.current,\n    tags\n  },\n  // The Featured Case Results section: what is featured, not a picked list\n  // (backlog 454). Inside select() so no other section carries the list.\n  "caseResults": select(\n    _type in ["caseResultsSection", "caseResultsSectionInline"] => *[\n    _type == "caseResult" && featured == true && !(_id in path("drafts.**")) && (count(string::split(coalesce(amount, ""), " ")[@ != ""]) > 0 || count(string::split(coalesce(caption, ""), " ")[@ != ""]) > 0)\n    && (!defined(^.areaOfLaw._ref) || areaOfLaw._ref == ^.areaOfLaw._ref)\n  ] | order(coalesce(year, 0) desc, _createdAt desc) {\n  _id, amount, caseType, caption, year,\n  "areaOfLaw": areaOfLaw._ref,\n  "href": select((hasPage == true && string::startsWith(slug.current, "case-results/") && count(string::split(slug.current, "/")) == 2) => "/" + slug.current, null)\n},\n    null\n  ),\n  // The section\'s own area of law, when it names one: the list above is already\n  // that area\'s, and a practice page\'s scope then leaves it alone.\n  "areaOfLaw": areaOfLaw._ref,\n  "badges": badges[defined(@->_id)]->{\n    "src": image.asset->url,\n    "alt": image.alt,\n    "width": image.asset->metadata.dimensions.width,\n    "height": image.asset->metadata.dimensions.height\n  },\n  "orderedAttorneyIds": select(\n    mode == \'practiceArea\' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,\n    null\n  ),\n  // The title key holds the RENDERED nav label, not the stored Name \u2014 same\n  // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,\n  // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the\n  // Nav Label. Three branches because the block has three modes.\n  "attorneys": select(\n    mode == \'all\' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{\n      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,\n      "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}, "photoOpaque": photo.asset->metadata.isOpaque\n    },\n    mode == \'practiceArea\' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{\n      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,\n      "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}, "photoOpaque": photo.asset->metadata.isOpaque\n    },\n    mode == \'manual\' => attorneys[defined(@->_id)]->{\n      _id, "title": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current, h1, jobTitle, "bio": metaDescription,\n      "photo": photo {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}, "photoOpaque": photo.asset->metadata.isOpaque\n    },\n    []\n  ),\n  "videos": videos[defined(@->_id)]->{\n    _id, title, youTubeUrl, description, videoType, "thumbnail": thumbnail {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n  }\n\n},\n    hideCtaForm,\n    "ctaOverride": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  "buttons": buttons[]{title, url, variant}\n}\n  }\n': EVENT_INDEX_PAGE_QUERY_RESULT;
     '\n  *[_type == "eventPage"] | order(eventDate asc) {\n    // Ruled 2026-08-07, Pass D.2: the event index card and the attorneys it\n    // lists are index-card and link-text surfaces, which NAME-1 gives the Nav\n    // Label. Both title keys hold the RENDERED label. The category key below\n    // is a bare string with no link target beside it, so it is outside this\n    // rule and outside the guard\'s derivation; the index route projects it and\n    // reads it nowhere today.\n    "title": coalesce(select(navLabel != "" => navLabel), title),\n    "slug": slug.current,\n    eventDate,\n    eventEndDate,\n    eventType,\n    "category": category->title,\n    locationType,\n    locationAddress,\n    registrationUrl,\n    registrationCta,\n    "formEmbed": registrationForm->formEmbed,\n    "attorneys": attorneys[defined(@->_id)]->{\n      _id,\n      "title": coalesce(select(navLabel != "" => navLabel), title),\n      "slug": slug.current\n    }\n  }\n': EVENT_INDEX_QUERY_RESULT;
     '\n  *[_type == "eventPage" && slug.current == $slug][0]{\n    "ogImage": ogImageOverride {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    title,\n    navLabel,\n    "slug": slug.current,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    eventDate,\n    eventEndDate,\n    eventType,\n    "category": category->title,\n    locationType,\n    locationAddress,\n    virtualLink,\n    registrationUrl,\n    registrationCta,\n    "formEmbed": registrationForm->formEmbed,\n    "body": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == "image" => {\n    ...,\n    "alt": coalesce(alt, ""),\n    caption,\n    "lqip": asset->metadata.lqip,\n    "dimensions": asset->metadata.dimensions\n  },\n  _type == "officeHours" => {\n    title\n  }\n},\n    // The same attorney list as EVENT_INDEX_QUERY, and the same 2026-08-07\n    // Pass D.2 ruling. One signature, two addresses; the guard counts a\n    // signature satisfied only when every occurrence resolves, so both move.\n    "attorneys": attorneys[defined(@->_id)]->{\n      _id,\n      "title": coalesce(select(navLabel != "" => navLabel), title),\n      "slug": slug.current\n    },\n    hideCtaForm,\n    "ctaOverride": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  "buttons": buttons[]{title, url, variant}\n}\n  }\n': EVENT_PAGE_QUERY_RESULT;
+    '{\n  ...(*[_type == "caseResultIndex"][0]{\n    "ogImage": ogImageOverride {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    "hero": hero {\n  heading,\n  \n  description,\n  "buttons": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  "backgroundImage": backgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "foregroundImage": foregroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  }\n,\n  scrimStyleOverride,\n  scrimColorOverride,\n  scrimDirectionOverride,\n  sectionBackgroundNone,\n  "sectionBackgroundImage": sectionBackgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  }\n},\n    title,\n    navLabel,\n    hideCtaForm,\n    "ctaOverride": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  "buttons": buttons[]{title, url, variant}\n}\n  }),\n  "results": *[_type == "caseResult" && !(_id in path("drafts.**")) && (count(string::split(coalesce(amount, ""), " ")[@ != ""]) > 0 || count(string::split(coalesce(caption, ""), " ")[@ != ""]) > 0)] | order(coalesce(year, 0) desc, _createdAt desc) {\n  _id, amount, caseType, caption, year,\n  "areaOfLaw": areaOfLaw._ref,\n  "href": select((hasPage == true && string::startsWith(slug.current, "case-results/") && count(string::split(slug.current, "/")) == 2) => "/" + slug.current, null)\n},\n  "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer\n}': CASE_RESULT_INDEX_QUERY_RESULT;
+    '\n  *[_type == "caseResult" && !(_id in path("drafts.**")) && (hasPage == true && string::startsWith(slug.current, "case-results/") && count(string::split(slug.current, "/")) == 2)].slug.current\n': CASE_RESULT_SLUGS_QUERY_RESULT;
+    '\n  *[_type == "caseResult" && slug.current == $slug && (hasPage == true && string::startsWith(slug.current, "case-results/") && count(string::split(slug.current, "/")) == 2)][0]{\n    "ogImage": ogImageOverride {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    title,\n    navLabel,\n    "slug": slug.current,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    amount,\n    caseType,\n    caption,\n    year,\n    "areaOfLaw": areaOfLaw->{"label": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current},\n    "practiceArea": practiceArea->{"label": coalesce(select(navLabel != "" => navLabel), title), "slug": slug.current},\n    "body": body []{\n  _type,\n  _key,\n  style,\n  markDefs,\n  children,\n  listItem,\n  level,\n  _type == "image" => {\n    ...,\n    "alt": coalesce(alt, ""),\n    caption,\n    "lqip": asset->metadata.lqip,\n    "dimensions": asset->metadata.dimensions\n  },\n  _type == "officeHours" => {\n    title\n  }\n},\n    "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer\n  }\n': CASE_RESULT_PAGE_QUERY_RESULT;
     '\n  *[_type == "blogIndex"][0]{\n    "ogImage": ogImageOverride {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    "slug": slug.current,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    "hero": hero {\n      "heading": coalesce(heading, ^.title),\n      \n  description,\n  "buttons": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  "backgroundImage": backgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "foregroundImage": foregroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  }\n\n    },\n    title,\n    navLabel,\n    hideCtaForm,\n    "ctaOverride": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  "buttons": buttons[]{title, url, variant}\n}\n  }\n': BLOG_INDEX_PAGE_QUERY_RESULT;
     '{\n  "id": _id,\n  title,\n  youTubeUrl,\n  description,\n  videoType,\n  duration,\n  "thumbnail": thumbnail {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n}': VIDEO_CARD_FRAGMENT_RESULT;
     '\n  *[_type == "videoIndex"][0]{\n    "ogImage": ogImageOverride {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    "slug": slug.current,\n    seoTitle,\n    metaDescription,\n    ogTitle,\n    ogDescription,\n    noIndex,\n    noFollow,\n    canonicalUrl,\n    "hero": hero {\n      "heading": coalesce(heading, ^.title),\n      \n  description,\n  "buttons": buttons[]{title, url, variant},\n  buttonsNone,\n  schemeOverride,\n  backgroundNone,\n  foregroundNone,\n  scrimOpacityOverride,\n  "backgroundImage": backgroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "fit": fit,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  },\n  "foregroundImage": foregroundImage{\n    "src": asset->url,\n    "alt": alt,\n    "hotspot": hotspot{x, y},\n    "width": asset->metadata.dimensions.width,\n    "height": asset->metadata.dimensions.height\n  }\n\n    },\n    title,\n    navLabel,\n    tagline,\n    heading,\n    description,\n    "featuredVideo": featuredVideo->{\n  "id": _id,\n  title,\n  youTubeUrl,\n  description,\n  videoType,\n  duration,\n  "thumbnail": thumbnail {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n},\n    "videos": videos[defined(@->_id)]->{\n  "id": _id,\n  title,\n  youTubeUrl,\n  description,\n  videoType,\n  duration,\n  "thumbnail": thumbnail {\n  ...,\n  "alt": coalesce(alt, ""),\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n}\n},\n    hideCtaForm,\n    "ctaOverride": ctaFormOverride {\n  tagline,\n  heading,\n  description,\n  "buttons": buttons[]{title, url, variant}\n}\n  }\n': VIDEO_INDEX_PAGE_QUERY_RESULT;

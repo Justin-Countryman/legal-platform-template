@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react'
 import {set, type StringInputProps, useClient} from 'sanity'
+import {CASE_RESULT_HAS_PAGE} from '../../site/lib/caseResultPage'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -35,16 +36,22 @@ const GROUP_LABELS: Record<string, string> = {
   blogPost: 'Blog Posts',
   blogCategory: 'Blog Categories',
   reviewPage: 'Review Pages',
+  caseResultIndex: 'Case Results',
+  caseResult: 'Case Result Pages',
 }
 
 // The types the picker offers. Exported so `scripts/verify-page-link-types.ts`
 // can assert each one has a `slug` in the extract and a route in the site.
 // Every slug is a whole path (`staff/jane-doe`, `blog/foo`,
 // `blog/category/bar`), so the href below needs no prefixing. `blogTag` and
-// `eventCategory` carry a slug and have no route; `pressItem`, `caseResult`
-// and `eventCategory` have no slug; none of them belongs here. Staff, posts
+// `eventCategory` carry a slug and have no route; `pressItem` and
+// `eventCategory` have no slug; none of them belongs here. Staff, posts
 // and categories joined 2026-09-11 (monorepo WS-V1-PHASE5-DESIGN §4, §9 item
-// 29: "the picker cannot pick staff, blog posts or categories").
+// 29: "the picker cannot pick staff, blog posts or categories"). The Case
+// Results page and each result with a page of its own joined 2026-10-14
+// (monorepo backlog 454: "The case results page would be in the navigation
+// somewhere"); a result is offered only when the site serves it, by the site's
+// own page test, CASE_RESULT_HAS_PAGE.
 export const PAGE_LINK_TYPES = [
   'practiceArea', 'geoPracticeArea', 'locationPage',
   'serviceAreaIndex', 'serviceAreaPage',
@@ -52,7 +59,7 @@ export const PAGE_LINK_TYPES = [
   'generalPage', 'landingPage', 'blogIndex', 'blogPost', 'blogCategory',
   'eventIndex', 'eventPage',
   'attorneyPage', 'attorneyIndex', 'staffIndex', 'staffPage',
-  'reviewPage',
+  'reviewPage', 'caseResultIndex', 'caseResult',
 ] as const
 
 // ─── Hierarchy Builder ────────────────────────────────────────────────────────
@@ -93,7 +100,8 @@ export function PageLinkInput(props: StringInputProps) {
         `*[
           defined(slug.current) &&
           !(_id in path("drafts.**")) &&
-          _type in $types
+          _type in $types &&
+          (_type != "caseResult" || ${CASE_RESULT_HAS_PAGE})
         ]{
           _type,
           "slug": slug.current,
@@ -101,6 +109,7 @@ export function PageLinkInput(props: StringInputProps) {
           "label": select(
             _type in ["attorneyPage", "staffPage"] => coalesce(firstName, "") + " " + coalesce(lastName, ""),
             _type == "eventPage" => coalesce(title, "Untitled Event"),
+            _type == "caseResult" => coalesce(navLabel, title, amount, "Untitled Case Result"),
             coalesce(
               title,
               select(
@@ -109,7 +118,8 @@ export function PageLinkInput(props: StringInputProps) {
                 _type == "attorneyIndex" => "Our Attorneys",
                 _type == "staffIndex" => "Our Staff",
                 _type == "aboutPage" => "About Us",
-                _type == "contactPage" => "Contact"
+                _type == "contactPage" => "Contact",
+                _type == "caseResultIndex" => "Case Results"
               ),
               hero.heading,
               "Untitled"
