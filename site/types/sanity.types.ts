@@ -1395,6 +1395,35 @@ export type PressItem = {
   };
 };
 
+export type CaseResultIndex = {
+  _id: string;
+  _type: "caseResultIndex";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  navLabel?: string;
+  seoTitle?: string;
+  metaDescription?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImageOverride?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  noIndex?: boolean;
+  noFollow?: boolean;
+  canonicalUrl?: string;
+  hero?: InternalHero;
+  hideCtaForm?: boolean;
+  ctaFormOverride?: CtaFormSection;
+};
+
 export type CaseResult = {
   _id: string;
   _type: "caseResult";
@@ -1405,7 +1434,29 @@ export type CaseResult = {
   caseType?: string;
   caption?: string;
   year?: number;
+  areaOfLaw?: PracticeAreaReference;
   practiceArea?: PracticeAreaReference;
+  featured?: boolean;
+  hasPage?: boolean;
+  title?: string;
+  slug?: Slug;
+  navLabel?: string;
+  body?: BlockContent;
+  seoTitle?: string;
+  metaDescription?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImageOverride?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  noIndex?: boolean;
+  noFollow?: boolean;
+  canonicalUrl?: string;
 };
 
 export type FaqItem = {
@@ -3470,6 +3521,7 @@ export type AllSanitySchemaTypes =
   | TestimonialsGrid
   | Badge
   | PressItem
+  | CaseResultIndex
   | CaseResult
   | FaqItem
   | TestimonialsPage

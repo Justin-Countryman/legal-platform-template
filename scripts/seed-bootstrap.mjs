@@ -136,8 +136,11 @@ const sampleCaseResult = {
   caseType: 'Sample Matter',
   caption:
     'Placeholder case result shipped with the Legal Platform Template. Replace with the firm’s real, verifiable outcomes in Sanity Studio.',
-  year: '2024',
-  practiceArea: {_type: 'reference', _ref: 'sample-practice-area'},
+  year: 2024,
+  // The area of law it belongs to (a top-level practice area), and featured, so the
+  // homepage's Featured Case Results section shows it (monorepo backlog 454).
+  areaOfLaw: {_type: 'reference', _ref: 'sample-practice-area'},
+  featured: true,
 }
 
 const sampleFaqItem = {

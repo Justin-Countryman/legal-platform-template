@@ -5,6 +5,7 @@
   "singletons": {
     "attorneyIndex": "attorneyIndex-attorneys",
     "blogIndex": "blogIndex-blog",
+    "caseResultIndex": "caseResultIndex-case-results",
     "designSettings": "designSettings",
     "eventIndex": "eventIndex-events",
     "footerSettings": "footerSettings",
@@ -4067,7 +4068,7 @@
     "caseResult": {
       "fields": [
         {
-          "description": "Display text exactly as it should appear — e.g. \"$246 Million\", \"$1.2M\", \"Charges Dismissed\". Non-monetary outcomes are valid results.",
+          "description": "The headline result, exactly as it should appear, saying what kind of result it was: \"$1.5 Million Settlement\", \"$2.1 Million Jury Verdict\", \"Charges Dismissed\", \"Not Guilty\", \"Sole Custody Awarded\". A dollar figure is what the client actually received; say whether it is before or after fees and costs. If a verdict was reduced, reversed or not collected, put the amount received here too, as prominently.",
           "jsonType": "string",
           "path": "amount",
           "required": "warning",
@@ -4076,44 +4077,656 @@
           "type": "string"
         },
         {
-          "description": "e.g. \"Truck Accident\" or \"Criminal Defense — Federal\"",
+          "description": "What the case was: \"Medical Malpractice\", \"Felony DWI\", \"Child Custody\", \"Chapter 7 Bankruptcy\".",
           "jsonType": "string",
           "path": "caseType",
           "required": "warning",
           "requiredMessage": "validation:generic.required",
-          "title": "Case Type / Matter Type",
+          "title": "Case Type",
           "type": "string"
         },
         {
-          "description": "Short description of the outcome. Must be accurate and verifiable — no guarantees, no superlatives, per the bar advertising rules in BI-Content.",
+          "description": "Optional. One to three sentences on what happened. Accurate and verifiable: no guarantees, no superlatives.",
           "jsonType": "string",
           "path": "caption",
-          "required": "warning",
-          "requiredMessage": "validation:generic.required",
-          "title": "Caption",
+          "title": "Summary",
           "type": "text"
         },
         {
-          "description": "Optional. The year the matter concluded.",
+          "description": "Optional. The year the matter concluded. Lists show the newest first.",
           "jsonType": "number",
           "path": "year",
           "title": "Year",
           "type": "number"
         },
         {
-          "description": "Optional. Reserved so results can be surfaced on the relevant practice-area page later — nothing consumes this yet.",
+          "description": "The area of law this result belongs to. A practice page shows only its own area of law’s results.",
+          "jsonType": "object",
+          "path": "areaOfLaw",
+          "required": "warning",
+          "requiredMessage": "Pick the area of law, or no practice page will show this result",
+          "title": "Area of Law",
+          "type": "reference"
+        },
+        {
+          "description": "Optional. The practice area under that area of law. Its own page links to it.",
           "jsonType": "object",
           "path": "practiceArea",
           "title": "Practice Area",
           "type": "reference"
+        },
+        {
+          "description": "Show this result in the Featured Case Results section: on the homepage, and on its own area of law’s practice pages. The section shows up to six, newest first.",
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "featured",
+          "title": "Featured",
+          "type": "boolean"
+        },
+        {
+          "description": "Off: a card that links nowhere. On: the card links to a page of its own at /case-results/… with the write-up. Turning it off later takes the page down; add a redirect if it was live.",
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "hasPage",
+          "title": "Give This Result Its Own Page",
+          "type": "boolean"
+        },
+        {
+          "description": "The page’s name and its heading. Name the case and where, never the result: \"Missed Cancer Diagnosis, Hennepin County\". The Result shows large on the page, with the disclaimer under it.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "path": "title",
+          "title": "Headline",
+          "type": "string"
+        },
+        {
+          "description": "Click Generate after writing the headline. Auto-prefixes case-results/.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "slug",
+          "title": "Slug",
+          "type": "slug"
+        },
+        {
+          "description": "Short label for menus, breadcrumbs and link text. Leave blank to use the Headline.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "path": "navLabel",
+          "title": "Nav Label",
+          "type": "string"
+        },
+        {
+          "description": "The case in full: the facts, the court or county, the issue, what the firm did, the outcome.",
+          "hidden": "<predicate>",
+          "jsonType": "array",
+          "of": [
+            "block",
+            "officeHours",
+            "image"
+          ],
+          "path": "body",
+          "title": "Write-up",
+          "type": "blockContent"
+        },
+        {
+          "jsonType": "array",
+          "of": [
+            "span",
+            "contentToken"
+          ],
+          "path": "body[]<block>.children",
+          "title": "Content",
+          "type": "array"
+        },
+        {
+          "jsonType": "array",
+          "of": [
+            "string"
+          ],
+          "path": "body[]<block>.children[]<span>.marks",
+          "title": "Marks",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "body[]<block>.children[]<span>.text",
+          "title": "Text",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "body[]<block>.children[]<contentToken>.tokenKey",
+          "title": "Token",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "options": {
+            "list": [
+              "normal",
+              "h2",
+              "h3",
+              "h4",
+              "h5",
+              "h6",
+              "blockquote"
+            ]
+          },
+          "path": "body[]<block>.style",
+          "title": "Style",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "options": {
+            "list": [
+              "bullet",
+              "number"
+            ]
+          },
+          "path": "body[]<block>.listItem",
+          "title": "List type",
+          "type": "string"
+        },
+        {
+          "jsonType": "array",
+          "of": [
+            "contentToken",
+            "link"
+          ],
+          "path": "body[]<block>.markDefs",
+          "title": "Mark definitions",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "body[]<block>.markDefs[]<contentToken>.tokenKey",
+          "title": "Token",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "body[]<block>.markDefs[]<link>.href",
+          "title": "URL",
+          "type": "url"
+        },
+        {
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "body[]<block>.markDefs[]<link>.blank",
+          "title": "Open in new tab",
+          "type": "boolean"
+        },
+        {
+          "jsonType": "number",
+          "path": "body[]<block>.level",
+          "title": "Indentation",
+          "type": "number"
+        },
+        {
+          "description": "Optional heading shown above the hours grid, e.g. \"Office Hours\". Leave blank to render just the grid.",
+          "jsonType": "string",
+          "path": "body[]<officeHours>.title",
+          "title": "Heading (optional)",
+          "type": "string"
+        },
+        {
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "path": "seoTitle",
+          "title": "SEO Title",
+          "type": "string"
+        },
+        {
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "path": "metaDescription",
+          "title": "Meta Description",
+          "type": "text"
+        },
+        {
+          "description": "Optional. The title on Facebook, LinkedIn and X share cards. Leave blank and the SEO Title is used, which is the normal case — fill this in only when the card wants different words from the search result. Aim for about 60 characters.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "path": "ogTitle",
+          "title": "Social Share Title",
+          "type": "string"
+        },
+        {
+          "description": "Optional. The description on share cards. Leave blank and the Meta Description is used, which is the normal case. Aim for about 160 characters.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "path": "ogDescription",
+          "title": "Social Share Description",
+          "type": "text"
+        },
+        {
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
+          "hidden": "<predicate>",
+          "jsonType": "object",
+          "path": "ogImageOverride",
+          "title": "OG Image",
+          "type": "image"
+        },
+        {
+          "hidden": "<predicate>",
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "noIndex",
+          "title": "No Index",
+          "type": "boolean"
+        },
+        {
+          "description": "Stops search engines following links on this page. Independent of No Index — a hidden page still follows its links unless this is on. Leave off unless you have a specific reason.",
+          "hidden": "<predicate>",
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "noFollow",
+          "title": "No Follow",
+          "type": "boolean"
+        },
+        {
+          "description": "Override only — the canonical URL is set automatically from the page slug. Only fill this in if you need to point to a different URL.",
+          "hidden": "<predicate>",
+          "jsonType": "string",
+          "path": "canonicalUrl",
+          "title": "Canonical URL",
+          "type": "url"
         }
       ],
       "initialDocument": {
-        "_type": "caseResult"
+        "_type": "caseResult",
+        "featured": false,
+        "hasPage": false,
+        "noFollow": false,
+        "noIndex": false
       },
       "kind": "document",
       "singletonId": null,
       "title": "Case Result"
+    },
+    "caseResultIndex": {
+      "fields": [
+        {
+          "description": "Internal label for this page — e.g. \"Case Results\"",
+          "jsonType": "string",
+          "path": "title",
+          "required": "warning",
+          "requiredMessage": "validation:generic.required",
+          "title": "Page Title",
+          "type": "string"
+        },
+        {
+          "description": "Always case-results/ — do not change",
+          "initialValue": {
+            "current": "case-results"
+          },
+          "jsonType": "object",
+          "path": "slug",
+          "readOnly": true,
+          "required": "warning",
+          "requiredMessage": "validation:generic.required",
+          "title": "Slug",
+          "type": "slug"
+        },
+        {
+          "description": "Short label for menus, breadcrumbs, index cards and link text. Leave blank to use the Page Title.",
+          "jsonType": "string",
+          "path": "navLabel",
+          "title": "Nav Label",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "seoTitle",
+          "title": "SEO Title",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "metaDescription",
+          "title": "Meta Description",
+          "type": "text"
+        },
+        {
+          "description": "Optional. The title on Facebook, LinkedIn and X share cards. Leave blank and the SEO Title is used, which is the normal case — fill this in only when the card wants different words from the search result. Aim for about 60 characters.",
+          "jsonType": "string",
+          "path": "ogTitle",
+          "title": "Social Share Title",
+          "type": "string"
+        },
+        {
+          "description": "Optional. The description on share cards. Leave blank and the Meta Description is used, which is the normal case. Aim for about 160 characters.",
+          "jsonType": "string",
+          "path": "ogDescription",
+          "title": "Social Share Description",
+          "type": "text"
+        },
+        {
+          "description": "1200×630 px recommended. Optional — when empty, the site generates a branded share image automatically from the firm name, logo and brand color, so leaving this blank is a valid choice rather than a gap.",
+          "jsonType": "object",
+          "path": "ogImageOverride",
+          "title": "OG Image",
+          "type": "image"
+        },
+        {
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "noIndex",
+          "title": "No Index",
+          "type": "boolean"
+        },
+        {
+          "description": "Stops search engines following links on this page. Independent of No Index — a hidden page still follows its links unless this is on. Leave off unless you have a specific reason.",
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "noFollow",
+          "title": "No Follow",
+          "type": "boolean"
+        },
+        {
+          "description": "Override only — the canonical URL is set automatically from the page slug. Only fill this in if you need to point to a different URL.",
+          "jsonType": "string",
+          "path": "canonicalUrl",
+          "title": "Canonical URL",
+          "type": "url"
+        },
+        {
+          "description": "Optional. When set, the heading inside the hero is the page's H1. When left empty, a fallback header band renders the H1.",
+          "jsonType": "object",
+          "path": "hero",
+          "title": "Internal Hero",
+          "type": "internalHero"
+        },
+        {
+          "description": "Required when hero is used — this becomes the H1",
+          "jsonType": "string",
+          "path": "hero.heading",
+          "title": "Heading (H1)",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "hero.description",
+          "title": "Description",
+          "type": "text"
+        },
+        {
+          "description": "Override the site-wide default hero buttons (Hero Settings → Internal Hero) for this page. Leave empty to inherit the default.",
+          "jsonType": "array",
+          "of": [
+            "ctaButton"
+          ],
+          "path": "hero.buttons",
+          "title": "Buttons",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "hero.buttons[]<ctaButton>.title",
+          "title": "Button Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /contact/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "hero.buttons[]<ctaButton>.url",
+          "title": "URL",
+          "type": "string"
+        },
+        {
+          "initialValue": "primary",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "primary",
+              "secondary",
+              "link"
+            ]
+          },
+          "path": "hero.buttons[]<ctaButton>.variant",
+          "title": "Variant",
+          "type": "string"
+        },
+        {
+          "description": "Show no hero buttons here even if a site-wide default is set. Ignored when you add your own buttons above.",
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "hero.buttonsNone",
+          "title": "No buttons on this page",
+          "type": "boolean"
+        },
+        {
+          "description": "Override the site default background scheme for this page (applies only when no background image is shown).",
+          "initialValue": "inherit",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "inherit",
+              "dark",
+              "light"
+            ]
+          },
+          "path": "hero.schemeOverride",
+          "title": "Background Scheme",
+          "type": "string"
+        },
+        {
+          "description": "Upload to override the site default background image on this page (uses a dark scrim, white text). Leave empty to inherit the site default.",
+          "jsonType": "object",
+          "path": "hero.backgroundImage",
+          "title": "Background Image",
+          "type": "image"
+        },
+        {
+          "description": "Force a plain background even if the site has a default image. Ignored when you upload your own image above.",
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "hero.backgroundNone",
+          "title": "No background image on this page",
+          "type": "boolean"
+        },
+        {
+          "description": "Upload to override the site default section background (the full-bleed pattern/texture behind heroes with no focal Background Image) on this page. Leave empty to inherit the site default.",
+          "jsonType": "object",
+          "path": "hero.sectionBackgroundImage",
+          "title": "Section Background",
+          "type": "image"
+        },
+        {
+          "description": "Force no section background even if the site has a default. Ignored when you upload your own image above.",
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "hero.sectionBackgroundNone",
+          "title": "No section background on this page",
+          "type": "boolean"
+        },
+        {
+          "description": "Override the site default scrim style (flat vs gradient) over the background image for this page.",
+          "initialValue": "inherit",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "inherit",
+              "flat",
+              "gradient"
+            ]
+          },
+          "path": "hero.scrimStyleOverride",
+          "title": "Scrim Style",
+          "type": "string"
+        },
+        {
+          "description": "Optional. Override the site default scrim strength (0–100) over the background image for this page. Leave empty to inherit.",
+          "jsonType": "number",
+          "path": "hero.scrimOpacityOverride",
+          "title": "Scrim Opacity Override",
+          "type": "number"
+        },
+        {
+          "description": "Override the gradient scrim color for this page. Inherit = use the site default.",
+          "hidden": "<predicate>",
+          "initialValue": "inherit",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "inherit",
+              "auto",
+              "action",
+              "black"
+            ]
+          },
+          "path": "hero.scrimColorOverride",
+          "title": "Gradient Color",
+          "type": "string"
+        },
+        {
+          "description": "Override the gradient fade direction for this page. Inherit = use the site default; Auto = follow content alignment.",
+          "hidden": "<predicate>",
+          "initialValue": "inherit",
+          "jsonType": "string",
+          "options": {
+            "layout": "dropdown",
+            "list": [
+              "inherit",
+              "auto",
+              "to-right",
+              "to-left",
+              "to-top",
+              "to-bottom",
+              "to-top-right",
+              "to-top-left",
+              "to-bottom-right",
+              "to-bottom-left"
+            ]
+          },
+          "path": "hero.scrimDirectionOverride",
+          "title": "Gradient Direction",
+          "type": "string"
+        },
+        {
+          "description": "Upload to override the site default foreground subject on this page (shown bottom-right, full color above the scrim, hidden on mobile). Leave empty to inherit the site default.",
+          "jsonType": "object",
+          "path": "hero.foregroundImage",
+          "title": "Foreground Image",
+          "type": "image"
+        },
+        {
+          "description": "Force no foreground even if the site has a default. Ignored when you upload your own image above.",
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "hero.foregroundNone",
+          "title": "No foreground image on this page",
+          "type": "boolean"
+        },
+        {
+          "description": "Hide the global CTA section on this page",
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "hideCtaForm",
+          "title": "Hide Global CTA",
+          "type": "boolean"
+        },
+        {
+          "description": "Override the Global CTA heading/text for this page only — leave blank to use Global CTA defaults. Form is always pulled from Site Settings.",
+          "jsonType": "object",
+          "path": "ctaFormOverride",
+          "title": "Global CTA Override",
+          "type": "ctaFormSection"
+        },
+        {
+          "jsonType": "string",
+          "path": "ctaFormOverride.tagline",
+          "title": "Tagline",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "ctaFormOverride.heading",
+          "title": "H2 Heading",
+          "type": "string"
+        },
+        {
+          "jsonType": "string",
+          "path": "ctaFormOverride.description",
+          "title": "Description",
+          "type": "text"
+        },
+        {
+          "description": "Up to two CTAs override the Global CTA buttons for this page only — leave empty to use Global CTA defaults.",
+          "jsonType": "array",
+          "of": [
+            "ctaButton"
+          ],
+          "path": "ctaFormOverride.buttons",
+          "title": "Buttons",
+          "type": "array"
+        },
+        {
+          "jsonType": "string",
+          "path": "ctaFormOverride.buttons[]<ctaButton>.title",
+          "title": "Button Label",
+          "type": "string"
+        },
+        {
+          "description": "Relative path (e.g. /contact/) or full URL (https://...)",
+          "jsonType": "string",
+          "path": "ctaFormOverride.buttons[]<ctaButton>.url",
+          "title": "URL",
+          "type": "string"
+        },
+        {
+          "initialValue": "primary",
+          "jsonType": "string",
+          "options": {
+            "layout": "radio",
+            "list": [
+              "primary",
+              "secondary",
+              "link"
+            ]
+          },
+          "path": "ctaFormOverride.buttons[]<ctaButton>.variant",
+          "title": "Variant",
+          "type": "string"
+        }
+      ],
+      "initialDocument": {
+        "_type": "caseResultIndex",
+        "hero": {
+          "_type": "internalHero",
+          "backgroundImage": {
+            "_type": "image",
+            "fit": "cover"
+          },
+          "backgroundNone": false,
+          "buttonsNone": false,
+          "foregroundNone": false,
+          "schemeOverride": "inherit",
+          "scrimColorOverride": "inherit",
+          "scrimDirectionOverride": "inherit",
+          "scrimStyleOverride": "inherit",
+          "sectionBackgroundImage": {
+            "_type": "image",
+            "fit": "cover"
+          },
+          "sectionBackgroundNone": false
+        },
+        "hideCtaForm": false,
+        "noFollow": false,
+        "noIndex": false,
+        "slug": {
+          "_type": "slug",
+          "current": "case-results"
+        }
+      },
+      "kind": "document",
+      "singletonId": "caseResultIndex-case-results",
+      "title": "Case Results Page"
     },
     "caseResultsSection": {
       "fields": [

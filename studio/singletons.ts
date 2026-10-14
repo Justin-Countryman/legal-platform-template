@@ -42,6 +42,9 @@ export const INDEX_SINGLETON_IDS = {
   staffIndex: 'staffIndex-staff',
   eventIndex: 'eventIndex-events',
   videoIndex: 'videoIndex-videos',
+  // The Case Results page (monorepo backlog 454); Site Build writes it at the pin
+  // that carries it, `page_creation._INDEX_SINGLETONS`.
+  caseResultIndex: 'caseResultIndex-case-results',
 } as const
 
 export const SINGLETON_IDS: Readonly<Record<string, string>> = {
