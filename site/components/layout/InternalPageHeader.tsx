@@ -41,12 +41,15 @@ export function InternalPageHeader({title}: Props) {
   const {isDark, hasImage} = surface
   const showSection = !hasImage && surface.hasSectionBg
   const imageBacked = hasImage || (showSection && isDark)
+  // On a light band the section background is the ghost, and the band reads its tiers (HeroBackdrop, monorepo backlog 321).
+  const ghosted = showSection && !isDark
 
   return (
     <header
       style={{paddingTop: HERO_HEADER_CLEARANCE}}
       data-ring-context={isDark ? 'dark' : undefined}
       data-hero-image={imageBacked ? 'true' : undefined}
+      data-fade={ghosted ? 'light' : undefined}
       className={[
         // overflow-hidden lets a site-default foreground subject bleed off the
         // bottom; min-height (lg+) gives a standing figure room (head not clipped).

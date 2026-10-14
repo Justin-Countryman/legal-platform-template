@@ -169,6 +169,7 @@ export function Split({config, content, surface, sectionBackground, edgeBelow, g
     <HeroBackdrop surface={sectionBackground} scrimStyle={config.scrimStyle} scrimColor={config.scrimColor} scrimDirection={config.scrimDirection} align={config.contentAlign} />
   ) : undefined
   const imageBacked = !!sectionNode && !!sectionBackground?.isDark
+  const ghosted = !!sectionNode && !sectionBackground?.isDark
 
   // ─── Media column by type ───────────────────────────────────────────────────
   let media: React.ReactNode = null
@@ -228,7 +229,7 @@ export function Split({config, content, surface, sectionBackground, edgeBelow, g
     )
 
     return (
-      <HeroBand edgeBelow={edgeBelow} glow={glow} texture={texture} surface={surface} fullViewport={fullViewport} center backdropNode={sectionNode} imageBacked={imageBacked}>
+      <HeroBand edgeBelow={edgeBelow} glow={glow} texture={texture} surface={surface} fullViewport={fullViewport} center backdropNode={sectionNode} imageBacked={imageBacked} ghosted={ghosted}>
         <div className="container relative z-10">
           <div className="relative py-6 lg:py-12">
             {/* Image 60% on one side; card 48% on the other → a guaranteed ~8% overlap
@@ -262,7 +263,7 @@ export function Split({config, content, surface, sectionBackground, edgeBelow, g
     const im = surface.bgImage
     const fullAlign = config.contentAlign === 'center' ? 'center' : 'start'
     return (
-      <HeroBand edgeBelow={edgeBelow} glow={glow} texture={texture} surface={surface} fullViewport={fullViewport} flush backdropNode={sectionNode} imageBacked={imageBacked}>
+      <HeroBand edgeBelow={edgeBelow} glow={glow} texture={texture} surface={surface} fullViewport={fullViewport} flush backdropNode={sectionNode} imageBacked={imageBacked} ghosted={ghosted}>
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 lg:items-stretch">
           {/* Text column owns the header clearance + vertical padding (the band is flush). */}
           <div
@@ -291,7 +292,7 @@ export function Split({config, content, surface, sectionBackground, edgeBelow, g
 
   // ─── Inline — standard side-by-side split (contained panel) ─────────────────
   return (
-    <HeroBand edgeBelow={edgeBelow} glow={glow} texture={texture} surface={surface} fullViewport={fullViewport} center backdropNode={sectionNode} imageBacked={imageBacked}>
+    <HeroBand edgeBelow={edgeBelow} glow={glow} texture={texture} surface={surface} fullViewport={fullViewport} center backdropNode={sectionNode} imageBacked={imageBacked} ghosted={ghosted}>
       <div className="container relative z-10 grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <div className={mediaLeft ? 'lg:order-2' : ''}>{textBlock}</div>
         <div className={mediaLeft ? 'lg:order-1' : ''}>{media}</div>

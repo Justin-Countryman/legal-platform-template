@@ -89,6 +89,7 @@ export function HeroBand({
   backdrop = false,
   backdropNode,
   imageBacked,
+  ghosted = false,
   center = false,
   flush = false,
   className,
@@ -119,6 +120,8 @@ export function HeroBand({
   backdropNode?: ReactNode
   /** Force the data-hero-image cascade (image-backed button treatment) for a custom backdrop. */
   imageBacked?: boolean
+  /** The backdrop is a light band's Section Background, drawn as the ghost: the band reads its tiers (`data-fade`, monorepo backlog 321). */
+  ghosted?: boolean
   /** Vertically center the content within the band (full-viewport / centered layouts). */
   center?: boolean
   /** Drop the section's horizontal gutter + bottom padding so a child (e.g. a full-bleed split image) can reach the viewport edge. The child owns its own padding. */
@@ -143,6 +146,7 @@ export function HeroBand({
       style={{...(flush ? {} : {paddingTop: HERO_HEADER_CLEARANCE}), ...style}}
       data-ring-context={surface.isDark ? 'dark' : undefined}
       data-hero-image={showBackdrop || imageBacked ? 'true' : undefined}
+      data-fade={ghosted ? 'light' : undefined}
       data-glow={lit && !ramp ? 'true' : undefined}
       className={[
         'relative isolate overflow-hidden',

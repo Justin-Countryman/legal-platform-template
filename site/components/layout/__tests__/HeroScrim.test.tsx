@@ -1,18 +1,17 @@
 import {describe, expect, it} from 'vitest'
 import {render} from '@testing-library/react'
 import {
-  HeroScrim, MIN_LIGHT_SCRIM_OPACITY, MIN_TEXT_SCRIM_OPACITY,
-  type HeroScrimAlign, type HeroScrimColor, type HeroScrimDirection, type HeroScrimStyle, type HeroScrimTone,
+  HeroScrim, MIN_TEXT_SCRIM_OPACITY,
+  type HeroScrimAlign, type HeroScrimColor, type HeroScrimDirection, type HeroScrimStyle,
 } from '../HeroScrim'
 
 // Text over a photo meets WCAG 2.2 AA for any photo (monorepo backlog 321, `[R-462]`, `[R-466]`; monorepo
-// WS-V1-ACCESSIBILITY-DESIGN-2026-10-13.md §7). The engine holds every text tier over the photo floor: the dark scrim at
-// MIN_TEXT_SCRIM_OPACITY over a white pixel (designTokens.ts photoFloor), and on a light band the page background at
-// MIN_LIGHT_SCRIM_OPACITY over a black one (colorGuarantee.test.ts). So no point of any scrim may be lighter than its
-// floor: a gradient deepens from the floor, never fades below it, and the action color never sits under text.
+// WS-V1-ACCESSIBILITY-DESIGN-2026-10-13.md §7). The engine holds every text tier over the photo floor, the dark scrim at
+// MIN_TEXT_SCRIM_OPACITY over a white pixel (designTokens.ts photoFloor). So no point of the scrim may be lighter than
+// the floor: a gradient deepens from the floor, never fades below it, and the action color never sits under text. A light
+// band draws no scrim: its photo is the ghost (HeroBackdrop, held in section-background.test.tsx).
 
 const STYLES: HeroScrimStyle[] = ['flat', 'gradient']
-const TONES: HeroScrimTone[] = ['dark', 'light']
 const COLORS: HeroScrimColor[] = ['auto', 'action', 'black']
 const ALIGNS: HeroScrimAlign[] = ['left', 'center']
 const DIRECTIONS: HeroScrimDirection[] = ['auto', 'to-right', 'to-left', 'to-top', 'to-bottom', 'to-top-right', 'to-top-left', 'to-bottom-right', 'to-bottom-left']
@@ -27,18 +26,16 @@ function drawn(props: Parameters<typeof HeroScrim>[0]) {
 }
 
 describe('no point of a hero scrim is lighter than its floor (backlog 321)', () => {
-  it('the floors are the ones the engine proves', () => {
+  it('the floor is the one the engine proves', () => {
     expect(MIN_TEXT_SCRIM_OPACITY).toBe(80)
-    expect(MIN_LIGHT_SCRIM_OPACITY).toBe(97)
   })
 
-  it('every style, tone, color, direction, alignment and stored opacity draws at or above its tone\'s floor', () => {
+  it('every style, color, direction, alignment and stored opacity draws at or above the floor', () => {
     const below: string[] = []
-    for (const style of STYLES) for (const tone of TONES) for (const color of COLORS) for (const align of ALIGNS)
+    for (const style of STYLES) for (const color of COLORS) for (const align of ALIGNS)
       for (const direction of DIRECTIONS) for (const opacity of OPACITIES) {
-        const floor = tone === 'dark' ? MIN_TEXT_SCRIM_OPACITY : MIN_LIGHT_SCRIM_OPACITY
-        const {stops} = drawn({style, tone, color, align, direction, opacity})
-        if (Math.min(...stops) < floor) below.push(`${style}/${tone}/${color}/${align}/${direction}/${opacity}: ${stops.join(' to ')}`)
+        const {stops} = drawn({style, color, align, direction, opacity})
+        if (Math.min(...stops) < MIN_TEXT_SCRIM_OPACITY) below.push(`${style}/${color}/${align}/${direction}/${opacity}: ${stops.join(' to ')}`)
       }
     expect(below).toEqual([])
   })
@@ -47,14 +44,11 @@ describe('no point of a hero scrim is lighter than its floor (backlog 321)', () 
     expect(drawn({style: 'gradient', opacity: 95}).stops).toEqual([95, 80])
     expect(drawn({style: 'gradient', opacity: 80}).stops).toEqual([80, 80])
     expect(drawn({style: 'gradient', opacity: 40}).stops).toEqual([80, 80])
-    expect(drawn({style: 'gradient', tone: 'light', opacity: 100}).stops).toEqual([100, 97])
   })
 
   it('the action color never sits under text: a stored action gradient draws the scrim color', () => {
     expect(drawn({style: 'gradient', color: 'action', opacity: 90}).bases).toEqual(['var(--color-scrim)', 'var(--color-scrim)'])
     expect(drawn({style: 'gradient', color: 'black', opacity: 90}).bases).toEqual(['rgb(0, 0, 0)', 'rgb(0, 0, 0)'])
-    // On a light band dark text sits on the scrim, so black is never its color.
-    expect(drawn({style: 'gradient', tone: 'light', color: 'black', opacity: 100}).bases).toEqual(['var(--color-background)', 'var(--color-background)'])
   })
 
   it('the direction still follows the text, so the deeper end sits behind it', () => {
