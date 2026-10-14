@@ -86,7 +86,7 @@ export const heroSettings = defineType({
       fieldset: 'internalDefaults',
       altLabel: 'internal hero section background',
       description:
-        'Optional full-bleed texture or repeating pattern behind internal heroes that have no focal Background Image. Use Tile for a seamless pattern, Cover for a single texture. Follows the Background Scheme for its scrim tone. A page can override or remove it.',
+        'Optional full-bleed texture or repeating pattern behind internal heroes that have no focal Background Image. Use Tile for a seamless pattern, Cover for a single texture. On a dark Background Scheme it sits under the scrim; on a light one it shows faintly, in grey, with no scrim. A page can override or remove it.',
       fit: {coverTitle: 'Cover (single texture)', tileTitle: 'Tile (repeat pattern)'},
     }),
     defineField({
@@ -96,7 +96,7 @@ export const heroSettings = defineType({
       group: 'internal',
       fieldset: 'internalDefaults',
       description:
-        'Applies to the active full-bleed background (the Background Image or the Section Background). Flat = even overlay. Gradient = fades from full strength on the text side toward the image (more premium, keeps the image clearer). A page can override this.',
+        'Applies to the active full-bleed background (the Background Image or the Section Background). Flat = even overlay. Gradient = deepest on the text side, lighter toward the image, but never lighter than the text needs, so at the default strength it draws even. A page can override this.',
       options: {
         list: [
           {title: 'Flat (even overlay)', value: 'flat'},
@@ -126,11 +126,11 @@ export const heroSettings = defineType({
       group: 'internal',
       fieldset: 'internalDefaults',
       description:
-        'Color of the gradient scrim. Auto follows the Background Scheme (brand color on dark heroes, page background on light). Action uses your CTA color; Black is a neutral darken.',
+        'Color of the gradient scrim. Auto is the brand color; Black is a neutral darken; Action is retired and draws as Auto. A gradient never fades below the strength the text needs to stay readable.',
       options: {
         list: [
           {title: 'Auto — from scheme', value: 'auto'},
-          {title: 'Action (CTA color)', value: 'action'},
+          {title: 'Action (retired: draws as Auto)', value: 'action'},
           {title: 'Black (neutral darken)', value: 'black'},
         ],
         layout: 'radio',

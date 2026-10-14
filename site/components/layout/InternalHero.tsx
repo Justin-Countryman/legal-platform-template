@@ -96,6 +96,8 @@ export function InternalHero({data, napTokens}: {data: InternalHeroData; napToke
   // present, already fills the bleed. Buttons read as image-backed only when dark.
   const showSection = !hasImage && surface.hasSectionBg
   const imageBacked = hasImage || (showSection && isDark)
+  // On a light band the section background is the ghost, and the band reads its tiers (HeroBackdrop, monorepo backlog 321).
+  const ghosted = showSection && !isDark
   const hasButtons = buttons && buttons.length > 0
   // A bare h1 (no description, no buttons) is vertically centered in a min-height
   // band; once there's a description or buttons the content stacks from the top.
@@ -106,6 +108,7 @@ export function InternalHero({data, napTokens}: {data: InternalHeroData; napToke
       style={{paddingTop: HERO_HEADER_CLEARANCE}}
       data-ring-context={isDark ? 'dark' : undefined}
       data-hero-image={imageBacked ? 'true' : undefined}
+      data-fade={ghosted ? 'light' : undefined}
       className={[
         // overflow-hidden lets the foreground subject bleed off the bottom edge;
         // min-height (lg+) gives a standing figure room so its head isn't clipped.

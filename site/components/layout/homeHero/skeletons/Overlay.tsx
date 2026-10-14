@@ -51,7 +51,7 @@ function Backdrop({config, surface, content, treated}: {config: HeroConfig; surf
           <Image src={surface.bgImage.src} alt={surface.bgImage.alt ?? ''} fill priority className="object-cover hero-drift" style={{objectPosition: heroObjectPosition(surface.bgImage)}} sizes={HERO_BACKDROP_SIZES} />
         ))
       )}
-      <HeroScrim style={config.scrimStyle} color={config.scrimColor} direction={config.scrimDirection} opacity={surface.scrimOpacity} align={config.contentAlign} tone="dark" textRight={config.foreground && config.foregroundSide === 'left' && config.contentAlign !== 'center'} />
+      <HeroScrim style={config.scrimStyle} color={config.scrimColor} direction={config.scrimDirection} opacity={surface.scrimOpacity} align={config.contentAlign} textRight={config.foreground && config.foregroundSide === 'left' && config.contentAlign !== 'center'} />
     </div>
   )
 }
@@ -68,6 +68,7 @@ export function Overlay({config, content, surface, sectionBackground, edgeBelow,
     ) : undefined
   const backdropNode = hasBackdrop ? <Backdrop config={config} surface={surface} content={content} treated={photoTreated} /> : sectionNode
   const imageBacked = hasBackdrop || (!!sectionNode && !!sectionBackground?.isDark)
+  const ghosted = !!sectionNode && !sectionBackground?.isDark
   // Foreground figure pairs with left-aligned text (bottom-right two-column) —
   // not applicable when content is centered.
   const hasFigure = config.foreground && surface.hasForeground && config.contentAlign !== 'center'
@@ -93,6 +94,7 @@ export function Overlay({config, content, surface, sectionBackground, edgeBelow,
       fullViewport={fullViewport}
       backdropNode={backdropNode}
       imageBacked={imageBacked}
+      ghosted={ghosted}
       center
       className={hasFigure ? HERO_BAND_MIN_H_LG : undefined}
     >

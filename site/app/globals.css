@@ -975,7 +975,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 /* The transparent header over a hero carrying the glow's light (`[R-648]`, monorepo WS-PREMIUM-PACKAGE-DESIGN §10.2) takes
    the lit band's values of the three blocks above: its links, ring, buttons and controls stand over the light, which is
-   solved under every one of them; the plain on-dark values are not (the control border measured 1.63 to 2.71 there). */
+   solved under every one of them; the plain on-dark values are not (the control border measured 1.63 to 2.71 there).
+   Over a photo hero it takes the same values, the photo floor's (monorepo backlog 321, ADV-A11Y-C): the header sits
+   outside the hero's section, so the hero's own block never reached it, and the raw accent its links hover in measured
+   2.68 to 4.21 over the floor on four presets. */
+:root:has([data-hero-image="true"]) header.bg-transparent,
 :root:has(.glow-light-hero) header.bg-transparent {
   --color-action-text:       var(--color-foreground-on-dark);
   --color-action-text-hover: var(--color-foreground-on-dark);
@@ -997,8 +1001,12 @@ h1, h2, h3, h4, h5, h6 {
    takes its own tiers, as a photo band does on the dark side: each is the site's own where that holds on the floor,
    else stepped darker at its own hue (`fadeOnLight`, `lib/designTokens.ts`; `validateWcag` holds every pair on the
    floor). The hover wash is off: a 6% ink over a tier solved to its ratio would take it under. A dark card or panel
-   inside the band sets its own values, as it does anywhere. */
-[data-fade="light"] {
+   inside the band sets its own values, as it does anywhere.
+   A light hero's Section Background is the same ghost over the page ground (HeroBackdrop, `data-hero-ghost`; monorepo
+   backlog 321, Justin's "2: A" of 2026-10-14), and a transparent header over it takes the band's tiers, as one over a
+   photo hero takes the photo floor's: it sits outside the band, so the band's own block never reaches it. */
+[data-fade="light"],
+:root:has([data-hero-ghost]) header.bg-transparent {
   /* A heading in the button color takes its own ghost-band value (monorepo `[R-641]`); otherwise today's heading. */
   --color-heading:            var(--color-heading-on-fade);
   --color-foreground-muted:   var(--color-foreground-muted-on-fade);

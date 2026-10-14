@@ -283,6 +283,28 @@ describe('InternalHero — section background', () => {
     const {getByTestId} = render(<InternalHero data={{...WITH_IMAGE, sectionBackgroundImage: WITH_SECTION.sectionBackgroundImage}} />)
     expect((getByTestId('hero-bg') as HTMLImageElement).getAttribute('src')).toBe('/hero.jpg')
   })
+
+  // Monorepo backlog 321 (Justin, 2026-10-14, "2: A"): on a light band the section background is the ghost, the photo in
+  // grey at the palette's solved opacity over the page ground with no scrim, and the band reads its ghost tiers.
+  it('on a light band it is the ghost: no scrim, and the band reads its ghost tiers', () => {
+    const {container, queryByTestId} = render(
+      <HeroSchemeProvider scheme="light">
+        <InternalHero data={WITH_SECTION} />
+      </HeroSchemeProvider>,
+    )
+    const section = container.querySelector('section') as HTMLElement
+    expect(section.getAttribute('data-fade')).toBe('light')
+    expect(queryByTestId('hero-scrim')).toBeNull()
+    const ghost = container.querySelector('[data-hero-ghost] [data-photo-ghost]') as HTMLElement
+    expect(ghost.style.opacity).toBe('var(--fade-opacity-on-light, 0)')
+  })
+
+  it('on a dark band it sits under the scrim, and the band is not a ghost band', () => {
+    const {container, getByTestId} = render(<InternalHero data={{...WITH_SECTION, schemeOverride: 'dark'}} />)
+    expect((container.querySelector('section') as HTMLElement).hasAttribute('data-fade')).toBe(false)
+    expect(getByTestId('hero-scrim')).not.toBeNull()
+    expect(container.querySelector('[data-hero-ghost]')).toBeNull()
+  })
 })
 
 // ─── Foreground image (InternalHero only) ────────────────────────────────────

@@ -129,6 +129,25 @@ describe('InternalPageHeader — useHeroScheme integration', () => {
     expect((getByTestId('hero-scrim') as HTMLElement).style.opacity).toBe('0.8')
   })
 
+  // Monorepo backlog 321 (Justin, 2026-10-14, "2: A"): a light band's site section background is the ghost.
+  it('draws the site section background as the ghost on a light band, under the scrim on a dark one', () => {
+    const value = {bgImage: null, foreground: null, scrimOpacity: 80, scrimStyle: 'flat' as const, scrimColor: 'auto' as const, scrimDirection: 'auto' as const, sectionBg: {src: '/pattern.png', alt: '', fit: 'tile' as const}, defaultButtons: []}
+    const draw = (scheme: 'light' | 'dark') => render(
+      <HeroSchemeProvider scheme={scheme}>
+        <HeroSurfaceProvider value={value}>
+          <InternalPageHeader title="X" />
+        </HeroSurfaceProvider>
+      </HeroSchemeProvider>,
+    ).container
+    const light = draw('light')
+    expect((light.firstChild as HTMLElement).getAttribute('data-fade')).toBe('light')
+    expect(light.querySelector('[data-testid="hero-scrim"]')).toBeNull()
+    expect((light.querySelector('[data-hero-ghost] [data-photo-ghost]') as HTMLElement).style.opacity).toBe('var(--fade-opacity-on-light, 0)')
+    const dark = draw('dark')
+    expect((dark.firstChild as HTMLElement).hasAttribute('data-fade')).toBe(false)
+    expect(dark.querySelector('[data-testid="hero-scrim"]')).not.toBeNull()
+  })
+
   it('renders the shared site FOREGROUND (two-column) on the no-hero band', () => {
     const {getByTestId} = render(
       <HeroSchemeProvider scheme="light">

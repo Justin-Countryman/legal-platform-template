@@ -21,8 +21,10 @@
 // that is too slow for CI and is recorded in the design record, not repeated here.
 
 import {describe, expect, it} from 'vitest'
-import {converter, clampChroma, formatHex} from 'culori'
-import {lightTextureCap, parseHexInput, resolvePalette, PANEL_LIFT, SECTION_TEXTURE_OPACITY, validateWcag, type ColorInputs, type PaletteOptions} from '../designTokens'
+import fs from 'node:fs'
+import path from 'node:path'
+import {converter, clampChroma, formatHex, wcagContrast} from 'culori'
+import {fadeFloor, lightTextureCap, parseHexInput, resolvePalette, PANEL_LIFT, SECTION_TEXTURE_OPACITY, validateWcag, type ColorInputs, type PaletteOptions} from '../designTokens'
 import {PALETTE_PRESETS, presetInputs} from '../palettes'
 import before from './fixtures/color-tokens-before-phase14.json'
 import {nearBlack} from './sweeps'
@@ -114,6 +116,47 @@ describe('color guarantee: every blocking pair passes for any operator input', (
     // Near-black grounds with saturated accents: 35 of 24,066 failed on the texture's blend before the
     // solve took it as a ground (ADV-17C3-PRB), and the uniform sweeps above never generate them.
     expectNone(nearBlack(5000, 17).flatMap((inputs, i) => failures(`near-black#${i}`, inputs)))
+  }, 120_000)
+
+  // Monorepo backlog 321 (`[R-462]`, `[R-466]`; Justin, 2026-10-14, "2: A"): on a light band a background image is the
+  // ghost (HeroBackdrop), the photo over the page ground at the palette's `--fade-opacity-on-light` with no scrim, and the
+  // worst photo pixel is black. Read through the `[data-fade="light"]` rule as globals.css declares it (the band carries
+  // it, and the transparent header over the ghost takes it), every tier the hero and its header set text in holds 4.5:1,
+  // and the ring, the star and a control's edge 3:1, over that floor drawn one level darker than exact (`fadeFloor`), on
+  // every preset with every palette option, each role alone over the grid, 5,000 seeded and 2,000 near-black palettes.
+  it('a light band\'s image, drawn as the ghost, leaves every tier its band and header read at AA over a black pixel', () => {
+    const CSS = fs.readFileSync(path.resolve(__dirname, '../../app/globals.css'), 'utf8')
+    const rule = CSS.match(/\[data-fade="light"\],\n:root:has\(\[data-hero-ghost\]\) header\.bg-transparent \{([^}]*)\}/)
+    expect(rule, 'the ghost band\'s rule names the band and the header over it').not.toBeNull()
+    const swapped = Object.fromEntries([...rule![1].matchAll(/(--color-[a-z-]+):\s*var\((--color-[a-z-]+)\);/g)].map((m) => [m[1], m[2]]))
+    // A value the engine emits only for a set option falls back to its default in globals.css (a ghosted band's heading
+    // is today's unless the heading takes the button color).
+    const read = (t: Record<string, string>, name: string): string =>
+      t[name] ?? t[CSS.match(new RegExp(`\\n\\s*${name}:\\s*var\\((--color-[a-z-]+)\\);`))![1]]
+    // ADV-A11Y-C's nine pairs, and the two 3:1 edges the rule also moves.
+    const pairs: [string, number][] = [
+      ['--color-foreground', 4.5], ['--color-foreground-muted', 4.5], ['--color-foreground-subtle', 4.5],
+      ['--color-heading', 4.5], ['--color-brand-dark', 4.5], ['--color-accent-text', 4.5],
+      ['--color-action-text', 4.5], ['--color-action-text-hover', 4.5], ['--color-ring-focus', 3],
+      ['--color-star-outline', 3], ['--color-border-control', 3],
+    ]
+    const below = (label: string, inputs: ColorInputs, options: PaletteOptions = {}): string[] => {
+      const t = resolvePalette(inputs, options).tokens
+      const ground = fadeFloor(t['--color-background'], Number(t['--fade-opacity-on-light']))
+      return pairs.filter(([tier, min]) => (wcagContrast(read(t, swapped[tier] ?? tier), ground) as number) < min)
+        .map(([tier]) => `${label} ${JSON.stringify(inputs)} ${JSON.stringify(options)}: ${tier} as ${swapped[tier] ?? tier} ${read(t, swapped[tier] ?? tier)} on ${ground}`)
+    }
+    const found: string[] = []
+    for (const options of [{}, ...DETAIL_VALUES, ...EVERY_DETAIL]) {
+      for (const p of PALETTE_PRESETS) found.push(...below(p.id, presetInputs(p), options))
+    }
+    for (const [context, base] of Object.entries(CONTEXTS)) {
+      for (const role of ROLES) for (const hex of grid()) found.push(...below(`${context}/${role}`, {...base, [role]: hex}))
+    }
+    found.push(...seeded(5000, 321).flatMap((inputs, i) => below(`sample#${i}`, inputs)))
+    found.push(...seeded(500, 3211).flatMap((inputs, i) => EVERY_DETAIL.flatMap((options) => below(`detail#${i}`, inputs, options))))
+    found.push(...nearBlack(2000, 321).flatMap((inputs, i) => below(`near-black#${i}`, inputs)))
+    expectNone(found)
   }, 120_000)
 
   it('the light texture never renders above the step an engine one level darker than Chromium draws within the swept blend', () => {
