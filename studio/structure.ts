@@ -159,6 +159,19 @@ export const structure = (S: StructureBuilder) =>
             ])
         ),
 
+      // The case results CMS (monorepo backlog 454): the page that lists them, then
+      // the results, each a card and, when switched on, a page of its own.
+      S.listItem()
+        .title('Case Results')
+        .child(
+          S.list()
+            .title('Case Results')
+            .items([
+              indexPane(S, 'caseResultIndex', 'Case Results Page'),
+              S.documentTypeListItem('caseResult').title('Case Results'),
+            ])
+        ),
+
       // ─── Specialty Pages (alphabetical) ───────────────────────────────────
       S.listItem()
         .title('Specialty Pages')
@@ -230,7 +243,7 @@ export const structure = (S: StructureBuilder) =>
               S.documentTypeListItem('attorneySection').title('Attorney Sections'),
               S.documentTypeListItem('badgesSection').title('Badges Sections'),
               S.documentTypeListItem('ctaSection').title('Banner CTA Sections'),
-              S.documentTypeListItem('caseResultsSection').title('Case Results Sections'),
+              S.documentTypeListItem('caseResultsSection').title('Featured Case Results Sections'),
               S.documentTypeListItem('contentSection').title('Content Sections'),
               S.documentTypeListItem('faqSection').title('FAQ Sections'),
               S.documentTypeListItem('practiceAreaNav').title('Practice Area Nav Sections'),
@@ -269,7 +282,6 @@ export const structure = (S: StructureBuilder) =>
               S.documentTypeListItem('location').title('Location Records'),
               S.documentTypeListItem('siteForm').title('Forms'),
               S.documentTypeListItem('video').title('Videos'),
-              S.documentTypeListItem('caseResult').title('Case Results'),
               S.documentTypeListItem('pressItem').title('Press Mentions'),
               S.documentTypeListItem('badge').title('Badges / Awards'),
             ])

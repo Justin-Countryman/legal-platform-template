@@ -131,8 +131,10 @@ while IFS= read -r line; do
         MISSING=1
       fi
       # Phase 11: the content section members render through HeadingUnit (the
-      # emphasis span), the stat row carries the results disclaimer, and the
-      # marquee ribbon crosses the client boundary with its pause toggle.
+      # emphasis span), the stat row carries the results disclaimer (its "$40M
+      # recovered" tile is a result; since monorepo [R-720] a row of plain numbers
+      # carries none), and the marquee ribbon crosses the client boundary with its
+      # pause toggle.
       # Matched as HTML, which the flight payload never spells.
       for needle in '<em class="heading-emphasis">numbers</em>' 'data-testid="results-disclaimer"' '>Pause</button>'; do
         if ! grep -qF "$needle" .next/server/app/index.html; then

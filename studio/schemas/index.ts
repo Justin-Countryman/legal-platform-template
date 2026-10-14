@@ -34,6 +34,7 @@ import {testimonial} from './documents/testimonial'
 import {testimonialsPage} from './documents/testimonialsPage'
 import {faqItem} from './documents/faqItem'
 import {caseResult} from './documents/caseResult'
+import {caseResultIndex} from './documents/caseResultIndex'
 import {pressItem} from './documents/pressItem'
 import {badge} from './documents/badge'
 
@@ -119,6 +120,7 @@ export const schemaTypes = [
   testimonialsPage,
   faqItem,
   caseResult,
+  caseResultIndex,
   pressItem,
   badge,
 

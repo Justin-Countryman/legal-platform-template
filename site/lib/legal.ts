@@ -24,9 +24,18 @@
 // through to the constant.
 //
 // Ruled 2026-07-20. Recorded in BI-Library.md, Case Result item.
+//
+// THE WORDING, three sentences (ruled by Justin 2026-10-14; monorepo backlog 309
+// and 454, WS-CASE-RESULTS-DESIGN-2026-10-13.md §5 and §11): the version that
+// holds in every state the bar research read. The first carries Nevada's words
+// (RPC 7.2(b)(7)), the second South Dakota's reason (RPC 7.1(c)(4)), the third
+// California's context (B&P 6157(c), 6158.3). The one sentence before it held
+// in Minnesota only.
 
 export const RESULTS_DISCLAIMER_DEFAULT =
-  'Past results do not guarantee a similar outcome. Every case is different and must be evaluated on its own facts.'
+  'Past results do not guarantee, warrant, or predict the outcome of any future case. ' +
+  'Every case is decided on its own facts and merits, so past success cannot assure future success. ' +
+  'Each result described here depended on the facts and law of that case, and results differ when the facts differ.'
 
 /**
  * Resolves the results disclaimer for a site.

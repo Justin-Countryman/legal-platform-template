@@ -1,7 +1,8 @@
-// The 13 interior routes that draw the site's closing call to action, each with the query that answers its own
+// The 14 interior routes that draw the site's closing call to action, each with the query that answers its own
 // document, the field its override lives in, and how to render it. Shared by the tests that drive every route.
 import * as Q from '@/lib/sanity/queries'
 import TestimonialsPage from '@/app/(site)/testimonials/page'
+import CaseResultsPage from '@/app/(site)/case-results/page'
 import VideoLibraryPage from '@/app/(site)/videos/page'
 import StaffIndexPage from '@/app/(site)/staff/page'
 import AttorneysIndexPage from '@/app/(site)/attorneys/page'
@@ -37,6 +38,8 @@ export const ROUTES: Route[] = [
   {name: 'events', query: Q.EVENT_INDEX_PAGE_QUERY, doc: {_id: 'eventIndex', hero}, key: 'ctaOverride', render: () => EventsIndexPage()},
   {name: 'service-area', query: Q.SERVICE_AREA_INDEX_QUERY, doc: {_id: 'serviceAreaIndex', hero}, key: 'ctaOverride', render: () => ServiceAreaIndexPage()},
   {name: 'blog', query: Q.BLOG_INDEX_PAGE_QUERY, doc: {_id: 'blogIndex', hero}, key: 'ctaOverride', render: () => BlogIndexPage()},
+  // The Case Results page (backlog 454) is served only when a result shows, so its document comes with one.
+  {name: 'case results', query: Q.CASE_RESULT_INDEX_QUERY, doc: {hero, results: [{_id: 'r1', amount: 'Charges Dismissed', caseType: 'DWI'}]}, key: 'ctaOverride', render: () => CaseResultsPage()},
   {
     name: 'blog post',
     query: Q.BLOG_POST_PAGE_QUERY,

@@ -17,6 +17,9 @@ type SitemapData = {
   videoIndex: SingletonNode
   testimonials: SingletonNode
   contact: SingletonNode
+  caseResultIndex: SingletonNode
+  caseResultsShown: boolean
+  caseResults: SanityNode[]
   attorneys: SanityNode[]
   staff: SanityNode[]
   blogPosts: SanityNode[]
@@ -83,6 +86,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // own `noIndex` was unreadable. `contactPage` is in the query now and supplies
   // a real `lastModified` as well.
   if (listed(data.contact)) push('/contact', data.contact?._updatedAt, 0.7)
+  // The Case Results page is served whenever a result has something to show, its
+  // document or not (backlog 454), so it is listed then, unless the document hides it.
+  if (data.caseResultsShown && listed(data.caseResultIndex)) push('/case-results', data.caseResultIndex?._updatedAt, 0.6)
 
   // Collection routes — every stored slug is the full URL path
   for (const n of data.attorneys) push(`/${n.slug}`, n._updatedAt, 0.7)
@@ -90,6 +96,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   for (const n of data.blogPosts) push(`/${n.slug}`, n._updatedAt, 0.6)
   for (const n of data.blogCategories) push(`/${n.slug}`, n._updatedAt, 0.5)
   for (const n of data.events) push(`/${n.slug}`, n._updatedAt, 0.5)
+  for (const n of data.caseResults ?? []) push(`/${n.slug}`, n._updatedAt, 0.5)
   for (const n of data.catchAll) push(`/${n.slug}`, n._updatedAt, 0.7)
 
   return entries

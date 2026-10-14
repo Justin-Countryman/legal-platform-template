@@ -1,4 +1,5 @@
 import {groq} from 'next-sanity'
+import {CASE_RESULT_HAS_PAGE} from '../caseResultPage'
 
 // ─── Reusable Fragments ───────────────────────────────────────────────────────
 // Declared first — used by queries throughout this file.
@@ -181,6 +182,41 @@ const GATED_STREET_FRAGMENT = `
   "zip":      select(locationType in ["Physical", "Shared"] => zip, null),
 `
 
+// ─── Case results (monorepo backlog 454) ──────────────────────────────────────
+// The case results CMS (WS-CASE-RESULTS-DESIGN-2026-10-13.md §11). Three tests,
+// each ONE string, read by every query that needs it, so the card's link, the
+// route, `sitemap.xml` and the index's 404 never disagree:
+//
+// CASE_RESULT_SHOWN: the result has something to show, a Result or a Summary
+// holding a word. In GROQ `null != ""` is true and a string of spaces is not
+// empty, so a field counts only when split on spaces it holds a word (the
+// practice-area card line's idiom above). `isShownResult` in
+// CaseResultsSection.tsx is the same test for data already fetched;
+// caseResults.test.ts holds the two equal.
+export const CASE_RESULT_SHOWN = `(count(string::split(coalesce(amount, ""), " ")[@ != ""]) > 0 || count(string::split(coalesce(caption, ""), " ")[@ != ""]) > 0)`
+// CASE_RESULT_HAS_PAGE: the result is a page (`lib/caseResultPage.ts`, a module
+// of its own because the Studio's link picker reads the same string).
+export {CASE_RESULT_HAS_PAGE}
+// Newest year first, then the newest entered; a result with no year goes last
+// (`order(year desc)` puts a null first), as the build's composer reads it.
+const CASE_RESULT_ORDER = `order(coalesce(year, 0) desc, _createdAt desc)`
+// What a card draws. `href` only for a result that is a page.
+const CASE_RESULT_CARD_FRAGMENT = `{
+  _id, amount, caseType, caption, year,
+  "areaOfLaw": areaOfLaw._ref,
+  "href": select(${CASE_RESULT_HAS_PAGE} => "/" + slug.current, null)
+}`
+// The results a Featured Case Results section may show: featured, published,
+// shown, newest first, and when the section names an area of law, only that
+// area's (`^` is the section, or the canvas member, as the attorney section's
+// `^.practiceAreaPage` is). A practice page narrows the list to its own silo
+// in `scopeCaseResults` (CaseResultsSection.tsx), from the page's
+// `caseResultsScope`, before anything walks it; the cap applies after that.
+const FEATURED_CASE_RESULTS = `*[
+    _type == "caseResult" && featured == true && !(_id in path("drafts.**")) && ${CASE_RESULT_SHOWN}
+    && (!defined(^.areaOfLaw._ref) || areaOfLaw._ref == ^.areaOfLaw._ref)
+  ] | ${CASE_RESULT_ORDER} ${CASE_RESULT_CARD_FRAGMENT}`
+
 // ─── The shared section projection ────────────────────────────────────────────
 // One projection body for a shared section, used twice (Phase 10, 2026-09-14;
 // monorepo WS-V1-PHASE10-DESIGN §2 requirement 7): SECTIONS_FRAGMENT
@@ -289,9 +325,15 @@ export const SECTION_BODY = `
     "slug": slug.current,
     tags
   },
-  "caseResults": caseResults[defined(@->_id)]->{
-    _id, amount, caseType, caption, year
-  },
+  // The Featured Case Results section: what is featured, not a picked list
+  // (backlog 454). Inside select() so no other section carries the list.
+  "caseResults": select(
+    _type in ["caseResultsSection", "caseResultsSectionInline"] => ${FEATURED_CASE_RESULTS},
+    null
+  ),
+  // The section's own area of law, when it names one: the list above is already
+  // that area's, and a practice page's scope then leaves it alone.
+  "areaOfLaw": areaOfLaw._ref,
   "badges": badges[defined(@->_id)]->{
     "src": image.asset->url,
     "alt": image.alt,
@@ -459,6 +501,12 @@ export const SITEMAP_QUERY = groq`{
   "videoIndex":       *[_type == "videoIndex"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
   "testimonials":     *[_type == "testimonialsPage"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
   "contact":          *[_type == "contactPage"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
+  // The Case Results page is served whenever a result has something to show,
+  // with or without its document (backlog 454); a result's own page is listed
+  // when it passes the page test.
+  "caseResultIndex":  *[_type == "caseResultIndex"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
+  "caseResultsShown": count(*[_type == "caseResult" && !(_id in path("drafts.**")) && ${CASE_RESULT_SHOWN}]) > 0,
+  "caseResults":      *[_type == "caseResult" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && ${CASE_RESULT_HAS_PAGE}]{"slug": slug.current, _updatedAt},
   "attorneys":        *[_type == "attorneyPage" && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},
   "staff":            *[_type == "staffPage"    && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},
   "blogPosts":        *[_type == "blogPost"     && !(_id in path("drafts.**")) && coalesce(noIndex, false) == false && defined(slug.current)]{"slug": slug.current, _updatedAt},
@@ -1560,6 +1608,62 @@ export const EVENT_PAGE_QUERY = groq`
   }
 `
 
+// ─── The Case Results page, and a result's own page (backlog 454) ─────────────
+// `/case-results` lists every result that has something to show, newest first,
+// one list (Justin, 2026-10-14: "a case results index page which would just be a
+// big list of cards"); the page document is optional, and the route reads the
+// preset name when there is none. `/case-results/<name>` serves only a result
+// that passes the page test, so a result whose switch is off has no page.
+// The page's own fields are spread into the top level, as HOME_METADATA_QUERY
+// spreads the homepage's: a missing document spreads to nothing.
+export const CASE_RESULT_INDEX_QUERY = groq`{
+  ...(*[_type == "caseResultIndex"][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
+    seoTitle,
+    metaDescription,
+    ogTitle,
+    ogDescription,
+    noIndex,
+    noFollow,
+    canonicalUrl,
+    "hero": hero ${INTERNAL_HERO_FRAGMENT},
+    title,
+    navLabel,
+    hideCtaForm,
+    "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT}
+  }),
+  "results": *[_type == "caseResult" && !(_id in path("drafts.**")) && ${CASE_RESULT_SHOWN}] | ${CASE_RESULT_ORDER} ${CASE_RESULT_CARD_FRAGMENT},
+  "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer
+}`
+
+export const CASE_RESULT_SLUGS_QUERY = groq`
+  *[_type == "caseResult" && !(_id in path("drafts.**")) && ${CASE_RESULT_HAS_PAGE}].slug.current
+`
+
+export const CASE_RESULT_PAGE_QUERY = groq`
+  *[_type == "caseResult" && slug.current == $slug && ${CASE_RESULT_HAS_PAGE}][0]{
+    "ogImage": ogImageOverride ${IMAGE_FRAGMENT},
+    title,
+    navLabel,
+    "slug": slug.current,
+    seoTitle,
+    metaDescription,
+    ogTitle,
+    ogDescription,
+    noIndex,
+    noFollow,
+    canonicalUrl,
+    amount,
+    caseType,
+    caption,
+    year,
+    "areaOfLaw": areaOfLaw->{"label": ${NAV_LABEL_EXPR}, "slug": slug.current},
+    "practiceArea": practiceArea->{"label": ${NAV_LABEL_EXPR}, "slug": slug.current},
+    "body": body ${BLOCK_CONTENT_FRAGMENT},
+    "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer
+  }
+`
+
 // ─── Blog Index Page ──────────────────────────────────────────────────────────
 export const BLOG_INDEX_PAGE_QUERY = groq`
   *[_type == "blogIndex"][0]{
@@ -1955,6 +2059,16 @@ export const CATCH_ALL_PAGE_QUERY = groq`
     ${SIDEBAR_FRAGMENT},
     "resultsDisclaimer": *[_type == "siteSettings"][0].resultsDisclaimer,
     "sections": sections ${SECTIONS_FRAGMENT},
+    // The silo a Featured Case Results section here shows (backlog 454): a
+    // practice area page's area of law is its top ancestor, read as deep as the
+    // breadcrumb's chain (PARENT_CHAIN_DEPTH, four parents); a geo practice page
+    // has no link to one, so its scope is none and the section shows nothing
+    // unless it names an area itself. Every other page shows any area (null).
+    "caseResultsScope": select(
+      _type == "practiceArea" => {"areaOfLaw": coalesce(parentPage->parentPage->parentPage->parentPage->_id, parentPage->parentPage->parentPage->_id, parentPage->parentPage->_id, parentPage->_id, _id)},
+      _type == "geoPracticeArea" => {"areaOfLaw": null},
+      null
+    ),
     hideCtaForm,
     "ctaOverride": ctaFormOverride ${CTA_OVERRIDE_FRAGMENT},
     _type == "locationPage" => {

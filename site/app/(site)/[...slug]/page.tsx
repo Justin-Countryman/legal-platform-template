@@ -43,7 +43,8 @@ import {FaqAccordion} from '@/components/ui/FaqAccordion'
 import {Sidebar} from '@/components/layout/Sidebar'
 import {GlobalCta} from '@/components/sections/GlobalCta'
 import {withCtaOverride} from '@/lib/ctaOverride'
-import {PageSections, sectionsLastGround} from '@/components/sections/PageSections'
+import {PageSections, sectionsLastGround, type PageSectionData} from '@/components/sections/PageSections'
+import {scopeCaseResults} from '@/components/sections/CaseResultsSection'
 import {OfficeHoursProvider} from '@/components/location/OfficeHoursContext'
 import {siteHost} from '@/lib/siteHost'
 
@@ -273,6 +274,7 @@ export default async function CatchAllPage({params}: Props) {
   const hasSidebar = page.sidebar && page.sidebar.filter((c: unknown) => (c as {_componentType?: unknown})._componentType).length > 0
   const hasFaqs = page.faqItems && page.faqItems.length > 0
   const breadcrumbs = buildBreadcrumbs(page)
+  const sections = scopeCaseResults<PageSectionData>(page.sections ?? [], page.caseResultsScope)
 
   const content = (
     <>
@@ -360,13 +362,14 @@ export default async function CatchAllPage({params}: Props) {
         )}
       </ContentSidebarLayout>
 
-      {/* Full Width Sections */}
-      {page.sections && page.sections.length > 0 && (
-        <PageSections sections={page.sections} napTokens={tokens} resultsDisclaimer={page.resultsDisclaimer} site={siteLookWithHeadingFace((await getSiteChrome())?.designTokens)} />
+      {/* Full Width Sections. A Featured Case Results section shows this page's silo (backlog 454): scoped once,
+          here, so the render and the close's ground walk read the same list. */}
+      {sections.length > 0 && (
+        <PageSections sections={sections} napTokens={tokens} resultsDisclaimer={page.resultsDisclaimer} site={siteLookWithHeadingFace((await getSiteChrome())?.designTokens)} />
       )}
 
       {!page.hideCtaForm && globalCtaData && (
-        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)} data={withCtaOverride(globalCtaData, page.ctaOverride)} surface={await chromeClose(sectionsLastGround(page.sections, siteLookWithHeadingFace((await getSiteChrome())?.designTokens)))} napTokens={tokens} />
+        <GlobalCta headingFace={headingFaceWithAdvances((await getSiteChrome())?.designTokens)} data={withCtaOverride(globalCtaData, page.ctaOverride)} surface={await chromeClose(sectionsLastGround(sections, siteLookWithHeadingFace((await getSiteChrome())?.designTokens)))} napTokens={tokens} />
       )}
     </>
   )

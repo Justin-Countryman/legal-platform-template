@@ -158,3 +158,46 @@ describe('the two behaviours that were built and uncovered', () => {
     expect(entry?.lastModified).toBeInstanceOf(Date)
   })
 })
+
+// ─── Case results (monorepo backlog 454) ──────────────────────────────────────
+// `/case-results` is served whenever a result has something to show, with or
+// without its page document, so it is listed then and only then; a result's own
+// page is listed when it passes the page test and is not hidden. The sitemap must
+// never list a 404 (ADV-CR-C).
+describe('case results', () => {
+  it('lists /case-results when a result has something to show, with or without the page document', async () => {
+    mockSitemap({caseResultsShown: true, caseResultIndex: null, caseResults: []})
+    expect(paths(await sitemap())).toContain('/case-results')
+    mockSitemap({caseResultsShown: true, caseResultIndex: {...VISIBLE}, caseResults: []})
+    expect(paths(await sitemap())).toContain('/case-results')
+  })
+
+  it('does not list it when nothing shows, or when its page document hides it', async () => {
+    mockSitemap({caseResultsShown: false, caseResultIndex: {...VISIBLE}, caseResults: []})
+    expect(paths(await sitemap())).not.toContain('/case-results')
+    mockSitemap({caseResultsShown: true, caseResultIndex: {...VISIBLE, noIndex: true}, caseResults: []})
+    expect(paths(await sitemap())).not.toContain('/case-results')
+  })
+
+  it('lists each result page the query answers, at its whole stored path', async () => {
+    mockSitemap({caseResultsShown: true, caseResultIndex: null, caseResults: [{slug: 'case-results/custody-modification', _updatedAt: '2026-10-01T00:00:00Z'}]})
+    expect(paths(await sitemap())).toContain('/case-results/custody-modification')
+  })
+
+  it('the query answers only pages: switch on, the right address, not hidden, and counts only results that show', async () => {
+    const r = (id: string, f: Record<string, unknown>) => ({_id: id, _type: 'caseResult', _updatedAt: '2026-10-01T00:00:00Z', amount: 'Dismissed', ...f})
+    const dataset = [
+      r('a', {hasPage: true, slug: {current: 'case-results/a'}}),
+      r('b', {hasPage: false, slug: {current: 'case-results/b'}}),
+      r('c', {hasPage: true, slug: {current: 'case-results/c/d'}}),
+      r('e', {hasPage: true, slug: {current: 'case-results/e'}, noIndex: true}),
+      r('drafts.f', {hasPage: true, slug: {current: 'case-results/f'}}),
+    ]
+    const {evaluate} = await import('groq-js')
+    const value = (await (await evaluate(parse(SITEMAP_QUERY), {dataset})).get()) as {caseResults: {slug: string}[]; caseResultsShown: boolean}
+    expect(value.caseResults.map((n) => n.slug)).toEqual(['case-results/a'])
+    expect(value.caseResultsShown).toBe(true)
+    const blank = (await (await evaluate(parse(SITEMAP_QUERY), {dataset: [r('z', {amount: ' ', caption: ''})]})).get()) as {caseResultsShown: boolean}
+    expect(blank.caseResultsShown).toBe(false)
+  })
+})

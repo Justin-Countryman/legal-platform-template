@@ -132,12 +132,17 @@ const sampleCaseResult = {
   // dollar figure. The results disclaimer renders automatically wherever
   // case results render (site/lib/legal.ts — code-constant floor), so no
   // per-item disclaimer field exists or is needed.
-  amount: 'Favorable Outcome',
-  caseType: 'Sample Matter',
+  // Worded as a firm is told to enter one (monorepo [R-717]): the kind of result
+  // in words and a case type, never a bare outcome.
+  amount: 'Charges Dismissed',
+  caseType: 'Misdemeanor Theft',
   caption:
-    'Placeholder case result shipped with the Legal Platform Template. Replace with the firm’s real, verifiable outcomes in Sanity Studio.',
-  year: '2024',
-  practiceArea: {_type: 'reference', _ref: 'sample-practice-area'},
+    'Placeholder case result shipped with the Legal Platform Template: the charge was dismissed before trial. Replace with the firm’s real, verifiable outcomes in Sanity Studio.',
+  year: 2024,
+  // The area of law it belongs to (a top-level practice area), and featured, so the
+  // homepage's Featured Case Results section shows it (monorepo backlog 454).
+  areaOfLaw: {_type: 'reference', _ref: 'sample-practice-area'},
+  featured: true,
 }
 
 const sampleFaqItem = {
@@ -175,16 +180,17 @@ const sampleHomePage = {
   h1: 'Trusted legal counsel for every chapter',
   // Homepage canvas — wires the reference-only item docs so their sections
   // render populated on a fresh client (item 43): a badges section referencing
-  // sample-badge and a case-results section referencing sample-case-result.
+  // sample-badge, and the Featured Case Results section, which shows the
+  // featured sample-case-result.
   // Members are inline section objects; the referenced documents are created
   // first in the run order below so reference resolution succeeds.
   canvas: [
     {
+      // The Featured Case Results section shows the featured results; the sample is one.
       _type: 'caseResultsSectionInline',
       _key: 'seed-case-results',
       heading: 'Results That Matter',
       intro: 'A sample of outcomes — placeholder content shipped with the template.',
-      caseResults: [{_type: 'reference', _ref: 'sample-case-result', _key: 'seed-case-result-1'}],
     },
     {
       _type: 'badgesSectionInline',

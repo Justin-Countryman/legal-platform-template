@@ -205,12 +205,17 @@ describe('slots', () => {
 })
 
 describe('the results disclaimer renders exactly when a result figure does', () => {
+  // Monorepo [R-720] (Justin, 2026-10-14: "only when a number is a result"): a number that is not a past result
+  // shows no disclaimer; one that is always does.
   it.each([
     ['a proof number on a split', {layout: 'split', body: block('b'), proof: {number: '$1M'}}, true],
     ['a proof number on twoColumnText', {layout: 'twoColumnText', heading: 'h', proof: {number: '$1M'}}, true],
     ['a blank proof number', {layout: 'statement', heading: 'h', proof: {number: '  ', caption: 'c'}}, false],
     ['a proof number stored on a ribbon, which renders none', {layout: 'ribbon', heading: 'h', proof: {number: '$1M'}}, false],
-    ['a stat row with a tile', {layout: 'statRow', items: [{_key: 'a', body: 'years'}]}, true],
+    ['a stat row of plain numbers', {layout: 'statRow', items: [{_key: 'a', title: '500+', body: 'families'}, {_key: 'b', title: '25', body: 'years'}]}, false],
+    ['a stat row with one result among them', {layout: 'statRow', items: [{_key: 'a', title: '500+', body: 'families'}, {_key: 'b', title: '$40M', body: 'recovered'}]}, true],
+    ['a proof number that is not a result', {layout: 'statement', heading: 'h', proof: {number: '500+', caption: 'families served'}}, false],
+    ['a proof number that is one by its caption', {layout: 'statement', heading: 'h', proof: {number: '300', caption: 'cases won'}}, true],
     ['items on a split, which are not tiles', {layout: 'split', items: [{_key: 'a', title: '24/7'}]}, false],
   ] as Array<[string, ContentSectionData, boolean]>)('%s', (_label, data, expected) => {
     expect(rendersResultClaim(data)).toBe(expected)
@@ -228,8 +233,8 @@ describe('the results-disclaimer cases shared with the homepage composer', () =>
     },
   )
 
-  it('holds all eighteen cases', () => {
-    expect(resultClaimCases.cases).toHaveLength(18)
+  it('holds all twenty-two cases', () => {
+    expect(resultClaimCases.cases).toHaveLength(22)
   })
 })
 

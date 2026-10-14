@@ -1,0 +1,85 @@
+{
+  "about": "Whether a number reads as a past result (money, wins, verdicts, settlements), so the results disclaimer shows beside it (monorepo [R-720]: 'only when a number is a result'). The template's lib/resultFigure.ts and the monorepo's BE/_shared/claim_patterns.is_result_figure each assert this file; the monorepo keeps its copy byte-equal to this one.",
+  "cases": [
+    {
+      "text": "$50M recovered",
+      "result": true
+    },
+    {
+      "text": "300 cases won",
+      "result": true
+    },
+    {
+      "text": "Verdicts",
+      "result": false
+    },
+    {
+      "text": "500+ families",
+      "result": false
+    },
+    {
+      "text": "25 years",
+      "result": false
+    },
+    {
+      "text": "4.9 rating",
+      "result": false
+    },
+    {
+      "text": "$2.1 Million settlement",
+      "result": true
+    },
+    {
+      "text": "$40 million",
+      "result": true
+    },
+    {
+      "text": "98% success rate",
+      "result": true
+    },
+    {
+      "text": "98%",
+      "result": false
+    },
+    {
+      "text": "120 verdicts",
+      "result": true
+    },
+    {
+      "text": "1,000+ clients",
+      "result": false
+    },
+    {
+      "text": "$500 consultation",
+      "result": false
+    },
+    {
+      "text": "$1,500",
+      "result": true
+    },
+    {
+      "text": "Dismissed in 40 cases",
+      "result": true
+    },
+    {
+      "text": "Charges dismissed",
+      "result": false
+    },
+    {
+      "text": "Settlements",
+      "result": false
+    },
+    {
+      "text": "24/7",
+      "result": false
+    },
+    {
+      "text": "30 years",
+      "result": false
+    },
+    {
+      "text": "3 offices",
+      "result": false
+    }
+  ]
+}
