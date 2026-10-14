@@ -116,9 +116,10 @@ export default async function CaseResultPage({params}: Props) {
         </div>
       </div>
 
+      {/* One column on the heading's left edge, so the heading, the trail, the result and the write-up line up. */}
       <article className="px-[5%] py-12 md:py-16 lg:py-20">
         <div className="container">
-          <div className="mx-auto max-w-3xl">
+          <div className="max-w-3xl">
             {/* The result, as its card draws it, and the disclaimer directly under it. REQUIRED. */}
             <div data-card="" data-ring-context="light" className="rounded-ui bg-muted p-6 shadow-card-rest md:p-8">
               {result.amount ? (
