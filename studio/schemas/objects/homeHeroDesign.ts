@@ -61,14 +61,14 @@ export const homeHeroDesign = defineType({
       title: 'Background Scheme',
       type: 'string',
       fieldset: 'background',
-      description: 'Color scheme for the hero band: Dark = brand color + white text, Light = neutral tint + dark text. Also sets the Section Background scrim tone (dark scheme → dark scrim, light scheme → light scrim).',
+      description: 'Color scheme for the hero band: Dark = brand color + white text, Light = neutral tint + dark text. Also sets how the Section Background shows: under the scrim on Dark, faintly and in grey with no scrim on Light.',
       options: radio([{title: 'Inherit site default', value: 'inherit'}, {title: 'Dark — brand color, white text', value: 'dark'}, {title: 'Light — neutral tint, dark text', value: 'light'}]),
       initialValue: 'inherit',
       hidden: hide(show.scheme),
     }),
     // The full-bleed wallpaper behind the WHOLE hero (both layouts). Page-only (no
     // site default), so its presence = on — no "None" toggle. Pairs with the Scrim
-    // controls below + the Background Scheme above (which sets the scrim tone).
+    // controls below + the Background Scheme above (a light scheme draws it as the ghost, no scrim).
     heroImageField({
       name: 'sectionBackgroundImage',
       title: 'Section Background',
@@ -96,7 +96,7 @@ export const homeHeroDesign = defineType({
       title: 'Scrim Style',
       type: 'string',
       fieldset: 'background',
-      description: 'Applies to the active full-bleed background (the Overlay backdrop or the Section Background). Flat = even overlay. Gradient = fades from full strength on the text side toward the image (more premium, keeps the image clearer).',
+      description: 'Applies to the active full-bleed background (the Overlay backdrop or the Section Background). Flat = even overlay. Gradient = deepest on the text side, lighter toward the image, but never lighter than the text needs, so at the default strength it draws even.',
       options: radio([{title: 'Flat (even overlay)', value: 'flat'}, {title: 'Gradient (directional fade)', value: 'gradient'}]),
       initialValue: 'flat',
       hidden: hide(show.scrim),
@@ -109,7 +109,7 @@ export const homeHeroDesign = defineType({
       title: 'Gradient Color',
       type: 'string',
       fieldset: 'background',
-      description: 'Color of the gradient scrim. Auto follows the Background Scheme; Black is a neutral darken on a dark hero; Action is retired and draws as Auto. A gradient never fades below the strength the text needs to stay readable.',
+      description: 'Color of the gradient scrim. Auto is the brand color; Black is a neutral darken; Action is retired and draws as Auto. A gradient never fades below the strength the text needs to stay readable.',
       options: radio([{title: 'Auto — from scheme', value: 'auto'}, {title: 'Action (retired: draws as Auto)', value: 'action'}, {title: 'Black (neutral darken)', value: 'black'}]),
       initialValue: 'auto',
       hidden: ({parent}) => !(show.scrim(parent) && (parent as {scrimStyle?: string})?.scrimStyle === 'gradient'),
