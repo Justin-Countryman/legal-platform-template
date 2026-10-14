@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import {isResultFigure} from '@/lib/resultFigure'
 import type {CSSProperties} from 'react'
 import {BlockProse} from '@/components/ui/BlockProse'
 import {ButtonGroup, toCtaItems} from '@/components/ui/ButtonGroup'
@@ -42,9 +43,12 @@ import {countGridClasses, itemTiers} from './countGrid'
 // bar advertising rules pair past results with a disclaimer, always. So
 // `disclaimer` is a REQUIRED prop, resolved by the dispatcher from the code
 // constant (site/lib/legal.ts), and it renders whenever `rendersResultClaim`
-// says a proof number or a stat tile renders. There is no per-item "this is a
-// result" flag: a flag's blank default is a result published with no disclaimer
-// (see CaseResultsSection.tsx). Phase 12's gate reads the same function.
+// says a proof number or a stat tile states a result. Since monorepo [R-720]
+// (Justin, 2026-10-14: "only when a number is a result") a number that is not
+// one ("500+ families", "25 years") shows none: the test is read from the
+// number itself (`lib/resultFigure.ts`, the platform's own detector ported),
+// never from a per-item flag, whose blank default would publish a result with
+// no disclaimer (see CaseResultsSection.tsx). Phase 12's gate reads the same rule.
 
 export type ContentSectionData = ContentSectionProps
 
@@ -100,17 +104,18 @@ export function isContentSectionEmpty(data: ContentSectionData | null | undefine
 }
 
 /**
- * True when the section renders a figure that can be a past result: a proof
- * number on a layout that shows one, or a stat row with a tile. The disclaimer
+ * True when the section renders a figure that states a past result: a proof
+ * number on a layout that shows one, or a stat tile, whose number with its
+ * caption reads as a result (`isResultFigure`, monorepo [R-720]). The disclaimer
  * renders exactly when this is true. Exported as the contract for Phase 12's
- * gate (the disclaimed slots are `proof.number`, and `items[].title` on a stat
- * row).
+ * gate (the disclaimed slots are `proof.number`, and `items[].title` and
+ * `items[].body` on a stat row).
  */
 export function rendersResultClaim(data: ContentSectionData): boolean {
   const layout = layoutOf(data)
-  if (layout === 'statRow') return renderableItems(data).length > 0
+  if (layout === 'statRow') return renderableItems(data).some((i) => isResultFigure(`${i.title ?? ''} ${i.body ?? ''}`))
   if (layout === 'ribbon') return false
-  return has(data.proof?.number)
+  return has(data.proof?.number) && isResultFigure(`${data.proof?.number ?? ''} ${data.proof?.caption ?? ''}`)
 }
 
 /** The heading over the items (Phase 18 session B): 24px, between the section heading and the 20px item titles. */

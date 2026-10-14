@@ -1,5 +1,5 @@
 {
-  "about": "When a content section renders a result figure, and so the results disclaimer. The template's ContentSectionBlock test and the monorepo's BE/_shared/homepage_member_table.py each assert their own side against their own copy of this file (the redirect-resolution-cases.json precedent).",
+  "about": "When a content section renders a result figure, and so the results disclaimer. The template's ContentSectionBlock test and the monorepo's BE/_shared/homepage_member_table.py each assert their own side against their own copy of this file (the redirect-resolution-cases.json precedent). Since monorepo [R-720] (2026-10-14, 'only when a number is a result') a proof number or a stat tile claims only when its number with its caption reads as a past result: the template's lib/resultFigure.ts, the monorepo's claim_patterns.is_result_figure.",
   "cases": [
     {
       "data": {
@@ -32,7 +32,7 @@
           "number": "98%"
         }
       },
-      "claims": true
+      "claims": false
     },
     {
       "data": {
@@ -47,7 +47,7 @@
           "number": "500+"
         }
       },
-      "claims": true
+      "claims": false
     },
     {
       "data": {
@@ -80,7 +80,7 @@
           }
         ]
       },
-      "claims": true
+      "claims": false
     },
     {
       "data": {
@@ -91,7 +91,7 @@
           }
         ]
       },
-      "claims": true
+      "claims": false
     },
     {
       "data": {
@@ -146,6 +146,60 @@
     },
     {
       "data": {},
+      "claims": false
+    },
+    {
+      "data": {
+        "layout": "twoColumnText",
+        "proof": {
+          "number": "98%",
+          "caption": "success rate"
+        }
+      },
+      "claims": true
+    },
+    {
+      "data": {
+        "layout": "statRow",
+        "items": [
+          {
+            "title": "500+",
+            "body": "families served"
+          },
+          {
+            "title": "$50M",
+            "body": "recovered"
+          }
+        ]
+      },
+      "claims": true
+    },
+    {
+      "data": {
+        "layout": "statRow",
+        "items": [
+          {
+            "title": "300",
+            "body": "cases won"
+          }
+        ]
+      },
+      "claims": true
+    },
+    {
+      "data": {
+        "layout": "statRow",
+        "items": [
+          {
+            "title": "25",
+            "body": "years"
+          },
+          {
+            "title": "4.9",
+            "body": "rating"
+          }
+        ]
+      },
       "claims": false
     }
   ]

@@ -244,9 +244,16 @@ describe('HomepageCanvas — contentSectionInline (Phase 11)', () => {
   })
 
   it('a stat row renders the operator wording when it is set', () => {
-    const row = {_type: 'contentSectionInline', _key: 's', layout: 'statRow', items: [{_key: 'i', title: '500+', body: 'families'}]} as HomepageBlock
+    const row = {_type: 'contentSectionInline', _key: 's', layout: 'statRow', items: [{_key: 'i', title: '$40M', body: 'recovered'}]} as HomepageBlock
     const {getByTestId} = render(<HomepageCanvas blocks={[row]} resultsDisclaimer="Jurisdiction wording." />)
     expect(getByTestId('results-disclaimer').textContent).toBe('Jurisdiction wording.')
+  })
+
+  // Monorepo [R-720] (Justin, 2026-10-14: "only when a number is a result").
+  it('a stat row of plain numbers renders no disclaimer', () => {
+    const row = {_type: 'contentSectionInline', _key: 's', layout: 'statRow', items: [{_key: 'i', title: '500+', body: 'families'}]} as HomepageBlock
+    const {queryByTestId} = render(<HomepageCanvas blocks={[row]} resultsDisclaimer="Jurisdiction wording." />)
+    expect(queryByTestId('results-disclaimer')).toBeNull()
   })
 })
 
