@@ -24,6 +24,7 @@ import {homepageTitle, resolveTitle} from '@/lib/seoTitle'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {buildSocialMeta, SITEWIDE_OG_IMAGE_URL} from '@/lib/socialMeta'
 import {hasImage, type SanityImage} from '@/lib/sanity/image'
+import {buildWebSiteSchema, type WebSiteNames} from '@/lib/websiteSchema'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 //
@@ -149,8 +150,21 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 // The body is `HomeBody` (Phase 17A), so the preview address can draw the same
-// homepage over its own chrome.
+// homepage over its own chrome. The WebSite node naming the firm (ENTITY-7) is
+// the route's own: the home page is where Google reads the site name, and the
+// preview address is not a page anyone searches.
 export default async function HomePage() {
   const [chrome, all] = await Promise.all([getSiteChrome(), getHomePage()])
-  return <HomeBody chrome={chrome} all={all} />
+  const website = buildWebSiteSchema((chrome?.nap ?? null) as WebSiteNames)
+  return (
+    <>
+      {website ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{__html: JSON.stringify(website)}}
+        />
+      ) : null}
+      <HomeBody chrome={chrome} all={all} />
+    </>
+  )
 }
