@@ -68,4 +68,20 @@ describe('RESULTS_DISCLAIMER_DEFAULT — the compliance floor', () => {
     expect(RESULTS_DISCLAIMER_DEFAULT.toLowerCase()).toContain('past results')
     expect(RESULTS_DISCLAIMER_DEFAULT.toLowerCase()).toContain('do not guarantee')
   })
+
+  // Monorepo backlog 309 and 454 (WS-CASE-RESULTS-DESIGN-2026-10-13.md §5, §11): the wording that holds in every
+  // state the bar research read, three sentences, ruled by Justin 2026-10-14. Each clause is one state's words.
+  it('is three sentences, the wording that holds in every state the research read', () => {
+    const sentences = RESULTS_DISCLAIMER_DEFAULT.split(/(?<=\.)\s+/)
+    expect(sentences).toHaveLength(3)
+    const text = RESULTS_DISCLAIMER_DEFAULT.toLowerCase()
+    // Nevada RPC 7.2(b)(7): "past results do not guarantee, warrant, or predict future cases".
+    expect(text).toContain('do not guarantee, warrant, or predict')
+    // South Dakota RPC 7.1(c)(4): past success cannot assure future success, each case on its own merits.
+    expect(text).toContain('past success cannot assure future success')
+    expect(text).toContain('its own facts and merits')
+    // California B&P 6157(c) and 6158.3: the result depended on that case's facts; results differ on others.
+    expect(text).toContain('depended on the facts and law of that case')
+    expect(text).toContain('results differ when the facts differ')
+  })
 })
