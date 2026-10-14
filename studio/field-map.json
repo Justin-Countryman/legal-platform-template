@@ -4731,7 +4731,7 @@
     "caseResultsSection": {
       "fields": [
         {
-          "description": "Internal label — e.g. \"Personal Injury Results\"",
+          "description": "Internal label — e.g. \"Featured Results\" or \"Personal Injury Results\"",
           "jsonType": "string",
           "path": "name",
           "required": "warning",
@@ -4755,43 +4755,20 @@
           "type": "string"
         },
         {
-          "description": "Optional. A text link on the right of the heading, such as \"All practice areas\" or \"All results\". Setting it aligns the heading left.",
-          "jsonType": "object",
-          "path": "headerLink",
-          "title": "Header Link",
-          "type": "object"
-        },
-        {
-          "jsonType": "string",
-          "path": "headerLink.label",
-          "title": "Label",
-          "type": "string"
-        },
-        {
-          "description": "Relative path (e.g. /practice-areas/) or full URL (https://...)",
-          "jsonType": "string",
-          "path": "headerLink.url",
-          "title": "Page",
-          "type": "string"
-        },
-        {
           "jsonType": "string",
           "path": "intro",
           "title": "Intro",
           "type": "text"
         },
         {
-          "description": "Select from the case results you have built under Individual Items. Build each result once and reuse it. The results disclaimer renders automatically below them and is not editable here.",
-          "jsonType": "array",
-          "of": [
-            "reference"
-          ],
-          "path": "caseResults",
-          "title": "Case Results",
-          "type": "array"
+          "description": "Leave blank and the section shows the featured results that fit where it sits: every area of law on the homepage and other pages, and the page’s own area of law on a practice area page. Pick one to show only that area’s, on any page; a geo practice page needs one picked to show any. Mark results Featured on each case result. The results disclaimer renders automatically below them and is not editable here.",
+          "jsonType": "object",
+          "path": "areaOfLaw",
+          "title": "Area of Law",
+          "type": "reference"
         },
         {
-          "description": "Leave blank for up to three across. Four across sets eight results in two rows of four; seven in four and three; the count still decides, and one result never sits alone on a row.",
+          "description": "Leave blank for up to three across, six results at most. Four across shows up to eight in two rows of four; the count still decides, and one result never sits alone on a row.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -4801,41 +4778,6 @@
           },
           "path": "across",
           "title": "Columns",
-          "type": "string"
-        },
-        {
-          "description": "Optional. Usually a link to a fuller results page.",
-          "jsonType": "object",
-          "path": "ctaButton",
-          "title": "CTA Button",
-          "type": "ctaButton"
-        },
-        {
-          "jsonType": "string",
-          "path": "ctaButton.title",
-          "title": "Button Label",
-          "type": "string"
-        },
-        {
-          "description": "Relative path (e.g. /contact/) or full URL (https://...)",
-          "jsonType": "string",
-          "path": "ctaButton.url",
-          "title": "URL",
-          "type": "string"
-        },
-        {
-          "initialValue": "primary",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "primary",
-              "secondary",
-              "link"
-            ]
-          },
-          "path": "ctaButton.variant",
-          "title": "Variant",
           "type": "string"
         },
         {
@@ -4902,15 +4844,11 @@
         }
       ],
       "initialDocument": {
-        "_type": "caseResultsSection",
-        "ctaButton": {
-          "_type": "ctaButton",
-          "variant": "primary"
-        }
+        "_type": "caseResultsSection"
       },
       "kind": "document",
       "singletonId": null,
-      "title": "Case Results Section"
+      "title": "Featured Case Results Section"
     },
     "contactPage": {
       "fields": [
@@ -11221,43 +11159,20 @@
           "type": "string"
         },
         {
-          "description": "Optional. A text link on the right of the heading, such as \"All practice areas\" or \"All results\". Setting it aligns the heading left.",
-          "jsonType": "object",
-          "path": "canvas[]<caseResultsSectionInline>.headerLink",
-          "title": "Header Link",
-          "type": "object"
-        },
-        {
-          "jsonType": "string",
-          "path": "canvas[]<caseResultsSectionInline>.headerLink.label",
-          "title": "Label",
-          "type": "string"
-        },
-        {
-          "description": "Relative path (e.g. /practice-areas/) or full URL (https://...)",
-          "jsonType": "string",
-          "path": "canvas[]<caseResultsSectionInline>.headerLink.url",
-          "title": "Page",
-          "type": "string"
-        },
-        {
           "jsonType": "string",
           "path": "canvas[]<caseResultsSectionInline>.intro",
           "title": "Intro",
           "type": "text"
         },
         {
-          "description": "Select from the case results you have built under Individual Items. Build each result once and reuse it. The results disclaimer renders automatically below them and is not editable here.",
-          "jsonType": "array",
-          "of": [
-            "reference"
-          ],
-          "path": "canvas[]<caseResultsSectionInline>.caseResults",
-          "title": "Case Results",
-          "type": "array"
+          "description": "Leave blank and the section shows the featured results that fit where it sits: every area of law on the homepage and other pages, and the page’s own area of law on a practice area page. Pick one to show only that area’s, on any page; a geo practice page needs one picked to show any. Mark results Featured on each case result. The results disclaimer renders automatically below them and is not editable here.",
+          "jsonType": "object",
+          "path": "canvas[]<caseResultsSectionInline>.areaOfLaw",
+          "title": "Area of Law",
+          "type": "reference"
         },
         {
-          "description": "Leave blank for up to three across. Four across sets eight results in two rows of four; seven in four and three; the count still decides, and one result never sits alone on a row.",
+          "description": "Leave blank for up to three across, six results at most. Four across shows up to eight in two rows of four; the count still decides, and one result never sits alone on a row.",
           "jsonType": "string",
           "options": {
             "layout": "radio",
@@ -11267,41 +11182,6 @@
           },
           "path": "canvas[]<caseResultsSectionInline>.across",
           "title": "Columns",
-          "type": "string"
-        },
-        {
-          "description": "Optional. Usually a link to a fuller results page.",
-          "jsonType": "object",
-          "path": "canvas[]<caseResultsSectionInline>.ctaButton",
-          "title": "CTA Button",
-          "type": "ctaButton"
-        },
-        {
-          "jsonType": "string",
-          "path": "canvas[]<caseResultsSectionInline>.ctaButton.title",
-          "title": "Button Label",
-          "type": "string"
-        },
-        {
-          "description": "Relative path (e.g. /contact/) or full URL (https://...)",
-          "jsonType": "string",
-          "path": "canvas[]<caseResultsSectionInline>.ctaButton.url",
-          "title": "URL",
-          "type": "string"
-        },
-        {
-          "initialValue": "primary",
-          "jsonType": "string",
-          "options": {
-            "layout": "radio",
-            "list": [
-              "primary",
-              "secondary",
-              "link"
-            ]
-          },
-          "path": "canvas[]<caseResultsSectionInline>.ctaButton.variant",
-          "title": "Variant",
           "type": "string"
         },
         {

@@ -1,14 +1,22 @@
-import {Button} from '@/components/ui/Button'
-import {headerLinkOf} from './headerLink'
 import {SectionHeader} from '@/components/ui/SectionHeader'
+import {CaseResultCard} from '@/components/ui/CaseResultCard'
 import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 import {SectionShell} from './SectionShell'
 import {type SeamProps, NO_SEAM} from './sectionFrame'
-import {type CaseResultsSectionProps} from './sectionProps'
+import {type CaseResultItem, type CaseResultsSectionProps} from './sectionProps'
 import {headingFit} from '@/lib/headingFit'
 import {CASE_RESULT_TIERS, CASE_RESULT_TIERS_FOUR, NARROW_FEW, countGridClasses} from './countGrid'
 
-// ─── Case Results section ─────────────────────────────────────────────────────
+// ─── Featured Case Results section ────────────────────────────────────────────
+//
+// WHAT IT SHOWS (monorepo backlog 454, WS-CASE-RESULTS-DESIGN-2026-10-13.md §11,
+// ruled by Justin 2026-10-14): the results marked Featured, not a list picked
+// here. On the homepage, any area of law; on a practice page, that page's area of
+// law only ("only displaying the correct case results in the practice area
+// silo"); a section naming an area of law, that area anywhere. Up to six, eight
+// at four across, newest first. It links to nothing but each card's own page:
+// "the section doesn't link to the case results page that has the cards", so the
+// header link and the button it once carried are gone.
 //
 // Promoted from `components/homepage/CaseResultsBlock.tsx` (Phase 10,
 // 2026-09-14): the shared section the homepage list renders for
@@ -47,14 +55,47 @@ export function resolveAppearance(data: CaseResultsSectionData) {
   return data.appearance
 }
 
-/** The results this section draws: a result with no amount and no caption has
- *  nothing to show, and a dangling reference projects as null. The render, `isEmpty`
- *  and the grey box all read this one filter (Phase 17A), so the walk never counts a
- *  band the page does not draw. */
-export function visibleResults(data: CaseResultsSectionData) {
-  return (data.caseResults ?? []).filter(
-    (r): r is NonNullable<typeof r> => r != null && Boolean(r.amount || r.caption),
-  )
+/** A result with something to show: a Result or a Summary holding a word. The same
+ *  test as `CASE_RESULT_SHOWN` in queries.ts, which the index's 404 and `sitemap.xml`
+ *  read; caseResults.test.ts holds the two equal. */
+export function isShownResult(r: {amount?: string | null; caption?: string | null}): boolean {
+  const hasWord = (v?: string | null) => (v ?? '').split(' ').some((w) => w !== '')
+  return hasWord(r.amount) || hasWord(r.caption)
+}
+
+/** The most a section shows: six, eight at four across (two rows of four). */
+export function resultsCap(data: Pick<CaseResultsSectionData, 'across'>): number {
+  return data.across === 'four' ? 8 : 6
+}
+
+/** The results this section draws: shown, and no more than the cap. A practice page
+ *  narrows the list to its silo first (`scopeCaseResults`), so the cap counts that
+ *  silo's results. The render, `isEmpty` and the grey box all read this one filter
+ *  (Phase 17A), so the walk never counts a band the page does not draw. */
+export function visibleResults(data: CaseResultsSectionData): CaseResultItem[] {
+  return (data.caseResults ?? [])
+    .filter((r): r is NonNullable<typeof r> => r != null && isShownResult(r))
+    .slice(0, resultsCap(data))
+}
+
+/** The silo a page shows: an area of law's id, or null for a page that belongs to
+ *  one it cannot name (a geo practice page). Null or undefined scope: not a practice
+ *  page, every area. Projected by the page query (`caseResultsScope`). */
+export type CaseResultsScope = {areaOfLaw: string | null} | null
+
+/** Narrow every Featured Case Results section on a page to the page's silo, before
+ *  anything walks or draws the list. A section that names its own area of law was
+ *  narrowed by its query and is left alone. A preview's draft id names the
+ *  published area. */
+export function scopeCaseResults<T extends {_type?: string | null}>(sections: T[], scope: CaseResultsScope | undefined): T[] {
+  if (!scope) return sections
+  const area = scope.areaOfLaw ? scope.areaOfLaw.replace(/^drafts\./, '') : null
+  return sections.map((section) => {
+    const s = section as T & {caseResults?: CaseResultItem[] | null; areaOfLaw?: string | null}
+    if (s._type !== 'caseResultsSection' && s._type !== 'caseResultsSectionInline') return section
+    if (s.areaOfLaw) return section
+    return {...s, caseResults: area ? (s.caseResults ?? []).filter((r) => r?.areaOfLaw === area) : []}
+  })
 }
 
 /** True when this section renders nothing, so the walk skips it and it never
@@ -90,39 +131,23 @@ export function CaseResultsSection({
 
   const heading = resolveTokenString(data.heading, napTokens)
   const emphasis = resolveTokenString(data.headingEmphasis, napTokens)
-  const link = headerLinkOf(data.headerLink, napTokens)
   const intro = resolveTokenString(data.intro, napTokens)
-  const cta = data.ctaButton?.title && data.ctaButton?.url ? data.ctaButton : null
 
   return (
     <SectionShell
       appearance={resolveAppearance(data)}
       seam={seam}
     >
+      {/* No header link: the section links to nothing but each card's own page (backlog 454). */}
       {heading && (
-        <SectionHeader emphasis={emphasis} link={link} scale={scale} heading={heading} fit={headingFit(heading, seam.site?.headingFace)} description={intro} className="mx-auto mb-12 max-w-2xl" />
+        <SectionHeader emphasis={emphasis} scale={scale} heading={heading} fit={headingFit(heading, seam.site?.headingFace)} description={intro} className="mx-auto mb-12 max-w-2xl" />
       )}
 
       {/* Phase 18 session D: the columns follow the count (`countGrid.ts`; a result card lies sideways, so three across
           and two by two at four, as session B's sideways cards). They were three across whatever the count. */}
       <ul role="list" className={`${grid.list} gap-6`} aria-label="Case results">
         {results.map((r, i) => (
-          // A light card keeps light-surface text wherever the band is: an operator
-          // can set this section dark or image, and without the light context the
-          // card's text inherited the dark band's (measured 1.06:1, Phase 14).
-          <li key={r._id ?? i} data-card="" data-ring-context="light" className={`rounded-ui bg-muted p-6 shadow-card-rest md:p-8 ${grid.items[i]}`}>
-            {r.amount ? (
-              // The result itself is the loudest thing in the card. h3, so it
-              // sits under the section's single h2.
-              <h3 className="font-heading text-2xl font-bold text-foreground md:text-3xl">{r.amount}</h3>
-            ) : null}
-            {r.caseType || r.year ? (
-              <p className="mt-2 text-sm font-semibold uppercase tracking-wide text-foreground-subtle">
-                {[r.caseType, r.year].filter(Boolean).join(' · ')}
-              </p>
-            ) : null}
-            {r.caption ? <p className="mt-3 text-foreground-muted">{r.caption}</p> : null}
-          </li>
+          <CaseResultCard key={r._id ?? i} result={r} level="h3" className={grid.items[i]} />
         ))}
       </ul>
 
@@ -133,14 +158,6 @@ export function CaseResultsSection({
       >
         {disclaimer}
       </p>
-
-      {cta ? (
-        <div className="mt-8 flex justify-center">
-          <Button href={cta.url as string} variant={cta.variant === 'secondary' ? 'secondary' : 'primary'}>
-            {resolveTokenString(cta.title, napTokens)}
-          </Button>
-        </div>
-      ) : null}
     </SectionShell>
   )
 }

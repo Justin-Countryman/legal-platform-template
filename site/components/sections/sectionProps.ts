@@ -66,6 +66,10 @@ export type CaseResultItem = {
   caseType?: string | null
   caption?: string | null
   year?: number | null
+  /** The result's area of law, an id: what a practice page's scope reads (backlog 454). */
+  areaOfLaw?: string | null
+  /** Its own page's address when it has one; a card without links nowhere. */
+  href?: string | null
 }
 
 export type PracticeAreaNavProps = SectionProps<
@@ -98,10 +102,12 @@ export type VideoSectionProps = SectionProps<
   'videos' | AppearanceKeys,
   {videos?: VideoItem[] | null; appearance?: SectionAppearance | null}
 >
+// The Featured Case Results section (backlog 454): the featured results its query
+// reads, and the area of law it names, as an id, when it names one.
 export type CaseResultsSectionProps = SectionProps<
   CaseResultsSection,
-  'caseResults' | 'ctaButton' | AppearanceKeys,
-  {caseResults?: CaseResultItem[] | null; ctaButton?: CtaButtonData | null; appearance?: SectionAppearance | null}
+  'areaOfLaw' | AppearanceKeys,
+  {caseResults?: CaseResultItem[] | null; areaOfLaw?: string | null; appearance?: SectionAppearance | null}
 >
 
 // The reviews section (2026-09-14): only its buttons resolve.

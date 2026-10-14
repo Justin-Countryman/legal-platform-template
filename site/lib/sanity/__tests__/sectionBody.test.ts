@@ -45,9 +45,10 @@ const PAIRS: Array<[doc: string, inline: string, fields: Record<string, unknown>
   ['videoSection', 'videoSectionInline', {
     heading: 'Watch', layout: 'split', videos: [{_key: 'v1', _type: 'reference', _ref: 'video-1'}],
   }],
+  // The Featured Case Results section (monorepo backlog 454): no list of its own; it reads what is featured, here
+  // in the area of law it names.
   ['caseResultsSection', 'caseResultsSectionInline', {
-    heading: 'Results', intro: 'Some of them.', ctaButton: {title: 'More', url: '/results/', variant: 'secondary'},
-    caseResults: [{_key: 'c1', _type: 'reference', _ref: 'result-1'}, {_key: 'c2', _type: 'reference', _ref: 'result-missing'}],
+    heading: 'Results', intro: 'Some of them.', areaOfLaw: {_type: 'reference', _ref: 'pa-family'},
   }],
   // The content section (Phase 11), once per layout and once with video media.
   ['contentSection', 'contentSectionInline', {
@@ -100,7 +101,10 @@ const DATASET = [
   {_id: 'badge-1', _type: 'badge', _rev: '1', image: {alt: 'Best', asset: {_ref: 'image-1'}}},
   {_id: 'testi-1', _type: 'testimonial', _rev: '1', quote: 'Superb.', name: 'A client', numberOfStars: 5},
   {_id: 'video-1', _type: 'video', _rev: '1', title: 'Intro', youTubeUrl: 'https://www.youtube.com/watch?v=abc123xyz00'},
-  {_id: 'result-1', _type: 'caseResult', _rev: '1', amount: '$1M', caseType: 'Truck', caption: 'Settled.', year: 2025},
+  {_id: 'result-1', _type: 'caseResult', _rev: '1', amount: '$1M', caseType: 'Truck', caption: 'Settled.', year: 2025,
+    featured: true, areaOfLaw: {_type: 'reference', _ref: 'pa-family'}},
+  {_id: 'result-2', _type: 'caseResult', _rev: '1', amount: '$2M', caseType: 'Truck', year: 2024,
+    featured: true, areaOfLaw: {_type: 'reference', _ref: 'pa-estate'}},
 ]
 
 async function run(query: string) {
@@ -175,9 +179,9 @@ describe('SECTION_BODY: the inline member and the referenced document project th
     expect(manual.attorneys).toEqual([expect.objectContaining({title: 'Jane Roe', slug: 'attorneys/jane-roe'})])
     const everyone = canvas[3] as {attorneys: Array<{title: string}>}
     expect(everyone.attorneys.map((a) => a.title)).toEqual(['Jane Roe'])
-    const results = canvas[8] as {caseResults: Array<{amount: string}>; ctaButton: {title: string}}
-    expect(results.caseResults).toEqual([expect.objectContaining({amount: '$1M', year: 2025})])
-    expect(results.ctaButton.title).toBe('More')
+    const results = canvas[8] as {caseResults: Array<{amount: string}>; areaOfLaw: string}
+    expect(results.caseResults).toEqual([expect.objectContaining({amount: '$1M', year: 2025, areaOfLaw: 'pa-family', href: null})])
+    expect(results.areaOfLaw).toBe('pa-family')
   })
 
   it('a stored member of a deleted block type projects only its type and key', async () => {

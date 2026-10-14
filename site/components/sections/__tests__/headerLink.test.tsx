@@ -42,14 +42,24 @@ describe('the header link', () => {
     expect(headerLinkOf(null)).toBeNull()
   })
 
-  it('reaches the practice areas, attorneys, testimonials and case results', () => {
+  it('reaches the practice areas, attorneys and testimonials', () => {
     const link = {label: 'View all', url: '/all/'}
     const cases = [
       render(<PracticeAreaNavBlock data={{heading: 'Areas', headerLink: link, layout: 'tile', items: [{_key: 'a', label: 'Wills', href: '/wills/'}]} as never} />).container,
       render(<AttorneySectionBlock data={{heading: 'People', headerLink: link, attorneys: [{_id: 'x', title: 'A. Lawyer', slug: 'attorneys/a'}]} as never} />).container,
       render(<TestimonialsGridSection data={{heading: 'Clients', headerLink: link, testimonials: [{_id: 't', quote: 'Kind.', name: 'A.'}]} as never} />).container,
-      render(<CaseResultsSection data={{heading: 'Results', headerLink: link, caseResults: [{_id: 'r', amount: '$1M', caption: 'Settlement'}]} as never} disclaimer="Past results do not guarantee future outcomes." />).container,
     ]
     for (const c of cases) expect(c.querySelector('[data-header-link] a[href="/all/"]')).not.toBeNull()
+  })
+
+  // Monorepo backlog 454: "the section doesn't link to the case results page that has the cards" (Justin, 2026-10-14).
+  // A link stored before its field was deleted, or a button, draws nothing; a card links to its own page only.
+  it('never reaches the Featured Case Results section, which links to nothing but each card’s own page', () => {
+    const c = render(<CaseResultsSection data={{heading: 'Results', headerLink: {label: 'All results', url: '/case-results/'},
+      ctaButton: {title: 'See all', url: '/case-results/'},
+      caseResults: [{_id: 'r', amount: '$1M', caption: 'Settlement', href: '/case-results/truck-collision'}, {_id: 's', amount: 'Dismissed'}]} as never}
+      disclaimer="Past results do not guarantee future outcomes." />).container
+    expect(c.querySelector('[data-header-link]')).toBeNull()
+    expect([...c.querySelectorAll('a')].map((a) => a.getAttribute('href'))).toEqual(['/case-results/truck-collision'])
   })
 })

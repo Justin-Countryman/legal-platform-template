@@ -47,29 +47,6 @@
   },
   {
     "type": "type",
-    "name": "caseResultsSectionInline.headerLink",
-    "value": {
-      "type": "object",
-      "attributes": {
-        "label": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        },
-        "url": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        }
-      }
-    }
-  },
-  {
-    "type": "type",
     "name": "testimonialsGridInline.headerLink",
     "value": {
       "type": "object",
@@ -1987,7 +1964,7 @@
   },
   {
     "type": "type",
-    "name": "caseResult.reference",
+    "name": "practiceArea.reference",
     "value": {
       "type": "object",
       "attributes": {
@@ -2012,7 +1989,7 @@
           "optional": true
         }
       },
-      "dereferencesTo": "caseResult"
+      "dereferencesTo": "practiceArea"
     }
   },
   {
@@ -2042,14 +2019,6 @@
           },
           "optional": true
         },
-        "headerLink": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "caseResultsSectionInline.headerLink"
-          },
-          "optional": true
-        },
         "intro": {
           "type": "objectAttribute",
           "value": {
@@ -2057,25 +2026,11 @@
           },
           "optional": true
         },
-        "caseResults": {
+        "areaOfLaw": {
           "type": "objectAttribute",
           "value": {
-            "type": "array",
-            "of": {
-              "type": "object",
-              "attributes": {
-                "_key": {
-                  "type": "objectAttribute",
-                  "value": {
-                    "type": "string"
-                  }
-                }
-              },
-              "rest": {
-                "type": "inline",
-                "name": "caseResult.reference"
-              }
-            }
+            "type": "inline",
+            "name": "practiceArea.reference"
           },
           "optional": true
         },
@@ -2089,14 +2044,6 @@
                 "value": "four"
               }
             ]
-          },
-          "optional": true
-        },
-        "ctaButton": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "ctaButton"
           },
           "optional": true
         },
@@ -2970,36 +2917,6 @@
           "optional": true
         }
       }
-    }
-  },
-  {
-    "type": "type",
-    "name": "practiceArea.reference",
-    "value": {
-      "type": "object",
-      "attributes": {
-        "_ref": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          }
-        },
-        "_type": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string",
-            "value": "reference"
-          }
-        },
-        "_weak": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "boolean"
-          },
-          "optional": true
-        }
-      },
-      "dereferencesTo": "practiceArea"
     }
   },
   {
@@ -6747,29 +6664,6 @@
         },
         "optional": true
       },
-      "headerLink": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "object",
-          "attributes": {
-            "label": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "string"
-              },
-              "optional": true
-            },
-            "url": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "string"
-              },
-              "optional": true
-            }
-          }
-        },
-        "optional": true
-      },
       "intro": {
         "type": "objectAttribute",
         "value": {
@@ -6777,25 +6671,11 @@
         },
         "optional": true
       },
-      "caseResults": {
+      "areaOfLaw": {
         "type": "objectAttribute",
         "value": {
-          "type": "array",
-          "of": {
-            "type": "object",
-            "attributes": {
-              "_key": {
-                "type": "objectAttribute",
-                "value": {
-                  "type": "string"
-                }
-              }
-            },
-            "rest": {
-              "type": "inline",
-              "name": "caseResult.reference"
-            }
-          }
+          "type": "inline",
+          "name": "practiceArea.reference"
         },
         "optional": true
       },
@@ -6809,14 +6689,6 @@
               "value": "four"
             }
           ]
-        },
-        "optional": true
-      },
-      "ctaButton": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "inline",
-          "name": "ctaButton"
         },
         "optional": true
       },

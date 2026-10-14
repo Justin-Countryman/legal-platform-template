@@ -178,16 +178,17 @@ const sampleHomePage = {
   h1: 'Trusted legal counsel for every chapter',
   // Homepage canvas — wires the reference-only item docs so their sections
   // render populated on a fresh client (item 43): a badges section referencing
-  // sample-badge and a case-results section referencing sample-case-result.
+  // sample-badge, and the Featured Case Results section, which shows the
+  // featured sample-case-result.
   // Members are inline section objects; the referenced documents are created
   // first in the run order below so reference resolution succeeds.
   canvas: [
     {
+      // The Featured Case Results section shows the featured results; the sample is one.
       _type: 'caseResultsSectionInline',
       _key: 'seed-case-results',
       heading: 'Results That Matter',
       intro: 'A sample of outcomes — placeholder content shipped with the template.',
-      caseResults: [{_type: 'reference', _ref: 'sample-case-result', _key: 'seed-case-result-1'}],
     },
     {
       _type: 'badgesSectionInline',

@@ -78,6 +78,10 @@ const DELETED_FIELDS: Array<[type: string, field: string]> = [
   ['designSettings', 'accent2Color'],
   // Phase 16C ([R-481]): a section's own bottom edge, on every type that had it.
   ...PAIRS.flatMap(([doc, inline]) => [[doc, 'edgeBottom'], [inline, 'edgeBottom']] as Array<[string, string]>),
+  // 2026-10-14 (monorepo backlog 454): the Featured Case Results section shows what is featured and links to
+  // nothing but each card's own page, so its picked list, its header link and its button went.
+  ...(['caseResults', 'headerLink', 'ctaButton'] as const).flatMap((f) =>
+    [['caseResultsSection', f], ['caseResultsSectionInline', f]] as Array<[string, string]>),
 ]
 
 // ─── 1. The schema compiles with two names per section and no duplicates ──────
@@ -136,7 +140,7 @@ for (const name of DELETED_TYPES) {
   if (schema.get(name)) fail(`${name} is registered again; it was deleted in Phase 15`)
 }
 for (const [type, field] of DELETED_FIELDS) {
-  if ((schema.get(type) as ObjectSchemaType | undefined)?.fields?.some((f) => f.name === field)) fail(`${type}.${field} is declared again; it was deleted in Phase 15`)
+  if ((schema.get(type) as ObjectSchemaType | undefined)?.fields?.some((f) => f.name === field)) fail(`${type}.${field} is declared again; it was deleted (Phase 15 and after)`)
 }
 ok(`the ${DELETED_TYPES.length} retired block types and ${DELETED_FIELDS.length} retired fields stay deleted`)
 
