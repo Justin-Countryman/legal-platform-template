@@ -82,18 +82,18 @@ describe('/case-results, every result as a card', () => {
     expect([...list.matchAll(/href="([^"]+)"/g)].map((m) => m[1])).toEqual(['/case-results/custody-modification-dakota-county'])
   })
 
-  it('carries the disclaimer above and below the list, the site’s wording when it has one', async () => {
+  // Justin, 2026-10-14, on the grey preview: "show it once below the cards", at 14 pixels ("make it 14 then").
+  it('carries the disclaimer once, directly below the list, at 14px, the site’s wording when it has one', async () => {
     serve({[Q.CASE_RESULT_INDEX_QUERY]: {results: RESULTS}})
     const html = renderToStaticMarkup(await CaseResultsPage())
-    expect(count(html, 'data-testid="results-disclaimer"')).toBe(2)
-    const first = html.indexOf('data-testid="results-disclaimer"')
+    expect(count(html, 'data-testid="results-disclaimer"')).toBe(1)
     const list = html.indexOf('aria-label="Case results"')
-    const last = html.lastIndexOf('data-testid="results-disclaimer"')
-    expect(first).toBeLessThan(list)
-    expect(last).toBeGreaterThan(list)
-    expect(count(html, RESULTS_DISCLAIMER_DEFAULT)).toBe(2)
+    const disclaimer = html.indexOf('data-testid="results-disclaimer"')
+    expect(disclaimer).toBeGreaterThan(list)
+    expect(html.slice(disclaimer, disclaimer + 200)).toMatch(/class="[^"]*\btext-sm\b/)
+    expect(count(html, RESULTS_DISCLAIMER_DEFAULT)).toBe(1)
     serve({[Q.CASE_RESULT_INDEX_QUERY]: {results: RESULTS, resultsDisclaimer: 'Our own wording.'}})
-    expect(count(renderToStaticMarkup(await CaseResultsPage()), 'Our own wording.')).toBe(2)
+    expect(count(renderToStaticMarkup(await CaseResultsPage()), 'Our own wording.')).toBe(1)
   })
 
   it('reads its page document when there is one: its hero heading is the H1, its search fields the metadata', async () => {

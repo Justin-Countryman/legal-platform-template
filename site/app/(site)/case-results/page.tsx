@@ -26,9 +26,9 @@ import {type CaseResultItem} from '@/components/sections/sectionProps'
 //
 // Every case result as a card, newest first, one list (Justin, 2026-10-14: "a case
 // results index page which would just be a big list of cards"). A card with a page
-// of its own links to it; the rest link nowhere. The disclaimer sits above the list
-// and below it, the one page that is nothing but results (WS-CASE-RESULTS-DESIGN
-// §5, §11.6). Served when at least one result has something to show, and a 404
+// of its own links to it; the rest link nowhere. The disclaimer sits once, directly
+// below the list, at 14px (Justin, 2026-10-14: "show it once below the cards", "make
+// it 14 then"; monorepo [R-717]). Served when at least one result has something to show, and a 404
 // otherwise, so a firm with none has no empty page; `sitemap.xml` lists it by the
 // same test. The page document (`caseResultIndex`) is optional: without one the
 // page takes its preset name.
@@ -90,12 +90,9 @@ export default async function CaseResultsPage() {
         </div>
       </div>
 
-      {/* Every result, the disclaimer above and below. REQUIRED, both: see CaseResultsSection.tsx's header. */}
+      {/* Every result, the disclaimer once below them. REQUIRED: see CaseResultsSection.tsx's header. */}
       <div className="px-[5%] py-12 md:py-16 lg:py-20">
         <div className="container">
-          <p data-testid="results-disclaimer" className="mx-auto mb-8 max-w-3xl text-center text-sm text-foreground-subtle">
-            {disclaimer}
-          </p>
           <ul role="list" className={`${grid.list} gap-6`} aria-label="Case results">
             {results.map((r, i) => (
               <CaseResultCard key={r._id ?? i} result={r} level="h2" className={grid.items[i]} />

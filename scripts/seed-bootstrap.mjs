@@ -132,10 +132,12 @@ const sampleCaseResult = {
   // dollar figure. The results disclaimer renders automatically wherever
   // case results render (site/lib/legal.ts — code-constant floor), so no
   // per-item disclaimer field exists or is needed.
-  amount: 'Favorable Outcome',
-  caseType: 'Sample Matter',
+  // Worded as a firm is told to enter one (monorepo [R-717]): the kind of result
+  // in words and a case type, never a bare outcome.
+  amount: 'Charges Dismissed',
+  caseType: 'Misdemeanor Theft',
   caption:
-    'Placeholder case result shipped with the Legal Platform Template. Replace with the firm’s real, verifiable outcomes in Sanity Studio.',
+    'Placeholder case result shipped with the Legal Platform Template: the charge was dismissed before trial. Replace with the firm’s real, verifiable outcomes in Sanity Studio.',
   year: 2024,
   // The area of law it belongs to (a top-level practice area), and featured, so the
   // homepage's Featured Case Results section shows it (monorepo backlog 454).
