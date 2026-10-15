@@ -16568,7 +16568,7 @@
           "type": "string"
         },
         {
-          "description": "Paste the Fillout (or other provider) embed snippet here",
+          "description": "Paste the Fillout embed snippet here. In Fillout, add no tracking to the form itself (no Meta Pixel, Google Tag Manager, Google Ads or custom code): it would run outside the cookie banner, and the firm’s privacy policy assumes there is none.",
           "jsonType": "string",
           "path": "formEmbed",
           "required": "warning",
@@ -16701,17 +16701,54 @@
           "type": "text"
         },
         {
-          "description": "Google Analytics 4 snippet only. It loads only after a visitor chooses Accept in the cookie banner, and never for a visitor who declines or whose browser sends Global Privacy Control. Any other script here is a new outside vendor the firm’s privacy policy must name.",
+          "description": "Google Analytics 4 snippet only. It loads only after a visitor chooses Accept in the cookie banner, and never for a visitor who declines or whose browser sends Global Privacy Control. Advertising tags go in the Advertising fields below, never here. Any other script here is a new outside vendor the firm’s privacy policy must name.",
           "jsonType": "string",
           "path": "scriptsRequireConsent",
           "title": "Scripts — Require Consent",
           "type": "text"
+        },
+        {
+          "description": "The digits of the pixel ID from Meta Events Manager. In Events Manager, turn OFF Automatic Advanced Matching for this pixel, so it never reads a form.",
+          "jsonType": "string",
+          "path": "metaPixelId",
+          "title": "Advertising — Meta Pixel ID",
+          "type": "string"
+        },
+        {
+          "description": "AW- and the digits (the Google tag for Google Ads). In Google Ads, leave Enhanced Conversions and its automatic detection of user-provided data OFF, so the tag never reads a form.",
+          "jsonType": "string",
+          "path": "googleAdsId",
+          "title": "Advertising — Google Ads tag ID",
+          "type": "string"
+        },
+        {
+          "description": "The digits of the UET tag. In Microsoft Advertising, leave Enhanced Conversions OFF and the Clarity box CLEAR.",
+          "jsonType": "string",
+          "path": "microsoftUetId",
+          "title": "Advertising — Microsoft Advertising UET tag ID",
+          "type": "string"
+        },
+        {
+          "description": "The digits of the partner ID from LinkedIn Campaign Manager. Turn OFF enhanced conversion tracking for the Insight Tag. LinkedIn’s tag also reads clicks and form submits on the page and cannot be told not to; it loads only with the visitor’s consent, and it cannot see inside the site’s Fillout forms.",
+          "jsonType": "string",
+          "path": "linkedInPartnerId",
+          "title": "Advertising — LinkedIn Insight Tag partner ID",
+          "type": "string"
+        },
+        {
+          "description": "Renames the footer’s Cookie settings link to \"Do Not Sell or Share My Personal Information\"; it opens the same choices. Turn it on only when the firm’s lawyer says the law requires the link (a firm covered by California’s privacy law, or one taking Connecticut residents’ sensitive details while it advertises). California’s other wording, \"Your Privacy Choices\", needs the state’s icon and a page for two rights, which this link is not, so it is not offered.",
+          "initialValue": false,
+          "jsonType": "boolean",
+          "path": "doNotSellLink",
+          "title": "Advertising — \"Do Not Sell or Share\" link",
+          "type": "boolean"
         }
       ],
       "initialDocument": {
         "_type": "siteSettings",
         "cookieBannerText": "We use analytics cookies to learn how visitors use this website. They stay off unless you accept.",
         "disclaimerUrl": "/disclaimer/",
+        "doNotSellLink": false,
         "firmName": "",
         "firmNameShort": "",
         "hideFromSearch": true,

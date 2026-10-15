@@ -14,9 +14,14 @@ declare global {
   }
 }
 
+// Only to Google Analytics: with an advertising tag on the same gtag, an event with no `send_to` would reach Google Ads
+// too (monorepo WS-AD-PIXELS-DESIGN-2026-10-15 §6). The cookie banner records the GA4 ids it loaded.
+
 function sendToGa4(metric: Metric) {
-  if (typeof window.gtag !== 'function') return
+  const ga = (window as Window & {__lpGaIds?: string[]}).__lpGaIds
+  if (typeof window.gtag !== 'function' || !ga?.length) return
   window.gtag('event', metric.name, {
+    send_to: ga,
     // GA4 event values must be integers; CLS is <1 so scale it up.
     value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
     metric_id: metric.id,

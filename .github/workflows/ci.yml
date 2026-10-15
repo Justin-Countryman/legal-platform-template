@@ -661,7 +661,11 @@ jobs:
         run: node scripts/ci/focus-walk.mjs
       # The cookie banner holds Site Settings' consent script back until Accept, with Consent Mode default-denied, and
       # remembers a decline; Global Privacy Control declines unasked; Cookie settings reopens it (monorepo
-      # BI/rules/legal-pages.md; the CI fixture's snippet loads a probe this script answers, never Google).
+      # BI/rules/legal-pages.md; the CI fixture's snippet loads a probe this script answers, never Google). The
+      # advertising tags (monorepo WS-AD-PIXELS-DESIGN-2026-10-15): none before an accept, only on the site's own
+      # address and on an address with nothing typed in it, one network on its own ad's landing, all four on the
+      # thank-you page with its address bare, none under Global Privacy Control, none after a withdrawal; every request
+      # to an outside host is answered by the script and never leaves the runner.
       - name: The cookie banner holds analytics until Accept (built and served)
         if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.browsers.outcome == 'success' }}
         timeout-minutes: 5

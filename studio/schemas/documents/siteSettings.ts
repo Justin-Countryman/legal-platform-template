@@ -173,7 +173,60 @@ export const siteSettings = defineType({
       // Corrected 2026-10-15: the help text promised an opt-out that did not
       // exist, and the scripts loaded for every visitor.
       description:
-        'Google Analytics 4 snippet only. It loads only after a visitor chooses Accept in the cookie banner, and never for a visitor who declines or whose browser sends Global Privacy Control. Any other script here is a new outside vendor the firm’s privacy policy must name.',
+        'Google Analytics 4 snippet only. It loads only after a visitor chooses Accept in the cookie banner, and never for a visitor who declines or whose browser sends Global Privacy Control. Advertising tags go in the Advertising fields below, never here. Any other script here is a new outside vendor the firm’s privacy policy must name.',
+      // An advertising tag pasted here would run as analytics, outside the advertising choice (monorepo
+      // WS-AD-PIXELS-DESIGN-2026-10-15 §6); go-live refuses one in any pasted field. Warns, as every field rule does.
+      validation: (Rule) =>
+        Rule.custom((value) =>
+          typeof value === 'string' && /fbevents|fbq\(|gtm\.js|GTM-|AW-\d|bat\.bing|uetq|snap\.licdn|lintrk|_linkedin_partner_id/.test(value)
+            ? 'This looks like an advertising tag. Put its ID in the Advertising fields instead, so it runs only with the visitor’s advertising consent.'
+            : true,
+        ).warning(),
+    },
+
+    // ─── Advertising ──────────────────────────────────────────────────────────
+    // Standard pixels by ID (monorepo WS-AD-PIXELS-DESIGN-2026-10-15; Justin 2026-10-15: "build a place for standard
+    // pixels and connect to this functionality. clients will have it.", and on counting: "That is the role of pixel for
+    // google ads etc. we don't need that"). The site renders each vendor's own base tag from the ID (site/lib/adPixels.ts)
+    // on every page, only after a visitor accepts Advertising in the cookie banner, never on the hidden staging site, and
+    // never on an address carrying something a visitor typed. What the firm counts is set in each vendor's own dashboard.
+    // Each ID set is an advertising company the firm's privacy policy must name, and its lawyer must adopt that policy
+    // before launch. The shapes are site/lib/outsideVendors.json's (`ids`), which site/lib/adIds.ts and the platform's
+    // go-live check read (a field rule warns; the site uses nothing of the wrong shape).
+    {
+      name: 'metaPixelId',
+      title: 'Advertising — Meta Pixel ID',
+      type: 'string',
+      description: 'The digits of the pixel ID from Meta Events Manager. In Events Manager, turn OFF Automatic Advanced Matching for this pixel, so it never reads a form.',
+      validation: (Rule) => Rule.regex(/^\d{12,20}$/, {name: 'Meta Pixel ID'}).warning('A Meta Pixel ID is all digits, usually 15 or 16'),
+    },
+    {
+      name: 'googleAdsId',
+      title: 'Advertising — Google Ads tag ID',
+      type: 'string',
+      description: 'AW- and the digits (the Google tag for Google Ads). In Google Ads, leave Enhanced Conversions and its automatic detection of user-provided data OFF, so the tag never reads a form.',
+      validation: (Rule) => Rule.regex(/^AW-\d{6,12}$/, {name: 'Google Ads tag ID'}).warning('A Google Ads tag ID is AW- and digits'),
+    },
+    {
+      name: 'microsoftUetId',
+      title: 'Advertising — Microsoft Advertising UET tag ID',
+      type: 'string',
+      description: 'The digits of the UET tag. In Microsoft Advertising, leave Enhanced Conversions OFF and the Clarity box CLEAR.',
+      validation: (Rule) => Rule.regex(/^\d{4,12}$/, {name: 'UET tag ID'}).warning('A UET tag ID is all digits'),
+    },
+    {
+      name: 'linkedInPartnerId',
+      title: 'Advertising — LinkedIn Insight Tag partner ID',
+      type: 'string',
+      description: 'The digits of the partner ID from LinkedIn Campaign Manager. Turn OFF enhanced conversion tracking for the Insight Tag. LinkedIn’s tag also reads clicks and form submits on the page and cannot be told not to; it loads only with the visitor’s consent, and it cannot see inside the site’s Fillout forms.',
+      validation: (Rule) => Rule.regex(/^\d{3,12}$/, {name: 'LinkedIn partner ID'}).warning('A LinkedIn partner ID is all digits'),
+    },
+    {
+      name: 'doNotSellLink',
+      title: 'Advertising — "Do Not Sell or Share" link',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Renames the footer’s Cookie settings link to "Do Not Sell or Share My Personal Information"; it opens the same choices. Turn it on only when the firm’s lawyer says the law requires the link (a firm covered by California’s privacy law, or one taking Connecticut residents’ sensitive details while it advertises). California’s other wording, "Your Privacy Choices", needs the state’s icon and a page for two rights, which this link is not, so it is not offered.',
     },
   ],
 

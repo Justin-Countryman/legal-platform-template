@@ -16,6 +16,7 @@ import {asksForPanels} from '@/lib/layouts'
 import {detailValue} from '@/lib/details'
 import type {LogoFacts} from '@/lib/logoFacts'
 import {type getSiteChrome} from '@/lib/sanity/fetchers'
+import {adVendors, usableAdIds} from '@/lib/adIds'
 import {resolveTokenString, formatPhone} from '@/lib/tokens'
 import {buildDesignTokenCSS, buildColorCSS, buildFontCSS, resolveSidebarDesignSettings} from '@/lib/designTokens'
 import {dividerShape} from '@/lib/dividers'
@@ -382,7 +383,10 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
           cookiesUrl: footerData?.siteSettings?.cookiesUrl,
           termsUrl: footerData?.siteSettings?.termsUrl,
           // The cookie banner's footer button, only when there is a consent script to choose about.
-          hasConsentScripts: typeof chrome.scripts === 'string' && chrome.scripts.trim() !== '',
+          hasConsentScripts: (typeof chrome.scripts === 'string' && chrome.scripts.trim() !== '') ||
+            adVendors(usableAdIds((chrome as {consent?: Record<string, unknown> | null}).consent)).length > 0,
+          // 11 CCR §7013's title, when the firm's lawyer says the law requires the link (monorepo WS-AD-PIXELS-DESIGN-2026-10-15 §6, 18).
+          consentLabel: (chrome as {consent?: {doNotSellLink?: boolean | null} | null}).consent?.doNotSellLink ? 'Do Not Sell or Share My Personal Information' : null,
           footerLayout: footerData?.footerSettings?.footerLayout,
           formEmbed: footerData?.footerSettings?.formEmbed,
           locations: footerData?.locations,

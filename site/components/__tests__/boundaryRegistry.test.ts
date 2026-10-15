@@ -55,6 +55,14 @@ const REGISTRY: readonly Row[] = [
     grounds: ['island'],
   },
   {
+    // The cookie banner's Choose panel (monorepo WS-AD-PIXELS-DESIGN-2026-10-15 §6): two plain checkboxes, both off.
+    file: 'consent/ConsentBanner.tsx',
+    draws: 'the edge of each purpose checkbox, and whether it is ticked',
+    marks: ['type="checkbox"', 'accent-[var(--color-action)]', 'aria-labelledby', 'focus-visible:ring-focus'],
+    contract: "1.4.11 the box is the browser's own native control, its edge drawn by the browser on its own white box; 1.4.1 a tick, not color alone, says it is on; 4.1.2 a named checkbox with its description",
+    grounds: ['island'],
+  },
+  {
     file: 'ui/Input.tsx',
     draws: 'the edge of a text field, and its placeholder',
     marks: ['border-border-control', 'placeholder:text-foreground-subtle', 'data-ring-context="light"'],

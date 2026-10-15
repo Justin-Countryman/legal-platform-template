@@ -146,6 +146,9 @@ while IFS= read -r line; do
     # Listed by the homepage member above; served by the catch-all at request
     # time (no generateStaticParams), so it has no prerendered route to assert.
     practiceArea) continue ;;
+    # The thank-you page, as the build makes it (monorepo page_creation.py): served by the catch-all at request time
+    # like the practice area above. consent-served.mjs reads it, where the advertising tags count a lead.
+    generalPage) continue ;;
     # A singleton has no slug and no route of its own. Its evidence is the color
     # its value produces in the prerendered layout's :root, which is the end-to-end
     # proof that a color field reaches the page through GROQ and the engine (the

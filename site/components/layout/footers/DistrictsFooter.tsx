@@ -25,7 +25,7 @@ const LINK = 'transition-colors duration-ui-fast hover:text-action-text hover:un
 export function DistrictsFooter({data}: Props) {
   const {
     firmName, address, locations, ctaText, ctaUrl,
-    privacyPolicyUrl, disclaimerUrl, cookiesUrl, termsUrl, hasConsentScripts,
+    privacyPolicyUrl, disclaimerUrl, cookiesUrl, termsUrl, hasConsentScripts, consentLabel,
   } = data
 
   const surface = footerSurface(data.footerScheme)
@@ -163,7 +163,7 @@ export function DistrictsFooter({data}: Props) {
             {legalLinks.map((l, i) => (
               <Link key={i} href={l.href} className={`underline ${LINK}`}>{l.label}</Link>
             ))}
-            {hasConsentScripts && <ConsentSettingsButton className={`underline ${LINK}`} />}
+            {hasConsentScripts && <ConsentSettingsButton className={`underline ${LINK}`} label={consentLabel} />}
           </div>
           {/* Social icons + action buttons, side by side with a gap */}
           <div className="flex flex-wrap items-center gap-x-8 gap-y-3">

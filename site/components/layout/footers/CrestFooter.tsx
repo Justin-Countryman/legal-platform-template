@@ -17,7 +17,7 @@ export function CrestFooter({data}: Props) {
   const {
     firmName, address, locations, ctaText, ctaUrl,
     column1, column2,
-    privacyPolicyUrl, disclaimerUrl, cookiesUrl, termsUrl, hasConsentScripts,
+    privacyPolicyUrl, disclaimerUrl, cookiesUrl, termsUrl, hasConsentScripts, consentLabel,
   } = data
 
   const surface = footerSurface(data.footerScheme)
@@ -163,7 +163,7 @@ export function CrestFooter({data}: Props) {
               {legalLinks.map((l, i) => (
                 <Link key={i} href={l.href} className="underline transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">{l.label}</Link>
               ))}
-              {hasConsentScripts && <ConsentSettingsButton className="underline transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus" />}
+              {hasConsentScripts && <ConsentSettingsButton className="underline transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus" label={consentLabel} />}
             </div>
           )}
         </div>

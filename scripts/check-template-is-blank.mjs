@@ -115,6 +115,15 @@ export const PLATFORM_HOSTS = new Map([
   ['googleapis.com', 'outside vendor: Google Maps embed'],
   ['elfsight.com', 'outside vendor: the reviews widget embed'],
   ['elfsightcdn.com', 'outside vendor: the reviews widget embed'],
+  ['facebook.net', 'outside vendor: the Meta Pixel (Site Settings, Advertising)'],
+  ['googleadservices.com', 'outside vendor: Google Ads (Site Settings, Advertising)'],
+  ['doubleclick.net', 'outside vendor: Google Ads (Site Settings, Advertising)'],
+  ['googlesyndication.com', 'outside vendor: Google Ads (Site Settings, Advertising)'],
+  ['bing.com', 'outside vendor: Microsoft Advertising UET (Site Settings, Advertising)'],
+  ['licdn.com', 'outside vendor: the LinkedIn Insight Tag (Site Settings, Advertising)'],
+  ['adsymptotic.com', 'outside vendor: the LinkedIn Insight Tag (Site Settings, Advertising)'],
+  ['oribi.io', 'outside vendor: the LinkedIn Insight Tag (Site Settings, Advertising)'],
+  ['bizographics.com', 'outside vendor: the LinkedIn Insight Tag (Site Settings, Advertising)'],
 ])
 
 // There is deliberately NO list of bespoke placeholder domains here.

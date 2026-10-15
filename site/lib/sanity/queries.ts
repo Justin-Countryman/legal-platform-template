@@ -399,13 +399,19 @@ export const SITE_SCRIPTS_QUERY = groq`
   *[_type == "siteSettings"][0].scriptsRequireConsent
 `
 
-// ─── The cookie banner's words ────────────────────────────────────────────────
-// Its text (siteSettings.cookieBannerText, a code default when empty) and the
-// privacy policy it links.
+// ─── The cookie banner's words and the advertising IDs ───────────────────────
+// Its text (siteSettings.cookieBannerText, a code default when empty), the
+// privacy policy it links, and the advertising IDs whose tags it holds back
+// (site/lib/adIds.ts checks each one's shape before any is used).
 export const CONSENT_QUERY = groq`
   *[_type == "siteSettings"][0]{
     "bannerText": cookieBannerText,
-    privacyPolicyUrl
+    privacyPolicyUrl,
+    metaPixelId,
+    googleAdsId,
+    microsoftUetId,
+    linkedInPartnerId,
+    doNotSellLink
   }
 `
 

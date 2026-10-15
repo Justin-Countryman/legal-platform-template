@@ -34,7 +34,7 @@ function directionsHref(loc: FooterLocation): string {
 export function SwitchboardFooter({data}: Props) {
   const {
     firmName, address, locations, ctaText, ctaUrl,
-    privacyPolicyUrl, disclaimerUrl, cookiesUrl, termsUrl, hasConsentScripts,
+    privacyPolicyUrl, disclaimerUrl, cookiesUrl, termsUrl, hasConsentScripts, consentLabel,
   } = data
 
   const surface = footerSurface(data.footerScheme)
@@ -233,7 +233,7 @@ export function SwitchboardFooter({data}: Props) {
             {legalLinks.map((l, i) => (
               <Link key={i} href={l.href} className={`underline ${LINK}`}>{l.label}</Link>
             ))}
-            {hasConsentScripts && <ConsentSettingsButton className={`underline ${LINK}`} />}
+            {hasConsentScripts && <ConsentSettingsButton className={`underline ${LINK}`} label={consentLabel} />}
           </div>
           <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
             <SocialIcons data={data} className="text-foreground-muted" hoverClass="hover:text-action-text" />

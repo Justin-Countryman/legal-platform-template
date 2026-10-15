@@ -80,8 +80,10 @@ export type FooterData = {
   cookiesUrl?: string | null
   /** `/terms` when the firm's Terms of Use page exists (the footer query derives it). */
   termsUrl?: string | null
-  /** Site Settings holds a consent script, so the legal links carry Cookie settings. */
+  /** Site Settings holds a consent script or an advertising ID, so the legal links carry Cookie settings. */
   hasConsentScripts?: boolean | null
+  /** Site Settings → Privacy choices link label, when the firm's lawyer requires one; else "Cookie settings". */
+  consentLabel?: string | null
   footerLayout?: string | null
   formEmbed?: string | null
   locations?: FooterLocation[] | null

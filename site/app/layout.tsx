@@ -3,10 +3,11 @@ import {resolveHidden} from '@/lib/searchVisibility'
 import {titleTemplate} from '@/lib/seoTitle'
 import {getSiteChrome} from '@/lib/sanity/fetchers'
 import {ConsentBanner} from '@/components/consent/ConsentBanner'
-import {bootScript} from '@/lib/consent'
+import {bootScript, type Purpose} from '@/lib/consent'
+import {adVendors, usableAdIds} from '@/lib/adIds'
 import {WebVitals} from '@/components/analytics/WebVitals'
 import './globals.css'
-import {siteOrigin} from '@/lib/siteHost'
+import {siteHost, siteOrigin} from '@/lib/siteHost'
 import {SITEWIDE_OG_IMAGE_URL} from '@/lib/socialMeta'
 
 // Typography is fully driven at runtime by the active fontPairingPreset (or
@@ -216,7 +217,9 @@ export default async function RootLayout({
   const chrome = await getSiteChrome()
   const orgData = (chrome?.organization ?? null) as OrganizationData | null
   const consentScripts = (chrome?.scripts ?? null) as string | null
-  const consent = (chrome?.consent ?? null) as {bannerText?: string | null; privacyPolicyUrl?: string | null} | null
+  const consent = (chrome?.consent ?? null) as ({bannerText?: string | null; privacyPolicyUrl?: string | null} & Record<string, unknown>) | null
+  const adIds = usableAdIds(consent)
+  const purposes: Purpose[] = [...(consentScripts?.trim() ? ['analytics' as const] : []), ...(adVendors(adIds).length ? ['ads' as const] : [])]
   const organizationSchema = buildOrganizationSchema(orgData)
 
   return (
@@ -247,10 +250,12 @@ export default async function RootLayout({
         {/* The cookie banner (monorepo BI/rules/legal-pages.md): first after the skip link, so a keyboard or a
             screen reader meets it early, and fixed to the bottom by CSS. The inline script decides before paint
             (lib/consent.ts bootConsent) and sets html[data-consent], which globals.css reads to show it. It holds the
-            operator-pasted GA4 snippet (Site Settings, Scripts: Require Consent) back until the visitor accepts; with
-            no snippet there is no script and no banner. */}
-        {consentScripts?.trim() ? <script dangerouslySetInnerHTML={{__html: bootScript()}} /> : null}
-        <ConsentBanner scripts={consentScripts} text={consent?.bannerText} privacyPolicyUrl={consent?.privacyPolicyUrl} />
+            operator-pasted GA4 snippet (Site Settings, Scripts: Require Consent) and the advertising tags the site writes
+            from Site Settings' IDs (lib/adPixels.ts) back until the visitor accepts each purpose; with neither there is
+            no script and no banner. */}
+        {purposes.length ? <script dangerouslySetInnerHTML={{__html: bootScript(purposes)}} /> : null}
+        <ConsentBanner scripts={consentScripts} text={consent?.bannerText} privacyPolicyUrl={consent?.privacyPolicyUrl} adIds={adIds}
+          site={siteHost()} />
         {children}
         {/* Core Web Vitals → GA4 events (free; replaces Vercel Speed Insights). */}
         <WebVitals />

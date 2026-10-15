@@ -14,7 +14,9 @@
 //     header's own link "into view" below the padding, a jump of hundreds of pixels (measured 333 px in Chromium).
 // The cookie banner (2026-10-15, monorepo BI/rules/legal-pages.md): the CI fixture holds a consent script, so every
 // live page is walked twice, fresh with the banner open at the bottom (its Accept must come within the first four
-// Tabs, and nothing focused may sit under it) and with a decline stored, as a returning visitor sees it.
+// Tabs, and nothing focused may sit under it) and with a decline stored, as a returning visitor sees it. The fixture
+// also holds advertising IDs, so the banner asks about two purposes (monorepo WS-AD-PIXELS-DESIGN-2026-10-15 §6): the
+// first page is walked a third time with Choose open, and both of its checkboxes must be reached by Tab.
 // Prints one line per page and width and every failure; exits 1 on a failure, 2 when a page or a server would not load.
 //
 // Usage: node scripts/ci/focus-walk.mjs [--served URL] [--paths /,/fixture-practice-area]
@@ -119,7 +121,7 @@ function readFocus() {
   }
   const head = header ? header.getBoundingClientRect() : null
   return {
-    none: false, scrollY, label, tag: el.tagName, inHeader, covered, points, centre,
+    none: false, scrollY, label, tag: el.tagName, type: el.getAttribute('type'), inHeader, covered, points, centre,
     top: box.top, headerBottom: head ? head.bottom : null, visible: box.width > 0 && box.height > 0,
   }
 }
@@ -139,7 +141,7 @@ async function settle(page) {
   }))
 }
 
-async function walk(page, key, failures, where, labels = []) {
+async function walk(page, key, failures, where, labels = [], tags = []) {
   let steps = 0
   let previous = await page.evaluate(readFocus)
   const seen = new Set()
@@ -149,6 +151,7 @@ async function walk(page, key, failures, where, labels = []) {
     const now = await page.evaluate(readFocus)
     if (now.none) break
     labels.push(now.label)
+    tags.push(now.type === 'checkbox' ? 'checkbox' : now.tag)
     const id = `${now.tag}:${now.label}:${Math.round(now.top + now.scrollY)}`
     if (seen.has(id)) break
     seen.add(id)
@@ -172,14 +175,14 @@ const failures = []
 let broken = false
 try {
   for (const [width, options] of WIDTHS) {
-   for (const mode of ['fresh', 'declined']) {
+   for (const mode of ['fresh', 'declined', 'choose']) {
     const name = `${width} ${mode}`
     const ctx = await browser.newContext(options)
     if (mode === 'declined') {
-      await ctx.addInitScript(() => localStorage.setItem('lp-consent', JSON.stringify({v: 1, choice: 'denied', at: Math.floor(Date.now() / 1000)})))
+      await ctx.addInitScript(() => localStorage.setItem('lp-consent', JSON.stringify({v: 2, analytics: 'denied', ads: 'denied', at: Math.floor(Date.now() / 1000)})))
     }
     const page = await ctx.newPage()
-    for (const path of PATHS) {
+    for (const path of mode === 'choose' ? PATHS.slice(0, 1) : PATHS) {
       const res = await page.goto(BASE + path, {waitUntil: 'load', timeout: 60000}).catch(() => null)
       if (!res || res.status() >= 400) {
         console.error(`::error::${path} at ${name} did not load (${res ? res.status() : 'no answer'})`)
@@ -194,13 +197,28 @@ try {
         return !!b && b.getClientRects().length > 0
       })
       if (mode === 'declined' && bannerOpen) failures.push(`${path} at ${name}: the cookie banner is open for a visitor who declined`)
+      if (mode === 'choose') {
+        const choose = page.locator('section[data-consent-banner] button[aria-controls="lp-consent-choose"]')
+        if ((await choose.count()) !== 1) {
+          failures.push(`${path} at ${name}: the cookie banner has no Choose button`)
+          continue
+        }
+        await choose.focus()
+        await page.keyboard.press('Enter')
+        await settle(page)
+        await page.evaluate(() => document.activeElement instanceof HTMLElement && document.activeElement.blur())
+      }
       const labels = []
-      const forward = await walk(page, 'Tab', failures, `${path} at ${name}`, labels)
-      if (bannerOpen && !labels.slice(0, 4).includes('Accept')) {
+      const tags = []
+      const forward = await walk(page, 'Tab', failures, `${path} at ${name}`, labels, tags)
+      if (bannerOpen && mode !== 'choose' && !labels.slice(0, 4).some((l) => l === 'Accept' || l === 'Accept all')) {
         failures.push(`${path} at ${name}: the cookie banner's Accept is not within the first four Tabs (${labels.slice(0, 4).join(' | ')})`)
       }
+      if (mode === 'choose' && tags.filter((t) => t === 'checkbox').length !== 2) {
+        failures.push(`${path} at ${name}: Tab reached ${tags.filter((t) => t === 'checkbox').length} of Choose's two checkboxes`)
+      }
       const back = await walk(page, 'Shift+Tab', failures, `${path} at ${name}`)
-      console.log(`${failures.length === before ? 'ok  ' : 'FAIL'} ${path} at ${name}: ${forward} Tab, ${back} Shift+Tab${bannerOpen ? ', banner open' : ''}`)
+      console.log(`${failures.length === before ? 'ok  ' : 'FAIL'} ${path} at ${name}: ${forward} Tab, ${back} Shift+Tab${bannerOpen ? (mode === 'choose' ? ', banner open on Choose' : ', banner open') : ''}`)
     }
     await ctx.close()
    }

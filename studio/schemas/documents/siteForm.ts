@@ -28,7 +28,7 @@ export const siteForm = defineType({
       title: 'Embed Code',
       type: 'text',
       rows: 5,
-      description: 'Paste the Fillout (or other provider) embed snippet here',
+      description: 'Paste the Fillout embed snippet here. In Fillout, add no tracking to the form itself (no Meta Pixel, Google Tag Manager, Google Ads or custom code): it would run outside the cookie banner, and the firm’s privacy policy assumes there is none.',
       validation: (Rule) => Rule.required().warning(),
     },
   ],
