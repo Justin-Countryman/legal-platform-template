@@ -390,11 +390,21 @@ export const SITE_METADATA_QUERY = groq`
   }
 `
 
-// ─── Consent-gated scripts (GA4 etc.) ─────────────────────────────────────────
-// Operator-pasted <script> blob (siteSettings.scriptsRequireConsent) rendered
-// client-side in the body so embedded scripts execute (defines gtag for GA4).
+// ─── Consent-gated scripts (GA4) ──────────────────────────────────────────────
+// Operator-pasted <script> blob (siteSettings.scriptsRequireConsent), mounted by
+// the cookie banner only after a visitor accepts (components/consent/ConsentBanner).
 export const SITE_SCRIPTS_QUERY = groq`
   *[_type == "siteSettings"][0].scriptsRequireConsent
+`
+
+// ─── The cookie banner's words ────────────────────────────────────────────────
+// Its text (siteSettings.cookieBannerText, a code default when empty) and the
+// privacy policy it links.
+export const CONSENT_QUERY = groq`
+  *[_type == "siteSettings"][0]{
+    "bannerText": cookieBannerText,
+    privacyPolicyUrl
+  }
 `
 
 // ─── OG image composition ─────────────────────────────────────────────────────
@@ -635,6 +645,9 @@ export const FOOTER_QUERY = groq`{
     privacyPolicyUrl,
     disclaimerUrl,
     cookiesUrl,
+    // Terms of Use, linked only when the page exists: the platform makes a
+    // general page at /terms only for a firm whose starter terms were drafted.
+    "termsUrl": select(count(*[_type == "generalPage" && slug.current == "terms" && !(_id in path("drafts.**"))]) > 0 => "/terms"),
     "address": primaryLocation->{
       ${GATED_STREET_FRAGMENT}
       city,
@@ -2110,6 +2123,7 @@ export const SITE_CHROME_QUERY = groq`{
   "metadata": ${SITE_METADATA_QUERY},
   "organization": ${ORGANIZATION_SCHEMA_QUERY},
   "scripts": ${SITE_SCRIPTS_QUERY},
+  "consent": ${CONSENT_QUERY},
   "header": ${HEADER_QUERY},
   "footer": ${FOOTER_QUERY},
   "designTokens": ${DESIGN_TOKENS_QUERY},

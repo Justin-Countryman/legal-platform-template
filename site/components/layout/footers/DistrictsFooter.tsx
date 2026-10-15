@@ -8,6 +8,7 @@
 
 import {LogoImage, logoBlend} from '@/components/ui/LogoImage'
 import Link from 'next/link'
+import {ConsentSettingsButton} from '@/components/consent/ConsentSettingsButton'
 import {MdLocationOn, MdPhone} from 'react-icons/md'
 import {Button} from '@/components/ui/Button'
 import {
@@ -24,7 +25,7 @@ const LINK = 'transition-colors duration-ui-fast hover:text-action-text hover:un
 export function DistrictsFooter({data}: Props) {
   const {
     firmName, address, locations, ctaText, ctaUrl,
-    privacyPolicyUrl, disclaimerUrl, cookiesUrl,
+    privacyPolicyUrl, disclaimerUrl, cookiesUrl, termsUrl, hasConsentScripts,
   } = data
 
   const surface = footerSurface(data.footerScheme)
@@ -63,6 +64,7 @@ export function DistrictsFooter({data}: Props) {
   const legalLinks = [
     ...(privacyPolicyUrl ? [{label: 'Privacy Policy', href: privacyPolicyUrl}] : []),
     ...(disclaimerUrl ? [{label: 'Legal Disclaimer', href: disclaimerUrl}] : []),
+    ...(termsUrl ? [{label: 'Terms of Use', href: termsUrl}] : []),
     ...(cookiesUrl ? [{label: 'Cookie Policy', href: cookiesUrl}] : []),
   ]
 
@@ -161,6 +163,7 @@ export function DistrictsFooter({data}: Props) {
             {legalLinks.map((l, i) => (
               <Link key={i} href={l.href} className={`underline ${LINK}`}>{l.label}</Link>
             ))}
+            {hasConsentScripts && <ConsentSettingsButton className={`underline ${LINK}`} />}
           </div>
           {/* Social icons + action buttons, side by side with a gap */}
           <div className="flex flex-wrap items-center gap-x-8 gap-y-3">

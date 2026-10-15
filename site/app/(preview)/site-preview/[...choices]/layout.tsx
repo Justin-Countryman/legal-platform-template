@@ -3,6 +3,7 @@ import {notFound, redirect} from 'next/navigation'
 import {SiteShell} from '@/components/layout/SiteShell'
 import {Switcher} from '@/components/preview/Switcher'
 import {analyticsOff} from '@/lib/preview/analytics'
+import {CONSENT_OFF_SCRIPT} from '@/lib/consent'
 import {loadPreview} from '@/lib/preview/load'
 import {closeShownOf, homeHeroOf} from '@/components/layout/HomeBody'
 import {heroGround, heroPhotoOf, setPhotoEntries} from '@/lib/heroGround'
@@ -66,6 +67,8 @@ export default async function PreviewLayout({children, params}: {children: React
 
   return (
     <>
+      {/* The cookie banner stays off on the preview, which runs no consent script (lib/consent.ts). */}
+      <script dangerouslySetInnerHTML={{__html: CONSENT_OFF_SCRIPT}} />
       {off && <script dangerouslySetInnerHTML={{__html: off}} />}
       {state.choices.view === 'grey' ? (
         // The grey box draws its own header and footer boxes, in its own greys: no

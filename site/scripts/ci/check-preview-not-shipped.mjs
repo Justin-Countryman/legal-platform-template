@@ -50,7 +50,10 @@ const SENTINELS = [
   'Preview, nothing is live',
   'gb-label',
   'sw-choice',
-  'ga-disable-',
+  // The preview's own statement (lib/preview/analytics.ts), not the bare property name: the cookie banner sets
+  // `ga-disable-<id>` on a visitor who declines (2026-10-15, monorepo BI/rules/legal-pages.md), so the bare words
+  // now reach every live page by design.
+  "window['ga-disable-",
   // Phase 17C session 3: the meeting's preselection in the switcher's rows.
   'sw-all',
   'Suggested first:',

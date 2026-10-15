@@ -610,11 +610,25 @@ describe('CATCH_ALL_PAGE_QUERY serves the eight types and only them', () => {
 })
 
 describe('SITE_CHROME_QUERY carries every key the layouts read', () => {
-  it('answers the ten keys from an empty dataset, the switch reading hidden', async () => {
+  it('answers the eleven keys from an empty dataset, the switch reading hidden', async () => {
     const chrome = await run(SITE_CHROME_QUERY, [], {})
     expect(Object.keys(chrome).sort()).toEqual(
-      ['designTokens', 'footer', 'globalCta', 'header', 'heroSettings', 'hidden', 'metadata', 'nap', 'organization', 'scripts'].sort(),
+      ['consent', 'designTokens', 'footer', 'globalCta', 'header', 'heroSettings', 'hidden', 'metadata', 'nap', 'organization', 'scripts'].sort(),
     )
     expect(chrome.hidden).toBeNull()
   })
+})
+
+// The footer's legal links (monorepo BI/rules/legal-pages.md): Terms of Use only when the firm's published page
+// exists.
+describe('FOOTER_QUERY derives the Terms of Use link', () => {
+  const settings = (extra: Record<string, unknown> = {}) => ({_id: 'siteSettings', _type: 'siteSettings', firmName: 'Fixture', ...extra})
+  const terms = (id: string) => ({_id: id, _type: 'generalPage', title: 'Terms of Use', slug: {_type: 'slug', current: 'terms'}})
+
+  it('links /terms only when a published general page holds it', async () => {
+    expect((await run(FOOTER_QUERY, [settings()], {})).siteSettings.termsUrl).toBeNull()
+    expect((await run(FOOTER_QUERY, [settings(), terms('drafts.generalPage-terms')], {})).siteSettings.termsUrl).toBeNull()
+    expect((await run(FOOTER_QUERY, [settings(), terms('generalPage-terms')], {})).siteSettings.termsUrl).toBe('/terms')
+  })
+
 })

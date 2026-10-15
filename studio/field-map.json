@@ -16663,8 +16663,8 @@
           "type": "text"
         },
         {
-          "description": "Customizable consent banner message",
-          "initialValue": "We use cookies to improve your experience. You can opt out at any time.",
+          "description": "The message in the cookie banner, beside Accept, Decline and a link to the privacy policy. The banner appears only when Scripts — Require Consent holds a script. Leave blank for the standard message.",
+          "initialValue": "We use analytics cookies to learn how visitors use this website. They stay off unless you accept.",
           "jsonType": "string",
           "path": "cookieBannerText",
           "title": "Cookie Banner Text",
@@ -16687,14 +16687,14 @@
           "type": "string"
         },
         {
-          "description": "Always renders — e.g. Bing verification, other non-tracking tags",
+          "description": "Not shown on the website: nothing renders this field. Put the Search Console token in its own field above.",
           "jsonType": "string",
           "path": "scriptsNoConsent",
           "title": "Scripts — No Consent Required",
           "type": "text"
         },
         {
-          "description": "Loads immediately (opt-out model) but blocked if user opts out — e.g. GA4, Facebook Pixel, GTM, live chat",
+          "description": "Google Analytics 4 snippet only. It loads only after a visitor chooses Accept in the cookie banner, and never for a visitor who declines or whose browser sends Global Privacy Control. Any other script here is a new outside vendor the firm’s privacy policy must name.",
           "jsonType": "string",
           "path": "scriptsRequireConsent",
           "title": "Scripts — Require Consent",
@@ -16703,7 +16703,7 @@
       ],
       "initialDocument": {
         "_type": "siteSettings",
-        "cookieBannerText": "We use cookies to improve your experience. You can opt out at any time.",
+        "cookieBannerText": "We use analytics cookies to learn how visitors use this website. They stay off unless you accept.",
         "disclaimerUrl": "/disclaimer/",
         "firmName": "",
         "firmNameShort": "",
