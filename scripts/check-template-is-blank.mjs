@@ -66,7 +66,7 @@ const RESERVED_DOMAINS = ['example.com', 'example.net', 'example.org']
 
 // Real hosts the platform itself depends on. Each needs a reason; a host that
 // cannot be justified as PLATFORM infrastructure does not belong here.
-const PLATFORM_HOSTS = new Map([
+export const PLATFORM_HOSTS = new Map([
   ['cdn.sanity.io', 'Sanity image CDN — every rendered image URL'],
   ['sanity.io', 'Sanity product + docs links'],
   ['sanity.studio', 'hosted Studio hostnames (scripts/README.md seed project)'],
@@ -100,6 +100,21 @@ const PLATFORM_HOSTS = new Map([
   ['superlawyers.com', 'legal directory — footerSettings.superLawyersUrl'],
   ['lawinfo.com', 'legal directory — footerSettings.lawInfoUrl'],
   ['yelp.com', 'review directory — footerSettings.yelpUrl'],
+  // Outside vendors a visitor's browser reaches: each is an entry in
+  // site/lib/outsideVendors.json, which the firm's privacy policy is drafted
+  // from (monorepo BI/rules/legal-pages.md). site/lib/__tests__/
+  // outsideVendors.test.ts holds this list and that one together.
+  ['googletagmanager.com', 'outside vendor: Google Analytics 4 snippet (Scripts: Require Consent)'],
+  ['google-analytics.com', 'outside vendor: Google Analytics 4 collection'],
+  ['analytics.google.com', 'outside vendor: Google Analytics 4 collection'],
+  ['ytimg.com', 'outside vendor: YouTube thumbnails and player'],
+  ['googlevideo.com', 'outside vendor: YouTube player media'],
+  ['vimeocdn.com', 'outside vendor: Vimeo player'],
+  ['fillout.com', 'outside vendor: the standard form embed (siteForm.formEmbed)'],
+  ['gstatic.com', 'outside vendor: Google Maps embed assets'],
+  ['googleapis.com', 'outside vendor: Google Maps embed'],
+  ['elfsight.com', 'outside vendor: the reviews widget embed'],
+  ['elfsightcdn.com', 'outside vendor: the reviews widget embed'],
 ])
 
 // There is deliberately NO list of bespoke placeholder domains here.

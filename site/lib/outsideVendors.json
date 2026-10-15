@@ -1,0 +1,117 @@
+{
+  "_about": "Every outside company whose servers a visitor's browser reaches from this site: the template's own code (when: always, scroll, consent) and the platform's standard pastes in Studio, which load with the page once pasted (when: paste). The firm's privacy policy is drafted from this list (monorepo BI/rules/legal-pages.md, the LEGAL family). The scrub guard (scripts/check-template-is-blank.mjs) fails the build on any real host the template names that its PLATFORM_HOSTS does not allow, and lib/__tests__/outsideVendors.test.ts fails when an allowed host is neither a vendor here nor in linkOnly with a reason: so a new outside script cannot merge without its vendor. A host is a hostname or *.suffix. Adding a vendor adds a company to every firm's privacy policy: say so in the pull request.",
+  "vendors": [
+    {
+      "id": "sanity",
+      "name": "Sanity",
+      "purpose": "stores the website's content and delivers its images",
+      "hosts": [
+        "cdn.sanity.io"
+      ],
+      "when": "always",
+      "receives": "IP address and browser details, with each image request"
+    },
+    {
+      "id": "youtube",
+      "name": "YouTube (Google)",
+      "purpose": "plays videos, in its privacy-enhanced mode",
+      "hosts": [
+        "img.youtube.com",
+        "i.ytimg.com",
+        "www.youtube-nocookie.com",
+        "*.ytimg.com",
+        "*.googlevideo.com",
+        "*.youtube.com"
+      ],
+      "when": "scroll",
+      "receives": "IP address and browser details; a video's preview image loads before play, and the player may set or read cookies"
+    },
+    {
+      "id": "vimeo",
+      "name": "Vimeo",
+      "purpose": "plays videos, with its do-not-track setting",
+      "hosts": [
+        "player.vimeo.com",
+        "*.vimeocdn.com",
+        "vimeo.com"
+      ],
+      "when": "scroll",
+      "receives": "IP address and browser details; essential player cookies"
+    },
+    {
+      "id": "google-analytics",
+      "name": "Google Analytics",
+      "purpose": "measures how visitors use the website, only after a visitor accepts",
+      "hosts": [
+        "www.googletagmanager.com",
+        "*.google-analytics.com",
+        "*.analytics.google.com"
+      ],
+      "when": "consent",
+      "receives": "pages visited, time on them, referrer, device and browser, approximate location from the IP address; sets cookies"
+    },
+    {
+      "id": "fillout",
+      "name": "Fillout",
+      "purpose": "provides the contact form; form messages are stored for the firm in Zite",
+      "hosts": [
+        "*.fillout.com",
+        "fillout.com"
+      ],
+      "when": "paste",
+      "receives": "what the visitor types into the form, IP address and browser details"
+    },
+    {
+      "id": "google-maps",
+      "name": "Google Maps",
+      "purpose": "shows an office's location on a map",
+      "hosts": [
+        "www.google.com",
+        "maps.google.com",
+        "maps.googleapis.com",
+        "maps.gstatic.com",
+        "*.gstatic.com",
+        "*.googleapis.com"
+      ],
+      "when": "paste",
+      "receives": "IP address and browser details; may set or read cookies"
+    },
+    {
+      "id": "elfsight",
+      "name": "Elfsight",
+      "purpose": "shows the firm's Google reviews in a widget",
+      "hosts": [
+        "static.elfsight.com",
+        "*.elfsight.com",
+        "*.elfsightcdn.com"
+      ],
+      "when": "paste",
+      "receives": "IP address and browser details"
+    }
+  ],
+  "linkOnly": {
+    "sanity.studio": "hosted Studio addresses for the firm's editors; never loaded by a visitor",
+    "api.sanity.io": "the content API, called by the server at build and render; never by a visitor's browser",
+    "schema.org": "a structured data namespace, never fetched",
+    "w3.org": "the SVG namespace, never fetched",
+    "youtu.be": "short video links the site reads to find a video's id",
+    "fonts.google.com": "font license attribution; fonts are served by the site itself",
+    "vercel.sh": "a configuration schema address, never served",
+    "jsdelivr.net": "a configuration schema address, never served",
+    "nextjs.org": "a documentation link in generated code",
+    "lucide.dev": "icon library attribution",
+    "sil.org": "the font license's text",
+    "github.com": "source and documentation links",
+    "facebook.com": "a link to the firm's profile; nothing loads from it",
+    "instagram.com": "a link to the firm's profile; nothing loads from it",
+    "linkedin.com": "a link to the firm's profile; nothing loads from it",
+    "justia.com": "a link to the firm's directory profile",
+    "avvo.com": "a link to the firm's directory profile",
+    "martindale.com": "a link to the firm's directory profile",
+    "findlaw.com": "a link to the firm's directory profile",
+    "lawyers.com": "a link to the firm's directory profile",
+    "superlawyers.com": "a link to the firm's directory profile",
+    "lawinfo.com": "a link to the firm's directory profile",
+    "yelp.com": "a link to the firm's review profile"
+  }
+}
