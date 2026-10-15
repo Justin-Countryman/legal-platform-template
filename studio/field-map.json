@@ -1097,6 +1097,13 @@
           "type": "image"
         },
         {
+          "description": "Optional. One short line about this attorney, shown on their card wherever attorneys are listed. Left empty, the card shows no line. The meta description is written for search and never shows on the card.",
+          "jsonType": "string",
+          "path": "cardLine",
+          "title": "Card Line",
+          "type": "string"
+        },
+        {
           "jsonType": "array",
           "of": [
             "block",

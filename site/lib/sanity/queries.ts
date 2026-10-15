@@ -344,21 +344,23 @@ export const SECTION_BODY = `
     mode == 'practiceArea' => *[_type == "attorneyIndex"][0].orderedAttorneys[]._ref,
     null
   ),
+  // An attorney card's bio is the attorney's own Card Line, never the meta description, which the build writes for
+  // search (monorepo FIELD-7, Group 3, [R-739]); a line of spaces counts as none, as a practice area's does.
   // The title key holds the RENDERED nav label, not the stored Name — same
   // shape as the sidebar tree, and for the same reason. Ruled 2026-08-07,
   // Pass D.2: attorney cards are an index-card surface, which NAME-1 gives the
   // Nav Label. Three branches because the block has three modes.
   "attorneys": select(
     mode == 'all' => *[_type == "attorneyIndex"][0].orderedAttorneys[defined(@->_id)]->{
-      _id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
+      _id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, h1, jobTitle, "bio": select(count(string::split(coalesce(cardLine, ""), " ")[@ != ""]) > 0 => cardLine, null),
       "photo": photo ${IMAGE_FRAGMENT}, "photoOpaque": photo.asset->metadata.isOpaque
     },
     mode == 'practiceArea' => *[_type == "attorneyPage" && references(^.practiceAreaPage._ref)]{
-      _id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
+      _id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, h1, jobTitle, "bio": select(count(string::split(coalesce(cardLine, ""), " ")[@ != ""]) > 0 => cardLine, null),
       "photo": photo ${IMAGE_FRAGMENT}, "photoOpaque": photo.asset->metadata.isOpaque
     },
     mode == 'manual' => attorneys[defined(@->_id)]->{
-      _id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, h1, jobTitle, "bio": metaDescription,
+      _id, "title": ${NAV_LABEL_EXPR}, "slug": slug.current, h1, jobTitle, "bio": select(count(string::split(coalesce(cardLine, ""), " ")[@ != ""]) > 0 => cardLine, null),
       "photo": photo ${IMAGE_FRAGMENT}, "photoOpaque": photo.asset->metadata.isOpaque
     },
     []
