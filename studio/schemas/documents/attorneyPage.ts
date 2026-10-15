@@ -252,6 +252,23 @@ export const attorneyPage = defineType({
       ],
     }),
 
+    {
+      // Monorepo `BI/rules/page-fields.md` FIELD-7, Group 3 ([R-739], backlog 467): one line on the attorney's card,
+      // where attorneys are listed. The card printed the meta description, which the build now writes for search, so
+      // the card reads this line alone; no platform writer, no default, and with none the card prints no line.
+      name: 'cardLine',
+      title: 'Card Line',
+      type: 'string',
+      description:
+        'Optional. One short line about this attorney, shown on their card wherever attorneys are listed. Left empty, the card shows no line. The meta description is written for search and never shows on the card.',
+      validation: (Rule) =>
+        Rule.custom((v?: string) => {
+          if (typeof v !== 'string' || v === '') return true
+          if (v.trim() === '') return 'A card line of spaces shows nothing on the card'
+          return v.length <= 160 ? true : `${v.length} characters: over 160 it runs past three lines on the card and is cut off`
+        }).warning(),
+    },
+
     // ─── Biography (always visible) ───────────────────────────────────────────
     defineField({
       name: 'fullBiography',
