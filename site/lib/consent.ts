@@ -3,10 +3,16 @@
 //
 // - Site Settings → Scripts — Require Consent (Google Analytics 4's snippet) runs only after a visitor accepts.
 //   Google's Consent Mode in its basic form: the tag is not loaded at all until then, and when it is, every key
-//   starts denied and only `analytics_storage` is granted. The banner asks about analytics alone, so the three
-//   advertising keys are never granted, which keeps the firm's privacy policy's "no sale or sharing" true.
-// - The choice is one browser-storage entry, never a cookie the site sets, kept about six months (the ICO's figure
-//   for asking a decliner again, and the CNIL's for both) and then asked again.
+//   starts denied and only `analytics_storage` is granted; the advertising keys only with an accept of advertising.
+// - The choice is kept twelve months and then asked again (monorepo [R-751]; Justin, 2026-10-15: "We should not be
+//   asking twice or whatever the industry standard is"): Cookiebot's and OneTrust's default, and California's floor
+//   for asking again someone who opted out of sharing (11 CCR §7026(k)). It is kept twice: a browser-storage entry the
+//   page writes at once, and a first-party cookie of the same name the site's own server sets (`/api/consent`), which
+//   Safari keeps (its tracking prevention deletes a site's script-written storage, and caps script-written cookies,
+//   after seven days without a click on the site; WebKit, "Full Third-Party Cookie Blocking and More", 2020-03-24).
+//   The page never writes the cookie itself, or Safari would cap it too. It is read storage first, then the cookie.
+//   Storing the choice needs no consent of its own (the CNIL's first exempt tracker; the ICO's consent-mechanism
+//   cookies).
 // - A browser sending Global Privacy Control, with nothing stored, is a decline without asking; a choice the visitor
 //   made in the banner stands.
 // - `bootConsent` decides before the page paints: the layout inlines it, serialized, ahead of the banner, and it sets
@@ -30,7 +36,11 @@ export type ConsentState = 'ask' | 'granted' | 'denied' | 'mixed' | 'off'
 
 export const CONSENT_STORAGE_KEY = 'lp-consent'
 export const CONSENT_VERSION = 2
-export const CONSENT_KEEP_SECONDS = 183 * 24 * 60 * 60
+export const CONSENT_KEEP_SECONDS = 365 * 24 * 60 * 60
+/** The site's own route that sets the choice's cookie (`app/api/consent/route.ts`). */
+export const CONSENT_COOKIE_ROUTE = '/api/consent'
+/** How far a choice's time may sit from the server's before the cookie route refuses it (a wrong device clock). */
+export const CONSENT_CLOCK_SKEW_SECONDS = 2 * 24 * 60 * 60
 
 /** Rendered by the operator's preview layout, after the root layout's own script: the banner never shows there and
  *  nothing is held or loaded by it (the Switcher sits at the bottom, and flow-metrics measures only the preview).
@@ -107,6 +117,38 @@ export function consentState(r: Resolution): ConsentState {
   return 'mixed'
 }
 
+/** The stored choice as written: the browser-storage entry, or, when Safari has deleted it, the cookie the site's
+ *  server set. `bootConsent` reads the same way, inline. */
+export function readStoredRaw(d: Document, w: Window, key: string = CONSENT_STORAGE_KEY): string | null {
+  try {
+    const raw = w.localStorage.getItem(key)
+    if (raw) return raw
+  } catch {
+    // Storage refused: the cookie may still hold the choice.
+  }
+  try {
+    const jar = ('; ' + d.cookie).split('; ' + key + '=')
+    return jar.length > 1 ? decodeURIComponent(jar[1].split(';')[0]) : null
+  } catch {
+    return null
+  }
+}
+
+/** The cookie's header, for the route: the entry exactly as the page stored it, its age counted from the choice. */
+export function choiceCookieHeader(raw: string, nowSeconds: number, secure: boolean): string | null {
+  const choices = parseChoices(raw, nowSeconds + CONSENT_CLOCK_SKEW_SECONDS)
+  let at = NaN
+  try {
+    at = (JSON.parse(raw) as {at?: number}).at ?? NaN
+  } catch {
+    return null
+  }
+  if (!choices || !Number.isFinite(at) || Math.abs(nowSeconds - at) > CONSENT_CLOCK_SKEW_SECONDS) return null
+  const value = serializeChoices(choices, at)
+  const maxAge = Math.max(0, CONSENT_KEEP_SECONDS - Math.max(0, nowSeconds - at))
+  return `${CONSENT_STORAGE_KEY}=${encodeURIComponent(value)}; Max-Age=${maxAge}; Path=/; SameSite=Lax${secure ? '; Secure' : ''}`
+}
+
 /* eslint-disable no-var */
 /** The decision, made before paint. Self-contained on purpose (no imports, no closures): the layout inlines it with
  *  `.toString()`. Sets `html[data-consent]` and returns the state; held equal to `consentState(resolveChoices(...))`
@@ -114,7 +156,16 @@ export function consentState(r: Resolution): ConsentState {
 export function bootConsent(d: Document, w: Window, key: string, keep: number, purposes: string[]): string {
   var stored = null as null | Record<string, string>
   try {
-    var raw = w.localStorage.getItem(key)
+    var raw = null as string | null
+    try {
+      raw = w.localStorage.getItem(key)
+    } catch {
+      raw = null
+    }
+    if (!raw) {
+      var jar = ('; ' + d.cookie).split('; ' + key + '=')
+      raw = jar.length > 1 ? decodeURIComponent(jar[1].split(';')[0]) : null
+    }
     var v = raw ? JSON.parse(raw) : null
     var now = Math.floor(Date.now() / 1000)
     var ok = function (c: unknown) { return c === 'granted' || c === 'denied' }

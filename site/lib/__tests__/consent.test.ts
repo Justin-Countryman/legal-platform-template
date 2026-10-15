@@ -1,4 +1,4 @@
-import {describe, it, expect} from 'vitest'
+import {afterEach, describe, it, expect} from 'vitest'
 import {
   CONSENT_KEEP_SECONDS,
   CONSENT_OFF_SCRIPT,
@@ -7,11 +7,13 @@ import {
   analyticsCookieNames,
   bootConsent,
   bootScript,
+  choiceCookieHeader,
   consentCommands,
   consentState,
   cookieDomains,
   measurementIds,
   parseChoices,
+  readStoredRaw,
   resolveChoices,
   serializeChoices,
 } from '@/lib/consent'
@@ -40,8 +42,8 @@ describe('the stored choices', () => {
     expect(parseChoices(v1('maybe', NOW), NOW)).toBeNull()
   })
 
-  it('are kept about six months, then asked again', () => {
-    expect(CONSENT_KEEP_SECONDS).toBe(183 * 24 * 60 * 60)
+  it('are kept twelve months, then asked again (monorepo [R-751])', () => {
+    expect(CONSENT_KEEP_SECONDS).toBe(365 * 24 * 60 * 60)
     const raw = serializeChoices({analytics: 'denied', ads: 'granted'}, NOW)
     expect(parseChoices(raw, NOW + CONSENT_KEEP_SECONDS - 1)).toEqual({analytics: 'denied', ads: 'granted'})
     expect(parseChoices(raw, NOW + CONSENT_KEEP_SECONDS)).toBeNull()
@@ -185,5 +187,30 @@ describe("the thank-you page's address", () => {
     window.history.replaceState(null, '', '/practice?x=1')
     new Function(bootScript(['analytics']))()
     expect(window.location.search).toBe('?x=1')
+  })
+})
+
+describe('the cookie the site’s server sets (monorepo [R-751])', () => {
+  afterEach(() => {
+    document.cookie = 'lp-consent=; Max-Age=0; path=/'
+    localStorage.clear()
+  })
+
+  it('the before-paint script reads it when browser storage is empty, as Safari leaves it after seven days', () => {
+    localStorage.clear()
+    document.cookie = `lp-consent=${encodeURIComponent(serializeChoices({analytics: 'denied'}, Math.floor(Date.now() / 1000)))}; path=/`
+    new Function(bootScript(['analytics']))()
+    expect(document.documentElement.getAttribute('data-consent')).toBe('denied')
+    expect(readStoredRaw(document, window)).toContain('"analytics":"denied"')
+  })
+
+  it('the cookie lives as long as the choice, from a choice made now, a device clock up to two days off allowed', () => {
+    const now = 2_000_000_000
+    const day = 24 * 60 * 60
+    expect(choiceCookieHeader(serializeChoices({ads: 'denied'}, now), now, true)).toContain(`Max-Age=${CONSENT_KEEP_SECONDS};`)
+    expect(choiceCookieHeader(serializeChoices({ads: 'denied'}, now - day), now, true)).toContain(`Max-Age=${CONSENT_KEEP_SECONDS - day};`)
+    expect(choiceCookieHeader(serializeChoices({ads: 'denied'}, now + day), now, true)).toContain(`Max-Age=${CONSENT_KEEP_SECONDS};`)
+    expect(choiceCookieHeader(serializeChoices({ads: 'denied'}, now - 30 * day), now, true)).toBeNull()
+    expect(choiceCookieHeader(serializeChoices({ads: 'denied'}, now + 3 * day), now, true)).toBeNull()
   })
 })

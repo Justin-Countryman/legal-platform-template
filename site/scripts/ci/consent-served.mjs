@@ -12,6 +12,10 @@
 //   5. the footer's Cookie settings button reopens the banner with focus inside it.
 //   6. the server's HTML holds the banner (so it paints with the page, not after hydration) and the before-paint
 //      script. (The preview routes, which need a signed session, are held off by lib/__tests__/consent.test.ts.)
+//  16. the choice's durable copy (monorepo [R-751]): Accept makes the site's own server set the lp-consent cookie,
+//      readable by the page, SameSite=Lax, kept twelve months; with the browser's storage then emptied, as Safari
+//      empties it after seven days without a click, the next page reads the cookie and does not ask again; another
+//      origin's post is refused.
 //
 // Advertising (monorepo WS-AD-PIXELS-DESIGN-2026-10-15 §2 and §8): the fixture also holds an ID for each of the four
 // networks, and each set ID loads its vendor's base tag on every page after an accept. Cases 1 to 6 run on 127.0.0.1, which is not the site's own
@@ -223,6 +227,29 @@ try {
   check(/<section[^>]*data-consent-banner/.test(html), "6. the server's HTML has no banner: it would paint only after hydration")
   check(html.includes('lp-consent') && html.includes('data-consent'), "6. the server's HTML has no before-paint consent script")
   console.log(`${failures.length > n6 ? 'FAIL' : 'ok  '} 6. in the server's HTML, with its before-paint script`)
+
+  const n16 = failures.length
+  await visit(browser, {}, async ({page, probes, load}) => {
+    if (!(await load('/'))) return
+    const answered = page.waitForResponse((r) => r.url().endsWith('/api/consent'), {timeout: 10000}).catch(() => null)
+    await page.getByRole('button', {name: 'Accept'}).first().click()
+    const res = await answered
+    check(res?.status() === 204, `16. the cookie route answered ${res ? res.status() : 'nothing'}, not 204`)
+    const cookie = (await page.context().cookies()).find((c) => c.name === 'lp-consent')
+    if (!check(!!cookie, '16. Accept set no lp-consent cookie')) return
+    const days = (cookie.expires - Date.now() / 1000) / 86400
+    check(days > 360 && days <= 366, `16. the cookie is kept ${Math.round(days)} days, not twelve months`)
+    check(cookie.httpOnly === false && cookie.sameSite === 'Lax', `16. the cookie is httpOnly ${cookie.httpOnly}, sameSite ${cookie.sameSite}`)
+    await page.evaluate(() => localStorage.clear())
+    const before = probes.length
+    if (!(await load('/fixture-practice-area'))) return
+    check((await banner(page).count()) === 0, '16. with the browser storage emptied, the banner asked again')
+    check(probes.length === before + 1, '16. with the browser storage emptied, the accepted script did not load')
+  })
+  const forged = await fetch(`${BASE}/api/consent`, {method: 'POST', headers: {origin: 'https://evil.example'},
+    body: JSON.stringify({v: 2, analytics: 'granted', at: Math.floor(Date.now() / 1000)})}).then((r) => r.status).catch(() => 0)
+  check(forged === 403, `16. another origin's post was answered ${forged}, not 403`)
+  console.log(`${failures.length > n16 ? 'FAIL' : 'ok  '} 16. the server-set cookie keeps the choice when the browser's storage is gone`)
 
   if (!LIVE) {
     console.log('skip 7 to 15: no --live address for the site\'s own host')

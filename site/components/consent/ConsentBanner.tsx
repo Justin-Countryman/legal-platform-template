@@ -7,6 +7,7 @@ import {Button} from '@/components/ui/Button'
 import {adSafeAddress, adVendors, isLiveHost, type AdIds} from '@/lib/adIds'
 import {AD_STORAGE_KEYS, adCookieNames, adPageView, adPixelsLoaded, loadAdPixels, revokeAdPixels} from '@/lib/adPixels'
 import {
+  CONSENT_COOKIE_ROUTE,
   CONSENT_KEEP_SECONDS,
   CONSENT_OPEN_EVENT,
   CONSENT_STORAGE_KEY,
@@ -19,6 +20,7 @@ import {
   cookieDomains,
   measurementIds,
   parseChoices,
+  readStoredRaw,
   resolveChoices,
   serializeChoices,
   type Choices,
@@ -144,19 +146,25 @@ function declineAds() {
 }
 
 function readStored(): Choices | null {
-  try {
-    return parseChoices(window.localStorage.getItem(CONSENT_STORAGE_KEY), nowSeconds())
-  } catch {
-    return null
-  }
+  return parseChoices(readStoredRaw(document, window), nowSeconds())
 }
 
-function store(choices: Choices) {
+/** Keep the choice: in the browser's storage at once, and as the cookie the site's server sets (`/api/consent`), which
+ *  Safari keeps when it deletes the page's storage. Resolves when the cookie is set, or after a second and a half. */
+function store(choices: Choices): Promise<void> {
+  const entry = serializeChoices(choices, nowSeconds())
   try {
-    window.localStorage.setItem(CONSENT_STORAGE_KEY, serializeChoices(choices, nowSeconds()))
+    window.localStorage.setItem(CONSENT_STORAGE_KEY, entry)
   } catch {
-    // Storage refused (a private window, a full quota): the choice holds for this page view only.
+    // Storage refused (a private window, a full quota): the cookie still keeps it.
   }
+  let sent: Promise<unknown>
+  try {
+    sent = fetch(CONSENT_COOKIE_ROUTE, {method: 'POST', body: entry, credentials: 'same-origin', keepalive: true}).catch(() => undefined)
+  } catch {
+    sent = Promise.resolve()
+  }
+  return Promise.race([sent, new Promise((done) => setTimeout(done, 1500))]).then(() => undefined)
 }
 
 export function ConsentBanner({scripts, text, privacyPolicyUrl, adIds = {}, site = ''}: Props) {
@@ -271,7 +279,7 @@ export function ConsentBanner({scripts, text, privacyPolicyUrl, adIds = {}, site
     const hadFocus = !!regionRef.current?.contains(document.activeElement)
     const gpc = (navigator as Navigator & {globalPrivacyControl?: boolean}).globalPrivacyControl === true
     const merged: Choices = {...(readStored() ?? {}), ...choices, gpc}
-    store(merged)
+    const kept = store(merged)
     const said = purposes.map((p) => `${p === 'ads' ? 'Advertising' : 'Analytics'} cookies ${merged[p] === 'granted' ? 'accepted' : 'declined'}`)
     const message = `${said.join('; ')}. Change this with Cookie settings at the bottom of the page.`
     // A purpose withdrawn after its tags loaded in this page view: switch them off, clear, and start the page again.
@@ -283,7 +291,8 @@ export function ConsentBanner({scripts, text, privacyPolicyUrl, adIds = {}, site
       } catch {
         // Session storage refused: the reload says nothing.
       }
-      window.location.reload()
+      // The reload waits for the cookie, so a page that later finds Safari's storage gone reads this choice.
+      void kept.then(() => window.location.reload())
       return
     }
     setConsentState(consentState(resolveChoices(merged, false, purposes)))

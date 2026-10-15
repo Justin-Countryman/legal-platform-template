@@ -31,7 +31,12 @@ function banner(props: Partial<{text: string | null; privacyPolicyUrl: string | 
   return <ConsentBanner scripts={SNIPPET} text={props.text ?? 'x'} privacyPolicyUrl={props.privacyPolicyUrl ?? null} />
 }
 
+// The site's own cookie route (app/api/consent): every choice is posted to it.
+const sent = vi.fn(async () => new Response(null, {status: 204}))
+
 beforeEach(() => {
+  sent.mockClear()
+  vi.stubGlobal('fetch', sent)
   localStorage.clear()
   delete window.dataLayer
   delete window.__lpConsentLoaded
@@ -50,6 +55,36 @@ beforeEach(() => {
 afterEach(() => {
   document.querySelectorAll(`script[src="${PROBE}"]`).forEach((s) => s.remove())
   document.cookie = '_ga=; Max-Age=0; path=/'
+  document.cookie = 'lp-consent=; Max-Age=0; path=/'
+  vi.unstubAllGlobals()
+})
+
+describe('where the choice is kept (monorepo [R-751])', () => {
+  it('posts every choice to the site’s own route, which answers with the cookie Safari keeps', () => {
+    render(banner())
+    fireEvent.click(screen.getByRole('button', {name: 'Accept'}))
+    expect(sent).toHaveBeenCalledTimes(1)
+    const [url, init] = sent.mock.calls[0] as unknown as [string, RequestInit]
+    expect(url).toBe('/api/consent')
+    expect(init.method).toBe('POST')
+    expect(init.body).toBe(localStorage.getItem(CONSENT_STORAGE_KEY))
+  })
+
+  it('a returning visitor whose browser storage Safari deleted is read from the cookie, and not asked again', () => {
+    // Written here by the test; on the site only the server's Set-Cookie writes it.
+    document.cookie = `lp-consent=${encodeURIComponent(serializeChoices({analytics: 'granted'}, nowSeconds()))}; path=/`
+    render(banner())
+    expect(screen.queryByRole('region')).toBeNull()
+    expect(probes()).toBe(1)
+  })
+
+  it('the browser-storage entry wins over the cookie: it is the newer when both are there', () => {
+    document.cookie = `lp-consent=${encodeURIComponent(serializeChoices({analytics: 'granted'}, nowSeconds()))}; path=/`
+    localStorage.setItem(CONSENT_STORAGE_KEY, serializeChoices({analytics: 'denied'}, nowSeconds()))
+    render(banner())
+    expect(screen.queryByRole('region')).toBeNull()
+    expect(probes()).toBe(0)
+  })
 })
 
 describe('with no consent script, nothing at all', () => {
