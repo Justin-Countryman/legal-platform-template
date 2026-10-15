@@ -6,6 +6,7 @@
 
 import {LogoImage, logoBlend} from '@/components/ui/LogoImage'
 import Link from 'next/link'
+import {ConsentSettingsButton} from '@/components/consent/ConsentSettingsButton'
 import {MdLocationOn} from 'react-icons/md'
 import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel, footerSurface, footerLogo} from './shared'
 import {formatPhone} from '@/lib/tokens'
@@ -17,7 +18,7 @@ export function PillarFooter({data}: Props) {
   const {
     firmName, address, locations,
     column1, column2,
-    privacyPolicyUrl, disclaimerUrl, cookiesUrl,
+    privacyPolicyUrl, disclaimerUrl, cookiesUrl, termsUrl, hasConsentScripts,
   } = data
 
   const surface = footerSurface(data.footerScheme)
@@ -34,6 +35,7 @@ export function PillarFooter({data}: Props) {
   const legalLinks = [
     ...(privacyPolicyUrl ? [{label: 'Privacy Policy', href: privacyPolicyUrl}] : []),
     ...(disclaimerUrl ? [{label: 'Legal Disclaimer', href: disclaimerUrl}] : []),
+    ...(termsUrl ? [{label: 'Terms of Use', href: termsUrl}] : []),
     ...(cookiesUrl ? [{label: 'Cookie Policy', href: cookiesUrl}] : []),
   ]
 
@@ -147,11 +149,12 @@ export function PillarFooter({data}: Props) {
       <div className={`${surface.footerClass} px-[5%]`}>
         <div className="container flex flex-col gap-3 py-5 text-xs text-foreground-subtle md:flex-row md:items-center md:justify-between">
           <p>© {year} {firmName}. All rights reserved.</p>
-          {legalLinks.length > 0 && (
+          {(legalLinks.length > 0 || hasConsentScripts) && (
             <div className="flex flex-wrap gap-x-3 gap-y-1">
               {legalLinks.map((l, i) => (
                 <Link key={i} href={l.href} className="underline transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">{l.label}</Link>
               ))}
+              {hasConsentScripts && <ConsentSettingsButton className="underline transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus" />}
             </div>
           )}
         </div>

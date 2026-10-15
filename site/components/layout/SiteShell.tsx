@@ -380,6 +380,9 @@ export function SiteShell({chrome: given, children}: {chrome: SiteChrome; childr
           privacyPolicyUrl: footerData?.siteSettings?.privacyPolicyUrl,
           disclaimerUrl: footerData?.siteSettings?.disclaimerUrl,
           cookiesUrl: footerData?.siteSettings?.cookiesUrl,
+          termsUrl: footerData?.siteSettings?.termsUrl,
+          // The cookie banner's footer button, only when there is a consent script to choose about.
+          hasConsentScripts: typeof chrome.scripts === 'string' && chrome.scripts.trim() !== '',
           footerLayout: footerData?.footerSettings?.footerLayout,
           formEmbed: footerData?.footerSettings?.formEmbed,
           locations: footerData?.locations,

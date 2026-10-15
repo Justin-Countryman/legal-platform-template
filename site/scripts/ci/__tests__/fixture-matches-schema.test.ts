@@ -34,7 +34,9 @@ const TEMPLATES = ['attorneyPage', 'staffPage', 'blogPost', 'blogCategory', 'eve
 const HOMEPAGE_LIST = ['homePage', 'practiceArea']
 // A singleton with a color set (Phase 14), so the stub build proves a color
 // field reaches the prerendered :root through GROQ and the engine. It has no slug.
-const SINGLETONS = ['designSettings']
+// siteSettings (2026-10-15): the cookie banner's text and a GA4-shaped consent script whose file the served checks
+// answer themselves (scripts/ci/consent-served.mjs), so the stub build draws the banner on every live page.
+const SINGLETONS = ['designSettings', 'siteSettings']
 
 describe('scripts/ci/fixture.ndjson agrees with studio/schema.json', () => {
   it('carries exactly one document per generateStaticParams template, plus the homepage list fixture', () => {

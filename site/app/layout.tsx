@@ -2,7 +2,8 @@ import type {Metadata} from 'next'
 import {resolveHidden} from '@/lib/searchVisibility'
 import {titleTemplate} from '@/lib/seoTitle'
 import {getSiteChrome} from '@/lib/sanity/fetchers'
-import {HtmlEmbed} from '@/components/ui/HtmlEmbed'
+import {ConsentBanner} from '@/components/consent/ConsentBanner'
+import {bootScript} from '@/lib/consent'
 import {WebVitals} from '@/components/analytics/WebVitals'
 import './globals.css'
 import {siteOrigin} from '@/lib/siteHost'
@@ -215,10 +216,12 @@ export default async function RootLayout({
   const chrome = await getSiteChrome()
   const orgData = (chrome?.organization ?? null) as OrganizationData | null
   const consentScripts = (chrome?.scripts ?? null) as string | null
+  const consent = (chrome?.consent ?? null) as {bannerText?: string | null; privacyPolicyUrl?: string | null} | null
   const organizationSchema = buildOrganizationSchema(orgData)
 
   return (
-    <html lang="en-US">
+    // `suppressHydrationWarning`: the consent script below sets `data-consent` on this element before React hydrates.
+    <html lang="en-US" suppressHydrationWarning>
       <body className="antialiased font-body text-foreground bg-background">
         {/* Site-wide Organization schema — fires on every route */}
         <script
@@ -241,10 +244,14 @@ export default async function RootLayout({
         >
           Skip to Main Content
         </a>
+        {/* The cookie banner (monorepo BI/rules/legal-pages.md): first after the skip link, so a keyboard or a
+            screen reader meets it early, and fixed to the bottom by CSS. The inline script decides before paint
+            (lib/consent.ts bootConsent) and sets html[data-consent], which globals.css reads to show it. It holds the
+            operator-pasted GA4 snippet (Site Settings, Scripts: Require Consent) back until the visitor accepts; with
+            no snippet there is no script and no banner. */}
+        {consentScripts?.trim() ? <script dangerouslySetInnerHTML={{__html: bootScript()}} /> : null}
+        <ConsentBanner scripts={consentScripts} text={consent?.bannerText} privacyPolicyUrl={consent?.privacyPolicyUrl} />
         {children}
-        {/* GA4 (consent-gated, opt-out model) — operator-pasted snippet from
-            Site Settings; HtmlEmbed executes its <script> tags and defines gtag. */}
-        {consentScripts && <HtmlEmbed html={consentScripts} />}
         {/* Core Web Vitals → GA4 events (free; replaces Vercel Speed Insights). */}
         <WebVitals />
       </body>

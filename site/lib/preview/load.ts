@@ -61,5 +61,8 @@ export const loadPreview = cache(async (address: string): Promise<PreviewState> 
   // The palette built from the firm's own colors, where the grant carries it (Phase 18 session E).
   if (choices.palette === 'brand' && !grant.brandPalette) return {kind: 'none'}
   const plan = planPreview(stored, choices, heroPhotoOf(homeHeroOf(home))?.assetId ?? null, grant.brandPalette ?? null)
-  return {kind: 'live', grant, choices, plan, chrome: withPreview(liveChrome, plan), liveChrome, home}
+  // The preview draws no cookie banner (lib/consent.ts CONSENT_OFF_SCRIPT) and runs no consent script, so its
+  // chrome carries none: the footer then draws no Cookie settings button, and the preview's layout is the site's.
+  const drawn = liveChrome && typeof liveChrome === 'object' ? {...liveChrome, scripts: null} : liveChrome
+  return {kind: 'live', grant, choices, plan, chrome: withPreview(drawn, plan), liveChrome, home}
 })

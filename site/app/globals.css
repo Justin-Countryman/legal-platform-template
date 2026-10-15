@@ -809,6 +809,29 @@
    scripts/ci/focus-walk.mjs. */
 html {
   scroll-padding-top: calc(var(--sticky-header-h, 0px) + 0.5rem);
+  /* The cookie banner, fixed to the bottom while it is open, publishes its height as --consent-banner-h (unset, so 0,
+     when closed): a focused element scrolls clear of it (WCAG 2.4.11, technique C43), and the body's padding below lets
+     the end of the page scroll above it. components/consent/ConsentBanner.tsx; held by scripts/ci/focus-walk.mjs. */
+  scroll-padding-bottom: calc(var(--consent-banner-h, 0px) + 0.5rem);
+}
+
+body {
+  padding-bottom: var(--consent-banner-h, 0px);
+}
+
+/* The banner shows only when the before-paint script (lib/consent.ts bootConsent) or the banner itself says to ask. */
+html:not([data-consent="ask"]) [data-consent-banner] {
+  display: none;
+}
+
+/* Cookie settings has nothing to open on the operator's own routes. */
+html[data-consent="off"] [data-consent-settings] {
+  display: none;
+}
+
+/* Back to Top rises above the open cookie banner. */
+@utility bottom-above-consent {
+  bottom: calc(var(--consent-banner-h, 0px) + 2rem);
 }
 
 :where(header.sticky, header.fixed) * {

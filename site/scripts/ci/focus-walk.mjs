@@ -12,6 +12,9 @@
 //     marquee's Pause button, monorepo backlog 330);
 //   - focus moving INTO the header must not scroll the page: a scroll padding alone makes the browser scroll a sticky
 //     header's own link "into view" below the padding, a jump of hundreds of pixels (measured 333 px in Chromium).
+// The cookie banner (2026-10-15, monorepo BI/rules/legal-pages.md): the CI fixture holds a consent script, so every
+// live page is walked twice, fresh with the banner open at the bottom (its Accept must come within the first four
+// Tabs, and nothing focused may sit under it) and with a decline stored, as a returning visitor sees it.
 // Prints one line per page and width and every failure; exits 1 on a failure, 2 when a page or a server would not load.
 //
 // Usage: node scripts/ci/focus-walk.mjs [--served URL] [--paths /,/fixture-practice-area]
@@ -32,6 +35,7 @@ const PATHS = (flag('--paths') ?? '/,/fixture-practice-area,/attorneys/fixture-a
 const MAX_STEPS = 400
 const WIDTHS = [
   ['1440', {viewport: {width: 1440, height: 900}}],
+  ['320', {viewport: {width: 320, height: 568}, isMobile: true, hasTouch: true}],
   ['1024', {viewport: {width: 1024, height: 768}}],
   ['768', {viewport: {width: 768, height: 1024}, isMobile: true, hasTouch: true}],
   ['390', {viewport: {width: 390, height: 844}, isMobile: true, hasTouch: true}],
@@ -135,7 +139,7 @@ async function settle(page) {
   }))
 }
 
-async function walk(page, key, failures, where) {
+async function walk(page, key, failures, where, labels = []) {
   let steps = 0
   let previous = await page.evaluate(readFocus)
   const seen = new Set()
@@ -144,6 +148,7 @@ async function walk(page, key, failures, where) {
     await settle(page)
     const now = await page.evaluate(readFocus)
     if (now.none) break
+    labels.push(now.label)
     const id = `${now.tag}:${now.label}:${Math.round(now.top + now.scrollY)}`
     if (seen.has(id)) break
     seen.add(id)
@@ -166,8 +171,13 @@ const browser = await chromium.launch()
 const failures = []
 let broken = false
 try {
-  for (const [name, options] of WIDTHS) {
+  for (const [width, options] of WIDTHS) {
+   for (const mode of ['fresh', 'declined']) {
+    const name = `${width} ${mode}`
     const ctx = await browser.newContext(options)
+    if (mode === 'declined') {
+      await ctx.addInitScript(() => localStorage.setItem('lp-consent', JSON.stringify({v: 1, choice: 'denied', at: Math.floor(Date.now() / 1000)})))
+    }
     const page = await ctx.newPage()
     for (const path of PATHS) {
       const res = await page.goto(BASE + path, {waitUntil: 'load', timeout: 60000}).catch(() => null)
@@ -179,11 +189,21 @@ try {
       await page.evaluate(() => document.fonts.ready.then(() => true))
       await page.waitForFunction(() => Object.keys(document.querySelector('header') || {}).some((k) => k.startsWith('__react')), null, {timeout: 20000}).catch(() => {})
       const before = failures.length
-      const forward = await walk(page, 'Tab', failures, `${path} at ${name}`)
+      const bannerOpen = await page.evaluate(() => {
+        const b = document.querySelector('[data-consent-banner]')
+        return !!b && b.getClientRects().length > 0
+      })
+      if (mode === 'declined' && bannerOpen) failures.push(`${path} at ${name}: the cookie banner is open for a visitor who declined`)
+      const labels = []
+      const forward = await walk(page, 'Tab', failures, `${path} at ${name}`, labels)
+      if (bannerOpen && !labels.slice(0, 4).includes('Accept')) {
+        failures.push(`${path} at ${name}: the cookie banner's Accept is not within the first four Tabs (${labels.slice(0, 4).join(' | ')})`)
+      }
       const back = await walk(page, 'Shift+Tab', failures, `${path} at ${name}`)
-      console.log(`${failures.length === before ? 'ok  ' : 'FAIL'} ${path} at ${name}: ${forward} Tab, ${back} Shift+Tab`)
+      console.log(`${failures.length === before ? 'ok  ' : 'FAIL'} ${path} at ${name}: ${forward} Tab, ${back} Shift+Tab${bannerOpen ? ', banner open' : ''}`)
     }
     await ctx.close()
+   }
   }
 } finally {
   await browser.close()

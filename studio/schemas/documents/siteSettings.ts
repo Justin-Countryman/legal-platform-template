@@ -113,14 +113,17 @@ export const siteSettings = defineType({
     },
 
     // ─── Cookie Consent ───────────────────────────────────────────────────────
+    // The cookie banner (site/components/consent/ConsentBanner.tsx; monorepo
+    // BI/rules/legal-pages.md). Until 2026-10-15 nothing rendered this text.
     {
       name: 'cookieBannerText',
       title: 'Cookie Banner Text',
       type: 'text',
       rows: 2,
-      description: 'Customizable consent banner message',
+      description:
+        'The message in the cookie banner, beside Accept, Decline and a link to the privacy policy. The banner appears only when Scripts — Require Consent holds a script. Leave blank for the standard message.',
       components: {input: TokenTextInput},
-      initialValue: 'We use cookies to improve your experience. You can opt out at any time.',
+      initialValue: 'We use analytics cookies to learn how visitors use this website. They stay off unless you accept.',
     },
 
     // ─── Search visibility ────────────────────────────────────────────────────
@@ -158,14 +161,19 @@ export const siteSettings = defineType({
       title: 'Scripts — No Consent Required',
       type: 'text',
       rows: 5,
-      description: 'Always renders — e.g. Bing verification, other non-tracking tags',
+      // Corrected 2026-10-15: the help text said "Always renders"; nothing has
+      // ever queried this field.
+      description: 'Not shown on the website: nothing renders this field. Put the Search Console token in its own field above.',
     },
     {
       name: 'scriptsRequireConsent',
       title: 'Scripts — Require Consent',
       type: 'text',
       rows: 5,
-      description: 'Loads immediately (opt-out model) but blocked if user opts out — e.g. GA4, Facebook Pixel, GTM, live chat',
+      // Corrected 2026-10-15: the help text promised an opt-out that did not
+      // exist, and the scripts loaded for every visitor.
+      description:
+        'Google Analytics 4 snippet only. It loads only after a visitor chooses Accept in the cookie banner, and never for a visitor who declines or whose browser sends Global Privacy Control. Any other script here is a new outside vendor the firm’s privacy policy must name.',
     },
   ],
 

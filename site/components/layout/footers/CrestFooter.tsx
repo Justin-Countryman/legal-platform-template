@@ -5,6 +5,7 @@
 
 import {LogoImage, logoBlend} from '@/components/ui/LogoImage'
 import Link from 'next/link'
+import {ConsentSettingsButton} from '@/components/consent/ConsentSettingsButton'
 import {MdLocationOn} from 'react-icons/md'
 import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel, footerSurface, footerLogo} from './shared'
 import {formatPhone} from '@/lib/tokens'
@@ -16,7 +17,7 @@ export function CrestFooter({data}: Props) {
   const {
     firmName, address, locations, ctaText, ctaUrl,
     column1, column2,
-    privacyPolicyUrl, disclaimerUrl, cookiesUrl,
+    privacyPolicyUrl, disclaimerUrl, cookiesUrl, termsUrl, hasConsentScripts,
   } = data
 
   const surface = footerSurface(data.footerScheme)
@@ -33,6 +34,7 @@ export function CrestFooter({data}: Props) {
   const legalLinks = [
     ...(privacyPolicyUrl ? [{label: 'Privacy Policy', href: privacyPolicyUrl}] : []),
     ...(disclaimerUrl ? [{label: 'Legal Disclaimer', href: disclaimerUrl}] : []),
+    ...(termsUrl ? [{label: 'Terms of Use', href: termsUrl}] : []),
     ...(cookiesUrl ? [{label: 'Cookie Policy', href: cookiesUrl}] : []),
   ]
 
@@ -156,11 +158,12 @@ export function CrestFooter({data}: Props) {
       <div className="border-t border-border">
         <div className="container py-6 text-center text-xs text-foreground-subtle">
           <p>© {year} {firmName}. All rights reserved.</p>
-          {legalLinks.length > 0 && (
+          {(legalLinks.length > 0 || hasConsentScripts) && (
             <div className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1">
               {legalLinks.map((l, i) => (
                 <Link key={i} href={l.href} className="underline transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">{l.label}</Link>
               ))}
+              {hasConsentScripts && <ConsentSettingsButton className="underline transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus" />}
             </div>
           )}
         </div>
