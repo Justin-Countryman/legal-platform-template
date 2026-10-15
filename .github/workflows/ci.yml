@@ -651,13 +651,22 @@ jobs:
         run: node scripts/ci/ramp-pixels.mjs
       # Monorepo backlog 331 (WCAG 2.4.11 and 2.4.12): keyboard focus never lands under the sticky header, focus entering
       # the header never jumps the page, and nothing else covers a focused element's centre (backlog 330). A Tab and
-      # Shift+Tab walk of four pages at 1440, 1024, 768 and 390 on the build above (monorepo
-      # WS-V1-ACCESSIBILITY-DESIGN-2026-10-13.md §5.2 B2).
+      # Shift+Tab walk of four pages at 1440, 1024, 768, 390 and 320 on the build above (monorepo
+      # WS-V1-ACCESSIBILITY-DESIGN-2026-10-13.md §5.2 B2), each fresh with the cookie banner open and again with a
+      # decline stored (monorepo WS-CONSENT-AND-LEGAL-PAGES-DESIGN-2026-10-15.md §8 A7).
       - name: Keyboard focus is never hidden (built and served)
         if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.browsers.outcome == 'success' }}
-        timeout-minutes: 10
+        timeout-minutes: 15
         working-directory: site
         run: node scripts/ci/focus-walk.mjs
+      # The cookie banner holds Site Settings' consent script back until Accept, with Consent Mode default-denied, and
+      # remembers a decline; Global Privacy Control declines unasked; Cookie settings reopens it (monorepo
+      # BI/rules/legal-pages.md; the CI fixture's snippet loads a probe this script answers, never Google).
+      - name: The cookie banner holds analytics until Accept (built and served)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.browsers.outcome == 'success' }}
+        timeout-minutes: 5
+        working-directory: site
+        run: node scripts/ci/consent-served.mjs
       - name: The flow metrics golden at 1440 and 390 (built and served)
         if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.browsers.outcome == 'success' }}
         timeout-minutes: 25
