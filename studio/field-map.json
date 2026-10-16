@@ -1240,6 +1240,7 @@
           "type": "reference"
         },
         {
+          "description": "Shown on the profile only with Display Email Publicly on. Anyone can read an address saved here through the site's public data, so leave it empty unless the firm wants it public.",
           "jsonType": "string",
           "path": "email",
           "title": "Email Address",

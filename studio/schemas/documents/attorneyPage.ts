@@ -2,6 +2,7 @@ import {defineType, defineField} from 'sanity'
 import {TokenStringInput} from '../../components/TokenStringInput'
 import {TokenTextInput} from '../../components/TokenTextInput'
 import {PageLinkInput} from '../../components/PageLinkInput'
+import {hiddenEmailWarning} from '../../../site/lib/personEmail'
 import {seoTitleValidation} from '../seoTitle'
 import {metaDescriptionValidation} from '../metaDescription'
 import {
@@ -315,10 +316,17 @@ export const attorneyPage = defineType({
 
     // ─── Contact & Visibility (collapsed) ────────────────────────────────────
     defineField({
+      // Monorepo backlog 463: the dataset is public, so an address here is readable whatever showEmail says.
       name: 'email',
       title: 'Email Address',
       type: 'string',
+      description:
+        'Shown on the profile only with Display Email Publicly on. Anyone can read an address saved here through the site\'s public data, so leave it empty unless the firm wants it public.',
       fieldset: 'contactVisibility',
+      validation: (Rule) =>
+        Rule.custom((email, context) =>
+          hiddenEmailWarning(email, (context.document as {showEmail?: unknown} | undefined)?.showEmail),
+        ).warning(),
     }),
     defineField({
       name: 'showEmail',
