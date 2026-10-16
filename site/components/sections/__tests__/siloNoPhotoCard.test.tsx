@@ -30,7 +30,8 @@ const block = (layout: string, withPhoto: boolean): PracticeAreaNavBlockData =>
   ({heading: 'How we can help', layout, mobileDisplay: 'stacked', items: items(withPhoto)} as never)
 
 const PANEL = /(^|\s)(h-44|h-36)(\s|$)/
-const FILL = 'from-foreground/5'
+// The tile's fill (`TileFill`, `tile-fill`; monorepo backlog 381 moved it off `from-foreground/5`).
+const FILL = '.tile-fill'
 
 describe('a practice card with no photo draws no empty photo panel (backlog 427)', () => {
   it.each(['feature', 'split'])('%s without photos: no panel, no fill, the icon bare', (layout) => {
@@ -39,7 +40,7 @@ describe('a practice card with no photo draws no empty photo panel (backlog 427)
     expect(cards).toHaveLength(2)
     for (const card of cards) {
       expect([...card.querySelectorAll('div')].some((d) => PANEL.test(d.className)), layout).toBe(false)
-      expect(card.innerHTML.includes(FILL), layout).toBe(false)
+      expect(card.querySelector(FILL), layout).toBeNull()
       const glyph = card.querySelector('[data-tile-icon]')!
       expect(glyph.getAttribute('data-tile-icon')).toBe('bare')
       expect(glyph.className.split(' ')).not.toContain('bg-decor/10')

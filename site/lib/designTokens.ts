@@ -675,6 +675,15 @@ export function resolvePalette(raw: ColorInputs = {}, options: PaletteOptions = 
     darkTexture: blendOver(brandDark, texture.ink, texture.opacity), photoFloor, glow: tokens['--color-glow'], glowLight: tokens['--color-glow-light'] ?? null,
     panel: tokens['--color-panel-surface'] ? [tokens['--color-panel-surface'], tokens['--color-panel-light']] : [],
     onDark: inverse['color-foreground-on-dark'], light: {fill: background, fg: foreground, hover: muted}}))
+  // The practice tile's fill and hover glow (monorepo backlog 381), solved once every ground and word above is final.
+  // The page's own (`--tile-fill`, `--tile-glow`) is the light ground's; the dark and saturated blocks re-point them.
+  for (const [kind, grounds] of Object.entries(tileGroundsOf(tokens))) {
+    const solved = tileGlowOf(grounds, tokens['--color-action'])
+    tokens[`--tile-fill-on-${kind}`] = `${solved.fill}%`
+    tokens[`--tile-glow-on-${kind}`] = `${solved.glow}%`
+  }
+  tokens['--tile-fill'] = tokens['--tile-fill-on-light']
+  tokens['--tile-glow'] = tokens['--tile-glow-on-light']
   // Phase 17C session 3: the render margin applies on a dark band only where its ink is lighter than
   // the ground (the on-dark text color on a near-black ground), the one case where a line drawn a level
   // toward its ink moves toward the text. A black ink moves away, so those bands render as solved.
@@ -1167,6 +1176,126 @@ function blendOver(ground: string, ink: string, alpha: number): string {
   return formatHex({mode: 'rgb', r: mix(g.r, k.r), g: mix(g.g, k.g), b: mix(g.b, k.b)})
 }
 
+// ─── The practice tile's fill and hover glow (monorepo backlog 381) ──────────────────────────────────────────────────
+// A tile with no photograph draws its fill, the band's text color at `--tile-fill` in its top corner fading to nothing,
+// and hovered under the Glow preset the action color at `--tile-glow` there fading to a third of it at the far corner
+// (`tile-fill`, `tile-glow`, `globals.css`; `TileFill`, `TileGlow`). Its label (the foreground) and blurb (the muted tier)
+// sit over both. At today's 5% and 30% no pair held the composite: over the plain dark band Teal & Mint's blurb measured
+// 3.99:1 (Phase 17E), six presets fell to 3.97 to 4.43 on the light grounds, and over 5,015 swept palettes the glow
+// failed on about 70% of light grounds and 45% of dark ones, the fill alone on 648 saturated bands. So both are solved
+// per palette and per kind of ground: the highest whole percent at or under today's at which the words keep 4.5:1 over
+// every ground of that kind, fill first. The arrow is `aria-hidden` and the chip a decoration, so neither is a pair.
+// A glowing card's surface, the Layout theme's panel and a photo or lit band are not plain grounds (backlog 372); the
+// glow is hidden on the last two (`[data-tile-glow]`).
+export const TILE_FILL_MAX = 5
+export const TILE_GLOW_MAX = 30
+
+// The tile's arithmetic runs for every palette any sweep resolves, twice (the solve, then validateWcag's check of what was
+// emitted), so it works on parsed channels and a table of linear values rather than through color conversions.
+const LINEAR_8 = Array.from({length: 256}, (_, v) => {
+  const c = v / 255
+  return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+})
+const rgb8 = (hex: string): number[] => [parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16)]
+const luminance8 = (c: number[]) => 0.2126 * LINEAR_8[c[0]] + 0.7152 * LINEAR_8[c[1]] + 0.0722 * LINEAR_8[c[2]]
+const ratioOfLuminances = (x: number, y: number) => (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)
+
+/** A point of a tile: its fill (`ink` at `fill` percent) and the glow (`cue` at `glow` percent) over `ground`, each alpha a
+ *  level of 255 up as a browser may round it, composited per channel at eight bits as `blendOver` rounds. */
+function tilePoint(ground: number[], ink: number[], fill: number, cue: number[], glow: number): number[] {
+  const up = (pct: number) => (pct <= 0 ? 0 : Math.ceil((pct / 100) * 255) / 255)
+  const a = up(fill), b = up(glow)
+  return [0, 1, 2].map((i) => Math.round(Math.round(ground[i] * (1 - a) + ink[i] * a) * (1 - b) + cue[i] * b))
+}
+export function tileComposite(ground: string, ink: string, fill: number, cue: string, glow: number): string {
+  return '#' + tilePoint(rgb8(ground), rgb8(ink), fill, rgb8(cue), glow).map((v) => v.toString(16).padStart(2, '0')).join('')
+}
+
+type TileKind = {grounds: Array<[string, string]>; ink: string; words: Array<[string, string]>}
+
+/** The plain grounds a tile can sit on, by the cascade block that sets its words: the light ones, the dark ones (the
+ *  dark texture and the gradient ramp among them, which no block tells apart) and the saturated fill. */
+export function tileGroundsOf(t: Record<string, string>): Record<'light' | 'dark' | 'saturated', TileKind> {
+  const dark = t['--color-brand-dark']
+  const lightTexture = textureOnLight(dark)
+  const ramp: Array<[string, string]> = t['--color-gradient-start'] && t['--color-gradient-stop']
+    ? [0, 0.25, 0.5, 0.75, 1].map((at) => [`gradient-ramp-${at * 100}`, mixOklab(t['--color-gradient-start'], t['--color-gradient-stop'], at)])
+    : []
+  return {
+    light: {
+      grounds: [
+        ['background', t['--color-background']], ['hero-tint', t['--color-hero-tint']], ['muted', t['--color-muted']], ['wash', t['--color-wash']],
+        ['section-texture', blendOver(t['--color-background'], lightTexture.ink, lightTexture.opacity)],
+      ],
+      ink: t['--color-foreground'],
+      words: [['foreground', t['--color-foreground']], ['foreground-muted', t['--color-foreground-muted']]],
+    },
+    dark: {
+      grounds: [
+        ['brand-dark', dark],
+        ['section-texture-dark', blendOver(dark, t['--color-texture-ink-on-dark'], Number(t['--section-texture-opacity-on-dark']))],
+        ...ramp,
+      ],
+      ink: t['--color-foreground-on-dark'],
+      words: [['foreground-on-dark', t['--color-foreground-on-dark']], ['foreground-muted-on-dark', t['--color-foreground-muted-on-dark']]],
+    },
+    saturated: {
+      grounds: [['accent-fill', t['--color-accent-fill'] ?? t['--color-accent']]],
+      ink: t['--color-accent-fg'],
+      words: [['accent-fg', t['--color-accent-fg']]],
+    },
+  }
+}
+
+/** The worst ratio a word reads at over one ground, across every point the two gradients draw at `fill` and `glow`: the
+ *  glow from its peak to a third of it with the fill at its peak and at nothing (the two corners), and the fill from its
+ *  peak to nothing alone. At eight bits a little more ink can read a little better, so a peak that held alone could
+ *  leave a weaker point under it failing (15 of 15,045 solves measured), and every whole percent under each is read. */
+function tileWorst(ground: number[], ink: number[], cue: number[], word: number, fill: number, glow: number): number {
+  let worst = Infinity
+  for (let g = 0; g <= glow; g++) {
+    worst = Math.min(worst, ratioOfLuminances(word, luminance8(tilePoint(ground, ink, fill, cue, g))))
+    if (fill > 0) worst = Math.min(worst, ratioOfLuminances(word, luminance8(tilePoint(ground, ink, 0, cue, g))))
+  }
+  for (let f = 0; f < fill; f++) worst = Math.min(worst, ratioOfLuminances(word, luminance8(tilePoint(ground, ink, f, cue, 0))))
+  return worst
+}
+
+/** The highest fill, then the highest glow, in whole percent at or under today's, at which every word holds 4.5:1 over
+ *  every ground of the kind at every point the gradients draw (`tileWorst`). Climbed one percent at a time, so every
+ *  value under the answer holds too. At 0 and 0 the tile is its plain ground, whose pairs `validateWcag` holds. */
+export function tileGlowOf(kind: TileKind, cue: string): {fill: number; glow: number} {
+  const grounds = kind.grounds.map(([, hex]) => rgb8(hex))
+  const ink = rgb8(kind.ink), c = rgb8(cue)
+  const words = kind.words.map(([, hex]) => luminance8(rgb8(hex)))
+  const holdsAt = (fill: number, glow: number) =>
+    grounds.every((g) => {
+      const corner = luminance8(tilePoint(g, ink, fill, c, glow)), bare = luminance8(tilePoint(g, ink, 0, c, glow))
+      return words.every((w) => ratioOfLuminances(w, corner) >= 4.5 && ratioOfLuminances(w, bare) >= 4.5)
+    })
+  let fill = 0
+  while (fill < TILE_FILL_MAX && holdsAt(fill + 1, 0)) fill += 1
+  let glow = 0
+  while (glow < TILE_GLOW_MAX && holdsAt(fill, glow + 1)) glow += 1
+  return {fill, glow}
+}
+
+/** The tile's pairs at the emitted values, as `validateWcag` reports them: each word over each ground at its worst point. */
+export function tilePairs(t: Record<string, string>): Array<{pair: string; ratio: number}> {
+  const out: Array<{pair: string; ratio: number}> = []
+  const cue = rgb8(t['--color-action'])
+  for (const [kind, grounds] of Object.entries(tileGroundsOf(t))) {
+    const fill = parseInt(t[`--tile-fill-on-${kind}`]), glow = parseInt(t[`--tile-glow-on-${kind}`])
+    const ink = rgb8(grounds.ink)
+    for (const [ground, hex] of grounds.grounds) {
+      for (const [word, wordHex] of grounds.words) {
+        out.push({pair: `${word} on the practice tile's fill and glow over ${ground}`, ratio: tileWorst(rgb8(hex), ink, cue, luminance8(rgb8(wordHex)), fill, glow)})
+      }
+    }
+  }
+  return out
+}
+
 // The token-level pairs every rendered surface relies on. The component-level
 // pairings (a light card inside a dark band, and so on) are held by component
 // tests; this list is what an operator's color choice can move.
@@ -1315,6 +1444,8 @@ export function validateWcag(palette: ResolvedPalette): WcagResult[] {
   // accent) with `accent-fg` text, and the saturated band's inverse primary button
   // is the same pair reversed, which has the same ratio (Phase 15).
   check('accent-fg on accent-fill',               t['--color-accent-fg'], t['--color-accent-fill'] ?? t['--color-accent'], 4.5)
+  // The practice tile's words over its fill and hover glow at the emitted values, on every plain ground (backlog 381).
+  for (const {pair, ratio} of tilePairs(t)) results.push({pair, ratio: Math.round(ratio * 100) / 100, min: 4.5, passes: ratio >= 4.5, blocking: true})
   // The color details (`[R-641]`), held only where an option emitted them.
   if (t['--color-saturated-decor'] && t['--color-saturated-decor'] !== t['--color-accent-fg']) {
     check('saturated-decor on accent-fill (graphics)', t['--color-saturated-decor'], t['--color-accent-fill'], 3)

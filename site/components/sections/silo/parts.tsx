@@ -87,17 +87,18 @@ export function TileImage({item, fx, scrim = true}: {item: SiloNavItem; fx: Silo
 
 /** Subtle adaptive fill so a no-image tile still reads designed. */
 export function TileFill() {
-  return <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent" />
+  return <div aria-hidden="true" className="absolute inset-0 tile-fill" />
 }
 
 /** Accent glow overlay (Glow preset). Universal; fades in only when selected. Never drawn on a photograph or a lit
- *  ground (`data-tile-glow`, `globals.css`, Phase 17E). */
+ *  ground (`data-tile-glow`, `globals.css`, Phase 17E). Its peak and the fill's are the engine's for the ground, so the
+ *  tile's words hold over them (`tile-glow`, `tile-fill`, monorepo backlog 381). */
 export function TileGlow({fx}: {fx: SiloHoverClasses}) {
   return (
     <div
       aria-hidden="true"
       data-tile-glow=""
-      className={`pointer-events-none absolute inset-0 bg-gradient-to-br from-cue/30 to-cue/10 opacity-0 transition-opacity duration-ui-base ease-gentle ${fx.glow}`}
+      className={`pointer-events-none absolute inset-0 tile-glow opacity-0 transition-opacity duration-ui-base ease-gentle ${fx.glow}`}
     />
   )
 }

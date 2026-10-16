@@ -892,6 +892,9 @@ h1, h2, h3, h4, h5, h6 {
   --color-star-outline:      var(--color-star-outline-on-dark);
   /* A slab in the dark ground would vanish on a dark band; it takes the accent. */
   --color-slab:              var(--color-accent-on-dark-raw);
+  /* The practice tile's fill and hover glow, solved for this ground (monorepo backlog 381). */
+  --tile-fill:               var(--tile-fill-on-dark);
+  --tile-glow:               var(--tile-glow-on-dark);
 }
 
 /* Light-surface containers nested inside dark-context ancestors: re-declare
@@ -916,6 +919,9 @@ h1, h2, h3, h4, h5, h6 {
   --color-hover-wash:        rgb(var(--shadow-rgb) / 0.06);
   --color-star-outline:      var(--color-star-outline-on-light);
   --color-slab:              var(--color-brand-dark);
+  /* The practice tile's fill and hover glow, solved for this ground (monorepo backlog 381). */
+  --tile-fill:               var(--tile-fill-on-light);
+  --tile-glow:               var(--tile-glow-on-light);
 }
 
 /* The saturated band (Phase 15, WS-V1-PHASE15-DESIGN §7 amendment 12): the
@@ -944,6 +950,9 @@ h1, h2, h3, h4, h5, h6 {
   --color-hover-wash:        transparent;
   --color-star-outline:      var(--color-accent-fg);
   --color-slab:              var(--color-accent-fg);
+  /* The practice tile's fill and hover glow, solved for this ground (monorepo backlog 381). */
+  --tile-fill:               var(--tile-fill-on-saturated);
+  --tile-glow:               var(--tile-glow-on-saturated);
 }
 
 /* Highlighted words on a saturated band ([R-461], Justin 2026-09-17: a word is
@@ -2064,6 +2073,17 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 @media (forced-colors: active) { [data-photo-ghost] { display: none; } }
 @media print { [data-photo-ghost] { display: none; } }
 @media (prefers-contrast: more) { [data-photo-ghost] { display: none; } }
+/* The practice tile's fill and hover glow (`TileFill`, `TileGlow`; monorepo backlog 381): the band's text color at
+   `--tile-fill` in the top corner, fading out, and the action color at `--tile-glow` there, fading to a third of it at the
+   far corner, as `from-foreground/5 to-transparent` and `from-cue/30 to-cue/10` drew them. The engine solves both per
+   palette for the ground the cascade blocks name (`tileGlowOf`), so the tile's label and blurb hold 4.5:1 over the
+   composite; validateWcag holds it. */
+@utility tile-fill {
+  background-image: linear-gradient(to bottom right in oklab, color-mix(in oklab, var(--color-foreground) var(--tile-fill), transparent), transparent);
+}
+@utility tile-glow {
+  background-image: linear-gradient(to bottom right in oklab, color-mix(in oklab, --theme(--color-cue) var(--tile-glow), transparent), color-mix(in oklab, --theme(--color-cue) calc(var(--tile-glow) / 3), transparent));
+}
 /* No hover glow on a photograph or a lit ground (Phase 17E, the pre-PR break pass; monorepo WS-V1-PHASE17E-DESIGN §9):
    the accent glow over a card's fill takes the muted line under 4.5:1 at its brightest corner, over the scrim's floor
    on 8 of the 15 presets and over Gradient bloom's glow on 2 of 9 (measured). A practice grid first sits on a
