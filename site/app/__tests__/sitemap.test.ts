@@ -159,6 +159,24 @@ describe('the two behaviours that were built and uncovered', () => {
   })
 })
 
+// ─── Testimonials (monorepo backlog 409) ──────────────────────────────────────
+// `/testimonials` is a 404 when its page lists no testimonial, so the query answers
+// no singleton then, and the route's "no document, no entry" guard keeps it out.
+describe('testimonials', () => {
+  it('the query answers the page only when it lists a testimonial that exists', async () => {
+    const {evaluate} = await import('groq-js')
+    const page = (refs: string[]) => ({_id: 'testimonialsPage-testimonials', _type: 'testimonialsPage', _updatedAt: '2026-10-01T00:00:00Z',
+      testimonials: refs.map((r) => ({_type: 'reference', _ref: r, _key: r}))})
+    const quote = {_id: 't1', _type: 'testimonial', quote: 'They kept me informed.'}
+    const answer = async (dataset: unknown[]) =>
+      ((await (await evaluate(parse(SITEMAP_QUERY), {dataset})).get()) as {testimonials: unknown}).testimonials
+    expect(await answer([page(['t1']), quote])).toMatchObject({noIndex: false})
+    expect(await answer([page([]), quote])).toBeNull()
+    expect(await answer([page(['gone']), quote])).toBeNull()
+    expect(await answer([quote])).toBeNull()
+  })
+})
+
 // ─── Case results (monorepo backlog 454) ──────────────────────────────────────
 // `/case-results` is served whenever a result has something to show, with or
 // without its page document, so it is listed then and only then; a result's own

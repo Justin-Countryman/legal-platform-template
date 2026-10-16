@@ -517,7 +517,9 @@ export const SITEMAP_QUERY = groq`{
   "eventIndex":       *[_type == "eventIndex"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
   "serviceAreaIndex": *[_type == "serviceAreaIndex"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
   "videoIndex":       *[_type == "videoIndex"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
-  "testimonials":     *[_type == "testimonialsPage"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
+  // The testimonials page is a 404 when it lists no testimonial (monorepo backlog
+  // 409), so it answers here only when it lists one that exists.
+  "testimonials":     *[_type == "testimonialsPage" && count(testimonials[defined(@->_id)]) > 0][0]{_updatedAt, ${SINGLETON_NOINDEX}},
   "contact":          *[_type == "contactPage"][0]{_updatedAt, ${SINGLETON_NOINDEX}},
   // The Case Results page is served whenever a result has something to show,
   // with or without its document (backlog 454); a result's own page is listed
