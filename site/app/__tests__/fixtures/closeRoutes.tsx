@@ -31,7 +31,7 @@ const slugged = <P,>(slug: P) => ({params: Promise.resolve({slug})})
 const hero = {heading: 'A page'}
 
 export const ROUTES: Route[] = [
-  {name: 'testimonials', query: Q.TESTIMONIALS_PAGE_QUERY, doc: {_id: 'testimonialsPage', hero}, key: 'ctaOverride', render: () => TestimonialsPage()},
+  {name: 'testimonials', query: Q.TESTIMONIALS_PAGE_QUERY, doc: {_id: 'testimonialsPage', hero, testimonials: [{_id: 't1', quote: 'They kept me informed.', name: 'A client'}]}, key: 'ctaOverride', render: () => TestimonialsPage()},
   {name: 'videos', query: Q.VIDEO_INDEX_PAGE_QUERY, doc: {_id: 'videoIndex', hero}, key: 'ctaOverride', render: () => VideoLibraryPage()},
   {name: 'staff', query: Q.STAFF_INDEX_QUERY, doc: {_id: 'staffIndex', hero}, key: 'ctaOverride', render: () => StaffIndexPage()},
   {name: 'attorneys', query: Q.ATTORNEY_INDEX_QUERY, doc: {_id: 'attorneyIndex', hero}, key: 'ctaOverride', render: () => AttorneysIndexPage()},

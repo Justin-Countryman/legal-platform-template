@@ -1,6 +1,7 @@
 export const revalidate = 86400
 
 import type {Metadata} from 'next'
+import {notFound} from 'next/navigation'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import {TESTIMONIALS_PAGE_QUERY} from '@/lib/sanity/queries'
 import {chromeGlobalCta, chromeNap, fetchCached, getSiteChrome, chromeClose} from '@/lib/sanity/fetchers'
@@ -58,6 +59,10 @@ export default async function TestimonialsPage() {
   const testimonials: TestimonialData[] = (page?.testimonials ?? []).filter(
     (t: TestimonialData | null): t is TestimonialData => t !== null
   )
+  // Nothing to list is a 404, as /case-results is with no result (monorepo backlog
+  // 409): a firm with no testimonial has no empty page, and `sitemap.xml` lists the
+  // address by the same test.
+  if (testimonials.length === 0) notFound()
 
   return (
     <>
@@ -79,23 +84,18 @@ export default async function TestimonialsPage() {
       <div className="px-[5%] py-12 md:py-16 lg:py-20">
         <div className="container">
 
-          {/* Testimonials grid */}
-          {testimonials.length > 0 ? (
-            // The columns follow the count, as the homepage's section does (cardGrid.ts, Phase 18 session B).
-            <ul
-              role="list"
-              className={cardGridClasses(testimonials.length, 3).list}
-              aria-label="Client testimonials"
-            >
-              {testimonials.map((t, i) => (
-                <li key={t._id} className={cardGridClasses(testimonials.length, 3).items[i] || undefined}>
-                  <TestimonialCard t={t} />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-center text-foreground-muted">No testimonials added yet.</p>
-          )}
+          {/* Testimonials grid. The columns follow the count, as the homepage's section does (cardGrid.ts, Phase 18 session B). */}
+          <ul
+            role="list"
+            className={cardGridClasses(testimonials.length, 3).list}
+            aria-label="Client testimonials"
+          >
+            {testimonials.map((t, i) => (
+              <li key={t._id} className={cardGridClasses(testimonials.length, 3).items[i] || undefined}>
+                <TestimonialCard t={t} />
+              </li>
+            ))}
+          </ul>
 
         </div>
       </div>
