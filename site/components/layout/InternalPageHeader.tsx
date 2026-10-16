@@ -48,6 +48,9 @@ export function InternalPageHeader({title}: Props) {
     <header
       style={{paddingTop: HERO_HEADER_CLEARANCE}}
       data-ring-context={isDark ? 'dark' : undefined}
+      // The ground at the hero's top, where a merged header sits: the stylesheet gives a transparent header of the other
+      // polarity its own solid ground (monorepo backlog 458; `globals.css`).
+      data-hero-ground={isDark ? 'dark' : 'light'}
       data-hero-image={imageBacked ? 'true' : undefined}
       data-fade={ghosted ? 'light' : undefined}
       className={[

@@ -64,11 +64,12 @@ describe('the transparent header over a lit hero', () => {
     // Every block a glowing band reads (its selector list names `[data-glow="true"]`), merged.
     const lit: Record<string, string> = {}
     for (const m of CSS.matchAll(/((?:\[[^\]]+\],\n)*\[data-glow="true"\](?:,\n\[[^\]]+\])*)\s*\{([^}]*)\}/g)) Object.assign(lit, decls(m[2]))
-    const header = decls(bodyOf(':root:has(.glow-light-hero) header.bg-transparent'))
+    const header = decls(bodyOf(':root:has(.glow-light-hero) header.bg-transparent:not([data-transparent="light"])'))
     expect(Object.keys(lit).length).toBeGreaterThanOrEqual(13)
     expect(header).toEqual(lit)
     // The same rule serves the header over a photo hero (monorepo backlog 321): the photo floor's values are the lit band's.
-    expect(CSS).toContain(':root:has([data-hero-image="true"]) header.bg-transparent,\n:root:has(.glow-light-hero) header.bg-transparent {')
+    // Never a light transparent header, which takes its own solid ground there (monorepo backlog 458).
+    expect(CSS).toContain(':root:has([data-hero-image="true"]) header.bg-transparent:not([data-transparent="light"]),\n:root:has(.glow-light-hero) header.bg-transparent:not([data-transparent="light"]) {')
   })
 
   it('every header draws its transparent state with the class the rule names', () => {

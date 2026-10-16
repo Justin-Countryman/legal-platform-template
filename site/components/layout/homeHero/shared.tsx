@@ -70,7 +70,8 @@ export function heroPhotoMark(treated: boolean | undefined): {'data-hero-photo'?
 //   • the hero-merge contract (paddingTop reserves the overlaid header height)
 //   • the height mode (content-driven vs. full-viewport)
 //   • the scheme background (when there's no full-bleed backdrop)
-//   • the cascade context attributes (data-ring-context / data-hero-image)
+//   • the cascade context attributes (data-ring-context / data-hero-image), and the ground a merged header sits on
+//     (data-hero-ground)
 //   • the optional full-bleed backdrop image + scrim (backdrop variants)
 // Variants render their own `container` inside `children`.
 /** The glow's light and veil in the hero (`[R-646]`, `[R-648]`) as one string, kept out of the band's class list, whose every
@@ -145,6 +146,8 @@ export function HeroBand({
       // (e.g. the split text column) re-applies the clearance to itself.
       style={{...(flush ? {} : {paddingTop: HERO_HEADER_CLEARANCE}), ...style}}
       data-ring-context={surface.isDark ? 'dark' : undefined}
+      // The ground at the band's top, where a merged header sits (monorepo backlog 397; `globals.css`).
+      data-hero-ground={surface.isDark ? 'dark' : 'light'}
       data-hero-image={showBackdrop || imageBacked ? 'true' : undefined}
       data-fade={ghosted ? 'light' : undefined}
       data-glow={lit && !ramp ? 'true' : undefined}

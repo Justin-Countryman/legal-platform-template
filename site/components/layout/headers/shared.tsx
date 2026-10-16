@@ -329,6 +329,14 @@ export function isDarkSurfaceScheme(scheme: string): boolean {
   return isDarkSurface(scheme)
 }
 
+// The header's transparent state, said on the header (`data-transparent`), so the stylesheet can give it its own solid ground
+// where the hero on screen is of the other polarity (`globals.css`, monorepo backlog 458 and 397): the shell decides the
+// polarity from the site's inner-page hero, and cannot see the page's. Only at the top of a merged header; never once
+// scrolled to a solid or floating state.
+export function transparentTop(scheme: string): 'dark' | 'light' | undefined {
+  return scheme === 'transparent-dark' ? 'dark' : scheme === 'transparent-light' ? 'light' : undefined
+}
+
 // Maps transparent schemes to their solid equivalents for use on mobile, where there
 // is no hero image behind the header to show through.
 export function solidScheme(scheme: string | null | undefined): string {

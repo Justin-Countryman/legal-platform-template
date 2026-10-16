@@ -22,13 +22,20 @@ import {HERO_BACKDROP_SIZES, heroObjectPosition, type ResolvedHeroSurface, type 
 // the shared HeroScrim — always dark here (the backdrop is a focal photo / mosaic).
 const MOSAIC_MAX = 6
 
+// The photographs a backdrop draws: the gallery's (the mosaic only) or the one photograph. None means the hero has no
+// backdrop at all (monorepo backlog 460): a Backdrop of Image or Mosaic with nothing to draw used to lay the dark scrim
+// over the page under a light scheme's dark text.
+function backdropPhotos(config: HeroConfig, surface: ResolvedHeroSurface, content: ResolvedHomeContent): HeroImage[] {
+  if (config.backdrop === 'mosaic') return (content.galleryImages.length ? content.galleryImages : surface.bgImage?.src ? [surface.bgImage] : []).slice(0, MOSAIC_MAX)
+  if (config.backdrop === 'image') return surface.bgImage?.src ? [surface.bgImage] : []
+  return []
+}
+
 // The site's photo color (monorepo backlog 438): marked, each mosaic tile and the photograph's own box carry the treatment,
 // under the scrim, which stays the backdrop's last layer; the photograph's box drifts with it, so the tint never parts from
 // the picture. Unmarked, the markup is as before.
 function Backdrop({config, surface, content, treated}: {config: HeroConfig; surface: ResolvedHeroSurface; content: ResolvedHomeContent; treated?: boolean}) {
-  const mosaicTiles: HeroImage[] = (
-    content.galleryImages.length ? content.galleryImages : surface.bgImage ? [surface.bgImage] : []
-  ).slice(0, MOSAIC_MAX)
+  const mosaicTiles = backdropPhotos(config, surface, content)
 
   return (
     <div className="absolute inset-0 z-0 overflow-hidden">
@@ -59,7 +66,7 @@ function Backdrop({config, surface, content, treated}: {config: HeroConfig; surf
 export function Overlay({config, content, surface, sectionBackground, edgeBelow, glow, texture, photoTreated}: SkeletonProps) {
   const fullViewport = config.heightMode === 'fullViewport'
   const centered = config.contentAlign === 'center'
-  const hasBackdrop = config.backdrop === 'image' || config.backdrop === 'mosaic'
+  const hasBackdrop = backdropPhotos(config, surface, content).length > 0
   // The Section Background only applies when this overlay has no focal backdrop of
   // its own (backdrop = none) — otherwise the backdrop already fills the bleed.
   const sectionNode =

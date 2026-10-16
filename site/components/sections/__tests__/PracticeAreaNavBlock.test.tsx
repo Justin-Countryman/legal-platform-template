@@ -187,7 +187,7 @@ describe('PracticeAreaNavBlock — card photos', () => {
     const {container} = render(<PracticeAreaNavBlock data={data({layout: 'spotlight', items: PHOTOGRAPHED})} />)
     const card = gridOf(container).querySelector('a') as HTMLElement
     const layers = [...card.children] as HTMLElement[]
-    const glow = layers.findIndex((el) => el.className.includes('from-cue/30'))
+    const glow = layers.findIndex((el) => el.className.split(' ').includes('tile-glow'))
     const tone = layers.find((el) => el.className.includes('from-brand-dark/95'))
     expect(glow).toBeGreaterThan(-1)
     // The tone layer is lifted over the glow; the text scrim lives in the z-10 content.

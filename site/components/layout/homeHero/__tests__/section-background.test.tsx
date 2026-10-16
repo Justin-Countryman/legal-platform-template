@@ -173,16 +173,19 @@ describe('homepage hero — a light band\'s Section Background is the ghost', ()
   })
 
   it('a transparent header over the ghost takes the band\'s ghost tiers, as one over a photo takes the photo floor\'s', () => {
-    const SEL = ':root:has([data-hero-ghost]) header.bg-transparent'
+    // Not a dark transparent header: it takes its own solid ground over a light band (monorepo backlog 458).
+    const SEL = ':root:has([data-hero-ghost]) header.bg-transparent:not([data-transparent="dark"])'
     expect(CSS).toContain(`[data-fade="light"],\n${SEL} {\n  /* A heading in the button color`)
     const {container} = render(
       <>
-        <header className="fixed bg-transparent" />
+        <header className="fixed bg-transparent" data-transparent="light" />
         <Split config={config()} content={content} surface={surface(light)} sectionBackground={sectionBg(light)} />
       </>,
       {container: document.documentElement.appendChild(document.createElement('div'))},
     )
     expect(container.querySelector('header')!.matches(SEL)).toBe(true)
+    container.querySelector('header')!.setAttribute('data-transparent', 'dark')
+    expect(container.querySelector('header')!.matches(SEL)).toBe(false)
     container.remove()
     const solid = document.body.appendChild(document.createElement('header'))
     solid.className = 'bg-transparent'

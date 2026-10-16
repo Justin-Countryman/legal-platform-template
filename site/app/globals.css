@@ -114,12 +114,12 @@
     0 16px 40px rgb(var(--shadow-rgb) / 0.10),
     0 40px 80px rgb(var(--shadow-rgb) / 0.06);
 
-  /* Four names from the wireframe kit the template started from, kept because
+  /* Three names from the wireframe kit the template started from, kept because
      something reads them: `background` and `border` are emitted by the engine at
-     runtime (these are their static fallbacks), and `brand-white` and
-     `border-secondary` are read directly. The kit's other 35 names had no reader
-     and were deleted in Phase 16A (item 339). */
-  --color-brand-white: #ffffff;
+     runtime (these are their static fallbacks), and `border-secondary` is read
+     directly. The kit's other 35 names had no reader and were deleted in Phase 16A
+     (item 339); `brand-white` lost its last reader, the Split hero's old play mark,
+     with monorepo backlog 461. */
   --color-background: #ffffff;
   --color-border: #000000;
   --color-border-secondary: #aaaaaa;
@@ -892,6 +892,9 @@ h1, h2, h3, h4, h5, h6 {
   --color-star-outline:      var(--color-star-outline-on-dark);
   /* A slab in the dark ground would vanish on a dark band; it takes the accent. */
   --color-slab:              var(--color-accent-on-dark-raw);
+  /* The practice tile's fill and hover glow, solved for this ground (monorepo backlog 381). */
+  --tile-fill:               var(--tile-fill-on-dark);
+  --tile-glow:               var(--tile-glow-on-dark);
 }
 
 /* Light-surface containers nested inside dark-context ancestors: re-declare
@@ -916,6 +919,9 @@ h1, h2, h3, h4, h5, h6 {
   --color-hover-wash:        rgb(var(--shadow-rgb) / 0.06);
   --color-star-outline:      var(--color-star-outline-on-light);
   --color-slab:              var(--color-brand-dark);
+  /* The practice tile's fill and hover glow, solved for this ground (monorepo backlog 381). */
+  --tile-fill:               var(--tile-fill-on-light);
+  --tile-glow:               var(--tile-glow-on-light);
 }
 
 /* The saturated band (Phase 15, WS-V1-PHASE15-DESIGN §7 amendment 12): the
@@ -944,6 +950,9 @@ h1, h2, h3, h4, h5, h6 {
   --color-hover-wash:        transparent;
   --color-star-outline:      var(--color-accent-fg);
   --color-slab:              var(--color-accent-fg);
+  /* The practice tile's fill and hover glow, solved for this ground (monorepo backlog 381). */
+  --tile-fill:               var(--tile-fill-on-saturated);
+  --tile-glow:               var(--tile-glow-on-saturated);
 }
 
 /* Highlighted words on a saturated band ([R-461], Justin 2026-09-17: a word is
@@ -1001,9 +1010,10 @@ h1, h2, h3, h4, h5, h6 {
    solved under every one of them; the plain on-dark values are not (the control border measured 1.63 to 2.71 there).
    Over a photo hero it takes the same values, the photo floor's (monorepo backlog 321, ADV-A11Y-C): the header sits
    outside the hero's section, so the hero's own block never reached it, and the raw accent its links hover in measured
-   2.68 to 4.21 over the floor on four presets. */
-:root:has([data-hero-image="true"]) header.bg-transparent,
-:root:has(.glow-light-hero) header.bg-transparent {
+   2.68 to 4.21 over the floor on four presets. A light transparent header is never over the photograph or the light: it
+   takes its own solid ground there (below, monorepo backlog 458), so these values are not its. */
+:root:has([data-hero-image="true"]) header.bg-transparent:not([data-transparent="light"]),
+:root:has(.glow-light-hero) header.bg-transparent:not([data-transparent="light"]) {
   --color-action-text:       var(--color-foreground-on-dark);
   --color-action-text-hover: var(--color-foreground-on-dark);
   --color-ring-focus:        var(--color-foreground-on-dark);
@@ -1027,9 +1037,10 @@ h1, h2, h3, h4, h5, h6 {
    inside the band sets its own values, as it does anywhere.
    A light hero's Section Background is the same ghost over the page ground (HeroBackdrop, `data-hero-ghost`; monorepo
    backlog 321, Justin's "2: A" of 2026-10-14), and a transparent header over it takes the band's tiers, as one over a
-   photo hero takes the photo floor's: it sits outside the band, so the band's own block never reaches it. */
+   photo hero takes the photo floor's: it sits outside the band, so the band's own block never reaches it. A dark
+   transparent header is never over the ghost: it takes its own solid ground there (below, monorepo backlog 458). */
 [data-fade="light"],
-:root:has([data-hero-ghost]) header.bg-transparent {
+:root:has([data-hero-ghost]) header.bg-transparent:not([data-transparent="dark"]) {
   /* A heading in the button color takes its own ghost-band value (monorepo `[R-641]`); otherwise today's heading. */
   --color-heading:            var(--color-heading-on-fade);
   --color-foreground-muted:   var(--color-foreground-muted-on-fade);
@@ -1042,6 +1053,21 @@ h1, h2, h3, h4, h5, h6 {
   --color-border-control:     var(--color-border-control-on-fade);
   --color-action-state-cue:   var(--color-action-state-cue-on-fade);
   --color-hover-wash:         transparent;
+}
+/* THE MERGED HEADER OVER THE HERO ON SCREEN (monorepo backlog 458 and 397). A merged header's transparent top takes its
+   polarity from the site's inner-page hero (`resolveMergedHeaderScheme`, `SiteShell`), because the layout that draws it
+   cannot see the page: an inner page with its own photograph or scheme, and the homepage, whose hero is its own, could
+   put its words on a ground of the other polarity (dark words over a photograph's scrim; white words over a light hero,
+   1.02:1 measured by ADV-17B4-A). Every hero says the ground at its top (`data-hero-ground`: HeroBand, InternalHero,
+   InternalPageHeader) and the header says its transparent polarity (`data-transparent`); where they disagree, the header
+   takes its own solid ground, as the phone row and the profile pages already do (ruled by the lead, 2026-10-15). Its
+   words, logo and buttons are the solid header's, every pair of which validateWcag holds. Where they agree, or a page
+   draws no hero, nothing here applies: only a page that is unreadable today changes. No script, so no flash. */
+:root:has([data-hero-ground="dark"]) header[data-transparent="light"] {
+  background-color: var(--color-background);
+}
+:root:has([data-hero-ground="light"]) header[data-transparent="dark"] {
+  background-color: var(--color-brand-dark);
 }
 /* No image on a photo band renders brighter than the white the scrim's proof assumes (an HDR
    photograph otherwise can, where the browser supports extended range). */
@@ -1501,6 +1527,15 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 /* The first band's figure, under the hero, which reserves nothing: it stops 2rem under its own band's top edge, where the
    references' attorneys stop (Lewin 38 px, Calesaric 30 px), instead of crossing. */
 @utility figure-inside { --figure-cross: -2rem; }
+/* The Split hero's full-bleed photograph starts under a merged header (monorepo backlog 459): the band is flush, so from
+   lg the photograph's half ran up behind the header and its links and buttons sat on the raw photograph. It now begins
+   at the header's height, the band's own ground under the header, as the text half's clearance already reserves. The
+   height is 0px on a site without the merge (`SiteShell`, `useHeaderHeight`), so nothing moves there; the fallback is
+   the one the band's clearance takes before the header is measured (`HERO_HEADER_CLEARANCE`). A phone stacks the
+   photograph under the text, so it takes none. */
+@utility hero-photo-under-header {
+  @variant lg { margin-top: var(--header-height, 8rem); }
+}
 
 /* ─── The gradient on a dark band (Phase 16F) ────────────────────────────────── */
 /* The ground fades from the brand dark into the deep stop the engine derived for
@@ -2038,6 +2073,17 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-synthesis-weight: none; }
 @media (forced-colors: active) { [data-photo-ghost] { display: none; } }
 @media print { [data-photo-ghost] { display: none; } }
 @media (prefers-contrast: more) { [data-photo-ghost] { display: none; } }
+/* The practice tile's fill and hover glow (`TileFill`, `TileGlow`; monorepo backlog 381): the band's text color at
+   `--tile-fill` in the top corner, fading out, and the action color at `--tile-glow` there, fading to a third of it at the
+   far corner, as `from-foreground/5 to-transparent` and `from-cue/30 to-cue/10` drew them. The engine solves both per
+   palette for the ground the cascade blocks name (`tileGlowOf`), so the tile's label and blurb hold 4.5:1 over the
+   composite; validateWcag holds it. */
+@utility tile-fill {
+  background-image: linear-gradient(to bottom right in oklab, color-mix(in oklab, var(--color-foreground) var(--tile-fill), transparent), transparent);
+}
+@utility tile-glow {
+  background-image: linear-gradient(to bottom right in oklab, color-mix(in oklab, --theme(--color-cue) var(--tile-glow), transparent), color-mix(in oklab, --theme(--color-cue) calc(var(--tile-glow) / 3), transparent));
+}
 /* No hover glow on a photograph or a lit ground (Phase 17E, the pre-PR break pass; monorepo WS-V1-PHASE17E-DESIGN §9):
    the accent glow over a card's fill takes the muted line under 4.5:1 at its brightest corner, over the scrim's floor
    on 8 of the 15 presets and over Gradient bloom's glow on 2 of 9 (measured). A practice grid first sits on a
