@@ -1,5 +1,5 @@
 {
-  "_about": "Every outside company whose servers a visitor's browser reaches from this site: the template's own code (when: always, scroll, consent) and the platform's standard pastes in Studio, which load with the page once pasted (when: paste). The firm's privacy policy is drafted from this list (monorepo BI/rules/legal-pages.md, the LEGAL family). The scrub guard (scripts/check-template-is-blank.mjs) fails the build on any real host the template names that its PLATFORM_HOSTS does not allow, and lib/__tests__/outsideVendors.test.ts fails when an allowed host is neither a vendor here nor in linkOnly with a reason: so a new outside script cannot merge without its vendor. A host is a hostname or *.suffix. Adding a vendor adds a company to every firm's privacy policy: say so in the pull request.",
+  "_about": "Every outside company whose servers a visitor's browser reaches from this site: the template's own code (when: always, scroll, consent) and the advertising tags it writes from Site Settings' IDs (when: ads, with each ID's shape and the click IDs its tag reads from a landing page's address) and the platform's standard pastes in Studio, which load with the page once pasted (when: paste). The firm's privacy policy is drafted from this list (monorepo BI/rules/legal-pages.md, the LEGAL family). The scrub guard (scripts/check-template-is-blank.mjs) fails the build on any real host the template names that its PLATFORM_HOSTS does not allow, and lib/__tests__/outsideVendors.test.ts fails when an allowed host is neither a vendor here nor in linkOnly with a reason: so a new outside script cannot merge without its vendor. A host is a hostname or *.suffix. Adding a vendor adds a company to every firm's privacy policy: say so in the pull request.",
   "vendors": [
     {
       "id": "sanity",
@@ -87,6 +87,84 @@
       ],
       "when": "paste",
       "receives": "IP address and browser details"
+    },
+    {
+      "id": "meta-pixel",
+      "name": "Meta (Facebook)",
+      "purpose": "measures the firm's ads and shows them to past visitors, only after a visitor accepts advertising",
+      "hosts": [
+        "connect.facebook.net",
+        "www.facebook.com"
+      ],
+      "when": "ads",
+      "receives": "pages visited, device and browser, IP address and the ad that brought the visitor; sets cookies; never what is typed into a form",
+      "ids": {
+        "metaPixelId": "^\\d{12,20}$"
+      },
+      "clickIds": [
+        "fbclid"
+      ]
+    },
+    {
+      "id": "google-ads",
+      "name": "Google Ads",
+      "purpose": "measures the firm's ads and shows them to past visitors, only after a visitor accepts advertising",
+      "hosts": [
+        "www.googletagmanager.com",
+        "www.googleadservices.com",
+        "googleads.g.doubleclick.net",
+        "*.doubleclick.net",
+        "pagead2.googlesyndication.com",
+        "www.google.com"
+      ],
+      "when": "ads",
+      "receives": "pages visited, device and browser, IP address and the ad that brought the visitor; sets cookies; never what is typed into a form",
+      "ids": {
+        "googleAdsId": "^AW-\\d{6,12}$"
+      },
+      "clickIds": [
+        "gclid",
+        "gbraid",
+        "wbraid"
+      ]
+    },
+    {
+      "id": "microsoft-uet",
+      "name": "Microsoft Advertising",
+      "purpose": "measures the firm's ads and shows them to past visitors, only after a visitor accepts advertising",
+      "hosts": [
+        "bat.bing.com"
+      ],
+      "when": "ads",
+      "receives": "pages visited, device and browser, IP address and the ad that brought the visitor; sets cookies; never what is typed into a form",
+      "ids": {
+        "microsoftUetId": "^\\d{4,12}$"
+      },
+      "clickIds": [
+        "msclkid"
+      ]
+    },
+    {
+      "id": "linkedin-insight",
+      "name": "LinkedIn",
+      "purpose": "measures the firm's ads and shows them to past visitors, only after a visitor accepts advertising",
+      "hosts": [
+        "snap.licdn.com",
+        "px.ads.linkedin.com",
+        "px4.ads.linkedin.com",
+        "dc.ads.linkedin.com",
+        "p.adsymptotic.com",
+        "*.linkedin.oribi.io",
+        "sjs.bizographics.com"
+      ],
+      "when": "ads",
+      "receives": "pages visited, device and browser, IP address, the ad that brought the visitor, and the buttons clicked and forms submitted on the page (LinkedIn's Website Actions, which cannot be switched off); sets cookies; never what is typed into a Fillout form",
+      "ids": {
+        "linkedInPartnerId": "^\\d{3,12}$"
+      },
+      "clickIds": [
+        "li_fat_id"
+      ]
     }
   ],
   "linkOnly": {
@@ -102,9 +180,7 @@
     "lucide.dev": "icon library attribution",
     "sil.org": "the font license's text",
     "github.com": "source and documentation links",
-    "facebook.com": "a link to the firm's profile; nothing loads from it",
     "instagram.com": "a link to the firm's profile; nothing loads from it",
-    "linkedin.com": "a link to the firm's profile; nothing loads from it",
     "justia.com": "a link to the firm's directory profile",
     "avvo.com": "a link to the firm's directory profile",
     "martindale.com": "a link to the firm's directory profile",

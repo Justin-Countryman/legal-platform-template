@@ -37,10 +37,13 @@ const HOMEPAGE_LIST = ['homePage', 'practiceArea']
 // siteSettings (2026-10-15): the cookie banner's text and a GA4-shaped consent script whose file the served checks
 // answer themselves (scripts/ci/consent-served.mjs), so the stub build draws the banner on every live page.
 const SINGLETONS = ['designSettings', 'siteSettings']
+// The thank-you page (2026-10-15, monorepo WS-AD-PIXELS-DESIGN-2026-10-15): served by `[...slug]` at request time, where
+// consent-served.mjs proves its address is bare before any tag runs and the advertising tags load there.
+const SERVED = ['generalPage']
 
 describe('scripts/ci/fixture.ndjson agrees with studio/schema.json', () => {
   it('carries exactly one document per generateStaticParams template, plus the homepage list fixture', () => {
-    expect(docs.map((d) => d._type).sort()).toEqual([...TEMPLATES, ...HOMEPAGE_LIST, ...SINGLETONS].sort())
+    expect(docs.map((d) => d._type).sort()).toEqual([...TEMPLATES, ...HOMEPAGE_LIST, ...SINGLETONS, ...SERVED].sort())
   })
 
   it('the homepage fixture holds the inline section members the stub build asserts, each a type the canvas allows', () => {

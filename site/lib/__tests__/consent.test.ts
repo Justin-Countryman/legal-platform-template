@@ -1,89 +1,159 @@
-import {describe, it, expect} from 'vitest'
+import {afterEach, describe, it, expect} from 'vitest'
 import {
   CONSENT_KEEP_SECONDS,
   CONSENT_OFF_SCRIPT,
-  bootConsent,
-  bootScript,
-  cookieDomains,
-  measurementIds,
   CONSENT_STORAGE_KEY,
   DEFAULT_BANNER_TEXT,
   analyticsCookieNames,
+  bootConsent,
+  bootScript,
+  choiceCookieHeader,
   consentCommands,
-  parseChoice,
-  resolveChoice,
-  serializeChoice,
+  consentState,
+  cookieDomains,
+  measurementIds,
+  parseChoices,
+  readStoredRaw,
+  resolveChoices,
+  serializeChoices,
 } from '@/lib/consent'
 
-// The banner's rules as pure functions (monorepo LEGAL rules, WS-CONSENT-AND-LEGAL-PAGES-DESIGN-2026-10-15 §4.1).
+// The banner's rules as functions (monorepo LEGAL rules; WS-CONSENT-AND-LEGAL-PAGES-DESIGN-2026-10-15 §4.1, and the
+// second purpose, advertising, WS-AD-PIXELS-DESIGN-2026-10-15 §2.2; Justin 2026-10-15: "build a place for standard
+// pixels and connect to this functionality").
 
 const NOW = 1_800_000_000
+const v1 = (choice: string, at: number) => JSON.stringify({v: 1, choice, at})
 
-describe('the stored choice', () => {
-  it('lives under one browser-storage key, never a cookie the site sets', () => {
+describe('the stored choices', () => {
+  it('live under one browser-storage key, never a cookie the site sets', () => {
     expect(CONSENT_STORAGE_KEY).toBe('lp-consent')
   })
 
-  it('round-trips an accept and a decline', () => {
-    expect(parseChoice(serializeChoice('granted', NOW), NOW)).toBe('granted')
-    expect(parseChoice(serializeChoice('denied', NOW), NOW)).toBe('denied')
+  it('round-trip each purpose on its own', () => {
+    const raw = serializeChoices({analytics: 'granted', ads: 'denied'}, NOW)
+    expect(JSON.parse(raw)).toEqual({v: 2, analytics: 'granted', ads: 'denied', at: NOW})
+    expect(parseChoices(raw, NOW)).toEqual({analytics: 'granted', ads: 'denied'})
+    expect(parseChoices(serializeChoices({analytics: 'denied'}, NOW), NOW)).toEqual({analytics: 'denied'})
   })
 
-  it('is kept about six months, then asked again', () => {
-    expect(CONSENT_KEEP_SECONDS).toBe(183 * 24 * 60 * 60)
-    const stored = serializeChoice('denied', NOW)
-    expect(parseChoice(stored, NOW + CONSENT_KEEP_SECONDS - 1)).toBe('denied')
-    expect(parseChoice(stored, NOW + CONSENT_KEEP_SECONDS)).toBeNull()
+  it('read a version 1 entry (from before advertising) as an analytics choice alone', () => {
+    expect(parseChoices(v1('granted', NOW), NOW)).toEqual({analytics: 'granted'})
+    expect(parseChoices(v1('maybe', NOW), NOW)).toBeNull()
   })
 
-  it('reads anything it did not write as no choice', () => {
-    for (const raw of [null, '', 'granted', '{}', 'not json', '{"v":2,"choice":"granted","at":1800000000}',
-      '{"v":1,"choice":"maybe","at":1800000000}', '{"v":1,"choice":"granted"}', '[1]']) {
-      expect(parseChoice(raw, NOW)).toBeNull()
+  it('are kept twelve months, then asked again (monorepo [R-751])', () => {
+    expect(CONSENT_KEEP_SECONDS).toBe(365 * 24 * 60 * 60)
+    const raw = serializeChoices({analytics: 'denied', ads: 'granted'}, NOW)
+    expect(parseChoices(raw, NOW + CONSENT_KEEP_SECONDS - 1)).toEqual({analytics: 'denied', ads: 'granted'})
+    expect(parseChoices(raw, NOW + CONSENT_KEEP_SECONDS)).toBeNull()
+  })
+
+  it('read anything they did not write, or dated ahead of now, as no choice', () => {
+    for (const raw of [null, '', 'granted', '{}', 'not json', '[1]', '{"v":2,"at":1800000000}',
+      '{"v":2,"ads":"maybe","at":1800000000}', '{"v":3,"analytics":"granted","at":1800000000}',
+      '{"v":2,"analytics":"granted"}', serializeChoices({analytics: 'granted'}, NOW + 3600)]) {
+      expect(parseChoices(raw, NOW)).toBeNull()
     }
-  })
-
-  it('reads a choice dated in the future as no choice (a clock moved back is not consent)', () => {
-    expect(parseChoice(serializeChoice('granted', NOW + 3600), NOW)).toBeNull()
   })
 })
 
-describe('Global Privacy Control', () => {
-  it('answers a decline when nothing is stored', () => {
-    expect(resolveChoice(null, true)).toBe('denied')
-    expect(resolveChoice(null, false)).toBeNull()
+describe('what the page acts on', () => {
+  it('asks while any purpose the site has is unchosen', () => {
+    expect(resolveChoices(null, false, ['analytics'])).toEqual({ask: true})
+    expect(resolveChoices({analytics: 'granted'}, false, ['analytics', 'ads'])).toEqual({ask: true, analytics: 'granted'})
+    expect(resolveChoices({analytics: 'granted', ads: 'denied'}, false, ['analytics', 'ads']))
+      .toEqual({ask: false, analytics: 'granted', ads: 'denied'})
   })
 
-  it('never overrides a choice the visitor made in the banner', () => {
-    expect(resolveChoice('granted', true)).toBe('granted')
-    expect(resolveChoice('denied', false)).toBe('denied')
+  it('ignores a stored purpose the site no longer has', () => {
+    expect(resolveChoices({analytics: 'denied', ads: 'granted'}, false, ['analytics'])).toEqual({ask: false, analytics: 'denied'})
+  })
+
+  it('lets Global Privacy Control decline every unchosen purpose, and never an analytics choice the visitor made', () => {
+    expect(resolveChoices(null, true, ['analytics', 'ads'])).toEqual({ask: false, analytics: 'denied', ads: 'denied'})
+    expect(resolveChoices({analytics: 'granted'}, true, ['analytics', 'ads'])).toEqual({ask: false, analytics: 'granted', ads: 'denied'})
+  })
+
+  it('names the state html[data-consent] carries', () => {
+    expect(consentState({ask: true})).toBe('ask')
+    expect(consentState({ask: false, analytics: 'granted', ads: 'granted'})).toBe('granted')
+    expect(consentState({ask: false, analytics: 'denied'})).toBe('denied')
+    expect(consentState({ask: false, analytics: 'granted', ads: 'denied'})).toBe('mixed')
   })
 })
 
 describe('Consent Mode (Google basic mode)', () => {
+  const DENIED = {ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied'}
+
   it('sets every key denied first, so nothing runs on an assumed yes', () => {
-    const [first] = consentCommands('denied')
-    expect(first).toEqual(['consent', 'default', {
-      ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied',
-    }])
-    expect(consentCommands('denied')).toHaveLength(1)
+    expect(consentCommands({analytics: 'denied', ads: 'denied'})).toEqual([['consent', 'default', DENIED]])
   })
 
-  it('grants analytics only on accept, and never an advertising key', () => {
-    const commands = consentCommands('granted')
-    expect(commands).toHaveLength(2)
-    expect(commands[1]).toEqual(['consent', 'update', {analytics_storage: 'granted'}])
-    for (const [, , keys] of commands.slice(1)) {
-      for (const k of ['ad_storage', 'ad_user_data', 'ad_personalization']) expect(keys).not.toHaveProperty(k)
-    }
+  it('grants analytics alone for analytics, and the three ad keys only for advertising', () => {
+    expect(consentCommands({analytics: 'granted'})[1]).toEqual(['consent', 'update', {analytics_storage: 'granted'}])
+    expect(consentCommands({analytics: 'denied', ads: 'granted'})[1])
+      .toEqual(['consent', 'update', {ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted'}])
+    expect(consentCommands({analytics: 'granted', ads: 'granted'})[1][2]).toEqual(
+      {analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted'})
   })
 })
 
-describe('withdrawing', () => {
+describe('bootConsent, the before-paint decision', () => {
+  const run = (raw: string | null, gpc: boolean, purposes: string[]) => {
+    localStorage.clear()
+    if (raw !== null) localStorage.setItem(CONSENT_STORAGE_KEY, raw)
+    Object.defineProperty(navigator, 'globalPrivacyControl', {configurable: true, value: gpc})
+    return bootConsent(document, window, CONSENT_STORAGE_KEY, CONSENT_KEEP_SECONDS, purposes)
+  }
+
+  it('agrees with parseChoices, resolveChoices and consentState on every case, and sets html[data-consent]', () => {
+    const now = Math.floor(Date.now() / 1000)
+    const table: Array<string | null> = [null, '', 'x', '{}', v1('granted', now), v1('denied', now),
+      serializeChoices({analytics: 'granted', ads: 'denied'}, now), serializeChoices({ads: 'granted'}, now),
+      serializeChoices({analytics: 'granted', ads: 'granted'}, now - CONSENT_KEEP_SECONDS),
+      serializeChoices({analytics: 'denied'}, now + 3600), '{"v":3,"analytics":"granted","at":1}',
+      serializeChoices({analytics: 'granted', ads: 'granted'}, now), serializeChoices({ads: 'granted', gpc: true}, now)]
+    for (const raw of table) {
+      for (const gpc of [false, true]) {
+        for (const purposes of [['analytics'], ['analytics', 'ads'], ['ads']]) {
+          const expected = consentState(resolveChoices(parseChoices(raw, now), gpc, purposes))
+          expect(run(raw, gpc, purposes)).toBe(expected)
+          expect(document.documentElement.getAttribute('data-consent')).toBe(expected)
+        }
+      }
+    }
+  })
+
+  it("is off on the operator's preview, which marks the page itself after the root layout's script", () => {
+    run(serializeChoices({analytics: 'granted'}, Math.floor(Date.now() / 1000)), false, ['analytics'])
+    new Function(CONSENT_OFF_SCRIPT)()
+    expect(document.documentElement.getAttribute('data-consent')).toBe('off')
+  })
+
+  it('serializes into a script that runs on its own, for the purposes the site has', () => {
+    localStorage.clear()
+    document.documentElement.removeAttribute('data-consent')
+    new Function(bootScript(['analytics', 'ads']))()
+    expect(document.documentElement.getAttribute('data-consent')).toBe('ask')
+  })
+})
+
+describe('the pasted snippet and the cookies it leaves', () => {
+  it('reads the GA4 ids', () => {
+    expect(measurementIds('<script>gtag("config","G-ABC1234");gtag("config","G-ABC1234")</script>')).toEqual(['G-ABC1234'])
+    expect(measurementIds(null)).toEqual([])
+  })
+
   it('finds Google Analytics cookies by name and nothing else', () => {
     const jar = '_ga=GA1.1.1; _ga_ABC123XYZ=GS1.1; other=1; _gid=GA1; _gat_UA-1=1; lp-preview=x; _gac_x=1'
     expect(analyticsCookieNames(jar).sort()).toEqual(['_ga', '_ga_ABC123XYZ', '_gac_x', '_gat_UA-1', '_gid'])
     expect(analyticsCookieNames('')).toEqual([])
+  })
+
+  it('names the host and every parent domain', () => {
+    expect(cookieDomains('www.firm.example')).toEqual(['', 'www.firm.example', 'firm.example'])
+    expect(cookieDomains('localhost')).toEqual([''])
   })
 })
 
@@ -95,53 +165,52 @@ describe('the banner text', () => {
   })
 })
 
-
-// The decision made before paint is the same rule as the one stated above, on one table of inputs.
-describe('bootConsent, the before-paint decision', () => {
-  const run = (raw: string | null, gpc: boolean) => {
-    localStorage.clear()
-    if (raw !== null) localStorage.setItem(CONSENT_STORAGE_KEY, raw)
-    Object.defineProperty(navigator, 'globalPrivacyControl', {configurable: true, value: gpc})
-    return bootConsent(document, window, CONSENT_STORAGE_KEY, 1, CONSENT_KEEP_SECONDS)
-  }
-  const now = () => Math.floor(Date.now() / 1000)
-
-  it('agrees with parseChoice and resolveChoice on every case, and sets html[data-consent]', () => {
-    const table: Array<string | null> = [null, '', 'x', '{}', serializeChoice('granted', now()), serializeChoice('denied', now()),
-      serializeChoice('granted', now() - CONSENT_KEEP_SECONDS), serializeChoice('denied', now() + 3600),
-      '{"v":2,"choice":"granted","at":1}']
-    for (const raw of table) {
-      for (const gpc of [false, true]) {
-        const expected = resolveChoice(parseChoice(raw, now()), gpc) ?? 'ask'
-        expect(run(raw, gpc)).toBe(expected)
-        expect(document.documentElement.getAttribute('data-consent')).toBe(expected)
-      }
-    }
+describe('Global Privacy Control after an advertising accept (11 CCR §7025(c)(3))', () => {
+  it('overrides an accept made without it, for advertising only', () => {
+    expect(resolveChoices({analytics: 'granted', ads: 'granted'}, true, ['analytics', 'ads']))
+      .toEqual({ask: false, analytics: 'granted', ads: 'denied'})
   })
 
-  it("is off on the operator's preview, which marks the page itself after the root layout's script", () => {
-    run(serializeChoice('granted', now()), false)
-    new Function(CONSENT_OFF_SCRIPT)()
-    expect(document.documentElement.getAttribute('data-consent')).toBe('off')
-  })
-
-  it('serializes into a script that runs on its own', () => {
-    localStorage.clear()
-    window.history.replaceState(null, '', '/')
-    document.documentElement.removeAttribute('data-consent')
-    new Function(bootScript())()
-    expect(document.documentElement.getAttribute('data-consent')).toBe('ask')
+  it('leaves an accept made while the signal was on (the footer opt-in)', () => {
+    const raw = serializeChoices({ads: 'granted', gpc: true}, NOW)
+    expect(parseChoices(raw, NOW)).toEqual({ads: 'granted', gpc: true})
+    expect(resolveChoices(parseChoices(raw, NOW), true, ['ads'])).toEqual({ask: false, ads: 'granted'})
   })
 })
 
-describe('the pasted snippet and the cookies it leaves', () => {
-  it('reads the GA4 ids', () => {
-    expect(measurementIds('<script>gtag("config","G-ABC1234");gtag("config","G-ABC1234")</script>')).toEqual(['G-ABC1234'])
-    expect(measurementIds(null)).toEqual([])
+describe("the thank-you page's address", () => {
+  it('loses its query string before paint, keeping the history entry and its fragment', () => {
+    window.history.replaceState({kept: 1}, '', '/thank-you?name=Pat&email=pat%40mail.example#top')
+    new Function(bootScript(['analytics']))()
+    expect(window.location.pathname + window.location.search + window.location.hash).toBe('/thank-you#top')
+    expect(window.history.state).toEqual({kept: 1})
+    window.history.replaceState(null, '', '/practice?x=1')
+    new Function(bootScript(['analytics']))()
+    expect(window.location.search).toBe('?x=1')
+  })
+})
+
+describe('the cookie the site’s server sets (monorepo [R-751])', () => {
+  afterEach(() => {
+    document.cookie = 'lp-consent=; Max-Age=0; path=/'
+    localStorage.clear()
   })
 
-  it('names the host and every parent domain', () => {
-    expect(cookieDomains('www.firm.example')).toEqual(['', 'www.firm.example', 'firm.example'])
-    expect(cookieDomains('localhost')).toEqual([''])
+  it('the before-paint script reads it when browser storage is empty, as Safari leaves it after seven days', () => {
+    localStorage.clear()
+    document.cookie = `lp-consent=${encodeURIComponent(serializeChoices({analytics: 'denied'}, Math.floor(Date.now() / 1000)))}; path=/`
+    new Function(bootScript(['analytics']))()
+    expect(document.documentElement.getAttribute('data-consent')).toBe('denied')
+    expect(readStoredRaw(document, window)).toContain('"analytics":"denied"')
+  })
+
+  it('the cookie lives as long as the choice, from a choice made now, a device clock up to two days off allowed', () => {
+    const now = 2_000_000_000
+    const day = 24 * 60 * 60
+    expect(choiceCookieHeader(serializeChoices({ads: 'denied'}, now), now, true)).toContain(`Max-Age=${CONSENT_KEEP_SECONDS};`)
+    expect(choiceCookieHeader(serializeChoices({ads: 'denied'}, now - day), now, true)).toContain(`Max-Age=${CONSENT_KEEP_SECONDS - day};`)
+    expect(choiceCookieHeader(serializeChoices({ads: 'denied'}, now + day), now, true)).toContain(`Max-Age=${CONSENT_KEEP_SECONDS};`)
+    expect(choiceCookieHeader(serializeChoices({ads: 'denied'}, now - 30 * day), now, true)).toBeNull()
+    expect(choiceCookieHeader(serializeChoices({ads: 'denied'}, now + 3 * day), now, true)).toBeNull()
   })
 })

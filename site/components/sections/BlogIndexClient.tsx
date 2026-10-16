@@ -117,6 +117,10 @@ export function BlogIndexClient({
 
   return (
     <div className="flex flex-col">
+      {/* A search's words are in this page's address: the next page is told only the site's origin as its referrer, so
+          the words never reach an analytics or advertising tag there (monorepo WS-AD-PIXELS-DESIGN-2026-10-15 §6).
+          React hoists the tag into the head. */}
+      {initialSearch ? <meta name="referrer" content="strict-origin" /> : null}
 
       {/* Search + category filter row */}
       <div className="mb-10 flex flex-wrap items-center justify-end gap-3">

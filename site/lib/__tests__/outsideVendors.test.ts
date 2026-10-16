@@ -6,8 +6,8 @@ import {PLATFORM_HOSTS, isAllowedHost} from '../../../scripts/check-template-is-
 // scrub guard's host allowlist, which already fails the build on any real host the template names and does not allow.
 // So a new outside script in the template cannot merge until it is a vendor here, or a link-only host with a reason.
 
-const WHEN = new Set(['always', 'scroll', 'consent', 'paste'])
-type Vendor = {id: string; name: string; purpose: string; hosts: string[]; when: string; receives: string}
+const WHEN = new Set(['always', 'scroll', 'consent', 'paste', 'ads'])
+type Vendor = {id: string; name: string; purpose: string; hosts: string[]; when: string; receives: string; ids?: Record<string, string>; clickIds?: string[]}
 const list = (vendors as {vendors: Vendor[]}).vendors
 const linkOnly = (vendors as {linkOnly: Record<string, string>}).linkOnly
 
@@ -23,6 +23,13 @@ describe('site/lib/outsideVendors.json', () => {
       expect(v.name && v.purpose && v.receives).toBeTruthy()
       expect(WHEN.has(v.when)).toBe(true)
       expect(v.hosts.length).toBeGreaterThan(0)
+    }
+  })
+
+  it('gives each advertising vendor the shapes of its IDs and its click ID, and no other vendor either', () => {
+    for (const v of list) {
+      expect(v.when === 'ads', v.id).toBe(!!v.ids && !!v.clickIds)
+      for (const shape of Object.values(v.ids ?? {})) expect(() => new RegExp(shape)).not.toThrow()
     }
   })
 
