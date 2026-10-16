@@ -147,7 +147,8 @@ describe('/case-results/<name>, a result with its own page', () => {
   it('takes its title from the SEO Title, else its name; never from the Result', async () => {
     serve({[Q.CASE_RESULT_PAGE_QUERY]: PAGE})
     const meta = await pageMetadata(slugged('custody-modification-dakota-county') as never)
-    expect(JSON.stringify(meta.title)).toContain('Custody Modification, Dakota County')
+    // monorepo [R-753]: Case Result, the headline, the firm; 64 characters, so the place goes first.
+    expect(meta.title).toEqual({absolute: 'Case Result - Custody Modification - Example Firm'})
     expect(JSON.stringify(meta.title)).not.toContain('Sole Custody Awarded')
     expect(meta.alternates?.canonical).toBe('/case-results/custody-modification-dakota-county')
     serve({[Q.CASE_RESULT_PAGE_QUERY]: {...PAGE, seoTitle: 'Custody Case in Dakota County'}})

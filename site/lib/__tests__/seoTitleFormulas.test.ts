@@ -3,6 +3,7 @@ import {
   SERVICE_AREA_INDEX_PAGE_NAME,
   aboutPageTitle,
   areaOfLawPageName,
+  caseResultPageTitle,
   composeTitle,
   geoHubPageName,
   geoSpokePageName,
@@ -276,5 +277,25 @@ describe('TITLE-8 — the two geo page shapes', () => {
 
   it('a spoke with no name returns empty', () => {
     expect(geoSpokePageName('Woodbury Personal Injury', '')).toBe('')
+  })
+})
+
+describe('the case result page formula (monorepo [R-753])', () => {
+  // Justin, 2026-10-15: "Case Result - headline - firmname"; over the line, the headline's place goes first, then
+  // the firm's name (FIELD-2); the headline never holds the result, so neither does the title.
+  it('is Case Result, the headline, then the firm', () => {
+    expect(caseResultPageTitle('Probate Dispute, Duluth', 'Marlow & Finch')).toBe('Case Result - Probate Dispute, Duluth - Marlow & Finch')
+  })
+  it('drops the headline\'s place first when it runs past one line', () => {
+    expect(caseResultPageTitle('Missed Cancer Diagnosis, Hennepin County', 'Marlow & Finch')).toBe('Case Result - Missed Cancer Diagnosis - Marlow & Finch')
+  })
+  it('then the firm\'s name, and keeps what is left', () => {
+    const long = 'Wrongful Death of a Commercial Truck Driver on Interstate 35'
+    expect(caseResultPageTitle(long, 'Marlow & Finch')).toBe(`Case Result - ${long}`)
+    expect(caseResultPageTitle('Missed Cancer Diagnosis in a Rural Clinic, Hennepin County', 'Marlow & Finch')).toBe('Case Result - Missed Cancer Diagnosis in a Rural Clinic')
+  })
+  it('returns empty with no headline, so the caller can fall back; no firm, no separator', () => {
+    expect(caseResultPageTitle('', 'Marlow & Finch')).toBe('')
+    expect(caseResultPageTitle('Probate Dispute, Duluth', '')).toBe('Case Result - Probate Dispute, Duluth')
   })
 })

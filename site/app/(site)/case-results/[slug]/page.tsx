@@ -8,7 +8,7 @@ import {CASE_RESULT_PAGE_QUERY, CASE_RESULT_SLUGS_QUERY} from '@/lib/sanity/quer
 import {chromeDesignTokens, chromeGlobalCta, chromeNap, fetchCached, getSiteChrome, chromeClose} from '@/lib/sanity/fetchers'
 import {headingFaceWithAdvances} from '@/lib/headingAdvances'
 import {expandNapTokens, resolveTokenString} from '@/lib/tokens'
-import {resolveTitle} from '@/lib/seoTitle'
+import {caseResultPageTitle, resolveTitle} from '@/lib/seoTitle'
 import {buildSocialMeta} from '@/lib/socialMeta'
 import {resolveResultsDisclaimer} from '@/lib/legal'
 import {PortableTextRenderer} from '@/components/ui/PortableText'
@@ -52,8 +52,10 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   if (!result) return {title: INDEX_PAGE_PRESETS.caseResultIndex}
   const tokens = expandNapTokens(rawTokens)
 
-  // NAME-1 / NAME-2: the SEO Title, else the page's name; the Result never.
-  const {title, label} = resolveTitle(result.seoTitle, resolvePageLabel(result), tokens, tokens?.firmName)
+  // NAME-1 / NAME-2: the SEO Title, else `Case Result - {headline} - {firm}` (monorepo [R-753]); the Result never.
+  const name = resolvePageLabel(result)
+  const {title, label} = resolveTitle(result.seoTitle, name, tokens, tokens?.firmName,
+    caseResultPageTitle(resolveTokenString(name, tokens), tokens?.firmName))
   const description = resolveTokenString(result.metaDescription, tokens)
   return {
     title,

@@ -385,6 +385,29 @@ export function aboutPageTitle(
 }
 
 /**
+ * A case result's own page (monorepo `[R-753]`; Justin, 2026-10-15: "Case Result - headline - firmname").
+ * `Case Result - Probate Dispute, Duluth - Marlow & Finch`. Past one line (RENDERED_TITLE_MAX), the
+ * headline's place (what follows its last comma) goes first, then the firm's name (monorepo FIELD-2); what
+ * is left is kept, since length warns and never blocks (TITLE-3). The headline never holds the result
+ * (its field's own validation), so the title cannot either. Empty with no headline: the caller falls back.
+ * Supplied whole as a complete title, like the about page's.
+ */
+export function caseResultPageTitle(headline: string | null | undefined, firmName: string | null | undefined): string {
+  const name = (headline ?? '').trim()
+  if (!name) return ''
+  const firm = (firmName ?? '').trim()
+  const lead = 'Case Result'
+  const comma = name.lastIndexOf(',')
+  const caseOnly = comma > 0 ? name.slice(0, comma).trim() : name
+  const shapes = [
+    [lead, name, firm],
+    [lead, caseOnly, firm],
+    [lead, caseOnly],
+  ].map((parts) => parts.filter(Boolean).join(TITLE_SEPARATOR))
+  return shapes.find((t) => t.length <= RENDERED_TITLE_MAX) ?? shapes[shapes.length - 1]
+}
+
+/**
  * The title every route that is about to call `notFound()` reports, so the
  * 404 page carries a real title instead of inheriting `title.default` (the
  * bare firm name).
