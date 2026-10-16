@@ -181,9 +181,13 @@ export const staffPage = defineType({
       ],
     },
     {
+      // Monorepo backlog 513: the page draws any address set here and the dataset is public, so the address itself
+      // is the switch; the build writes one only when the firm's Public Email is Yes.
       name: 'email',
       title: 'Email Address',
       type: 'string',
+      description:
+        'Shown on the profile whenever it is set, and anyone can read it through the site\'s public data. Leave it empty unless the firm wants it public.',
     },
     {
       name: 'phone',
