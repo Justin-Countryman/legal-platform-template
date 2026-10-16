@@ -17,6 +17,7 @@ import {type SeamProps, NO_SEAM} from './sectionFrame'
 import type {ContentSectionProps} from './sectionProps'
 import {headingFit} from '@/lib/headingFit'
 import {countGridClasses, itemTiers} from './countGrid'
+import {contentAlt} from '@/lib/imageAlt'
 
 // ─── Content section ──────────────────────────────────────────────────────────
 //
@@ -253,7 +254,7 @@ export function ContentSectionBlock({
           <ul role="list" aria-label="Awards and recognition" className={`mt-8 flex flex-wrap items-center gap-6 ${center ? 'justify-center' : ''}`}>
             {badges.map((b, i) => (
               <li key={i}>
-                <Image src={b.src as string} alt={b.alt ?? ''} width={b.width ?? 160} height={b.height ?? 160} className="h-14 w-auto object-contain" />
+                <Image src={b.src as string} alt={contentAlt(b.alt)} width={b.width ?? 160} height={b.height ?? 160} className="h-14 w-auto object-contain" />
               </li>
             ))}
           </ul>
@@ -417,7 +418,7 @@ function ContentMedia({data, ground, siteFrame}: {data: ContentSectionData; grou
       <SanityImage
         image={media.image}
         mode="natural"
-        alt={media.image.alt ?? ''}
+        alt={contentAlt(media.image.alt)}
         sizes="(min-width: 1280px) 50vw, (min-width: 853px) 768px, 100vw"
         className={`${treatment.image} ${cutout ? 'object-contain' : 'object-cover'}`}
       />

@@ -9,6 +9,7 @@ import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type SectionSurface} from '@/lib/sectionSurface'
 import {headingFit, type HeadingFit} from '@/lib/headingFit'
 import {HeadingText, headingFitStyle} from '@/components/ui/HeadingText'
+import {contentAlt} from '@/lib/imageAlt'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -119,7 +120,7 @@ function SplitCta({data, fit}: {data: CtaSectionBlockData; fit?: HeadingFit | nu
       </div>
       {hasImage(image) && (
         <div className="relative h-96 w-full overflow-hidden">
-          <SanityImage image={image} mode="fill" alt={image.alt ?? ''} sizes="(min-width: 1280px) 50vw, (min-width: 853px) 768px, 100vw" />
+          <SanityImage image={image} mode="fill" alt={contentAlt(image.alt)} sizes="(min-width: 1280px) 50vw, (min-width: 853px) 768px, 100vw" />
         </div>
       )}
     </>

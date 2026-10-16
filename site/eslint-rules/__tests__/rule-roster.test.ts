@@ -7,7 +7,7 @@
 import {describe, expect, it} from 'vitest'
 import plugin from '../index.js'
 
-const TWELVE = [
+const THIRTEEN = [
   'collection-grid-list-semantics',
   'color-roles',
   'footer-landmark-naming',
@@ -20,12 +20,13 @@ const TWELVE = [
   'no-text-action-raw',
   'no-use-hero-scheme-in-server',
   'no-theme-for-style-set',
+  'no-silent-empty-alt',
 ].sort()
 
 describe('platform plugin rule roster', () => {
   // Phase 16A added no-fixed-radius ([R-473]) and color-roles ([R-471]); Phase 17C
-  // no-theme-for-style-set ([R-535]).
-  it('exports exactly the nine Phase 8 keepers, Phase 16A\'s two and Phase 17C\'s one', () => {
-    expect(Object.keys(plugin.rules).sort()).toEqual(TWELVE)
+  // no-theme-for-style-set ([R-535]); monorepo backlog 457 no-silent-empty-alt.
+  it('exports exactly the nine Phase 8 keepers, Phase 16A\'s two, Phase 17C\'s one and 457\'s one', () => {
+    expect(Object.keys(plugin.rules).sort()).toEqual(THIRTEEN)
   })
 })

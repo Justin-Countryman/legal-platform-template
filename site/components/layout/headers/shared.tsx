@@ -423,8 +423,9 @@ export function HeaderLogo({data, scheme, useMark = false, size = 'rest', ringCl
         // Keyed by the file: compacted, the header may draw the mark, another file with its own shape, which must be a
         // new box rather than the wordmark's box animating its width down to the mark's. A logo on its own white (or
         // black) box is drawn into the header's solid ground, so the box does not show; the site shell gives a boxed logo
-        // a solid ground wherever the header would be glass or transparent (item 4).
-        <LogoImage key={asset.src} logo={asset} height={logoHeight(logoAspect(asset), size)} alt={asset.alt ?? ''} place={size} className={LOGO_CAPS[size]} blend={scheme === 'light' || scheme === 'dark' ? logoBlend(asset, darkSurface ? 'dark' : 'light') : null} priority />
+        // a solid ground wherever the header would be glass or transparent (item 4). Decorative (`alt=""`): the link's
+        // own name says the firm and the way home, so a description would be read twice (monorepo backlog 457).
+        <LogoImage key={asset.src} logo={asset} height={logoHeight(logoAspect(asset), size)} alt="" decorative place={size} className={LOGO_CAPS[size]} blend={scheme === 'light' || scheme === 'dark' ? logoBlend(asset, darkSurface ? 'dark' : 'light') : null} priority />
       ) : data.firmName ? (
         <span className="font-heading text-lg font-semibold">{data.firmName}</span>
       ) : null}

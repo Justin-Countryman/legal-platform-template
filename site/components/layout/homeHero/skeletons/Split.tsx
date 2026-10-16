@@ -17,6 +17,7 @@ import {getEmbedUrl} from '@/lib/videoEmbed'
 import {HeroBand, HeroTextBlock, HERO_HEADER_CLEARANCE, heroHeadingText, heroPhotoMark} from '../shared'
 import type {HeroConfig, ResolvedHomeContent, SkeletonProps, SplitImageRatio} from '../types'
 import {heroObjectPosition, type ResolvedHeroSurface, type HeroImage} from '@/lib/heroSurface'
+import {contentAlt} from '@/lib/imageAlt'
 
 const MEDIA_SIZES = '(min-width:1024px) 45vw, 100vw'
 
@@ -36,7 +37,7 @@ const RATIO_ASPECT: Record<Exclude<SplitImageRatio, 'auto'>, string> = {
 function StaticImage({img, aspect, treated}: {img: NonNullable<HeroImage>; aspect: string; treated?: boolean}) {
   return (
     <div className={`${PANEL_BASE} ${aspect}`} {...heroPhotoMark(treated)}>
-      <Image src={img.src} alt={img.alt ?? ''} fill priority sizes={MEDIA_SIZES} className="object-cover" style={{objectPosition: heroObjectPosition(img)}} />
+      <Image src={img.src} alt={contentAlt(img.alt)} fill priority sizes={MEDIA_SIZES} className="object-cover" style={{objectPosition: heroObjectPosition(img)}} />
     </div>
   )
 }
@@ -48,7 +49,7 @@ function NaturalImage({img, treated}: {img: NonNullable<HeroImage>; treated?: bo
     <div className={treated ? 'relative overflow-hidden rounded-ui shadow-elevation-md' : 'overflow-hidden rounded-ui shadow-elevation-md'} {...heroPhotoMark(treated)}>
       <Image
         src={img.src}
-        alt={img.alt ?? ''}
+        alt={contentAlt(img.alt)}
         width={img.width ?? 1200}
         height={img.height ?? 900}
         priority
@@ -72,7 +73,7 @@ function ImageMedia({config, surface, treated}: {config: HeroConfig; surface: Re
 function CollageTile({img, className, sizes, priority, treated}: {img: NonNullable<HeroImage>; className: string; sizes: string; priority?: boolean; treated?: boolean}) {
   return (
     <div className={['relative overflow-hidden rounded-ui shadow-elevation-md', className].join(' ')} {...heroPhotoMark(treated)}>
-      <Image src={img.src} alt={img.alt ?? ''} fill priority={priority} sizes={sizes} className="object-cover" style={{objectPosition: heroObjectPosition(img)}} />
+      <Image src={img.src} alt={contentAlt(img.alt)} fill priority={priority} sizes={sizes} className="object-cover" style={{objectPosition: heroObjectPosition(img)}} />
     </div>
   )
 }
@@ -115,7 +116,9 @@ function VideoMedia({content, surface, aspect, treated}: {content: ResolvedHomeC
   const photo = (
     <Image
       src={img.src}
-      alt={img.alt ?? ''}
+      // Inside the play button, whose own name ("Play video") is what a reader hears: decorative.
+      alt=""
+      data-decorative=""
       fill
       priority
       sizes={MEDIA_SIZES}
@@ -163,7 +166,7 @@ export function Split({config, content, surface, sectionBackground, edgeBelow, g
   // columns. Rendered as the band's z-0 backdrop; the content/media wrappers below
   // carry `relative z-10` so they sit above it.
   const sectionNode = sectionBackground ? (
-    <HeroBackdrop surface={sectionBackground} scrimStyle={config.scrimStyle} scrimColor={config.scrimColor} scrimDirection={config.scrimDirection} align={config.contentAlign} />
+    <HeroBackdrop surface={sectionBackground} decorative scrimStyle={config.scrimStyle} scrimColor={config.scrimColor} scrimDirection={config.scrimDirection} align={config.contentAlign} />
   ) : undefined
   const imageBacked = !!sectionNode && !!sectionBackground?.isDark
   const ghosted = !!sectionNode && !sectionBackground?.isDark
@@ -219,7 +222,7 @@ export function Split({config, content, surface, sectionBackground, edgeBelow, g
     const cardImg = config.splitMedia === 'image' && surface.bgImage?.src ? surface.bgImage : null
     const imageEl = cardImg ? (
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-ui shadow-elevation-md lg:aspect-[3/2]" {...heroPhotoMark(photoTreated)}>
-        <Image src={cardImg.src} alt={cardImg.alt ?? ''} fill priority sizes="(min-width:1024px) 60vw, 100vw" className="object-cover" style={{objectPosition: heroObjectPosition(cardImg)}} />
+        <Image src={cardImg.src} alt={contentAlt(cardImg.alt)} fill priority sizes="(min-width:1024px) 60vw, 100vw" className="object-cover" style={{objectPosition: heroObjectPosition(cardImg)}} />
       </div>
     ) : (
       media
@@ -281,7 +284,7 @@ export function Split({config, content, surface, sectionBackground, edgeBelow, g
           {/* Image fills its half to its sides and foot; from lg its top is under a merged header (`hero-photo-under-header`,
               monorepo backlog 459), so the header never sits on the raw photograph. */}
           <div className={['relative min-h-[20rem] lg:min-h-0 hero-photo-under-header', mediaLeft ? 'lg:order-1' : ''].join(' ')} {...heroPhotoMark(photoTreated)}>
-            <Image src={im.src} alt={im.alt ?? ''} fill priority sizes="(min-width:1024px) 50vw, 100vw" className="object-cover" style={{objectPosition: heroObjectPosition(im)}} />
+            <Image src={im.src} alt={contentAlt(im.alt)} fill priority sizes="(min-width:1024px) 50vw, 100vw" className="object-cover" style={{objectPosition: heroObjectPosition(im)}} />
           </div>
         </div>
       </HeroBand>

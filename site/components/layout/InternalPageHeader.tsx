@@ -93,6 +93,7 @@ export function InternalPageHeader({title}: Props) {
       ) : showSection ? (
         <HeroBackdrop
           surface={{...surface, bgImage: surface.sectionBg, hasImage: true, fit: surface.sectionBgFit}}
+          decorative
           scrimStyle={surface.scrimStyle}
         />
       ) : null}

@@ -1,6 +1,7 @@
 import NextImage from 'next/image'
 import {imageLoader} from 'next-sanity/image'
 import {urlForImage, sanityObjectPosition, hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
+import {contentAlt} from '@/lib/imageAlt'
 
 // ─── Shared Sanity image renderer ─────────────────────────────────────────────
 // The ONE place Sanity images are rendered. Three modes:
@@ -15,7 +16,9 @@ import {urlForImage, sanityObjectPosition, hasImage, type SanityImage as SanityI
 // next-sanity's imageLoader. Renders nothing when the image has no asset.
 //
 // Requires the image to be projected with IMAGE_FRAGMENT (asset ref + hotspot +
-// crop + lqip + dimensions). `alt` falls back to the projected alt, then ''.
+// crop + lqip + dimensions). With no `alt` the image is content: its projected alt, else an empty alt, which Verify
+// lists (`contentAlt`, monorepo backlog 457). A caller passes `alt=""` only for a decorative image, with its reason
+// (marked `data-decorative`), or `contentAlt(...)` with a fallback description of its own.
 
 type CommonProps = {
   image?: SanityImageData | null
@@ -37,7 +40,10 @@ export function SanityImage(props: Props) {
   const {image, alt, className, sizes, priority, quality} = props
   if (!hasImage(image)) return null
 
-  const altText = alt ?? image.alt ?? ''
+  // No alt given: a content image, its stored description or empty, which Verify lists. `alt=""`: the caller's decision
+  // that it is decoration, marked so.
+  const altText = alt === undefined ? contentAlt(image.alt) : alt
+  const decorative = alt === '' ? '' : undefined
   const blur = image.lqip ? ({placeholder: 'blur', blurDataURL: image.lqip} as const) : {}
 
   if (props.mode === 'fixed') {
@@ -48,6 +54,7 @@ export function SanityImage(props: Props) {
         loader={imageLoader}
         src={src}
         alt={altText}
+        data-decorative={decorative}
         width={width}
         height={height}
         className={className}
@@ -70,6 +77,7 @@ export function SanityImage(props: Props) {
         loader={imageLoader}
         src={src}
         alt={altText}
+        data-decorative={decorative}
         width={width}
         height={height}
         className={className}
@@ -89,6 +97,7 @@ export function SanityImage(props: Props) {
       loader={imageLoader}
       src={src}
       alt={altText}
+        data-decorative={decorative}
       fill
       className={className}
       style={{objectFit: 'cover', objectPosition: sanityObjectPosition(image)}}

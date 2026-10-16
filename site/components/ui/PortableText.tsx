@@ -4,6 +4,7 @@ import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage} from '@/lib/sanity/image'
 import {resolveToken, type NapTokens} from '@/lib/tokens'
 import {OfficeHoursBlock} from '@/components/location/OfficeHoursBlock'
+import {contentAlt} from '@/lib/imageAlt'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -43,7 +44,7 @@ function makeComponents(napTokens: NapTokens | null | undefined): PortableTextCo
             <SanityImage
               image={value}
               mode="natural"
-              alt={value?.alt ?? ''}
+              alt={contentAlt(value?.alt)}
               sizes="(min-width:768px) 768px, 100vw"
               className="w-full rounded-ui"
             />

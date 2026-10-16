@@ -9,6 +9,7 @@
 import Image from 'next/image'
 import {heroObjectPosition, type ResolvedHeroSurface} from '@/lib/heroSurface'
 import {HeroScrim, type HeroScrimStyle, type HeroScrimAlign, type HeroScrimColor, type HeroScrimDirection} from './HeroScrim'
+import {contentAlt} from '@/lib/imageAlt'
 
 // The treatment follows the resolved surface. A dark surface (photo / dark band) gets
 // the scrim + white text. A light surface (a Section Background on a light band) is
@@ -26,8 +27,12 @@ export function HeroBackdrop({
   scrimColor = 'auto',
   scrimDirection = 'auto',
   align = 'left',
+  decorative = false,
 }: {
   surface: ResolvedHeroSurface
+  /** A Section Background: a texture behind the band, so its photograph is decoration. Else the hero's own photograph,
+   *  a content image whose missing description is marked for Verify to list (`contentAlt`, monorepo backlog 457). */
+  decorative?: boolean
   scrimStyle?: HeroScrimStyle
   // Gradient-only color + direction (passed through to HeroScrim). Default 'auto'.
   scrimColor?: HeroScrimColor
@@ -36,19 +41,26 @@ export function HeroBackdrop({
 }) {
   if (!surface.hasImage || !surface.bgImage?.src) return null
   const {bgImage, fit, scrimOpacity} = surface
+  const described = decorative ? '' : contentAlt(bgImage.alt)
   const image =
     fit === 'tile' ? (
+      // A tiled photograph is a background, so its description is an image role's name; with none it is hidden, as an
+      // empty alt hides an image (an image role with an empty name is axe's `role-img-alt`), and a content one with none
+      // is marked for Verify to list, since a hidden element is otherwise skipped.
       <div
         className="absolute inset-0 bg-repeat"
         style={{backgroundImage: `url(${bgImage.src})`}}
-        role="img"
-        aria-label={bgImage.alt ?? ''}
+        role={described ? 'img' : undefined}
+        aria-label={described || undefined}
+        aria-hidden={described ? undefined : true}
+        data-alt-missing={described || decorative ? undefined : ''}
         data-testid="hero-bg-tile"
       />
     ) : (
       <Image
         src={bgImage.src}
-        alt={bgImage.alt ?? ''}
+        alt={described}
+        data-decorative={decorative ? '' : undefined}
         fill
         priority
         className="object-cover"

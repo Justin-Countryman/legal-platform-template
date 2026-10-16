@@ -12,6 +12,7 @@ import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNo
 import {formatPhone} from '@/lib/tokens'
 import {FormEmbed} from './FormEmbed'
 import type {FooterData} from '../Footer'
+import {contentAlt} from '@/lib/imageAlt'
 
 type Props = {data: FooterData}
 
@@ -54,7 +55,7 @@ export function BeaconFooter({data}: Props) {
           {/* Logo / firm name */}
           {logo?.src ? (
             <Link href="/" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
-              <LogoImage logo={logo} height={96} alt={logo.alt ?? ''} place="footer" className="max-w-[18rem]" blend={logoBlend(logo, data.footerScheme === 'light' ? 'light' : 'dark')} />
+              <LogoImage logo={logo} height={96} alt={contentAlt(logo.alt, firmName)} place="footer" className="max-w-[18rem]" blend={logoBlend(logo, data.footerScheme === 'light' ? 'light' : 'dark')} />
             </Link>
           ) : firmName ? (
             <Link href="/" className="font-heading text-2xl font-bold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">

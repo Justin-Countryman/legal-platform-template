@@ -24,6 +24,7 @@
 import Image from 'next/image'
 import type {ResolvedHeroSurface} from '@/lib/heroSurface'
 import {HERO_FOREGROUND_FLOOR} from '@/lib/heroLayout'
+import {contentAlt} from '@/lib/imageAlt'
 
 /** `grounded`: the homepage hero's figure, whose box reaches the band's bottom edge, so the figure stands on it at any
  *  band height (`HERO_FOREGROUND_FLOOR`). Absent: the fixed box the interior heroes draw. */
@@ -44,7 +45,7 @@ export function HeroForeground({surface, grounded = false, side = 'right'}: {sur
     >
       <Image
         src={fg.src}
-        alt={fg.alt ?? ''}
+        alt={contentAlt(fg.alt)}
         width={fg.width ?? 800}
         height={fg.height ?? 1000}
         // Contain within the box, grounded bottom-right — aspect-robust: height
