@@ -19,6 +19,7 @@ import {
   useSidebarDesignSettings,
 } from '@/lib/sidebarDesignSettingsContext'
 import type {SidebarNavIconStyle} from '@/lib/designTokens'
+import {contentAlt} from '@/lib/imageAlt'
 
 // ─── Active-state helper (WS-Sidebar Phase 2.2) ───────────────────────────────
 //
@@ -913,7 +914,7 @@ function SidebarAttorneyList({component}: {component: SidebarAttorneyListCompone
                           <SanityImage
                             image={attorney.photo}
                             mode="fill"
-                            alt={attorney.photo.alt ?? attorney.title ?? ''}
+                            alt={contentAlt(attorney.photo.alt, attorney.title)}
                             sizes="36px"
                           />
                         )}

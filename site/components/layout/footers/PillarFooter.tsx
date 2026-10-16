@@ -11,6 +11,7 @@ import {MdLocationOn} from 'react-icons/md'
 import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel, footerSurface, footerLogo} from './shared'
 import {formatPhone} from '@/lib/tokens'
 import type {FooterData} from '../Footer'
+import {contentAlt} from '@/lib/imageAlt'
 
 type Props = {data: FooterData}
 
@@ -55,7 +56,7 @@ export function PillarFooter({data}: Props) {
 
           {logo?.src ? (
             <Link href="/" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus">
-              <LogoImage logo={logo} height={96} alt={logo.alt ?? ''} place="footer" className="max-w-[18rem]" blend={logoBlend(logo, data.footerScheme === 'light' ? 'light' : 'dark')} />
+              <LogoImage logo={logo} height={96} alt={contentAlt(logo.alt, firmName)} place="footer" className="max-w-[18rem]" blend={logoBlend(logo, data.footerScheme === 'light' ? 'light' : 'dark')} />
             </Link>
           ) : firmName ? (
             <p className="font-heading text-xl font-bold text-foreground">{firmName}</p>

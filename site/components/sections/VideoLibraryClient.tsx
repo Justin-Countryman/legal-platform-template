@@ -55,7 +55,9 @@ function Thumb({video, featured}: {video: VideoCardData; featured?: boolean}) {
         // eslint-disable-next-line @next/next/no-img-element -- external poster host not in next.config remotePatterns
         <img
           src={autoSrc}
+          // The video's own poster, inside its card's link, which the title names: decoration.
           alt=""
+          data-decorative=""
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover"
           onError={() => {

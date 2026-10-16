@@ -15,6 +15,7 @@ import {heroForegroundVars, HERO_BAND_MIN_H_LG} from '@/lib/heroLayout'
 import {HeroBand, HeroTextBlock, heroHeadingText, heroPhotoMark} from '../shared'
 import type {HeroConfig, ResolvedHomeContent, SkeletonProps} from '../types'
 import {HERO_BACKDROP_SIZES, heroObjectPosition, type ResolvedHeroSurface, type HeroImage} from '@/lib/heroSurface'
+import {contentAlt} from '@/lib/imageAlt'
 
 // ─── Backdrop (image | mosaic) + scrim ────────────────────────────────────────
 // Mosaic tiles are capped at 6 (the 2/3-col grid) and built immutably so we never
@@ -43,7 +44,7 @@ function Backdrop({config, surface, content, treated}: {config: HeroConfig; surf
         <ul role="list" aria-label="Background image mosaic" className="grid size-full grid-cols-2 md:grid-cols-3">
           {mosaicTiles.map((img, i) => (
             <li key={i} className="relative" {...heroPhotoMark(treated)}>
-              <Image src={img!.src} alt={img!.alt ?? ''} fill priority={i === 0} className="object-cover" style={{objectPosition: heroObjectPosition(img)}} sizes="(min-width:768px) 34vw, 50vw" />
+              <Image src={img!.src} alt={contentAlt(img!.alt)} fill priority={i === 0} className="object-cover" style={{objectPosition: heroObjectPosition(img)}} sizes="(min-width:768px) 34vw, 50vw" />
             </li>
           ))}
         </ul>
@@ -52,10 +53,10 @@ function Backdrop({config, surface, content, treated}: {config: HeroConfig; surf
         // single full-bleed photograph, never the mosaic, whose tiles do not clip.
         surface.bgImage && (treated ? (
           <div className="absolute inset-0 hero-drift" {...heroPhotoMark(treated)}>
-            <Image src={surface.bgImage.src} alt={surface.bgImage.alt ?? ''} fill priority className="object-cover" style={{objectPosition: heroObjectPosition(surface.bgImage)}} sizes={HERO_BACKDROP_SIZES} />
+            <Image src={surface.bgImage.src} alt={contentAlt(surface.bgImage.alt)} fill priority className="object-cover" style={{objectPosition: heroObjectPosition(surface.bgImage)}} sizes={HERO_BACKDROP_SIZES} />
           </div>
         ) : (
-          <Image src={surface.bgImage.src} alt={surface.bgImage.alt ?? ''} fill priority className="object-cover hero-drift" style={{objectPosition: heroObjectPosition(surface.bgImage)}} sizes={HERO_BACKDROP_SIZES} />
+          <Image src={surface.bgImage.src} alt={contentAlt(surface.bgImage.alt)} fill priority className="object-cover hero-drift" style={{objectPosition: heroObjectPosition(surface.bgImage)}} sizes={HERO_BACKDROP_SIZES} />
         ))
       )}
       <HeroScrim style={config.scrimStyle} color={config.scrimColor} direction={config.scrimDirection} opacity={surface.scrimOpacity} align={config.contentAlign} textRight={config.foreground && config.foregroundSide === 'left' && config.contentAlign !== 'center'} />
@@ -71,7 +72,7 @@ export function Overlay({config, content, surface, sectionBackground, edgeBelow,
   // its own (backdrop = none) — otherwise the backdrop already fills the bleed.
   const sectionNode =
     !hasBackdrop && sectionBackground ? (
-      <HeroBackdrop surface={sectionBackground} scrimStyle={config.scrimStyle} scrimColor={config.scrimColor} scrimDirection={config.scrimDirection} align={config.contentAlign} />
+      <HeroBackdrop surface={sectionBackground} decorative scrimStyle={config.scrimStyle} scrimColor={config.scrimColor} scrimDirection={config.scrimDirection} align={config.contentAlign} />
     ) : undefined
   const backdropNode = hasBackdrop ? <Backdrop config={config} surface={surface} content={content} treated={photoTreated} /> : sectionNode
   const imageBacked = hasBackdrop || (!!sectionNode && !!sectionBackground?.isDark)

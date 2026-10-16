@@ -70,7 +70,8 @@ const LAYOUTS: {name: string; el: (treated?: boolean) => React.ReactElement; pho
     el: (t) => <Split config={config({skeleton: 'split', splitImageStyle: 'overlap'})} content={content({galleryImages: gallery as never})} surface={surface()} photoTreated={t} />},
   {name: 'split, card over the image', photos: ['A storefront'],
     el: (t) => <Split config={config({skeleton: 'split', textTreatment: 'overlap'})} content={content()} surface={surface()} photoTreated={t} />},
-  {name: 'split, video poster', photos: ['A storefront'],
+  // The poster sits inside the play button, whose own name is what a reader hears: decorative (monorepo backlog 457).
+  {name: 'split, video poster', photos: [''],
     el: (t) => <Split config={config({skeleton: 'split', splitMedia: 'video'})} content={content({videoUrl: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ'})} surface={surface()} photoTreated={t} />},
   {name: 'backdrop photograph, with the cut-out figure', photos: ['A storefront'],
     el: (t) => <Overlay config={config({skeleton: 'overlay', backdrop: 'image', foreground: true})} content={content()} surface={surface({foreground: figure as never, hasForeground: true})} photoTreated={t} />},

@@ -42,11 +42,15 @@ export function LogoImage({
   className = '',
   blend = null,
   priority = false,
+  decorative = false,
 }: {
   logo: LogoFile
   /** The drawn height in pixels at the widest the box is allowed (`logoHeight`). */
   height: number
+  /** `contentAlt(...)`; empty is listed by Verify unless `decorative` says so (monorepo backlog 457). */
   alt: string
+  /** The logo sits inside a link whose own name says the firm: decoration, and marked so. */
+  decorative?: boolean
   /** Where it is drawn, for the tests and the measurements: `rest`, `compact`, `phone`, `footer`, `review`. */
   place: string
   className?: string
@@ -68,6 +72,7 @@ export function LogoImage({
       <Image
         src={logo.src}
         alt={alt}
+        data-decorative={decorative ? '' : undefined}
         width={logo.width}
         height={logo.height}
         priority={priority}

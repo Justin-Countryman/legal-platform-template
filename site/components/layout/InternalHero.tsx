@@ -177,6 +177,7 @@ export function InternalHero({data, napTokens}: {data: InternalHeroData; napToke
       ) : showSection ? (
         <HeroBackdrop
           surface={{...surface, bgImage: surface.sectionBg, hasImage: true, fit: surface.sectionBgFit}}
+          decorative
           scrimStyle={surface.scrimStyle}
           scrimColor={surface.scrimColor}
           scrimDirection={surface.scrimDirection}

@@ -80,6 +80,10 @@ const eslintConfig = [
       // attributes (typical of the icon-registry SVG_PROPS pattern)
       // bail out — the decision is made inside the spread.
       "platform/no-svg-without-aria-decision": "error",
+      // Monorepo backlog 457 (`[R-465]`): an image's alt never falls back to '' silently. A content image takes
+      // `contentAlt` (lib/imageAlt.ts), which marks a missing description for Verify to list; a decorative one the
+      // literal alt="" with its reason beside it.
+      "platform/no-silent-empty-alt": "error",
       // A8 — `BI-PRINCIPLES.md → "Mobile-first / Mobile best practices"`
       // ("H1 maximum text-3xl on mobile — never larger") +
       // `BI-FOUNDATIONS.md → "Mobile-first always"` ("The mobile H1 cap
@@ -271,6 +275,14 @@ const eslintConfig = [
     rules: {
       "@typescript-eslint/no-require-imports": "off",
       "no-restricted-syntax": "off",
+    },
+  },
+
+  // Monorepo backlog 457: a test's next/image mock passes whatever alt it is given; it decides nothing.
+  {
+    files: ["**/__tests__/**"],
+    rules: {
+      "platform/no-silent-empty-alt": "off",
     },
   },
 

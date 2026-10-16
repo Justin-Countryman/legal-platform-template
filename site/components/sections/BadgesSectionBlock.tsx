@@ -7,6 +7,7 @@ import {type SeamProps, NO_SEAM} from './sectionFrame'
 import {type BadgesSectionProps} from './sectionProps'
 import {headingFit, type HeadingFit} from '@/lib/headingFit'
 import {PausableMarquee} from './PausableMarquee'
+import {contentAlt} from '@/lib/imageAlt'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -41,7 +42,7 @@ function BadgeList({badges, className, imageClassName}: {badges: BadgeImage[]; c
           <Image
             key={i}
             src={badge.src}
-            alt={badge.alt ?? ''}
+            alt={contentAlt(badge.alt)}
             width={badge.width ?? 300}
             height={badge.height ?? 300}
             className={imageClassName ?? 'max-h-20 w-auto object-contain'}
@@ -143,7 +144,7 @@ function SplitBadges({data, tagline, heading, description, buttons, fit, scale}:
                   <li key={i} className="flex items-center justify-center">
                     <Image
                       src={badge.src}
-                      alt={badge.alt ?? ''}
+                      alt={contentAlt(badge.alt)}
                       width={badge.width ?? 300}
                       height={badge.height ?? 300}
                       className="h-28 w-auto object-contain"
@@ -181,7 +182,8 @@ function ScrollingBadges({data, tagline, heading, description, buttons, fit, sca
             <Image
               key={i}
               src={badge.src}
-              alt={badge.alt ?? ''}
+              // The marquee's repeats are hidden from assistive technology, so Verify reads only the first of each.
+              alt={contentAlt(badge.alt)}
               width={badge.width ?? 300}
               height={badge.height ?? 300}
               className={i >= badges.length ? 'h-20 w-auto object-contain motion-reduce:hidden' : 'h-20 w-auto object-contain'}

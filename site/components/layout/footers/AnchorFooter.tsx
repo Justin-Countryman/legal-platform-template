@@ -9,6 +9,7 @@ import {MdLocationOn} from 'react-icons/md'
 import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel, footerSurface, footerLogo} from './shared'
 import {formatPhone} from '@/lib/tokens'
 import type {FooterData} from '../Footer'
+import {contentAlt} from '@/lib/imageAlt'
 
 type Props = {data: FooterData}
 
@@ -51,7 +52,7 @@ export function AnchorFooter({data}: Props) {
           <div>
             {logo?.src ? (
               <Link href="/" className="mb-6 inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus" aria-label={firmName ?? 'Home'}>
-                <LogoImage logo={logo} height={64} alt={logo.alt ?? firmName ?? ''} place="footer" className="max-w-[18rem]" blend={logoBlend(logo, data.footerScheme === 'light' ? 'light' : 'dark')} />
+                <LogoImage logo={logo} height={64} alt={contentAlt(logo.alt, firmName)} place="footer" className="max-w-[18rem]" blend={logoBlend(logo, data.footerScheme === 'light' ? 'light' : 'dark')} />
               </Link>
             ) : firmName ? (
               <p className="mb-6 font-heading text-2xl font-bold text-foreground">{firmName}</p>
