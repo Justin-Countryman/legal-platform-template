@@ -54,6 +54,27 @@ describe.skipIf(!fs.existsSync(FILE))('scripts/ci/record-a11y.ndjson (skipped on
     expect(docs.find((d) => d._type === 'heroSettings'), 'a photo hero').toBeTruthy()
   })
 
+  // Monorepo backlog 468: the case results CMS (template PR #85, `[R-715]`) added /case-results, a result's own page and
+  // the Featured Case Results section, and the fixture held no result, so Verify's scan of a local build never read them.
+  it('the case results: a featured card only, a featured result with its own page, the index, and the Featured section', () => {
+    const results = docs.filter((d) => d._type === 'caseResult') as unknown as Array<Doc & {featured?: boolean; hasPage?: boolean; slug?: {current?: string}; amount?: string; caption?: string; areaOfLaw?: {_ref: string}}>
+    const shown = (r: (typeof results)[number]) => !!(r.amount?.trim() || r.caption?.trim())
+    expect(results.some((r) => r.featured && !r.hasPage && shown(r)), 'a featured card with no page').toBe(true)
+    // The address the route takes: case-results/ and one name (lib/caseResultPage.ts).
+    const page = results.find((r) => r.featured && r.hasPage)
+    expect(page?.slug?.current).toMatch(/^case-results\/[a-z0-9-]+$/)
+    expect(String((page as unknown as {title?: string}).title ?? '').trim(), 'a page is named').not.toBe('')
+    expect(Array.isArray((page as unknown as {body?: unknown[]}).body) && (page as unknown as {body: unknown[]}).body.length > 0, 'a page has its write-up').toBe(true)
+    for (const r of results) expect(docs.some((d) => d._id === r.areaOfLaw?._ref && d._type === 'practiceArea'), `${r._id}: an area of law`).toBe(true)
+    expect(docs.find((d) => d._type === 'caseResultIndex'), 'the index page').toBeTruthy()
+    // Reached by a link, as a firm's menu reaches it: on a hidden site the served sitemap is empty, and Verify finds the
+    // pages the template makes with no row through links alone.
+    const nav = docs.find((d) => d._type === 'mainNavigation') as unknown as {items: Array<{href?: string}>}
+    expect(nav.items.some((item) => item.href?.replace(/\/$/, '') === '/case-results'), 'the menu links the index').toBe(true)
+    const canvas = (docs.find((d) => d._type === 'homePage') as unknown as {canvas: Section[]}).canvas
+    expect(canvas.some((s) => s._type === 'caseResultsSectionInline'), 'the Featured Case Results section').toBe(true)
+  })
+
   it('the header has a navigation with a dropdown, so the scan reads the menu and its submenu', () => {
     const nav = docs.find((d) => d._type === 'mainNavigation') as unknown as {sticky: boolean; items: Array<{children?: unknown[]}>}
     expect(nav.sticky).toBe(true)
