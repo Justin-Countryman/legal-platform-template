@@ -17277,6 +17277,7 @@
           "type": "image"
         },
         {
+          "description": "Shown on the profile whenever it is set, and anyone can read it through the site's public data. Leave it empty unless the firm wants it public.",
           "jsonType": "string",
           "path": "email",
           "title": "Email Address",
