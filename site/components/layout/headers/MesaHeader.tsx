@@ -10,7 +10,7 @@ import {useRef, useState} from 'react'
 import {
   useScrolled, useHeaderFits, useHeaderHeight, useScrollLock,
   resolveScheme, schemeBg, mobileRowBg, headerPositionClass,
-  isDarkSurfaceScheme,
+  isDarkSurfaceScheme, transparentTop,
   HEADER_TEXT, HEADER_HOVER_TEXT, HEADER_MUTED_TEXT, HEADER_SUBTLE_TEXT,
   secondPhone, HeaderLogo, TopBar, NavLinks, MobileDrawer, MobileHeaderRow,
   type HeaderData,
@@ -61,7 +61,7 @@ export function MesaHeader({data}: Props) {
   function closeMenu() { setMenuOpen(false) }
 
   return (
-    <header ref={headerRef} data-ring-context={dataRingContext} className={`${posClass} transition-colors duration-structural-slow ease-balanced ${floatingActive ? 'bg-transparent' : `${bgClass} ${textClass}`}`}>
+    <header ref={headerRef} data-ring-context={dataRingContext} data-transparent={transparentTop(scheme)} className={`${posClass} transition-colors duration-structural-slow ease-balanced ${floatingActive ? 'bg-transparent' : `${bgClass} ${textClass}`}`}>
 
       {(topBarDesktop || topBarMobile) && (
         <TopBar desktop={topBarDesktop} mobile={topBarMobile} left={topBarLeft} right={topBarRight} style={topBarStyle} visible={!scrolled} pinSide={topBarPinSide} />

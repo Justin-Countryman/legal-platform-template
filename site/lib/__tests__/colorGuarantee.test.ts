@@ -126,7 +126,8 @@ describe('color guarantee: every blocking pair passes for any operator input', (
   // every preset with every palette option, each role alone over the grid, 5,000 seeded and 2,000 near-black palettes.
   it('a light band\'s image, drawn as the ghost, leaves every tier its band and header read at AA over a black pixel', () => {
     const CSS = fs.readFileSync(path.resolve(__dirname, '../../app/globals.css'), 'utf8')
-    const rule = CSS.match(/\[data-fade="light"\],\n:root:has\(\[data-hero-ghost\]\) header\.bg-transparent \{([^}]*)\}/)
+    // The header over it is a light transparent one; a dark one takes its own solid ground there (monorepo backlog 458).
+    const rule = CSS.match(/\[data-fade="light"\],\n:root:has\(\[data-hero-ghost\]\) header\.bg-transparent:not\(\[data-transparent="dark"\]\) \{([^}]*)\}/)
     expect(rule, 'the ghost band\'s rule names the band and the header over it').not.toBeNull()
     const swapped = Object.fromEntries([...rule![1].matchAll(/(--color-[a-z-]+):\s*var\((--color-[a-z-]+)\);/g)].map((m) => [m[1], m[2]]))
     // A value the engine emits only for a set option falls back to its default in globals.css (a ghosted band's heading

@@ -10,7 +10,7 @@ import {
   useScrolled, useHeaderFits, useHeaderHeight, useScrollLock,
   resolveScheme, schemeBg, mobileRowBg, headerPositionClass,
   HEADER_TEXT, HEADER_HOVER_TEXT,
-  isDarkSurfaceScheme,
+  isDarkSurfaceScheme, transparentTop,
   HeaderLogo, TopBar, CtaButtons, NavLinks, MobileDrawer, MobileHeaderRow,
   type HeaderData,
 } from './shared'
@@ -50,7 +50,7 @@ export function RidgeHeader({data}: Props) {
   function closeMenu() { setMenuOpen(false) }
 
   return (
-    <header ref={headerRef} data-ring-context={dataRingContext} className={`${posClass} transition-colors duration-structural-slow ease-balanced ${floatingActive ? 'bg-transparent' : `${bgClass} ${textClass}`}`}>
+    <header ref={headerRef} data-ring-context={dataRingContext} data-transparent={transparentTop(scheme)} className={`${posClass} transition-colors duration-structural-slow ease-balanced ${floatingActive ? 'bg-transparent' : `${bgClass} ${textClass}`}`}>
 
       {(topBarDesktop || topBarMobile) && (
         <TopBar desktop={topBarDesktop} mobile={topBarMobile} left={topBarLeft} right={topBarRight} style={topBarStyle} visible={!scrolled} pinSide={topBarPinSide} />

@@ -1001,9 +1001,10 @@ h1, h2, h3, h4, h5, h6 {
    solved under every one of them; the plain on-dark values are not (the control border measured 1.63 to 2.71 there).
    Over a photo hero it takes the same values, the photo floor's (monorepo backlog 321, ADV-A11Y-C): the header sits
    outside the hero's section, so the hero's own block never reached it, and the raw accent its links hover in measured
-   2.68 to 4.21 over the floor on four presets. */
-:root:has([data-hero-image="true"]) header.bg-transparent,
-:root:has(.glow-light-hero) header.bg-transparent {
+   2.68 to 4.21 over the floor on four presets. A light transparent header is never over the photograph or the light: it
+   takes its own solid ground there (below, monorepo backlog 458), so these values are not its. */
+:root:has([data-hero-image="true"]) header.bg-transparent:not([data-transparent="light"]),
+:root:has(.glow-light-hero) header.bg-transparent:not([data-transparent="light"]) {
   --color-action-text:       var(--color-foreground-on-dark);
   --color-action-text-hover: var(--color-foreground-on-dark);
   --color-ring-focus:        var(--color-foreground-on-dark);
@@ -1027,9 +1028,10 @@ h1, h2, h3, h4, h5, h6 {
    inside the band sets its own values, as it does anywhere.
    A light hero's Section Background is the same ghost over the page ground (HeroBackdrop, `data-hero-ghost`; monorepo
    backlog 321, Justin's "2: A" of 2026-10-14), and a transparent header over it takes the band's tiers, as one over a
-   photo hero takes the photo floor's: it sits outside the band, so the band's own block never reaches it. */
+   photo hero takes the photo floor's: it sits outside the band, so the band's own block never reaches it. A dark
+   transparent header is never over the ghost: it takes its own solid ground there (below, monorepo backlog 458). */
 [data-fade="light"],
-:root:has([data-hero-ghost]) header.bg-transparent {
+:root:has([data-hero-ghost]) header.bg-transparent:not([data-transparent="dark"]) {
   /* A heading in the button color takes its own ghost-band value (monorepo `[R-641]`); otherwise today's heading. */
   --color-heading:            var(--color-heading-on-fade);
   --color-foreground-muted:   var(--color-foreground-muted-on-fade);
@@ -1042,6 +1044,21 @@ h1, h2, h3, h4, h5, h6 {
   --color-border-control:     var(--color-border-control-on-fade);
   --color-action-state-cue:   var(--color-action-state-cue-on-fade);
   --color-hover-wash:         transparent;
+}
+/* THE MERGED HEADER OVER THE HERO ON SCREEN (monorepo backlog 458 and 397). A merged header's transparent top takes its
+   polarity from the site's inner-page hero (`resolveMergedHeaderScheme`, `SiteShell`), because the layout that draws it
+   cannot see the page: an inner page with its own photograph or scheme, and the homepage, whose hero is its own, could
+   put its words on a ground of the other polarity (dark words over a photograph's scrim; white words over a light hero,
+   1.02:1 measured by ADV-17B4-A). Every hero says the ground at its top (`data-hero-ground`: HeroBand, InternalHero,
+   InternalPageHeader) and the header says its transparent polarity (`data-transparent`); where they disagree, the header
+   takes its own solid ground, as the phone row and the profile pages already do (ruled by the lead, 2026-10-15). Its
+   words, logo and buttons are the solid header's, every pair of which validateWcag holds. Where they agree, or a page
+   draws no hero, nothing here applies: only a page that is unreadable today changes. No script, so no flash. */
+:root:has([data-hero-ground="dark"]) header[data-transparent="light"] {
+  background-color: var(--color-background);
+}
+:root:has([data-hero-ground="light"]) header[data-transparent="dark"] {
+  background-color: var(--color-brand-dark);
 }
 /* No image on a photo band renders brighter than the white the scrim's proof assumes (an HDR
    photograph otherwise can, where the browser supports extended range). */
