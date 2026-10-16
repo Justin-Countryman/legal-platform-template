@@ -10,8 +10,8 @@
 // Text sits on the scheme background (panel image role) — never pass a backdrop.
 
 import Image from 'next/image'
-import {MdPlayArrow} from 'react-icons/md'
 import {DialogPanel} from '@/components/ui/DialogPanel'
+import {PlayMark} from '@/components/media/PlayMark'
 import {HeroBackdrop} from '@/components/layout/HeroBackdrop'
 import {getEmbedUrl} from '@/lib/videoEmbed'
 import {HeroBand, HeroTextBlock, HERO_HEADER_CLEARANCE, heroHeadingText, heroPhotoMark} from '../shared'
@@ -104,7 +104,8 @@ function OverlapCollage({surface, content, treated}: {surface: ResolvedHeroSurfa
 
 // ─── Video media (Reel) — poster + play affordance opening an embed dialog ─────
 // The poster follows the Ratio control (defaults to 16:9 to match the video). Marked for the photo treatment, the poster
-// sits in its own box under the play mark, so the tint never reaches the mark; unmarked, the markup is as before.
+// sits in its own box under the play mark, so the tint never reaches the mark; unmarked, the markup is as before. The mark
+// is the video poster's (`PlayMark`, monorepo backlog 461), which holds 3:1 over any poster, and carries the focus ring.
 function VideoMedia({content, surface, aspect, treated}: {content: ResolvedHomeContent; surface: ResolvedHeroSurface; aspect: string; treated?: boolean}) {
   const img = surface.bgImage
   const embedUrl = content.videoUrl ? getEmbedUrl(content.videoUrl) : null
@@ -133,14 +134,10 @@ function VideoMedia({content, surface, aspect, treated}: {content: ResolvedHomeC
     <button
       type="button"
       aria-label="Play video"
-      className={`group ${PANEL_BASE} ${aspect}`}
+      className={`group ${PANEL_BASE} ${aspect} focus-visible:outline-none`}
     >
       {poster}
-      <span className="absolute inset-0 grid place-items-center">
-        <span className="grid size-16 place-items-center rounded-full bg-brand-dark/30 backdrop-blur-sm transition-transform duration-structural-fast group-hover:scale-110">
-          <MdPlayArrow className="size-9 text-brand-white" aria-hidden="true" />
-        </span>
-      </span>
+      <PlayMark />
     </button>
   )
 
@@ -281,8 +278,9 @@ export function Split({config, content, surface, sectionBackground, edgeBelow, g
               className="w-full max-w-xl"
             />
           </div>
-          {/* Image fills its half to all edges — no padding above/below. */}
-          <div className={['relative min-h-[20rem] lg:min-h-0', mediaLeft ? 'lg:order-1' : ''].join(' ')} {...heroPhotoMark(photoTreated)}>
+          {/* Image fills its half to its sides and foot; from lg its top is under a merged header (`hero-photo-under-header`,
+              monorepo backlog 459), so the header never sits on the raw photograph. */}
+          <div className={['relative min-h-[20rem] lg:min-h-0 hero-photo-under-header', mediaLeft ? 'lg:order-1' : ''].join(' ')} {...heroPhotoMark(photoTreated)}>
             <Image src={im.src} alt={im.alt ?? ''} fill priority sizes="(min-width:1024px) 50vw, 100vw" className="object-cover" style={{objectPosition: heroObjectPosition(im)}} />
           </div>
         </div>
