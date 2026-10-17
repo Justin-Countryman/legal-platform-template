@@ -1,12 +1,10 @@
 import {afterEach, describe, it, expect} from 'vitest'
 import {
   CONSENT_KEEP_SECONDS,
-  CONSENT_OFF_SCRIPT,
   CONSENT_STORAGE_KEY,
   DEFAULT_BANNER_TEXT,
   analyticsCookieNames,
   bootConsent,
-  bootScript,
   choiceCookieHeader,
   consentCommands,
   consentState,
@@ -17,12 +15,27 @@ import {
   resolveChoices,
   serializeChoices,
 } from '@/lib/consent'
+import {CONSENT_BOOT_JS, PREVIEW_OFF_JS} from '@/lib/inlineScripts'
 
 // The banner's rules as functions (monorepo LEGAL rules; WS-CONSENT-AND-LEGAL-PAGES-DESIGN-2026-10-15 §4.1, and the
 // second purpose, advertising, WS-AD-PIXELS-DESIGN-2026-10-15 §2.2; Justin 2026-10-15: "build a place for standard
 // pixels and connect to this functionality").
 
 const NOW = 1_800_000_000
+
+/** Runs one of the layout's fixed inline scripts (lib/inlineScripts.ts) as the page would: its own element, with its
+ *  attributes, is `document.currentScript`. */
+function runInline(js: string, attrs: Record<string, string> = {}) {
+  const el = document.createElement('script')
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v)
+  Object.defineProperty(document, 'currentScript', {configurable: true, get: () => el})
+  try {
+    new Function(js)()
+  } finally {
+    delete (document as unknown as Record<string, unknown>).currentScript
+  }
+}
+const runBoot = (purposes: string[]) => runInline(CONSENT_BOOT_JS, {'data-purposes': JSON.stringify(purposes)})
 const v1 = (choice: string, at: number) => JSON.stringify({v: 1, choice, at})
 
 describe('the stored choices', () => {
@@ -127,14 +140,14 @@ describe('bootConsent, the before-paint decision', () => {
 
   it("is off on the operator's preview, which marks the page itself after the root layout's script", () => {
     run(serializeChoices({analytics: 'granted'}, Math.floor(Date.now() / 1000)), false, ['analytics'])
-    new Function(CONSENT_OFF_SCRIPT)()
+    runInline(PREVIEW_OFF_JS)
     expect(document.documentElement.getAttribute('data-consent')).toBe('off')
   })
 
-  it('serializes into a script that runs on its own, for the purposes the site has', () => {
+  it('the inline script runs on its own, for the purposes on its element', () => {
     localStorage.clear()
     document.documentElement.removeAttribute('data-consent')
-    new Function(bootScript(['analytics', 'ads']))()
+    runBoot(['analytics', 'ads'])
     expect(document.documentElement.getAttribute('data-consent')).toBe('ask')
   })
 })
@@ -181,11 +194,11 @@ describe('Global Privacy Control after an advertising accept (11 CCR §7025(c)(3
 describe("the thank-you page's address", () => {
   it('loses its query string before paint, keeping the history entry and its fragment', () => {
     window.history.replaceState({kept: 1}, '', '/thank-you?name=Pat&email=pat%40mail.example#top')
-    new Function(bootScript(['analytics']))()
+    runBoot(['analytics'])
     expect(window.location.pathname + window.location.search + window.location.hash).toBe('/thank-you#top')
     expect(window.history.state).toEqual({kept: 1})
     window.history.replaceState(null, '', '/practice?x=1')
-    new Function(bootScript(['analytics']))()
+    runBoot(['analytics'])
     expect(window.location.search).toBe('?x=1')
   })
 })
@@ -199,7 +212,7 @@ describe('the cookie the site’s server sets (monorepo [R-751])', () => {
   it('the before-paint script reads it when browser storage is empty, as Safari leaves it after seven days', () => {
     localStorage.clear()
     document.cookie = `lp-consent=${encodeURIComponent(serializeChoices({analytics: 'denied'}, Math.floor(Date.now() / 1000)))}; path=/`
-    new Function(bootScript(['analytics']))()
+    runBoot(['analytics'])
     expect(document.documentElement.getAttribute('data-consent')).toBe('denied')
     expect(readStoredRaw(document, window)).toContain('"analytics":"denied"')
   })

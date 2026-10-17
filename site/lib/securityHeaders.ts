@@ -1,3 +1,7 @@
+import {createHash} from 'node:crypto'
+import {INLINE_SCRIPTS} from './inlineScripts'
+import {SCRIPT_HOSTS} from './scriptHosts'
+
 /**
  * The security headers every response carries, in one place.
  *
@@ -25,33 +29,45 @@
  *                           `unsafe-none`, `same-origin-allow-popups`,
  *                           `same-origin` or `noopener-allow-popups`. ADDED
  *                           HERE.
- *   csp-xss                 `Content-Security-Policy`. NOT ADDED — CSP is
- *                           deliberately deferred, so this audit stays red and
- *                           that is a decision rather than an omission.
- *   trusted-types-xss       CSP `require-trusted-types-for`. Deferred with CSP,
- *                           for the same reason.
+ *   csp-xss                 `Content-Security-Policy`. ADDED 2026-10-16
+ *                           (monorepo [R-785]); informative, weight 0.
+ *   trusted-types-xss       CSP `require-trusted-types-for`. Not added:
+ *                           informative, and not part of the ruling.
  *
- * So "a clean Best Practices score" is not what this achieves and the CSP
- * carve-out is why. What it achieves is every header-driven audit that does not
- * require CSP.
+ * ─── THE CONTENT SECURITY POLICY, THE FINGERPRINT WAY ───────────────────────
  *
- * ─── THE CSP DEFERRAL, AND WHERE IT IS RULED ────────────────────────────────
+ * Ruled by Justin 2026-10-16 (monorepo [R-785]): hashes, never a nonce (a nonce
+ * renders every page per visit), never `'unsafe-inline'` in script-src, and it
+ * ships only if no PageSpeed score drops. It reverses the 2026-08-10 deferral
+ * in `BI/rules/technical-seo.md`, whose reasoning was right: a policy written
+ * without the inventory either breaks the site or protects nothing. The
+ * inventory and the design are the monorepo's WS-CSP-DESIGN-2026-10-16.
  *
- * `BI/rules/technical-seo.md` build queue line 6 is its live home and carries
- * the reasoning: this site renders inline script and inline style from four
- * surfaces — the inline JSON-LD blocks, `framer-motion`'s runtime style
- * injection, the Sanity-driven `<style dangerouslySetInnerHTML>` font injection
- * in `app/(site)/layout.tsx`, and the Vercel Analytics and Speed Insights
- * scripts — and a policy written without auditing all four either breaks the
- * site or sets `unsafe-inline` everywhere and buys nothing.
+ * - `script-src`: the site's own origin (Next's chunks), the hash of each fixed
+ *   inline script (`lib/inlineScripts.ts`: the relay that hands Next's inline
+ *   page data over as data, the consent decision, the preview's switch-off),
+ *   and the outside hosts in `lib/scriptHosts.ts`. Next's own inline data
+ *   scripts are never run, so they need no hash (the relay). JSON-LD is a data
+ *   block and is never checked. In `next dev` only, `'unsafe-eval'` (Next's own
+ *   guide: its dev runtime evaluates code).
+ * - `object-src 'none'`, `base-uri 'none'`, `frame-ancestors 'self'` (the same
+ *   as X-Frame-Options below), `form-action 'self'`.
+ * - Nothing else on purpose: styles (per firm, per edit, and every server-
+ *   rendered style attribute), images, beacons, video and map frames and the
+ *   vendors' own frames stay as they were. The protection against injected
+ *   code is script-src; that is also what the graders score.
+ * - On a Vercel preview deployment only, `https://vercel.live` for Vercel's
+ *   own toolbar, which Vercel injects there and nowhere else.
+ * - Every path but the operator's preview (`CSP_SOURCE`): the preview renders
+ *   per request and streams React's own inline scripts, which no fixed hash
+ *   can name; it is behind a signed session and no visitor or grader sees it.
+ * - What it does not stop, said plainly: a script injected with a `src` on a
+ *   listed host. www.googletagmanager.com serves any Tag Manager container,
+ *   and the Google hosts are on Lighthouse's own list of known bypasses, so
+ *   Lighthouse's `csp-xss` keeps a High finding (it scores nothing). Injected
+ *   inline code and inline handlers are what it stops.
  *
- * This used to read "locked decision D5", pointing at a dated entry in the
- * platform's completed-work backlog archive. That address moved with the
- * archive, and the phrase implied a decision registry this platform does not
- * have, so both are gone: a live claim does not cite a dated backlog entry as
- * its authority.
- *
- * ─── WHY `same-origin-allow-popups` AND NOT `same-origin` ────────────────────
+  * ─── WHY `same-origin-allow-popups` AND NOT `same-origin` ────────────────────
  *
  * All four COOP values above pass the audit equally, so the choice is made on
  * behaviour rather than on score. `same-origin` severs `window.opener` for
@@ -65,6 +81,30 @@
  * The first four are unchanged and predate this file: platform-portable
  * baseline, shipped in Phase 1.
  */
+const sha256 = (text: string) => `'sha256-${createHash('sha256').update(text, 'utf8').digest('base64')}'`
+
+/** The policy, one fixed string for every firm and page. `dev` adds `'unsafe-eval'` for `next dev` alone; `preview`
+ *  adds Vercel's toolbar on a Vercel preview deployment. */
+export function contentSecurityPolicy(
+  dev = process.env.NODE_ENV === 'development',
+  preview = process.env.VERCEL_ENV === 'preview',
+): string {
+  const scriptSrc = [
+    "'self'",
+    ...Object.values(INLINE_SCRIPTS).map(sha256),
+    ...SCRIPT_HOSTS.map((h) => h.source),
+    ...(preview ? ['https://vercel.live'] : []),
+    ...(dev ? ["'unsafe-eval'"] : []),
+  ]
+  return [
+    `script-src ${scriptSrc.join(' ')}`,
+    "object-src 'none'",
+    "base-uri 'none'",
+    "frame-ancestors 'self'",
+    "form-action 'self'",
+  ].join('; ')
+}
+
 export const securityHeaders = [
   {
     key: 'Strict-Transport-Security',
@@ -79,3 +119,8 @@ export const securityHeaders = [
   {key: 'X-Frame-Options', value: 'SAMEORIGIN'},
   {key: 'Cross-Origin-Opener-Policy', value: 'same-origin-allow-popups'},
 ]
+
+/** Every path but the operator's preview (`app/(preview)/site-preview`), in `next.config.ts`'s source syntax. */
+export const CSP_SOURCE = '/:path((?!site-preview(?:/|$)).*)'
+
+export const cspHeaders = [{key: 'Content-Security-Policy', value: contentSecurityPolicy()}]

@@ -4,7 +4,10 @@
 // Web Vitals reports through gtag, so it goes quiet too. Tag Manager containers and
 // other vendors (call tracking, chat, pixels) cannot be switched off this way, and the
 // design record says so rather than pretending otherwise.
-export function analyticsOff(scripts: unknown): string {
-  const ids = typeof scripts === 'string' ? [...new Set(scripts.match(/\bG-[A-Z0-9]{4,}\b/g) ?? [])] : []
-  return ids.map((id) => `window['ga-disable-${id}']=true;`).join('')
+//
+// Since monorepo [R-785] this returns the ids, which the preview layout puts in `data-ga-off` on one fixed script
+// (lib/inlineScripts.ts PREVIEW_OFF_JS) that the Content Security Policy names by hash; a script written per firm could
+// not be.
+export function analyticsOff(scripts: unknown): string[] {
+  return typeof scripts === 'string' ? [...new Set(scripts.match(/\bG-[A-Z0-9]{4,}\b/g) ?? [])] : []
 }

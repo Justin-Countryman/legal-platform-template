@@ -649,6 +649,15 @@ jobs:
         timeout-minutes: 10
         working-directory: site
         run: node scripts/ci/ramp-pixels.mjs
+      # Monorepo [R-785] (WS-CSP-DESIGN-2026-10-16 §5): the Content Security Policy breaks nothing. Every inline script
+      # in the built HTML is a fixed one or Next's data shape; every route type, served in Chromium and WebKit and again
+      # delivered in small pieces, hydrates under the enforced header with no violation, no console error, and the
+      # relay handing Next exactly the data the server wrote; the cookie banner's accept reports no violation.
+      - name: The security policy breaks nothing (built and served)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.browsers.outcome == 'success' }}
+        timeout-minutes: 15
+        working-directory: site
+        run: node scripts/ci/csp-served.mjs
       # Monorepo backlog 331 (WCAG 2.4.11 and 2.4.12): keyboard focus never lands under the sticky header, focus entering
       # the header never jumps the page, and nothing else covers a focused element's centre (backlog 330). A Tab and
       # Shift+Tab walk of four pages at 1440, 1024, 768, 390 and 320 on the build above (monorepo

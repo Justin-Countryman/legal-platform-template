@@ -9,14 +9,14 @@ import {
 } from './lib/redirects'
 import {assertNoEdgeCollisions} from './lib/edgeBlock'
 import {loadRetired, retiredRewritesAtBuild} from './lib/retired'
-import {securityHeaders} from './lib/securityHeaders'
+import {CSP_SOURCE, cspHeaders, securityHeaders} from './lib/securityHeaders'
 
 // ─── Security headers ─────────────────────────────────────────────────────────
 // The set moved to `lib/securityHeaders.ts` on 2026-08-10 when it grew the two
 // Lighthouse Best Practices audits it was missing — see that file's header for
-// which audits are decided by a header, which two were added, and why CSP's two
-// stay red. It moved for the same reason the redirect loader did: logic inside
-// this config module is logic no suite can run.
+// which audits are decided by a header and which were added, the Content
+// Security Policy among them since 2026-10-16. It moved for the same reason the
+// redirect loader did: logic inside this config module is logic no suite can run.
 
 // ─── Legacy URL redirects ─────────────────────────────────────────────────────
 // ONE SOURCE, ruled 2026-08-17 (TECH-9). `CS/redirects.csv` is the only store of
@@ -97,6 +97,9 @@ const nextConfig: NextConfig = {
           ? [...securityHeaders, {key: 'X-Robots-Tag', value: 'noindex, nofollow'}]
           : securityHeaders,
       },
+      // The Content Security Policy (monorepo [R-785]) on every path but the operator's preview; see
+      // `lib/securityHeaders.ts` for why the preview is left out.
+      {source: CSP_SOURCE, headers: cspHeaders},
     ]
   },
   async redirects() {

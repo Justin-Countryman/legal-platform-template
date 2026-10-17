@@ -1,6 +1,7 @@
 'use client'
 
 import {useEffect, useRef} from 'react'
+import {mountPastedHtml} from '@/lib/pastedCode'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -14,9 +15,13 @@ type Props = {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 //
-// Mounts raw HTML client-side using createContextualFragment so embedded
-// <script> tags execute. dangerouslySetInnerHTML does not run scripts —
-// this matters for form embeds (HubSpot, etc.) and review-platform widgets.
+// Mounts raw HTML client-side so embedded <script> tags execute.
+// dangerouslySetInnerHTML does not run scripts — this matters for form embeds
+// (Fillout) and review-platform widgets (Elfsight). Under the Content Security
+// Policy (monorepo [R-785]) only a script the policy allows is recreated
+// (`lib/pastedCode.ts`); anything else is left out and named in
+// `data-embed-blocked`, which Verify and the QA Checker list, never left to
+// fail with a console error.
 
 export function HtmlEmbed({html, className, 'aria-label': ariaLabel}: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -25,8 +30,9 @@ export function HtmlEmbed({html, className, 'aria-label': ariaLabel}: Props) {
     const container = containerRef.current
     if (!container) return
     container.innerHTML = ''
-    const fragment = document.createRange().createContextualFragment(html)
-    container.appendChild(fragment)
+    container.removeAttribute('data-embed-blocked')
+    const {skipped} = mountPastedHtml(container, html)
+    if (skipped.length) container.setAttribute('data-embed-blocked', skipped.join(' '))
   }, [html])
 
   return <div ref={containerRef} className={className} aria-label={ariaLabel} />

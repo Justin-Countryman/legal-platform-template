@@ -12225,7 +12225,7 @@
           "type": "string"
         },
         {
-          "description": "Paste the embed code from your reviews provider, for example an Elfsight Google Reviews widget. The section does not appear without it.",
+          "description": "Paste the Elfsight Google Reviews widget code. Another provider’s code does not run until the site’s security policy lists that provider. The section does not appear without it.",
           "jsonType": "string",
           "path": "canvas[]<reviewsSectionInline>.reviewsEmbed",
           "title": "Reviews Embed Code",
@@ -15247,7 +15247,7 @@
           "type": "string"
         },
         {
-          "description": "Paste the embed code from your reviews provider, for example an Elfsight Google Reviews widget. The section does not appear without it.",
+          "description": "Paste the Elfsight Google Reviews widget code. Another provider’s code does not run until the site’s security policy lists that provider. The section does not appear without it.",
           "jsonType": "string",
           "path": "reviewsEmbed",
           "required": "warning",
@@ -16702,7 +16702,7 @@
           "type": "text"
         },
         {
-          "description": "Google Analytics 4 snippet only. It loads only after a visitor chooses Accept in the cookie banner, and never for a visitor who declines or whose browser sends Global Privacy Control. Advertising tags go in the Advertising fields below, never here. Any other script here is a new outside vendor the firm’s privacy policy must name.",
+          "description": "Google Analytics 4 snippet only, pasted as Google gives it. It loads only after a visitor chooses Accept in the cookie banner, and never for a visitor who declines or whose browser sends Global Privacy Control. Advertising tags go in the Advertising fields below, never here. Any other script here does not run: the site’s security policy allows only the vendors it lists.",
           "jsonType": "string",
           "path": "scriptsRequireConsent",
           "title": "Scripts — Require Consent",

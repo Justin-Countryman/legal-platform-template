@@ -11,7 +11,9 @@ import {META_SCRIPT, GTAG_SCRIPT, UET_SCRIPT} from '@/lib/adPixels'
 
 // The banner as a visitor meets it (monorepo LEGAL rules; WS-CONSENT-AND-LEGAL-PAGES-DESIGN-2026-10-15 §4.1, §8).
 // jsdom never executes a script, so "loaded" is read as the pasted <script> element being in the document, and
-// Consent Mode as what reached `window.dataLayer` before it. The layout's before-paint script does not run under
+// Consent Mode as what reached `window.dataLayer` before it. Since monorepo [R-785] the snippet's inline half is done
+// by the site itself (lib/pastedCode.ts, under the Content Security Policy), so its `js` and `config` reach
+// `window.dataLayer` too, after Consent Mode. The layout's before-paint script does not run under
 // render(), so each test also proves the banner decides for itself when it did not.
 
 const PROBE = '/__consent-probe.js'
@@ -39,6 +41,7 @@ beforeEach(() => {
   vi.stubGlobal('fetch', sent)
   localStorage.clear()
   delete window.dataLayer
+  delete (window as unknown as Record<string, unknown>).gtag
   delete window.__lpConsentLoaded
   delete window.__lpConsentDefault
   for (const k of ['fbq', '_fbq', 'uetq', 'lintrk', '_linkedin_partner_id', '_linkedin_data_partner_ids', '__lpAdsLoaded']) delete (window as unknown as Record<string, unknown>)[k]
@@ -147,6 +150,8 @@ describe('accepting', () => {
       ['consent', 'default', {ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied'}],
       ['consent', 'update', {analytics_storage: 'granted'}],
       ['set', {allow_google_signals: false, allow_ad_personalization_signals: false}],
+      ['js', expect.any(Date)],
+      ['config', 'G-FIXTURE1'],
     ])
     for (const e of entries()) expect(Object.prototype.toString.call(e)).toBe('[object Arguments]')
     expect(probes()).toBe(1)
@@ -285,10 +290,14 @@ describe('with an advertising ID set', () => {
     fireEvent.click(screen.getByRole('button', {name: 'Accept all'}))
     expect(probes()).toBe(1)
     expect(headScripts()).toEqual([META_SCRIPT, `${GTAG_SCRIPT}?id=AW-1234567890`, UET_SCRIPT])
-    expect(commands().slice(0, 4)).toEqual([
+    // The snippet's own `js` and `config` follow the `set`, as its inline half always ran there in a browser; the
+    // advertising grant comes after them (monorepo [R-785]: the site now does that half itself, lib/pastedCode.ts).
+    expect(commands().slice(0, 6)).toEqual([
       ['consent', 'default', {ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied'}],
       ['consent', 'update', {analytics_storage: 'granted'}],
       ['set', {allow_google_signals: false, allow_ad_personalization_signals: false}],
+      ['js', expect.any(Date)],
+      ['config', 'G-FIXTURE1'],
       ['consent', 'update', {ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted'}],
     ])
     expect(JSON.parse(localStorage.getItem(CONSENT_STORAGE_KEY) ?? '{}')).toMatchObject({v: 2, analytics: 'granted', ads: 'granted'})
