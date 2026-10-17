@@ -7,7 +7,7 @@ import {LogoImage, logoBlend} from '@/components/ui/LogoImage'
 import Link from 'next/link'
 import {ConsentSettingsButton} from '@/components/consent/ConsentSettingsButton'
 import {MdLocationOn} from 'react-icons/md'
-import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel, footerSurface, footerLogo} from './shared'
+import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel, footerSurface, footerLogo, copyrightLine} from './shared'
 import {formatPhone} from '@/lib/tokens'
 import type {FooterData} from '../Footer'
 import {contentAlt} from '@/lib/imageAlt'
@@ -158,7 +158,7 @@ export function CrestFooter({data}: Props) {
       {/* ── Bottom bar ────────────────────────────────────────────────────── */}
       <div className="border-t border-border">
         <div className="container py-6 text-center text-xs text-foreground-subtle">
-          <p>© {year} {firmName}. All rights reserved.</p>
+          <p>{copyrightLine(year, firmName)}</p>
           {(legalLinks.length > 0 || hasConsentScripts) && (
             <div className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1">
               {legalLinks.map((l, i) => (

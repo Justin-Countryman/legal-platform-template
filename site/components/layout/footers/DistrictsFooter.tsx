@@ -11,10 +11,7 @@ import Link from 'next/link'
 import {ConsentSettingsButton} from '@/components/consent/ConsentSettingsButton'
 import {MdLocationOn, MdPhone} from 'react-icons/md'
 import {Button} from '@/components/ui/Button'
-import {
-  SocialIcons, ActionButtons, EmergencyContact, AppointmentNote,
-  cityLine, officeLocationLabel, footerSurface, footerLogo, FooterNavRow,
-} from './shared'
+import {SocialIcons, ActionButtons, EmergencyContact, AppointmentNote, cityLine, officeLocationLabel, footerSurface, footerLogo, FooterNavRow, copyrightLine} from './shared'
 import {formatPhone} from '@/lib/tokens'
 import type {FooterData, FooterLocation} from '../Footer'
 import {contentAlt} from '@/lib/imageAlt'
@@ -160,7 +157,7 @@ export function DistrictsFooter({data}: Props) {
         <div className="flex flex-col gap-6 border-t border-border py-6 text-xs text-foreground-subtle md:flex-row md:items-center md:justify-between">
           {/* © + legal links on one line */}
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-1">
-            <p>© {year} {firmName}. All rights reserved.</p>
+            <p>{copyrightLine(year, firmName)}</p>
             {legalLinks.map((l, i) => (
               <Link key={i} href={l.href} className={`underline ${LINK}`}>{l.label}</Link>
             ))}
