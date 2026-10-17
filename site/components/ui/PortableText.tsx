@@ -2,7 +2,7 @@ import Link from 'next/link'
 import {PortableText, type PortableTextComponents} from 'next-sanity'
 import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage} from '@/lib/sanity/image'
-import {resolveToken, type NapTokens} from '@/lib/tokens'
+import {isPhoneToken, resolveToken, telHref, type NapTokens} from '@/lib/tokens'
 import {OfficeHoursBlock} from '@/components/location/OfficeHoursBlock'
 import {contentAlt} from '@/lib/imageAlt'
 
@@ -32,8 +32,18 @@ function paragraphResolvesEmpty(value: unknown, napTokens: NapTokens | null | un
 function makeComponents(napTokens: NapTokens | null | undefined): PortableTextComponents {
   return {
     types: {
+      // A phone token is tap-to-call (monorepo backlog 519): a location page's body names its office's phone by token.
+      // The link text is the number, whose purpose it states (WCAG 2.2 SC 2.4.4). An inline object is never inside a
+      // link mark, so this link nests in none; the annotation form below stays text for that reason.
       contentToken: ({value}) => {
-        return <>{resolveToken(value?.tokenKey, napTokens)}</>
+        const text = resolveToken(value?.tokenKey, napTokens)
+        const href = isPhoneToken(value?.tokenKey) ? telHref(text) : ''
+        if (!href) return <>{text}</>
+        return (
+          <a href={href} className="whitespace-nowrap text-action-text underline underline-offset-4 transition-colors duration-ui-fast hover:text-action-text-hover">
+            {text}
+          </a>
+        )
       },
       officeHours: ({value}) => <OfficeHoursBlock title={value?.title} />,
       image: ({value}) => {
