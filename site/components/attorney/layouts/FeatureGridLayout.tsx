@@ -15,6 +15,7 @@ import {CredentialSection} from '@/components/attorney/CredentialSection'
 import {AttorneyVideo} from '@/components/attorney/AttorneyVideo'
 import {buildFullName, formatAddress, type Attorney} from '@/components/attorney/types'
 import type {NapTokens} from '@/lib/tokens'
+import {telHref} from '@/lib/tokens'
 
 type Props = {attorney: Attorney; napTokens?: NapTokens; cta?: {label: string; href: string}}
 
@@ -109,9 +110,9 @@ export function FeatureGridLayout({attorney, napTokens, cta = {label: 'Contact U
                     <>
                       {' · '}
                       <a
-                        href={`tel:${attorney.location.officePhone.replace(/\D/g, '')}`}
+                        href={telHref(attorney.location.officePhone) || undefined}
                         className="transition-colors duration-ui-fast hover:text-foreground"
-                        aria-label={`Call ${attorney.location.officePhone}`}
+                        aria-label={telHref(attorney.location.officePhone) ? `Call ${attorney.location.officePhone}` : undefined}
                       >
                         {attorney.location.officePhone}
                       </a>

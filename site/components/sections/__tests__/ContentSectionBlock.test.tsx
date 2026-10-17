@@ -161,7 +161,7 @@ describe('slots', () => {
   it('shows the phone as a tap-to-call link when asked', () => {
     const {container} = renderSection({layout: 'statement', heading: 'Call', showPhone: true}, {tokens: {primaryPhone: '763-280-5100'}})
     const tel = container.querySelector('a[href^="tel:"]')!
-    expect(tel.getAttribute('href')).toBe('tel:7632805100')
+    expect(tel.getAttribute('href')).toBe('tel:+17632805100')
     expect(tel.textContent).toBe('763-280-5100')
     expect(renderSection({layout: 'statement', heading: 'Call'}, {tokens: {primaryPhone: '763-280-5100'}}).container.querySelector('a[href^="tel:"]')).toBeNull()
   })

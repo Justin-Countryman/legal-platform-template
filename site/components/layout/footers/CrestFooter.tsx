@@ -8,7 +8,7 @@ import Link from 'next/link'
 import {ConsentSettingsButton} from '@/components/consent/ConsentSettingsButton'
 import {MdLocationOn} from 'react-icons/md'
 import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel, footerSurface, footerLogo, copyrightLine} from './shared'
-import {formatPhone} from '@/lib/tokens'
+import {formatPhone, telHref} from '@/lib/tokens'
 import type {FooterData} from '../Footer'
 import {contentAlt} from '@/lib/imageAlt'
 
@@ -94,7 +94,7 @@ export function CrestFooter({data}: Props) {
           <h3 className="text-base font-semibold mb-2 text-foreground-muted">Contact</h3>
           {officePhone && (
             <a
-              href={`tel:${officePhone.replace(/\D/g, '')}`}
+              href={telHref(officePhone) || undefined}
               className="block text-xl font-light text-foreground transition-colors duration-ui-fast hover:text-action-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
             >
               {formatPhone(officePhone)}
@@ -102,7 +102,7 @@ export function CrestFooter({data}: Props) {
           )}
           {tollFreePhone && (
             <a
-              href={`tel:${tollFreePhone.replace(/\D/g, '')}`}
+              href={telHref(tollFreePhone) || undefined}
               className="mt-1 block text-sm text-foreground-muted transition-colors duration-ui-fast hover:text-action-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
             >
               {formatPhone(tollFreePhone)}

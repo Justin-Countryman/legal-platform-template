@@ -212,7 +212,7 @@ describe('Sidebar — runtime dispatch per variant', () => {
     const {container} = render(<Sidebar components={components} />)
     const phone = container.querySelector('a[href^="tel:"]')
     expect(phone).not.toBeNull()
-    expect(phone?.getAttribute('href')).toBe('tel:5551234567')
+    expect(phone?.getAttribute('href')).toBe('tel:+15551234567')
     expect(phone?.textContent).toContain('(555) 123-4567')
     // The CTA button renders to the configured URL
     const buttons = container.querySelectorAll('a')

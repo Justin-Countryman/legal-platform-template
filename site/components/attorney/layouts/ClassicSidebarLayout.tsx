@@ -15,6 +15,7 @@ import {CredentialSection} from '@/components/attorney/CredentialSection'
 import {AttorneyVideo} from '@/components/attorney/AttorneyVideo'
 import {buildFullName, formatAddress, type Attorney} from '@/components/attorney/types'
 import type {NapTokens} from '@/lib/tokens'
+import {telHref} from '@/lib/tokens'
 
 type Props = {attorney: Attorney; napTokens?: NapTokens; cta?: {label: string; href: string}; isDark?: boolean}
 
@@ -59,9 +60,9 @@ export function ClassicSidebarLayout({attorney, napTokens, cta = {label: 'Contac
             )}
             {attorney.showLocations && attorney.location?.officePhone && (
               <a
-                href={`tel:${attorney.location.officePhone.replace(/\D/g, '')}`}
+                href={telHref(attorney.location.officePhone) || undefined}
                 className="flex items-center gap-2 text-sm text-foreground transition-colors duration-ui-fast hover:text-accent-text"
-                aria-label={`Call ${attorney.location.officePhone}`}
+                aria-label={telHref(attorney.location.officePhone) ? `Call ${attorney.location.officePhone}` : undefined}
               >
                 <MdPhone className="size-4 shrink-0" aria-hidden="true" />
                 {attorney.location.officePhone}

@@ -11,6 +11,7 @@ import {Tagline} from '@/components/ui/Tagline'
 import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {buildStaffName, formatStaffAddress, type StaffMember} from '@/components/staff/types'
 import type {NapTokens} from '@/lib/tokens'
+import {telHref} from '@/lib/tokens'
 
 type Props = {
   member: StaffMember
@@ -78,7 +79,7 @@ export function FeatureGridLayout({member, napTokens, cta = {label: 'Contact Us'
               )}
               {(member.phone || member.location?.officePhone) && (
                 <a
-                  href={`tel:${(member.phone ?? member.location?.officePhone ?? '').replace(/\D/g, '')}`}
+                  href={telHref((member.phone ?? member.location?.officePhone ?? '')) || undefined}
                   className="rounded-ui transition-colors duration-ui-fast hover:text-accent-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2"
                 >
                   <Chip icon="phone" className="cursor-pointer">

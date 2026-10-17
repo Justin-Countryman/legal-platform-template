@@ -9,7 +9,7 @@ import Link from 'next/link'
 import {ConsentSettingsButton} from '@/components/consent/ConsentSettingsButton'
 import {MdLocationOn} from 'react-icons/md'
 import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel, footerSurface, footerLogo, copyrightLine} from './shared'
-import {formatPhone} from '@/lib/tokens'
+import {formatPhone, telHref} from '@/lib/tokens'
 import type {FooterData} from '../Footer'
 import {contentAlt} from '@/lib/imageAlt'
 
@@ -90,7 +90,7 @@ export function PillarFooter({data}: Props) {
             <div className="mt-8 space-y-1">
               {officePhone && (
                 <a
-                  href={`tel:${officePhone.replace(/\D/g, '')}`}
+                  href={telHref(officePhone) || undefined}
                   className="block text-3xl font-light text-foreground transition-colors duration-ui-fast hover:text-action-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
                 >
                   {formatPhone(officePhone)}
@@ -98,7 +98,7 @@ export function PillarFooter({data}: Props) {
               )}
               {tollFreePhone && (
                 <a
-                  href={`tel:${tollFreePhone.replace(/\D/g, '')}`}
+                  href={telHref(tollFreePhone) || undefined}
                   className="block text-sm text-foreground-subtle transition-colors duration-ui-fast hover:text-action-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
                 >
                   {formatPhone(tollFreePhone)}
