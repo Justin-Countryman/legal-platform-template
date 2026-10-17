@@ -58,9 +58,14 @@ import {SCRIPT_HOSTS} from './scriptHosts'
  *   code is script-src; that is also what the graders score.
  * - On a Vercel preview deployment only, `https://vercel.live` for Vercel's
  *   own toolbar, which Vercel injects there and nowhere else.
- * - Every path but the operator's preview (`CSP_SOURCE`): the preview renders
- *   per request and streams React's own inline scripts, which no fixed hash
- *   can name; it is behind a signed session and no visitor or grader sees it.
+ * - Page documents only (`CSP_SOURCE`, `CSP_MISSING`): a policy does nothing
+ *   on a script, a stylesheet, an image or the router's own data requests,
+ *   and sent on them its ~550 bytes cost the render-blocking stylesheet a
+ *   simulated round trip in Lighthouse (measured 2026-10-16: an attorney page's
+ *   phone LCP 2.76 s to 2.91 s in 4 of 5 runs). Not the operator's preview
+ *   either: it renders per request and streams React's own inline scripts,
+ *   which no fixed hash can name; it is behind a signed session and no visitor
+ *   or grader sees it.
  * - What it does not stop, said plainly: a script injected with a `src` on a
  *   listed host. www.googletagmanager.com serves any Tag Manager container,
  *   and the Google hosts are on Lighthouse's own list of known bypasses, so
@@ -120,7 +125,11 @@ export const securityHeaders = [
   {key: 'Cross-Origin-Opener-Policy', value: 'same-origin-allow-popups'},
 ]
 
-/** Every path but the operator's preview (`app/(preview)/site-preview`), in `next.config.ts`'s source syntax. */
-export const CSP_SOURCE = '/:path((?!site-preview(?:/|$)).*)'
+/** Every page path, in `next.config.ts`'s source syntax: not Next's own files (`/_next/`), the API routes, the icon,
+ *  or the operator's preview (`app/(preview)/site-preview`). */
+export const CSP_SOURCE = '/:path((?!_next/|api/|favicon\\.ico$|site-preview(?:/|$)).*)'
+
+/** Not the router's own data requests (a link's page data, a prefetch), which carry an `RSC` header. */
+export const CSP_MISSING = [{type: 'header' as const, key: 'rsc'}]
 
 export const cspHeaders = [{key: 'Content-Security-Policy', value: contentSecurityPolicy()}]

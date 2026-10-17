@@ -9,7 +9,7 @@ import {
 } from './lib/redirects'
 import {assertNoEdgeCollisions} from './lib/edgeBlock'
 import {loadRetired, retiredRewritesAtBuild} from './lib/retired'
-import {CSP_SOURCE, cspHeaders, securityHeaders} from './lib/securityHeaders'
+import {CSP_MISSING, CSP_SOURCE, cspHeaders, securityHeaders} from './lib/securityHeaders'
 
 // ─── Security headers ─────────────────────────────────────────────────────────
 // The set moved to `lib/securityHeaders.ts` on 2026-08-10 when it grew the two
@@ -97,9 +97,9 @@ const nextConfig: NextConfig = {
           ? [...securityHeaders, {key: 'X-Robots-Tag', value: 'noindex, nofollow'}]
           : securityHeaders,
       },
-      // The Content Security Policy (monorepo [R-785]) on every path but the operator's preview; see
-      // `lib/securityHeaders.ts` for why the preview is left out.
-      {source: CSP_SOURCE, headers: cspHeaders},
+      // The Content Security Policy (monorepo [R-785]) on page documents only, never the operator's preview; see
+      // `lib/securityHeaders.ts` for why both.
+      {source: CSP_SOURCE, missing: CSP_MISSING, headers: cspHeaders},
     ]
   },
   async redirects() {

@@ -95,10 +95,10 @@ describe('Lighthouse Best Practices: the audits a response header decides', () =
     expect(contentSecurityPolicy(false, false)).not.toContain('vercel.live')
   })
 
-  it("covers every path but the operator's preview", () => {
+  it("covers page paths, not Next's files, the API, the icon or the operator's preview (served: csp-served.mjs)", () => {
     const re = new RegExp(`^${CSP_SOURCE.replace('/:path', '/')}$`)
-    for (const p of ['/', '/contact', '/blog/a-post', '/review/x', '/site-previews', '/a/site-preview']) expect(re.test(p)).toBe(true)
-    for (const p of ['/site-preview', '/site-preview/abc/def', '/site-preview/enter']) expect(re.test(p)).toBe(false)
+    for (const p of ['/', '/contact', '/blog/a-post', '/review/x', '/site-previews', '/a/site-preview', '/api-guide']) expect(re.test(p)).toBe(true)
+    for (const p of ['/site-preview', '/site-preview/abc/def', '/_next/static/chunks/a.css', '/api/og', '/favicon.ico']) expect(re.test(p)).toBe(false)
   })
 })
 

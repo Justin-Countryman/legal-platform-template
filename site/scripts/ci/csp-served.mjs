@@ -13,7 +13,9 @@
 //      document, which the layout's relay is not in: there the relay's second copy (lib/relay.ts, from Next's client
 //      bundle) must hand everything over and the page must draw its "not found" heading; the refusals logged before
 //      that file ran are the one console output allowed, and only there.
-//   2b. The operator's preview carries no policy (lib/securityHeaders.ts CSP_SOURCE), and every other page does.
+//   2b. Page documents carry the policy and nothing else does (lib/securityHeaders.ts CSP_SOURCE, CSP_MISSING): not
+//      the operator's preview, not Next's files (a policy on the render-blocking stylesheet cost a simulated round
+//      trip), not the router's own data requests.
 //   2c. Every host in lib/scriptHosts.ts loads a script under the real header with no violation, and a host not in it
 //      is refused once: the list and the header agree as the browser reads them (outside hosts answered here).
 //   3. The same, with the HTML delivered in small pieces with pauses (a proxy in front of the server), so the parser
@@ -247,11 +249,17 @@ async function open(browser, origin, path, expectStatus, label) {
 {
   const preview = await fetch(`${BASE}/site-preview/a/b`, {redirect: 'manual'})
   const home = await fetch(`${BASE}/`)
+  const html = await home.text()
+  const assets = [...new Set([...html.matchAll(/(?:href|src)="(\/_next\/static\/[^"]+)"/g)].map((m) => m[1]))]
+  const assetPolicies = await Promise.all(assets.map(async (a) => (await fetch(BASE + a)).headers.get('content-security-policy')))
+  const rsc = await fetch(`${BASE}/contact`, {headers: {RSC: '1'}})
   const ok = [
     check(!preview.headers.get('content-security-policy'), `/site-preview: carries a policy (${preview.status})`),
     check(!!home.headers.get('content-security-policy'), '/: carries no policy'),
+    check(assets.length > 3 && assetPolicies.every((p) => !p), `Next's files: ${assetPolicies.filter(Boolean).length} of ${assets.length} carry a policy`),
+    check(!rsc.headers.get('content-security-policy'), "the router's data request carries a policy"),
   ].every(Boolean)
-  console.log(`${ok ? 'ok  ' : 'FAIL'} the preview carries no policy (${preview.status}), the site does`)
+  console.log(`${ok ? 'ok  ' : 'FAIL'} the policy is on page documents only: not the preview (${preview.status}), ${assets.length} files or the router's data`)
 }
 
 // Every listed host, read from lib/scriptHosts.ts as text (this script cannot import TypeScript).
