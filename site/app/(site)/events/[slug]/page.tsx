@@ -113,9 +113,9 @@ function buildEventSchema(event: unknown, tokens: NapTokens | null, domain: stri
     schema.eventAttendanceMode = 'https://schema.org/OfflineEventAttendanceMode'
     schema.location = {'@type': 'Place', address: e.locationAddress}
   }
-  schema.eventStatus = isPastEvent(e.eventDate as string)
-    ? 'https://schema.org/EventCancelled'
-    : 'https://schema.org/EventScheduled'
+  // Scheduled whether or not it is past: EventCancelled says it was called off (Google's Event docs, read
+  // 2026-10-16; monorepo backlog 517), and the schema has no field that says one was.
+  schema.eventStatus = 'https://schema.org/EventScheduled'
   return schema
 }
 
@@ -139,6 +139,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     ...(await buildRobotsMeta(event.noIndex, event.noFollow)),
     alternates: {canonical: event.canonicalUrl ?? `/${slug}`},
     ...buildSocialMeta(label, description, event?.ogImage, {
+      url: event.canonicalUrl ?? `/${slug}`,
       ogTitle: event?.ogTitle, ogDescription: event?.ogDescription, tokens,
     }),
   }

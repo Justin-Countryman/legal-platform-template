@@ -11,6 +11,7 @@ import {resolveTokenString, type NapTokens} from '@/lib/tokens'
 //     description,
 //     alternates: {canonical: '/foo/'},
 //     ...buildSocialMeta(label, description, page.ogImage, {
+//       url: page.canonicalUrl ?? '/foo/',
 //       ogTitle: page?.ogTitle, ogDescription: page?.ogDescription, tokens,
 //     }),
 //   }
@@ -66,6 +67,10 @@ export type SocialOverrides = {
   ogTitle?: string | null
   ogDescription?: string | null
   tokens?: NapTokens | null
+  // The page's canonical, as `alternates.canonical` has it: og:url (monorepo backlog 517).
+  url?: string | null
+  // `article` for a blog post; every other page is `website` (ogp.me).
+  type?: 'website' | 'article'
 }
 
 /**
@@ -105,8 +110,16 @@ export function buildSocialMeta(
     : null
   const ogImage = override ?? `/api/og?title=${encodeURIComponent(safeTitle)}`
   const alt = (override && overrideImage?.alt) || safeTitle
+  // Open Graph's four required properties are og:title, og:type, og:image and og:url (ogp.me, read 2026-10-16).
+  // Next REPLACES the root layout's `openGraph` with this one, so the card restates the layout's type, site name
+  // and locale, and Next derives no og:url, so the route's canonical is passed in (monorepo backlog 517).
+  const siteName = overrides?.tokens?.firmName?.trim()
   return {
     openGraph: {
+      type: overrides?.type ?? 'website',
+      ...(overrides?.url ? {url: overrides.url} : {}),
+      ...(siteName ? {siteName} : {}),
+      locale: 'en_US',
       title: safeTitle,
       description: safeDescription,
       images: [{url: ogImage, width: 1200, height: 630, alt}],

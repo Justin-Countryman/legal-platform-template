@@ -18,6 +18,7 @@ export type VideoCardData = {
   videoType?: string | null
   duration?: string | null
   thumbnail?: SanityImageData | null
+  uploadDate?: string | null
 }
 
 // Canonical videoType order (mirrors the schema enum) — drives chip ordering.

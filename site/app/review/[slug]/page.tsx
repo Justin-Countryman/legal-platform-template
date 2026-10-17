@@ -69,10 +69,10 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const canonical = `/${data.page.slug}`
 
   // TECH-4: every page emits a card, and this was the route emitting none —
-  // found during item 91's build and not acted on until now. No override
-  // arguments: `reviewPage` carries no `ogTitle`, `ogDescription` or
-  // `ogImageOverride`, and the builder's contract says omitting them is correct
-  // for a type that has none.
+  // found during item 91's build and not acted on until now. No title,
+  // description or image override: `reviewPage` carries no `ogTitle`,
+  // `ogDescription` or `ogImageOverride`. It passes its public canonical as
+  // og:url and its tokens for og:site_name (monorepo backlog 517).
   //
   // TECH-5, landed 2026-08-10 with the schema field, closing the last half of
   // queue line 11. The description argument was `undefined` here because the type
@@ -90,7 +90,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     description,
     ...(await buildRobotsMeta(data.page.noIndex, data.page.noFollow)),
     alternates: {canonical},
-    ...buildSocialMeta(label, description),
+    ...buildSocialMeta(label, description, null, {url: canonical, tokens}),
   }
 }
 

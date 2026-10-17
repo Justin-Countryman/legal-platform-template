@@ -1,3 +1,4 @@
+import {streetAddress} from '@/lib/structuredData'
 import type {Metadata} from 'next'
 import {resolveHidden} from '@/lib/searchVisibility'
 import {titleTemplate} from '@/lib/seoTitle'
@@ -28,6 +29,7 @@ type OrganizationData = {
   logo?: string | null
   address?: {
     address1?: string | null
+    address2?: string | null
     city?: string | null
     state?: string | null
     zip?: string | null
@@ -77,7 +79,7 @@ export function buildOrganizationSchema(input: OrganizationData | null) {
   const address = data.address && data.address.address1
     ? {
         '@type': 'PostalAddress',
-        streetAddress: data.address.address1,
+        streetAddress: streetAddress(data.address),
         addressLocality: data.address.city ?? undefined,
         addressRegion: data.address.state ?? undefined,
         postalCode: data.address.zip ?? undefined,

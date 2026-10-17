@@ -197,3 +197,22 @@ describe('every page query projects the override fields', () => {
     }
   })
 })
+
+// Monorepo backlog 517: Open Graph's four required properties are og:title, og:type, og:image and og:url (ogp.me,
+// read 2026-10-16), and "any non-marked up webpage should be treated as og:type website". Next REPLACES a parent's
+// `openGraph` with a route's, so the root layout's type, site name and locale never reached a page that builds its
+// own card, and Next derives no og:url: the card carries all of them itself.
+describe('buildSocialMeta — the required properties (TECH-4)', () => {
+  it('carries og:type website, the canonical as og:url, the site name and the locale', () => {
+    const og = buildSocialMeta('Wills', 'We draft wills.', null, {url: '/wills', tokens: TOKENS}).openGraph as Record<string, unknown>
+    expect(og.type).toBe('website')
+    expect(og.url).toBe('/wills')
+    expect(og.siteName).toBe('Dudley & Smith, P.A.')
+    expect(og.locale).toBe('en_US')
+  })
+
+  it('an article says so', () => {
+    const og = buildSocialMeta('A post', 'Body', null, {url: '/blog/a-post', type: 'article'}).openGraph as Record<string, unknown>
+    expect(og.type).toBe('article')
+  })
+})
