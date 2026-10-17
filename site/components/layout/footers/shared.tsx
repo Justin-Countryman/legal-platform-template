@@ -301,7 +301,7 @@ const DAYS = [
 // structured data want the same value, and ONLY the footer wants a different
 // one. This converts for RENDERING ONLY.
 //
-// `buildOpeningHours` in app/(site)/[...slug]/page.tsx must keep passing the
+// `openingHoursSpecification` in lib/structuredData.ts must keep passing the
 // raw stored value into opens/closes. It does not import this module.
 //
 // Anything that is not HH:MM is returned untouched. Legacy records may hold

@@ -59,6 +59,7 @@ export async function generateMetadata(): Promise<Metadata> {
     ...(await buildRobotsMeta(indexPage.noIndex, indexPage.noFollow)),
     alternates: {canonical: indexPage.canonicalUrl ?? '/videos'},
     ...buildSocialMeta(label, description, indexPage?.ogImage, {
+      url: indexPage.canonicalUrl ?? '/videos',
       ogTitle: indexPage?.ogTitle, ogDescription: indexPage?.ogDescription, tokens,
     }),
   }
@@ -80,6 +81,8 @@ function videoJsonLd(videos: VideoCardData[]) {
         description: v.description || v.title,
         ...(thumbnailUrl ? {thumbnailUrl} : {}),
         ...(iso ? {duration: iso} : {}),
+        // Required by Google's video results; schema.org: when it "was uploaded to this site" (backlog 517).
+        ...(v.uploadDate ? {uploadDate: v.uploadDate} : {}),
         embedUrl,
       }
     })

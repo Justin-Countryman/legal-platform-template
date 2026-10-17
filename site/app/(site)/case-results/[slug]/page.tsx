@@ -63,6 +63,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     ...(await buildRobotsMeta(result.noIndex, result.noFollow)),
     alternates: {canonical: result.canonicalUrl ?? `/${fullSlug}`},
     ...buildSocialMeta(label, description, result?.ogImage, {
+      url: result.canonicalUrl ?? `/${fullSlug}`,
       ogTitle: result?.ogTitle, ogDescription: result?.ogDescription, tokens,
     }),
   }

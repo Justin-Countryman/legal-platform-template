@@ -107,7 +107,7 @@ export async function generateMetadata(): Promise<Metadata> {
   // image entirely. The strings change; the picture does not.
   const ogImage = home?.ogImage
   const social = buildSocialMeta(label, description, ogImage, {
-    ogTitle: home?.ogTitle, ogDescription: home?.ogDescription, tokens,
+    url: canonical, ogTitle: home?.ogTitle, ogDescription: home?.ogDescription, tokens,
   })
   const socialMeta = hasImage(ogImage)
     ? social

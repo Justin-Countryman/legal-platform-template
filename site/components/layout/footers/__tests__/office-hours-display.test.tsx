@@ -1,6 +1,5 @@
+import {openingHoursSpecification} from '@/lib/structuredData'
 import {describe, it, expect} from 'vitest'
-import {readFileSync} from 'node:fs'
-import path from 'node:path'
 import {render, screen} from '@testing-library/react'
 import {formatHourForDisplay, OfficeHours} from '../shared'
 
@@ -145,20 +144,12 @@ describe('OfficeHours — the rendered footer block', () => {
 //
 // schema.org requires 24-hour ISO in opens/closes. If someone later "makes the
 // structured data match the footer", every client emits invalid LocalBusiness
-// hours and nothing visibly breaks. This asserts against the shipped source
-// because buildOpeningHours is module-private to a server component that cannot
-// be imported here.
-describe('buildOpeningHours keeps passing the RAW stored value (item 254)', () => {
-  const pagePath = path.resolve(__dirname, '../../../../app/(site)/[...slug]/page.tsx')
-  const source = readFileSync(pagePath, 'utf-8')
-
+// hours and nothing visibly breaks. The builder lives in lib/structuredData.ts
+// since monorepo backlog 517, so its output is asserted, not its source.
+describe('the office hours structured data keeps passing the RAW stored value (item 254)', () => {
   it('emits opens/closes straight from the record, unformatted', () => {
-    expect(source).toContain('opens: d.open,')
-    expect(source).toContain('closes: d.close,')
-  })
-
-  it('does not reach into the footer module for a display formatter', () => {
-    expect(source).not.toContain('formatHourForDisplay')
-    expect(source).not.toContain('footers/shared')
+    const specs = openingHoursSpecification({mondayStatus: 'Open', mondayOpen: '08:30', mondayClose: '13:00'})
+    expect(specs?.[0]).toMatchObject({opens: '08:30', closes: '13:00'})
+    expect(JSON.stringify(specs)).not.toMatch(/AM|PM/)
   })
 })

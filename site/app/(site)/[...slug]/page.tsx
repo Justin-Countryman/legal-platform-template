@@ -24,6 +24,7 @@ export async function generateStaticParams() {
   return []
 }
 
+import {openingHoursSpecification, streetAddress} from '@/lib/structuredData'
 import {notFound} from 'next/navigation'
 import {buildRobotsMeta} from '@/lib/robotsMeta'
 import type {Metadata} from 'next'
@@ -85,7 +86,7 @@ function buildOfficeLegalServiceSchema(
   const address = loc.address1
     ? {
         '@type': 'PostalAddress',
-        streetAddress: [loc.address1, loc.address2].filter(Boolean).join(', '),
+        streetAddress: streetAddress(loc),
         addressLocality: loc.city ?? undefined,
         addressRegion: loc.state ?? undefined,
         postalCode: loc.zip ?? undefined,
@@ -104,7 +105,7 @@ function buildOfficeLegalServiceSchema(
     // Service area — kept for Virtual/Home locations where the street address is
     // gated out (D9); still valid (and harmless) for Physical/Shared.
     areaServed: loc.city ?? loc.state ?? undefined,
-    openingHoursSpecification: buildOpeningHours(loc.hours),
+    openingHoursSpecification: openingHoursSpecification(loc.hours),
     sameAs: sameAs.length > 0 ? sameAs : undefined,
     // The office belongs to the firm. ENTITY-6: a nested entity that IS the firm
     // REFERENCES the firm's identifier and declares nothing else — not a second
@@ -119,7 +120,6 @@ function buildOfficeLegalServiceSchema(
   }
 }
 
-type LocationHoursDay = {status?: string | null; open?: string | null; close?: string | null}
 type LocationHours = Record<string, string | null | undefined>
 type LocationData = {
   address1?: string | null
@@ -137,35 +137,6 @@ type LocationData = {
   appointmentRequired?: string | null
   gbpCidUrl?: string | null
   geo?: {lat?: number | null; lng?: number | null} | null
-}
-
-const DAY_PREFIXES: Array<{prefix: string; schema: string}> = [
-  {prefix: 'monday', schema: 'Mo'},
-  {prefix: 'tuesday', schema: 'Tu'},
-  {prefix: 'wednesday', schema: 'We'},
-  {prefix: 'thursday', schema: 'Th'},
-  {prefix: 'friday', schema: 'Fr'},
-  {prefix: 'saturday', schema: 'Sa'},
-  {prefix: 'sunday', schema: 'Su'},
-]
-
-function buildOpeningHours(hours: LocationHours | null | undefined) {
-  if (!hours) return undefined
-  const specs = DAY_PREFIXES
-    .map(({prefix, schema}): LocationHoursDay & {schema: string} => ({
-      schema,
-      status: hours[`${prefix}Status`] as string | null | undefined,
-      open: hours[`${prefix}Open`] as string | null | undefined,
-      close: hours[`${prefix}Close`] as string | null | undefined,
-    }))
-    .filter((d) => d.status === 'Open' && d.open && d.close)
-    .map((d) => ({
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: d.schema,
-      opens: d.open,
-      closes: d.close,
-    }))
-  return specs.length > 0 ? specs : undefined
 }
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -248,6 +219,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     ...(await buildRobotsMeta(page.noIndex, page.noFollow)),
     alternates: {canonical: page.canonicalUrl ?? `/${slugStr}`},
     ...buildSocialMeta(label, description, page?.ogImage, {
+      url: page.canonicalUrl ?? `/${slugStr}`,
       ogTitle: page?.ogTitle, ogDescription: page?.ogDescription, tokens,
     }),
   }

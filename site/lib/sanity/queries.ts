@@ -1715,6 +1715,8 @@ export const BLOG_INDEX_PAGE_QUERY = groq`
 // chips are derived client-side from each video's videoType.
 const VIDEO_CARD_FRAGMENT = groq`{
   "id": _id,
+  // When the video was added to this site: schema.org's uploadDate (monorepo backlog 517).
+  "uploadDate": _createdAt,
   title,
   youTubeUrl,
   description,
