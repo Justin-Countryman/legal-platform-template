@@ -1130,12 +1130,11 @@ export const NAP_TOKENS_QUERY = groq`
       "_id": _id,
       "phone": officePhone,
       "fax": officeFax,
-      address1,
-      address2,
-      address3,
+      // The street through D9's gate: these become the office.* and location.* tokens and ride in every page's data
+      // (monorepo backlog 529, ADV-529).
+      ${GATED_STREET_FRAGMENT}
       city,
       state,
-      zip,
       appointmentRequired,
       emergency24_7,
       emergencyPhone
@@ -1400,13 +1399,11 @@ export const STAFF_PAGE_QUERY = groq`
     phone,
     "photo": photo ${IMAGE_FRAGMENT},
     "biography": biography ${BLOCK_CONTENT_FRAGMENT},
+    // The street through D9's gate, as every other location projection (monorepo backlog 529).
     "location": location->{
       city,
-      address1,
-      address2,
-      address3,
+      ${GATED_STREET_FRAGMENT}
       state,
-      zip,
       officePhone
     },
     hideCtaForm,
@@ -1493,11 +1490,12 @@ export const ATTORNEY_PAGE_QUERY = groq`
       label,
       "slug": page->slug.current
     },
+    // The street through D9's gate, as every other location projection: a Home or Virtual office's street never
+    // reached a page but this one and the staff page (monorepo backlog 529).
     "location": location->{
-      address1,
+      ${GATED_STREET_FRAGMENT}
       city,
       state,
-      zip,
       officePhone,
       tollFreePhone
     },
