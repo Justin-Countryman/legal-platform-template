@@ -63,6 +63,13 @@ export type FooterSurface = {
   buttonContext: 'light' | 'dark'
 }
 
+/** "© {year} {firm}. All rights reserved.", the firm's name ending in one period (monorepo backlog 519: "P.A.."). */
+export function copyrightLine(year: number, firmName: string | null | undefined): string {
+  const name = (firmName ?? '').trim()
+  if (!name) return `© ${year}. All rights reserved.`
+  return `© ${year} ${name}${/[.!?]$/.test(name) ? '' : '.'} All rights reserved.`
+}
+
 export function footerSurface(scheme: FooterScheme | null | undefined): FooterSurface {
   if (scheme === 'light') {
     return {footerClass: 'bg-hero-tint text-foreground-muted', ringContext: undefined, buttonContext: 'light'}

@@ -10,10 +10,38 @@
  */
 export function formatPhone(raw: string | null | undefined): string {
   if (!raw) return ''
+  // An international number (a `+` that is not `+1`) is shown as stored: reading its digits as a North American
+  // number dropped its country (`+65 6123 4567` as 656-123-4567; ADV-519, monorepo backlog 519).
+  if (/^\s*\+(?!1)/.test(raw)) return raw.trim()
   const digits = raw.replace(/\D/g, '')
   const local = digits.length === 11 && digits.startsWith('1') ? digits.slice(1) : digits
   if (local.length !== 10) return raw.trim()
   return `${local.slice(0, 3)}-${local.slice(3, 6)}-${local.slice(6)}`
+}
+
+/**
+ * A phone's `tel:` href in RFC 3966's global form (§5.1: "All phone numbers MUST use the global form unless they
+ * cannot be represented as such"), compact, as the platform's call button writes it (monorepo `phone_button`,
+ * [R-608]): the first North American number in the text as `tel:+16125550100`, an extension or a second number left
+ * off; an international number stored with its `+` (not `+1`) and 8 to 15 digits as `tel:+` and its digits. '' for
+ * anything else (a vanity number, a seven-digit number, a malformed `+1`): a link that dials the wrong number is worse
+ * than text (ADV-519). Monorepo backlog 519.
+ */
+export function telHref(raw: string | null | undefined): string {
+  const text = (raw ?? '').trim()
+  const nanp = /(?:\+?1[\s.-]*)?\(?(\d{3})\)?[\s.-]*(\d{3})[\s.-]*(\d{4})(?!\d)/.exec(text)
+  if (nanp && (!text.startsWith('+') || text.startsWith('+1'))) return `tel:+1${nanp[1]}${nanp[2]}${nanp[3]}`
+  const intl = /^(\+[02-9][\d\s.()-]{6,18}\d)/.exec(text)
+  if (intl) {
+    const digits = intl[1].replace(/\D/g, '')
+    if (digits.length >= 8 && digits.length <= 15) return `tel:+${digits}`
+  }
+  return ''
+}
+
+/** The tokens that hold a phone a visitor calls (never a fax): a page's text renders them tap-to-call (backlog 519). */
+export function isPhoneToken(key: string | null | undefined): boolean {
+  return key === 'primaryPhone' || key === 'primaryTollFree' || /^(?:office|location\.[^.]+)\.(?:phone|emergency)$/.test(key ?? '')
 }
 
 export type NapTokens = {

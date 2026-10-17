@@ -8,7 +8,7 @@ import {LogoImage, logoBlend} from '@/components/ui/LogoImage'
 import Link from 'next/link'
 import {ConsentSettingsButton} from '@/components/consent/ConsentSettingsButton'
 import {MdLocationOn} from 'react-icons/md'
-import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel, footerSurface, footerLogo} from './shared'
+import {SocialIcons, ActionButtons, OfficeHours, EmergencyContact, AppointmentNote, cityLine, FooterNavRegion, FooterNavList, officeLocationLabel, footerSurface, footerLogo, copyrightLine} from './shared'
 import {formatPhone} from '@/lib/tokens'
 import type {FooterData} from '../Footer'
 import {contentAlt} from '@/lib/imageAlt'
@@ -149,7 +149,7 @@ export function PillarFooter({data}: Props) {
       {/* ── Bottom bar ────────────────────────────────────────────────────── */}
       <div className={`${surface.footerClass} px-[5%]`}>
         <div className="container flex flex-col gap-3 py-5 text-xs text-foreground-subtle md:flex-row md:items-center md:justify-between">
-          <p>© {year} {firmName}. All rights reserved.</p>
+          <p>{copyrightLine(year, firmName)}</p>
           {(legalLinks.length > 0 || hasConsentScripts) && (
             <div className="flex flex-wrap gap-x-3 gap-y-1">
               {legalLinks.map((l, i) => (

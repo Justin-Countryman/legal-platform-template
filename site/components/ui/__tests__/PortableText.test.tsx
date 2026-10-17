@@ -388,6 +388,25 @@ describe('PortableTextRenderer — NAP-token resolution', () => {
     expect(container.textContent).toContain('Sample Firm')
   })
 
+  // Monorepo backlog 519: a location page's body names its office's phone by token; on a phone it is tap-to-call.
+  it('a phone token is a tap-to-call link in the global form, and a fax is not', () => {
+    const tokens = {...NAP_TOKENS, 'office.phone': '612-555-0100', 'office.fax': '612-555-0199'}
+    const {container} = render(
+      <PortableTextRenderer
+        napTokens={tokens}
+        value={[{_key: 'b', _type: 'block', style: 'normal', markDefs: [], children: [
+          {_key: 's1', _type: 'span', text: 'Call ', marks: []},
+          {_key: 't1', _type: 'contentToken', tokenKey: 'office.phone'},
+          {_key: 's2', _type: 'span', text: ' or fax ', marks: []},
+          {_key: 't2', _type: 'contentToken', tokenKey: 'office.fax'},
+        ]} as unknown] as unknown[]}
+      />,
+    )
+    const links = [...container.querySelectorAll('a')]
+    expect(links.map((a) => [a.getAttribute('href'), a.textContent])).toEqual([['tel:+16125550100', '612-555-0100']])
+    expect(container.textContent).toContain('612-555-0199')
+  })
+
   it('contentToken type with an unknown key renders nothing (no {{key}} leak)', () => {
     const {container} = render(
       <PortableTextRenderer
