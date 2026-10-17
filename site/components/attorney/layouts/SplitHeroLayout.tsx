@@ -14,6 +14,7 @@ import {CredentialSection} from '@/components/attorney/CredentialSection'
 import {AttorneyVideo} from '@/components/attorney/AttorneyVideo'
 import {buildFullName, formatAddress, type Attorney} from '@/components/attorney/types'
 import type {NapTokens} from '@/lib/tokens'
+import {telHref} from '@/lib/tokens'
 
 type Props = {attorney: Attorney; napTokens?: NapTokens; cta?: {label: string; href: string}; isDark?: boolean}
 
@@ -89,9 +90,9 @@ export function SplitHeroLayout({attorney, napTokens, cta = {label: 'Contact Us'
               )}
               {attorney.location?.officePhone && (
                 <a
-                  href={`tel:${attorney.location.officePhone.replace(/\D/g, '')}`}
+                  href={telHref(attorney.location.officePhone) || undefined}
                   className="rounded-ui transition-colors duration-ui-fast hover:text-accent-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2"
-                  aria-label={`Call ${attorney.location.officePhone}`}
+                  aria-label={telHref(attorney.location.officePhone) ? `Call ${attorney.location.officePhone}` : undefined}
                 >
                   <Chip icon="phone" className="cursor-pointer">
                     {attorney.location.officePhone}

@@ -15,6 +15,7 @@ import type {LogoFacts} from '@/lib/logoFacts'
 import {usePathname} from 'next/navigation'
 import {IconButton} from '@/components/ui/IconButton'
 import {ButtonGroup, type CtaItem} from '@/components/ui/ButtonGroup'
+import {telHref} from '@/lib/tokens'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -915,7 +916,8 @@ type ActionBarProps = {
 function MobileActionBar({data, isOpen, onToggle, hoverTextClass, triggerRef}: ActionBarProps) {
   const phone    = data.headerPhone || data.tollFreePhone || data.phone
   const hasCta   = !!data.headerCtaUrl
-  const hasPhone = !!phone
+  // A number it cannot dial for certain has no Call cell (monorepo backlog 528): the cell shows only the word.
+  const hasPhone = !!telHref(phone)
   const cols     = 1 + (hasCta ? 1 : 0) + (hasPhone ? 1 : 0)
   const gridCols = cols === 3 ? 'grid-cols-3' : cols === 2 ? 'grid-cols-2' : 'grid-cols-1'
 
@@ -947,9 +949,9 @@ function MobileActionBar({data, isOpen, onToggle, hoverTextClass, triggerRef}: A
 
       {hasPhone && phone && (
         <a
-          href={`tel:${phone.replace(/\D/g, '')}`}
+          href={telHref(phone) || undefined}
           className={cellClass}
-          aria-label={`Call us at ${phone}`}
+          aria-label={telHref(phone) ? `Call us at ${phone}` : undefined}
         >
           <MdPhone className="text-base" aria-hidden="true" />
           <span>Call</span>
@@ -1011,9 +1013,9 @@ function MobilePhoneSplit({data, isOpen, onToggle, scheme, hoverTextClass, trigg
       <div className="flex items-stretch border-t border-current/10">
         {phone ? (
           <a
-            href={`tel:${phone.replace(/\D/g, '')}`}
+            href={telHref(phone) || undefined}
             className={`flex flex-1 items-center justify-center gap-3 py-3 text-sm font-semibold tracking-wide transition-colors duration-ui-fast ${hoverTextClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-current`}
-            aria-label={`Call us at ${phone}`}
+            aria-label={telHref(phone) ? `Call us at ${phone}` : undefined}
           >
             <MdPhone className="shrink-0 text-lg" aria-hidden="true" />
             <span>{phone}</span>
@@ -1062,9 +1064,9 @@ function MobileLogoSplit({data, isOpen, onToggle, scheme, hoverTextClass, trigge
       {phone && (
         <div className="border-t border-current/10">
           <a
-            href={`tel:${phone.replace(/\D/g, '')}`}
+            href={telHref(phone) || undefined}
             className={`flex items-center justify-center gap-3 py-2.5 text-sm font-semibold tracking-wide transition-colors duration-ui-fast ${hoverTextClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-current`}
-            aria-label={`Call us at ${phone}`}
+            aria-label={telHref(phone) ? `Call us at ${phone}` : undefined}
           >
             <MdPhone className="shrink-0 text-lg" aria-hidden="true" />
             <span>{phone}</span>
@@ -1279,11 +1281,11 @@ export function MobileDrawer({data, isOpen, items, onClose, triggerRef}: MobileD
 
         {phone && (
           <div className="mt-6 flex flex-col items-center gap-1 text-center">
-            <a href={`tel:${phone.replace(/\D/g, '')}`} className="text-sm font-semibold text-foreground">
+            <a href={telHref(phone) || undefined} className="text-sm font-semibold text-foreground">
               {data.headerPhoneTagline ? `${data.headerPhoneTagline}: ` : ''}{phone}
             </a>
             {phone2 && (
-              <a href={`tel:${phone2.replace(/\D/g, '')}`} className="text-sm font-semibold text-foreground">
+              <a href={telHref(phone2) || undefined} className="text-sm font-semibold text-foreground">
                 {phone2}
               </a>
             )}

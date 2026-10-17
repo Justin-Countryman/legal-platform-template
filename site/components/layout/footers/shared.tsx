@@ -40,7 +40,7 @@ import {
 } from 'react-icons/bi'
 import {MdCheck} from 'react-icons/md'
 import {ButtonGroup, type CtaItem} from '@/components/ui/ButtonGroup'
-import {formatPhone} from '@/lib/tokens'
+import {formatPhone, telHref} from '@/lib/tokens'
 import type {FooterData, FooterScheme, OfficeHours} from '../Footer'
 
 // ─── Footer color scheme ──────────────────────────────────────────────────────
@@ -406,7 +406,7 @@ export function EmergencyContact({
       <p className={labelClass}>24/7 Emergency</p>
       {emergencyPhone ? (
         <a
-          href={`tel:${emergencyPhone.replace(/\D/g, '')}`}
+          href={telHref(emergencyPhone) || undefined}
           className={`block ${phoneClass} underline transition-colors duration-ui-fast hover:text-action-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus`}
         >
           {formatPhone(emergencyPhone)}

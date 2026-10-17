@@ -24,6 +24,12 @@ describe('telHref', () => {
     expect(telHref('+65 6123 4567')).toBe('tel:+6561234567')
   })
 
+  it('never reads a number from the middle of a longer one, and drops a national (0) (monorepo backlog 528)', () => {
+    expect(telHref('4402079460958')).toBe('')   // a UK number stored without its +: no Maine number
+    expect(telHref('0612-555-0100')).toBe('')
+    expect(telHref('+44 (0)20 7946 0958')).toBe('tel:+442079460958')
+  })
+
   it('leaves as text what it cannot dial for certain', () => {
     for (const raw of ['', null, 'call us', '1-800-LAWYERS', '555-0100', '+1 612 555 010']) {
       expect(telHref(raw)).toBe('')

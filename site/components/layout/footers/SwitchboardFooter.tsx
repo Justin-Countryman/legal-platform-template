@@ -16,7 +16,7 @@ import {ConsentSettingsButton} from '@/components/consent/ConsentSettingsButton'
 import {MdPhone, MdLocationOn, MdDirections} from 'react-icons/md'
 import {Button} from '@/components/ui/Button'
 import {SocialIcons, ActionButtons, EmergencyContact, AppointmentNote, OfficeHours, cityLine, officeLocationLabel, footerSurface, footerLogo, FooterNavRow, copyrightLine} from './shared'
-import {formatPhone} from '@/lib/tokens'
+import {formatPhone, telHref} from '@/lib/tokens'
 import type {FooterData, FooterLocation} from '../Footer'
 import {contentAlt} from '@/lib/imageAlt'
 
@@ -103,7 +103,7 @@ export function SwitchboardFooter({data}: Props) {
           {(primaryPhone || hasCta) && (
             <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
               {primaryPhone && (
-                <a href={`tel:${primaryPhone.replace(/\D/g, '')}`} className={`inline-flex items-center gap-2 text-lg font-semibold text-foreground ${LINK}`}>
+                <a href={telHref(primaryPhone) || undefined} className={`inline-flex items-center gap-2 text-lg font-semibold text-foreground ${LINK}`}>
                   <MdPhone className="shrink-0" aria-hidden="true" />
                   {formatPhone(primaryPhone)}
                 </a>
@@ -169,13 +169,13 @@ export function SwitchboardFooter({data}: Props) {
 
                   <div className="mt-4 flex flex-col gap-1">
                     {loc.officePhone && (
-                      <a href={`tel:${loc.officePhone.replace(/\D/g, '')}`} className={`inline-flex items-center gap-2 text-base font-semibold text-foreground ${LINK}`}>
+                      <a href={telHref(loc.officePhone) || undefined} className={`inline-flex items-center gap-2 text-base font-semibold text-foreground ${LINK}`}>
                         <MdPhone className="shrink-0" aria-hidden="true" />
                         {formatPhone(loc.officePhone)}
                       </a>
                     )}
                     {loc.tollFreePhone && (
-                      <a href={`tel:${loc.tollFreePhone.replace(/\D/g, '')}`} className={`text-sm text-foreground-muted ${LINK}`}>
+                      <a href={telHref(loc.tollFreePhone) || undefined} className={`text-sm text-foreground-muted ${LINK}`}>
                         Toll free {formatPhone(loc.tollFreePhone)}
                       </a>
                     )}

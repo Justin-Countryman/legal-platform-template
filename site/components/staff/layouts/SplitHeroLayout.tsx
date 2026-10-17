@@ -10,6 +10,7 @@ import {Chip} from '@/components/ui/Chip'
 import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {buildStaffName, formatStaffAddress, type StaffMember} from '@/components/staff/types'
 import type {NapTokens} from '@/lib/tokens'
+import {telHref} from '@/lib/tokens'
 
 type Props = {
   member: StaffMember
@@ -80,18 +81,18 @@ export function SplitHeroLayout({member, napTokens, cta = {label: 'Contact Us', 
               )}
               {member.phone && (
                 <a
-                  href={`tel:${member.phone.replace(/\D/g, '')}`}
+                  href={telHref(member.phone) || undefined}
                   className="rounded-ui transition-colors duration-ui-fast hover:text-accent-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2"
-                  aria-label={`Call ${member.phone}`}
+                  aria-label={telHref(member.phone) ? `Call ${member.phone}` : undefined}
                 >
                   <Chip icon="phone" className="cursor-pointer">{member.phone}</Chip>
                 </a>
               )}
               {!member.phone && member.location?.officePhone && (
                 <a
-                  href={`tel:${member.location.officePhone.replace(/\D/g, '')}`}
+                  href={telHref(member.location.officePhone) || undefined}
                   className="rounded-ui transition-colors duration-ui-fast hover:text-accent-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2"
-                  aria-label={`Call ${member.location.officePhone}`}
+                  aria-label={telHref(member.location.officePhone) ? `Call ${member.location.officePhone}` : undefined}
                 >
                   <Chip icon="phone" className="cursor-pointer">{member.location.officePhone}</Chip>
                 </a>

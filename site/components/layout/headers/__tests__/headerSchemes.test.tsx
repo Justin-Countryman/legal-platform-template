@@ -110,7 +110,9 @@ describe('the mobile row follows the state the header is in (Phase 17B session 4
     it(`${layout}: a toll-free-only firm's number is printed as often as a firm with no second number`, () => {
       const tollFreeOnly = {...BASE, headerLayout: layout, headerPhone: null, tollFreePhone: '(800) 555-0199'}
       const count = (data: HeaderData) =>
-        renderHeader(data, false).container.querySelectorAll('a[href="tel:8005550199"]').length
+        renderHeader(data, false).container.querySelectorAll('a[href="tel:+18005550199"]').length
+      // The global form (monorepo backlog 528); printed at all, so the comparison is not of two empty counts.
+      expect(count({...tollFreeOnly, headerPhone2: null})).toBeGreaterThan(0)
       expect(count({...tollFreeOnly, headerPhone2: '(800) 555-0199'})).toBe(count({...tollFreeOnly, headerPhone2: null}))
     })
   }
@@ -139,5 +141,27 @@ describe('the helpers', () => {
     expect(schemeBg('light', true)).not.toContain('hairline-bottom')
     expect(schemeBg('dark', true, true)).not.toContain('hairline-bottom')
     expect(schemeBg('dark', false)).not.toContain('hairline-bottom')
+  })
+})
+
+// Monorepo backlog 528: every header's tel: link is RFC 3966's global form (lib/tokens.ts telHref); a phone it cannot
+// dial for certain is no link, and the mobile action bar draws no Call cell for it (the cell shows only the word "Call").
+const callCells = (c: HTMLElement) => [...c.querySelectorAll('a')].filter((a) => a.textContent?.trim() === 'Call')
+
+describe("the header's phone", () => {
+  it('a phone it can dial: tel: links in the global form and a Call cell', () => {
+    const {container} = renderHeader({...BASE, mobileLayout: 'bar-top', headerPhone: '612-555-0100 ext. 12'}, false)
+    const hrefs = [...container.querySelectorAll('a[href^="tel:"]')].map((a) => a.getAttribute('href'))
+    expect(hrefs.length).toBeGreaterThan(0)
+    for (const href of hrefs) expect(href).toBe('tel:+16125550100')
+    expect(container.querySelector('[aria-label^="Call us at"]')).not.toBeNull()
+    expect(callCells(container).length).toBe(1)
+  })
+
+  it('a phone it cannot dial for certain: no tel: link, no Call cell, no label on a link that is not one', () => {
+    const {container} = renderHeader({...BASE, mobileLayout: 'bar-top', headerPhone: '800-LAW-FIRM', tollFreePhone: null}, false)
+    expect(container.querySelectorAll('a[href^="tel:"]').length).toBe(0)
+    expect(container.querySelector('[aria-label^="Call us at"]')).toBeNull()
+    expect(callCells(container)).toEqual([])
   })
 })

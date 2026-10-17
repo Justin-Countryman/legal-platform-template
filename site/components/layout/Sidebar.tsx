@@ -5,7 +5,7 @@ import Link from 'next/link'
 import {SanityImage} from '@/components/ui/SanityImage'
 import {hasImage, type SanityImage as SanityImageData} from '@/lib/sanity/image'
 import {usePathname} from 'next/navigation'
-import {resolveTokenString, type NapTokens} from '@/lib/tokens'
+import {resolveTokenString, type NapTokens, telHref} from '@/lib/tokens'
 import {FormEmbed} from '@/components/layout/footers/FormEmbed'
 import {Button} from '@/components/ui/Button'
 import {Input} from '@/components/ui/Input'
@@ -830,7 +830,7 @@ function SidebarCtaBox({component, napTokens}: {component: SidebarCtaBoxComponen
         const resolvedPhone = resolveTokenString(phoneNumber, napTokens)
         return (
           <a
-            href={`tel:${resolvedPhone.replace(/\D/g, '')}`}
+            href={telHref(resolvedPhone) || undefined}
             className="mb-4 mt-2 block text-xl font-bold text-foreground transition-opacity duration-ui-fast hover:opacity-70"
           >
             {resolvedPhone}

@@ -29,9 +29,12 @@ export function formatPhone(raw: string | null | undefined): string {
  */
 export function telHref(raw: string | null | undefined): string {
   const text = (raw ?? '').trim()
-  const nanp = /(?:\+?1[\s.-]*)?\(?(\d{3})\)?[\s.-]*(\d{3})[\s.-]*(\d{4})(?!\d)/.exec(text)
+  // Never from the middle of a longer number: "4402079460958" (a UK number stored without its +) is no Maine number
+  // (monorepo backlog 528, ADV-528).
+  const nanp = /(?<!\d)(?:\+?1[\s.-]*)?\(?(\d{3})\)?[\s.-]*(\d{3})[\s.-]*(\d{4})(?!\d)/.exec(text)
   if (nanp && (!text.startsWith('+') || text.startsWith('+1'))) return `tel:+1${nanp[1]}${nanp[2]}${nanp[3]}`
-  const intl = /^(\+[02-9][\d\s.()-]{6,18}\d)/.exec(text)
+  // A national trunk "(0)" written beside the country code ("+44 (0)20 7946 0958") is never dialled from abroad.
+  const intl = /^(\+[02-9][\d\s.()-]{6,18}\d)/.exec(text.replace(/\s*\(0\)\s*/, ' '))
   if (intl) {
     const digits = intl[1].replace(/\D/g, '')
     if (digits.length >= 8 && digits.length <= 15) return `tel:+${digits}`

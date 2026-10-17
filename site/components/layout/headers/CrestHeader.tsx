@@ -13,6 +13,7 @@ import {
   secondPhone, HeaderLogo, TopBar, CtaButtons, NavLinks, MobileDrawer, MobileHeaderRow,
   type HeaderData,
 } from './shared'
+import {telHref} from '@/lib/tokens'
 
 type Props = {data: HeaderData}
 
@@ -111,14 +112,14 @@ export function CrestHeader({data}: Props) {
                     </span>
                   )}
                   <a
-                    href={`tel:${displayPhone.replace(/\D/g, '')}`}
+                    href={telHref(displayPhone) || undefined}
                     className={`text-base font-semibold tracking-wide transition-colors duration-ui-fast ${hoverTextClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current`}
                   >
                     {displayPhone}
                   </a>
                   {displayPhone2 && (
                     <a
-                      href={`tel:${displayPhone2.replace(/\D/g, '')}`}
+                      href={telHref(displayPhone2) || undefined}
                       className={`text-sm font-semibold tracking-wide ${mutedTextClass} transition-colors duration-ui-fast ${hoverTextClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current`}
                     >
                       {displayPhone2}

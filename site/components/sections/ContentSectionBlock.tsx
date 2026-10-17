@@ -9,7 +9,7 @@ import {VideoEmbed} from '@/components/media/VideoEmbed'
 import {splitEmphasis} from '@/lib/headingEmphasis'
 import {resolveTreatment, treatmentClasses, type TreatmentGround} from '@/lib/imageTreatment'
 import {hasImage, sanityObjectPosition} from '@/lib/sanity/image'
-import {formatPhone, resolveTokenString, type NapTokens} from '@/lib/tokens'
+import {formatPhone, resolveTokenString, type NapTokens, telHref} from '@/lib/tokens'
 import {proseTakesDropCap} from '@/lib/dropCap'
 import {MarqueeRibbon} from './MarqueeRibbon'
 import {SectionShell, type SectionAppearance} from './SectionShell'
@@ -274,7 +274,7 @@ export function ContentSectionBlock({
             <div className={`mt-8 flex flex-wrap items-center gap-x-6 gap-y-4 ${center ? 'justify-center' : ''}`}>
               {cta.length > 0 && <ButtonGroup items={cta} context={surface.buttonContext} align={center ? 'center' : 'start'} />}
               {has(phone) && (
-                <a href={`tel:${phone.replace(/\D/g, '')}`} className="text-lg font-semibold text-foreground underline-offset-4 hover:underline">
+                <a href={telHref(phone) || undefined} className="text-lg font-semibold text-foreground underline-offset-4 hover:underline">
                   {formatPhone(phone)}
                 </a>
               )}

@@ -16,6 +16,7 @@ import {
   secondPhone, HeaderLogo, TopBar, CtaButtons, NavLinks, MobileDrawer, MobileHeaderRow,
   type HeaderData,
 } from './shared'
+import {telHref} from '@/lib/tokens'
 
 type Props = {data: HeaderData}
 
@@ -117,7 +118,7 @@ export function LedgeHeader({data}: Props) {
                       </span>
                     )}
                     <a
-                      href={`tel:${displayPhone.replace(/\D/g, '')}`}
+                      href={telHref(displayPhone) || undefined}
                       className={`text-base font-semibold tracking-wide transition-colors duration-ui-fast ${hoverTextClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current`}
                       tabIndex={hideSupplementary ? -1 : undefined}
                     >
@@ -127,7 +128,7 @@ export function LedgeHeader({data}: Props) {
                 )}
                 {displayPhone2 && (
                   <a
-                    href={`tel:${displayPhone2.replace(/\D/g, '')}`}
+                    href={telHref(displayPhone2) || undefined}
                     className={`text-sm font-semibold tracking-wide ${mutedTextClass} transition-colors duration-ui-fast ${hoverTextClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current`}
                     tabIndex={hideSupplementary ? -1 : undefined}
                   >
@@ -145,7 +146,7 @@ export function LedgeHeader({data}: Props) {
                 {displayPhone && (
                   <div className={`overflow-hidden pr-1 transition-[max-width,opacity] duration-structural-slow ease-balanced ${hideSupplementary ? 'ml-6 max-w-xs opacity-100' : 'max-w-0 opacity-0 pointer-events-none'}`}>
                     <a
-                      href={`tel:${displayPhone.replace(/\D/g, '')}`}
+                      href={telHref(displayPhone) || undefined}
                       className={`whitespace-nowrap text-sm font-semibold tracking-wide transition-colors duration-ui-fast ${hoverTextClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current`}
                       tabIndex={hideSupplementary ? undefined : -1}
                     >

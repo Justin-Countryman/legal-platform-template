@@ -5,6 +5,7 @@ import {MdLocationOn, MdPhone, MdOpenInNew, MdGavel, MdBalance} from 'react-icon
 import {PortableTextRenderer} from '@/components/ui/PortableText'
 import {FeedbackModal} from '@/components/review/FeedbackModal'
 import type {NapTokens} from '@/lib/tokens'
+import {telHref} from '@/lib/tokens'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -176,9 +177,9 @@ export function ReviewPageContent({page, logo, firmInfo, napTokens}: Props) {
                     )}
                     {address.officePhone && (
                       <a
-                        href={`tel:${address.officePhone.replace(/\D/g, '')}`}
+                        href={telHref(address.officePhone) || undefined}
                         className="flex items-center gap-1.5 transition-colors duration-ui-fast hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-focus"
-                        aria-label={`Call us at ${address.officePhone}`}
+                        aria-label={telHref(address.officePhone) ? `Call us at ${address.officePhone}` : undefined}
                       >
                         <MdPhone className="size-4 shrink-0 text-foreground-subtle" aria-hidden="true" />
                         <span>{address.officePhone}</span>
