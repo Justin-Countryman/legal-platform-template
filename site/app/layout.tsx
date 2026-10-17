@@ -4,7 +4,8 @@ import {resolveHidden} from '@/lib/searchVisibility'
 import {titleTemplate} from '@/lib/seoTitle'
 import {getSiteChrome} from '@/lib/sanity/fetchers'
 import {ConsentBanner} from '@/components/consent/ConsentBanner'
-import {bootScript, type Purpose} from '@/lib/consent'
+import {type Purpose} from '@/lib/consent'
+import {CONSENT_BOOT_JS, RELAY_JS} from '@/lib/inlineScripts'
 import {adVendors, usableAdIds} from '@/lib/adIds'
 import {WebVitals} from '@/components/analytics/WebVitals'
 import './globals.css'
@@ -228,6 +229,10 @@ export default async function RootLayout({
     // `suppressHydrationWarning`: the consent script below sets `data-consent` on this element before React hydrates.
     <html lang="en-US" suppressHydrationWarning>
       <body className="antialiased font-body text-foreground bg-background">
+        {/* The relay, first in the body so it is in place before any of Next's inline data scripts (lib/inlineScripts.ts):
+            under the Content Security Policy (monorepo [R-785]) it hands their data to Next as data, so the policy can
+            name every script by a fixed hash and the pages stay pre-built. */}
+        <script dangerouslySetInnerHTML={{__html: RELAY_JS}} />
         {/* Site-wide Organization schema — fires on every route */}
         <script
           type="application/ld+json"
@@ -251,11 +256,11 @@ export default async function RootLayout({
         </a>
         {/* The cookie banner (monorepo BI/rules/legal-pages.md): first after the skip link, so a keyboard or a
             screen reader meets it early, and fixed to the bottom by CSS. The inline script decides before paint
-            (lib/consent.ts bootConsent) and sets html[data-consent], which globals.css reads to show it. It holds the
+            (lib/inlineScripts.ts CONSENT_BOOT_JS, held equal to lib/consent.ts bootConsent) and sets html[data-consent], which globals.css reads to show it. It holds the
             operator-pasted GA4 snippet (Site Settings, Scripts: Require Consent) and the advertising tags the site writes
             from Site Settings' IDs (lib/adPixels.ts) back until the visitor accepts each purpose; with neither there is
             no script and no banner. */}
-        {purposes.length ? <script dangerouslySetInnerHTML={{__html: bootScript(purposes)}} /> : null}
+        {purposes.length ? <script data-purposes={JSON.stringify(purposes)} dangerouslySetInnerHTML={{__html: CONSENT_BOOT_JS}} /> : null}
         <ConsentBanner scripts={consentScripts} text={consent?.bannerText} privacyPolicyUrl={consent?.privacyPolicyUrl} adIds={adIds}
           site={siteHost()} />
         {children}

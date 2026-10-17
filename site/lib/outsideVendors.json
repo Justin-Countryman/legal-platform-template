@@ -175,6 +175,7 @@
     "youtu.be": "short video links the site reads to find a video's id",
     "fonts.google.com": "font license attribution; fonts are served by the site itself",
     "vercel.sh": "a configuration schema address, never served",
+  "vercel.live": "Vercel's own toolbar, which Vercel adds to preview deployments only; the security policy names it there and nowhere else, and no visitor of the firm's site loads it",
     "jsdelivr.net": "a configuration schema address, never served",
     "nextjs.org": "a documentation link in generated code",
     "lucide.dev": "icon library attribution",

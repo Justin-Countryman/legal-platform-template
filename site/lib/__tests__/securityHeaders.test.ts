@@ -1,5 +1,9 @@
 import {describe, it, expect} from 'vitest'
-import {securityHeaders} from '../securityHeaders'
+import {createHash} from 'node:crypto'
+import {CSP_SOURCE, contentSecurityPolicy, cspHeaders, securityHeaders} from '../securityHeaders'
+import {INLINE_SCRIPTS} from '../inlineScripts'
+import {SCRIPT_HOSTS} from '../scriptHosts'
+import vendors from '../outsideVendors.json'
 
 /**
  * The security header set, pinned to the Lighthouse audits that decide it —
@@ -21,7 +25,7 @@ import {securityHeaders} from '../securityHeaders'
  */
 
 const value = (key: string) =>
-  securityHeaders.find((h) => h.key.toLowerCase() === key.toLowerCase())?.value
+  [...securityHeaders, ...cspHeaders].find((h) => h.key.toLowerCase() === key.toLowerCase())?.value
 
 describe('Lighthouse Best Practices: the audits a response header decides', () => {
   it('has-hsts: a long max-age with includeSubDomains and preload', () => {
@@ -47,15 +51,54 @@ describe('Lighthouse Best Practices: the audits a response header decides', () =
     ]).toContain(value('Cross-Origin-Opener-Policy'))
   })
 
-  // A DELIBERATE ABSENCE, asserted so that adding CSP has to be a decision
-  // rather than a drive-by. The deferral leaves the `csp-xss` and
-  // `trusted-types-xss` audits red on purpose; it is ruled at
-  // `BI/rules/technical-seo.md` build queue line 6, which carries the reasoning
-  // and is where a reversal would be recorded. If this case ever goes red, CSP
-  // arrived — check that the deferral was actually reversed there, and delete
-  // this case with the reasoning rather than around it.
-  it('csp-xss and trusted-types-xss stay unmet, because CSP is deferred', () => {
-    expect(value('Content-Security-Policy')).toBeUndefined()
+  // THE DEFERRAL'S CASE, REPLACED 2026-10-16. Until then this asserted the header's ABSENCE, so that adding CSP had to
+  // be a decision rather than a drive-by; the decision is monorepo [R-785] (hashes, never a nonce, never
+  // 'unsafe-inline' in script-src), and `BI/rules/technical-seo.md`'s CSP block records the reversal. What is pinned
+  // now is that ruling's shape. Whether the policy breaks anything is `scripts/ci/csp-served.mjs`, on a served build.
+  it('csp-xss: the policy is sent, enforced, in the shape [R-785] ruled', () => {
+    const csp = value('Content-Security-Policy')
+    expect(csp).toBeDefined()
+    expect(value('Content-Security-Policy-Report-Only')).toBeUndefined()
+    const directives = new Map(
+      (csp ?? '').split(';').map((d) => d.trim().split(/\s+/)).map(([name, ...sources]) => [name, sources]),
+    )
+    expect([...directives.keys()]).toEqual(['script-src', 'object-src', 'base-uri', 'frame-ancestors', 'form-action'])
+    expect(directives.get('object-src')).toEqual(["'none'"])
+    expect(directives.get('base-uri')).toEqual(["'none'"])
+    expect(directives.get('frame-ancestors')).toEqual(["'self'"])
+    expect(directives.get('form-action')).toEqual(["'self'"])
+    const script = directives.get('script-src') ?? []
+    for (const unsafe of ["'unsafe-inline'", "'unsafe-eval'", "'unsafe-hashes'", "'strict-dynamic'", '*', 'https:', 'http:', 'data:', 'blob:']) {
+      expect(script).not.toContain(unsafe)
+    }
+    expect(script.filter((s) => s.startsWith("'nonce-"))).toEqual([])
+  })
+
+  it('script-src names each fixed inline script by its hash, the listed hosts, and nothing else', () => {
+    const script = (value('Content-Security-Policy') ?? '').split(';')[0].trim().split(/\s+/).slice(1)
+    const hashes = Object.values(INLINE_SCRIPTS).map((t) => `'sha256-${createHash('sha256').update(t, 'utf8').digest('base64')}'`)
+    expect(script).toEqual(["'self'", ...hashes, ...SCRIPT_HOSTS.map((h) => h.source)])
+    expect(securityHeaders.map((h) => h.key)).not.toContain('Content-Security-Policy')
+  })
+
+  it('every outside host it lets a script load from is a vendor the firm’s privacy policy names', () => {
+    const named = (vendors as {vendors: Array<{id: string; hosts: string[]}>}).vendors.flatMap((v) => v.hosts)
+    const covered = (host: string) => named.some((h) => (h.startsWith('*.') ? host === h.slice(2) || host.endsWith(h.slice(1)) : host === h))
+    for (const {source} of SCRIPT_HOSTS) expect(covered(source.replace('https://', '')), source).toBe(true)
+    for (const h of SCRIPT_HOSTS) expect(h.source).toMatch(/^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)+$/)
+  })
+
+  it("next dev alone adds 'unsafe-eval', which Next's dev runtime needs; a Vercel preview alone adds its toolbar", () => {
+    expect(contentSecurityPolicy(true, false)).toContain("'unsafe-eval'")
+    expect(contentSecurityPolicy(false, false)).not.toContain("'unsafe-eval'")
+    expect(contentSecurityPolicy(false, true)).toContain('https://vercel.live')
+    expect(contentSecurityPolicy(false, false)).not.toContain('vercel.live')
+  })
+
+  it("covers page paths, not Next's files, the API, the icon or the operator's preview (served: csp-served.mjs)", () => {
+    const re = new RegExp(`^${CSP_SOURCE.replace('/:path', '/')}$`)
+    for (const p of ['/', '/contact', '/blog/a-post', '/review/x', '/site-previews', '/a/site-preview', '/api-guide']) expect(re.test(p)).toBe(true)
+    for (const p of ['/site-preview', '/site-preview/abc/def', '/_next/static/chunks/a.css', '/api/og', '/favicon.ico']) expect(re.test(p)).toBe(false)
   })
 })
 

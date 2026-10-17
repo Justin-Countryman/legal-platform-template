@@ -6,6 +6,7 @@ import Link from 'next/link'
 import {Button} from '@/components/ui/Button'
 import {adSafeAddress, adVendors, isLiveHost, type AdIds} from '@/lib/adIds'
 import {AD_STORAGE_KEYS, adCookieNames, adPageView, adPixelsLoaded, loadAdPixels, revokeAdPixels} from '@/lib/adPixels'
+import {mountPastedHtml} from '@/lib/pastedCode'
 import {
   CONSENT_COOKIE_ROUTE,
   CONSENT_KEEP_SECONDS,
@@ -32,9 +33,9 @@ import {
 // advertising purpose WS-AD-PIXELS-DESIGN-2026-10-15 §2.2). The rules are `lib/consent.ts`; this is the visitor's side.
 //
 // - In the server's HTML from the start, first in the body after the skip link, so a keyboard or a screen reader meets
-//   it where it is. The layout's inline script (`bootScript`) decides before paint and sets `html[data-consent]`;
-//   globals.css shows the banner only under `ask`, so there is no late paint and no layout shift. Without JavaScript it
-//   never shows, which is right: nothing it holds back would load anyway.
+//   it where it is. The layout's inline script (`CONSENT_BOOT_JS`, lib/inlineScripts.ts) decides before paint and sets
+//   `html[data-consent]`; globals.css shows the banner only under `ask`, so there is no late paint and no layout shift.
+//   Without JavaScript it never shows, which is right: nothing it holds back would load anyway.
 // - Purposes: Analytics when Site Settings → Scripts — Require Consent holds a script; Advertising when Site Settings
 //   holds an advertising ID. With analytics alone the banner is Accept and Decline. With advertising it is Accept all
 //   and Decline all, as equals, and Choose, which opens a switch per purpose, both off. Each purpose is stored on its own.
@@ -126,7 +127,11 @@ function loadAnalytics(html: string, host: HTMLElement | null) {
   window.__lpGaIds = measurementIds(html)
   // Google Analytics never feeds advertising: no Google signals, no ad personalization (whatever the property says).
   gtag('set', {allow_google_signals: false, allow_ad_personalization_signals: false})
-  ;(host ?? document.body).appendChild(document.createRange().createContextualFragment(html))
+  // Under the Content Security Policy (monorepo [R-785]): Google's snippet runs as it always did, its script tag
+  // recreated and its inline half done by `mountPastedHtml`; anything else in the box is left out and marked here.
+  const box = host ?? document.body
+  const {skipped} = mountPastedHtml(box, html)
+  if (skipped.length) box.setAttribute('data-embed-blocked', skipped.join(' '))
 }
 
 function declineAnalytics(html: string) {

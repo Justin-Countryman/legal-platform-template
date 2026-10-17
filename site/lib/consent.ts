@@ -15,9 +15,10 @@
 //   cookies).
 // - A browser sending Global Privacy Control, with nothing stored, is a decline without asking; a choice the visitor
 //   made in the banner stands.
-// - `bootConsent` decides before the page paints: the layout inlines it, serialized, ahead of the banner, and it sets
-//   `html[data-consent]`, which CSS reads to show the banner. The client calls the same function when the inline
-//   script did not run. `parseChoices` and `resolveChoices` state the same rule for the tests, which hold the two equal.
+// - `bootConsent` decides before the page paints: the layout inlines the same decision ahead of the banner as fixed text
+//   (`lib/inlineScripts.ts` CONSENT_BOOT_JS, so the Content Security Policy can name it by hash, monorepo [R-785]; its
+//   test holds the two equal), and it sets `html[data-consent]`, which CSS reads to show the banner. The client calls
+//   this function when the inline script did not run. `parseChoices` and `resolveChoices` state the same rule for the tests, which hold the two equal.
 // - Advertising (2026-10-15, monorepo WS-AD-PIXELS-DESIGN-2026-10-15): when Site Settings holds an advertising ID, the
 //   banner asks about two purposes, each stored on its own; a stored choice that does not cover a purpose the site
 //   now has is asked again.
@@ -41,11 +42,6 @@ export const CONSENT_KEEP_SECONDS = 365 * 24 * 60 * 60
 export const CONSENT_COOKIE_ROUTE = '/api/consent'
 /** How far a choice's time may sit from the server's before the cookie route refuses it (a wrong device clock). */
 export const CONSENT_CLOCK_SKEW_SECONDS = 2 * 24 * 60 * 60
-
-/** Rendered by the operator's preview layout, after the root layout's own script: the banner never shows there and
- *  nothing is held or loaded by it (the Switcher sits at the bottom, and flow-metrics measures only the preview).
- *  Set by the preview itself so no live page carries the preview's address (scripts/ci/check-preview-not-shipped). */
-export const CONSENT_OFF_SCRIPT = "document.documentElement.setAttribute('data-consent','off');"
 
 /** Shown when Site Settings → Cookie Banner Text is empty. */
 export const DEFAULT_BANNER_TEXT =
@@ -150,9 +146,8 @@ export function choiceCookieHeader(raw: string, nowSeconds: number, secure: bool
 }
 
 /* eslint-disable no-var */
-/** The decision, made before paint. Self-contained on purpose (no imports, no closures): the layout inlines it with
- *  `.toString()`. Sets `html[data-consent]` and returns the state; held equal to `consentState(resolveChoices(...))`
- *  by the tests. */
+/** The decision, made before paint. Sets `html[data-consent]` and returns the state; held equal to
+ *  `consentState(resolveChoices(...))` and to the inline CONSENT_BOOT_JS (`lib/inlineScripts.ts`) by the tests. */
 export function bootConsent(d: Document, w: Window, key: string, keep: number, purposes: string[]): string {
   var stored = null as null | Record<string, string>
   try {
@@ -202,18 +197,11 @@ export function bootConsent(d: Document, w: Window, key: string, keep: number, p
 
 /** The thank-you page's address loses any query string before Next reads it and before any tag runs: a form that
  *  redirects with answers in the address would otherwise hand them to analytics and every advertising tag. The history
- *  entry's own state is kept, so Back still works. Self-contained, inlined by `bootScript`. */
+ *  entry's own state is kept, so Back still works. The inline CONSENT_BOOT_JS does the same first (`lib/inlineScripts.ts`). */
 export function cleanThankYou(w: Window, path: string): void {
   if (w.location.pathname === path && w.location.search) {
     w.history.replaceState(w.history.state, '', w.location.pathname + w.location.hash)
   }
-}
-
-/** The inline script the layout renders ahead of the banner, for the purposes the site has. */
-export function bootScript(purposes: readonly Purpose[]): string {
-  return `(${cleanThankYou.toString()})(window,"/thank-you");` +
-    `(${bootConsent.toString()})(document,window,${JSON.stringify(CONSENT_STORAGE_KEY)},` +
-    `${CONSENT_KEEP_SECONDS},${JSON.stringify(purposes)});`
 }
 
 type ConsentCommand = ['consent', 'default' | 'update', Record<string, 'granted' | 'denied'>]

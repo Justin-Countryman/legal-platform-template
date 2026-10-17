@@ -173,7 +173,7 @@ export const siteSettings = defineType({
       // Corrected 2026-10-15: the help text promised an opt-out that did not
       // exist, and the scripts loaded for every visitor.
       description:
-        'Google Analytics 4 snippet only. It loads only after a visitor chooses Accept in the cookie banner, and never for a visitor who declines or whose browser sends Global Privacy Control. Advertising tags go in the Advertising fields below, never here. Any other script here is a new outside vendor the firm’s privacy policy must name.',
+        'Google Analytics 4 snippet only, pasted as Google gives it. It loads only after a visitor chooses Accept in the cookie banner, and never for a visitor who declines or whose browser sends Global Privacy Control. Advertising tags go in the Advertising fields below, never here. Any other script here does not run: the site’s security policy allows only the vendors it lists.',
       // An advertising tag pasted here would run as analytics, outside the advertising choice (monorepo
       // WS-AD-PIXELS-DESIGN-2026-10-15 §6); go-live refuses one in any pasted field. Warns, as every field rule does.
       validation: (Rule) =>

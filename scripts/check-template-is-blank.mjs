@@ -80,6 +80,7 @@ export const PLATFORM_HOSTS = new Map([
   ['google.com', 'Maps directions URL builder — SwitchboardFooter'],
   ['fonts.google.com', 'font license attribution (the CDN itself is banned by lint)'],
   ['vercel.sh', 'vercel.json $schema'],
+  ['vercel.live', 'Vercel toolbar on preview deployments only — the security policy names it there (site/lib/securityHeaders.ts)'],
   ['jsdelivr.net', 'sanity-typegen.json $schema'],
   ['nextjs.org', 'generated next-env.d.ts doc link'],
   ['lucide.dev', 'icon library attribution'],
